@@ -425,13 +425,13 @@ missing_runtime <- c(
   if (!requireNamespace("jsonlite", quietly = TRUE)) "jsonlite"
 )
 if (isTRUE(alpaca_cfg$has_credentials) && length(missing_runtime) == 0L) {
-  skip_check("live Alpaca fetch smoke", "credentials/runtime detected; run Rscript scripts/run_data_refresh.R for network smoke")
+  skip_check("live Alpaca fetch smoke", "non-network validation only; credentials/runtime detected; run Rscript scripts/run_data_refresh.R for network smoke")
 } else {
   reasons <- c(
     if (!isTRUE(alpaca_cfg$has_credentials)) "missing Alpaca credentials",
     if (length(missing_runtime) > 0L) paste("missing packages:", paste(missing_runtime, collapse = ","))
   )
-  skip_check("live Alpaca fetch smoke", paste(reasons, collapse = "; "))
+  skip_check("live Alpaca fetch smoke", paste(c("non-network validation only", reasons), collapse = "; "))
 }
 
 utils::write.csv(results, results_path, row.names = FALSE)

@@ -103,6 +103,8 @@ To run only the operator-facing validation script without a live Alpaca fetch:
 It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
 When the ignored repo-local `.codex_r_libs/` directory exists, the validation script adds it to `.libPaths()` before checking optional Alpaca runtime packages.
 
+Interpret validation status literally: `PASS` means the local non-network data-layer contract checks passed, `FAIL` means the local data-layer check failed, and `SKIP live Alpaca fetch smoke` means no network fetch was attempted. A skipped live smoke can still appear when credentials and runtime packages are present; the operator must run `scripts/run_data_refresh.R` separately to exercise the credentialed Alpaca path.
+
 Validation also writes deterministic inspection CSVs:
 
 - `runs/validation/data_layer_validation_refresh_plan.csv`

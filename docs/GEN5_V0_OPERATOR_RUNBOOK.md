@@ -53,7 +53,7 @@ Run the local non-network validation wrapper before any credentialed refresh:
 powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
 ```
 
-This wrapper runs the scaffold smoke test, data-layer validation script, and non-network `testthat` suite. A `SKIP` for the live Alpaca fetch smoke is expected here; it means the validation script did not make a network call.
+This wrapper runs the scaffold smoke test, data-layer validation script, and non-network `testthat` suite. Interpret `PASS` as local data-layer contract coverage only. A `SKIP` for the live Alpaca fetch smoke is expected here; it means the validation script did not make a network call, even if credentials and runtime packages are present.
 
 When credentials and runtime packages are available, run a live Alpaca adjusted daily smoke with explicit bounds:
 

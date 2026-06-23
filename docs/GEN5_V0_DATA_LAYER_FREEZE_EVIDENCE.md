@@ -182,7 +182,7 @@ The local validation artifact `runs/validation/data_layer_validation_results.csv
 - refresh artifact writing under `runs/validation`
 - symbol coverage artifact writing under `runs/validation`
 
-The same validation artifact reports `SKIP` for `live Alpaca fetch smoke` because the validation script is intentionally non-network. It directs the operator to run the data refresh script for the live network smoke.
+The same validation artifact reports `SKIP` for `live Alpaca fetch smoke` because the validation script is intentionally non-network. This SKIP is not a hidden PASS for Alpaca connectivity; it means the credentialed live fetch path was not exercised by validation. The operator must run the data refresh script separately for the live network smoke.
 
 For routine local validation, run the repository wrapper from the project root:
 

@@ -129,7 +129,18 @@ Stop conditions:
 
 ### 4. Review data-layer validation PASS/SKIP interpretation
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `docs: clarify validation skip semantics`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Clarified that PASS covers non-network data-layer contract checks only.
+- Clarified that `SKIP live Alpaca fetch smoke` means validation did not exercise a network fetch, even when credentials and runtime packages are present.
 
 Goal: Ensure operators understand that non-network validation can pass while live Alpaca fetch remains a deliberate SKIP, and that the live smoke is a separate credentialed check.
 
