@@ -12,6 +12,8 @@ The bounded live Alpaca smoke evidence is recorded in ignored local run artifact
 
 The date suffixes identify the inspected refresh snapshots used for the freeze note. Operators should regenerate these artifacts through the data refresh and validation scripts rather than editing the CSVs by hand.
 
+For repeatable comparisons, regenerate evidence with explicit `GEN5_AS_OF_TIMESTAMP`, `GEN5_FETCH_START_DATE`, and `GEN5_FETCH_END_DATE` values. Generated CSVs stay ignored; source-controlled documentation should record only the interpretation needed for closeout.
+
 Primary covered-range snapshot:
 
 - `runs/data_refresh/alpaca_daily_audit_20260622.csv`
@@ -205,6 +207,8 @@ powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
 ```
 
 For a live Alpaca smoke refresh, run `scripts/run_data_refresh.R` with explicit credentials in the local environment and, when needed, explicit `GEN5_FETCH_START_DATE` and `GEN5_FETCH_END_DATE` bounds. Live refresh artifacts remain generated local evidence under ignored output folders.
+
+The closeout checklist and non-network coverage map are maintained in `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.
 
 ## Freeze Interpretation
 

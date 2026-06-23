@@ -169,6 +169,8 @@ The current market-data-layer freeze evidence is summarized in `docs/GEN5_V0_DAT
 
 The freeze evidence does not certify strategy, WFA, allocation, dashboard, execution, or live-order readiness. It records that the Gen5 v0 data layer exposes bounded requests, explicit `as_of_timestamp` handling, cache coverage, duplicate detection, stale/partial history warnings, and generated audit artifacts under ignored local output folders.
 
+The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.

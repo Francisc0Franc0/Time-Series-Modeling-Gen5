@@ -27,6 +27,8 @@ ALPACA_SECRET=your_secret_here
 
 6. Keep heavy data caches outside OneDrive when practical by setting `cache.root` in `config/data_layer.local.yml` or by setting `GEN5_CACHE_ROOT` for one run.
 
+The repository does not migrate or delete existing cache files. Cache root changes only affect subsequent reads/writes for that run or local config.
+
 ## Configuration Rules
 
 The v0 config must remain Alpaca-only, adjusted daily, and `1D`:
@@ -81,3 +83,5 @@ Review generated CSVs rather than editing them:
 - `runs/data_refresh/alpaca_daily_symbol_coverage_YYYYMMDD.csv`
 
 Generated caches, validation output, refresh output, local config overlays, credentials, and repo-local package libraries are ignored by git.
+
+For closeout gates and the current non-network invariant coverage map, see `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.

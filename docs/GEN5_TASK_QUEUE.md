@@ -263,7 +263,19 @@ Stop conditions:
 
 ### 8. Prepare Gen5 v0 data-layer closeout checklist
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-closeout-checklist-pass-1`
+
+Commit: `docs: add Gen5 v0 closeout checklist`
+
+Validation: Documentation-only diff check.
+
+Notes:
+
+- Added `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md` defining data-layer-only closeout gates.
+- Kept the checklist limited to Alpaca adjusted daily OHLCV ingestion, explicit timestamp/date handling, deterministic cache/audit behavior, ignored artifacts, operator docs, validation, and bounded live smoke evidence.
+- Added README/runbook/freeze-evidence cross-links without authorizing downstream modules.
 
 Goal: Define what "data layer stable enough to move on" means without starting WFA or strategy work.
 
@@ -282,7 +294,18 @@ Stop conditions:
 
 ### 9. Review test coverage map for data-layer invariants
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-closeout-checklist-pass-1`
+
+Commit: `docs: add Gen5 v0 closeout checklist`
+
+Validation: Documentation-only diff check; no tests changed.
+
+Notes:
+
+- Mapped current smoke, validation, and non-network `testthat` coverage to the Gen5 v0 data-layer invariants in the closeout checklist.
+- Identified live Alpaca connectivity and date-specific evidence snapshots as operator-reviewed closeout items rather than default network tests.
 
 Goal: Map current non-network tests to Gen5 v0 invariants and identify data-layer-only gaps.
 
@@ -302,7 +325,19 @@ Stop conditions:
 
 ### 10. Review local cache path ergonomics
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-closeout-checklist-pass-1`
+
+Commit: `docs: add Gen5 v0 closeout checklist`
+
+Validation: Documentation-only diff check; no config loading behavior changed.
+
+Notes:
+
+- Confirmed `config/data_layer.example.yml` recommends an outside-OneDrive cache root.
+- Confirmed ignored `config/data_layer.local.yml` and `GEN5_CACHE_ROOT` are documented operator override paths.
+- Clarified in the operator runbook that the repo does not migrate or delete existing caches.
 
 Goal: Confirm local cache configuration supports storage outside OneDrive when configured and that operator docs explain the expected behavior.
 
@@ -322,7 +357,18 @@ Stop conditions:
 
 ### 11. Review freeze evidence reproducibility notes
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-closeout-checklist-pass-1`
+
+Commit: `docs: add Gen5 v0 closeout checklist`
+
+Validation: Documentation-only diff check.
+
+Notes:
+
+- Clarified that comparable evidence should be regenerated with explicit `GEN5_AS_OF_TIMESTAMP`, `GEN5_FETCH_START_DATE`, and `GEN5_FETCH_END_DATE`.
+- Reiterated that generated evidence artifacts remain ignored and only closeout interpretation belongs in source-controlled documentation.
 
 Goal: Clarify how a future operator should regenerate comparable freeze evidence with explicit timestamps and bounded dates.
 
