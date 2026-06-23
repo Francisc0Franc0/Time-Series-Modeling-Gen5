@@ -775,3 +775,198 @@ Stop conditions:
 
 - Implementing WFA, indicators, returns, labels, regimes, strategy signals, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, or provider expansion.
 - Changing the workbench handoff contract in a way that requires code changes.
+
+## Recommended Next Queue: Minimal WFA Foundation
+
+These tasks are intended to be handed off one chunk at a time after the minimal WFA contract plan is accepted. They start building WFA infrastructure without adding indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboards, execution, or live-order logic.
+
+### 23. Add WFA handoff reader and gate
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-handoff-gate`
+
+Goal: Validate a completed Research Data Workbench handoff before future WFA folds consume it.
+
+Likely files:
+
+- new helper under `R/` for WFA handoff loading/gating
+- focused tests under `tests/testthat/`
+- docs updates to `README.md`, `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`, or this queue only if operator-facing behavior changes
+
+Required behavior:
+
+- Read a workbench manifest and its linked canonical bars, health rows, audit, symbol coverage, refresh plan, and optional merge summary.
+- Confirm explicit `as_of_timestamp` and `latest_completed_session` consistency across the handoff artifacts.
+- Confirm no bar rows occur after `latest_completed_session`.
+- Confirm required adjusted daily Alpaca bar schema, `adjusted == TRUE`, `timeframe == "1D"`, and `provider == "alpaca"`.
+- Fail loudly on duplicate `symbol` plus `session_date` rows, missing required columns, missing required artifacts, or `health_max_severity == "ERROR"`.
+- Surface `WARN` health rows as review-required evidence without silently repairing or fetching data.
+- Avoid provider/network dependencies, Alpaca credentials, `.Renviron`, `Sys.Date()`, or direct cache authority outside the manifest.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Direct Alpaca calls or provider-helper calls from WFA code.
+- Any attempt to infer latest sessions independently.
+- Implementing folds, indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, or provider expansion.
+
+### 24. Add quarterly fold geometry manifest builder
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-quarterly-fold-geometry`
+
+Goal: Create explicit quarterly TRAIN/OOS fold manifests from an accepted handoff without computing research features or performance.
+
+Likely files:
+
+- WFA fold-geometry helper under `R/`
+- focused non-network tests under `tests/testthat/`
+- documentation updates for generated fold-manifest fields
+
+Required behavior:
+
+- Consume only an accepted WFA handoff gate result and explicit geometry inputs.
+- Emit fold records with `fold_id`, TRAIN dates, OOS dates, decision cadence, decision-pack validity dates, source handoff reference, `as_of_timestamp`, and `latest_completed_session`.
+- Use quarterly OOS periods for the first geometry.
+- Ensure TRAIN and OOS windows are date-valid, ordered, disjoint, and bounded by `latest_completed_session`.
+- Record any intentional gap policy explicitly.
+- Avoid searching across multiple geometries in this first slice.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Any feature, return, label, regime, strategy, exit, allocation, or live-order logic.
+- Any `Sys.Date()` or market-clock API use.
+- Any direct provider/cache authority outside the accepted handoff.
+
+### 25. Add TRAIN/OOS split verifier and fold-local availability audit
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-train-oos-split-audit`
+
+Goal: Prove that accepted handoff bars can be partitioned by the quarterly fold manifest without leakage.
+
+Likely files:
+
+- WFA split/audit helper under `R/`
+- generated-artifact schema documentation
+- focused tests under `tests/testthat/`
+
+Required behavior:
+
+- Partition bars into TRAIN and OOS rows for each fold using only explicit fold dates.
+- Verify TRAIN and OOS rows are disjoint for every fold.
+- Verify OOS rows occur strictly after TRAIN rows and never after `latest_completed_session`.
+- Produce fold-local symbol availability evidence without filtering symbols based on OOS performance.
+- Preserve missing, partial, stale, and warning context from the source handoff rather than repairing data.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing indicators, returns, labels, regimes, strategy signals, drawdowns, allocation, or performance metrics.
+- Any OOS-informed symbol eligibility decision.
+- Any provider/network dependency.
+
+### 26. Add frozen fold-decision evidence scaffolding
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-frozen-evidence-scaffold`
+
+Goal: Define and write the minimal frozen evidence structure for each fold before any active strategy candidate exists.
+
+Likely files:
+
+- WFA evidence helper under `R/`
+- generated-artifact schema documentation
+- focused tests under `tests/testthat/`
+
+Required behavior:
+
+- Write a fold-level evidence artifact that links source handoff, gate result, fold geometry, TRAIN rows available, accepted warnings, and code revision when available.
+- Record that no active candidate, feature model, or strategy selector has been fit yet.
+- Include leakage attestation fields for no provider calls, no latest-session inference, and no OOS fitting.
+- Keep artifacts under ignored run paths when generated by scripts.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Implementing strategy decisions, returns, labels, regimes, exits, allocation, or performance claims.
+- Writing generated evidence into source control.
+
+### 27. Add baseline-family registry scaffolding
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-baseline-registry-scaffold`
+
+Goal: Represent baseline concepts before active strategy evaluation so `no_trade` and buy-and-hold comparisons stay first-class.
+
+Likely files:
+
+- baseline registry helper or config under WFA/research scope
+- tests under `tests/testthat/`
+- documentation updates describing baseline families
+
+Required behavior:
+
+- Register baseline families for `no_trade`/cash, broad-market buy-and-hold, per-asset buy-and-hold, fixed equal-weight basket buy-and-hold, and active curation without additional entry/exit timing.
+- Group baselines by research question so top-level diagnostics do not become cluttered.
+- Keep baseline definitions tied to the same fold calendar, handoff artifacts, health gates, and audit discipline as active candidates.
+- Do not compute baseline returns or benchmark performance in this slice.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Implementing returns, performance metrics, leverage reports, allocation, strategy evaluation, or live-facing advice.
+
+### 28. Add first minimal WFA foundation closeout check
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-foundation-closeout`
+
+Goal: Confirm the first WFA foundation slices agree before any active research candidate, return calculation, indicator, label, regime, or strategy work begins.
+
+Likely files:
+
+- `README.md`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+- tests only if a gap is found in foundation coverage
+
+Required behavior:
+
+- Confirm handoff gate, quarterly fold geometry, TRAIN/OOS split audit, frozen evidence scaffold, and baseline registry scaffold align with the minimal WFA contract.
+- Confirm generated artifacts remain ignored.
+- Confirm default validation remains non-network.
+- Confirm there are still no indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` if code or tests exist by this point.
+- Otherwise perform a documentation-only diff review.
+
+Stop conditions:
+
+- Any unresolved leakage issue.
+- Any generated artifacts appearing as tracked files.
+- Any ambiguous decision about moving from WFA foundation into return/performance evaluation.
