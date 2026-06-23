@@ -14,7 +14,7 @@ The date suffixes identify the inspected refresh snapshots used for the freeze n
 
 For repeatable comparisons, regenerate evidence with explicit `GEN5_AS_OF_TIMESTAMP`, `GEN5_FETCH_START_DATE`, and `GEN5_FETCH_END_DATE` values. Generated CSVs stay ignored; source-controlled documentation should record only the interpretation needed for closeout.
 
-Primary covered-range snapshot:
+Latest covered-range snapshot:
 
 - `runs/data_refresh/alpaca_daily_audit_20260622.csv`
 - `runs/data_refresh/alpaca_daily_refresh_plan_20260622.csv`
@@ -38,9 +38,9 @@ Local non-network validation evidence is recorded under `runs/validation/`, espe
 
 ## Explicit Timestamp And Bounds
 
-The primary freeze snapshot carries an explicit provider query timestamp:
+The latest `20260622` freeze snapshot carries an explicit provider query timestamp:
 
-- `provider_query_timestamp`: `2026-06-23 02:30:00`
+- `provider_query_timestamp`: `2026-06-23 12:54:35`
 - `requested_start_date`: `2026-02-23`
 - `requested_end_date`: `2026-06-22`
 - `latest_completed_session`: `2026-06-22`
@@ -60,14 +60,14 @@ The later snapshot is important because it shows the data layer did not silently
 
 Operator interpretation:
 
-- The `20260622` snapshot is the covered-range evidence.
+- The `20260622` snapshot is covered-range evidence: the requested date range matches the observed cached range.
 - The `20260623` snapshot is the stale-tail evidence.
 - The stale-tail gap is acceptable data-layer evidence because the gap is explicit, symbol-level, and auditable.
 - The stale-tail gap is not a trading signal and does not imply strategy, live-advice, or execution readiness.
 
 ## Refresh Plan Summary
 
-Primary covered-range snapshot, `alpaca_daily_refresh_plan_20260622.csv`:
+Latest covered-range snapshot, `alpaca_daily_refresh_plan_20260622.csv`:
 
 - Requested symbols: `SPY`, `QQQ`, `TSLA`, `NVDA`
 - Cache path root: `C:/Users/Franc/TradingDataCache/Time-Series-Modeling-Gen5/alpaca/1D/`
@@ -88,11 +88,12 @@ Follow-up stale-tail snapshot, `alpaca_daily_refresh_plan_20260623.csv`:
 
 ## Merge Summary
 
-Primary covered-range snapshot, `alpaca_daily_merge_summary_20260622.csv`:
+Latest covered-range snapshot, `alpaca_daily_merge_summary_20260622.csv`:
 
 - Each symbol remained at `merged_row_count = 83`.
 - Each symbol had `first_merged_session = 2026-02-23`.
 - Each symbol had `latest_merged_session = 2026-06-22`.
+- Each symbol had `returned_bar_count = 0`.
 - Each symbol had `no_returned_bars = FALSE`.
 - Each symbol had `wrote_cache = TRUE`.
 
@@ -107,7 +108,7 @@ Follow-up stale-tail snapshot, `alpaca_daily_merge_summary_20260623.csv`:
 
 ## Audit Summary
 
-Primary covered-range audit, `alpaca_daily_audit_20260622.csv`:
+Latest covered-range audit, `alpaca_daily_audit_20260622.csv`:
 
 - `requested_symbol_count = 4`
 - `present_symbol_count = 4`
@@ -120,6 +121,8 @@ Primary covered-range audit, `alpaca_daily_audit_20260622.csv`:
 - `stale_symbol_count = 0`
 - `availability_warning_count = 0`
 - `refresh_skip_symbol_count = 4`
+- `refresh_fetch_ranges_by_symbol = SPY=NA;QQQ=NA;TSLA=NA;NVDA=NA`
+- `no_returned_bar_symbol_count = 0`
 - `refresh_decisions_by_symbol = SPY=fully_cached;QQQ=fully_cached;TSLA=fully_cached;NVDA=fully_cached`
 
 Follow-up stale-tail audit, `alpaca_daily_audit_20260623.csv`:
@@ -140,11 +143,11 @@ Follow-up stale-tail audit, `alpaca_daily_audit_20260623.csv`:
 - `no_returned_bar_symbols = SPY,QQQ,TSLA,NVDA`
 - `availability_warnings = partial_history_symbols=SPY,QQQ,TSLA,NVDA;no_returned_bars=SPY,QQQ,TSLA,NVDA`
 
-This is acceptable freeze evidence for the data layer because the gap is explicit, bounded, and auditable. It is not evidence of strategy readiness or live-trading readiness.
+This is acceptable freeze evidence for the data layer because the stale-tail gap is explicit, bounded, and auditable. It is not evidence of strategy readiness or live-trading readiness.
 
 ## Symbol Coverage Results
 
-Primary covered-range coverage, `alpaca_daily_symbol_coverage_20260622.csv`:
+Latest covered-range coverage, `alpaca_daily_symbol_coverage_20260622.csv`:
 
 - Symbols covered: `SPY`, `QQQ`, `TSLA`, `NVDA`
 - Per-symbol `row_count`: 83
@@ -152,6 +155,7 @@ Primary covered-range coverage, `alpaca_daily_symbol_coverage_20260622.csv`:
 - Per-symbol `partial_history_status`: `covers_requested_range`
 - Per-symbol `stale_status`: `current`
 - Per-symbol observed range: `2026-02-23` through `2026-06-22`
+- Per-symbol bounded requested range: `2026-02-23` through `2026-06-22`
 
 Follow-up stale-tail coverage, `alpaca_daily_symbol_coverage_20260623.csv`:
 

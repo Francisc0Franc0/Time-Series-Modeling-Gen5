@@ -88,7 +88,7 @@ Artifact terminology is intentionally literal:
 
 Fetched rows are merged with existing symbol caches using `symbol` plus `session_date` as the deterministic key, with fetched rows taking precedence on overlap. Merged cache files are sorted by `symbol` and `session_date`.
 
-Each refresh also writes two ignored inspection artifacts under `runs/data_refresh/`:
+Each refresh also writes three ignored inspection artifacts under `runs/data_refresh/`:
 
 - `alpaca_daily_refresh_plan_YYYYMMDD.csv`: the pre-fetch plan by symbol. Use this to see whether each symbol was fully cached, needed a cold fetch, needed a stale tail fetch, or had partial history.
 - `alpaca_daily_merge_summary_YYYYMMDD.csv`: the post-fetch cache merge result by symbol. Use this to see how many bars came back, how many rows ended up in the cache, whether a cache file was written, and whether a symbol needed a fetch but returned no bars.

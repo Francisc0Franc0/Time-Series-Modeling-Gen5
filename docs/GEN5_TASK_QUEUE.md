@@ -83,7 +83,7 @@ Likely files:
 - `.gitignore`
 - `README.md`
 - `docs/GEN5_V0_DATA_LAYER_FREEZE_EVIDENCE.md`
-- `tests/testthat/test-generated_artifact_ignores.R`
+- `tests/testthat/test_generated_artifact_ignores.R`
 
 Validation:
 
@@ -385,14 +385,14 @@ Stop conditions:
 
 - Any instruction to commit generated run artifacts.
 
-## Suggested Overnight Prompt
+## Suggested Closeout Confirmation Prompt
 
-Use this prompt in a fresh task when ready:
+Use this prompt in a fresh task only after the operator has run any credentialed closeout checks they want to refresh:
 
 ```text
-Work through the next 6 pending items in docs/GEN5_TASK_QUEUE.md in this same thread.
+Perform a final no-code Gen5 v0 market-data-layer closeout confirmation.
 
-Stay within AGENTS.md and Gen5 v0 market-data-layer scope. For each item: inspect relevant files, make scoped changes, run scripts/test/run_tests.ps1 when warranted, commit, push, update docs/GEN5_TASK_QUEUE.md, and leave a concise status note.
+Stay within AGENTS.md and Gen5 v0 market-data-layer scope. Confirm the closeout checklist, freeze evidence, operator runbook, README, task queue, and ignore coverage still agree after the operator refreshes any credentialed Alpaca smoke evidence. Do not add WFA, strategy, allocation, dashboard, execution, or live-order logic.
 
-Stop if validation fails, the task requires WFA/strategy/allocation/dashboard/execution logic, a new dependency, destructive file operations, live-order behavior, provider expansion beyond Alpaca adjusted daily OHLCV, or an ambiguous project decision.
+Stop if validation fails, generated artifacts appear as tracked files, the task requires WFA/strategy/allocation/dashboard/execution logic, a new dependency, destructive file operations, live-order behavior, provider expansion beyond Alpaca adjusted daily OHLCV, or an ambiguous project decision.
 ```
