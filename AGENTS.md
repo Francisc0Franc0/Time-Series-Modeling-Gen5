@@ -43,6 +43,28 @@ Build a long-only, rolling walk-forward, regime-conditioned tactical equity/ETF 
 6. Live-facing outputs must eventually consume frozen WFA evidence, not recompute authority.
 7. Heavy generated artifacts and data caches should not live in git.
 
+## R Testing Instructions
+
+For Gen5 R validation, Codex should first run the local test runner:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+This is the preferred validation command because it selects the expected `Rscript` path, adds ignored `.codex_r_libs/` to `.libPaths()`, and runs the scaffold smoke test, data-layer validation, and non-network `testthat` tests.
+
+If the local test runner cannot start, Codex must say so clearly, include the error, and then fall back to the explicit known-good commands:
+
+```powershell
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' tests\smoke_test.R
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts\validate\validate_data_layer.R
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' -e ".libPaths(c(normalizePath('.codex_r_libs', winslash='/'), .libPaths())); testthat::test_dir('tests/testthat')"
+```
+
+Do not rely on bare `Rscript` unless `Get-Command Rscript` confirms it is available.
+
+R startup locale warnings on Windows are non-fatal unless tests fail.
+
 ## Planning Requirement
 
 At the start of each new non-trivial Codex task, before the implementation plan, provide a brief plain-language context note that says:

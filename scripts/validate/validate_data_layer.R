@@ -324,11 +324,18 @@ refresh_plan_path <- file.path(validation_dir, "data_layer_validation_refresh_pl
 merge_summary_path <- file.path(validation_dir, "data_layer_validation_merge_summary.csv")
 symbol_coverage_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.csv")
 symbol_coverage_chart_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.png")
-utils::write.csv(audit, audit_path, row.names = FALSE)
+g5_write_audit_artifact_csv(audit, audit_path)
 utils::write.csv(results, results_path, row.names = FALSE)
 
 pass_fail("validation outputs are written under runs/validation", {
   file.exists(audit_path) && file.exists(results_path)
+}, paste("audit:", normalizePath(audit_path, winslash = "/", mustWork = FALSE)))
+
+pass_fail("audit artifact CSV is written with required columns", {
+  audit_read <- utils::read.csv(audit_path, stringsAsFactors = FALSE)
+  identical(names(audit_read), g5_required_audit_columns()) &&
+    !("X" %in% names(audit_read)) &&
+    identical(audit_read$requested_symbols, paste(validation_symbols, collapse = ","))
 }, paste("audit:", normalizePath(audit_path, winslash = "/", mustWork = FALSE)))
 
 pass_fail("refresh artifact CSVs are written under runs/validation", {

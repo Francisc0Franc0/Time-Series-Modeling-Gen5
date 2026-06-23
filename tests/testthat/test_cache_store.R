@@ -114,10 +114,18 @@ test_that("incremental cache planning covers cold, stale, partial, and fully cac
   expect_identical(artifact$symbol, sort(artifact$symbol))
 
   plan_csv <- tempfile("g5_refresh_plan_", fileext = ".csv")
+  plan_csv_2 <- tempfile("g5_refresh_plan_", fileext = ".csv")
   g5_write_refresh_plan_artifact_csv(refresh$plan, plan_csv)
+  g5_write_refresh_plan_artifact_csv(refresh$plan, plan_csv_2)
   plan_read <- utils::read.csv(plan_csv, stringsAsFactors = FALSE)
   expect_identical(names(plan_read), names(artifact))
   expect_false("X" %in% names(plan_read))
+  expect_identical(readLines(plan_csv), readLines(plan_csv_2))
+
+  expect_error(
+    g5_refresh_plan_artifact(refresh$plan[setdiff(names(refresh$plan), "refresh_decision")]),
+    "missing required columns: refresh_decision"
+  )
 })
 
 test_that("incremental cache writes merge deterministically and report symbols with no returned bars", {
@@ -197,8 +205,16 @@ test_that("incremental cache writes merge deterministically and report symbols w
   expect_identical(artifact$symbol, sort(artifact$symbol))
 
   merge_csv <- tempfile("g5_merge_summary_", fileext = ".csv")
+  merge_csv_2 <- tempfile("g5_merge_summary_", fileext = ".csv")
   g5_write_cache_merge_summary_artifact_csv(written$summary, merge_csv)
+  g5_write_cache_merge_summary_artifact_csv(written$summary, merge_csv_2)
   merge_read <- utils::read.csv(merge_csv, stringsAsFactors = FALSE)
   expect_identical(names(merge_read), names(artifact))
   expect_false("X" %in% names(merge_read))
+  expect_identical(readLines(merge_csv), readLines(merge_csv_2))
+
+  expect_error(
+    g5_cache_merge_summary_artifact(written$summary[setdiff(names(written$summary), "merged_row_count")]),
+    "missing required columns: merged_row_count"
+  )
 })

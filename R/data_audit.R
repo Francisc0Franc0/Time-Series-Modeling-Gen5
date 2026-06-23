@@ -1,5 +1,52 @@
 # Data-quality audit helpers.
 
+.g5_required_audit_columns <- c(
+  "requested_symbols",
+  "requested_symbol_count",
+  "present_symbol_count",
+  "present_symbols",
+  "missing_symbol_count",
+  "missing_symbols",
+  "row_count",
+  "row_counts_by_symbol",
+  "duplicate_symbol_session_count",
+  "latest_completed_session",
+  "first_available_session_by_symbol",
+  "latest_available_session_by_symbol",
+  "requested_start_date",
+  "requested_end_date",
+  "observed_start_date",
+  "observed_end_date",
+  "empty_symbol_count",
+  "empty_symbols",
+  "partial_history_symbol_count",
+  "partial_history_symbols",
+  "availability_warning_count",
+  "availability_warnings",
+  "latest_cached_session_by_symbol",
+  "stale_symbol_count",
+  "stale_symbols",
+  "cache_hit_symbol_count",
+  "cache_hit_symbols",
+  "cache_miss_symbol_count",
+  "cache_miss_symbols",
+  "refresh_fetch_symbol_count",
+  "refresh_fetch_symbols",
+  "refresh_skip_symbol_count",
+  "refresh_skip_symbols",
+  "refresh_decisions_by_symbol",
+  "refresh_fetch_ranges_by_symbol",
+  "no_returned_bar_symbol_count",
+  "no_returned_bar_symbols",
+  "returned_bar_counts_by_symbol",
+  "merged_row_counts_by_symbol",
+  "provider_query_timestamp"
+)
+
+g5_required_audit_columns <- function() {
+  .g5_required_audit_columns
+}
+
 g5_audit_bars <- function(
   bars,
   requested_symbols,
@@ -20,7 +67,11 @@ g5_audit_bars <- function(
   requested_symbols <- g5_standardize_symbol(requested_symbols)
   cache_hits <- if (length(cache_hits) == 0L) character() else g5_standardize_symbol(cache_hits)
   cache_misses <- if (length(cache_misses) == 0L) character() else g5_standardize_symbol(cache_misses)
-  present_symbols <- if ("symbol" %in% names(bars)) unique(g5_standardize_symbol(bars$symbol)) else character()
+  observed_symbols <- if ("symbol" %in% names(bars)) unique(g5_standardize_symbol(bars$symbol)) else character()
+  present_symbols <- c(
+    intersect(requested_symbols, observed_symbols),
+    sort(setdiff(observed_symbols, requested_symbols))
+  )
   missing_symbols <- setdiff(requested_symbols, present_symbols)
   empty_symbols <- missing_symbols
   latest_completed_session <- as.Date(latest_completed_session)
@@ -69,6 +120,10 @@ g5_audit_bars <- function(
   names(latest_by_symbol) <- c("symbol", "latest_cached_session")
 
   stale_symbols <- latest_by_symbol$symbol[latest_by_symbol$latest_cached_session < latest_completed_session]
+  stale_symbols <- c(
+    intersect(requested_symbols, stale_symbols),
+    sort(setdiff(stale_symbols, requested_symbols))
+  )
 
   availability <- merge(first_by_symbol, latest_by_symbol, by = "symbol", all = TRUE)
   expected_end_date <- if (is.na(requested_end_date)) {
@@ -81,6 +136,10 @@ g5_audit_bars <- function(
     partial_rows <- availability$first_available_session > requested_start_date |
       availability$latest_cached_session < expected_end_date
     partial_history_symbols <- availability$symbol[partial_rows]
+    partial_history_symbols <- c(
+      intersect(requested_symbols, partial_history_symbols),
+      sort(setdiff(partial_history_symbols, requested_symbols))
+    )
   }
 
   observed_start_date <- if (nrow(first_by_symbol) > 0L) {
@@ -182,7 +241,11 @@ g5_audit_bars <- function(
 
   row_counts <- if ("symbol" %in% names(bars) && nrow(bars) > 0L) {
     counts <- table(g5_standardize_symbol(bars$symbol))
-    paste(paste(names(counts), as.integer(counts), sep = "="), collapse = ";")
+    count_symbols <- c(
+      intersect(requested_symbols, names(counts)),
+      sort(setdiff(names(counts), requested_symbols))
+    )
+    paste(paste(count_symbols, as.integer(counts[count_symbols]), sep = "="), collapse = ";")
   } else {
     ""
   }
@@ -269,6 +332,31 @@ g5_audit_bars <- function(
     provider_query_timestamp = as.character(provider_query_timestamp),
     stringsAsFactors = FALSE
   )
+}
+
+g5_audit_artifact <- function(audit) {
+  if (!is.data.frame(audit) || nrow(audit) == 0L) {
+    g5_stop("audit must be a non-empty data.frame.")
+  }
+  required <- g5_required_audit_columns()
+  missing <- setdiff(required, names(audit))
+  if (length(missing) > 0L) {
+    g5_stop(paste("audit is missing required columns:", paste(missing, collapse = ", ")))
+  }
+
+  out <- audit[required]
+  rownames(out) <- NULL
+  out
+}
+
+g5_write_audit_artifact_csv <- function(audit, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  artifact <- g5_audit_artifact(audit)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(artifact, path, row.names = FALSE)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
 g5_symbol_coverage_artifact <- function(

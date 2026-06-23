@@ -83,6 +83,60 @@ test_that("audit reports missing, stale, duplicate, cache, and provider timestam
   expect_match(audit$availability_warnings, "empty_symbols=TSLA", fixed = TRUE)
   expect_match(audit$availability_warnings, "partial_history_symbols=QQQ", fixed = TRUE)
   expect_match(audit$availability_warnings, "no_returned_bars=TSLA", fixed = TRUE)
+
+  artifact <- g5_audit_artifact(audit)
+  expect_identical(names(artifact), g5_required_audit_columns())
+
+  audit_csv <- tempfile("g5_audit_", fileext = ".csv")
+  audit_csv_2 <- tempfile("g5_audit_", fileext = ".csv")
+  g5_write_audit_artifact_csv(audit, audit_csv)
+  g5_write_audit_artifact_csv(audit, audit_csv_2)
+  audit_read <- utils::read.csv(audit_csv, stringsAsFactors = FALSE)
+  expect_identical(names(audit_read), g5_required_audit_columns())
+  expect_false("X" %in% names(audit_read))
+  expect_identical(readLines(audit_csv), readLines(audit_csv_2))
+
+  expect_error(
+    g5_audit_artifact(audit[setdiff(names(audit), "provider_query_timestamp")]),
+    "missing required columns: provider_query_timestamp"
+  )
+})
+
+test_that("audit symbol summaries follow requested-symbol order", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "data_audit.R"))
+
+  bars <- data.frame(
+    symbol = c("SPY", "QQQ", "SPY", "IWM"),
+    session_date = as.Date(c("2026-06-22", "2026-06-18", "2026-06-18", "2026-06-18")),
+    open = c(100, 200, 99, 300),
+    high = c(101, 201, 100, 301),
+    low = c(99, 199, 98, 299),
+    close = c(100.5, 200.5, 99.5, 300.5),
+    volume = c(1000, 1200, 900, 1300),
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "alpaca",
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22"),
+    fetch_start_date = as.Date("2026-06-18"),
+    fetch_end_date = as.Date("2026-06-22"),
+    data_version_hash = paste0("h", seq_len(4L)),
+    stringsAsFactors = FALSE
+  )
+
+  audit <- g5_audit_bars(
+    bars = bars,
+    requested_symbols = c("QQQ", "SPY", "IWM", "EMPTY"),
+    latest_completed_session = as.Date("2026-06-22"),
+    requested_start_date = as.Date("2026-06-18"),
+    requested_end_date = as.Date("2026-06-22")
+  )
+
+  expect_identical(audit$present_symbols, "QQQ,SPY,IWM")
+  expect_identical(audit$row_counts_by_symbol, "QQQ=1;SPY=2;IWM=1")
+  expect_identical(audit$stale_symbols, "QQQ,IWM")
+  expect_identical(audit$partial_history_symbols, "QQQ,IWM")
 })
 
 test_that("audit reports all requested symbols when provider payload is empty", {
@@ -172,8 +226,19 @@ test_that("symbol coverage artifact reports per-symbol availability statuses", {
   expect_equal(coverage$merged_row_count, c(3L, 2L, 2L, 0L))
 
   coverage_csv <- tempfile("g5_symbol_coverage_", fileext = ".csv")
+  coverage_csv_2 <- tempfile("g5_symbol_coverage_", fileext = ".csv")
   g5_write_symbol_coverage_artifact_csv(coverage, coverage_csv)
+  g5_write_symbol_coverage_artifact_csv(coverage, coverage_csv_2)
   coverage_read <- utils::read.csv(coverage_csv, stringsAsFactors = FALSE)
   expect_identical(names(coverage_read), names(coverage))
   expect_false("X" %in% names(coverage_read))
+  expect_identical(readLines(coverage_csv), readLines(coverage_csv_2))
+
+  expect_error(
+    g5_write_symbol_coverage_artifact_csv(
+      coverage[setdiff(names(coverage), "partial_history_status")],
+      tempfile("g5_bad_symbol_coverage_", fileext = ".csv")
+    ),
+    "missing required columns: partial_history_status"
+  )
 })

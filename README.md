@@ -38,6 +38,22 @@ Or from a shell with R installed:
 Rscript tests/smoke_test.R
 ```
 
+## Local Test Runner
+
+For day-to-day local validation on Windows, use the checked-in test runner:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+The wrapper uses `C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe` when it is available, falling back to `Rscript` on `PATH`. To override the R executable for one run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1 -RscriptPath "C:\Path\To\Rscript.exe"
+```
+
+The R runner adds ignored `.codex_r_libs/` to `.libPaths()` when present, then runs the scaffold smoke test, data-layer validation, and non-network testthat tests.
+
 ## Alpaca Data Refresh Smoke
 
 The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. Use the local file for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.

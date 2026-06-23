@@ -169,7 +169,7 @@ audit_path <- file.path(
   artifact_dir,
   paste0("alpaca_daily_audit_", format(as.Date(resolved$latest_completed_session), "%Y%m%d"), ".csv")
 )
-utils::write.csv(audit, audit_path, row.names = FALSE)
+g5_write_audit_artifact_csv(audit, audit_path)
 message("Wrote audit: ", audit_path)
 
 symbol_coverage <- g5_symbol_coverage_artifact(
