@@ -918,9 +918,21 @@ Stop conditions:
 
 ### 26. Add frozen fold-decision evidence scaffolding
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-frozen-evidence-scaffold`
+
+Branch: `codex/gen5-wfa-frozen-evidence-and-baseline-scaffold`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_frozen_fold_evidence.R` as the frozen fold-decision evidence scaffold for the Minimal WFA Foundation.
+- The helper consumes an accepted WFA handoff gate result, explicit quarterly fold geometry, TRAIN/OOS split audit outputs, accepted source warnings, and local git/code metadata when available.
+- It emits one fold-level evidence row with source handoff, gate/review status, fold dates, TRAIN rows available, warning context, leakage attestations, and explicit no-active-decision status.
+- Generated evidence CSV writing is constrained to ignored `runs/` paths by default.
+- No OOS performance, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, provider calls, cache authority, or `Sys.Date()` use were added.
 
 Goal: Define and write the minimal frozen evidence structure for each fold before any active strategy candidate exists.
 

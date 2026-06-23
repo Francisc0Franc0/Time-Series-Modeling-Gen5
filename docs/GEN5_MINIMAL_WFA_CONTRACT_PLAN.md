@@ -12,6 +12,8 @@ Implementation note: the first fold construction slice now exists as a quarterly
 
 Implementation note: the first TRAIN/OOS split audit slice now exists as `R/wfa_train_oos_split_audit.R`. It consumes an accepted WFA handoff gate result, canonical handoff bars, source symbol coverage and health context, and the explicit quarterly fold geometry manifest; it partitions rows by fold dates only, produces fold-local symbol availability evidence, and records leakage attestation without computing indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboards, execution, live-order behavior, provider expansion, corporate-actions ingestion, or earnings-data integration.
 
+Implementation note: the first frozen fold-decision evidence scaffold now exists as `R/wfa_frozen_fold_evidence.R`. It consumes the accepted handoff gate result, explicit fold geometry, TRAIN/OOS split audit outputs, accepted source warning context, and local git/code metadata when available; it emits one fold-level evidence row before OOS evaluation and records that no active candidate, feature model, strategy selector, baseline decision, return calculation, or performance claim exists yet.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -143,6 +145,8 @@ The first TRAIN/OOS split audit helper returns these tabular evidence surfaces:
 - `symbol_availability`, with one row per fold and source handoff symbol, fold-local TRAIN/OOS row counts and date edges, source empty/partial/stale coverage fields, source health warning context, and an availability rule that records no OOS performance filtering;
 - `source_warn_health_rows`, preserving accepted source warning rows for downstream evidence;
 - `leakage_attestation`, recording no provider calls, no latest-session inference, and no OOS-outcome membership decisions.
+
+The first frozen evidence helper returns a tabular scaffold with one row per fold. Each row links the source handoff reference, gate status and review acceptance, fold dates and decision-pack validity dates, TRAIN rows and symbols available, accepted source warnings, leakage attestations for no provider calls, no latest-session inference, no OOS membership decisions, and no OOS fitting, plus code revision metadata when available. It deliberately records `FROZEN_NO_ACTIVE_DECISION`, `oos_performance_evaluated == FALSE`, and no active candidate or strategy decision.
 
 ## Selection And Rejection Posture
 
