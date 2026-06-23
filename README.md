@@ -170,3 +170,5 @@ The freeze evidence does not certify strategy, WFA, allocation, dashboard, execu
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.
+
+Alpaca-specific behavior is contained in the provider module. Downstream Gen5 modules should consume canonical adjusted daily bars, cache plans, merge summaries, symbol coverage, and audit artifacts rather than Alpaca response shapes, URL details, authentication details, feed quirks, or pagination behavior.

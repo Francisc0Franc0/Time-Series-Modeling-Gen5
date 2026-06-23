@@ -194,7 +194,18 @@ Stop conditions:
 
 ### 6. Review provider-boundary documentation
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `docs: clarify Alpaca provider boundary`
+
+Validation: Documentation-only diff check.
+
+Notes:
+
+- Clarified that Alpaca credentials, request construction, feed selection, pagination, response parsing, and provider errors stay inside `R/alpaca_provider.R`.
+- Reiterated that downstream modules should consume canonical bars and cache/audit artifacts, not Alpaca response shapes or provider quirks.
 
 Goal: Confirm Alpaca-specific behavior is documented as provider-contained and that downstream research modules are not asked to know provider quirks.
 

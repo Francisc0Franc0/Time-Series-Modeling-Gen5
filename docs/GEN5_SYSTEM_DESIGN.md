@@ -40,6 +40,8 @@ Gen5 targets a long-only, rolling walk-forward, regime-conditioned tactical equi
 
 No analytical module should decide what latest means. The data layer alone resolves the latest completed session from an explicit as-of timestamp and records why.
 
+Provider quirks stay inside the provider module. In v0, `R/alpaca_provider.R` owns Alpaca credentials, URL construction, feed selection, adjusted daily request parameters, pagination, response parsing, and provider error interpretation. Everything outside that boundary should consume canonical adjusted daily bars plus cache/audit artifacts.
+
 Every bar bundle should preserve:
 
 - `symbol`
