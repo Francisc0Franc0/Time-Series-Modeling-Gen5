@@ -111,6 +111,7 @@ When warranted at the end of a completed task:
 - Recommend the script or scripts the operator should run next, then await confirmation that the task was accomplished.
 - After the operator confirms completion, provide a suggested commit message for the task that is being closed out.
 - Then suggest next steps aligned with the current plan, including a proposed new branch name, next Codex prompt, and recommended reasoning level.
+- When suggesting a next Codex prompt for a new task, embed the proposed branch name directly in the prompt so the next task starts on the intended branch.
 
 ## Coding Style
 
