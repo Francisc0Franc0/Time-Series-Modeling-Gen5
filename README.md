@@ -63,6 +63,7 @@ Rscript scripts/run_data_refresh.R
 ```
 
 The script fetches adjusted daily bars for the configured symbols, writes ignored local cache files, reads them back, and writes an ignored audit CSV under `runs/`.
+When the ignored repo-local `.codex_r_libs/` directory exists, the refresh script adds it to `.libPaths()` before checking runtime packages.
 
 The refresh path is incremental and deterministic. For each requested symbol it first inspects the local symbol cache, then records one refresh decision:
 
@@ -92,6 +93,7 @@ Rscript scripts/validate/validate_data_layer.R
 ```
 
 It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
+When the ignored repo-local `.codex_r_libs/` directory exists, the validation script adds it to `.libPaths()` before checking optional Alpaca runtime packages.
 
 Validation also writes deterministic inspection CSVs:
 

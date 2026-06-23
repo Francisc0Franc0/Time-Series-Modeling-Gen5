@@ -12,10 +12,8 @@ repo_root <- if (!is.null(script_path) && nzchar(script_path)) {
 
 setwd(repo_root)
 
-local_lib <- file.path(repo_root, ".codex_r_libs")
-if (dir.exists(local_lib)) {
-  .libPaths(c(normalizePath(local_lib, winslash = "/"), .libPaths()))
-}
+source(file.path(repo_root, "scripts", "lib", "repo_local_libs.R"))
+g5_use_repo_local_libs(repo_root)
 
 message("Gen5 test runner")
 message("Repository: ", repo_root)

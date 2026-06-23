@@ -7,6 +7,9 @@ repo_root <- if (!is.null(script_path) && nzchar(script_path)) {
   normalizePath(".", winslash = "/", mustWork = TRUE)
 }
 
+source(file.path(repo_root, "scripts", "lib", "repo_local_libs.R"))
+g5_use_repo_local_libs(repo_root)
+
 source(file.path(repo_root, "R", "data_contract.R"))
 source(file.path(repo_root, "R", "config_loader.R"))
 source(file.path(repo_root, "R", "calendar.R"))
