@@ -108,3 +108,72 @@ test_that("audit reports all requested symbols when provider payload is empty", 
   expect_match(audit$availability_warnings, "empty_symbols=SPY,QQQ", fixed = TRUE)
   expect_match(audit$availability_warnings, "empty_provider_payload_for_requested_range", fixed = TRUE)
 })
+
+test_that("symbol coverage artifact reports per-symbol availability statuses", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "data_audit.R"))
+
+  bars <- data.frame(
+    symbol = c("SPY", "SPY", "SPY", "QQQ", "QQQ", "IWM", "IWM"),
+    session_date = as.Date(c(
+      "2026-06-18", "2026-06-19", "2026-06-22",
+      "2026-06-19", "2026-06-22",
+      "2026-06-18", "2026-06-19"
+    )),
+    open = c(99, 100, 101, 200, 201, 300, 301),
+    high = c(100, 101, 102, 202, 203, 302, 303),
+    low = c(98, 99, 100, 199, 200, 299, 300),
+    close = c(99.5, 100.5, 101.5, 201, 202, 301, 302),
+    volume = c(900, 1000, 1100, 1400, 1500, 1600, 1700),
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "alpaca",
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22"),
+    fetch_start_date = as.Date("2026-06-18"),
+    fetch_end_date = as.Date("2026-06-22"),
+    data_version_hash = paste0("h", seq_len(7L)),
+    stringsAsFactors = FALSE
+  )
+
+  coverage <- g5_symbol_coverage_artifact(
+    bars = bars,
+    requested_symbols = c("SPY", "QQQ", "IWM", "EMPTY"),
+    latest_completed_session = as.Date("2026-06-22"),
+    requested_start_date = as.Date("2026-06-18"),
+    requested_end_date = as.Date("2026-06-23"),
+    cache_refresh_plan = data.frame(
+      symbol = c("SPY", "QQQ", "IWM", "EMPTY"),
+      cache_file_exists = c(TRUE, TRUE, TRUE, FALSE),
+      needs_fetch = c(FALSE, TRUE, TRUE, TRUE),
+      refresh_decision = c("fully_cached", "partial_history", "stale_cache", "cold_cache"),
+      stringsAsFactors = FALSE
+    ),
+    cache_refresh_result = data.frame(
+      symbol = c("SPY", "QQQ", "IWM", "EMPTY"),
+      returned_bar_count = c(0L, 1L, 0L, 0L),
+      merged_row_count = c(3L, 2L, 2L, 0L),
+      no_returned_bars = c(FALSE, FALSE, TRUE, TRUE),
+      wrote_cache = c(TRUE, TRUE, TRUE, FALSE),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  expect_identical(coverage$symbol, c("SPY", "QQQ", "IWM", "EMPTY"))
+  expect_identical(as.Date(coverage$coverage_end_date), rep(as.Date("2026-06-22"), 4L))
+  expect_equal(coverage$row_count, c(3L, 2L, 2L, 0L))
+  expect_identical(coverage$empty_status, c("has_rows", "has_rows", "has_rows", "empty"))
+  expect_identical(
+    coverage$partial_history_status,
+    c("covers_requested_range", "partial_history", "partial_history", "empty")
+  )
+  expect_identical(coverage$stale_status, c("current", "current", "stale", "empty"))
+  expect_identical(coverage$refresh_decision, c("fully_cached", "partial_history", "stale_cache", "cold_cache"))
+  expect_equal(coverage$merged_row_count, c(3L, 2L, 2L, 0L))
+
+  coverage_csv <- tempfile("g5_symbol_coverage_", fileext = ".csv")
+  g5_write_symbol_coverage_artifact_csv(coverage, coverage_csv)
+  coverage_read <- utils::read.csv(coverage_csv, stringsAsFactors = FALSE)
+  expect_identical(names(coverage_read), names(coverage))
+  expect_false("X" %in% names(coverage_read))
+})

@@ -83,6 +83,10 @@ merge_summary_path <- file.path(
   artifact_dir,
   paste0("alpaca_daily_merge_summary_", artifact_date, ".csv")
 )
+symbol_coverage_path <- file.path(
+  artifact_dir,
+  paste0("alpaca_daily_symbol_coverage_", artifact_date, ".csv")
+)
 
 cache_root <- cfg$cache$root
 refresh <- g5_plan_incremental_cache_refresh(
@@ -167,3 +171,15 @@ audit_path <- file.path(
 )
 utils::write.csv(audit, audit_path, row.names = FALSE)
 message("Wrote audit: ", audit_path)
+
+symbol_coverage <- g5_symbol_coverage_artifact(
+  bars = read_back,
+  requested_symbols = symbols,
+  latest_completed_session = resolved$latest_completed_session,
+  requested_start_date = date_range$requested_start_date,
+  requested_end_date = date_range$requested_end_date,
+  cache_refresh_plan = refresh$plan,
+  cache_refresh_result = written$summary
+)
+g5_write_symbol_coverage_artifact_csv(symbol_coverage, symbol_coverage_path)
+message("Wrote symbol coverage artifact: ", symbol_coverage_path)

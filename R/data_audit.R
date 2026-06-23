@@ -141,7 +141,7 @@ g5_audit_bars <- function(
   skipped_fetch_symbols <- character()
   refresh_decisions_by_symbol <- ""
   refresh_fetch_ranges_by_symbol <- ""
-  if (is.data.frame(cache_refresh_plan) && nrow(cache_refresh_plan) > 0L) {
+  if (is.data.frame(cache_refresh_plan) && nrow(cache_refresh_plan) > 0L && "symbol" %in% names(cache_refresh_plan)) {
     needs_fetch <- if ("needs_fetch" %in% names(cache_refresh_plan)) {
       as.logical(cache_refresh_plan$needs_fetch)
     } else {
@@ -172,7 +172,7 @@ g5_audit_bars <- function(
   no_returned_bar_symbols <- character()
   returned_bar_counts_by_symbol <- ""
   merged_row_counts_by_symbol <- ""
-  if (is.data.frame(cache_refresh_result) && nrow(cache_refresh_result) > 0L) {
+  if (is.data.frame(cache_refresh_result) && nrow(cache_refresh_result) > 0L && "symbol" %in% names(cache_refresh_result)) {
     if ("no_returned_bars" %in% names(cache_refresh_result)) {
       no_returned_bar_symbols <- cache_refresh_result$symbol[as.logical(cache_refresh_result$no_returned_bars)]
     }
@@ -269,4 +269,313 @@ g5_audit_bars <- function(
     provider_query_timestamp = as.character(provider_query_timestamp),
     stringsAsFactors = FALSE
   )
+}
+
+g5_symbol_coverage_artifact <- function(
+  bars,
+  requested_symbols,
+  latest_completed_session,
+  requested_start_date = NULL,
+  requested_end_date = NULL,
+  cache_refresh_plan = NULL,
+  cache_refresh_result = NULL
+) {
+  if (!is.data.frame(bars)) {
+    g5_stop("bars must be a data.frame.")
+  }
+
+  requested_symbols <- g5_standardize_symbol(requested_symbols)
+  latest_completed_session <- as.Date(latest_completed_session)
+  if (is.na(latest_completed_session)) {
+    g5_stop("latest_completed_session must be a valid date.")
+  }
+
+  if (nrow(bars) > 0L) {
+    bars <- g5_validate_bar_data(bars)
+  }
+
+  if (is.null(requested_start_date) && "fetch_start_date" %in% names(bars) && nrow(bars) > 0L) {
+    requested_start_date <- min(as.Date(bars$fetch_start_date), na.rm = TRUE)
+  }
+  if (is.null(requested_end_date) && "fetch_end_date" %in% names(bars) && nrow(bars) > 0L) {
+    requested_end_date <- max(as.Date(bars$fetch_end_date), na.rm = TRUE)
+  }
+
+  requested_start_date <- if (is.null(requested_start_date)) {
+    as.Date(NA_character_)
+  } else {
+    as.Date(requested_start_date)[1L]
+  }
+  requested_end_date <- if (is.null(requested_end_date)) {
+    as.Date(NA_character_)
+  } else {
+    as.Date(requested_end_date)[1L]
+  }
+  if (!is.na(requested_start_date) && !is.na(requested_end_date) && requested_start_date > requested_end_date) {
+    g5_stop("requested_start_date must be on or before requested_end_date.")
+  }
+
+  coverage_end_date <- if (is.na(requested_end_date)) {
+    latest_completed_session
+  } else {
+    min(requested_end_date, latest_completed_session)
+  }
+
+  if (nrow(bars) > 0L && !all(c("symbol", "session_date") %in% names(bars))) {
+    g5_stop("bars must include symbol and session_date columns.")
+  }
+
+  row_counts <- integer(length(requested_symbols))
+  names(row_counts) <- requested_symbols
+  first_sessions <- rep(as.Date(NA_character_), length(requested_symbols))
+  latest_sessions <- rep(as.Date(NA_character_), length(requested_symbols))
+
+  if (nrow(bars) > 0L) {
+    bars$symbol <- g5_standardize_symbol(bars$symbol)
+    bars$session_date <- as.Date(bars$session_date)
+    counts <- table(bars$symbol)
+    matched_counts <- counts[requested_symbols]
+    row_counts <- as.integer(ifelse(is.na(matched_counts), 0L, matched_counts))
+    names(row_counts) <- requested_symbols
+
+    first_by_symbol <- aggregate(
+      bars$session_date,
+      list(symbol = bars$symbol),
+      min
+    )
+    names(first_by_symbol) <- c("symbol", "observed_first_session")
+    latest_by_symbol <- aggregate(
+      bars$session_date,
+      list(symbol = bars$symbol),
+      max
+    )
+    names(latest_by_symbol) <- c("symbol", "observed_latest_session")
+
+    first_idx <- match(requested_symbols, first_by_symbol$symbol)
+    latest_idx <- match(requested_symbols, latest_by_symbol$symbol)
+    first_sessions <- as.Date(first_by_symbol$observed_first_session[first_idx])
+    latest_sessions <- as.Date(latest_by_symbol$observed_latest_session[latest_idx])
+  }
+
+  is_empty <- row_counts == 0L
+  can_evaluate_partial <- !is.na(requested_start_date) && !is.na(coverage_end_date)
+  is_partial_history <- rep(FALSE, length(requested_symbols))
+  if (can_evaluate_partial) {
+    is_partial_history <- !is_empty & (
+      first_sessions > requested_start_date |
+        latest_sessions < coverage_end_date
+    )
+  }
+  is_stale <- !is_empty & latest_sessions < latest_completed_session
+
+  partial_history_status <- if (!can_evaluate_partial) {
+    rep("not_evaluated", length(requested_symbols))
+  } else ifelse(
+    is_empty,
+    "empty",
+    ifelse(is_partial_history, "partial_history", "covers_requested_range")
+  )
+  stale_status <- ifelse(is_empty, "empty", ifelse(is_stale, "stale", "current"))
+
+  out <- data.frame(
+    symbol = requested_symbols,
+    requested_start_date = requested_start_date,
+    requested_end_date = requested_end_date,
+    coverage_end_date = coverage_end_date,
+    latest_completed_session = latest_completed_session,
+    observed_first_session = first_sessions,
+    observed_latest_session = latest_sessions,
+    row_count = as.integer(row_counts),
+    is_empty = as.logical(is_empty),
+    empty_status = ifelse(is_empty, "empty", "has_rows"),
+    is_partial_history = as.logical(is_partial_history),
+    partial_history_status = partial_history_status,
+    is_stale = as.logical(is_stale),
+    stale_status = stale_status,
+    stringsAsFactors = FALSE
+  )
+
+  if (is.data.frame(cache_refresh_plan) && nrow(cache_refresh_plan) > 0L) {
+    plan_cols <- intersect(
+      c("symbol", "cache_file_exists", "needs_fetch", "refresh_decision"),
+      names(cache_refresh_plan)
+    )
+    plan <- cache_refresh_plan[plan_cols]
+    plan$symbol <- g5_standardize_symbol(plan$symbol)
+    out <- merge(out, plan, by = "symbol", all.x = TRUE, sort = FALSE)
+  }
+
+  if (is.data.frame(cache_refresh_result) && nrow(cache_refresh_result) > 0L) {
+    result_cols <- intersect(
+      c("symbol", "returned_bar_count", "merged_row_count", "no_returned_bars", "wrote_cache"),
+      names(cache_refresh_result)
+    )
+    result <- cache_refresh_result[result_cols]
+    result$symbol <- g5_standardize_symbol(result$symbol)
+    out <- merge(out, result, by = "symbol", all.x = TRUE, sort = FALSE)
+  }
+
+  out <- out[match(requested_symbols, out$symbol), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_write_symbol_coverage_artifact_csv <- function(symbol_coverage, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  if (!is.data.frame(symbol_coverage) || nrow(symbol_coverage) == 0L) {
+    g5_stop("symbol_coverage must be a non-empty data.frame.")
+  }
+  required <- c(
+    "symbol",
+    "requested_start_date",
+    "requested_end_date",
+    "coverage_end_date",
+    "latest_completed_session",
+    "observed_first_session",
+    "observed_latest_session",
+    "row_count",
+    "is_empty",
+    "empty_status",
+    "is_partial_history",
+    "partial_history_status",
+    "is_stale",
+    "stale_status"
+  )
+  missing <- setdiff(required, names(symbol_coverage))
+  if (length(missing) > 0L) {
+    g5_stop(paste("symbol_coverage is missing required columns:", paste(missing, collapse = ", ")))
+  }
+
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(symbol_coverage, path, row.names = FALSE)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_write_symbol_coverage_chart <- function(symbol_coverage, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  if (!is.data.frame(symbol_coverage) || nrow(symbol_coverage) == 0L) {
+    g5_stop("symbol_coverage must be a non-empty data.frame.")
+  }
+
+  required <- c(
+    "symbol",
+    "requested_start_date",
+    "coverage_end_date",
+    "observed_first_session",
+    "observed_latest_session",
+    "is_empty",
+    "is_partial_history",
+    "is_stale"
+  )
+  missing <- setdiff(required, names(symbol_coverage))
+  if (length(missing) > 0L) {
+    g5_stop(paste("symbol_coverage is missing required columns:", paste(missing, collapse = ", ")))
+  }
+
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+
+  width <- 1000L
+  height <- max(360L, 120L + 34L * nrow(symbol_coverage))
+  grDevices::png(filename = path, width = width, height = height)
+  on.exit(grDevices::dev.off(), add = TRUE)
+
+  symbols <- rev(symbol_coverage$symbol)
+  y <- seq_along(symbols)
+  plot_dates <- as.Date(c(
+    symbol_coverage$requested_start_date,
+    symbol_coverage$coverage_end_date,
+    symbol_coverage$observed_first_session,
+    symbol_coverage$observed_latest_session
+  ))
+  xlim <- range(plot_dates, na.rm = TRUE)
+  if (!all(is.finite(as.numeric(xlim)))) {
+    xlim <- as.Date(c("1970-01-01", "1970-01-02"))
+  }
+  if (xlim[[1L]] == xlim[[2L]]) {
+    xlim <- xlim + c(-1L, 1L)
+  }
+
+  graphics::par(mar = c(5, 8, 4, 2))
+  graphics::plot(
+    x = xlim,
+    y = c(1L, length(symbols)),
+    type = "n",
+    yaxt = "n",
+    xlab = "Session date",
+    ylab = "",
+    main = "Gen5 Data-Layer Cache Coverage By Symbol"
+  )
+  graphics::axis(2, at = y, labels = symbols, las = 1)
+  graphics::grid(nx = NA, ny = NULL, col = "gray90")
+
+  requested_start <- unique(as.Date(symbol_coverage$requested_start_date))
+  coverage_end <- unique(as.Date(symbol_coverage$coverage_end_date))
+  requested_start <- requested_start[!is.na(requested_start)]
+  coverage_end <- coverage_end[!is.na(coverage_end)]
+  if (length(requested_start) > 0L && length(coverage_end) > 0L) {
+    graphics::segments(
+      x0 = requested_start[[1L]],
+      x1 = coverage_end[[1L]],
+      y0 = y,
+      y1 = y,
+      col = "gray80",
+      lwd = 8,
+      lend = "butt"
+    )
+  }
+
+  chart_rows <- symbol_coverage[match(symbols, symbol_coverage$symbol), , drop = FALSE]
+  colors <- ifelse(
+    chart_rows$is_empty,
+    "gray55",
+    ifelse(chart_rows$is_partial_history, "#7570B3", ifelse(chart_rows$is_stale, "#D95F02", "#1B9E77"))
+  )
+  has_rows <- !chart_rows$is_empty &
+    !is.na(as.Date(chart_rows$observed_first_session)) &
+    !is.na(as.Date(chart_rows$observed_latest_session))
+  if (any(has_rows)) {
+    graphics::segments(
+      x0 = as.Date(chart_rows$observed_first_session[has_rows]),
+      x1 = as.Date(chart_rows$observed_latest_session[has_rows]),
+      y0 = y[has_rows],
+      y1 = y[has_rows],
+      col = colors[has_rows],
+      lwd = 4,
+      lend = "butt"
+    )
+    single_day_rows <- has_rows &
+      as.Date(chart_rows$observed_first_session) == as.Date(chart_rows$observed_latest_session)
+    if (any(single_day_rows)) {
+      graphics::points(
+        x = as.Date(chart_rows$observed_first_session[single_day_rows]),
+        y = y[single_day_rows],
+        pch = 16,
+        col = colors[single_day_rows],
+        cex = 1.2
+      )
+    }
+  }
+  if (any(!has_rows)) {
+    graphics::points(
+      x = rep(xlim[[1L]], sum(!has_rows)),
+      y = y[!has_rows],
+      pch = 4,
+      col = colors[!has_rows],
+      lwd = 2
+    )
+  }
+  graphics::legend(
+    "bottomright",
+    legend = c("requested range", "covers range", "partial history", "stale", "empty"),
+    col = c("gray80", "#1B9E77", "#7570B3", "#D95F02", "gray55"),
+    lwd = c(8, 4, 4, 4, NA),
+    pch = c(NA, NA, NA, NA, 4),
+    bty = "n"
+  )
+
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }

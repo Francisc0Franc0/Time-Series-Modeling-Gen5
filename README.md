@@ -63,6 +63,7 @@ Each refresh also writes two ignored inspection artifacts under `runs/data_refre
 
 - `alpaca_daily_refresh_plan_YYYYMMDD.csv`: the pre-fetch plan by symbol. Use this to see whether each symbol was fully cached, needed a cold fetch, needed a stale tail fetch, or had partial history.
 - `alpaca_daily_merge_summary_YYYYMMDD.csv`: the post-fetch cache merge result by symbol. Use this to see how many bars came back, how many rows ended up in the cache, whether a cache file was written, and whether a symbol needed a fetch but returned no bars.
+- `alpaca_daily_symbol_coverage_YYYYMMDD.csv`: the per-symbol cache coverage view after the refresh. Use this to scan requested dates, observed first/latest sessions, row counts, empty status, partial-history status, and stale status in one row per requested symbol.
 
 These CSVs are generated artifacts, not source files. They are intentionally covered by the ignored `runs/` folder.
 
@@ -80,6 +81,17 @@ Validation also writes deterministic inspection CSVs:
 
 - `runs/validation/data_layer_validation_refresh_plan.csv`
 - `runs/validation/data_layer_validation_merge_summary.csv`
+- `runs/validation/data_layer_validation_symbol_coverage.csv`
+- `runs/validation/data_layer_validation_symbol_coverage.png`
+
+The symbol coverage CSVs are the fastest operator view of cache/data availability by symbol:
+
+- `empty_status == "empty"` means the requested symbol has no observed bars in the inspected cache payload.
+- `partial_history_status == "partial_history"` means the symbol has bars, but its observed first/latest sessions do not cover the bounded requested range.
+- `stale_status == "stale"` means the symbol has bars, but its latest observed session is before the resolved latest completed session.
+- `coverage_end_date` is the requested end clipped to `latest_completed_session`, so a future requested end remains auditable without implying a provider fetch past the completed session.
+
+The validation PNG is a simple data-layer coverage chart. It shows requested date span versus observed cache span by symbol only; it does not show signals, returns, strategies, allocation, or WFA evidence.
 
 The validation output also reports the exact script path and command to rerun. Its audit CSV includes availability/date-range fields:
 

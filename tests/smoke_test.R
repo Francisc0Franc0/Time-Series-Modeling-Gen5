@@ -177,4 +177,30 @@ incremental_audit <- g5_audit_bars(
 stopifnot(incremental_audit$refresh_fetch_symbol_count == 2L)
 stopifnot(identical(incremental_audit$no_returned_bar_symbols, "SPY"))
 
+symbol_coverage <- g5_symbol_coverage_artifact(
+  incremental_write$bars,
+  c("SPY", "QQQ", "EMPTY"),
+  as.Date("2026-06-22"),
+  requested_start_date = as.Date("2026-06-18"),
+  requested_end_date = as.Date("2026-06-23"),
+  cache_refresh_plan = incremental_plan$plan,
+  cache_refresh_result = incremental_write$summary
+)
+stopifnot(identical(symbol_coverage$symbol, c("SPY", "QQQ", "EMPTY")))
+stopifnot(identical(
+  symbol_coverage$empty_status,
+  c("has_rows", "has_rows", "empty")
+))
+stopifnot(identical(
+  symbol_coverage$partial_history_status,
+  c("partial_history", "partial_history", "empty")
+))
+symbol_coverage_csv <- tempfile("g5_symbol_coverage_", fileext = ".csv")
+g5_write_symbol_coverage_artifact_csv(symbol_coverage, symbol_coverage_csv)
+stopifnot(file.exists(symbol_coverage_csv))
+stopifnot(identical(
+  names(utils::read.csv(symbol_coverage_csv, stringsAsFactors = FALSE)),
+  names(symbol_coverage)
+))
+
 message("Gen5 scaffold smoke test passed.")

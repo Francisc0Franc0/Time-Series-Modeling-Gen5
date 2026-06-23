@@ -322,6 +322,8 @@ audit_path <- file.path(validation_dir, "data_layer_validation_audit.csv")
 results_path <- file.path(validation_dir, "data_layer_validation_results.csv")
 refresh_plan_path <- file.path(validation_dir, "data_layer_validation_refresh_plan.csv")
 merge_summary_path <- file.path(validation_dir, "data_layer_validation_merge_summary.csv")
+symbol_coverage_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.csv")
+symbol_coverage_chart_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.png")
 utils::write.csv(audit, audit_path, row.names = FALSE)
 utils::write.csv(results, results_path, row.names = FALSE)
 
@@ -369,6 +371,43 @@ pass_fail("refresh artifact CSVs are written under runs/validation", {
     identical(plan_read$symbol, sort(plan_read$symbol)) &&
     identical(merge_read$symbol, sort(merge_read$symbol))
 }, paste("plan:", normalizePath(refresh_plan_path, winslash = "/", mustWork = FALSE)))
+
+pass_fail("symbol coverage inspection artifacts are written under runs/validation", {
+  symbol_coverage <- g5_symbol_coverage_artifact(
+    bars = cache_read$bars,
+    requested_symbols = validation_symbols,
+    latest_completed_session = resolved$latest_completed_session,
+    requested_start_date = date_range$requested_start_date,
+    requested_end_date = date_range$requested_end_date,
+    cache_refresh_plan = refresh$plan,
+    cache_refresh_result = incremental_write$summary
+  )
+  g5_write_symbol_coverage_artifact_csv(symbol_coverage, symbol_coverage_path)
+  g5_write_symbol_coverage_chart(symbol_coverage, symbol_coverage_chart_path)
+  coverage_read <- utils::read.csv(symbol_coverage_path, stringsAsFactors = FALSE)
+  dia <- coverage_read[coverage_read$symbol == "DIA", , drop = FALSE]
+  empty <- coverage_read[coverage_read$symbol == "EMPTY", , drop = FALSE]
+  spy <- coverage_read[coverage_read$symbol == "SPY", , drop = FALSE]
+  all(c(
+    "symbol",
+    "requested_start_date",
+    "requested_end_date",
+    "observed_first_session",
+    "observed_latest_session",
+    "row_count",
+    "empty_status",
+    "partial_history_status",
+    "stale_status"
+  ) %in% names(coverage_read)) &&
+    nrow(coverage_read) == length(validation_symbols) &&
+    identical(coverage_read$symbol, validation_symbols) &&
+    identical(spy$partial_history_status, "covers_requested_range") &&
+    identical(dia$partial_history_status, "partial_history") &&
+    identical(dia$stale_status, "stale") &&
+    identical(empty$empty_status, "empty") &&
+    identical(empty$partial_history_status, "empty") &&
+    file.exists(symbol_coverage_chart_path)
+}, paste("coverage:", normalizePath(symbol_coverage_path, winslash = "/", mustWork = FALSE)))
 
 alpaca_cfg <- g5_alpaca_config_from_env()
 missing_runtime <- c(
