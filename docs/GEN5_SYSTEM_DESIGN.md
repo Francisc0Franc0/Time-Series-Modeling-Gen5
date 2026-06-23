@@ -23,7 +23,7 @@ These are architectural decisions and later build-order constraints, not a claim
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.
 - Leverage reports: always compare 1.0x baseline with 1.8x leveraged variant.
 - Drawdown discomfort threshold: 25% is a major design warning level.
-- Local heavy cache: allowed outside OneDrive.
+- Local heavy cache: ignored repo-local `data_cache/` is acceptable for v0.1 simplicity; outside-OneDrive cache roots remain an optional operator optimization.
 
 ## Semantic Modules
 
@@ -78,13 +78,14 @@ Every data refresh should export an audit of requested symbols, resolved session
 
 ## Build Order
 
-1. Data layer and cache contract.
-2. Minimal WFA engine.
-3. Asset universe/taxonomy studies.
-4. Feature engine.
-5. PCA state model.
-6. `ema_cross` plus `no_trade` strategy vertical slice.
-7. Trade-scoped exit policy layer.
-8. Allocation inside WFA.
-9. Frozen decision pack.
-10. Advice-only dashboard/live runner.
+- Data layer and cache contract.
+- Research Data Workbench: small basket/date-range query, universe registry, severity-labeled data health, static candlestick inspection, and research handoff manifest.
+- Minimal WFA engine.
+- Asset universe/taxonomy studies.
+- Feature engine.
+- PCA state model.
+- Strategy vertical slice with explicit cash/no-position and buy-and-hold baselines.
+- Trade-scoped exit policy layer.
+- Allocation inside WFA.
+- Frozen decision pack.
+- Advice-only dashboard/live runner.

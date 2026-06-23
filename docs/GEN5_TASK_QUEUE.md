@@ -2,15 +2,15 @@
 
 ## Project Recap
 
-Gen5 is in the v0 market-data-layer milestone. The repository currently has an R-first, Alpaca-only, adjusted daily OHLCV data layer with explicit `as_of_timestamp` handling, deterministic cache planning and merge behavior, validation output, and freeze evidence under ignored local run artifacts.
+Gen5 is moving from the v0 market-data-layer milestone into the v0.1 Research Data Workbench milestone. The repository currently has an R-first, Alpaca-only, adjusted daily OHLCV data layer with explicit `as_of_timestamp` handling, deterministic cache planning and merge behavior, validation output, and freeze evidence under ignored local run artifacts.
 
-The current milestone sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope until the data-layer contract, tests, operator guidance, and closeout evidence are stable.
+The v0.1 milestone sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench should only make adjusted daily data easier to query, inspect, chart, and hand off to later research.
 
-The visible behavior this milestone is moving toward is boring on purpose: an operator can configure local data settings, run the validation wrapper, run a bounded Alpaca refresh when credentials are available, inspect coverage/audit artifacts, and know whether the adjusted daily market-data layer is healthy enough to support later research modules.
+The visible behavior this milestone is moving toward is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
 ## Queue Rules
 
-Codex may work this queue only within the Gen5 v0 market-data-layer scope defined in `AGENTS.md`.
+Codex may work this queue only within the Gen5 data-layer and research-plumbing scope defined in `AGENTS.md` and `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`.
 
 For each task, Codex should:
 
@@ -396,3 +396,217 @@ Stay within AGENTS.md and Gen5 v0 market-data-layer scope. Confirm the closeout 
 
 Stop if validation fails, generated artifacts appear as tracked files, the task requires WFA/strategy/allocation/dashboard/execution logic, a new dependency, destructive file operations, live-order behavior, provider expansion beyond Alpaca adjusted daily OHLCV, or an ambiguous project decision.
 ```
+
+## Next Milestone Queue: Gen5 v0.1 Research Data Workbench
+
+Planning spec: `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+
+Recommended branch for the first implementation chunk: `codex/gen5-v0-1-research-data-workbench`
+
+These tasks are intended for sequential Codex work after the operator confirms the v0 closeout is complete. They remain research-plumbing tasks only. They do not authorize WFA, strategy, allocation, dashboard, execution, live-order logic, or provider expansion beyond Alpaca.
+
+### 12. Align cache guidance around repo-local `data_cache/`
+
+Status: pending
+
+Goal: Make operator docs and config comments agree that `data_cache/` is the simple default working cache for now, while outside-OneDrive cache roots remain an optional future optimization.
+
+Likely files:
+
+- `README.md`
+- `docs/GEN5_V0_OPERATOR_RUNBOOK.md`
+- `config/data_layer.example.yml`
+- possibly `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+
+Validation:
+
+- Documentation/config diff review.
+- Run the local test wrapper if config loading behavior changes.
+
+Stop conditions:
+
+- Any automatic migration, deletion, or rewriting of existing cache files.
+- Any change that causes generated cache artifacts to be tracked by git.
+
+### 13. Add manual universe registry scaffold
+
+Status: pending
+
+Goal: Represent manually curated universes with role labels for `candidate_universe`, `research_universe`, `context_universe`, and later `live_basket`, starting with the v0.1 growth/meme POC symbols.
+
+Likely files:
+
+- new config or data file under `config/` for source-controlled universe definitions
+- `README.md`
+- `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+- tests under `tests/testthat/` if a parser/validator is added
+
+Validation:
+
+- Non-network validation for required fields, duplicate symbols, invalid roles, inverse/leveraged ETF exclusions if encoded.
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` if code or tests change.
+
+Stop conditions:
+
+- Rule-based universe selection logic.
+- Survivorship-bias modeling.
+- Live basket selection logic beyond labels/placeholders.
+
+### 14. Promote shared latest-complete-session helper for workbench use
+
+Status: pending
+
+Goal: Ensure refresh, query, validation, and chart paths all use one explicit `as_of_timestamp` session resolver and do not independently infer latest market sessions.
+
+Likely files:
+
+- `R/calendar.R`
+- scripts under `scripts/validate/` or a new workbench script path
+- `tests/testthat/test_calendar_resolution.R`
+- operator docs
+
+Validation:
+
+- Non-network tests covering after-close, before-close, weekend/holiday, and future-request clipping behavior.
+- Run the local test wrapper.
+
+Stop conditions:
+
+- Any analytical helper calling `Sys.Date()` or silently using runtime date authority.
+- Any reliance on live market-clock APIs for default validation.
+
+### 15. Add small-basket research query wrapper
+
+Status: pending
+
+Goal: Provide an operator-facing query path for a universe or symbol basket plus date range, returning canonical adjusted daily bars and a manifest from the existing cache/provider plumbing.
+
+Likely files:
+
+- new script under `scripts/`
+- possible helper under `R/`
+- `README.md`
+- tests under `tests/testthat/`
+
+Validation:
+
+- Non-network tests using local fixture/cache behavior.
+- Run the local test wrapper.
+
+Stop conditions:
+
+- WFA fold generation.
+- indicators, returns, labels, regimes, features, or strategy events.
+- direct Alpaca calls outside provider/data-layer boundaries.
+
+### 16. Add severity-labeled data health report
+
+Status: pending
+
+Goal: Produce console plus CSV or Markdown health output for query/validation runs, with `ERROR`, `WARN`, and `INFO` severities for missing, stale, partial, empty, duplicate, and clipped-future conditions.
+
+Likely files:
+
+- `R/data_audit.R`
+- validation/query scripts
+- `README.md`
+- `tests/testthat/test_data_audit.R`
+
+Validation:
+
+- Non-network tests for severity classification.
+- Run the local test wrapper.
+
+Stop conditions:
+
+- Hiding or downgrading hard data-contract failures.
+- Turning default validation into a network test.
+
+### 17. Add static candlestick PNG inspection script
+
+Status: pending
+
+Goal: Render a basic static candlestick PNG for one symbol/date range from canonical bars, separate from the core pipeline.
+
+Likely files:
+
+- new script under `scripts/validate/` or `scripts/inspect/`
+- possible plotting helper under `R/`
+- `README.md`
+- generated output under ignored `runs/`
+
+Validation:
+
+- Non-network smoke using cached or fixture bars.
+- Confirm generated PNG path is under ignored output.
+- Run the local test wrapper if code or tests change.
+
+Stop conditions:
+
+- Adding package dependencies without operator approval.
+- Creating a dashboard or broad plotting suite.
+- Embedding chart generation into the core refresh path.
+
+### 18. Add opt-in Alpaca credential preflight
+
+Status: pending
+
+Goal: Give the operator a clear way to confirm credential presence and basic credentialed readiness without making default tests depend on network access.
+
+Likely files:
+
+- provider/config helpers under `R/`
+- script under `scripts/`
+- operator docs
+- tests for non-secret environment handling
+
+Validation:
+
+- Non-network tests for missing/placeholder credentials.
+- Optional operator-run credentialed smoke.
+- Run the local test wrapper if code or tests change.
+
+Stop conditions:
+
+- Storing credentials in YAML or source-controlled files.
+- Printing secrets.
+- Making default validation require credentials or network.
+
+### 19. Define research handoff manifest and gate checklist
+
+Status: pending
+
+Goal: Create the source-controlled contract and checklist that future WFA code must consume, including no direct Alpaca calls, explicit as-of timestamp, universe metadata, data-health status, and baseline concepts.
+
+Likely files:
+
+- new checklist doc under `docs/`
+- `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+- `docs/GEN5_SYSTEM_DESIGN.md`
+- `README.md`
+
+Validation:
+
+- Documentation-only diff review unless code changes.
+
+Stop conditions:
+
+- Implementing WFA or strategy evaluation.
+- Treating cash/no-position or buy-and-hold baselines as implemented performance logic.
+
+### 20. Corporate-actions metadata spike
+
+Status: deferred
+
+Goal: After the core workbench is stable, decide whether Alpaca corporate-actions metadata belongs in Gen5 data-layer scope and how it should be cached/audited.
+
+Notes:
+
+- Alpaca supports corporate actions such as splits, dividends, mergers, spin-offs, name changes, and reorganizations.
+- A structured earnings calendar or earnings-surprise feed is not part of the v0.1 plan.
+
+Stop conditions:
+
+- Starting this without explicit operator authorization.
+- Mixing corporate actions into canonical adjusted daily bars before the bar workbench is stable.
+- Adding a non-Alpaca provider for earnings data without a separate scope decision.

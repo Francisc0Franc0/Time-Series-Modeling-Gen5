@@ -171,6 +171,12 @@ The freeze evidence does not certify strategy, WFA, allocation, dashboard, execu
 
 The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.
 
+## Next Milestone Planning
+
+The next planned milestone is Gen5 v0.1 Research Data Workbench, documented in `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. It is a research-plumbing milestone only: small basket/date-range queries, manual universe roles, severity-labeled data health, static candlestick PNG inspection, and a canonical research handoff manifest.
+
+This milestone does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, or non-Alpaca providers. Future WFA code should consume the workbench handoff contract rather than calling Alpaca directly.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.
