@@ -26,16 +26,16 @@ config/             Example configuration files
 
 ## First Smoke Test
 
-From this repository root:
+For normal local validation, prefer the checked-in test runner in the next section. For a narrow scaffold-only smoke check from this repository root:
 
 ```r
 source("tests/smoke_test.R")
 ```
 
-Or from a shell with R installed:
+Or from PowerShell with the known local R installation:
 
 ```powershell
-Rscript tests/smoke_test.R
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' tests\smoke_test.R
 ```
 
 ## Local Test Runner
@@ -59,7 +59,7 @@ The R runner adds ignored `.codex_r_libs/` to `.libPaths()` when present, then r
 The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. Use the local file for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
 
 ```powershell
-Rscript scripts/run_data_refresh.R
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/run_data_refresh.R
 ```
 
 The script fetches adjusted daily bars for the configured symbols, writes ignored local cache files, reads them back, and writes an ignored audit CSV under `runs/`.
@@ -86,10 +86,16 @@ These CSVs are generated artifacts, not source files. They are intentionally cov
 
 ## Data-Layer Validation
 
-Run the operator-facing validation script without Alpaca credentials:
+Run the full local validation wrapper first:
 
 ```powershell
-Rscript scripts/validate/validate_data_layer.R
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+To run only the operator-facing validation script without a live Alpaca fetch:
+
+```powershell
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/validate/validate_data_layer.R
 ```
 
 It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
@@ -134,10 +140,16 @@ For a live Alpaca smoke refresh, optionally bound the historical range explicitl
 ```powershell
 $env:GEN5_FETCH_START_DATE="2020-01-01"
 $env:GEN5_FETCH_END_DATE="2026-06-23"
-Rscript scripts/run_data_refresh.R
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/run_data_refresh.R
 ```
 
 Cache and audit outputs remain under ignored local cache paths and `runs/`.
+
+## Gen5 v0 Freeze Evidence
+
+The current market-data-layer freeze evidence is summarized in `docs/GEN5_V0_DATA_LAYER_FREEZE_EVIDENCE.md`. It is an operator audit note for adjusted daily Alpaca ingestion, deterministic cache planning/merge behavior, validation output, and symbol coverage only.
+
+The freeze evidence does not certify strategy, WFA, allocation, dashboard, execution, or live-order readiness. It records that the Gen5 v0 data layer exposes bounded requests, explicit `as_of_timestamp` handling, cache coverage, duplicate detection, stale/partial history warnings, and generated audit artifacts under ignored local output folders.
 
 ## Design Principle
 

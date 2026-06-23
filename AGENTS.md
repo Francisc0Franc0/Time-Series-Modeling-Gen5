@@ -65,6 +65,28 @@ Do not rely on bare `Rscript` unless `Get-Command Rscript` confirms it is availa
 
 R startup locale warnings on Windows are non-fatal unless tests fail.
 
+## Codex Autonomy Policy
+
+Within the Gen5 v0 market-data-layer milestone, Codex may work autonomously across sequentially related tasks when the scope remains limited to:
+
+- Alpaca adjusted daily OHLCV market-data modules.
+- Cache, audit, and deterministic data-layer behavior.
+- Validation scripts and non-network tests.
+- Operator documentation, README cleanup, and freeze-evidence documentation.
+
+Codex may read repository files, modify scoped files, run the preferred local test runner, inspect git diffs, create branches with the `codex/` prefix, stage relevant files, and prepare commits when validation passes.
+
+Codex must stop and ask before:
+
+- Adding new package dependencies.
+- Changing provider scope beyond Alpaca adjusted daily OHLCV.
+- Adding WFA, PCA, strategy, exit, allocation, dashboard, or execution logic.
+- Changing live-facing behavior beyond advice-only market-data-layer outputs.
+- Deleting files or generated artifacts.
+- Pushing branches or opening pull requests, unless explicitly authorized for the current task or milestone.
+
+For larger autonomous runs, Codex should proceed task-by-task, validate each completed slice, summarize the result, and then continue only within the authorized Gen5 v0 market-data-layer scope.
+
 ## Planning Requirement
 
 At the start of each new non-trivial Codex task, before the implementation plan, provide a brief plain-language context note that says:

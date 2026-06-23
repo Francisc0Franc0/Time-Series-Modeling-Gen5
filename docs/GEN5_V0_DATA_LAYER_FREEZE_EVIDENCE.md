@@ -10,6 +10,8 @@ It does not add or validate WFA, strategy, state modeling, allocation, dashboard
 
 The bounded live Alpaca smoke evidence is recorded in ignored local run artifacts under `runs/data_refresh/`. These CSVs are generated audit artifacts, not source files.
 
+The date suffixes identify the inspected refresh snapshots used for the freeze note. Operators should regenerate these artifacts through the data refresh and validation scripts rather than editing the CSVs by hand.
+
 Primary covered-range snapshot:
 
 - `runs/data_refresh/alpaca_daily_audit_20260622.csv`
@@ -53,6 +55,13 @@ The follow-up stale-tail snapshot carries a later explicit provider query timest
 - `observed_end_date`: `2026-06-22`
 
 The later snapshot is important because it shows the data layer did not silently treat missing June 23 provider bars as complete coverage. It recorded the bounded stale-tail request and surfaced the availability gap.
+
+Operator interpretation:
+
+- The `20260622` snapshot is the covered-range evidence.
+- The `20260623` snapshot is the stale-tail evidence.
+- The stale-tail gap is acceptable data-layer evidence because the gap is explicit, symbol-level, and auditable.
+- The stale-tail gap is not a trading signal and does not imply strategy, live-advice, or execution readiness.
 
 ## Refresh Plan Summary
 
@@ -173,7 +182,15 @@ The local validation artifact `runs/validation/data_layer_validation_results.csv
 - refresh artifact writing under `runs/validation`
 - symbol coverage artifact writing under `runs/validation`
 
-The same validation artifact reports `SKIP` for `live Alpaca fetch smoke` because the validation script is intentionally non-network. It directs the operator to run `Rscript scripts/run_data_refresh.R` for the live network smoke.
+The same validation artifact reports `SKIP` for `live Alpaca fetch smoke` because the validation script is intentionally non-network. It directs the operator to run the data refresh script for the live network smoke.
+
+For routine local validation, run the repository wrapper from the project root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+For a live Alpaca smoke refresh, run `scripts/run_data_refresh.R` with explicit credentials in the local environment and, when needed, explicit `GEN5_FETCH_START_DATE` and `GEN5_FETCH_END_DATE` bounds. Live refresh artifacts remain generated local evidence under ignored output folders.
 
 ## Freeze Interpretation
 
