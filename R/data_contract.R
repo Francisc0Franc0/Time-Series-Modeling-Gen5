@@ -69,6 +69,10 @@ g5_validate_bar_data <- function(bars, require_adjusted = TRUE) {
     g5_stop("Gen5 v0 requires timeframe == '1D'.")
   }
 
+  if (any(is.na(bars$data_version_hash) | !nzchar(as.character(bars$data_version_hash)))) {
+    g5_stop("data_version_hash must be non-missing and non-empty.")
+  }
+
   key <- paste(bars$symbol, bars$session_date)
   duplicate_n <- sum(duplicated(key))
   if (duplicate_n > 0L) {
@@ -87,9 +91,9 @@ g5_make_data_version_hash <- function(...) {
   values <- paste(..., collapse = "|")
   # Deterministic lightweight hash using base R only. Replace with digest later if needed.
   ints <- utf8ToInt(values)
-  hash <- 0L
+  hash <- 0
   for (x in ints) {
-    hash <- as.integer((hash * 131L + x) %% 2147483647L)
+    hash <- (hash * 131 + x) %% 2147483647
   }
   sprintf("g5_%010d", hash)
 }

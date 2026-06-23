@@ -57,5 +57,33 @@ stopifnot(nrow(read_back) == 3L)
 
 audit <- g5_audit_bars(read_back, c("SPY", "QQQ", "TSLA"), as.Date("2026-06-22"))
 stopifnot(audit$missing_symbol_count == 1L)
+stopifnot(audit$row_count == 3L)
+stopifnot(audit$duplicate_symbol_session_count == 0L)
+stopifnot(audit$latest_completed_session == as.Date("2026-06-22"))
+
+provider_request <- g5_alpaca_daily_adjusted_request(
+  symbols = c("SPY", "QQQ"),
+  start_date = as.Date("2026-06-18"),
+  end_date = as.Date("2026-06-19"),
+  as_of_timestamp = "2026-06-22 17:00:00",
+  latest_completed_session = as.Date("2026-06-22")
+)
+
+provider_payload <- list(
+  SPY = list(
+    list(t = "2026-06-18T04:00:00Z", o = 100, h = 101, l = 99, c = 100.5, v = 1000),
+    list(t = "2026-06-19T04:00:00Z", o = 101, h = 102, l = 100, c = 101.5, v = 1100)
+  ),
+  QQQ = list(
+    list(t = "2026-06-19T04:00:00Z", o = 200, h = 202, l = 199, c = 201, v = 1200)
+  )
+)
+
+mapped <- g5_alpaca_map_bars_to_canonical(provider_payload, provider_request)
+stopifnot(identical(names(mapped), g5_required_bar_columns()))
+stopifnot(nrow(mapped) == 3L)
+stopifnot(all(mapped$provider == "alpaca"))
+stopifnot(all(mapped$adjusted))
+stopifnot(all(mapped$timeframe == "1D"))
 
 message("Gen5 scaffold smoke test passed.")

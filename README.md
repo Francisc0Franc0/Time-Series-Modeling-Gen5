@@ -38,6 +38,16 @@ Or from a shell with R installed:
 Rscript tests/smoke_test.R
 ```
 
+## Alpaca Data Refresh Smoke
+
+The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials in environment variables. Supported credential names are `ALPACA_KEY_ID` / `ALPACA_SECRET_KEY` or `ALPACA_KEY` / `ALPACA_SECRET`.
+
+```powershell
+Rscript scripts/run_data_refresh.R
+```
+
+The script fetches adjusted daily bars for `SPY`, `QQQ`, `TSLA`, and `NVDA` by default, writes ignored local cache files under `data_cache/`, reads them back, and writes an ignored audit CSV under `runs/`.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.
