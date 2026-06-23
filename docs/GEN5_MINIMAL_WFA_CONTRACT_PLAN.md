@@ -14,6 +14,8 @@ Implementation note: the first TRAIN/OOS split audit slice now exists as `R/wfa_
 
 Implementation note: the first frozen fold-decision evidence scaffold now exists as `R/wfa_frozen_fold_evidence.R`. It consumes the accepted handoff gate result, explicit fold geometry, TRAIN/OOS split audit outputs, accepted source warning context, and local git/code metadata when available; it emits one fold-level evidence row before OOS evaluation and records that no active candidate, feature model, strategy selector, baseline decision, return calculation, or performance claim exists yet.
 
+Implementation note: the first baseline-family registry scaffold now exists as `R/wfa_baseline_registry.R`. It reserves `no_trade`/cash, broad-market buy-and-hold, per-asset buy-and-hold, fixed equal-weight basket buy-and-hold, and active-curation-with-passive-holding families as declarative definitions tied to the same accepted handoff, explicit quarterly fold calendar, frozen evidence, health gate, and audit discipline as later active candidates, without computing returns, choosing assets from OOS evidence, allocating capital, evaluating performance, or producing live-facing advice.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -216,6 +218,8 @@ All baselines must use the same fold calendar, handoff artifacts, health gates, 
 To avoid clutter, top-level diagnostics should group baselines by the question being asked. Detailed artifacts may preserve every baseline result, but operator-facing summaries should separate core baselines from study-specific baselines.
 
 This planning slice does not implement baseline returns, benchmark performance, allocation, leverage, or selection logic.
+
+The first baseline registry helper returns one declarative row per reserved baseline family. It groups families by research question and diagnostic group, records that returns/performance/allocation are not implemented, and carries source handoff, gate acceptance, fold calendar, health-gate, split-audit, and frozen-evidence linkage fields so future baseline evaluation must use the same WFA discipline as active candidates.
 
 ## Minimal Audit Outputs
 

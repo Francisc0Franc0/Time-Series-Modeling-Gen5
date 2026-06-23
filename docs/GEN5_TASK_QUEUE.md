@@ -960,9 +960,21 @@ Stop conditions:
 
 ### 27. Add baseline-family registry scaffolding
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-baseline-registry-scaffold`
+
+Branch: `codex/gen5-wfa-frozen-evidence-and-baseline-scaffold`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_baseline_registry.R` as a declarative baseline-family registry scaffold.
+- Reserved `no_trade_cash`, `broad_market_buy_hold`, `per_asset_buy_hold`, `fixed_equal_weight_basket_buy_hold`, and `active_curation_no_timing` families.
+- Grouped baseline families by research question and diagnostic group so later summaries can stay organized.
+- Tied baseline definitions to the same accepted handoff gate, explicit quarterly fold calendar, frozen fold evidence, health gate, TRAIN/OOS audit, and ignored `runs/` artifact discipline as later active candidates.
+- No baseline returns, benchmark performance, asset selection from OOS evidence, allocation, strategy evaluation, live-facing advice, dashboards, execution, provider expansion, corporate-actions ingestion, earnings-data integration, provider calls, cache authority, or `Sys.Date()` use were added.
 
 Goal: Represent baseline concepts before active strategy evaluation so `no_trade` and buy-and-hold comparisons stay first-class.
 
