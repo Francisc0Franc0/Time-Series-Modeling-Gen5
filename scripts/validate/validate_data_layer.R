@@ -74,6 +74,7 @@ bars <- NULL
 cache_read <- NULL
 audit <- NULL
 empty_audit <- NULL
+symbol_coverage <- NULL
 
 pass_fail("config loads from example plus optional local override", {
   cfg <<- g5_load_data_layer_config(repo_root)
@@ -327,6 +328,7 @@ refresh_plan_path <- file.path(validation_dir, "data_layer_validation_refresh_pl
 merge_summary_path <- file.path(validation_dir, "data_layer_validation_merge_summary.csv")
 symbol_coverage_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.csv")
 symbol_coverage_chart_path <- file.path(validation_dir, "data_layer_validation_symbol_coverage.png")
+health_report_path <- file.path(validation_dir, "data_layer_validation_health.csv")
 g5_write_audit_artifact_csv(audit, audit_path)
 utils::write.csv(results, results_path, row.names = FALSE)
 
@@ -383,7 +385,7 @@ pass_fail("refresh artifact CSVs are written under runs/validation", {
 }, paste("plan:", normalizePath(refresh_plan_path, winslash = "/", mustWork = FALSE)))
 
 pass_fail("symbol coverage inspection artifacts are written under runs/validation", {
-  symbol_coverage <- g5_symbol_coverage_artifact(
+  symbol_coverage <<- g5_symbol_coverage_artifact(
     bars = cache_read$bars,
     requested_symbols = validation_symbols,
     latest_completed_session = resolved$latest_completed_session,
@@ -418,6 +420,24 @@ pass_fail("symbol coverage inspection artifacts are written under runs/validatio
     identical(empty$partial_history_status, "empty") &&
     file.exists(symbol_coverage_chart_path)
 }, paste("coverage:", normalizePath(symbol_coverage_path, winslash = "/", mustWork = FALSE)))
+
+pass_fail("severity-labeled data health report is written under runs/validation", {
+  health_report <- g5_data_health_report(
+    bars = cache_read$bars,
+    audit = audit,
+    symbol_coverage = symbol_coverage,
+    date_range = date_range,
+    refresh_plan = refresh$plan
+  )
+  g5_print_data_health_report(health_report)
+  g5_write_data_health_report_csv(health_report, health_report_path)
+  health_read <- utils::read.csv(health_report_path, stringsAsFactors = FALSE)
+  all(c("severity", "category", "symbol", "detail") %in% names(health_read)) &&
+    any(health_read$severity == "WARN") &&
+    any(health_read$category == "clipped_future_request") &&
+    any(health_read$category == "empty_symbol") &&
+    !any(health_read$severity == "ERROR")
+}, paste("health:", normalizePath(health_report_path, winslash = "/", mustWork = FALSE)))
 
 alpaca_cfg <- g5_alpaca_config_from_env()
 missing_runtime <- c(

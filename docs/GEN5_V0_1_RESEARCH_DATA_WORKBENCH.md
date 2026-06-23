@@ -88,6 +88,8 @@ Context/benchmark candidates:
 
 Final symbol selection can be adjusted during the universe-registry task. The important rule is to keep research symbols and context symbols labeled separately.
 
+The first source-controlled registry scaffold lives at `config/universe_registry.csv`. It uses explicit rows for `candidate_universe`, `research_universe`, and `context_universe`; `live_basket` is an allowed later label but has no selected symbols in this foundation chunk.
+
 ### Baselines
 
 Future research should compare active decisions against at least:
@@ -172,6 +174,15 @@ The report should answer:
 - whether the data came from cache or provider refresh;
 - where the artifacts were written.
 
+The foundation implementation writes query health rows as CSV with:
+
+- `severity`
+- `category`
+- `symbol`
+- `detail`
+
+`ERROR` rows remain reserved for hard contract failures such as duplicate symbol/session rows, missing required bar columns, or future rows. `WARN` rows cover clipped requested end dates, stale/partial/empty/missing symbols, cache misses, and refresh-needed symbols. `INFO` rows record row counts, cache hits, and per-symbol coverage facts.
+
 ## Operator Commands To Plan
 
 The exact script names can be adjusted during implementation, but v0.1 should converge on clear wrapper behavior:
@@ -183,6 +194,15 @@ The exact script names can be adjusted during implementation, but v0.1 should co
 - `credentials`: opt-in Alpaca credential/preflight check.
 
 Default validation should remain non-network. Credentialed checks should be explicit.
+
+Implemented foundation query command:
+
+```powershell
+$env:GEN5_AS_OF_TIMESTAMP="2026-06-23 17:30:00"
+$env:GEN5_WORKBENCH_START_DATE="2026-02-23"
+$env:GEN5_WORKBENCH_END_DATE="2026-06-23"
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/query_research_data.R
+```
 
 ## Acceptance Criteria
 
@@ -198,4 +218,3 @@ Gen5 v0.1 is ready to hand off to the first research milestone when:
 - future WFA code has a documented no-Alpaca-direct-call contract;
 - cash/no-position and buy-and-hold are documented as later research baselines;
 - the research gate checklist confirms no WFA, strategy, allocation, dashboard, execution, or live-order logic has been added.
-

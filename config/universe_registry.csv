@@ -1,0 +1,25 @@
+universe_name,role,symbol,description
+gen5_v0_1_poc_growth,candidate_universe,NVDA,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,AMD,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,TSLA,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,PLTR,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,META,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,COIN,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,SMCI,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,MSTR,Volatile growth candidate
+gen5_v0_1_poc_growth,candidate_universe,SPY,Context benchmark candidate
+gen5_v0_1_poc_growth,candidate_universe,QQQ,Context benchmark candidate
+gen5_v0_1_poc_growth,candidate_universe,SMH,Context benchmark candidate
+gen5_v0_1_poc_growth,candidate_universe,XLK,Context benchmark candidate
+gen5_v0_1_poc_growth,research_universe,NVDA,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,AMD,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,TSLA,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,PLTR,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,META,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,COIN,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,SMCI,Initial v0.1 research core
+gen5_v0_1_poc_growth,research_universe,MSTR,Initial v0.1 research core
+gen5_v0_1_poc_growth,context_universe,SPY,Market context benchmark
+gen5_v0_1_poc_growth,context_universe,QQQ,Growth context benchmark
+gen5_v0_1_poc_growth,context_universe,SMH,Semiconductor context benchmark
+gen5_v0_1_poc_growth,context_universe,XLK,Technology context benchmark

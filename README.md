@@ -60,7 +60,7 @@ For the full local operator setup sequence, including config overlays, credentia
 
 ## Alpaca Data Refresh Smoke
 
-The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. Use the local file for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
+The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. The default cache root is the ignored repo-local `data_cache/alpaca_daily_adjusted/` folder; use the local file or `GEN5_CACHE_ROOT` only when an operator-specific override is needed. Use local config for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
 
 ```powershell
 & 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/run_data_refresh.R
@@ -158,6 +158,23 @@ $env:GEN5_FETCH_END_DATE="2026-06-23"
 ```
 
 Cache and audit outputs remain under ignored local cache paths and `runs/`.
+
+## Research Workbench Query
+
+Gen5 v0.1 adds a research-plumbing query wrapper only. It reads the manual universe registry in `config/universe_registry.csv`, resolves the latest completed session from explicit `GEN5_AS_OF_TIMESTAMP`, reads or optionally refreshes adjusted daily bars through the existing data-layer/cache/provider helpers, and writes ignored query artifacts under `runs/research_workbench/`.
+
+Default use is non-network cache read:
+
+```powershell
+$env:GEN5_AS_OF_TIMESTAMP="2026-06-23 17:30:00"
+$env:GEN5_WORKBENCH_START_DATE="2026-02-23"
+$env:GEN5_WORKBENCH_END_DATE="2026-06-23"
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/query_research_data.R
+```
+
+Set `GEN5_WORKBENCH_SYMBOLS="NVDA,AMD"` for an explicit small basket, or use `GEN5_WORKBENCH_UNIVERSE` and `GEN5_WORKBENCH_ROLES` to select registry labels such as `research_universe` or `context_universe`. Set `GEN5_WORKBENCH_REFRESH=true` only when a credentialed Alpaca refresh is intended.
+
+The query output includes canonical adjusted daily bars, a manifest, audit CSV, symbol coverage CSV, refresh plan CSV, and severity-labeled health CSV with `ERROR`, `WARN`, and `INFO` rows. It does not compute indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
 ## Generated Local Files
 

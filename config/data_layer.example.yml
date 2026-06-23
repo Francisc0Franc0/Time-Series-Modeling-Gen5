@@ -9,8 +9,9 @@ feed: iex
 signal_timing: after_close_for_next_open
 
 cache:
-  # Recommended: keep heavy cache outside OneDrive.
-  root: C:/Users/Franc/TradingDataCache/Time-Series-Modeling-Gen5
+  # Default v0.1 working cache. This folder is repo-local and gitignored.
+  # Operators may override with GEN5_CACHE_ROOT or config/data_layer.local.yml.
+  root: data_cache/alpaca_daily_adjusted
   format: rds
 
 calendar:

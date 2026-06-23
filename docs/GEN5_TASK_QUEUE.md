@@ -407,7 +407,17 @@ These tasks are intended for sequential Codex work after the operator confirms t
 
 ### 12. Align cache guidance around repo-local `data_cache/`
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Updated the default cache root to ignored repo-local `data_cache/alpaca_daily_adjusted/`.
+- Clarified README/runbook guidance that outside-OneDrive cache roots remain optional operator overrides.
+- Added relative cache-root resolution under the repository root; no cache migration, deletion, or artifact tracking was added.
 
 Goal: Make operator docs and config comments agree that `data_cache/` is the simple default working cache for now, while outside-OneDrive cache roots remain an optional future optimization.
 
@@ -430,7 +440,17 @@ Stop conditions:
 
 ### 13. Add manual universe registry scaffold
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `config/universe_registry.csv` with manual `candidate_universe`, `research_universe`, and `context_universe` rows for the v0.1 POC symbols.
+- Added registry validation/helpers with `live_basket` as an allowed later label but no selected live symbols.
+- Added non-network tests for role validation, duplicate detection, and symbol resolution.
 
 Goal: Represent manually curated universes with role labels for `candidate_universe`, `research_universe`, `context_universe`, and later `live_basket`, starting with the v0.1 growth/meme POC symbols.
 
@@ -454,7 +474,17 @@ Stop conditions:
 
 ### 14. Promote shared latest-complete-session helper for workbench use
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the workbench query path with explicit `GEN5_AS_OF_TIMESTAMP` requirement.
+- Workbench session resolution uses `g5_resolve_latest_completed_session()` and bounded date handling uses the existing Alpaca daily date-range helper.
+- No `Sys.Date()` or live market-clock dependency was added.
 
 Goal: Ensure refresh, query, validation, and chart paths all use one explicit `as_of_timestamp` session resolver and do not independently infer latest market sessions.
 
@@ -477,7 +507,17 @@ Stop conditions:
 
 ### 15. Add small-basket research query wrapper
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/workbench_query.R` and `scripts/query_research_data.R`.
+- The query wrapper reads explicit symbol baskets or universe-role selections, uses existing cache planning/read/write helpers, and only refreshes from Alpaca when explicitly requested.
+- Query artifacts include canonical adjusted daily bars, manifest, audit, symbol coverage, refresh plan, and health CSVs under ignored `runs/research_workbench/`.
 
 Goal: Provide an operator-facing query path for a universe or symbol basket plus date range, returning canonical adjusted daily bars and a manifest from the existing cache/provider plumbing.
 
@@ -501,7 +541,17 @@ Stop conditions:
 
 ### 16. Add severity-labeled data health report
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added severity-labeled health helpers in `R/data_audit.R`.
+- Validation and query runs now write durable health CSVs with `ERROR`, `WARN`, and `INFO` rows.
+- Non-network tests cover duplicate-row errors plus clipped-future, empty, partial, stale/cache-warning, and info classifications.
 
 Goal: Produce console plus CSV or Markdown health output for query/validation runs, with `ERROR`, `WARN`, and `INFO` severities for missing, stale, partial, empty, duplicate, and clipped-future conditions.
 

@@ -25,7 +25,7 @@ ALPACA_KEY=your_key_here
 ALPACA_SECRET=your_secret_here
 ```
 
-6. Keep heavy data caches outside OneDrive when practical by setting `cache.root` in `config/data_layer.local.yml` or by setting `GEN5_CACHE_ROOT` for one run.
+6. Use the ignored repo-local `data_cache/alpaca_daily_adjusted/` folder as the simple default cache for v0.1 workbench runs. Keep heavy data caches outside OneDrive only when practical by overriding `cache.root` in `config/data_layer.local.yml` or by setting `GEN5_CACHE_ROOT` for one run.
 
 The repository does not migrate or delete existing cache files. Cache root changes only affect subsequent reads/writes for that run or local config.
 
@@ -46,6 +46,8 @@ The loader reads `config/data_layer.example.yml` first, then overlays ignored `c
 - `GEN5_MARKET_CLOSE_TIME`
 - `ALPACA_DATA_FEED`
 - `GEN5_SYMBOLS`
+
+Relative cache roots are resolved under the repository root, so `data_cache/alpaca_daily_adjusted` maps to the ignored repo-local cache folder.
 
 ## Validation Order
 
@@ -83,5 +85,20 @@ Review generated CSVs rather than editing them:
 - `runs/data_refresh/alpaca_daily_symbol_coverage_YYYYMMDD.csv`
 
 Generated caches, validation output, refresh output, local config overlays, credentials, and repo-local package libraries are ignored by git.
+
+## v0.1 Workbench Query
+
+For a non-network small-basket/date-range query from the existing cache:
+
+```powershell
+$env:GEN5_AS_OF_TIMESTAMP="2026-06-23 17:30:00"
+$env:GEN5_WORKBENCH_START_DATE="2026-02-23"
+$env:GEN5_WORKBENCH_END_DATE="2026-06-23"
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/query_research_data.R
+```
+
+The default universe is `gen5_v0_1_poc_growth` with `research_universe` rows from `config/universe_registry.csv`. Override with `GEN5_WORKBENCH_SYMBOLS`, `GEN5_WORKBENCH_UNIVERSE`, or `GEN5_WORKBENCH_ROLES`. Set `GEN5_WORKBENCH_REFRESH=true` only for an intentional credentialed Alpaca refresh.
+
+Workbench artifacts are written under ignored `runs/research_workbench/`: bars, manifest, audit, symbol coverage, refresh plan, and severity-labeled health CSVs.
 
 For closeout gates and the current non-network invariant coverage map, see `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.

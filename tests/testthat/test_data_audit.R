@@ -242,3 +242,63 @@ test_that("symbol coverage artifact reports per-symbol availability statuses", {
     "missing required columns: partial_history_status"
   )
 })
+
+test_that("data health report labels errors, warnings, and info rows", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "data_audit.R"))
+
+  bars <- data.frame(
+    symbol = c("SPY", "SPY", "QQQ"),
+    session_date = as.Date(c("2026-06-22", "2026-06-22", "2026-06-19")),
+    open = c(100, 100, 200),
+    high = c(101, 101, 201),
+    low = c(99, 99, 199),
+    close = c(100.5, 100.5, 200.5),
+    volume = c(1000, 1000, 1200),
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "alpaca",
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22"),
+    fetch_start_date = as.Date("2026-06-18"),
+    fetch_end_date = as.Date("2026-06-22"),
+    data_version_hash = c("a", "a", "b"),
+    stringsAsFactors = FALSE
+  )
+  audit <- g5_audit_bars(
+    bars = bars,
+    requested_symbols = c("SPY", "QQQ", "EMPTY"),
+    latest_completed_session = as.Date("2026-06-22"),
+    requested_start_date = as.Date("2026-06-18"),
+    requested_end_date = as.Date("2026-06-23"),
+    availability_warnings = "requested_end_date_after_latest_completed_session"
+  )
+  coverage <- g5_symbol_coverage_artifact(
+    bars = bars[!duplicated(paste(bars$symbol, bars$session_date)), , drop = FALSE],
+    requested_symbols = c("SPY", "QQQ", "EMPTY"),
+    latest_completed_session = as.Date("2026-06-22"),
+    requested_start_date = as.Date("2026-06-18"),
+    requested_end_date = as.Date("2026-06-23")
+  )
+  health <- g5_data_health_report(
+    bars = bars,
+    audit = audit,
+    symbol_coverage = coverage,
+    date_range = data.frame(
+      date_range_warning_count = 1L,
+      date_range_warnings = "requested_end_date_after_latest_completed_session",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  expect_true(any(health$severity == "ERROR" & health$category == "duplicate_symbol_session"))
+  expect_true(any(health$severity == "WARN" & health$category == "empty_symbol" & health$symbol == "EMPTY"))
+  expect_true(any(health$severity == "WARN" & health$category == "clipped_future_request"))
+  expect_true(any(health$severity == "INFO" & health$category == "row_count"))
+  expect_identical(g5_health_max_severity(health), "ERROR")
+
+  health_csv <- tempfile("g5_health_", fileext = ".csv")
+  g5_write_data_health_report_csv(health, health_csv)
+  health_read <- utils::read.csv(health_csv, stringsAsFactors = FALSE)
+  expect_identical(names(health_read), c("severity", "category", "symbol", "detail"))
+})

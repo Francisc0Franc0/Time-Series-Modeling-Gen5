@@ -124,6 +124,20 @@ g5_env_symbols <- function(value, default) {
   g5_standardize_symbol(strsplit(value, ",", fixed = TRUE)[[1L]])
 }
 
+g5_resolve_repo_path <- function(path, repo_root) {
+  path <- as.character(path[[1L]])
+  if (!nzchar(path)) {
+    g5_stop("path must be non-empty.")
+  }
+  is_windows_absolute <- grepl("^[A-Za-z]:[/\\\\]", path)
+  is_unc <- grepl("^[/\\\\]{2}", path)
+  is_unix_absolute <- grepl("^/", path)
+  if (is_windows_absolute || is_unc || is_unix_absolute) {
+    return(normalizePath(path, winslash = "/", mustWork = FALSE))
+  }
+  normalizePath(file.path(repo_root, path), winslash = "/", mustWork = FALSE)
+}
+
 g5_load_local_renviron <- function(
   repo_root = normalizePath(".", winslash = "/", mustWork = TRUE),
   path = file.path(repo_root, ".Renviron")
@@ -188,6 +202,7 @@ g5_load_data_layer_config <- function(
   }
 
   cfg$cache$root <- g5_env_value("GEN5_CACHE_ROOT", cfg$cache$root)
+  cfg$cache$root <- g5_resolve_repo_path(cfg$cache$root, repo_root)
   cfg$calendar$timezone <- g5_env_value("GEN5_MARKET_TIMEZONE", cfg$calendar$timezone)
   cfg$calendar$market_close_time <- g5_env_value("GEN5_MARKET_CLOSE_TIME", cfg$calendar$market_close_time)
   cfg$feed <- g5_env_value("ALPACA_DATA_FEED", cfg$feed %g5||% "iex")

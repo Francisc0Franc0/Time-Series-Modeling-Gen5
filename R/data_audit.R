@@ -667,3 +667,206 @@ g5_write_symbol_coverage_chart <- function(symbol_coverage, path) {
 
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
+
+g5_health_row <- function(severity, category, symbol = "", detail = "") {
+  data.frame(
+    severity = severity,
+    category = category,
+    symbol = symbol,
+    detail = detail,
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_split_symbol_list <- function(value) {
+  value <- as.character(value[[1L]])
+  if (is.na(value) || !nzchar(value)) {
+    return(character())
+  }
+  g5_standardize_symbol(strsplit(value, ",", fixed = TRUE)[[1L]])
+}
+
+g5_data_health_report <- function(
+  bars,
+  audit,
+  symbol_coverage = NULL,
+  date_range = NULL,
+  refresh_plan = NULL
+) {
+  rows <- list()
+  add <- function(severity, category, symbol = "", detail = "") {
+    rows[[length(rows) + 1L]] <<- g5_health_row(severity, category, symbol, detail)
+  }
+
+  if (!is.data.frame(bars)) {
+    add("ERROR", "bar_contract", "", "bars is not a data.frame")
+  } else {
+    missing_cols <- setdiff(g5_required_bar_columns(), names(bars))
+    if (length(missing_cols) > 0L) {
+      add("ERROR", "bar_contract", "", paste("missing required columns:", paste(missing_cols, collapse = ",")))
+    }
+    if (all(c("symbol", "session_date") %in% names(bars)) && nrow(bars) > 0L) {
+      key <- paste(g5_standardize_symbol(bars$symbol), as.Date(bars$session_date))
+      duplicate_count <- sum(duplicated(key))
+      if (duplicate_count > 0L) {
+        add("ERROR", "duplicate_symbol_session", "", paste("duplicate rows:", duplicate_count))
+      }
+    }
+    if (all(c("session_date", "latest_completed_session") %in% names(bars)) && nrow(bars) > 0L) {
+      future_count <- sum(as.Date(bars$session_date) > as.Date(bars$latest_completed_session), na.rm = TRUE)
+      if (future_count > 0L) {
+        add("ERROR", "future_rows", "", paste("rows after latest_completed_session:", future_count))
+      }
+    }
+  }
+
+  if (!is.data.frame(audit) || nrow(audit) == 0L) {
+    add("ERROR", "audit_contract", "", "audit is missing or empty")
+  } else {
+    audit <- audit[1L, , drop = FALSE]
+    if ("duplicate_symbol_session_count" %in% names(audit) &&
+        !is.na(audit$duplicate_symbol_session_count) &&
+        audit$duplicate_symbol_session_count > 0L) {
+      add("ERROR", "duplicate_symbol_session", "", paste("duplicate rows:", audit$duplicate_symbol_session_count))
+    }
+
+    missing_symbols <- if ("missing_symbols" %in% names(audit)) g5_split_symbol_list(audit$missing_symbols) else character()
+    for (sym in missing_symbols) {
+      add("WARN", "missing_symbol", sym, "requested symbol has no rows in the query output")
+    }
+
+    empty_symbols <- if ("empty_symbols" %in% names(audit)) g5_split_symbol_list(audit$empty_symbols) else character()
+    for (sym in empty_symbols) {
+      add("WARN", "empty_symbol", sym, "requested symbol is empty for the bounded query range")
+    }
+
+    partial_symbols <- if ("partial_history_symbols" %in% names(audit)) {
+      g5_split_symbol_list(audit$partial_history_symbols)
+    } else {
+      character()
+    }
+    for (sym in partial_symbols) {
+      add("WARN", "partial_history", sym, "observed bars do not cover the bounded requested range")
+    }
+
+    stale_symbols <- if ("stale_symbols" %in% names(audit)) g5_split_symbol_list(audit$stale_symbols) else character()
+    for (sym in stale_symbols) {
+      add("WARN", "stale_symbol", sym, "latest observed session is before latest_completed_session")
+    }
+
+    if ("row_count" %in% names(audit)) {
+      add("INFO", "row_count", "", paste("query row count:", audit$row_count))
+    }
+    if ("cache_hit_symbols" %in% names(audit) && nzchar(as.character(audit$cache_hit_symbols))) {
+      add("INFO", "cache_hits", "", paste("cache hit symbols:", audit$cache_hit_symbols))
+    }
+    if ("cache_miss_symbols" %in% names(audit) && nzchar(as.character(audit$cache_miss_symbols))) {
+      add("WARN", "cache_misses", "", paste("cache miss symbols:", audit$cache_miss_symbols))
+    }
+  }
+
+  if (is.data.frame(date_range) && nrow(date_range) > 0L &&
+      "date_range_warning_count" %in% names(date_range) &&
+      date_range$date_range_warning_count[[1L]] > 0L) {
+    add("WARN", "clipped_future_request", "", as.character(date_range$date_range_warnings[[1L]]))
+  }
+
+  if (is.data.frame(symbol_coverage) && nrow(symbol_coverage) > 0L) {
+    for (i in seq_len(nrow(symbol_coverage))) {
+      sym <- as.character(symbol_coverage$symbol[[i]])
+      add(
+        "INFO",
+        "symbol_coverage",
+        sym,
+        paste(
+          "rows=", symbol_coverage$row_count[[i]],
+          " empty=", symbol_coverage$empty_status[[i]],
+          " partial=", symbol_coverage$partial_history_status[[i]],
+          " stale=", symbol_coverage$stale_status[[i]],
+          sep = ""
+        )
+      )
+    }
+  }
+
+  if (is.data.frame(refresh_plan) && nrow(refresh_plan) > 0L) {
+    needs_fetch <- refresh_plan[as.logical(refresh_plan$needs_fetch), , drop = FALSE]
+    if (nrow(needs_fetch) > 0L) {
+      for (i in seq_len(nrow(needs_fetch))) {
+        add(
+          "WARN",
+          "refresh_needed",
+          as.character(needs_fetch$symbol[[i]]),
+          paste("refresh_decision:", needs_fetch$refresh_decision[[i]])
+        )
+      }
+    }
+  }
+
+  if (length(rows) == 0L) {
+    add("INFO", "health", "", "no health issues detected")
+  }
+
+  out <- do.call(rbind, rows)
+  severity_order <- c(ERROR = 1L, WARN = 2L, INFO = 3L)
+  out <- out[order(severity_order[out$severity], out$category, out$symbol, out$detail), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_health_max_severity <- function(health_report) {
+  if (!is.data.frame(health_report) || nrow(health_report) == 0L || !"severity" %in% names(health_report)) {
+    return("INFO")
+  }
+  if (any(health_report$severity == "ERROR")) {
+    return("ERROR")
+  }
+  if (any(health_report$severity == "WARN")) {
+    return("WARN")
+  }
+  "INFO"
+}
+
+g5_write_data_health_report_csv <- function(health_report, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  required <- c("severity", "category", "symbol", "detail")
+  if (!is.data.frame(health_report) || nrow(health_report) == 0L) {
+    g5_stop("health_report must be a non-empty data.frame.")
+  }
+  missing <- setdiff(required, names(health_report))
+  if (length(missing) > 0L) {
+    g5_stop(paste("health_report is missing required columns:", paste(missing, collapse = ", ")))
+  }
+  invalid <- setdiff(unique(health_report$severity), c("ERROR", "WARN", "INFO"))
+  if (length(invalid) > 0L) {
+    g5_stop(paste("Invalid health severity value(s):", paste(invalid, collapse = ", ")))
+  }
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(health_report[required], path, row.names = FALSE)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_print_data_health_report <- function(health_report) {
+  if (!is.data.frame(health_report) || nrow(health_report) == 0L) {
+    message("INFO health - no health report rows")
+    return(invisible(FALSE))
+  }
+  for (i in seq_len(nrow(health_report))) {
+    symbol <- if (nzchar(as.character(health_report$symbol[[i]]))) {
+      paste0(" [", health_report$symbol[[i]], "]")
+    } else {
+      ""
+    }
+    message(
+      health_report$severity[[i]],
+      " ",
+      health_report$category[[i]],
+      symbol,
+      " - ",
+      health_report$detail[[i]]
+    )
+  }
+  invisible(TRUE)
+}
