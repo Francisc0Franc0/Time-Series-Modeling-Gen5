@@ -54,6 +54,8 @@ powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1 -RscriptPath
 
 The R runner adds ignored `.codex_r_libs/` to `.libPaths()` when present, then runs the scaffold smoke test, data-layer validation, and non-network testthat tests.
 
+For the full local operator setup sequence, including config overlays, credentials, local cache roots, repo-local R libraries, validation order, and the credentialed Alpaca refresh smoke, see `docs/GEN5_V0_OPERATOR_RUNBOOK.md`.
+
 ## Alpaca Data Refresh Smoke
 
 The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. Use the local file for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.

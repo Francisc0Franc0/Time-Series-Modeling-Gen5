@@ -1,5 +1,6 @@
 # Example Gen5 data-layer configuration.
-# Copy to config/data_layer.local.yml and fill local paths/secrets outside git.
+# Copy to config/data_layer.local.yml for local paths and symbols.
+# Keep Alpaca credentials in environment variables or ignored .Renviron, not YAML.
 
 provider: alpaca
 timeframe: 1D

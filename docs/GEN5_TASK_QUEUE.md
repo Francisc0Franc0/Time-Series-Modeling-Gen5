@@ -97,7 +97,18 @@ Stop conditions:
 
 ### 3. Tighten operator setup guidance
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `docs: add Gen5 v0 operator runbook`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a dedicated v0 operator runbook covering local config overlays, credentials, cache root placement, repo-local R libraries, validation order, and live Alpaca refresh smoke order.
+- Clarified that credentials belong in environment variables or ignored `.Renviron`, not YAML.
 
 Goal: Make the local setup path obvious for a human operator: config overlay, credentials, local cache root, `.codex_r_libs/`, validation wrapper, and live refresh order.
 
