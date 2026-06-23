@@ -163,6 +163,20 @@ Follow-up stale-tail coverage, `alpaca_daily_symbol_coverage_20260623.csv`:
 
 The coverage artifacts show that all requested symbols are represented and that the June 23 gap is reported at symbol granularity.
 
+## Terminology Reference
+
+The freeze evidence uses the same literal artifact labels as the validation and refresh scripts:
+
+- `fully_cached`: requested bounded range is already covered by cache.
+- `stale_cache`: cache starts early enough but ends before the requested bounded end.
+- `partial_history`: cache reaches the requested bounded end but starts after the requested start.
+- `partial_history_stale`: cache misses both the requested start and bounded end.
+- `cold_cache`: no symbol cache file exists.
+- `cold_cache_empty_file`: a symbol cache file exists but contains no rows.
+- `no_returned_bars`: a symbol needed a fetch but the provider payload supplied no bars for that symbol/range.
+- `covers_requested_range`: observed bars cover the bounded requested range in symbol coverage output.
+- `stale`: observed bars exist but end before `latest_completed_session`.
+
 ## Local Validation Status
 
 The local validation artifact `runs/validation/data_layer_validation_results.csv` reports PASS for:

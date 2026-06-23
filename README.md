@@ -76,6 +76,14 @@ The refresh path is incremental and deterministic. For each requested symbol it 
 - `partial_history_stale`: cached history misses both the requested start and bounded end.
 - `cold_cache_empty_file`: a cache file exists but contains no rows, so it is treated as a cold cache.
 
+Artifact terminology is intentionally literal:
+
+- `refresh_decision` uses `fully_cached`, `stale_cache`, `partial_history`, `partial_history_stale`, `cold_cache`, or `cold_cache_empty_file`.
+- `no_returned_bars == TRUE` means a symbol needed a provider fetch but the provider payload supplied no bars for that symbol/range.
+- `partial_history_status == "covers_requested_range"` means observed bars cover the bounded requested range.
+- `partial_history_status == "partial_history"` means observed bars exist but do not cover the bounded requested range.
+- `stale_status == "stale"` means observed bars exist but end before `latest_completed_session`.
+
 Fetched rows are merged with existing symbol caches using `symbol` plus `session_date` as the deterministic key, with fetched rows taking precedence on overlap. Merged cache files are sorted by `symbol` and `session_date`.
 
 Each refresh also writes two ignored inspection artifacts under `runs/data_refresh/`:

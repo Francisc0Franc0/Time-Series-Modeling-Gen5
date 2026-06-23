@@ -161,7 +161,18 @@ Stop conditions:
 
 ### 5. Normalize cache and audit terminology
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `test: cover cache terminology labels`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added operator-facing terminology references for refresh decisions, `no_returned_bars`, `covers_requested_range`, and `stale`.
+- Expanded cache planner tests to cover all six `refresh_decision` labels without changing cache-planning semantics.
 
 Goal: Make terms consistent across README, freeze evidence, validation output, and tests: `fully_cached`, `stale_cache`, `partial_history`, `partial_history_stale`, `cold_cache`, `cold_cache_empty_file`, `no_returned_bars`, `stale`, and `covers_requested_range`.
 

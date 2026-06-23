@@ -61,7 +61,7 @@ test_that("cache reads can report partial hits without hiding misses", {
   expect_identical(read_result$cache_missing_symbols, "TSLA")
 })
 
-test_that("incremental cache planning covers cold, stale, partial, and fully cached symbols", {
+test_that("incremental cache planning covers all refresh decision labels", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "cache_store.R"))
 
@@ -90,8 +90,32 @@ test_that("incremental cache planning covers cold, stale, partial, and fully cac
 
   tmp_cache <- tempfile("g5_incremental_cache_")
   g5_write_bars_cache(bars, tmp_cache)
+  empty_path <- g5_cache_symbol_path(tmp_cache, "alpaca", "1D", "EMPTYFILE")
+  dir.create(dirname(empty_path), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(g5_empty_bar_data(), empty_path)
+
+  stale_partial_bars <- data.frame(
+    symbol = "DIA",
+    session_date = as.Date("2026-06-19"),
+    open = 500,
+    high = 501,
+    low = 499,
+    close = 500.5,
+    volume = 1800,
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "alpaca",
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22"),
+    fetch_start_date = as.Date("2026-06-18"),
+    fetch_end_date = as.Date("2026-06-22"),
+    data_version_hash = "dia_hash",
+    stringsAsFactors = FALSE
+  )
+  g5_write_bars_cache(stale_partial_bars, tmp_cache)
+
   refresh <- g5_plan_incremental_cache_refresh(
-    symbols = c("SPY", "QQQ", "IWM", "TSLA"),
+    symbols = c("SPY", "QQQ", "IWM", "DIA", "TSLA", "EMPTYFILE"),
     cache_root = tmp_cache,
     requested_start_date = as.Date("2026-06-18"),
     requested_end_date = as.Date("2026-06-22"),
@@ -102,7 +126,9 @@ test_that("incremental cache planning covers cold, stale, partial, and fully cac
   expect_identical(decisions[["SPY"]], "fully_cached")
   expect_identical(decisions[["QQQ"]], "partial_history")
   expect_identical(decisions[["IWM"]], "stale_cache")
+  expect_identical(decisions[["DIA"]], "partial_history_stale")
   expect_identical(decisions[["TSLA"]], "cold_cache")
+  expect_identical(decisions[["EMPTYFILE"]], "cold_cache_empty_file")
   expect_equal(refresh$plan$fetch_start_date[refresh$plan$symbol == "IWM"], as.Date("2026-06-20"))
   expect_true(is.na(refresh$plan$fetch_start_date[refresh$plan$symbol == "SPY"]))
 
