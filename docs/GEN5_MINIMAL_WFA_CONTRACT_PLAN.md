@@ -6,7 +6,9 @@ This planning record follows the Gen5 v0 market-data-layer closeout and the Gen5
 
 The first minimal WFA milestone must consume those handoff artifacts without calling Alpaca, inferring latest sessions, or recomputing provider authority. This document defines the contract and build order only. It does not implement WFA code.
 
-Implementation note: the first Minimal WFA Foundation code slice now exists as a handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench handoff before later fold construction, while still leaving folds, indicators, returns, labels, regimes, strategy logic, exits, allocation, dashboards, execution, live-order behavior, provider expansion, corporate-actions ingestion, and earnings-data integration out of scope.
+Implementation note: the first Minimal WFA Foundation code slice now exists as a handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench handoff before later fold construction, while still leaving indicators, returns, labels, regimes, strategy logic, exits, allocation, dashboards, execution, live-order behavior, provider expansion, corporate-actions ingestion, and earnings-data integration out of scope.
+
+Implementation note: the first fold construction slice now exists as a quarterly fold geometry builder in `R/wfa_fold_geometry.R`. It consumes an accepted WFA handoff gate result plus explicit geometry inputs and emits TRAIN/OOS date records only; it does not partition bars, compute features, compute returns, evaluate candidates, or search across geometry alternatives.
 
 ## Scope
 
@@ -103,6 +105,8 @@ A fold geometry record must include:
 - source handoff manifest path or ID;
 - source `as_of_timestamp`;
 - source `latest_completed_session`.
+
+The first implementation uses `g5_build_quarterly_fold_geometry()` for a single explicit quarterly geometry. The emitted manifest records include `fold_id`, TRAIN dates, OOS dates, `decision_cadence`, decision-pack validity dates, train and OOS window rules, intentional gap days and gap dates, source handoff reference, handoff gate status/review acceptance fields, source `as_of_timestamp`, source `latest_completed_session`, and `geometry_search_policy == "none_single_explicit_quarterly_geometry"`.
 
 The first implementation should use quarterly OOS periods and the canonical `session_date` calendar visible in the handoff bars. Calendar construction is allowed only from handoff data and manifest metadata. It must not call market-clock APIs or infer latest sessions.
 

@@ -828,9 +828,21 @@ Stop conditions:
 
 ### 24. Add quarterly fold geometry manifest builder
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-quarterly-fold-geometry`
+
+Branch: `codex/gen5-wfa-quarterly-fold-geometry`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_fold_geometry.R` as the quarterly fold geometry manifest builder for the Minimal WFA Foundation.
+- The builder consumes a WFA handoff gate result plus explicit geometry inputs only, requires `REVIEW_REQUIRED` handoffs to be explicitly accepted, and emits TRAIN/OOS date records with quarterly decision cadence, decision-pack validity dates, source handoff reference, source `as_of_timestamp`, and source `latest_completed_session`.
+- The first geometry is a single explicit expanding-TRAIN/calendar-quarter-OOS geometry, with final OOS bounded by `latest_completed_session`, explicit no-gap or intentional calendar-day gap policy, and `geometry_search_policy == "none_single_explicit_quarterly_geometry"`.
+- Added focused non-network tests for valid quarterly folds, intentional gap recording, review-required acceptance, invalid dates, invalid gate status, and latest-completed-session bounds.
+- No indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, provider calls, cache authority, or `Sys.Date()` use were added.
 
 Goal: Create explicit quarterly TRAIN/OOS fold manifests from an accepted handoff without computing research features or performance.
 
