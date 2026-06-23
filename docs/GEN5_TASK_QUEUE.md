@@ -753,6 +753,7 @@ Notes:
 
 - Added `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md` as the first WFA planning boundary after the Research Data Workbench.
 - Defined allowed workbench handoff inputs, fold geometry requirements, TRAIN/OOS separation, no-leakage rules, fold-local fit/apply requirements for later learned components, reserved cash/no-position and buy-and-hold baselines, minimal audit outputs, and frozen decision evidence.
+- Captured operator intent that WFA is the time-machine methodology for research decisions and frozen quarterly decision packs, with fold consistency as the first selection priority and 25% drawdown as a warning threshold.
 - Reconfirmed that this slice does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
 
 Goal: Define the first minimal WFA milestone contract and build order before implementation begins.
