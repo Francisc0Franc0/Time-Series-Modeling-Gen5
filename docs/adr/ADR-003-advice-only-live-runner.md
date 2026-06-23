@@ -10,7 +10,9 @@ The intended operational workflow is compatible with a normal day job: run the s
 
 ## Decision
 
-Gen5 live operation is advice-only. It should produce professional console output and dashboard-style charts, but it should not submit orders.
+When the later live-advisor milestone is built, Gen5 live operation will be advice-only. It should produce professional console output and dashboard-style charts, but it should not submit orders.
+
+This ADR does not make the Gen5 v0 market-data layer a live runner. Current v0 work remains limited to adjusted daily Alpaca data ingestion, cache behavior, validation, and audit artifacts.
 
 ## Consequences
 

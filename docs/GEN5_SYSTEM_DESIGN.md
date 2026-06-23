@@ -10,6 +10,8 @@ Gen5 targets a long-only, rolling walk-forward, regime-conditioned tactical equi
 
 ## Current Decisions
 
+These are architectural decisions and later build-order constraints, not a claim that downstream modules are already implemented. The current v0 implementation target remains the market-data layer.
+
 - Core language: R-first.
 - Provider: Alpaca only for v0.
 - Bars: adjusted daily OHLCV only.

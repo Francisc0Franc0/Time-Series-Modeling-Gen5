@@ -227,7 +227,18 @@ Stop conditions:
 
 ### 7. Review ADR consistency against current v0 freeze
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `docs: align ADR scope with v0 freeze`
+
+Validation: Documentation-only diff check.
+
+Notes:
+
+- Clarified that system-design current decisions are architectural constraints and build-order direction, not implementation status.
+- Clarified ADR-003 as a later live-advisor decision that does not make v0 a live runner.
 
 Goal: Ensure ADRs, system design, README, and freeze evidence agree on current scope and do not imply completed downstream modules.
 

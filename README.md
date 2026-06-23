@@ -6,6 +6,8 @@ The first milestone is intentionally narrow: a daily adjusted Alpaca market-data
 
 ## Gen5 v0 Scope
 
+This scope records contract constraints and future build direction; the current implementation target is still the market-data layer only.
+
 - Long-only daily trading research and advice-only live signals.
 - Alpaca provider only.
 - Adjusted daily OHLCV bars only.
