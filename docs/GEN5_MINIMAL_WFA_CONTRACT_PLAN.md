@@ -10,6 +10,8 @@ Implementation note: the first Minimal WFA Foundation code slice now exists as a
 
 Implementation note: the first fold construction slice now exists as a quarterly fold geometry builder in `R/wfa_fold_geometry.R`. It consumes an accepted WFA handoff gate result plus explicit geometry inputs and emits TRAIN/OOS date records only; it does not partition bars, compute features, compute returns, evaluate candidates, or search across geometry alternatives.
 
+Implementation note: the first TRAIN/OOS split audit slice now exists as `R/wfa_train_oos_split_audit.R`. It consumes an accepted WFA handoff gate result, canonical handoff bars, source symbol coverage and health context, and the explicit quarterly fold geometry manifest; it partitions rows by fold dates only, produces fold-local symbol availability evidence, and records leakage attestation without computing indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboards, execution, live-order behavior, provider expansion, corporate-actions ingestion, or earnings-data integration.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -133,6 +135,14 @@ For each fold:
 - Cross-fold summaries may aggregate completed OOS evidence only after each fold has been independently frozen and evaluated.
 
 The WFA layer may use OOS rows to measure the already-frozen decision for that fold. It may not use OOS rows to decide what that decision should have been.
+
+The first TRAIN/OOS split audit helper returns these tabular evidence surfaces:
+
+- `train_rows` and `oos_rows`, which preserve the canonical handoff bar columns and add fold membership fields (`fold_id`, `split_role`, fold TRAIN/OOS dates, and `split_membership_rule`);
+- `split_summary`, with per-fold row counts, first/latest TRAIN and OOS sessions, symbol counts, disjointness checks, OOS-after-TRAIN checks, latest-session bounds, and `outcome_columns_used_for_membership == FALSE`;
+- `symbol_availability`, with one row per fold and source handoff symbol, fold-local TRAIN/OOS row counts and date edges, source empty/partial/stale coverage fields, source health warning context, and an availability rule that records no OOS performance filtering;
+- `source_warn_health_rows`, preserving accepted source warning rows for downstream evidence;
+- `leakage_attestation`, recording no provider calls, no latest-session inference, and no OOS-outcome membership decisions.
 
 ## Selection And Rejection Posture
 

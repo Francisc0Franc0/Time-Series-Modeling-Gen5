@@ -873,9 +873,22 @@ Stop conditions:
 
 ### 25. Add TRAIN/OOS split verifier and fold-local availability audit
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-train-oos-split-audit`
+
+Branch: `codex/gen5-wfa-train-oos-split-audit`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_train_oos_split_audit.R` as the TRAIN/OOS split verifier and fold-local availability audit helper for the Minimal WFA Foundation.
+- The helper consumes an accepted WFA handoff gate result, canonical handoff bars, source symbol coverage and health context, and the explicit quarterly fold geometry manifest.
+- It returns `train_rows`, `oos_rows`, `split_summary`, `symbol_availability`, preserved warning rows, and a leakage attestation; fold membership is assigned by explicit fold dates only.
+- Fold-local symbol availability records every source handoff symbol, including missing, partial, stale, and warning context, without filtering symbols based on OOS performance.
+- Added focused non-network tests for disjoint TRAIN/OOS splits, OOS bounds, warning/context preservation, fake outcome-column immunity, review acceptance, and invalid fold bounds.
+- No indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, provider calls, cache authority, or `Sys.Date()` use were added.
 
 Goal: Prove that accepted handoff bars can be partitioned by the quarterly fold manifest without leakage.
 
