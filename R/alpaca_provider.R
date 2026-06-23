@@ -34,6 +34,31 @@ g5_alpaca_config_from_env <- function() {
   )
 }
 
+g5_alpaca_missing_credential_fields <- function(config = g5_alpaca_config_from_env()) {
+  missing_fields <- character()
+  key_id <- if (is.null(config$key_id) || length(config$key_id) == 0L) "" else as.character(config$key_id[[1L]])
+  secret_key <- if (is.null(config$secret_key) || length(config$secret_key) == 0L) "" else as.character(config$secret_key[[1L]])
+  if (is.na(key_id) || !nzchar(key_id)) {
+    missing_fields <- c(missing_fields, "key id (set ALPACA_KEY or ALPACA_KEY_ID)")
+  }
+  if (is.na(secret_key) || !nzchar(secret_key)) {
+    missing_fields <- c(missing_fields, "secret key (set ALPACA_SECRET or ALPACA_SECRET_KEY)")
+  }
+  missing_fields
+}
+
+g5_alpaca_require_credentials <- function(config = g5_alpaca_config_from_env()) {
+  missing_fields <- g5_alpaca_missing_credential_fields(config)
+  if (length(missing_fields) > 0L) {
+    g5_stop(paste(
+      "Alpaca credentials are not configured for live data refresh. Missing",
+      paste(missing_fields, collapse = " and "),
+      "in repo-local .Renviron or the process environment."
+    ))
+  }
+  invisible(TRUE)
+}
+
 g5_alpaca_daily_adjusted_request <- function(
   symbols,
   start_date,
@@ -123,18 +148,30 @@ g5_alpaca_resolve_daily_date_range <- function(
   )
 }
 
-g5_alpaca_require_runtime <- function() {
-  missing_pkgs <- c(
-    if (!requireNamespace("httr", quietly = TRUE)) "httr",
-    if (!requireNamespace("jsonlite", quietly = TRUE)) "jsonlite"
+g5_alpaca_missing_runtime_packages <- function(require_namespace = requireNamespace) {
+  c(
+    if (!require_namespace("httr", quietly = TRUE)) "httr",
+    if (!require_namespace("jsonlite", quietly = TRUE)) "jsonlite"
   )
+}
+
+g5_alpaca_require_runtime <- function() {
+  missing_pkgs <- g5_alpaca_missing_runtime_packages()
   if (length(missing_pkgs) > 0L) {
     g5_stop(paste(
       "Alpaca fetching requires R package(s):",
       paste(missing_pkgs, collapse = ", "),
-      "Install them before running the live data-refresh smoke path."
+      "Install them before running the live data-refresh smoke path.",
+      "Current .libPaths():",
+      paste(.libPaths(), collapse = "; ")
     ))
   }
+  invisible(TRUE)
+}
+
+g5_alpaca_preflight_live_fetch <- function(config = g5_alpaca_config_from_env()) {
+  g5_alpaca_require_credentials(config)
+  g5_alpaca_require_runtime()
   invisible(TRUE)
 }
 
@@ -245,10 +282,7 @@ g5_fetch_alpaca_daily_adjusted_bars <- function(request, config = g5_alpaca_conf
   if (!all(request$adjustment == "all")) {
     g5_stop("Gen5 v0 Alpaca requests must use adjustment == 'all'.")
   }
-  if (!isTRUE(config$has_credentials)) {
-    g5_stop("Alpaca credentials are not configured. Set ALPACA_KEY and ALPACA_SECRET in .Renviron or the environment.")
-  }
-  g5_alpaca_require_runtime()
+  g5_alpaca_preflight_live_fetch(config)
 
   symbols <- paste(g5_standardize_symbol(request$symbol), collapse = ",")
   base_url <- sub("/+$", "", config$base_url)

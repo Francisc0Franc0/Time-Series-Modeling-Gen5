@@ -127,3 +127,35 @@ test_that("Alpaca config accepts Gen4-style credential objects", {
   expect_identical(cfg$key_id, "object_key")
   expect_identical(cfg$secret_key, "object_secret")
 })
+
+test_that("Alpaca live fetch preflight reports missing credentials clearly", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  expect_identical(
+    g5_alpaca_missing_credential_fields(list(key_id = "", secret_key = "")),
+    c(
+      "key id (set ALPACA_KEY or ALPACA_KEY_ID)",
+      "secret key (set ALPACA_SECRET or ALPACA_SECRET_KEY)"
+    )
+  )
+
+  expect_error(
+    g5_alpaca_require_credentials(list(key_id = "", secret_key = "secret")),
+    "Missing key id \\(set ALPACA_KEY or ALPACA_KEY_ID\\)"
+  )
+})
+
+test_that("Alpaca runtime preflight can identify missing optional packages", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  fake_require_namespace <- function(package, quietly = TRUE) {
+    identical(package, "jsonlite")
+  }
+
+  expect_identical(
+    g5_alpaca_missing_runtime_packages(fake_require_namespace),
+    "httr"
+  )
+})

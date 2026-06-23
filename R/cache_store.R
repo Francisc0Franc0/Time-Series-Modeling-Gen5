@@ -12,15 +12,64 @@ g5_cache_symbol_path <- function(cache_root, provider, timeframe, symbol, format
   file.path(normalizePath(cache_root, winslash = "/", mustWork = FALSE), provider, timeframe, paste0(safe_symbol, ".", format))
 }
 
+g5_require_writable_cache_root <- function(cache_root) {
+  if (!nzchar(cache_root)) {
+    g5_stop("cache_root must be a non-empty path.")
+  }
+
+  normalized_root <- normalizePath(cache_root, winslash = "/", mustWork = FALSE)
+  created <- dir.create(normalized_root, recursive = TRUE, showWarnings = FALSE)
+  if (!dir.exists(normalized_root)) {
+    g5_stop(paste(
+      "Configured cache root is not available:",
+      normalized_root,
+      "Create it or set GEN5_CACHE_ROOT/cache.root to a writable local path."
+    ))
+  }
+  if (!created && !dir.exists(normalized_root)) {
+    g5_stop(paste("Configured cache root could not be created:", normalized_root))
+  }
+
+  probe_path <- tempfile("g5_cache_probe_", tmpdir = normalized_root)
+  probe <- tryCatch(
+    {
+      writeLines("gen5-cache-probe", probe_path, useBytes = TRUE)
+      file.exists(probe_path)
+    },
+    error = function(e) e
+  )
+  if (inherits(probe, "error") || !isTRUE(probe)) {
+    detail <- if (inherits(probe, "error")) conditionMessage(probe) else "write probe did not create a file"
+    g5_stop(paste(
+      "Configured cache root is not writable:",
+      normalized_root,
+      "-",
+      detail,
+      "Set GEN5_CACHE_ROOT/cache.root to a writable local path."
+    ))
+  }
+  unlink(probe_path, force = TRUE)
+  invisible(normalized_root)
+}
+
 g5_write_bars_cache <- function(bars, cache_root, provider = "alpaca", timeframe = "1D") {
   bars <- g5_validate_bar_data(bars)
+  g5_require_writable_cache_root(cache_root)
   symbols <- unique(bars$symbol)
   written <- character()
 
   for (sym in symbols) {
     out_path <- g5_cache_symbol_path(cache_root, provider, timeframe, sym)
     dir.create(dirname(out_path), recursive = TRUE, showWarnings = FALSE)
-    saveRDS(bars[bars$symbol == sym, , drop = FALSE], out_path)
+    if (!dir.exists(dirname(out_path))) {
+      g5_stop(paste("Cache symbol directory could not be created:", dirname(out_path)))
+    }
+    tryCatch(
+      saveRDS(bars[bars$symbol == sym, , drop = FALSE], out_path),
+      error = function(e) {
+        g5_stop(paste("Failed to write cache file:", out_path, "-", conditionMessage(e)))
+      }
+    )
     written <- c(written, out_path)
   }
 
@@ -257,6 +306,7 @@ g5_write_incremental_bars_cache <- function(
   if (!is.data.frame(refresh_plan) || nrow(refresh_plan) == 0L) {
     g5_stop("refresh_plan must be a non-empty data.frame.")
   }
+  g5_require_writable_cache_root(cache_root)
   fetched_bars <- if (is.null(fetched_bars) || nrow(fetched_bars) == 0L) {
     g5_empty_bar_data()
   } else {
@@ -280,7 +330,15 @@ g5_write_incremental_bars_cache <- function(
 
     if (nrow(merged) > 0L) {
       dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
-      saveRDS(merged, path)
+      if (!dir.exists(dirname(path))) {
+        g5_stop(paste("Cache symbol directory could not be created:", dirname(path)))
+      }
+      tryCatch(
+        saveRDS(merged, path),
+        error = function(e) {
+          g5_stop(paste("Failed to write cache file:", path, "-", conditionMessage(e)))
+        }
+      )
       merged_frames[[sym]] <- merged
     }
 

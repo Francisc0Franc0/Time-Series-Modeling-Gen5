@@ -92,6 +92,8 @@ symbol_coverage_path <- file.path(
 )
 
 cache_root <- cfg$cache$root
+cache_root <- g5_require_writable_cache_root(cache_root)
+message("Using cache root: ", cache_root)
 refresh <- g5_plan_incremental_cache_refresh(
   symbols = symbols,
   cache_root = cache_root,
@@ -110,6 +112,14 @@ if (nrow(fetch_rows) == 0L) {
   bars <- g5_empty_bar_data()
   message("Requested range is already fully cached; no Alpaca fetch required.")
 } else {
+  alpaca_cfg <- g5_alpaca_config_from_env()
+  g5_alpaca_preflight_live_fetch(alpaca_cfg)
+  message(
+    "Alpaca live fetch preflight passed for feed=",
+    cfg$feed,
+    "; requested fetch symbols=",
+    paste(fetch_rows$symbol, collapse = ",")
+  )
   for (i in seq_len(nrow(fetch_rows))) {
     symbol_request <- g5_alpaca_daily_adjusted_request(
       symbols = fetch_rows$symbol[[i]],
@@ -119,7 +129,7 @@ if (nrow(fetch_rows) == 0L) {
       latest_completed_session = resolved$latest_completed_session,
       feed = cfg$feed
     )
-    symbol_bars <- g5_fetch_alpaca_daily_adjusted_bars(symbol_request)
+    symbol_bars <- g5_fetch_alpaca_daily_adjusted_bars(symbol_request, config = alpaca_cfg)
     fetch_frames[[fetch_rows$symbol[[i]]]] <- symbol_bars
     message("Fetched canonical rows for ", fetch_rows$symbol[[i]], ": ", nrow(symbol_bars))
   }

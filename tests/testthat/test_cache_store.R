@@ -5,6 +5,19 @@ test_that("cache paths are symbol scoped", {
   expect_match(path, "SPY[.]rds$")
 })
 
+test_that("cache root preflight reports unusable configured paths", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "cache_store.R"))
+
+  cache_root_file <- tempfile("g5_cache_root_file_")
+  writeLines("not a directory", cache_root_file)
+
+  expect_error(
+    g5_require_writable_cache_root(cache_root_file),
+    "Configured cache root is not available"
+  )
+})
+
 test_that("cache reads can report partial hits without hiding misses", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "cache_store.R"))
