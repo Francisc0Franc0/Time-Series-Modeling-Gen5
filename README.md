@@ -62,6 +62,14 @@ For the full local operator setup sequence, including config overlays, credentia
 
 The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. The default cache root is the ignored repo-local `data_cache/alpaca_daily_adjusted/` folder; use the local file or `GEN5_CACHE_ROOT` only when an operator-specific override is needed. Use local config for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
 
+Before a credentialed refresh, operators can run an explicit no-network credential readiness preflight:
+
+```powershell
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/preflight_alpaca_credentials.R
+```
+
+The preflight checks credential presence, rejects placeholder-like values, checks live-fetch runtime packages by default, and prints only non-secret PASS/FAIL/SKIP rows. It does not store credentials, print credential values, or contact Alpaca. Set `GEN5_ALPACA_PREFLIGHT_REQUIRE_RUNTIME=false` only when you want to inspect credential presence without checking optional runtime packages.
+
 ```powershell
 & 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/run_data_refresh.R
 ```
@@ -176,6 +184,8 @@ Set `GEN5_WORKBENCH_SYMBOLS="NVDA,AMD"` for an explicit small basket, or use `GE
 
 The query output includes canonical adjusted daily bars, a manifest, audit CSV, symbol coverage CSV, refresh plan CSV, and severity-labeled health CSV with `ERROR`, `WARN`, and `INFO` rows. It does not compute indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
+The future research handoff contract and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA code must consume the workbench handoff artifacts rather than calling Alpaca or inferring latest sessions directly.
+
 ## Static Candlestick Inspection
 
 The workbench includes a separate static chart script for one-symbol visual inspection of canonical adjusted daily bars. By default it reads cache through the same workbench query/cache helpers and writes a PNG plus companion query artifacts under ignored `runs/research_workbench/`.
@@ -204,7 +214,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 ## Next Milestone Planning
 
-The next planned milestone is Gen5 v0.1 Research Data Workbench, documented in `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. It is a research-plumbing milestone only: small basket/date-range queries, manual universe roles, severity-labeled data health, static candlestick PNG inspection, and a canonical research handoff manifest.
+The next planned milestone is Gen5 v0.1 Research Data Workbench, documented in `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. It is a research-plumbing milestone only: small basket/date-range queries, manual universe roles, severity-labeled data health, static candlestick PNG inspection, an opt-in Alpaca credential preflight, and a canonical research handoff manifest.
 
 This milestone does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, or non-Alpaca providers. Future WFA code should consume the workbench handoff contract rather than calling Alpaca directly.
 

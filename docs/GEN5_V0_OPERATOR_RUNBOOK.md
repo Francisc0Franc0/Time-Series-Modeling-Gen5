@@ -59,6 +59,14 @@ powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
 
 This wrapper runs the scaffold smoke test, data-layer validation script, and non-network `testthat` suite. Interpret `PASS` as local data-layer contract coverage only. A `SKIP` for the live Alpaca fetch smoke is expected here; it means the validation script did not make a network call, even if credentials and runtime packages are present.
 
+When credentials are configured, run the opt-in no-network credential preflight before a live refresh:
+
+```powershell
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/preflight_alpaca_credentials.R
+```
+
+The preflight loads ignored `.Renviron` values, checks credential presence, rejects placeholder-like values, checks the live-fetch runtime packages by default, and prints only non-secret PASS/FAIL/SKIP rows. It does not store credentials, print credential values, or contact Alpaca. Set `GEN5_ALPACA_PREFLIGHT_REQUIRE_RUNTIME=false` only when inspecting credential presence without checking optional runtime packages.
+
 When credentials and runtime packages are available, run a live Alpaca adjusted daily smoke with explicit bounds:
 
 ```powershell
@@ -100,5 +108,7 @@ $env:GEN5_WORKBENCH_END_DATE="2026-06-23"
 The default universe is `gen5_v0_1_poc_growth` with `research_universe` rows from `config/universe_registry.csv`. Override with `GEN5_WORKBENCH_SYMBOLS`, `GEN5_WORKBENCH_UNIVERSE`, or `GEN5_WORKBENCH_ROLES`. Set `GEN5_WORKBENCH_REFRESH=true` only for an intentional credentialed Alpaca refresh.
 
 Workbench artifacts are written under ignored `runs/research_workbench/`: bars, manifest, audit, symbol coverage, refresh plan, and severity-labeled health CSVs.
+
+The future research handoff manifest and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA consumers must read the workbench handoff artifacts and must not call Alpaca directly.
 
 For closeout gates and the current non-network invariant coverage map, see `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.

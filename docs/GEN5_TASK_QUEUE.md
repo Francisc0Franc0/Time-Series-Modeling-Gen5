@@ -609,7 +609,17 @@ Stop conditions:
 
 ### 18. Add opt-in Alpaca credential preflight
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-closeout`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `scripts/preflight_alpaca_credentials.R` as an explicit no-network credential readiness check.
+- Added provider helpers that reject missing or placeholder-like credentials without printing credential values.
+- Added non-network tests for placeholder detection, runtime package readiness reporting, and skipped network probing.
 
 Goal: Give the operator a clear way to confirm credential presence and basic credentialed readiness without making default tests depend on network access.
 
@@ -634,7 +644,17 @@ Stop conditions:
 
 ### 19. Define research handoff manifest and gate checklist
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-closeout`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`.
+- Defined the future WFA consumer rule: consume workbench handoff artifacts, do not call Alpaca directly, and do not infer latest sessions.
+- Documented manifest fields, bar-contract gates, health-review gates, and cash/no-position plus buy-and-hold as reserved later baseline concepts only.
 
 Goal: Create the source-controlled contract and checklist that future WFA code must consume, including no direct Alpaca calls, explicit as-of timestamp, universe metadata, data-health status, and baseline concepts.
 

@@ -216,6 +216,22 @@ $env:GEN5_CHART_END_DATE="2026-06-23"
 
 The chart path queries one symbol through the existing workbench cache/provider helpers, writes companion query artifacts under ignored `runs/research_workbench/`, and renders a base-R PNG from canonical adjusted daily OHLC bars. `GEN5_CHART_REFRESH` defaults to `false`; set it to `true` only for an explicit credentialed refresh before plotting.
 
+Implemented opt-in credential preflight command:
+
+```powershell
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/preflight_alpaca_credentials.R
+```
+
+The preflight checks credential presence, rejects placeholder-like values, checks live-fetch runtime packages by default, and prints only non-secret PASS/FAIL/SKIP rows. It does not make a network request. Set `GEN5_ALPACA_PREFLIGHT_REQUIRE_RUNTIME=false` only when checking credential presence without checking optional runtime packages.
+
+## Research Handoff Gate
+
+The handoff contract for future research consumers is defined in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`.
+
+Future WFA code must consume the workbench bars, manifest, health, audit, symbol coverage, refresh plan, and source-controlled universe registry. It must not call Alpaca directly, infer the latest session, or require credentials as part of default research validation.
+
+The handoff gate reserves cash/no-position and buy-and-hold as later baseline concepts only. It does not implement returns, benchmark performance, WFA folds, strategy evaluation, allocation, dashboard behavior, execution, or live orders.
+
 ## Acceptance Criteria
 
 Gen5 v0.1 is ready to hand off to the first research milestone when:

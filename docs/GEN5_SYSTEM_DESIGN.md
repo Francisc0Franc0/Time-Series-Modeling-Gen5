@@ -24,6 +24,7 @@ These are architectural decisions and later build-order constraints, not a claim
 - Leverage reports: always compare 1.0x baseline with 1.8x leveraged variant.
 - Drawdown discomfort threshold: 25% is a major design warning level.
 - Local heavy cache: ignored repo-local `data_cache/` is acceptable for v0.1 simplicity; outside-OneDrive cache roots remain an optional operator optimization.
+- Research handoff: future WFA code must consume workbench handoff artifacts and must not call Alpaca directly.
 
 ## Semantic Modules
 
@@ -64,6 +65,8 @@ Every bar bundle should preserve:
 
 Every data refresh should export an audit of requested symbols, resolved session, missing symbols, duplicates, gaps, stale symbols, cache hits, and provider query timestamp.
 
+The v0.1 Research Data Workbench adds a handoff manifest and gate checklist for later WFA consumers. That handoff is still market-data-only: canonical bars, manifest, health rows, audit, symbol coverage, refresh plan, and universe metadata. It reserves cash/no-position and buy-and-hold as later baseline concepts without implementing returns, folds, strategy evaluation, or allocation.
+
 ## What Gen5 Intentionally Does Not Preserve From Gen4
 
 - Massive default plot generation.
@@ -79,7 +82,7 @@ Every data refresh should export an audit of requested symbols, resolved session
 ## Build Order
 
 - Data layer and cache contract.
-- Research Data Workbench: small basket/date-range query, universe registry, severity-labeled data health, static candlestick inspection, and research handoff manifest.
+- Research Data Workbench: small basket/date-range query, universe registry, severity-labeled data health, static candlestick inspection, opt-in credential preflight, and research handoff manifest.
 - Minimal WFA engine.
 - Asset universe/taxonomy studies.
 - Feature engine.

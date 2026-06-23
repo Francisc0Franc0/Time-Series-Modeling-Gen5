@@ -47,6 +47,50 @@ g5_alpaca_missing_credential_fields <- function(config = g5_alpaca_config_from_e
   missing_fields
 }
 
+.g5_alpaca_looks_placeholder <- function(value) {
+  value <- trimws(as.character(value[[1L]]))
+  if (is.na(value) || !nzchar(value)) {
+    return(FALSE)
+  }
+  token <- gsub("[^a-z0-9]+", "_", tolower(value))
+  token <- gsub("^_+|_+$", "", token)
+  token %in% c(
+    "alpaca_key",
+    "alpaca_key_id",
+    "alpaca_secret",
+    "alpaca_secret_key",
+    "change_me",
+    "changeme",
+    "dummy",
+    "example",
+    "fake",
+    "placeholder",
+    "replace_me",
+    "test",
+    "your_alpaca_key",
+    "your_alpaca_key_id",
+    "your_alpaca_secret",
+    "your_alpaca_secret_key",
+    "your_key",
+    "your_key_id",
+    "your_secret",
+    "your_secret_key"
+  ) || grepl("^(your|replace|change|dummy|fake|example|placeholder)_", token)
+}
+
+g5_alpaca_placeholder_credential_fields <- function(config = g5_alpaca_config_from_env()) {
+  placeholder_fields <- character()
+  key_id <- if (is.null(config$key_id) || length(config$key_id) == 0L) "" else as.character(config$key_id[[1L]])
+  secret_key <- if (is.null(config$secret_key) || length(config$secret_key) == 0L) "" else as.character(config$secret_key[[1L]])
+  if (.g5_alpaca_looks_placeholder(key_id)) {
+    placeholder_fields <- c(placeholder_fields, "key id")
+  }
+  if (.g5_alpaca_looks_placeholder(secret_key)) {
+    placeholder_fields <- c(placeholder_fields, "secret key")
+  }
+  placeholder_fields
+}
+
 g5_alpaca_require_credentials <- function(config = g5_alpaca_config_from_env()) {
   missing_fields <- g5_alpaca_missing_credential_fields(config)
   if (length(missing_fields) > 0L) {
@@ -54,6 +98,14 @@ g5_alpaca_require_credentials <- function(config = g5_alpaca_config_from_env()) 
       "Alpaca credentials are not configured for live data refresh. Missing",
       paste(missing_fields, collapse = " and "),
       "in repo-local .Renviron or the process environment."
+    ))
+  }
+  placeholder_fields <- g5_alpaca_placeholder_credential_fields(config)
+  if (length(placeholder_fields) > 0L) {
+    g5_stop(paste(
+      "Alpaca credentials look like placeholders for",
+      paste(placeholder_fields, collapse = " and "),
+      "and cannot be used for live data refresh."
     ))
   }
   invisible(TRUE)
@@ -167,6 +219,53 @@ g5_alpaca_require_runtime <- function() {
     ))
   }
   invisible(TRUE)
+}
+
+g5_alpaca_credential_preflight <- function(
+  config = g5_alpaca_config_from_env(),
+  require_runtime = TRUE,
+  require_namespace = requireNamespace
+) {
+  missing_fields <- g5_alpaca_missing_credential_fields(config)
+  placeholder_fields <- g5_alpaca_placeholder_credential_fields(config)
+  missing_runtime <- if (isTRUE(require_runtime)) {
+    g5_alpaca_missing_runtime_packages(require_namespace)
+  } else {
+    character()
+  }
+
+  checks <- data.frame(
+    check = c(
+      "key_id_present",
+      "secret_key_present",
+      "credentials_not_placeholders",
+      "runtime_packages",
+      "provider_scope",
+      "network_probe"
+    ),
+    status = c(
+      if (any(grepl("^key id", missing_fields))) "FAIL" else "PASS",
+      if (any(grepl("^secret key", missing_fields))) "FAIL" else "PASS",
+      if (length(placeholder_fields) > 0L) "FAIL" else "PASS",
+      if (!isTRUE(require_runtime)) "SKIP" else if (length(missing_runtime) > 0L) "FAIL" else "PASS",
+      "PASS",
+      "SKIP"
+    ),
+    detail = c(
+      if (any(grepl("^key id", missing_fields))) "Set ALPACA_KEY or ALPACA_KEY_ID outside source control." else "Configured outside source-controlled config.",
+      if (any(grepl("^secret key", missing_fields))) "Set ALPACA_SECRET or ALPACA_SECRET_KEY outside source control." else "Configured outside source-controlled config.",
+      if (length(placeholder_fields) > 0L) paste("Placeholder-like value detected for", paste(placeholder_fields, collapse = " and ")) else "No placeholder-like credential values detected.",
+      if (!isTRUE(require_runtime)) "Runtime package check skipped by caller." else if (length(missing_runtime) > 0L) paste("Missing package(s):", paste(missing_runtime, collapse = ", ")) else "Required runtime package namespaces are available.",
+      "Alpaca adjusted daily OHLCV only.",
+      "No network request is made by this preflight."
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  list(
+    ok = !any(checks$status == "FAIL"),
+    checks = checks
+  )
 }
 
 g5_alpaca_preflight_live_fetch <- function(config = g5_alpaca_config_from_env()) {

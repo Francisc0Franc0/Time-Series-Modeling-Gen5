@@ -146,6 +146,33 @@ test_that("Alpaca live fetch preflight reports missing credentials clearly", {
   )
 })
 
+test_that("Alpaca credential preflight rejects placeholders without exposing secrets", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  placeholder_config <- list(key_id = "YOUR_ALPACA_KEY", secret_key = "replace-me")
+  expect_identical(
+    g5_alpaca_placeholder_credential_fields(placeholder_config),
+    c("key id", "secret key")
+  )
+  expect_error(
+    g5_alpaca_require_credentials(placeholder_config),
+    "placeholders"
+  )
+
+  fake_require_namespace <- function(package, quietly = TRUE) TRUE
+  config <- list(key_id = "realistic_key_id", secret_key = "super_secret_value")
+  result <- g5_alpaca_credential_preflight(
+    config,
+    require_runtime = TRUE,
+    require_namespace = fake_require_namespace
+  )
+
+  expect_true(result$ok)
+  expect_true(all(result$checks$status %in% c("PASS", "SKIP")))
+  expect_false(any(grepl("realistic_key_id|super_secret_value", result$checks$detail)))
+})
+
 test_that("Alpaca runtime preflight can identify missing optional packages", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "alpaca_provider.R"))
@@ -157,5 +184,33 @@ test_that("Alpaca runtime preflight can identify missing optional packages", {
   expect_identical(
     g5_alpaca_missing_runtime_packages(fake_require_namespace),
     "httr"
+  )
+})
+
+test_that("Alpaca credential preflight reports runtime readiness without network", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  fake_require_namespace <- function(package, quietly = TRUE) {
+    identical(package, "jsonlite")
+  }
+  result <- g5_alpaca_credential_preflight(
+    list(key_id = "key_id", secret_key = "secret_key"),
+    require_runtime = TRUE,
+    require_namespace = fake_require_namespace
+  )
+
+  expect_false(result$ok)
+  expect_identical(
+    result$checks$status[result$checks$check == "runtime_packages"],
+    "FAIL"
+  )
+  expect_identical(
+    result$checks$status[result$checks$check == "network_probe"],
+    "SKIP"
+  )
+  expect_match(
+    result$checks$detail[result$checks$check == "network_probe"],
+    "No network request"
   )
 })
