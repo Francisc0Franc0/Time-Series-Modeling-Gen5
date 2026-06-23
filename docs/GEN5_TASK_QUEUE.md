@@ -782,9 +782,21 @@ These tasks are intended to be handed off one chunk at a time after the minimal 
 
 ### 23. Add WFA handoff reader and gate
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-handoff-gate`
+
+Branch: `codex/gen5-wfa-handoff-gate`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_handoff_gate.R` as the first Minimal WFA Foundation code slice.
+- The gate reads a completed Research Data Workbench manifest and only its linked canonical bars, audit, symbol coverage, health, refresh plan, and optional merge summary artifacts.
+- It rejects missing artifacts, missing required columns, duplicate `symbol` plus `session_date` rows, bars after `latest_completed_session`, inconsistent timestamp/session evidence, non-Alpaca/non-adjusted/non-1D bars, and `ERROR` health.
+- `WARN` health rows return `REVIEW_REQUIRED` with the warning rows preserved for operator review rather than silently repairing or fetching data.
+- No folds, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, Alpaca credentials, `.Renviron`, network calls, `Sys.Date()`, or direct cache authority were added.
 
 Goal: Validate a completed Research Data Workbench handoff before future WFA folds consume it.
 

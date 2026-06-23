@@ -6,6 +6,8 @@ This planning record follows the Gen5 v0 market-data-layer closeout and the Gen5
 
 The first minimal WFA milestone must consume those handoff artifacts without calling Alpaca, inferring latest sessions, or recomputing provider authority. This document defines the contract and build order only. It does not implement WFA code.
 
+Implementation note: the first Minimal WFA Foundation code slice now exists as a handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench handoff before later fold construction, while still leaving folds, indicators, returns, labels, regimes, strategy logic, exits, allocation, dashboards, execution, live-order behavior, provider expansion, corporate-actions ingestion, and earnings-data integration out of scope.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -78,6 +80,8 @@ Before any fold is constructed, a WFA run must confirm:
 - generated artifacts remain ignored and are not committed.
 
 This gate may fail the run or require operator acceptance. It must not silently repair provider data, fetch replacement bars, or reinterpret latest-session authority.
+
+The current gate returns `PASS` when the handoff has no warning health rows and `REVIEW_REQUIRED` when `WARN` rows are present. `ERROR` health rows, missing artifacts, schema failures, duplicated `symbol` plus `session_date` rows, future bars, or inconsistent `as_of_timestamp`/`latest_completed_session` evidence fail loudly.
 
 ## Fold Geometry Contract
 

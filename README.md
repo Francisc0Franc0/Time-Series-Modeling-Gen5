@@ -222,6 +222,8 @@ This milestone does not implement WFA, PCA/state modeling, strategy logic, exits
 
 The first minimal WFA contract is now defined as a planning record only. It covers rolling fold geometry, TRAIN/OOS separation, no-leakage rules, fold-local fitting requirements for later learned components, reserved cash/no-position and buy-and-hold baselines, minimal audit evidence, and explicit out-of-scope boundaries. It does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
 
+The first Minimal WFA Foundation slice adds a read-only handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench manifest and linked artifacts before future fold code may consume them. The gate reads only manifest-linked CSV artifacts, rejects hard contract failures and `ERROR` health, and returns `REVIEW_REQUIRED` when `WARN` health rows need operator review. It does not construct folds, compute returns, call Alpaca, read credentials, inspect provider responses, infer latest sessions, or read cache authority outside the manifest.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.
