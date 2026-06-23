@@ -65,10 +65,12 @@ message("Output directory: ", normalizePath(validation_dir, winslash = "/", must
 
 cfg <- NULL
 resolved <- NULL
+date_range <- NULL
 request <- NULL
 bars <- NULL
 cache_read <- NULL
 audit <- NULL
+empty_audit <- NULL
 
 pass_fail("config loads from example plus optional local override", {
   cfg <<- g5_load_data_layer_config(repo_root)
@@ -85,12 +87,24 @@ pass_fail("latest completed session uses explicit as_of_timestamp", {
     identical(as.character(resolved$as_of_timestamp), "2026-06-22 17:00:00")
 })
 
-validation_symbols <- c("SPY", "QQQ", "TSLA")
+validation_symbols <- c("SPY", "QQQ", "TSLA", "EMPTY")
+pass_fail("requested date range is explicit and bounded by latest completed session", {
+  date_range <<- g5_alpaca_resolve_daily_date_range(
+    start_date = as.Date("2026-06-18"),
+    end_date = as.Date("2026-06-23"),
+    latest_completed_session = resolved$latest_completed_session
+  )
+  identical(as.Date(date_range$requested_start_date), as.Date("2026-06-18")) &&
+    identical(as.Date(date_range$requested_end_date), as.Date("2026-06-23")) &&
+    identical(as.Date(date_range$fetch_end_date), as.Date("2026-06-22")) &&
+    date_range$date_range_warning_count == 1L
+}, "requested end after latest is recorded and clipped for the provider request")
+
 pass_fail("Alpaca adjusted daily request is explicit and bounded", {
   request <<- g5_alpaca_daily_adjusted_request(
     symbols = validation_symbols,
-    start_date = as.Date("2026-06-18"),
-    end_date = as.Date("2026-06-22"),
+    start_date = date_range$fetch_start_date,
+    end_date = date_range$fetch_end_date,
     as_of_timestamp = resolved$as_of_timestamp,
     latest_completed_session = resolved$latest_completed_session,
     feed = cfg$feed
@@ -101,6 +115,23 @@ pass_fail("Alpaca adjusted daily request is explicit and bounded", {
     all(request$end_date <= request$latest_completed_session)
 })
 
+pass_fail("Alpaca request rejects unbounded future end dates", {
+  inherits(
+    try(
+      g5_alpaca_daily_adjusted_request(
+        symbols = "SPY",
+        start_date = as.Date("2026-06-18"),
+        end_date = as.Date("2026-06-23"),
+        as_of_timestamp = resolved$as_of_timestamp,
+        latest_completed_session = resolved$latest_completed_session,
+        feed = cfg$feed
+      ),
+      silent = TRUE
+    ),
+    "try-error"
+  )
+})
+
 provider_payload <- list(
   SPY = list(
     list(t = "2026-06-18T04:00:00Z", o = 100, h = 101, l = 99, c = 100.5, v = 1000),
@@ -108,14 +139,14 @@ provider_payload <- list(
     list(t = "2026-06-22T04:00:00Z", o = 102, h = 103, l = 101, c = 102.5, v = 1200)
   ),
   QQQ = list(
-    list(t = "2026-06-18T04:00:00Z", o = 200, h = 202, l = 199, c = 201, v = 1400),
     list(t = "2026-06-19T04:00:00Z", o = 201, h = 203, l = 200, c = 202, v = 1500)
-  )
+  ),
+  EMPTY = list()
 )
 
 pass_fail("canonical bars are adjusted daily OHLCV only", {
   bars <<- g5_alpaca_map_bars_to_canonical(provider_payload, request)
-  nrow(bars) == 5L &&
+  nrow(bars) == 4L &&
     all(bars$adjusted) &&
     all(bars$timeframe == "1D") &&
     all(bars$provider == "alpaca") &&
@@ -133,28 +164,57 @@ pass_fail("cache write/read reports hits and missing symbols", {
   )
   nrow(written) == 2L &&
     identical(sort(cache_read$cache_hit_symbols), c("QQQ", "SPY")) &&
-    identical(cache_read$cache_missing_symbols, "TSLA") &&
-    nrow(cache_read$bars) == 5L
+    identical(sort(cache_read$cache_missing_symbols), c("EMPTY", "TSLA")) &&
+    nrow(cache_read$bars) == 4L
 })
 
-pass_fail("audit reports requested, missing, stale, rows, cache, and query timestamp", {
+pass_fail("audit reports availability, requested versus observed range, cache, and query timestamp", {
   audit <<- g5_audit_bars(
     bars = cache_read$bars,
     requested_symbols = validation_symbols,
     latest_completed_session = resolved$latest_completed_session,
+    requested_start_date = date_range$requested_start_date,
+    requested_end_date = date_range$requested_end_date,
     provider_query_timestamp = resolved$as_of_timestamp,
     cache_hits = cache_read$cache_hit_symbols,
-    cache_misses = cache_read$cache_missing_symbols
+    cache_misses = cache_read$cache_missing_symbols,
+    availability_warnings = date_range$date_range_warnings
   )
-  audit$requested_symbol_count == 3L &&
-    audit$missing_symbol_count == 1L &&
-    identical(audit$missing_symbols, "TSLA") &&
+  audit$requested_symbol_count == 4L &&
+    audit$missing_symbol_count == 2L &&
+    identical(audit$missing_symbols, "TSLA,EMPTY") &&
     audit$stale_symbol_count == 1L &&
     identical(audit$stale_symbols, "QQQ") &&
-    audit$row_count == 5L &&
+    audit$row_count == 4L &&
     audit$cache_hit_symbol_count == 2L &&
-    audit$cache_miss_symbol_count == 1L &&
-    identical(audit$provider_query_timestamp, resolved$as_of_timestamp)
+    audit$cache_miss_symbol_count == 2L &&
+    identical(audit$provider_query_timestamp, resolved$as_of_timestamp) &&
+    identical(as.Date(audit$requested_start_date), as.Date("2026-06-18")) &&
+    identical(as.Date(audit$requested_end_date), as.Date("2026-06-23")) &&
+    identical(as.Date(audit$observed_start_date), as.Date("2026-06-18")) &&
+    identical(as.Date(audit$observed_end_date), as.Date("2026-06-22")) &&
+    identical(audit$empty_symbol_count, 2L) &&
+    identical(audit$empty_symbols, "TSLA,EMPTY") &&
+    identical(audit$partial_history_symbol_count, 1L) &&
+    identical(audit$partial_history_symbols, "QQQ") &&
+    audit$availability_warning_count >= 3L
+})
+
+pass_fail("empty provider payload is reported as auditable availability failure", {
+  empty_bars <- g5_alpaca_map_bars_to_canonical(list(), request)
+  empty_audit <<- g5_audit_bars(
+    bars = empty_bars,
+    requested_symbols = validation_symbols,
+    latest_completed_session = resolved$latest_completed_session,
+    requested_start_date = date_range$requested_start_date,
+    requested_end_date = date_range$requested_end_date,
+    provider_query_timestamp = resolved$as_of_timestamp
+  )
+  nrow(empty_bars) == 0L &&
+    empty_audit$empty_symbol_count == length(validation_symbols) &&
+    identical(empty_audit$empty_symbols, paste(validation_symbols, collapse = ",")) &&
+    empty_audit$availability_warning_count >= 2L &&
+    grepl("empty_provider_payload_for_requested_range", empty_audit$availability_warnings, fixed = TRUE)
 })
 
 pass_fail("duplicate symbol/session rows are detected", {

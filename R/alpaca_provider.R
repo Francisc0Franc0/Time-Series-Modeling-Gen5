@@ -77,6 +77,52 @@ g5_alpaca_daily_adjusted_request <- function(
   )
 }
 
+g5_alpaca_resolve_daily_date_range <- function(
+  start_date,
+  end_date,
+  latest_completed_session
+) {
+  start_date <- as.Date(start_date)
+  requested_end_date <- as.Date(end_date)
+  latest_completed_session <- as.Date(latest_completed_session)
+  if (any(is.na(c(start_date, requested_end_date, latest_completed_session)))) {
+    g5_stop("start_date, end_date, and latest_completed_session must be valid dates.")
+  }
+  if (start_date > requested_end_date) {
+    g5_stop("start_date must be on or before end_date.")
+  }
+
+  fetch_end_date <- requested_end_date
+  warnings <- character()
+  if (requested_end_date > latest_completed_session) {
+    fetch_end_date <- latest_completed_session
+    warnings <- c(
+      warnings,
+      paste(
+        "requested_end_date_after_latest_completed_session",
+        paste0("requested_end_date=", requested_end_date),
+        paste0("latest_completed_session=", latest_completed_session),
+        paste0("fetch_end_date=", fetch_end_date),
+        sep = ":"
+      )
+    )
+  }
+  if (start_date > fetch_end_date) {
+    g5_stop("start_date is after the bounded fetch_end_date.")
+  }
+
+  data.frame(
+    requested_start_date = start_date,
+    requested_end_date = requested_end_date,
+    fetch_start_date = start_date,
+    fetch_end_date = fetch_end_date,
+    latest_completed_session = latest_completed_session,
+    date_range_warning_count = length(warnings),
+    date_range_warnings = paste(warnings, collapse = ";"),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_alpaca_require_runtime <- function() {
   missing_pkgs <- c(
     if (!requireNamespace("httr", quietly = TRUE)) "httr",

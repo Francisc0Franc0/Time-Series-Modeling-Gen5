@@ -58,6 +58,26 @@ Rscript scripts/validate/validate_data_layer.R
 
 It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
 
+The validation output also reports the exact script path and command to rerun. Its audit CSV includes availability/date-range fields:
+
+- requested and observed start/end dates
+- first/latest available session by symbol
+- empty symbol counts and symbol lists
+- partial-history symbol counts and symbol lists
+- availability warnings, including requested end dates clipped to the latest completed session
+
+Interpret `empty_symbols` as requested symbols with no returned bars in the audited payload or cache read. Interpret `partial_history_symbols` as symbols that returned bars but did not cover the bounded requested date range. A requested end date after the latest completed session is not fetched directly; the data layer records the requested date, clips the provider request to `latest_completed_session`, and emits an availability warning.
+
+For a live Alpaca smoke refresh, optionally bound the historical range explicitly:
+
+```powershell
+$env:GEN5_FETCH_START_DATE="2020-01-01"
+$env:GEN5_FETCH_END_DATE="2026-06-23"
+Rscript scripts/run_data_refresh.R
+```
+
+Cache and audit outputs remain under ignored local cache paths and `runs/`.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.

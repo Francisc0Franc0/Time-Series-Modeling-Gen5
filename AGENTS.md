@@ -52,6 +52,13 @@ For non-trivial changes, present a short plan before modifying files. Include:
 - side effects or downstream implications
 - validation or smoke checks
 
+## Response Closeout Protocol
+
+When warranted at the end of a completed task:
+
+- Recommend the script or scripts the operator should run next, then await confirmation that the task was accomplished.
+- After the operator confirms completion, suggest next steps aligned with the current plan, including a proposed new branch name, next Codex prompt, and recommended reasoning level.
+
 ## Coding Style
 
 - Prefer explicit, boring, testable R over clever abstractions.

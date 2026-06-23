@@ -70,6 +70,12 @@ g5_validate_bar_data <- function(bars, require_adjusted = TRUE) {
   bars$latest_completed_session <- as.Date(bars$latest_completed_session)
   bars$fetch_start_date <- as.Date(bars$fetch_start_date)
   bars$fetch_end_date <- as.Date(bars$fetch_end_date)
+  date_cols <- c("session_date", "latest_completed_session", "fetch_start_date", "fetch_end_date")
+  for (col in date_cols) {
+    if (any(is.na(bars[[col]]))) {
+      g5_stop(paste("Missing or invalid dates in", col))
+    }
+  }
 
   price_cols <- c("open", "high", "low", "close")
   for (col in price_cols) {

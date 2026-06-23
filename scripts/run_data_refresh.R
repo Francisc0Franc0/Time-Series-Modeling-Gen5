@@ -45,11 +45,27 @@ start_date <- if (nzchar(start_env)) {
 if (is.na(start_date)) {
   g5_stop("GEN5_FETCH_START_DATE could not be parsed as a date.")
 }
+end_env <- Sys.getenv("GEN5_FETCH_END_DATE", unset = "")
+requested_end_date <- if (nzchar(end_env)) {
+  as.Date(end_env)
+} else {
+  as.Date(resolved$latest_completed_session)
+}
+if (is.na(requested_end_date)) {
+  g5_stop("GEN5_FETCH_END_DATE could not be parsed as a date.")
+}
+
+date_range <- g5_alpaca_resolve_daily_date_range(
+  start_date = start_date,
+  end_date = requested_end_date,
+  latest_completed_session = resolved$latest_completed_session
+)
+print(date_range)
 
 request <- g5_alpaca_daily_adjusted_request(
   symbols = symbols,
-  start_date = start_date,
-  end_date = resolved$latest_completed_session,
+  start_date = date_range$fetch_start_date,
+  end_date = date_range$fetch_end_date,
   as_of_timestamp = resolved$as_of_timestamp,
   latest_completed_session = resolved$latest_completed_session,
   feed = cfg$feed
@@ -80,9 +96,12 @@ audit <- g5_audit_bars(
   bars = read_back,
   requested_symbols = symbols,
   latest_completed_session = resolved$latest_completed_session,
+  requested_start_date = date_range$requested_start_date,
+  requested_end_date = date_range$requested_end_date,
   provider_query_timestamp = resolved$as_of_timestamp,
   cache_hits = cache_read$cache_hit_symbols,
-  cache_misses = cache_read$cache_missing_symbols
+  cache_misses = cache_read$cache_missing_symbols,
+  availability_warnings = date_range$date_range_warnings
 )
 print(audit)
 

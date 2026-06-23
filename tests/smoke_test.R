@@ -60,11 +60,22 @@ stopifnot(audit$missing_symbol_count == 1L)
 stopifnot(audit$row_count == 3L)
 stopifnot(audit$duplicate_symbol_session_count == 0L)
 stopifnot(audit$latest_completed_session == as.Date("2026-06-22"))
+stopifnot(audit$empty_symbol_count == 1L)
+stopifnot(identical(audit$empty_symbols, "TSLA"))
+
+date_range <- g5_alpaca_resolve_daily_date_range(
+  start_date = as.Date("2026-06-18"),
+  end_date = as.Date("2026-06-23"),
+  latest_completed_session = as.Date("2026-06-22")
+)
+stopifnot(date_range$requested_end_date == as.Date("2026-06-23"))
+stopifnot(date_range$fetch_end_date == as.Date("2026-06-22"))
+stopifnot(date_range$date_range_warning_count == 1L)
 
 provider_request <- g5_alpaca_daily_adjusted_request(
   symbols = c("SPY", "QQQ"),
-  start_date = as.Date("2026-06-18"),
-  end_date = as.Date("2026-06-19"),
+  start_date = date_range$fetch_start_date,
+  end_date = date_range$fetch_end_date,
   as_of_timestamp = "2026-06-22 17:00:00",
   latest_completed_session = as.Date("2026-06-22")
 )
@@ -85,5 +96,30 @@ stopifnot(nrow(mapped) == 3L)
 stopifnot(all(mapped$provider == "alpaca"))
 stopifnot(all(mapped$adjusted))
 stopifnot(all(mapped$timeframe == "1D"))
+
+availability_audit <- g5_audit_bars(
+  mapped,
+  c("SPY", "QQQ", "TSLA"),
+  as.Date("2026-06-22"),
+  requested_start_date = date_range$requested_start_date,
+  requested_end_date = date_range$requested_end_date,
+  availability_warnings = date_range$date_range_warnings
+)
+stopifnot(availability_audit$empty_symbol_count == 1L)
+stopifnot(identical(availability_audit$empty_symbols, "TSLA"))
+stopifnot(availability_audit$partial_history_symbol_count == 2L)
+stopifnot(identical(availability_audit$requested_end_date, as.Date("2026-06-23")))
+
+empty_mapped <- g5_alpaca_map_bars_to_canonical(list(), provider_request)
+empty_audit <- g5_audit_bars(
+  empty_mapped,
+  c("SPY", "QQQ"),
+  as.Date("2026-06-22"),
+  requested_start_date = date_range$requested_start_date,
+  requested_end_date = date_range$requested_end_date
+)
+stopifnot(nrow(empty_mapped) == 0L)
+stopifnot(empty_audit$empty_symbol_count == 2L)
+stopifnot(grepl("empty_provider_payload_for_requested_range", empty_audit$availability_warnings, fixed = TRUE))
 
 message("Gen5 scaffold smoke test passed.")

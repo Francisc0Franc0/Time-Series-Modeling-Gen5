@@ -25,6 +25,33 @@ test_that("Alpaca adjusted daily request enforces explicit session bounds", {
   )
 })
 
+test_that("Alpaca date-range resolver keeps requested and bounded fetch dates auditable", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  resolved <- g5_alpaca_resolve_daily_date_range(
+    start_date = as.Date("2020-01-01"),
+    end_date = as.Date("2026-06-23"),
+    latest_completed_session = as.Date("2026-06-22")
+  )
+
+  expect_identical(as.Date(resolved$requested_start_date), as.Date("2020-01-01"))
+  expect_identical(as.Date(resolved$requested_end_date), as.Date("2026-06-23"))
+  expect_identical(as.Date(resolved$fetch_start_date), as.Date("2020-01-01"))
+  expect_identical(as.Date(resolved$fetch_end_date), as.Date("2026-06-22"))
+  expect_equal(resolved$date_range_warning_count, 1L)
+  expect_match(resolved$date_range_warnings, "requested_end_date_after_latest_completed_session")
+
+  expect_error(
+    g5_alpaca_resolve_daily_date_range(
+      start_date = as.Date("2026-06-24"),
+      end_date = as.Date("2026-06-25"),
+      latest_completed_session = as.Date("2026-06-22")
+    ),
+    "bounded fetch_end_date"
+  )
+})
+
 test_that("Alpaca provider payload maps to canonical adjusted daily bars", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "alpaca_provider.R"))
@@ -51,6 +78,23 @@ test_that("Alpaca provider payload maps to canonical adjusted daily bars", {
   expect_true(all(bars$adjusted))
   expect_true(all(bars$timeframe == "1D"))
   expect_true(all(bars$provider == "alpaca"))
+})
+
+test_that("Alpaca provider maps empty payloads to canonical empty bars", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  request <- g5_alpaca_daily_adjusted_request(
+    symbols = c("SPY", "EMPTY"),
+    start_date = as.Date("2026-06-18"),
+    end_date = as.Date("2026-06-22"),
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22")
+  )
+
+  bars <- g5_alpaca_map_bars_to_canonical(list(EMPTY = list()), request)
+  expect_identical(names(bars), g5_required_bar_columns())
+  expect_equal(nrow(bars), 0L)
 })
 
 test_that("Alpaca config accepts Gen4-style credential objects", {
