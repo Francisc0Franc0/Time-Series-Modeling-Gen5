@@ -145,6 +145,10 @@ $env:GEN5_FETCH_END_DATE="2026-06-23"
 
 Cache and audit outputs remain under ignored local cache paths and `runs/`.
 
+## Generated Local Files
+
+Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
+
 ## Gen5 v0 Freeze Evidence
 
 The current market-data-layer freeze evidence is summarized in `docs/GEN5_V0_DATA_LAYER_FREEZE_EVIDENCE.md`. It is an operator audit note for adjusted daily Alpaca ingestion, deterministic cache planning/merge behavior, validation output, and symbol coverage only.

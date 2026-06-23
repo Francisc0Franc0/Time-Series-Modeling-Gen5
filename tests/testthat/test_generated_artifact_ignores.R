@@ -5,6 +5,19 @@ test_that("generated data-layer artifacts are ignored by git", {
 
   gitignore_lines <- readLines(gitignore_path, warn = FALSE)
 
-  expect_true("runs/" %in% gitignore_lines)
-  expect_true("*.rds" %in% gitignore_lines)
+  required_ignores <- c(
+    ".codex_r_libs/",
+    "data_cache/",
+    "runs/",
+    "artifacts/",
+    "logs/",
+    "*.parquet",
+    "*.duckdb",
+    "*.rds",
+    ".Renviron",
+    ".env",
+    "config/*.local.yml"
+  )
+
+  expect_setequal(intersect(required_ignores, gitignore_lines), required_ignores)
 })

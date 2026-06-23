@@ -63,7 +63,18 @@ These are the recommended first six pending tasks for a one-thread autonomous ru
 
 ### 2. Review generated artifact ignore coverage
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-market-data-queue-pass-1`
+
+Commit: `test: expand generated artifact ignore coverage`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Confirmed targeted ignore coverage for local caches, run artifacts, validation outputs, local config overlays, credential files, repo-local R libraries, and heavyweight data formats.
+- Expanded the non-network ignore test and added a concise README note for generated local files.
 
 Goal: Confirm caches, run artifacts, validation outputs, local config, local R libraries, and other heavy or machine-local files stay out of git.
 
