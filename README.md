@@ -40,13 +40,23 @@ Rscript tests/smoke_test.R
 
 ## Alpaca Data Refresh Smoke
 
-The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials in environment variables. Supported credential names are `ALPACA_KEY_ID` / `ALPACA_SECRET_KEY` or `ALPACA_KEY` / `ALPACA_SECRET`.
+The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. Use the local file for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
 
 ```powershell
 Rscript scripts/run_data_refresh.R
 ```
 
-The script fetches adjusted daily bars for `SPY`, `QQQ`, `TSLA`, and `NVDA` by default, writes ignored local cache files under `data_cache/`, reads them back, and writes an ignored audit CSV under `runs/`.
+The script fetches adjusted daily bars for the configured symbols, writes ignored local cache files, reads them back, and writes an ignored audit CSV under `runs/`.
+
+## Data-Layer Validation
+
+Run the operator-facing validation script without Alpaca credentials:
+
+```powershell
+Rscript scripts/validate/validate_data_layer.R
+```
+
+It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
 
 ## Design Principle
 

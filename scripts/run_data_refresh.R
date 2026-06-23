@@ -8,19 +8,16 @@ repo_root <- if (!is.null(script_path) && nzchar(script_path)) {
 }
 
 source(file.path(repo_root, "R", "data_contract.R"))
+source(file.path(repo_root, "R", "config_loader.R"))
 source(file.path(repo_root, "R", "calendar.R"))
 source(file.path(repo_root, "R", "alpaca_provider.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "cache_store.R"))
 
-g5_env_symbols <- function(value, default) {
-  if (!nzchar(value)) {
-    return(default)
-  }
-  g5_standardize_symbol(strsplit(value, ",", fixed = TRUE)[[1L]])
-}
+g5_load_local_renviron(repo_root)
+cfg <- g5_load_data_layer_config(repo_root)
 
-timezone <- Sys.getenv("GEN5_MARKET_TIMEZONE", unset = "America/New_York")
+timezone <- cfg$calendar$timezone
 as_of_env <- Sys.getenv("GEN5_AS_OF_TIMESTAMP", unset = "")
 as_of_timestamp <- if (nzchar(as_of_env)) {
   as.POSIXct(as_of_env, tz = timezone)
@@ -34,14 +31,11 @@ if (is.na(as_of_timestamp)) {
 resolved <- g5_resolve_latest_completed_session(
   as_of_timestamp = as_of_timestamp,
   timezone = timezone,
-  market_close_time = Sys.getenv("GEN5_MARKET_CLOSE_TIME", unset = "16:00:00")
+  market_close_time = cfg$calendar$market_close_time
 )
 print(resolved)
 
-symbols <- g5_env_symbols(
-  Sys.getenv("GEN5_SYMBOLS", unset = ""),
-  c("SPY", "QQQ", "TSLA", "NVDA")
-)
+symbols <- cfg$symbols
 start_env <- Sys.getenv("GEN5_FETCH_START_DATE", unset = "")
 start_date <- if (nzchar(start_env)) {
   as.Date(start_env)
@@ -57,30 +51,38 @@ request <- g5_alpaca_daily_adjusted_request(
   start_date = start_date,
   end_date = resolved$latest_completed_session,
   as_of_timestamp = resolved$as_of_timestamp,
-  latest_completed_session = resolved$latest_completed_session
+  latest_completed_session = resolved$latest_completed_session,
+  feed = cfg$feed
 )
 print(request)
 
 bars <- g5_fetch_alpaca_daily_adjusted_bars(request)
 message("Fetched canonical rows: ", nrow(bars))
 
-cache_root <- Sys.getenv(
-  "GEN5_CACHE_ROOT",
-  unset = file.path(repo_root, "data_cache", "alpaca_daily_adjusted")
-)
+cache_root <- cfg$cache$root
 written <- g5_write_bars_cache(bars, cache_root = cache_root)
 message("Wrote cache files:")
 print(written)
 
-read_back <- g5_read_bars_cache(symbols, cache_root = cache_root)
+cache_read <- g5_read_bars_cache(
+  symbols,
+  cache_root = cache_root,
+  require_all = FALSE,
+  return_metadata = TRUE
+)
+read_back <- cache_read$bars
 message("Read cache rows: ", nrow(read_back))
+if (length(cache_read$cache_missing_symbols) > 0L) {
+  message("Missing cache symbols: ", paste(cache_read$cache_missing_symbols, collapse = ", "))
+}
 
 audit <- g5_audit_bars(
   bars = read_back,
   requested_symbols = symbols,
   latest_completed_session = resolved$latest_completed_session,
   provider_query_timestamp = resolved$as_of_timestamp,
-  cache_hits = unique(read_back$symbol)
+  cache_hits = cache_read$cache_hit_symbols,
+  cache_misses = cache_read$cache_missing_symbols
 )
 print(audit)
 

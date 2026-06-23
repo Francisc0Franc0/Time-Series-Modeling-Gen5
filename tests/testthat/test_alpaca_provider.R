@@ -52,3 +52,34 @@ test_that("Alpaca provider payload maps to canonical adjusted daily bars", {
   expect_true(all(bars$timeframe == "1D"))
   expect_true(all(bars$provider == "alpaca"))
 })
+
+test_that("Alpaca config accepts Gen4-style credential objects", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+
+  old_key_exists <- exists("ALPACA_KEY", envir = globalenv(), inherits = FALSE)
+  old_secret_exists <- exists("ALPACA_SECRET", envir = globalenv(), inherits = FALSE)
+  old_key <- if (old_key_exists) get("ALPACA_KEY", envir = globalenv()) else NULL
+  old_secret <- if (old_secret_exists) get("ALPACA_SECRET", envir = globalenv()) else NULL
+
+  on.exit({
+    if (old_key_exists) {
+      assign("ALPACA_KEY", old_key, envir = globalenv())
+    } else if (exists("ALPACA_KEY", envir = globalenv(), inherits = FALSE)) {
+      rm("ALPACA_KEY", envir = globalenv())
+    }
+    if (old_secret_exists) {
+      assign("ALPACA_SECRET", old_secret, envir = globalenv())
+    } else if (exists("ALPACA_SECRET", envir = globalenv(), inherits = FALSE)) {
+      rm("ALPACA_SECRET", envir = globalenv())
+    }
+  }, add = TRUE)
+
+  assign("ALPACA_KEY", "object_key", envir = globalenv())
+  assign("ALPACA_SECRET", "object_secret", envir = globalenv())
+
+  cfg <- g5_alpaca_config_from_env()
+  expect_true(cfg$has_credentials)
+  expect_identical(cfg$key_id, "object_key")
+  expect_identical(cfg$secret_key, "object_secret")
+})

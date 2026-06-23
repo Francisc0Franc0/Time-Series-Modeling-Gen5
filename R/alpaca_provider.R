@@ -1,14 +1,27 @@
 # Alpaca provider boundary.
 
+.g5_alpaca_value_from_object_or_env <- function(object_name, env_names, default = "") {
+  if (exists(object_name, envir = globalenv(), inherits = FALSE)) {
+    value <- get(object_name, envir = globalenv(), inherits = FALSE)
+    value <- as.character(value[1L])
+    if (!is.na(value) && nzchar(value)) {
+      return(value)
+    }
+  }
+
+  for (env_name in env_names) {
+    value <- Sys.getenv(env_name, unset = "")
+    if (nzchar(value)) {
+      return(value)
+    }
+  }
+
+  default
+}
+
 g5_alpaca_config_from_env <- function() {
-  key_id <- Sys.getenv("ALPACA_KEY_ID", unset = "")
-  if (!nzchar(key_id)) {
-    key_id <- Sys.getenv("ALPACA_KEY", unset = "")
-  }
-  secret_key <- Sys.getenv("ALPACA_SECRET_KEY", unset = "")
-  if (!nzchar(secret_key)) {
-    secret_key <- Sys.getenv("ALPACA_SECRET", unset = "")
-  }
+  key_id <- .g5_alpaca_value_from_object_or_env("ALPACA_KEY", c("ALPACA_KEY", "ALPACA_KEY_ID"))
+  secret_key <- .g5_alpaca_value_from_object_or_env("ALPACA_SECRET", c("ALPACA_SECRET", "ALPACA_SECRET_KEY"))
   base_url <- Sys.getenv("ALPACA_DATA_BASE_URL", unset = "https://data.alpaca.markets")
   feed <- Sys.getenv("ALPACA_DATA_FEED", unset = "iex")
 
@@ -80,24 +93,7 @@ g5_alpaca_require_runtime <- function() {
 }
 
 g5_alpaca_empty_bars <- function() {
-  data.frame(
-    symbol = character(),
-    session_date = as.Date(character()),
-    open = numeric(),
-    high = numeric(),
-    low = numeric(),
-    close = numeric(),
-    volume = numeric(),
-    adjusted = logical(),
-    timeframe = character(),
-    provider = character(),
-    as_of_timestamp = character(),
-    latest_completed_session = as.Date(character()),
-    fetch_start_date = as.Date(character()),
-    fetch_end_date = as.Date(character()),
-    data_version_hash = character(),
-    stringsAsFactors = FALSE
-  )
+  g5_empty_bar_data()
 }
 
 g5_alpaca_bar_value <- function(bar, name) {
@@ -204,7 +200,7 @@ g5_fetch_alpaca_daily_adjusted_bars <- function(request, config = g5_alpaca_conf
     g5_stop("Gen5 v0 Alpaca requests must use adjustment == 'all'.")
   }
   if (!isTRUE(config$has_credentials)) {
-    g5_stop("Alpaca credentials are not configured. Set ALPACA_KEY_ID/ALPACA_SECRET_KEY or ALPACA_KEY/ALPACA_SECRET in .Renviron or the environment.")
+    g5_stop("Alpaca credentials are not configured. Set ALPACA_KEY and ALPACA_SECRET in .Renviron or the environment.")
   }
   g5_alpaca_require_runtime()
 

@@ -9,7 +9,7 @@ g5_cache_symbol_path <- function(cache_root, provider, timeframe, symbol, format
   }
 
   safe_symbol <- gsub("[^A-Za-z0-9_.-]", "_", g5_standardize_symbol(symbol))
-  file.path(cache_root, provider, timeframe, paste0(safe_symbol, ".", format))
+  file.path(normalizePath(cache_root, winslash = "/", mustWork = FALSE), provider, timeframe, paste0(safe_symbol, ".", format))
 }
 
 g5_write_bars_cache <- function(bars, cache_root, provider = "alpaca", timeframe = "1D") {
@@ -27,10 +27,18 @@ g5_write_bars_cache <- function(bars, cache_root, provider = "alpaca", timeframe
   data.frame(symbol = symbols, path = written, stringsAsFactors = FALSE)
 }
 
-g5_read_bars_cache <- function(symbols, cache_root, provider = "alpaca", timeframe = "1D") {
+g5_read_bars_cache <- function(
+  symbols,
+  cache_root,
+  provider = "alpaca",
+  timeframe = "1D",
+  require_all = TRUE,
+  return_metadata = FALSE
+) {
   symbols <- g5_standardize_symbol(symbols)
   frames <- list()
   missing <- character()
+  hit_paths <- character()
 
   for (sym in symbols) {
     path <- g5_cache_symbol_path(cache_root, provider, timeframe, sym)
@@ -38,14 +46,32 @@ g5_read_bars_cache <- function(symbols, cache_root, provider = "alpaca", timefra
       missing <- c(missing, sym)
     } else {
       frames[[sym]] <- readRDS(path)
+      hit_paths <- c(hit_paths, path)
     }
   }
 
-  if (length(missing) > 0L) {
+  if (require_all && length(missing) > 0L) {
     g5_stop(paste("Missing cache files for symbols:", paste(missing, collapse = ", ")))
   }
 
-  bars <- do.call(rbind, frames)
-  rownames(bars) <- NULL
-  g5_validate_bar_data(bars)
+  bars <- if (length(frames) == 0L) {
+    g5_empty_bar_data()
+  } else {
+    out <- do.call(rbind, frames)
+    rownames(out) <- NULL
+    out
+  }
+  bars <- g5_validate_bar_data(bars)
+
+  if (return_metadata) {
+    return(list(
+      bars = bars,
+      requested_symbols = symbols,
+      cache_hit_symbols = names(frames),
+      cache_missing_symbols = missing,
+      cache_hit_paths = hit_paths
+    ))
+  }
+
+  bars
 }

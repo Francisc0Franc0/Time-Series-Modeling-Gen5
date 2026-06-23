@@ -22,6 +22,27 @@ g5_required_bar_columns <- function() {
   .g5_required_bar_columns
 }
 
+g5_empty_bar_data <- function() {
+  data.frame(
+    symbol = character(),
+    session_date = as.Date(character()),
+    open = numeric(),
+    high = numeric(),
+    low = numeric(),
+    close = numeric(),
+    volume = numeric(),
+    adjusted = logical(),
+    timeframe = character(),
+    provider = character(),
+    as_of_timestamp = character(),
+    latest_completed_session = as.Date(character()),
+    fetch_start_date = as.Date(character()),
+    fetch_end_date = as.Date(character()),
+    data_version_hash = character(),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_stop <- function(message) {
   stop(paste0("[Gen5] ", message), call. = FALSE)
 }
