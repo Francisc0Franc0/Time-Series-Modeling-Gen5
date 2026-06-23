@@ -119,7 +119,7 @@ Corporate-actions storage should be treated as a later authorized expansion afte
 
 Future WFA code should not call Alpaca directly. It should consume a canonical query result and manifest produced by the data layer/workbench.
 
-The planned canonical bar columns are:
+The current canonical bar columns are:
 
 - `symbol`
 - `session_date`
@@ -130,17 +130,12 @@ The planned canonical bar columns are:
 - `volume`
 - `adjusted`
 - `timeframe`
-- `currency`
 - `provider`
-- `feed`
 - `as_of_timestamp`
 - `latest_completed_session`
 - `fetch_start_date`
 - `fetch_end_date`
-- `fetched_at`
-- `cache_key`
-- `row_hash`
-- `data_quality_status`
+- `data_version_hash`
 
 The manifest should record:
 
