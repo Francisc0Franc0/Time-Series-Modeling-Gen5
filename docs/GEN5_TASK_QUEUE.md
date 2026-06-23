@@ -2,11 +2,11 @@
 
 ## Project Recap
 
-Gen5 is moving from the v0 market-data-layer milestone into the v0.1 Research Data Workbench milestone. The repository currently has an R-first, Alpaca-only, adjusted daily OHLCV data layer with explicit `as_of_timestamp` handling, deterministic cache planning and merge behavior, validation output, and freeze evidence under ignored local run artifacts.
+Gen5 has completed the v0 market-data-layer closeout and the v0.1 Research Data Workbench queue through the corporate-actions metadata spike. The repository currently has an R-first, Alpaca-only, adjusted daily OHLCV data layer with explicit `as_of_timestamp` handling, deterministic cache planning and merge behavior, validation output, freeze evidence, and workbench handoff artifacts under ignored local run paths.
 
-The v0.1 milestone sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench should only make adjusted daily data easier to query, inspect, chart, and hand off to later research.
+The completed v0.1 milestone still sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench only makes adjusted daily data easier to query, inspect, chart, and hand off to later research.
 
-The visible behavior this milestone is moving toward is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
+The visible behavior now available is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
 ## Queue Rules
 
@@ -397,13 +397,13 @@ Stay within AGENTS.md and Gen5 v0 market-data-layer scope. Confirm the closeout 
 Stop if validation fails, generated artifacts appear as tracked files, the task requires WFA/strategy/allocation/dashboard/execution logic, a new dependency, destructive file operations, live-order behavior, provider expansion beyond Alpaca adjusted daily OHLCV, or an ambiguous project decision.
 ```
 
-## Next Milestone Queue: Gen5 v0.1 Research Data Workbench
+## Completed Milestone Queue: Gen5 v0.1 Research Data Workbench
 
 Planning spec: `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
 
-Recommended branch for the first implementation chunk: `codex/gen5-v0-1-research-data-workbench`
+Initial recommended branch for the first implementation chunk: `codex/gen5-v0-1-research-data-workbench`
 
-These tasks are intended for sequential Codex work after the operator confirms the v0 closeout is complete. They remain research-plumbing tasks only. They do not authorize WFA, strategy, allocation, dashboard, execution, live-order logic, or provider expansion beyond Alpaca.
+These tasks were completed sequentially after the operator confirmed the v0 closeout. They remain research-plumbing tasks only. They do not authorize WFA, strategy, allocation, dashboard, execution, live-order logic, or provider expansion beyond Alpaca.
 
 ### 12. Align cache guidance around repo-local `data_cache/`
 
@@ -701,3 +701,38 @@ Stop conditions:
 - Starting this without explicit operator authorization.
 - Mixing corporate actions into canonical adjusted daily bars before the bar workbench is stable.
 - Adding a non-Alpaca provider for earnings data without a separate scope decision.
+
+### 21. Confirm Gen5 v0.1 Research Data Workbench closeout alignment
+
+Status: done
+
+Branch: `codex/gen5-v0-1-closeout-confirmation`
+
+Validation: Documentation-only diff review.
+
+Notes:
+
+- Confirmed README, operator runbook, workbench spec, research handoff checklist, system design, task queue, and ignore guidance agree after the corporate-actions metadata spike.
+- Updated README and this queue so v0.1 is described as closed out through the corporate-actions spike rather than only as the next planned milestone.
+- Reconfirmed that future research remains gated by the handoff contract and that WFA, indicators, returns, labels, regimes, strategy signals, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, and provider expansion remain out of scope.
+
+Goal: Confirm the completed v0.1 workbench documentation is aligned before any later research milestone starts consuming handoff artifacts.
+
+Likely files:
+
+- `README.md`
+- `docs/GEN5_TASK_QUEUE.md`
+- `docs/GEN5_V0_OPERATOR_RUNBOOK.md`
+- `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+- `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`
+- `docs/GEN5_SYSTEM_DESIGN.md`
+- `.gitignore`
+
+Validation:
+
+- Documentation-only diff review unless code, config, validation behavior, or operator commands change.
+
+Stop conditions:
+
+- Implementing WFA, indicators, returns, labels, regimes, strategy signals, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, or provider expansion.
+- Changing cache or generated artifact behavior.
