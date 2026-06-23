@@ -574,7 +574,17 @@ Stop conditions:
 
 ### 17. Add static candlestick PNG inspection script
 
-Status: pending
+Status: done
+
+Branch: `codex/gen5-v0-1-workbench-foundation`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a separate base-R static candlestick inspection helper for canonical adjusted daily bars.
+- Added `scripts/inspect/render_candlestick_png.R` to query one symbol through the existing workbench cache/provider helpers and write a PNG under ignored `runs/research_workbench/`.
+- Added non-network tests for PNG rendering and canonical adjusted-bar enforcement.
 
 Goal: Render a basic static candlestick PNG for one symbol/date range from canonical bars, separate from the core pipeline.
 

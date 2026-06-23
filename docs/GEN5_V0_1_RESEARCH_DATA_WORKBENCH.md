@@ -204,6 +204,18 @@ $env:GEN5_WORKBENCH_END_DATE="2026-06-23"
 & 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/query_research_data.R
 ```
 
+Implemented static candlestick inspection command:
+
+```powershell
+$env:GEN5_AS_OF_TIMESTAMP="2026-06-23 17:30:00"
+$env:GEN5_CHART_SYMBOL="NVDA"
+$env:GEN5_CHART_START_DATE="2026-02-23"
+$env:GEN5_CHART_END_DATE="2026-06-23"
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/inspect/render_candlestick_png.R
+```
+
+The chart path queries one symbol through the existing workbench cache/provider helpers, writes companion query artifacts under ignored `runs/research_workbench/`, and renders a base-R PNG from canonical adjusted daily OHLC bars. `GEN5_CHART_REFRESH` defaults to `false`; set it to `true` only for an explicit credentialed refresh before plotting.
+
 ## Acceptance Criteria
 
 Gen5 v0.1 is ready to hand off to the first research milestone when:

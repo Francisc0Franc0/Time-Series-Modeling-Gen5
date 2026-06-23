@@ -176,6 +176,20 @@ Set `GEN5_WORKBENCH_SYMBOLS="NVDA,AMD"` for an explicit small basket, or use `GE
 
 The query output includes canonical adjusted daily bars, a manifest, audit CSV, symbol coverage CSV, refresh plan CSV, and severity-labeled health CSV with `ERROR`, `WARN`, and `INFO` rows. It does not compute indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
+## Static Candlestick Inspection
+
+The workbench includes a separate static chart script for one-symbol visual inspection of canonical adjusted daily bars. By default it reads cache through the same workbench query/cache helpers and writes a PNG plus companion query artifacts under ignored `runs/research_workbench/`.
+
+```powershell
+$env:GEN5_AS_OF_TIMESTAMP="2026-06-23 17:30:00"
+$env:GEN5_CHART_SYMBOL="NVDA"
+$env:GEN5_CHART_START_DATE="2026-02-23"
+$env:GEN5_CHART_END_DATE="2026-06-23"
+& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' scripts/inspect/render_candlestick_png.R
+```
+
+Set `GEN5_CHART_REFRESH=true` only when a credentialed Alpaca refresh is intended before plotting. The PNG is an inspection artifact only; it does not add indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
