@@ -676,7 +676,18 @@ Stop conditions:
 
 ### 20. Corporate-actions metadata spike
 
-Status: deferred
+Status: done
+
+Branch: `codex/gen5-v0-1-corporate-actions-spike`
+
+Validation: Documentation-only diff review.
+
+Notes:
+
+- Reviewed Alpaca corporate-actions metadata after the Research Data Workbench closeout.
+- Decision: corporate-actions metadata may belong in later Gen5 data-layer scope only as an explicitly authorized Alpaca sidecar, not as part of the canonical adjusted daily bar table and not as a v0.1 research signal.
+- If later authorized, caching should use explicit `as_of_timestamp`, `start`, and `end` inputs, keep provider quirks inside the Alpaca provider boundary, store snapshots separately from adjusted bars under ignored cache paths, and audit request scope, pagination, row counts, query timestamp, provider/action filters, and deterministic hashes.
+- Key risks are lookahead from late-arriving/restated events, accidental double-adjustment of already adjusted bars, symbol identity drift, cache invalidation complexity, and premature use as labels or signals before WFA authority exists.
 
 Goal: After the core workbench is stable, decide whether Alpaca corporate-actions metadata belongs in Gen5 data-layer scope and how it should be cached/audited.
 

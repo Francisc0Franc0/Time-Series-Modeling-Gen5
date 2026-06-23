@@ -113,7 +113,17 @@ Alpaca has a corporate-actions endpoint for events such as splits, dividends, me
 
 No structured Alpaca earnings calendar or earnings-surprise endpoint is planned for v0.1. Alpaca news can be queried by symbol/date, but news articles are not a clean earnings-beat data source. See: https://docs.alpaca.markets/us/reference/news-3
 
-Corporate-actions storage should be treated as a later authorized expansion after the core adjusted-daily workbench is stable.
+Corporate-actions metadata is eligible for later Gen5 data-layer scope only as an explicitly authorized Alpaca sidecar. It should not be mixed into the canonical adjusted daily bar table, used to recompute adjusted OHLCV, or treated as a research signal in v0.1.
+
+If later authorized, corporate-actions caching should preserve the provider boundary:
+
+- use explicit `as_of_timestamp`, `start`, and `end` inputs rather than endpoint defaults;
+- store corporate-actions snapshots separately from adjusted daily bars under an ignored cache path;
+- keep provider request shape, pagination, type names, CUSIP handling, and response quirks inside the Alpaca provider module;
+- include enough cache metadata to replay or audit the request scope, including provider, endpoint version, region, symbols or CUSIPs, requested action types, process-date range, query timestamp, row counts, pagination evidence, and a deterministic content hash;
+- expose only a documented sidecar artifact or manifest link to future research consumers after a separate scope decision.
+
+The main risks are lookahead leakage from late-arriving or restated events, accidental double-adjustment of already adjusted bars, symbol identity drift around name changes and reorganizations, extra cache invalidation complexity, and quietly turning event metadata into labels or signals before WFA authority exists.
 
 ## Research Input Contract
 
