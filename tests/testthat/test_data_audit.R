@@ -30,7 +30,22 @@ test_that("audit reports missing, stale, duplicate, cache, and provider timestam
     provider_query_timestamp = "2026-06-22 17:00:00",
     cache_hits = c("SPY", "QQQ"),
     cache_misses = "TSLA",
-    availability_warnings = "operator_supplied_warning"
+    availability_warnings = "operator_supplied_warning",
+    cache_refresh_plan = data.frame(
+      symbol = c("SPY", "QQQ", "TSLA"),
+      needs_fetch = c(FALSE, TRUE, TRUE),
+      refresh_decision = c("fully_cached", "stale_cache", "cold_cache"),
+      fetch_start_date = as.Date(c(NA, "2026-06-20", "2026-06-18")),
+      fetch_end_date = as.Date(c(NA, "2026-06-22", "2026-06-22")),
+      stringsAsFactors = FALSE
+    ),
+    cache_refresh_result = data.frame(
+      symbol = c("SPY", "QQQ", "TSLA"),
+      returned_bar_count = c(0L, 1L, 0L),
+      merged_row_count = c(3L, 2L, 0L),
+      no_returned_bars = c(FALSE, FALSE, TRUE),
+      stringsAsFactors = FALSE
+    )
   )
 
   expect_equal(audit$requested_symbol_count, 3L)
@@ -42,6 +57,16 @@ test_that("audit reports missing, stale, duplicate, cache, and provider timestam
   expect_equal(audit$row_count, 5L)
   expect_equal(audit$cache_hit_symbol_count, 2L)
   expect_equal(audit$cache_miss_symbol_count, 1L)
+  expect_equal(audit$refresh_fetch_symbol_count, 2L)
+  expect_identical(audit$refresh_fetch_symbols, "QQQ,TSLA")
+  expect_equal(audit$refresh_skip_symbol_count, 1L)
+  expect_identical(audit$refresh_skip_symbols, "SPY")
+  expect_match(audit$refresh_decisions_by_symbol, "SPY=fully_cached", fixed = TRUE)
+  expect_match(audit$refresh_fetch_ranges_by_symbol, "QQQ=2026-06-20:2026-06-22", fixed = TRUE)
+  expect_equal(audit$no_returned_bar_symbol_count, 1L)
+  expect_identical(audit$no_returned_bar_symbols, "TSLA")
+  expect_match(audit$returned_bar_counts_by_symbol, "QQQ=1", fixed = TRUE)
+  expect_match(audit$merged_row_counts_by_symbol, "SPY=3", fixed = TRUE)
   expect_identical(audit$provider_query_timestamp, "2026-06-22 17:00:00")
   expect_identical(audit$first_available_session_by_symbol, "SPY=2026-06-18;QQQ=2026-06-18;TSLA=NA")
   expect_identical(audit$latest_available_session_by_symbol, "SPY=2026-06-22;QQQ=2026-06-19;TSLA=NA")
@@ -57,6 +82,7 @@ test_that("audit reports missing, stale, duplicate, cache, and provider timestam
   expect_match(audit$availability_warnings, "operator_supplied_warning")
   expect_match(audit$availability_warnings, "empty_symbols=TSLA", fixed = TRUE)
   expect_match(audit$availability_warnings, "partial_history_symbols=QQQ", fixed = TRUE)
+  expect_match(audit$availability_warnings, "no_returned_bars=TSLA", fixed = TRUE)
 })
 
 test_that("audit reports all requested symbols when provider payload is empty", {

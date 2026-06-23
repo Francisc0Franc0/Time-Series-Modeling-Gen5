@@ -48,6 +48,17 @@ Rscript scripts/run_data_refresh.R
 
 The script fetches adjusted daily bars for the configured symbols, writes ignored local cache files, reads them back, and writes an ignored audit CSV under `runs/`.
 
+The refresh path is incremental and deterministic. For each requested symbol it first inspects the local symbol cache, then records one refresh decision:
+
+- `cold_cache`: no symbol cache exists, so the requested bounded range is fetched.
+- `fully_cached`: the requested bounded range is already covered, so no provider request is made.
+- `stale_cache`: cached history starts early enough but ends before the requested bounded end date.
+- `partial_history`: cached history reaches the requested bounded end date but starts after the requested start date.
+- `partial_history_stale`: cached history misses both the requested start and bounded end.
+- `cold_cache_empty_file`: a cache file exists but contains no rows, so it is treated as a cold cache.
+
+Fetched rows are merged with existing symbol caches using `symbol` plus `session_date` as the deterministic key, with fetched rows taking precedence on overlap. Merged cache files are sorted by `symbol` and `session_date`.
+
 ## Data-Layer Validation
 
 Run the operator-facing validation script without Alpaca credentials:
@@ -67,6 +78,14 @@ The validation output also reports the exact script path and command to rerun. I
 - availability warnings, including requested end dates clipped to the latest completed session
 
 Interpret `empty_symbols` as requested symbols with no returned bars in the audited payload or cache read. Interpret `partial_history_symbols` as symbols that returned bars but did not cover the bounded requested date range. A requested end date after the latest completed session is not fetched directly; the data layer records the requested date, clips the provider request to `latest_completed_session`, and emits an availability warning.
+
+For incremental refresh audits, read:
+
+- `refresh_decisions_by_symbol` for the per-symbol cache decision.
+- `refresh_fetch_symbols` and `refresh_skip_symbols` for symbols fetched versus satisfied from cache.
+- `refresh_fetch_ranges_by_symbol` for the exact provider date ranges selected by the cache planner.
+- `no_returned_bar_symbols` for symbols that needed a fetch but returned no bars.
+- `returned_bar_counts_by_symbol` and `merged_row_counts_by_symbol` for provider payload size versus final cache size.
 
 For a live Alpaca smoke refresh, optionally bound the historical range explicitly:
 

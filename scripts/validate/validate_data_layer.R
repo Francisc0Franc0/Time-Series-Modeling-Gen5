@@ -87,7 +87,7 @@ pass_fail("latest completed session uses explicit as_of_timestamp", {
     identical(as.character(resolved$as_of_timestamp), "2026-06-22 17:00:00")
 })
 
-validation_symbols <- c("SPY", "QQQ", "TSLA", "EMPTY")
+validation_symbols <- c("SPY", "QQQ", "IWM", "DIA", "TSLA", "EMPTY")
 pass_fail("requested date range is explicit and bounded by latest completed session", {
   date_range <<- g5_alpaca_resolve_daily_date_range(
     start_date = as.Date("2026-06-18"),
@@ -133,18 +133,20 @@ pass_fail("Alpaca request rejects unbounded future end dates", {
 })
 
 provider_payload <- list(
-  SPY = list(
-    list(t = "2026-06-18T04:00:00Z", o = 100, h = 101, l = 99, c = 100.5, v = 1000),
-    list(t = "2026-06-19T04:00:00Z", o = 101, h = 102, l = 100, c = 101.5, v = 1100),
-    list(t = "2026-06-22T04:00:00Z", o = 102, h = 103, l = 101, c = 102.5, v = 1200)
-  ),
   QQQ = list(
-    list(t = "2026-06-19T04:00:00Z", o = 201, h = 203, l = 200, c = 202, v = 1500)
+    list(t = "2026-06-18T04:00:00Z", o = 200, h = 201, l = 199, c = 200.5, v = 1400)
+  ),
+  IWM = list(
+    list(t = "2026-06-22T04:00:00Z", o = 302, h = 303, l = 301, c = 302.5, v = 1600)
+  ),
+  TSLA = list(
+    list(t = "2026-06-18T04:00:00Z", o = 400, h = 410, l = 390, c = 405, v = 2000),
+    list(t = "2026-06-22T04:00:00Z", o = 406, h = 416, l = 396, c = 411, v = 2200)
   ),
   EMPTY = list()
 )
 
-pass_fail("canonical bars are adjusted daily OHLCV only", {
+pass_fail("provider payload maps to canonical adjusted daily OHLCV only", {
   bars <<- g5_alpaca_map_bars_to_canonical(provider_payload, request)
   nrow(bars) == 4L &&
     all(bars$adjusted) &&
@@ -154,21 +156,99 @@ pass_fail("canonical bars are adjusted daily OHLCV only", {
 })
 
 validation_cache <- file.path(validation_dir, "cache_smoke")
-pass_fail("cache write/read reports hits and missing symbols", {
-  written <- g5_write_bars_cache(bars, cache_root = validation_cache)
+if (dir.exists(validation_cache)) {
+  unlink(validation_cache, recursive = TRUE, force = TRUE)
+}
+existing_cache_bars <- data.frame(
+  symbol = c("SPY", "SPY", "SPY", "QQQ", "QQQ", "IWM", "IWM", "DIA"),
+  session_date = as.Date(c(
+    "2026-06-18", "2026-06-19", "2026-06-22",
+    "2026-06-19", "2026-06-22",
+    "2026-06-18", "2026-06-19",
+    "2026-06-19"
+  )),
+  open = c(100, 101, 102, 201, 202, 300, 301, 500),
+  high = c(101, 102, 103, 202, 203, 301, 302, 501),
+  low = c(99, 100, 101, 200, 201, 299, 300, 499),
+  close = c(100.5, 101.5, 102.5, 201.5, 202.5, 300.5, 301.5, 500.5),
+  volume = c(1000, 1100, 1200, 1500, 1550, 1600, 1650, 1700),
+  adjusted = TRUE,
+  timeframe = "1D",
+  provider = "alpaca",
+  as_of_timestamp = resolved$as_of_timestamp,
+  latest_completed_session = as.Date(resolved$latest_completed_session),
+  fetch_start_date = as.Date("2026-06-18"),
+  fetch_end_date = as.Date("2026-06-22"),
+  data_version_hash = "pending",
+  stringsAsFactors = FALSE
+)
+existing_cache_bars$data_version_hash <- mapply(
+  g5_make_data_version_hash,
+  existing_cache_bars$provider,
+  existing_cache_bars$symbol,
+  existing_cache_bars$session_date,
+  existing_cache_bars$open,
+  existing_cache_bars$high,
+  existing_cache_bars$low,
+  existing_cache_bars$close,
+  existing_cache_bars$volume,
+  existing_cache_bars$adjusted,
+  existing_cache_bars$timeframe,
+  existing_cache_bars$as_of_timestamp,
+  existing_cache_bars$latest_completed_session,
+  existing_cache_bars$fetch_start_date,
+  existing_cache_bars$fetch_end_date,
+  USE.NAMES = FALSE
+)
+
+refresh <- NULL
+incremental_write <- NULL
+pass_fail("incremental cache plan makes refresh decisions explicit", {
+  g5_write_bars_cache(existing_cache_bars, cache_root = validation_cache)
+  refresh <<- g5_plan_incremental_cache_refresh(
+    validation_symbols,
+    cache_root = validation_cache,
+    requested_start_date = date_range$fetch_start_date,
+    requested_end_date = date_range$fetch_end_date,
+    latest_completed_session = resolved$latest_completed_session
+  )
+  decisions <- setNames(refresh$plan$refresh_decision, refresh$plan$symbol)
+  identical(decisions[["SPY"]], "fully_cached") &&
+    identical(decisions[["QQQ"]], "partial_history") &&
+    identical(decisions[["IWM"]], "stale_cache") &&
+    identical(decisions[["DIA"]], "partial_history_stale") &&
+    identical(decisions[["TSLA"]], "cold_cache") &&
+    identical(decisions[["EMPTY"]], "cold_cache") &&
+    identical(refresh$plan$needs_fetch, c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE))
+})
+
+pass_fail("incremental cache merge is deterministic and reports no returned bars", {
+  incremental_write <<- g5_write_incremental_bars_cache(
+    fetched_bars = bars,
+    cache_root = validation_cache,
+    refresh_plan = refresh$plan
+  )
   cache_read <<- g5_read_bars_cache(
     validation_symbols,
     cache_root = validation_cache,
     require_all = FALSE,
     return_metadata = TRUE
   )
-  nrow(written) == 2L &&
-    identical(sort(cache_read$cache_hit_symbols), c("QQQ", "SPY")) &&
-    identical(sort(cache_read$cache_missing_symbols), c("EMPTY", "TSLA")) &&
-    nrow(cache_read$bars) == 4L
+  nrow(incremental_write$bars) == 12L &&
+    nrow(cache_read$bars) == 12L &&
+    identical(sort(cache_read$cache_hit_symbols), c("DIA", "IWM", "QQQ", "SPY", "TSLA")) &&
+    identical(cache_read$cache_missing_symbols, "EMPTY") &&
+    identical(
+      paste(cache_read$bars$symbol, cache_read$bars$session_date, sep = ":"),
+      sort(paste(cache_read$bars$symbol, cache_read$bars$session_date, sep = ":"))
+    ) &&
+    identical(
+      sort(incremental_write$summary$symbol[incremental_write$summary$no_returned_bars]),
+      c("DIA", "EMPTY")
+    )
 })
 
-pass_fail("audit reports availability, requested versus observed range, cache, and query timestamp", {
+pass_fail("audit reports availability, cache refresh decisions, and query timestamp", {
   audit <<- g5_audit_bars(
     bars = cache_read$bars,
     requested_symbols = validation_symbols,
@@ -178,25 +258,35 @@ pass_fail("audit reports availability, requested versus observed range, cache, a
     provider_query_timestamp = resolved$as_of_timestamp,
     cache_hits = cache_read$cache_hit_symbols,
     cache_misses = cache_read$cache_missing_symbols,
-    availability_warnings = date_range$date_range_warnings
+    availability_warnings = date_range$date_range_warnings,
+    cache_refresh_plan = refresh$plan,
+    cache_refresh_result = incremental_write$summary
   )
-  audit$requested_symbol_count == 4L &&
-    audit$missing_symbol_count == 2L &&
-    identical(audit$missing_symbols, "TSLA,EMPTY") &&
+  audit$requested_symbol_count == 6L &&
+    audit$missing_symbol_count == 1L &&
+    identical(audit$missing_symbols, "EMPTY") &&
     audit$stale_symbol_count == 1L &&
-    identical(audit$stale_symbols, "QQQ") &&
-    audit$row_count == 4L &&
-    audit$cache_hit_symbol_count == 2L &&
-    audit$cache_miss_symbol_count == 2L &&
+    identical(audit$stale_symbols, "DIA") &&
+    audit$row_count == 12L &&
+    audit$cache_hit_symbol_count == 5L &&
+    audit$cache_miss_symbol_count == 1L &&
+    audit$refresh_fetch_symbol_count == 5L &&
+    identical(audit$refresh_fetch_symbols, "QQQ,IWM,DIA,TSLA,EMPTY") &&
+    audit$refresh_skip_symbol_count == 1L &&
+    identical(audit$refresh_skip_symbols, "SPY") &&
+    grepl("SPY=fully_cached", audit$refresh_decisions_by_symbol, fixed = TRUE) &&
+    grepl("IWM=stale_cache", audit$refresh_decisions_by_symbol, fixed = TRUE) &&
+    identical(audit$no_returned_bar_symbol_count, 2L) &&
+    identical(audit$no_returned_bar_symbols, "DIA,EMPTY") &&
     identical(audit$provider_query_timestamp, resolved$as_of_timestamp) &&
     identical(as.Date(audit$requested_start_date), as.Date("2026-06-18")) &&
     identical(as.Date(audit$requested_end_date), as.Date("2026-06-23")) &&
     identical(as.Date(audit$observed_start_date), as.Date("2026-06-18")) &&
     identical(as.Date(audit$observed_end_date), as.Date("2026-06-22")) &&
-    identical(audit$empty_symbol_count, 2L) &&
-    identical(audit$empty_symbols, "TSLA,EMPTY") &&
+    identical(audit$empty_symbol_count, 1L) &&
+    identical(audit$empty_symbols, "EMPTY") &&
     identical(audit$partial_history_symbol_count, 1L) &&
-    identical(audit$partial_history_symbols, "QQQ") &&
+    identical(audit$partial_history_symbols, "DIA") &&
     audit$availability_warning_count >= 3L
 })
 

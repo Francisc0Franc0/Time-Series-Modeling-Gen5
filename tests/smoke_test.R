@@ -122,4 +122,44 @@ stopifnot(nrow(empty_mapped) == 0L)
 stopifnot(empty_audit$empty_symbol_count == 2L)
 stopifnot(grepl("empty_provider_payload_for_requested_range", empty_audit$availability_warnings, fixed = TRUE))
 
+incremental_cache <- tempfile("g5_incremental_cache_")
+existing_incremental <- validated
+existing_incremental <- existing_incremental[existing_incremental$symbol == "SPY", , drop = FALSE]
+incremental_seed <- g5_write_bars_cache(existing_incremental, incremental_cache)
+stopifnot(nrow(incremental_seed) == 1L)
+incremental_plan <- g5_plan_incremental_cache_refresh(
+  symbols = c("SPY", "QQQ"),
+  cache_root = incremental_cache,
+  requested_start_date = as.Date("2026-06-18"),
+  requested_end_date = as.Date("2026-06-22"),
+  latest_completed_session = as.Date("2026-06-22")
+)
+plan_decisions <- setNames(incremental_plan$plan$refresh_decision, incremental_plan$plan$symbol)
+stopifnot(identical(plan_decisions[["SPY"]], "stale_cache"))
+stopifnot(identical(plan_decisions[["QQQ"]], "cold_cache"))
+
+incremental_fetched <- mapped[mapped$symbol == "QQQ", , drop = FALSE]
+incremental_write <- g5_write_incremental_bars_cache(
+  fetched_bars = incremental_fetched,
+  cache_root = incremental_cache,
+  refresh_plan = incremental_plan$plan
+)
+stopifnot(nrow(incremental_write$bars) == 3L)
+stopifnot(identical(
+  incremental_write$summary$symbol[incremental_write$summary$no_returned_bars],
+  "SPY"
+))
+
+incremental_audit <- g5_audit_bars(
+  incremental_write$bars,
+  c("SPY", "QQQ"),
+  as.Date("2026-06-22"),
+  requested_start_date = as.Date("2026-06-18"),
+  requested_end_date = as.Date("2026-06-22"),
+  cache_refresh_plan = incremental_plan$plan,
+  cache_refresh_result = incremental_write$summary
+)
+stopifnot(incremental_audit$refresh_fetch_symbol_count == 2L)
+stopifnot(identical(incremental_audit$no_returned_bar_symbols, "SPY"))
+
 message("Gen5 scaffold smoke test passed.")

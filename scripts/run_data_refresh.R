@@ -72,13 +72,51 @@ request <- g5_alpaca_daily_adjusted_request(
 )
 print(request)
 
-bars <- g5_fetch_alpaca_daily_adjusted_bars(request)
+cache_root <- cfg$cache$root
+refresh <- g5_plan_incremental_cache_refresh(
+  symbols = symbols,
+  cache_root = cache_root,
+  requested_start_date = date_range$fetch_start_date,
+  requested_end_date = date_range$fetch_end_date,
+  latest_completed_session = resolved$latest_completed_session
+)
+message("Incremental cache refresh plan:")
+print(refresh$plan)
+
+fetch_frames <- list()
+fetch_rows <- refresh$plan[refresh$plan$needs_fetch, , drop = FALSE]
+if (nrow(fetch_rows) == 0L) {
+  bars <- g5_empty_bar_data()
+  message("Requested range is already fully cached; no Alpaca fetch required.")
+} else {
+  for (i in seq_len(nrow(fetch_rows))) {
+    symbol_request <- g5_alpaca_daily_adjusted_request(
+      symbols = fetch_rows$symbol[[i]],
+      start_date = fetch_rows$fetch_start_date[[i]],
+      end_date = fetch_rows$fetch_end_date[[i]],
+      as_of_timestamp = resolved$as_of_timestamp,
+      latest_completed_session = resolved$latest_completed_session,
+      feed = cfg$feed
+    )
+    symbol_bars <- g5_fetch_alpaca_daily_adjusted_bars(symbol_request)
+    fetch_frames[[fetch_rows$symbol[[i]]]] <- symbol_bars
+    message("Fetched canonical rows for ", fetch_rows$symbol[[i]], ": ", nrow(symbol_bars))
+  }
+  bars <- if (length(fetch_frames) == 0L) {
+    g5_empty_bar_data()
+  } else {
+    g5_validate_bar_data(do.call(rbind, fetch_frames))
+  }
+}
 message("Fetched canonical rows: ", nrow(bars))
 
-cache_root <- cfg$cache$root
-written <- g5_write_bars_cache(bars, cache_root = cache_root)
-message("Wrote cache files:")
-print(written)
+written <- g5_write_incremental_bars_cache(
+  fetched_bars = bars,
+  cache_root = cache_root,
+  refresh_plan = refresh$plan
+)
+message("Incremental cache merge/write summary:")
+print(written$summary)
 
 cache_read <- g5_read_bars_cache(
   symbols,
@@ -101,7 +139,9 @@ audit <- g5_audit_bars(
   provider_query_timestamp = resolved$as_of_timestamp,
   cache_hits = cache_read$cache_hit_symbols,
   cache_misses = cache_read$cache_missing_symbols,
-  availability_warnings = date_range$date_range_warnings
+  availability_warnings = date_range$date_range_warnings,
+  cache_refresh_plan = refresh$plan,
+  cache_refresh_result = written$summary
 )
 print(audit)
 

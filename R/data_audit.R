@@ -9,7 +9,9 @@ g5_audit_bars <- function(
   provider_query_timestamp = NA_character_,
   cache_hits = character(),
   cache_misses = character(),
-  availability_warnings = character()
+  availability_warnings = character(),
+  cache_refresh_plan = NULL,
+  cache_refresh_result = NULL
 ) {
   if (!is.data.frame(bars)) {
     g5_stop("bars must be a data.frame.")
@@ -105,6 +107,79 @@ g5_audit_bars <- function(
     paste(paste(names(values), ifelse(is.na(values), "NA", values), sep = "="), collapse = ";")
   }
 
+  symbol_text_summary <- function(symbols, summary_frame, value_col) {
+    if (length(symbols) == 0L) {
+      return("")
+    }
+    values <- rep(NA_character_, length(symbols))
+    names(values) <- symbols
+    if (is.data.frame(summary_frame) && nrow(summary_frame) > 0L && value_col %in% names(summary_frame)) {
+      idx <- match(g5_standardize_symbol(summary_frame$symbol), symbols)
+      values[idx[!is.na(idx)]] <- as.character(summary_frame[[value_col]][!is.na(idx)])
+    }
+    paste(paste(names(values), ifelse(is.na(values), "NA", values), sep = "="), collapse = ";")
+  }
+
+  cache_refresh_plan <- if (is.null(cache_refresh_plan)) {
+    data.frame()
+  } else {
+    cache_refresh_plan
+  }
+  cache_refresh_result <- if (is.null(cache_refresh_result)) {
+    data.frame()
+  } else {
+    cache_refresh_result
+  }
+  if (is.data.frame(cache_refresh_plan) && nrow(cache_refresh_plan) > 0L && "symbol" %in% names(cache_refresh_plan)) {
+    cache_refresh_plan$symbol <- g5_standardize_symbol(cache_refresh_plan$symbol)
+  }
+  if (is.data.frame(cache_refresh_result) && nrow(cache_refresh_result) > 0L && "symbol" %in% names(cache_refresh_result)) {
+    cache_refresh_result$symbol <- g5_standardize_symbol(cache_refresh_result$symbol)
+  }
+
+  planned_fetch_symbols <- character()
+  skipped_fetch_symbols <- character()
+  refresh_decisions_by_symbol <- ""
+  refresh_fetch_ranges_by_symbol <- ""
+  if (is.data.frame(cache_refresh_plan) && nrow(cache_refresh_plan) > 0L) {
+    needs_fetch <- if ("needs_fetch" %in% names(cache_refresh_plan)) {
+      as.logical(cache_refresh_plan$needs_fetch)
+    } else {
+      rep(FALSE, nrow(cache_refresh_plan))
+    }
+    planned_fetch_symbols <- cache_refresh_plan$symbol[needs_fetch]
+    skipped_fetch_symbols <- cache_refresh_plan$symbol[!needs_fetch]
+    refresh_decisions_by_symbol <- symbol_text_summary(requested_symbols, cache_refresh_plan, "refresh_decision")
+
+    range_values <- rep(NA_character_, nrow(cache_refresh_plan))
+    if (all(c("fetch_start_date", "fetch_end_date") %in% names(cache_refresh_plan))) {
+      has_range <- !is.na(as.Date(cache_refresh_plan$fetch_start_date)) &
+        !is.na(as.Date(cache_refresh_plan$fetch_end_date))
+      range_values[has_range] <- paste(
+        as.character(as.Date(cache_refresh_plan$fetch_start_date[has_range])),
+        as.character(as.Date(cache_refresh_plan$fetch_end_date[has_range])),
+        sep = ":"
+      )
+    }
+    plan_ranges <- data.frame(
+      symbol = cache_refresh_plan$symbol,
+      fetch_range = range_values,
+      stringsAsFactors = FALSE
+    )
+    refresh_fetch_ranges_by_symbol <- symbol_text_summary(requested_symbols, plan_ranges, "fetch_range")
+  }
+
+  no_returned_bar_symbols <- character()
+  returned_bar_counts_by_symbol <- ""
+  merged_row_counts_by_symbol <- ""
+  if (is.data.frame(cache_refresh_result) && nrow(cache_refresh_result) > 0L) {
+    if ("no_returned_bars" %in% names(cache_refresh_result)) {
+      no_returned_bar_symbols <- cache_refresh_result$symbol[as.logical(cache_refresh_result$no_returned_bars)]
+    }
+    returned_bar_counts_by_symbol <- symbol_text_summary(requested_symbols, cache_refresh_result, "returned_bar_count")
+    merged_row_counts_by_symbol <- symbol_text_summary(requested_symbols, cache_refresh_result, "merged_row_count")
+  }
+
   row_counts <- if ("symbol" %in% names(bars) && nrow(bars) > 0L) {
     counts <- table(g5_standardize_symbol(bars$symbol))
     paste(paste(names(counts), as.integer(counts), sep = "="), collapse = ";")
@@ -133,6 +208,12 @@ g5_audit_bars <- function(
   }
   if (length(empty_symbols) == length(requested_symbols)) {
     automatic_warnings <- c(automatic_warnings, "empty_provider_payload_for_requested_range")
+  }
+  if (length(no_returned_bar_symbols) > 0L) {
+    automatic_warnings <- c(
+      automatic_warnings,
+      paste0("no_returned_bars=", paste(no_returned_bar_symbols, collapse = ","))
+    )
   }
   availability_warnings <- c(as.character(availability_warnings), automatic_warnings)
   availability_warnings <- availability_warnings[!is.na(availability_warnings) & nzchar(availability_warnings)]
@@ -175,6 +256,16 @@ g5_audit_bars <- function(
     cache_hit_symbols = paste(intersect(requested_symbols, cache_hits), collapse = ","),
     cache_miss_symbol_count = length(intersect(requested_symbols, cache_misses)),
     cache_miss_symbols = paste(intersect(requested_symbols, cache_misses), collapse = ","),
+    refresh_fetch_symbol_count = length(intersect(requested_symbols, planned_fetch_symbols)),
+    refresh_fetch_symbols = paste(intersect(requested_symbols, planned_fetch_symbols), collapse = ","),
+    refresh_skip_symbol_count = length(intersect(requested_symbols, skipped_fetch_symbols)),
+    refresh_skip_symbols = paste(intersect(requested_symbols, skipped_fetch_symbols), collapse = ","),
+    refresh_decisions_by_symbol = refresh_decisions_by_symbol,
+    refresh_fetch_ranges_by_symbol = refresh_fetch_ranges_by_symbol,
+    no_returned_bar_symbol_count = length(intersect(requested_symbols, no_returned_bar_symbols)),
+    no_returned_bar_symbols = paste(intersect(requested_symbols, no_returned_bar_symbols), collapse = ","),
+    returned_bar_counts_by_symbol = returned_bar_counts_by_symbol,
+    merged_row_counts_by_symbol = merged_row_counts_by_symbol,
     provider_query_timestamp = as.character(provider_query_timestamp),
     stringsAsFactors = FALSE
   )
