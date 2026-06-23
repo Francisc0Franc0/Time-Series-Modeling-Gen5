@@ -150,6 +150,21 @@ stopifnot(identical(
   "SPY"
 ))
 
+refresh_plan_csv <- tempfile("g5_refresh_plan_", fileext = ".csv")
+merge_summary_csv <- tempfile("g5_merge_summary_", fileext = ".csv")
+g5_write_refresh_plan_artifact_csv(incremental_plan$plan, refresh_plan_csv)
+g5_write_cache_merge_summary_artifact_csv(incremental_write$summary, merge_summary_csv)
+stopifnot(file.exists(refresh_plan_csv))
+stopifnot(file.exists(merge_summary_csv))
+stopifnot(identical(
+  names(utils::read.csv(refresh_plan_csv, stringsAsFactors = FALSE)),
+  names(g5_refresh_plan_artifact(incremental_plan$plan))
+))
+stopifnot(identical(
+  names(utils::read.csv(merge_summary_csv, stringsAsFactors = FALSE)),
+  names(g5_cache_merge_summary_artifact(incremental_write$summary))
+))
+
 incremental_audit <- g5_audit_bars(
   incremental_write$bars,
   c("SPY", "QQQ"),

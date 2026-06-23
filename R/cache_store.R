@@ -310,3 +310,90 @@ g5_write_incremental_bars_cache <- function(
   rownames(write_summary) <- NULL
   list(summary = write_summary, bars = merged_bars)
 }
+
+g5_refresh_plan_artifact <- function(refresh_plan) {
+  required <- c(
+    "symbol",
+    "cache_path",
+    "cache_file_exists",
+    "cached_row_count",
+    "first_cached_session",
+    "latest_cached_session",
+    "requested_start_date",
+    "requested_end_date",
+    "needs_fetch",
+    "refresh_decision",
+    "fetch_start_date",
+    "fetch_end_date"
+  )
+  if (!is.data.frame(refresh_plan) || nrow(refresh_plan) == 0L) {
+    g5_stop("refresh_plan must be a non-empty data.frame.")
+  }
+  missing <- setdiff(required, names(refresh_plan))
+  if (length(missing) > 0L) {
+    g5_stop(paste("refresh_plan is missing required columns:", paste(missing, collapse = ", ")))
+  }
+
+  out <- refresh_plan[required]
+  out$symbol <- g5_standardize_symbol(out$symbol)
+  out$cache_file_exists <- as.logical(out$cache_file_exists)
+  out$cached_row_count <- as.integer(out$cached_row_count)
+  out$needs_fetch <- as.logical(out$needs_fetch)
+  out <- out[order(out$symbol), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_cache_merge_summary_artifact <- function(merge_summary) {
+  required <- c(
+    "symbol",
+    "path",
+    "refresh_decision",
+    "needs_fetch",
+    "returned_bar_count",
+    "merged_row_count",
+    "first_merged_session",
+    "latest_merged_session",
+    "no_returned_bars",
+    "wrote_cache"
+  )
+  if (!is.data.frame(merge_summary) || nrow(merge_summary) == 0L) {
+    g5_stop("merge_summary must be a non-empty data.frame.")
+  }
+  missing <- setdiff(required, names(merge_summary))
+  if (length(missing) > 0L) {
+    g5_stop(paste("merge_summary is missing required columns:", paste(missing, collapse = ", ")))
+  }
+
+  out <- merge_summary[required]
+  names(out)[names(out) == "path"] <- "cache_path"
+  out$symbol <- g5_standardize_symbol(out$symbol)
+  out$needs_fetch <- as.logical(out$needs_fetch)
+  out$returned_bar_count <- as.integer(out$returned_bar_count)
+  out$merged_row_count <- as.integer(out$merged_row_count)
+  out$no_returned_bars <- as.logical(out$no_returned_bars)
+  out$wrote_cache <- as.logical(out$wrote_cache)
+  out <- out[order(out$symbol), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_write_refresh_plan_artifact_csv <- function(refresh_plan, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  artifact <- g5_refresh_plan_artifact(refresh_plan)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(artifact, path, row.names = FALSE)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_write_cache_merge_summary_artifact_csv <- function(merge_summary, path) {
+  if (!nzchar(path)) {
+    g5_stop("path must be a non-empty file path.")
+  }
+  artifact <- g5_cache_merge_summary_artifact(merge_summary)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(artifact, path, row.names = FALSE)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}

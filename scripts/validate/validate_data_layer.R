@@ -320,12 +320,55 @@ pass_fail("duplicate symbol/session rows are detected", {
 
 audit_path <- file.path(validation_dir, "data_layer_validation_audit.csv")
 results_path <- file.path(validation_dir, "data_layer_validation_results.csv")
+refresh_plan_path <- file.path(validation_dir, "data_layer_validation_refresh_plan.csv")
+merge_summary_path <- file.path(validation_dir, "data_layer_validation_merge_summary.csv")
 utils::write.csv(audit, audit_path, row.names = FALSE)
 utils::write.csv(results, results_path, row.names = FALSE)
 
 pass_fail("validation outputs are written under runs/validation", {
   file.exists(audit_path) && file.exists(results_path)
 }, paste("audit:", normalizePath(audit_path, winslash = "/", mustWork = FALSE)))
+
+pass_fail("refresh artifact CSVs are written under runs/validation", {
+  g5_write_refresh_plan_artifact_csv(refresh$plan, refresh_plan_path)
+  g5_write_cache_merge_summary_artifact_csv(incremental_write$summary, merge_summary_path)
+  plan_read <- utils::read.csv(refresh_plan_path, stringsAsFactors = FALSE)
+  merge_read <- utils::read.csv(merge_summary_path, stringsAsFactors = FALSE)
+  identical(
+    names(plan_read),
+    c(
+      "symbol",
+      "cache_path",
+      "cache_file_exists",
+      "cached_row_count",
+      "first_cached_session",
+      "latest_cached_session",
+      "requested_start_date",
+      "requested_end_date",
+      "needs_fetch",
+      "refresh_decision",
+      "fetch_start_date",
+      "fetch_end_date"
+    )
+  ) &&
+    identical(
+      names(merge_read),
+      c(
+        "symbol",
+        "cache_path",
+        "refresh_decision",
+        "needs_fetch",
+        "returned_bar_count",
+        "merged_row_count",
+        "first_merged_session",
+        "latest_merged_session",
+        "no_returned_bars",
+        "wrote_cache"
+      )
+    ) &&
+    identical(plan_read$symbol, sort(plan_read$symbol)) &&
+    identical(merge_read$symbol, sort(merge_read$symbol))
+}, paste("plan:", normalizePath(refresh_plan_path, winslash = "/", mustWork = FALSE)))
 
 alpaca_cfg <- g5_alpaca_config_from_env()
 missing_runtime <- c(

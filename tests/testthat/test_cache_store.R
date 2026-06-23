@@ -92,6 +92,32 @@ test_that("incremental cache planning covers cold, stale, partial, and fully cac
   expect_identical(decisions[["TSLA"]], "cold_cache")
   expect_equal(refresh$plan$fetch_start_date[refresh$plan$symbol == "IWM"], as.Date("2026-06-20"))
   expect_true(is.na(refresh$plan$fetch_start_date[refresh$plan$symbol == "SPY"]))
+
+  artifact <- g5_refresh_plan_artifact(refresh$plan)
+  expect_identical(
+    names(artifact),
+    c(
+      "symbol",
+      "cache_path",
+      "cache_file_exists",
+      "cached_row_count",
+      "first_cached_session",
+      "latest_cached_session",
+      "requested_start_date",
+      "requested_end_date",
+      "needs_fetch",
+      "refresh_decision",
+      "fetch_start_date",
+      "fetch_end_date"
+    )
+  )
+  expect_identical(artifact$symbol, sort(artifact$symbol))
+
+  plan_csv <- tempfile("g5_refresh_plan_", fileext = ".csv")
+  g5_write_refresh_plan_artifact_csv(refresh$plan, plan_csv)
+  plan_read <- utils::read.csv(plan_csv, stringsAsFactors = FALSE)
+  expect_identical(names(plan_read), names(artifact))
+  expect_false("X" %in% names(plan_read))
 })
 
 test_that("incremental cache writes merge deterministically and report symbols with no returned bars", {
@@ -151,4 +177,28 @@ test_that("incremental cache writes merge deterministically and report symbols w
   expect_equal(written$bars$open[written$bars$symbol == "SPY" & written$bars$session_date == as.Date("2026-06-19")], 111)
   expect_identical(written$summary$symbol[written$summary$no_returned_bars], "EMPTY")
   expect_false(file.exists(g5_cache_symbol_path(tmp_cache, "alpaca", "1D", "EMPTY")))
+
+  artifact <- g5_cache_merge_summary_artifact(written$summary)
+  expect_identical(
+    names(artifact),
+    c(
+      "symbol",
+      "cache_path",
+      "refresh_decision",
+      "needs_fetch",
+      "returned_bar_count",
+      "merged_row_count",
+      "first_merged_session",
+      "latest_merged_session",
+      "no_returned_bars",
+      "wrote_cache"
+    )
+  )
+  expect_identical(artifact$symbol, sort(artifact$symbol))
+
+  merge_csv <- tempfile("g5_merge_summary_", fileext = ".csv")
+  g5_write_cache_merge_summary_artifact_csv(written$summary, merge_csv)
+  merge_read <- utils::read.csv(merge_csv, stringsAsFactors = FALSE)
+  expect_identical(names(merge_read), names(artifact))
+  expect_false("X" %in% names(merge_read))
 })

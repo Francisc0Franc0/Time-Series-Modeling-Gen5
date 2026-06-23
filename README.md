@@ -59,6 +59,13 @@ The refresh path is incremental and deterministic. For each requested symbol it 
 
 Fetched rows are merged with existing symbol caches using `symbol` plus `session_date` as the deterministic key, with fetched rows taking precedence on overlap. Merged cache files are sorted by `symbol` and `session_date`.
 
+Each refresh also writes two ignored inspection artifacts under `runs/data_refresh/`:
+
+- `alpaca_daily_refresh_plan_YYYYMMDD.csv`: the pre-fetch plan by symbol. Use this to see whether each symbol was fully cached, needed a cold fetch, needed a stale tail fetch, or had partial history.
+- `alpaca_daily_merge_summary_YYYYMMDD.csv`: the post-fetch cache merge result by symbol. Use this to see how many bars came back, how many rows ended up in the cache, whether a cache file was written, and whether a symbol needed a fetch but returned no bars.
+
+These CSVs are generated artifacts, not source files. They are intentionally covered by the ignored `runs/` folder.
+
 ## Data-Layer Validation
 
 Run the operator-facing validation script without Alpaca credentials:
@@ -68,6 +75,11 @@ Rscript scripts/validate/validate_data_layer.R
 ```
 
 It prints minimal PASS/FAIL/SKIP checks for config loading, explicit session resolution, adjusted daily request construction, cache write/read behavior, requested versus missing symbols, stale symbols, duplicate rows, row counts, cache hits, and provider query timestamp audit fields. Validation outputs are written under the ignored `runs/validation/` folder, separate from future experiment artifacts.
+
+Validation also writes deterministic inspection CSVs:
+
+- `runs/validation/data_layer_validation_refresh_plan.csv`
+- `runs/validation/data_layer_validation_merge_summary.csv`
 
 The validation output also reports the exact script path and command to rerun. Its audit CSV includes availability/date-range fields:
 

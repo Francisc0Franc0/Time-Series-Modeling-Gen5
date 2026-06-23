@@ -45,6 +45,14 @@ Build a long-only, rolling walk-forward, regime-conditioned tactical equity/ETF 
 
 ## Planning Requirement
 
+At the start of each new non-trivial Codex task, before the implementation plan, provide a brief plain-language context note that says:
+
+- where this sub-task sits inside the current larger task or milestone;
+- where that milestone sits in the overall Gen5 progression;
+- what kind of visible system behavior this work moves us closer to, without implying that out-of-scope modules already exist.
+
+Keep this context short and practical. It should orient the operator, not restate the whole project charter.
+
 For non-trivial changes, present a short plan before modifying files. Include:
 
 - files likely to change

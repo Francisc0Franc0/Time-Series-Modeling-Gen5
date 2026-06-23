@@ -72,6 +72,18 @@ request <- g5_alpaca_daily_adjusted_request(
 )
 print(request)
 
+artifact_dir <- file.path(repo_root, "runs", "data_refresh")
+dir.create(artifact_dir, recursive = TRUE, showWarnings = FALSE)
+artifact_date <- format(as.Date(resolved$latest_completed_session), "%Y%m%d")
+refresh_plan_path <- file.path(
+  artifact_dir,
+  paste0("alpaca_daily_refresh_plan_", artifact_date, ".csv")
+)
+merge_summary_path <- file.path(
+  artifact_dir,
+  paste0("alpaca_daily_merge_summary_", artifact_date, ".csv")
+)
+
 cache_root <- cfg$cache$root
 refresh <- g5_plan_incremental_cache_refresh(
   symbols = symbols,
@@ -82,6 +94,8 @@ refresh <- g5_plan_incremental_cache_refresh(
 )
 message("Incremental cache refresh plan:")
 print(refresh$plan)
+g5_write_refresh_plan_artifact_csv(refresh$plan, refresh_plan_path)
+message("Wrote refresh plan artifact: ", refresh_plan_path)
 
 fetch_frames <- list()
 fetch_rows <- refresh$plan[refresh$plan$needs_fetch, , drop = FALSE]
@@ -117,6 +131,8 @@ written <- g5_write_incremental_bars_cache(
 )
 message("Incremental cache merge/write summary:")
 print(written$summary)
+g5_write_cache_merge_summary_artifact_csv(written$summary, merge_summary_path)
+message("Wrote merge summary artifact: ", merge_summary_path)
 
 cache_read <- g5_read_bars_cache(
   symbols,
@@ -145,10 +161,8 @@ audit <- g5_audit_bars(
 )
 print(audit)
 
-audit_dir <- file.path(repo_root, "runs", "data_refresh")
-dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
 audit_path <- file.path(
-  audit_dir,
+  artifact_dir,
   paste0("alpaca_daily_audit_", format(as.Date(resolved$latest_completed_session), "%Y%m%d"), ".csv")
 )
 utils::write.csv(audit, audit_path, row.names = FALSE)
