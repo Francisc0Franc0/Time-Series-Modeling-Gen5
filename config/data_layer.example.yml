@@ -1,0 +1,23 @@
+# Example Gen5 data-layer configuration.
+# Copy to config/data_layer.local.yml and fill local paths/secrets outside git.
+
+provider: alpaca
+timeframe: 1D
+adjusted: true
+signal_timing: after_close_for_next_open
+
+cache:
+  # Recommended: keep heavy cache outside OneDrive.
+  root: C:/Users/Franc/TradingDataCache/Time-Series-Modeling-Gen5
+  format: rds
+
+calendar:
+  timezone: America/New_York
+  market_close_time: "16:00:00"
+  incomplete_bar_policy: exclude_current_unclosed_session
+
+symbols:
+  - SPY
+  - QQQ
+  - TSLA
+  - NVDA

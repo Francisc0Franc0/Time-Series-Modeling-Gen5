@@ -1,0 +1,24 @@
+# R session / project noise
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Local data and generated outputs
+data_cache/
+runs/
+artifacts/
+logs/
+*.parquet
+*.duckdb
+*.rds
+
+# Environment secrets
+.Renviron
+.env
+config/*.local.yml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
