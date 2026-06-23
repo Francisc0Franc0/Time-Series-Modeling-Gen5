@@ -88,6 +88,12 @@ Before the first future WFA consumer uses a workbench handoff, confirm:
 - Generated cache and run artifacts remain ignored and are not committed.
 - Future research code reads the handoff artifacts and does not call `g5_fetch_alpaca_daily_adjusted_bars()` or Alpaca HTTP APIs directly.
 
+## Next WFA Planning Gate
+
+The first minimal WFA planning record is `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`. Future WFA implementation should not begin until that contract is accepted as the build boundary for fold geometry, TRAIN/OOS separation, no-leakage rules, fold-local learned components, reserved baselines, frozen decision evidence, and explicit out-of-scope limits.
+
+That planning gate does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
+
 ## Reserved Baselines
 
 Future research should compare active decisions against cash/no-position and buy-and-hold baselines. In v0.1 these are contract concepts only. This checklist does not implement baseline returns, benchmark performance, strategy selection, or no-trade competition.

@@ -184,7 +184,7 @@ Set `GEN5_WORKBENCH_SYMBOLS="NVDA,AMD"` for an explicit small basket, or use `GE
 
 The query output includes canonical adjusted daily bars, a manifest, audit CSV, symbol coverage CSV, refresh plan CSV, and severity-labeled health CSV with `ERROR`, `WARN`, and `INFO` rows. It does not compute indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
-The future research handoff contract and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA code must consume the workbench handoff artifacts rather than calling Alpaca or inferring latest sessions directly.
+The future research handoff contract and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA code must consume the workbench handoff artifacts rather than calling Alpaca or inferring latest sessions directly. The documentation-only first WFA planning record lives in `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
 
 ## Static Candlestick Inspection
 
@@ -219,6 +219,8 @@ Gen5 v0.1 Research Data Workbench is documented in `docs/GEN5_V0_1_RESEARCH_DATA
 The v0.1 workbench queue is closed out through the corporate-actions metadata spike. That spike records corporate-actions metadata as a possible later Alpaca sidecar only, not a canonical bar-table change and not a v0.1 signal source.
 
 This milestone does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, corporate-actions ingestion, earnings-data integration, or non-Alpaca providers. Future WFA code should consume the workbench handoff contract rather than calling Alpaca directly.
+
+The first minimal WFA contract is now defined as a planning record only. It covers rolling fold geometry, TRAIN/OOS separation, no-leakage rules, fold-local fitting requirements for later learned components, reserved cash/no-position and buy-and-hold baselines, minimal audit evidence, and explicit out-of-scope boundaries. It does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
 
 ## Design Principle
 

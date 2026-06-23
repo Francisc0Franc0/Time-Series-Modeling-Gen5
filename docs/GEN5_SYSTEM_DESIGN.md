@@ -25,6 +25,7 @@ These are architectural decisions and later build-order constraints, not a claim
 - Drawdown discomfort threshold: 25% is a major design warning level.
 - Local heavy cache: ignored repo-local `data_cache/` is acceptable for v0.1 simplicity; outside-OneDrive cache roots remain an optional operator optimization.
 - Research handoff: future WFA code must consume workbench handoff artifacts and must not call Alpaca directly.
+- Minimal WFA contract: the first WFA milestone must begin from the documentation-only contract in `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md` before implementation.
 
 ## Semantic Modules
 
@@ -83,6 +84,7 @@ The v0.1 Research Data Workbench adds a handoff manifest and gate checklist for 
 
 - Data layer and cache contract.
 - Research Data Workbench: small basket/date-range query, universe registry, severity-labeled data health, static candlestick inspection, opt-in credential preflight, and research handoff manifest.
+- Minimal WFA contract planning: fold geometry, TRAIN/OOS separation, no-leakage rules, fold-local fit/apply requirements, reserved baselines, and audit evidence.
 - Minimal WFA engine.
 - Asset universe/taxonomy studies.
 - Feature engine.

@@ -237,6 +237,8 @@ Future WFA code must consume the workbench bars, manifest, health, audit, symbol
 
 The handoff gate reserves cash/no-position and buy-and-hold as later baseline concepts only. It does not implement returns, benchmark performance, WFA folds, strategy evaluation, allocation, dashboard behavior, execution, or live orders.
 
+The first minimal WFA contract planning record lives in `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`. It defines the next milestone boundary without adding WFA code or downstream research behavior to v0.1.
+
 ## Acceptance Criteria
 
 Gen5 v0.1 is ready to hand off to the first research milestone when:

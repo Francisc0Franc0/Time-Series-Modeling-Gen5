@@ -6,6 +6,8 @@ Gen5 has completed the v0 market-data-layer closeout and the v0.1 Research Data 
 
 The completed v0.1 milestone still sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench only makes adjusted daily data easier to query, inspect, chart, and hand off to later research.
 
+A post-v0.1 minimal WFA contract plan now exists as documentation only. It defines the first WFA build boundary without implementing folds, indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboard, execution, or live-order logic.
+
 The visible behavior now available is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
 ## Queue Rules
@@ -736,3 +738,39 @@ Stop conditions:
 
 - Implementing WFA, indicators, returns, labels, regimes, strategy signals, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, or provider expansion.
 - Changing cache or generated artifact behavior.
+
+## Planning Task After v0.1 Closeout
+
+### 22. Define minimal WFA contract plan
+
+Status: done
+
+Branch: `codex/gen5-minimal-wfa-contract-planning`
+
+Validation: Documentation-only diff review.
+
+Notes:
+
+- Added `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md` as the first WFA planning boundary after the Research Data Workbench.
+- Defined allowed workbench handoff inputs, fold geometry requirements, TRAIN/OOS separation, no-leakage rules, fold-local fit/apply requirements for later learned components, reserved cash/no-position and buy-and-hold baselines, minimal audit outputs, and frozen decision evidence.
+- Reconfirmed that this slice does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
+
+Goal: Define the first minimal WFA milestone contract and build order before implementation begins.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `README.md`
+- `docs/GEN5_SYSTEM_DESIGN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+- `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`
+- `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`
+
+Validation:
+
+- Documentation-only diff review unless code, config, validation behavior, or operator commands change.
+
+Stop conditions:
+
+- Implementing WFA, indicators, returns, labels, regimes, strategy signals, allocation, dashboards, execution, live-order logic, corporate-actions ingestion, earnings-data integration, or provider expansion.
+- Changing the workbench handoff contract in a way that requires code changes.
