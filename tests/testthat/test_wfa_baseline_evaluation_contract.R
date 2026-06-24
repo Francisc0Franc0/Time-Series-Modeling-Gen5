@@ -159,6 +159,9 @@ test_that("baseline evaluation contract scaffold records schema and deterministi
   expect_identical(scaffold$baseline_family_id[[1L]], "no_trade_cash")
   expect_true(all(scaffold$schema_version == g5_wfa_baseline_evaluation_contract_schema_version()))
   expect_false(any(duplicated(scaffold$contract_id)))
+  expect_true(all(scaffold$baseline_family_inclusion_status == "all_reserved_families_included_contract_scaffold_only"))
+  expect_true(all(scaffold$excluded_reserved_baseline_family_ids == ""))
+  expect_true(all(scaffold$excluded_reserved_baseline_review_status == "no_reserved_baseline_family_exclusions_recorded"))
   expect_true(all(grepl("/runs/", scaffold$artifact_path, fixed = TRUE)))
   expect_true(all(grepl("__contract.csv", scaffold$artifact_path, fixed = TRUE)))
   expect_true(all(scaffold$application_status == "not_applied_contract_scaffold_only"))
@@ -193,8 +196,13 @@ test_that("baseline evaluation contract can be limited to no-trade first", {
 
   expect_equal(nrow(scaffold), nrow(fixture$folds))
   expect_true(all(scaffold$baseline_family_id == "no_trade_cash"))
+  expect_true(all(scaffold$baseline_family_inclusion_status == "included_in_current_contract_scaffold_with_reserved_family_exclusions"))
+  expect_true(all(grepl("broad_market_buy_hold", scaffold$excluded_reserved_baseline_family_ids, fixed = TRUE)))
+  expect_true(all(grepl("per_asset_buy_hold", scaffold$excluded_reserved_baseline_family_ids, fixed = TRUE)))
+  expect_true(all(scaffold$excluded_reserved_baseline_review_status == "reserved_families_excluded_not_yet_authorized_for_this_slice"))
   expect_true(all(scaffold$cash_no_position_assumption_status == "not_defined_no_cash_yield_or_return_assumption"))
   expect_true(all(grepl("cash_no_position_return_assumption_not_defined", scaffold$review_required_reason)))
+  expect_true(all(grepl("reserved_baseline_families_excluded", scaffold$review_required_reason)))
 
   expect_error(
     g5_build_wfa_baseline_evaluation_contract_scaffold(
@@ -205,6 +213,16 @@ test_that("baseline evaluation contract can be limited to no-trade first", {
       included_baseline_family_ids = c("broad_market_buy_hold", "no_trade_cash")
     ),
     "start with no_trade_cash"
+  )
+  expect_error(
+    g5_build_wfa_baseline_evaluation_contract_scaffold(
+      gate_result = gate_result,
+      fold_geometry = fixture$folds,
+      frozen_fold_evidence = fixture$evidence,
+      baseline_registry = fixture$registry,
+      included_baseline_family_ids = c("no_trade_cash", "no_trade_cash")
+    ),
+    "must be unique"
   )
 })
 

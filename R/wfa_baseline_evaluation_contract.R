@@ -9,7 +9,10 @@ g5_wfa_required_baseline_evaluation_contract_columns <- function() {
     "schema_version",
     "contract_id",
     "baseline_family_id",
+    "baseline_family_inclusion_status",
     "baseline_family_status",
+    "excluded_reserved_baseline_family_ids",
+    "excluded_reserved_baseline_review_status",
     "fold_id",
     "frozen_evidence_id",
     "source_handoff_reference",
@@ -131,11 +134,15 @@ g5_wfa_validate_baseline_registry_for_evaluation_contract <- function(
 g5_wfa_baseline_contract_review_reason <- function(
   baseline_family_id,
   handoff_review_required,
-  source_warning_count
+  source_warning_count,
+  excluded_reserved_baseline_family_ids = character()
 ) {
   reasons <- character()
   if (isTRUE(handoff_review_required) || source_warning_count > 0L) {
     reasons <- c(reasons, "accepted_source_warning_context_requires_review_visibility")
+  }
+  if (length(excluded_reserved_baseline_family_ids) > 0L) {
+    reasons <- c(reasons, "reserved_baseline_families_excluded_from_current_contract_scaffold")
   }
   if (identical(baseline_family_id, "no_trade_cash")) {
     reasons <- c(reasons, "cash_no_position_return_assumption_not_defined_in_contract_scaffold")
@@ -192,9 +199,24 @@ g5_build_wfa_baseline_evaluation_contract_scaffold <- function(
   if (!identical(included_baseline_family_ids[[1L]], "no_trade_cash")) {
     g5_stop("baseline evaluation contract scaffold must start with no_trade_cash.")
   }
+  if (any(duplicated(included_baseline_family_ids))) {
+    g5_stop("included_baseline_family_ids must be unique.")
+  }
   unknown <- setdiff(included_baseline_family_ids, available_ids)
   if (length(unknown) > 0L) {
     g5_stop(paste("included baseline families are not reserved:", paste(unknown, collapse = ", ")))
+  }
+  excluded_reserved_baseline_family_ids <- setdiff(available_ids, included_baseline_family_ids)
+  excluded_reserved_baseline_family_text <- paste(excluded_reserved_baseline_family_ids, collapse = ";")
+  baseline_family_inclusion_status <- if (length(excluded_reserved_baseline_family_ids) > 0L) {
+    "included_in_current_contract_scaffold_with_reserved_family_exclusions"
+  } else {
+    "all_reserved_families_included_contract_scaffold_only"
+  }
+  excluded_reserved_baseline_review_status <- if (length(excluded_reserved_baseline_family_ids) > 0L) {
+    "reserved_families_excluded_not_yet_authorized_for_this_slice"
+  } else {
+    "no_reserved_baseline_family_exclusions_recorded"
   }
   included_registry <- baseline_registry[
     match(included_baseline_family_ids, available_ids),
@@ -230,7 +252,8 @@ g5_build_wfa_baseline_evaluation_contract_scaffold <- function(
       review_reason <- g5_wfa_baseline_contract_review_reason(
         baseline_family_id = family_id,
         handoff_review_required = review_required,
-        source_warning_count = source_warning_count
+        source_warning_count = source_warning_count,
+        excluded_reserved_baseline_family_ids = excluded_reserved_baseline_family_ids
       )
       k <- k + 1L
       rows[[k]] <- data.frame(
@@ -242,7 +265,10 @@ g5_build_wfa_baseline_evaluation_contract_scaffold <- function(
           sep = "_"
         ),
         baseline_family_id = family_id,
+        baseline_family_inclusion_status = baseline_family_inclusion_status,
         baseline_family_status = as.character(family$baseline_family_status[[1L]]),
+        excluded_reserved_baseline_family_ids = excluded_reserved_baseline_family_text,
+        excluded_reserved_baseline_review_status = excluded_reserved_baseline_review_status,
         fold_id = as.character(fold$fold_id[[1L]]),
         frozen_evidence_id = as.character(evidence$evidence_id[[1L]]),
         source_handoff_reference = as.character(fold$source_handoff_reference[[1L]]),
@@ -338,6 +364,27 @@ g5_validate_wfa_baseline_evaluation_contract_scaffold <- function(contract_scaff
       any(as.character(contract_scaffold$allocation_status) !=
           "not_implemented_no_allocation_or_weighting")) {
     g5_stop("baseline evaluation contract scaffold must not contain return, cash yield, metric, benchmark, or allocation implementation status.")
+  }
+  allowed_inclusion_status <- c(
+    "included_in_current_contract_scaffold_with_reserved_family_exclusions",
+    "all_reserved_families_included_contract_scaffold_only"
+  )
+  if (any(!as.character(contract_scaffold$baseline_family_inclusion_status) %in%
+          allowed_inclusion_status)) {
+    g5_stop("baseline evaluation contract scaffold has an unexpected baseline_family_inclusion_status.")
+  }
+  allowed_exclusion_review_status <- c(
+    "reserved_families_excluded_not_yet_authorized_for_this_slice",
+    "no_reserved_baseline_family_exclusions_recorded"
+  )
+  if (any(!as.character(contract_scaffold$excluded_reserved_baseline_review_status) %in%
+          allowed_exclusion_review_status)) {
+    g5_stop("baseline evaluation contract scaffold has an unexpected excluded reserved baseline review status.")
+  }
+  exclusion_review_required <- as.character(contract_scaffold$excluded_reserved_baseline_review_status) ==
+    "reserved_families_excluded_not_yet_authorized_for_this_slice"
+  if (any(exclusion_review_required & !nzchar(as.character(contract_scaffold$excluded_reserved_baseline_family_ids)))) {
+    g5_stop("baseline evaluation contract scaffold must name excluded reserved baseline families when exclusions are recorded.")
   }
   leakage_cols <- c(
     "leakage_no_provider_calls",

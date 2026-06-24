@@ -1343,3 +1343,46 @@ Stop conditions:
 - Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
 - Naming, designing, fitting, scoring, or selecting an active research candidate.
 - Treating contract rows, deterministic paths, or readiness statuses as baseline results.
+
+### 36. Review baseline evaluation contract scaffold for closeout readiness
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-baseline-evaluation-contract-closeout`
+
+Branch: `codex/gen5-wfa-baseline-evaluation-contract-closeout`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Confirmed the first no-trade and reserved baseline-family evaluation contract scaffold remains schema/readiness only and keeps OOS application/evaluation status explicitly `not_applied` and `not_authorized`.
+- Added explicit inclusion/exclusion review fields so a no-trade-only or otherwise narrow slice records which reserved baseline families are excluded and not yet authorized, instead of dropping that question silently.
+- Expanded non-network tests for reserved-family exclusion review status, deterministic no-trade-first behavior, duplicate included-family rejection, ignored `runs/` artifact paths, leakage attestations, and no return/performance/allocation implementation statuses.
+- Did not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+
+Goal: Confirm the first no-trade and reserved baseline-family evaluation contract scaffold is ready to close without producing baseline results.
+
+Likely files:
+
+- `R/wfa_baseline_evaluation_contract.R`
+- `tests/testthat/test_wfa_baseline_evaluation_contract.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Confirm schema/readiness helpers preserve required lineage, deterministic IDs or paths, review status fields, leakage attestations, and ignored output locations.
+- Confirm no-trade remains first and excluded reserved baseline-family questions remain visible when a narrow slice is requested.
+- Confirm validation remains non-network and no provider calls, credentials, unmanifested cache reads, latest-session inference, OOS outcome authority, OOS fitting, active-candidate inputs, or return/metric computation are introduced.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, or performance claims.
+- Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
+- Naming, designing, fitting, scoring, or selecting an active research candidate.
+- Treating contract rows, deterministic paths, or readiness statuses as baseline results.
