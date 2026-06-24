@@ -8,7 +8,7 @@ The completed v0.1 milestone still sits before PCA/state modeling, strategy rese
 
 Post-v0.1 Minimal WFA Foundation and guardrail slices now exist through handoff gating, quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence, reserved baseline-family scaffolding, baseline-evaluation contract scaffolding, and a first minimal WFA POC boundary. These remain WFA contract/scaffold surfaces, not strategy research or evaluation results.
 
-The current roadmap layer is Minimal WFA Engine Toward AMD EMA POC. It now has the exact narrow AMD EMA gate open, plus schema/readiness contract surfaces for evaluation readiness and train-only parameter freeze. This remains a minimal WFA POC path, not a production strategy: returns, trade accounting, performance metrics, OOS measurement, allocation, leverage, dashboards, live advice, execution, broader strategy families, and performance claims remain stopped until separately queued and explicitly authorized.
+The current roadmap layer is Minimal WFA Engine Toward AMD EMA POC. It now has the exact narrow AMD EMA gate open, plus schema/readiness contract surfaces for evaluation readiness, train-only parameter freeze, and frozen-parameter OOS application boundary readiness. This remains a minimal WFA POC path, not a production strategy: returns, trade accounting, performance metrics, OOS measurement, allocation, leverage, dashboards, live advice, execution, broader strategy families, and performance claims remain stopped until separately queued and explicitly authorized.
 
 The visible behavior now available is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
@@ -1841,9 +1841,19 @@ Stop conditions:
 
 ### 48. Add AMD EMA frozen-parameter application boundary
 
-Status: pending
+Status: complete
 
 Recommended branch: `codex/gen5-amd-ema-frozen-parameter-application-boundary`
+
+Branch: `codex/gen5-amd-ema-frozen-parameter-application-boundary`
+
+Notes:
+
+- Added `R/wfa_amd_ema_parameter_application_boundary.R` as the schema/readiness boundary after accepted AMD EMA parameter-freeze readiness.
+- Consumes only the parameter-freeze contract and accepted parameter-freeze readiness review, preserves `no_trade_cash` as row 1 for every fold, and binds already-frozen train-only fast/slow EMA periods to fold OOS windows without computing EMA signals or results.
+- Added guarded CSV writers and deterministic ignored `runs/` artifact paths for the boundary manifest, application surface, and readiness review.
+- Added non-network tests for lineage, no-trade-first rows, frozen-parameter preservation, STOP states, leakage attestations, ignored paths, and rejection of OOS-informed or result-like inputs.
+- Next pause point remains Task 49. It requires separate operator authorization naming the allowed OOS measurement fields before any measurement contract work begins.
 
 Goal: Consume the accepted AMD EMA parameter-freeze readiness review and define the next boundary for applying frozen train-only EMA parameters to OOS rows, without computing returns, trade accounting, performance metrics, allocation, leverage, live advice, execution, dashboards, or broader strategy families.
 

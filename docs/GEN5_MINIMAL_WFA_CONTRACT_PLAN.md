@@ -26,6 +26,8 @@ Implementation note: the first AMD EMA long/cash evaluation contract surface now
 
 Implementation note: the first AMD EMA train-only parameter-freeze contract now exists as `R/wfa_amd_ema_parameter_freeze_contract.R`. It consumes the accepted AMD EMA evaluation contract readiness review, requires explicit operator acceptance of that readiness surface, freezes one explicit fast/slow EMA period decision per fold, preserves `no_trade_cash` as a first-class comparison row, and emits readiness/write helpers with deterministic ignored-run artifact paths. It does not compute EMA signals, apply frozen parameters to OOS rows, compute returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
 
+Implementation note: the first AMD EMA frozen-parameter OOS application boundary now exists as `R/wfa_amd_ema_parameter_application_boundary.R`. It consumes the accepted AMD EMA parameter-freeze readiness review and source freeze surfaces, preserves `no_trade_cash` as row 1 for every fold, and binds already-frozen train-only fast/slow EMA periods to fold OOS windows as schema/readiness rows only. It does not compute EMA signals, returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims. The next pause point is a separately authorized Task 49 measurement contract that must name allowed measurement fields before work begins.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
