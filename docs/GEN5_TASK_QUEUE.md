@@ -1883,13 +1883,28 @@ Stop conditions:
 - Selecting, changing, or rejecting parameters based on OOS evidence.
 - Treating frozen parameter rows as completed strategy results.
 
-### 49. Later: authorize minimal OOS measurement contract only after application boundary review
+### 49. Authorize minimal OOS measurement contract after application boundary review
 
-Status: deferred
+Status: complete
 
 Recommended branch: `codex/gen5-amd-ema-minimal-oos-measurement-contract`
 
-Goal: Placeholder for a later explicit task that may define the first minimal OOS measurement contract for the already-frozen AMD EMA decisions and no-trade comparison, if the operator separately authorizes exactly which return, cash/no-position, trade-accounting, and metric fields are in scope.
+Branch: `codex/gen5-amd-ema-minimal-oos-measurement-contract`
+
+Goal: Define the first minimal OOS measurement contract for the already-frozen AMD EMA decisions and no-trade comparison, using only the operator-authorized return, cash/no-position, trade-accounting, and metric fields.
+
+Notes:
+
+- Added `R/wfa_amd_ema_oos_measurement_contract.R` as the first minimal OOS measurement contract after accepted AMD EMA application-boundary readiness.
+- Consumes the accepted application boundary and readiness review only, records a deterministic application artifact hash, and preserves no-trade as a first-class zero-return comparison.
+- Authorized exact output schemas for row-per-session OOS measurement, per-trade measurement, per-fold summary, and global summary surfaces.
+- Authorized return fields: `asset_session_return_open_to_close`, `strategy_session_return`, `no_trade_session_return`, `cash_no_position_return`, and `trade_return_open_to_open`.
+- Authorized cash/no-position fields: `measurement_status`, `position_state`, `no_trade_session_return`, and `cash_no_position_return`.
+- Authorized trade-accounting fields: `trade_id`, `trade_status`, `position_state`, `entry_signal_session_date`, `entry_execution_session_date`, `exit_signal_session_date`, `exit_execution_session_date`, `share_quantity`, `trade_pnl`, and `holding_period_sessions`.
+- Authorized metric fields: `sharpe_ratio`, `trade_return_open_to_open`, and `max_drawdown`.
+- Recorded that session returns are open-to-close, trade returns are entry-next-open to exit-next-open, flat/no-trade returns are zero, and missing frozen application session rows are validation errors rather than flat periods.
+- Added non-network tests for source readiness acceptance, exact field registry, no-trade preservation, strict session coverage validation, writer guardrails, and rejection of unauthorized measurement columns.
+- Did not compute EMA signals, return values, trade PnL, Sharpe, drawdown, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
 
 Required behavior:
 
@@ -1897,6 +1912,10 @@ Required behavior:
 - Must keep no-trade first-class.
 - Must preserve fold-local WFA chronology and leakage attestations.
 - Must remain non-live and non-dashboard.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
 
 Stop conditions:
 
