@@ -2008,3 +2008,29 @@ Validation:
 Stop conditions:
 
 - Computing share quantity, trade PnL, trade open-to-open return, Sharpe, drawdown, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.
+
+### 53. Add AMD EMA OOS measurement stack validators
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Goal: Add strict cross-surface validators proving the AMD EMA OOS measurement stack preserves frozen lineage, exact OOS coverage, no-trade-first comparison discipline, explicit timestamps, and canonical adjusted daily OHLCV constraints.
+
+Notes:
+
+- Added `g5_validate_wfa_amd_ema_oos_measurement_stack()` inside `R/wfa_amd_ema_oos_measurement_contract.R`.
+- Validates the measurement contract, frozen application boundary, frozen signal/position evidence, row-per-session measurement values, optional trade lifecycle rows, and canonical Alpaca adjusted daily AMD bars together.
+- Fails loudly on application-boundary lineage drift, exact OOS coverage mismatches, no-trade-first comparison drift, timestamp/session drift, unknown application IDs, bad artifact-hash lineage, duplicate/future/noncanonical bars, and row-count mismatches.
+- Added non-network tests for aligned stack validation plus timestamp drift, missing session coverage, and noncanonical AMD bar rejection.
+- Did not compute new returns, trade PnL, trade returns, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Adding summary/performance validators that compute Sharpe, drawdown, trade return, allocation, leverage, live advice, execution, dashboard, broader strategy-family, or performance-claim outputs.

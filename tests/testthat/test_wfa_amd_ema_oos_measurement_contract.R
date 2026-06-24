@@ -493,6 +493,87 @@ test_that("AMD EMA OOS trade lifecycle scaffold records signal-position transiti
   )
 })
 
+test_that("AMD EMA OOS measurement stack validator enforces cross-surface lineage and coverage", {
+  fixture <- g5_test_amd_ema_measurement_fixture()
+  contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    g5_build_wfa_amd_ema_oos_measurement_contract(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+  signal_position <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    g5_build_wfa_amd_ema_oos_signal_position_application(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      bars = fixture$bars,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+  signal_position <- g5_test_amd_ema_trade_lifecycle_signal_position(signal_position)
+  session_values <- g5_build_wfa_amd_ema_oos_session_measurement_values(
+    oos_measurement_contract = contract,
+    signal_position_application = signal_position,
+    bars = fixture$bars,
+    parameter_application_boundary = fixture$application
+  )
+  lifecycle <- g5_build_wfa_amd_ema_oos_trade_lifecycle_measurements(
+    oos_measurement_contract = contract,
+    signal_position_application = signal_position,
+    parameter_application_boundary = fixture$application
+  )
+
+  expect_silent(g5_validate_wfa_amd_ema_oos_measurement_stack(
+    oos_measurement_contract = contract,
+    parameter_application_boundary = fixture$application,
+    signal_position_application = signal_position,
+    session_measurements = session_values,
+    trade_lifecycle_measurements = lifecycle,
+    bars = fixture$bars
+  ))
+
+  bad_timestamp <- session_values
+  bad_timestamp$as_of_timestamp[[1L]] <- "2026-04-06 16:00:00"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = bad_timestamp,
+      trade_lifecycle_measurements = lifecycle,
+      bars = fixture$bars
+    ),
+    "explicit as_of_timestamp"
+  )
+
+  missing_session <- session_values[-1L, , drop = FALSE]
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = missing_session,
+      trade_lifecycle_measurements = lifecycle,
+      bars = fixture$bars
+    ),
+    "exactly the frozen OOS session count"
+  )
+
+  noncanonical_bars <- fixture$bars
+  noncanonical_bars$provider[noncanonical_bars$symbol == "AMD"] <- "other"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = session_values,
+      trade_lifecycle_measurements = lifecycle,
+      bars = noncanonical_bars
+    ),
+    "Alpaca adjusted daily OHLCV"
+  )
+})
+
 test_that("AMD EMA OOS session measurement validator is strict about frozen coverage", {
   fixture <- g5_test_amd_ema_measurement_fixture()
   contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(

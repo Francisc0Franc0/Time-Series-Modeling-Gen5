@@ -36,6 +36,8 @@ Implementation note: the first AMD EMA OOS session measurement value slice now e
 
 Implementation note: the first AMD EMA OOS trade lifecycle scaffold now exists inside `R/wfa_amd_ema_oos_measurement_contract.R`. It consumes the accepted measurement contract and frozen AMD EMA OOS signal/position evidence, derives entry and exit lifecycle rows from candidate long/cash transitions only, records deterministic trade IDs, entry/exit signal and execution dates, trade status, position state, and holding-period session counts where the lifecycle is closed, and leaves share quantity, trade PnL, and trade open-to-open return uncomputed. It does not compute performance metrics, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
 
+Implementation note: the first AMD EMA OOS measurement stack validator now exists inside `R/wfa_amd_ema_oos_measurement_contract.R`. It validates the accepted measurement contract, frozen application boundary, frozen signal/position evidence, row-per-session measurement values, optional trade lifecycle rows, and canonical Alpaca adjusted daily AMD bars as one lineage-preserving stack. It proves exact OOS coverage, no-trade-first comparison discipline, explicit `as_of_timestamp` and `latest_completed_session` consistency, known application IDs, canonical bar constraints, and source application artifact-hash lineage without computing new returns, trade accounting, metrics, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

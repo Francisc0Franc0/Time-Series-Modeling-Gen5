@@ -1500,6 +1500,178 @@ g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements <- function(
   trade_measurements
 }
 
+g5_wfa_amd_ema_oos_surface_key <- function(application_row_id, session_date, comparison_order, subject_id) {
+  paste(
+    as.character(application_row_id),
+    format(as.Date(session_date), "%Y-%m-%d"),
+    as.integer(comparison_order),
+    as.character(subject_id),
+    sep = "|"
+  )
+}
+
+g5_validate_wfa_amd_ema_oos_measurement_stack <- function(
+  oos_measurement_contract,
+  parameter_application_boundary,
+  signal_position_application,
+  session_measurements,
+  trade_lifecycle_measurements = NULL,
+  bars
+) {
+  oos_measurement_contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    oos_measurement_contract
+  )
+  parameter_application_boundary <- g5_validate_wfa_amd_ema_parameter_application_boundary(
+    parameter_application_boundary
+  )
+  signal_position_application <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    signal_position_application
+  )
+  session_measurements <- g5_validate_wfa_amd_ema_oos_session_measurements(
+    session_measurements = session_measurements,
+    oos_measurement_contract = oos_measurement_contract,
+    parameter_application_boundary = parameter_application_boundary
+  )
+  if (!is.null(trade_lifecycle_measurements)) {
+    trade_lifecycle_measurements <- g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements(
+      trade_measurements = trade_lifecycle_measurements,
+      oos_measurement_contract = oos_measurement_contract,
+      signal_position_application = signal_position_application,
+      parameter_application_boundary = parameter_application_boundary
+    )
+  }
+
+  manifest <- oos_measurement_contract$run_manifest
+  application_manifest <- parameter_application_boundary$run_manifest
+  application_surface <- parameter_application_boundary$application_surface
+  signal_manifest <- signal_position_application$run_manifest
+  signal_surface <- signal_position_application$signal_position_surface
+  bars <- g5_wfa_prepare_amd_ema_oos_measurement_bars(
+    bars = bars,
+    as_of_timestamp = manifest$as_of_timestamp[[1L]],
+    latest_completed_session = manifest$latest_completed_session[[1L]]
+  )
+
+  if (!identical(
+    as.character(manifest$source_application_boundary_id[[1L]]),
+    as.character(application_manifest$application_boundary_id[[1L]])
+  ) ||
+      !identical(
+        as.character(signal_manifest$source_application_boundary_id[[1L]]),
+        as.character(application_manifest$application_boundary_id[[1L]])
+      )) {
+    g5_stop("AMD EMA OOS measurement stack must preserve frozen application boundary lineage.")
+  }
+  expected_as_of <- as.character(manifest$as_of_timestamp[[1L]])
+  expected_latest <- as.Date(manifest$latest_completed_session[[1L]])
+  as_of_values <- c(
+    as.character(application_manifest$as_of_timestamp),
+    as.character(application_surface$as_of_timestamp),
+    as.character(signal_manifest$as_of_timestamp),
+    as.character(signal_surface$as_of_timestamp),
+    as.character(session_measurements$as_of_timestamp)
+  )
+  latest_values <- c(
+    as.Date(application_manifest$latest_completed_session),
+    as.Date(application_surface$latest_completed_session),
+    as.Date(signal_manifest$latest_completed_session),
+    as.Date(signal_surface$latest_completed_session)
+  )
+  if (!is.null(trade_lifecycle_measurements) && nrow(trade_lifecycle_measurements) > 0L) {
+    as_of_values <- c(as_of_values, as.character(trade_lifecycle_measurements$as_of_timestamp))
+  }
+  if (any(as_of_values != expected_as_of) || any(latest_values != expected_latest)) {
+    g5_stop("AMD EMA OOS measurement stack must preserve explicit as_of_timestamp and latest_completed_session across surfaces.")
+  }
+
+  expected_parts <- list()
+  k <- 0L
+  amd_session_dates <- as.Date(bars$session_date)
+  for (i in seq_len(nrow(application_surface))) {
+    app_row <- application_surface[i, , drop = FALSE]
+    oos_dates <- amd_session_dates[
+      amd_session_dates >= as.Date(app_row$oos_start_date[[1L]]) &
+        amd_session_dates <= as.Date(app_row$oos_end_date[[1L]])
+    ]
+    if (length(oos_dates) != as.integer(app_row$amd_oos_row_count[[1L]])) {
+      g5_stop("AMD EMA OOS measurement stack canonical bars do not match frozen OOS coverage.")
+    }
+    for (session_date in oos_dates) {
+      k <- k + 1L
+      expected_parts[[k]] <- data.frame(
+        application_row_id = as.character(app_row$application_row_id[[1L]]),
+        session_date = as.Date(session_date),
+        comparison_order = as.integer(app_row$comparison_order[[1L]]),
+        subject_id = as.character(app_row$subject_id[[1L]]),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  expected_rows <- do.call(rbind, expected_parts)
+  expected_keys <- g5_wfa_amd_ema_oos_surface_key(
+    expected_rows$application_row_id,
+    expected_rows$session_date,
+    expected_rows$comparison_order,
+    expected_rows$subject_id
+  )
+  signal_keys <- g5_wfa_amd_ema_oos_surface_key(
+    signal_surface$source_application_row_id,
+    signal_surface$session_date,
+    signal_surface$comparison_order,
+    signal_surface$subject_id
+  )
+  session_keys <- g5_wfa_amd_ema_oos_surface_key(
+    session_measurements$application_row_id,
+    session_measurements$session_date,
+    session_measurements$comparison_order,
+    session_measurements$subject_id
+  )
+  if (!identical(signal_keys, expected_keys) || !identical(session_keys, expected_keys)) {
+    g5_stop("AMD EMA OOS measurement stack must preserve exact frozen OOS coverage across application, signal/position, and session measurement rows.")
+  }
+
+  for (key in unique(paste(expected_rows$session_date, expected_rows$application_row_id))) {
+    rows <- expected_rows[paste(expected_rows$session_date, expected_rows$application_row_id) == key, , drop = FALSE]
+    if (nrow(rows) != 1L) {
+      g5_stop("AMD EMA OOS measurement stack has duplicate expected application/session rows.")
+    }
+  }
+  for (key in unique(paste(signal_surface$fold_id, signal_surface$session_date))) {
+    signal_rows <- signal_surface[paste(signal_surface$fold_id, signal_surface$session_date) == key, , drop = FALSE]
+    session_rows <- session_measurements[paste(session_measurements$oos_fold_id, session_measurements$session_date) == key, , drop = FALSE]
+    if (!identical(as.integer(signal_rows$comparison_order), c(1L, 2L)) ||
+        !identical(as.character(signal_rows$subject_id), c("no_trade_cash", "amd_ema_long_cash")) ||
+        !identical(as.integer(session_rows$comparison_order), c(1L, 2L)) ||
+        !identical(as.character(session_rows$subject_id), c("no_trade_cash", "amd_ema_long_cash"))) {
+      g5_stop("AMD EMA OOS measurement stack must preserve no-trade-first comparison discipline for every OOS session.")
+    }
+  }
+  if (any(as.character(session_measurements$application_artifact_hash) !=
+          as.character(manifest$source_application_artifact_hash[[1L]]))) {
+    g5_stop("AMD EMA OOS measurement stack must preserve source application artifact hash lineage.")
+  }
+  if (!is.null(trade_lifecycle_measurements) && nrow(trade_lifecycle_measurements) > 0L) {
+    if (any(as.character(trade_lifecycle_measurements$application_artifact_hash) !=
+            as.character(manifest$source_application_artifact_hash[[1L]]))) {
+      g5_stop("AMD EMA OOS measurement stack trade lifecycle rows must preserve source application artifact hash lineage.")
+    }
+    candidate_application_ids <- unique(as.character(
+      application_surface$application_row_id[application_surface$subject_id == "amd_ema_long_cash"]
+    ))
+    if (length(setdiff(as.character(trade_lifecycle_measurements$application_row_id), candidate_application_ids)) > 0L) {
+      g5_stop("AMD EMA OOS measurement stack trade lifecycle rows must reference known AMD EMA application rows.")
+    }
+  }
+
+  invisible(list(
+    oos_measurement_contract = oos_measurement_contract,
+    parameter_application_boundary = parameter_application_boundary,
+    signal_position_application = signal_position_application,
+    session_measurements = session_measurements,
+    trade_lifecycle_measurements = trade_lifecycle_measurements
+  ))
+}
+
 g5_write_wfa_amd_ema_oos_measurement_contract_csvs <- function(
   oos_measurement_contract,
   manifest_path = NULL,
