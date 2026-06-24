@@ -224,6 +224,8 @@ The first minimal WFA contract is now defined as a planning record only. It cove
 
 The first Minimal WFA Foundation slice adds a read-only handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench manifest and linked artifacts before future fold code may consume them. The gate reads only manifest-linked CSV artifacts, rejects hard contract failures and `ERROR` health, and returns `REVIEW_REQUIRED` when `WARN` health rows need operator review. It does not construct folds, compute returns, call Alpaca, read credentials, inspect provider responses, infer latest sessions, or read cache authority outside the manifest.
 
+The AMD EMA long/cash evaluation gate is now open only as a narrow research authorization contract in `R/wfa_amd_ema_evaluation_gate.R`. It requires accepted minimal WFA POC closeout evidence and baseline readiness evidence, names only `AMD` and `ema_long_cash`, keeps `no_trade_cash` first-class, and records that live advice, dashboards, allocation, leverage, execution, broader strategy families, and performance claims remain unauthorized.
+
 ## Design Principle
 
 No downstream analytical module should decide what "latest" means. The data layer resolves sessions, records the as-of timestamp, and exports the audit trail.
