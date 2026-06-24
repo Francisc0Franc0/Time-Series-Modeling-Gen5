@@ -1572,9 +1572,11 @@ Stop conditions:
 
 ### 40. Add minimal WFA POC run-manifest and review-surface scaffold
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-minimal-wfa-poc-scaffold`
+
+Branch: `codex/gen5-minimal-wfa-poc-scaffold`
 
 Goal: Add a minimal POC scaffold that records lineage, source handoff acceptance, fold geometry reference, split audit reference, frozen evidence reference, baseline readiness, fold-stability placeholder status, ignored output paths, and leakage attestation without evaluating OOS results.
 
@@ -1594,6 +1596,12 @@ Required behavior:
 Validation:
 
 - Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Notes:
+
+- Added `R/wfa_minimal_poc_manifest.R` for schema-only run-manifest and review-surface rows.
+- Added non-network tests covering deterministic ignored `runs/` paths, no-trade-first baseline readiness, reserved baseline readiness, explicit STOP statuses, and leakage attestations.
+- Did not compute returns, cash yields, benchmark math, performance metrics, EMA signals, active candidates, allocation, leverage, dashboards, live advice, execution, or performance claims.
 
 Stop conditions:
 

@@ -381,6 +381,14 @@ That gate-opening prompt must also:
 
 Without that exact gate-opening prompt, AMD EMA remains a named roadmap target only and all strategy evaluation work remains `STOP`.
 
+## Minimal WFA POC Manifest Scaffold
+
+The minimal WFA POC scaffold is a schema and review surface only. It records accepted WFA handoff lineage, explicit quarterly fold geometry, TRAIN/OOS split audit presence, frozen no-active-decision evidence, no-trade-first baseline readiness, reserved baseline family readiness, baseline evaluation contract availability, ignored output paths, fold-stability placeholder status, and leakage attestations.
+
+The scaffold does not evaluate OOS results. It records `not_evaluated`, `not_authorized`, and `not_implemented` statuses for OOS evaluation, returns, cash yield, benchmark math, performance metrics, allocation, and active candidate inputs. Its planned artifact paths must remain under ignored `runs/` locations.
+
+The scaffold may be used later as closeout evidence for deciding whether to open a narrower evaluation gate. It is not strategy evidence, not performance evidence, and not authorization for AMD EMA or any other active candidate.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.
