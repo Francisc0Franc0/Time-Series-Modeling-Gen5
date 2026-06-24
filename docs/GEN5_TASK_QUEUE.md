@@ -1134,9 +1134,19 @@ Stop conditions:
 
 ### 31. Define explicit stop/go gate for returns and performance evaluation
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-returns-evaluation-gate`
+
+Branch: `codex/gen5-wfa-post-foundation-guardrails`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a STOP-by-default returns and performance evaluation gate to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Defined the GO checklist for accepted handoff gates, explicit fold geometry, split audit evidence, frozen fold evidence, baseline-family registry, audit schema readiness, fold-stability contract review, ignored output locations, leakage attestations, and explicit operator approval.
+- Required any future first evaluation slice to start with no-trade and reserved baseline-family evaluation discipline before active candidates, while keeping this task documentation-only with no return formulas, benchmark math, performance metrics, allocation, candidate scoring, dashboards, execution, or live advice.
 
 Goal: Add an explicit documentation gate that says what must be true before any return calculation, OOS performance evaluation, benchmark comparison, or performance claim can begin.
 

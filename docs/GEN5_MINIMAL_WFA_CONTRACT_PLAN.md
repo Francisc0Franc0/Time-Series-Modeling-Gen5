@@ -190,6 +190,26 @@ The summary must aggregate only already-frozen and already-evaluated OOS records
 
 Until returns and performance evaluation are separately authorized, fold-stability artifacts may contain only schema fields, lineage, readiness status, coverage status, warning propagation, and explicit empty placeholders for future completed-OOS evidence. The absence of evaluated OOS records is a valid STOP state, not a reason to synthesize performance claims.
 
+## Returns And Performance Evaluation Gate
+
+Returns, OOS performance evaluation, benchmark comparison, candidate scoring, leverage reporting, allocation, dashboards, execution, live advice, and performance claims are `STOP` by default. The existence of fold geometry, split audits, frozen no-active-decision evidence, baseline registry scaffolding, audit schema readiness, or fold-stability schema placeholders does not open this gate by itself.
+
+The gate may move from `STOP` to `GO` only for a separately authorized first evaluation slice after all of the following are true:
+
+- accepted handoff gate results exist for the source workbench handoff;
+- explicit fold geometry exists and is linked to the accepted handoff;
+- TRAIN/OOS split audit evidence exists and preserves fold-local availability and warning context;
+- frozen fold evidence exists before OOS evaluation and records the no-active-decision or later frozen-decision state;
+- baseline-family registry scaffolding exists and keeps `no_trade` first-class;
+- WFA audit artifact schema readiness has been reviewed, including schema versions, deterministic IDs or paths, ignored-output locations, source lineage, and leakage attestations;
+- fold-stability summary contract fields have been reviewed, including missing/partial coverage, bad-fold visibility, outlier-dependence placeholders, warning propagation, and no-trade/baseline slots;
+- generated performance artifacts are planned for ignored run paths rather than source control;
+- the operator explicitly approves the first evaluation slice and its scope.
+
+The first future evaluation slice, if the gate is opened, must begin with no-trade and reserved baseline-family evaluation discipline before any active candidate is evaluated. Performance artifacts must reference frozen fold decisions and OOS application/evaluation audit records. They must not recompute authority from raw provider data, fetch replacement bars, infer latest sessions, change fold geometry, change symbol eligibility from OOS evidence, or update a frozen fold decision after seeing OOS results.
+
+This gate is documentation-only. It does not add return formulas, benchmark math, performance metrics, ranking rules, candidate scoring, allocation, leverage analysis, dashboard behavior, execution, live advice, or active research authorization.
+
 ## No-Leakage Rules
 
 The following rules apply to all future WFA implementation work:
