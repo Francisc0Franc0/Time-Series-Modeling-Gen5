@@ -451,3 +451,51 @@ test_that("AMD EMA evaluation contract readiness preserves review-required reaso
     "row counts"
   )
 })
+
+test_that("AMD EMA evaluation contract writers emit CSVs only under ignored runs paths", {
+  fixture <- g5_test_amd_ema_contract_fixture()
+  output_dir <- file.path(tempdir(), "runs", "amd_ema_evaluation_contract_writer")
+  scaffold <- g5_validate_wfa_amd_ema_evaluation_contract_scaffold(
+    g5_build_wfa_amd_ema_evaluation_contract_scaffold(
+      amd_ema_gate = fixture$amd_gate,
+      fold_geometry = fixture$folds,
+      split_audit = fixture$audit,
+      frozen_fold_evidence = fixture$evidence,
+      baseline_evaluation_contract = fixture$baseline_contract,
+      output_dir = output_dir
+    )
+  )
+  readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(scaffold)
+
+  written <- g5_write_wfa_amd_ema_evaluation_contract_scaffold_csvs(scaffold)
+  readiness_path <- g5_write_wfa_amd_ema_evaluation_contract_readiness_csv(
+    readiness,
+    file.path(output_dir, "readiness", "amd_ema_evaluation_contract_readiness.csv")
+  )
+
+  expect_true(file.exists(written$manifest_path))
+  expect_true(file.exists(written$review_surface_path))
+  expect_true(file.exists(readiness_path))
+  manifest_csv <- utils::read.csv(written$manifest_path, stringsAsFactors = FALSE)
+  review_csv <- utils::read.csv(written$review_surface_path, stringsAsFactors = FALSE)
+  readiness_csv <- utils::read.csv(readiness_path, stringsAsFactors = FALSE)
+  expect_identical(names(manifest_csv), g5_wfa_required_amd_ema_contract_manifest_columns())
+  expect_identical(names(review_csv), g5_wfa_required_amd_ema_contract_review_columns())
+  expect_identical(names(readiness_csv), g5_wfa_required_amd_ema_contract_readiness_columns())
+  expect_equal(nrow(review_csv), nrow(scaffold$review_surface))
+
+  expect_error(
+    g5_write_wfa_amd_ema_evaluation_contract_scaffold_csvs(
+      scaffold,
+      manifest_path = file.path(tempdir(), "not_runs", "manifest.csv")
+    ),
+    "ignored runs"
+  )
+  expect_error(
+    g5_write_wfa_amd_ema_evaluation_contract_readiness_csv(
+      readiness,
+      file.path(tempdir(), "not_runs", "readiness.csv")
+    ),
+    "ignored runs"
+  )
+})

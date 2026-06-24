@@ -823,3 +823,54 @@ g5_validate_wfa_amd_ema_evaluation_contract_readiness_review <- function(readine
   }
   readiness_review
 }
+
+g5_write_wfa_amd_ema_evaluation_contract_scaffold_csvs <- function(
+  contract_scaffold,
+  manifest_path = NULL,
+  review_surface_path = NULL,
+  require_ignored_run_path = TRUE
+) {
+  contract_scaffold <- g5_validate_wfa_amd_ema_evaluation_contract_scaffold(contract_scaffold)
+  manifest <- contract_scaffold$run_manifest
+  review_surface <- contract_scaffold$review_surface
+  if (is.null(manifest_path)) {
+    manifest_path <- as.character(manifest$contract_manifest_path[[1L]])
+  }
+  if (is.null(review_surface_path)) {
+    review_surface_path <- as.character(manifest$review_surface_path[[1L]])
+  }
+  for (path in c(manifest_path, review_surface_path)) {
+    if (length(path) != 1L || is.na(path) || !nzchar(as.character(path))) {
+      g5_stop("AMD EMA evaluation contract output paths must be non-empty.")
+    }
+    if (isTRUE(require_ignored_run_path) && !g5_wfa_path_looks_ignored_run_path(path)) {
+      g5_stop("AMD EMA evaluation contract CSVs must be written under ignored runs/ paths.")
+    }
+  }
+  dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)
+  dir.create(dirname(review_surface_path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(manifest, manifest_path, row.names = FALSE, na = "")
+  utils::write.csv(review_surface, review_surface_path, row.names = FALSE, na = "")
+  invisible(list(
+    manifest_path = normalizePath(manifest_path, winslash = "/", mustWork = FALSE),
+    review_surface_path = normalizePath(review_surface_path, winslash = "/", mustWork = FALSE)
+  ))
+}
+
+g5_write_wfa_amd_ema_evaluation_contract_readiness_csv <- function(
+  readiness_review,
+  path,
+  require_ignored_run_path = TRUE
+) {
+  readiness_review <- g5_validate_wfa_amd_ema_evaluation_contract_readiness_review(readiness_review)
+  if (length(path) != 1L || is.na(path) || !nzchar(as.character(path))) {
+    g5_stop("AMD EMA evaluation contract readiness output path must be one non-empty value.")
+  }
+  path <- as.character(path)
+  if (isTRUE(require_ignored_run_path) && !g5_wfa_path_looks_ignored_run_path(path)) {
+    g5_stop("AMD EMA evaluation contract readiness CSV must be written under ignored runs/ paths.")
+  }
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.csv(readiness_review, path, row.names = FALSE, na = "")
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
