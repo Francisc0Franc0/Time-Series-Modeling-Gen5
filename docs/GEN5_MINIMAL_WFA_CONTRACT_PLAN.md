@@ -239,6 +239,33 @@ At minimum, the WFA audit surface should include:
 - an OOS application/evaluation audit that references the frozen fold decision;
 - a leakage attestation recording that provider calls, latest-session inference, and OOS fitting were not used.
 
+The minimum schema contract is documentation-first. Source control should describe artifact fields and readiness rules, while generated run evidence remains under ignored paths such as `runs/`. A WFA audit artifact is not ready for returns or performance evaluation unless it records:
+
+- `schema_version`;
+- deterministic run, fold, artifact, or registry identifiers where applicable;
+- generated artifact path or source artifact path;
+- explicit source `as_of_timestamp`;
+- explicit source `latest_completed_session`;
+- source workbench handoff manifest path or ID;
+- fold geometry reference when the artifact is fold-specific;
+- handoff gate status, review status, and accepted-warning reference when applicable;
+- code revision metadata when available;
+- leakage attestation fields for no provider calls, no latest-session inference, no OOS fitting, and no OOS outcome authority.
+
+The artifact-specific readiness contract is:
+
+- Run manifest: links the accepted workbench handoff, requested universe or symbol selection, bounded date range, generated artifact directory, schema versions, code revision, validation status, and the explicit timestamp/session authority inherited from the handoff.
+- Fold manifest: records fold IDs, TRAIN/OOS dates, decision cadence, decision-pack validity dates, gap policy, geometry search policy, source handoff reference, source `as_of_timestamp`, and source `latest_completed_session`.
+- Handoff gate result: records gate status, health severity, accepted warnings, required artifact paths, canonical bar schema checks, duplicate/future-bar checks, and review acceptance when `REVIEW_REQUIRED`.
+- Fold-local availability: records one row per fold and source handoff symbol, TRAIN/OOS row counts and date edges, source missing/partial/stale/warning context, and the declared rule that no OOS performance filtering was used.
+- Frozen decision evidence: records fold identity, TRAIN evidence available before OOS, no-active-decision or later frozen-decision status, accepted warning context, leakage attestations, and code revision metadata.
+- Baseline or candidate registry: records declarative family or candidate identity, source handoff, gate/fold/evidence linkage, evaluation authorization status, and whether returns, allocation, or live advice remain unimplemented.
+- OOS application/evaluation audit placeholder: records the frozen decision reference, OOS window, application status, evaluation authorization status, and required future output path without computing returns or performance values in this slice.
+- Leakage attestation: records the artifact scope, source evidence IDs, no provider/network dependency, no independent date authority, no OOS fitting, no OOS-informed symbol filtering, and no recomputation from raw provider data.
+- Later aggregate and stability summaries: record only references to already-frozen and already-evaluated OOS records, plus missing/partial fold coverage and warning-context propagation.
+
+Before returns or performance evaluation can be added, a readiness review must confirm required columns, deterministic IDs or paths, schema-version fields, ignored-output locations, source handoff and fold references, explicit timestamp/session authority, and leakage attestations for every generated artifact family. This review must also confirm that default validation remains non-network and that no provider helper, credential path, `Sys.Date()`, or market-clock API is part of WFA artifact creation.
+
 Most durable WFA evidence should be tabular and manifest-driven: per-fold results, aggregate summaries, stability summaries, and links to frozen decision artifacts. Narrative interpretation is useful during development, but it should remain an operator-requested analysis layer rather than a required frozen artifact format.
 
 Frozen decision evidence should answer:

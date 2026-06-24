@@ -1050,9 +1050,19 @@ These tasks are the next minimal WFA chunks after the first foundation closeout.
 
 ### 29. Define WFA audit artifact schema and readiness checklist
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-audit-artifact-readiness`
+
+Branch: `codex/gen5-wfa-post-foundation-guardrails`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the documentation-first WFA audit artifact schema and readiness contract to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Defined required linkage to explicit `as_of_timestamp`, `latest_completed_session`, source handoff, fold geometry, gate/review status, ignored artifact paths, schema versions, deterministic IDs or paths, leakage attestations, and code revision metadata when available.
+- Kept the task documentation-only and did not add generated evidence, returns, performance metrics, indicators, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or active research candidates.
 
 Goal: Document the minimum generated WFA audit artifact schemas and readiness checks that must exist before returns or performance evaluation can be added.
 
