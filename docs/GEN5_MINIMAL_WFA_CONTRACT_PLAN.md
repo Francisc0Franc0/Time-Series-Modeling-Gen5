@@ -260,6 +260,19 @@ The first implementation slice should stop if the contract cannot represent `no_
 
 The current implementation scaffold is intentionally limited to `g5_build_wfa_baseline_evaluation_contract_scaffold()` and related schema/path/readiness validators. It writes no generated files by default, reads no bars or provider data, and plans placeholder artifact paths under ignored `runs/` locations only. It records review-required reasons for unresolved cash/no-position assumptions, broad-market proxy availability, warning context, fixed-basket membership, curation authorization, and any reserved baseline families intentionally excluded from a narrow slice without resolving those questions through OOS evidence or performance computation.
 
+## WFA Post-Guardrails Closeout Review
+
+The WFA post-foundation guardrails are closed through the baseline evaluation contract scaffold only. This closeout confirms that the audit artifact readiness contract, fold-stability summary contract, returns/performance `STOP` gate, first-candidate authorization boundary, no-trade/reserved-baseline authorization boundary, first baseline-evaluation implementation scope, and current baseline evaluation contract scaffold agree on the same status:
+
+- generated WFA artifact schemas are readiness and lineage surfaces only until a later task explicitly authorizes evaluation;
+- fold-stability artifacts may carry lineage, coverage, warning propagation, and placeholder fields, but may not synthesize returns, drawdowns, volatility, ranks, benchmark comparisons, pass/fail scores, or performance claims;
+- returns, OOS performance evaluation, benchmark comparison, candidate scoring, leverage reporting, allocation, dashboards, execution, live advice, and performance claims remain `STOP` by default;
+- no active research candidate is authorized by foundation closeout, audit readiness, fold-stability readiness, baseline scaffolding, or the baseline evaluation contract scaffold;
+- a future first evaluation slice must be explicitly authorized, must begin with `no_trade`, must remain limited to reserved baseline-family concepts already represented by the baseline registry, and must preserve excluded reserved-family questions when the authorized slice is narrow;
+- the current baseline evaluation contract scaffold records schema versions, deterministic ignored-run paths, review status fields, leakage attestations, lineage to accepted WFA artifacts, `not_applied` OOS application status, and `not_authorized` evaluation status without reading provider data, computing returns, assuming cash yield, performing benchmark math, creating performance metrics, allocating weights, or naming active candidates.
+
+This closeout does not open the returns/performance gate. It records readiness for an operator to decide whether to authorize a separate future baseline/no-trade evaluation task. Until that approval exists, contract rows, deterministic paths, review statuses, and reserved-family definitions remain scaffolding rather than baseline results.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.

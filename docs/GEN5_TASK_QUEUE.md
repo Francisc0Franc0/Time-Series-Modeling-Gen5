@@ -1386,3 +1386,43 @@ Stop conditions:
 - Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
 - Naming, designing, fitting, scoring, or selecting an active research candidate.
 - Treating contract rows, deterministic paths, or readiness statuses as baseline results.
+
+### 37. Perform WFA post-guardrails closeout review through baseline evaluation scaffold
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-post-guardrails-closeout`
+
+Branch: `codex/gen5-wfa-post-guardrails-closeout`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Confirmed the audit artifact readiness contract, fold-stability summary contract, returns/performance `STOP` gate, first-candidate authorization boundary, no-trade/reserved-baseline authorization boundary, first baseline-evaluation implementation scope, and current baseline evaluation contract scaffold agree.
+- Added a documentation-only post-guardrails closeout note to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md` so the reviewed agreement is explicit.
+- Confirmed the current scaffold remains schema/readiness only, with deterministic ignored-run artifact paths, review status fields, leakage attestations, lineage to accepted WFA artifacts, `not_applied` OOS application status, and `not_authorized` evaluation status.
+- Did not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+
+Goal: Perform a no-code closeout review of the WFA post-foundation guardrails through the baseline evaluation contract scaffold.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Confirm audit artifact readiness, fold-stability contract, returns/performance gate, first-candidate boundary, no-trade/reserved-baseline authorization boundary, implementation scope, and baseline evaluation scaffold remain aligned.
+- Preserve the `STOP` default for returns, performance evaluation, benchmark comparison, candidate scoring, leverage reporting, allocation, dashboards, execution, live advice, and performance claims.
+- Preserve the separation between baseline/no-trade evaluation readiness, actual returns/performance computation, and active candidate authorization.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+- Opening the returns/performance gate without explicit operator authorization.
+- Treating reserved baseline definitions, contract rows, deterministic paths, or readiness statuses as baseline results.
