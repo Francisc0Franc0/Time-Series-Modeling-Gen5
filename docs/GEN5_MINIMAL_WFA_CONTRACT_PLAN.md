@@ -230,6 +230,32 @@ This boundary keeps `no_trade` visible as a first-class competitor before active
 
 The future baseline-evaluation slice remains separate from active candidate authorization. It may prepare the comparison discipline that active candidates must eventually face, but it must not name, design, fit, score, or select an active research candidate.
 
+## First No-Trade And Reserved Baseline Evaluation Scope
+
+The first future no-trade and reserved baseline-family evaluation implementation slice must be scoped before code is added. This scope definition is documentation-only. It does not implement evaluation and does not compute returns, benchmark math, performance metrics, ranks, allocation, leverage reports, dashboards, execution, live advice, active candidates, or active candidate comparisons.
+
+The first implementation slice, when separately authorized, should be limited to preparing the minimum baseline-evaluation contract surfaces needed to apply already-reserved baseline definitions against already-frozen fold evidence. It may define artifact schemas, function boundaries, validation expectations, ignored output locations, and review gates for `no_trade` first, followed only by reserved baseline families already present in the baseline registry. It must not produce baseline results or performance claims.
+
+The allowed scope for that first implementation slice is:
+
+- read-only consumption of accepted WFA handoff gate results, explicit fold geometry, TRAIN/OOS split audit evidence, frozen fold evidence, baseline-family registry rows, and reviewed audit-schema contracts;
+- schema definitions for baseline OOS application/evaluation audit records that reference frozen fold evidence and fold-local availability evidence;
+- schema definitions for no-trade and reserved baseline review status fields, including skipped, unavailable, review-required, and not-yet-evaluated states;
+- deterministic identifiers or paths for generated baseline evaluation artifacts under ignored run paths;
+- validation checks for required lineage fields, schema versions, fold IDs, source `as_of_timestamp`, source `latest_completed_session`, handoff references, frozen evidence references, and leakage attestations;
+- review gates for source health warnings, missing or partial folds, unavailable broad-market proxy symbols, ambiguous cash/no-position assumptions, stale symbol context, and baseline families reserved but intentionally excluded from the slice.
+
+The prohibited scope for that first implementation slice is:
+
+- computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, leverage value-add, allocation weights, or portfolio equity curves;
+- selecting, removing, weighting, ranking, or tuning symbols by OOS evidence;
+- changing fold geometry, symbol eligibility, handoff acceptance, or frozen fold decisions after seeing OOS outcomes;
+- reading Alpaca/provider APIs, credentials, unmanifested cache files, market-clock APIs, or runtime date authority;
+- naming, designing, fitting, scoring, or selecting an active research candidate;
+- creating dashboards, live advice, execution behavior, order-routing behavior, or deployability claims.
+
+The first implementation slice should stop if the contract cannot represent `no_trade` without an implicit return assumption, if a reserved baseline needs a proxy symbol that is absent from the accepted handoff, if fold coverage is missing or ambiguous, if source warnings have not been accepted, if generated outputs would need to be source-controlled, or if any requested behavior requires returns/performance computation rather than schema and audit preparation.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.

@@ -1256,3 +1256,45 @@ Stop conditions:
 - Computing returns, benchmark math, performance metrics, ranks, allocation, leverage reports, dashboards, execution, live advice, or performance claims.
 - Naming, designing, fitting, scoring, or selecting an active research candidate.
 - Treating reserved baseline definitions as baseline results.
+
+### 34. Define first no-trade and reserved baseline-family evaluation implementation scope
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-baseline-evaluation-scope`
+
+Branch: `codex/gen5-wfa-baseline-evaluation-scope`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the documentation-only implementation scope for the first future no-trade and reserved baseline-family evaluation slice to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Limited the future first slice to schema definitions, function boundaries, validation expectations, ignored output locations, review gates, and leakage attestations for `no_trade` first and then only reserved baseline families already present in the baseline registry.
+- Required read-only consumption of accepted WFA artifacts and prohibited provider calls, credentials, unmanifested cache files, independent date authority, active-candidate outputs, and OOS outcome authority.
+- Clarified that this scope does not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage value-add, dashboards, execution, live advice, active candidates, or performance claims.
+
+Goal: Define the documentation-only scope for the first future no-trade and reserved baseline-family evaluation implementation slice without adding evaluation code or opening active research.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Define the future first implementation slice as contract preparation only, covering schema surfaces, validation checks, deterministic identifiers or paths, ignored output locations, and review gates.
+- Start with `no_trade` and then only reserved baseline families already represented by the baseline registry.
+- Require allowed inputs to come from accepted WFA handoff gate results, explicit fold geometry, TRAIN/OOS split audit evidence, frozen fold evidence, baseline-family registry rows, and reviewed audit-schema contracts.
+- Preserve the separation between baseline/no-trade evaluation preparation, actual returns/performance computation, and active candidate authorization.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, or performance claims.
+- Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
+- Naming, designing, fitting, scoring, or selecting an active research candidate.
+- Treating reserved baseline definitions or schema placeholders as baseline results.
