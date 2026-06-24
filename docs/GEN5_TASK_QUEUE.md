@@ -1921,3 +1921,33 @@ Stop conditions:
 
 - Starting this task without a separate operator prompt that names the allowed measurement fields.
 - Adding allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+### 50. Apply frozen AMD EMA parameters to OOS signal/position evidence
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-oos-signal-position-application`
+
+Branch: `codex/gen5-amd-ema-oos-signal-position-application`
+
+Goal: Apply already-frozen AMD EMA fast/slow periods to OOS sessions as signal and next-open position-state evidence only, while preserving no-trade as first-class and keeping returns, PnL, metrics, allocation, leverage, live advice, execution, dashboards, broader strategy families, and performance claims stopped.
+
+Notes:
+
+- Added `R/wfa_amd_ema_oos_signal_position_application.R` for a result-free signal/position evidence surface after accepted AMD EMA application-boundary readiness.
+- Consumes the frozen parameter/application boundary and readiness review plus canonical Alpaca adjusted daily AMD bars carrying the same explicit `as_of_timestamp` and `latest_completed_session`.
+- Emits one no-trade row and one AMD EMA row per frozen OOS session, with no-trade first, frozen parameter lineage, EMA values for the AMD row, signal state, and next-open position-state evidence.
+- Fails loudly on missing frozen OOS rows, duplicate bars, future or mismatched timestamp bars, and missing/ambiguous next-session dates.
+- Added non-network tests for lineage, no-trade-first session rows, frozen-parameter application, strict row coverage, duplicate/missing/ambiguous date rejection, result-like column rejection, readiness review, and ignored-path writers.
+- Did not compute returns, cash yield, PnL, trade accounting, Sharpe, drawdown, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `& 'C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe' -e ".libPaths(c(normalizePath('.codex_r_libs', winslash='/'), .libPaths())); testthat::test_file('tests/testthat/test_wfa_amd_ema_oos_signal_position_application.R')"` passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Any return, PnL, trade-accounting, Sharpe, drawdown, allocation, leverage, live-advice, execution, dashboard, broader-family, or performance-claim computation.
+- Selecting, changing, or rejecting frozen EMA parameters based on OOS evidence.
+- Treating signal/position evidence as live advice, executable orders, or completed strategy results.
