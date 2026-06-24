@@ -1022,6 +1022,150 @@ g5_validate_wfa_amd_ema_oos_session_measurements <- function(
   session_measurements
 }
 
+g5_wfa_prepare_amd_ema_oos_measurement_bars <- function(
+  bars,
+  as_of_timestamp,
+  latest_completed_session
+) {
+  bars <- g5_validate_bar_data(bars, require_adjusted = TRUE)
+  bars <- bars[as.character(bars$symbol) == "AMD", , drop = FALSE]
+  if (nrow(bars) == 0L) {
+    g5_stop("AMD EMA OOS session measurement values require canonical AMD bars.")
+  }
+  if (any(as.character(bars$provider) != "alpaca") ||
+      any(as.character(bars$timeframe) != "1D") ||
+      any(!as.logical(bars$adjusted))) {
+    g5_stop("AMD EMA OOS session measurement values require Alpaca adjusted daily OHLCV bars only.")
+  }
+  if (any(as.character(bars$as_of_timestamp) != as.character(as_of_timestamp))) {
+    g5_stop("AMD EMA OOS session measurement bars must carry the frozen as_of_timestamp.")
+  }
+  if (any(as.Date(bars$latest_completed_session) != as.Date(latest_completed_session))) {
+    g5_stop("AMD EMA OOS session measurement bars must carry the frozen latest_completed_session.")
+  }
+  bars <- bars[order(bars$session_date), , drop = FALSE]
+  rownames(bars) <- NULL
+  bars
+}
+
+g5_build_wfa_amd_ema_oos_session_measurement_values <- function(
+  oos_measurement_contract,
+  signal_position_application,
+  bars,
+  parameter_application_boundary = NULL
+) {
+  oos_measurement_contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    oos_measurement_contract
+  )
+  signal_position_application <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    signal_position_application
+  )
+  manifest <- oos_measurement_contract$run_manifest
+  signal_manifest <- signal_position_application$run_manifest
+  signal_surface <- signal_position_application$signal_position_surface
+
+  if (!identical(
+    as.character(signal_manifest$source_application_boundary_id[[1L]]),
+    as.character(manifest$source_application_boundary_id[[1L]])
+  )) {
+    g5_stop("AMD EMA OOS session measurement values must consume the frozen signal/position evidence for the measurement contract application boundary.")
+  }
+  if (!identical(
+    as.character(signal_manifest$as_of_timestamp[[1L]]),
+    as.character(manifest$as_of_timestamp[[1L]])
+  ) ||
+      !identical(
+        as.Date(signal_manifest$latest_completed_session[[1L]]),
+        as.Date(manifest$latest_completed_session[[1L]])
+      )) {
+    g5_stop("AMD EMA OOS session measurement values must preserve explicit as_of_timestamp and latest_completed_session lineage.")
+  }
+
+  bars <- g5_wfa_prepare_amd_ema_oos_measurement_bars(
+    bars = bars,
+    as_of_timestamp = manifest$as_of_timestamp[[1L]],
+    latest_completed_session = manifest$latest_completed_session[[1L]]
+  )
+  bar_keys <- paste(as.character(bars$symbol), as.Date(bars$session_date))
+  bar_lookup <- seq_len(nrow(bars))
+  names(bar_lookup) <- bar_keys
+
+  measurement_run_id <- paste(
+    "amd_ema_oos_session_measurement",
+    g5_wfa_sanitize_id_component(manifest$as_of_timestamp[[1L]], "as_of_timestamp"),
+    g5_wfa_sanitize_id_component(signal_manifest$signal_position_application_id[[1L]], "signal_position_application_id"),
+    sep = "_"
+  )
+
+  rows <- vector("list", nrow(signal_surface))
+  for (i in seq_len(nrow(signal_surface))) {
+    signal_row <- signal_surface[i, , drop = FALSE]
+    is_no_trade <- identical(as.character(signal_row$subject_id[[1L]]), "no_trade_cash")
+    key <- paste("AMD", as.Date(signal_row$session_date[[1L]]))
+    if (!(key %in% names(bar_lookup))) {
+      g5_stop("AMD EMA OOS session measurement values are missing canonical AMD bars for frozen signal/position rows.")
+    }
+    bar_index <- unname(bar_lookup[[key]])
+    bar_row <- bars[bar_index, , drop = FALSE]
+    asset_return <- if (is_no_trade) {
+      0
+    } else {
+      (as.numeric(bar_row$close[[1L]]) / as.numeric(bar_row$open[[1L]])) - 1
+    }
+    position_state <- if (is_no_trade) {
+      "no_position"
+    } else {
+      as.character(signal_row$position_state_for_next_open[[1L]])
+    }
+    measurement_status <- if (identical(position_state, "long")) {
+      "measured"
+    } else {
+      "flat_no_position"
+    }
+    strategy_return <- if (identical(position_state, "long")) {
+      asset_return
+    } else {
+      0
+    }
+
+    rows[[i]] <- data.frame(
+      schema_version = g5_wfa_amd_ema_oos_measurement_contract_schema_version(),
+      measurement_contract_id = as.character(manifest$measurement_contract_id[[1L]]),
+      measurement_run_id = measurement_run_id,
+      application_run_id = as.character(signal_row$source_application_boundary_id[[1L]]),
+      application_row_id = as.character(signal_row$source_application_row_id[[1L]]),
+      application_artifact_hash = as.character(manifest$source_application_artifact_hash[[1L]]),
+      parameter_pack_id = as.character(signal_row$frozen_parameter_id[[1L]]),
+      as_of_timestamp = as.character(signal_row$as_of_timestamp[[1L]]),
+      oos_fold_id = as.character(signal_row$fold_id[[1L]]),
+      comparison_order = as.integer(signal_row$comparison_order[[1L]]),
+      subject_id = as.character(signal_row$subject_id[[1L]]),
+      symbol = if (is_no_trade) NA_character_ else "AMD",
+      strategy_id = if (is_no_trade) "no_trade_cash" else "ema_long_cash",
+      session_date = as.Date(signal_row$session_date[[1L]]),
+      measurement_status = measurement_status,
+      position_state = position_state,
+      trade_id = NA_character_,
+      asset_session_return_open_to_close = asset_return,
+      strategy_session_return = strategy_return,
+      no_trade_session_return = 0,
+      cash_no_position_return = 0,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  session_measurements <- do.call(rbind, rows)
+  rownames(session_measurements) <- NULL
+  session_measurements <- session_measurements[
+    g5_wfa_required_amd_ema_oos_session_measurement_columns()
+  ]
+  g5_validate_wfa_amd_ema_oos_session_measurements(
+    session_measurements = session_measurements,
+    oos_measurement_contract = oos_measurement_contract,
+    parameter_application_boundary = parameter_application_boundary
+  )
+}
+
 g5_write_wfa_amd_ema_oos_measurement_contract_csvs <- function(
   oos_measurement_contract,
   manifest_path = NULL,

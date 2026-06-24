@@ -1951,3 +1951,32 @@ Stop conditions:
 - Any return, PnL, trade-accounting, Sharpe, drawdown, allocation, leverage, live-advice, execution, dashboard, broader-family, or performance-claim computation.
 - Selecting, changing, or rejecting frozen EMA parameters based on OOS evidence.
 - Treating signal/position evidence as live advice, executable orders, or completed strategy results.
+
+### 51. Add AMD EMA OOS session measurement values
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Goal: Consume frozen AMD EMA OOS signal/position evidence, the accepted minimal OOS measurement contract, and canonical Alpaca adjusted daily AMD bars to produce row-per-session OOS measurement values only.
+
+Notes:
+
+- Added a session measurement value builder inside `R/wfa_amd_ema_oos_measurement_contract.R`.
+- Consumes the validated measurement contract, frozen signal/position application evidence, and canonical Alpaca adjusted daily AMD bars carrying the same explicit `as_of_timestamp` and `latest_completed_session`.
+- Populates only the already-authorized row-per-session measurement fields: `measurement_status`, `position_state`, `asset_session_return_open_to_close`, `strategy_session_return`, `no_trade_session_return`, and `cash_no_position_return`, with required lineage identifiers and `trade_id` left uncomputed.
+- Preserves `no_trade_cash` as first-class zero-return rows and keeps flat/cash candidate rows at zero strategy return.
+- Fails loudly on missing frozen signal/position rows, missing canonical AMD bars, duplicate bars, future data, timestamp/session mismatches, unknown application lineage, and row-count mismatches.
+- Added non-network tests for frozen lineage consumption, no-trade zero-return rows, position-gated candidate returns, missing bars, and missing signal/position evidence.
+- Did not compute trade lifecycle rows, trade PnL, trade returns, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Computing trade lifecycle rows before the separately queued lifecycle scaffold.
+- Computing share quantities, trade PnL, trade open-to-open returns, Sharpe, drawdown, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.

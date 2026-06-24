@@ -11,6 +11,7 @@ source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_gate.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_contract.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_parameter_freeze_contract.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_parameter_application_boundary.R"))
+source(test_path("..", "..", "R", "wfa_amd_ema_oos_signal_position_application.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_oos_measurement_contract.R"))
 
 g5_test_amd_ema_measurement_code_metadata <- function() {
@@ -26,8 +27,8 @@ g5_test_amd_ema_measurement_gate_result <- function() {
   g5_wfa_handoff_gate_result(
     gate_status = "PASS",
     manifest_csv = "runs/research_workbench/amd_ema_measurement/handoff_manifest.csv",
-    as_of_timestamp = "2026-04-03 17:00:00",
-    latest_completed_session = as.Date("2026-04-03"),
+    as_of_timestamp = "2026-04-06 17:00:00",
+    latest_completed_session = as.Date("2026-04-06"),
     health_max_severity = "INFO",
     warn_row_count = 0L,
     review_required = FALSE,
@@ -38,7 +39,7 @@ g5_test_amd_ema_measurement_gate_result <- function() {
 g5_test_amd_ema_measurement_bars <- function() {
   g5_validate_bar_data(data.frame(
     symbol = c(
-      rep("AMD", 9L),
+      rep("AMD", 10L),
       rep("SPY", 5L),
       rep("QQQ", 2L)
     ),
@@ -46,23 +47,24 @@ g5_test_amd_ema_measurement_bars <- function() {
       "2025-12-29", "2025-12-30", "2025-12-31",
       "2026-01-02", "2026-02-02", "2026-03-31",
       "2026-04-01", "2026-04-02", "2026-04-03",
+      "2026-04-06",
       "2026-01-02", "2026-02-02", "2026-03-31",
       "2026-04-01", "2026-04-03",
       "2025-12-29", "2026-01-02"
     )),
-    open = seq(100, 115),
-    high = seq(101, 116),
-    low = seq(99, 114),
-    close = seq(100.5, 115.5),
-    volume = seq(1000, 1015),
+    open = seq(100, 116),
+    high = seq(101, 117),
+    low = seq(99, 115),
+    close = seq(100.5, 116.5),
+    volume = seq(1000, 1016),
     adjusted = TRUE,
     timeframe = "1D",
     provider = "alpaca",
-    as_of_timestamp = "2026-04-03 17:00:00",
-    latest_completed_session = as.Date("2026-04-03"),
+    as_of_timestamp = "2026-04-06 17:00:00",
+    latest_completed_session = as.Date("2026-04-06"),
     fetch_start_date = as.Date("2025-12-29"),
-    fetch_end_date = as.Date("2026-04-03"),
-    data_version_hash = paste0("hash_", seq_len(16L)),
+    fetch_end_date = as.Date("2026-04-06"),
+    data_version_hash = paste0("hash_", seq_len(17L)),
     stringsAsFactors = FALSE
   ))
 }
@@ -72,7 +74,7 @@ g5_test_amd_ema_measurement_health <- function() {
     severity = "INFO",
     category = "row_count",
     symbol = "",
-    detail = "query row count: 16",
+    detail = "query row count: 17",
     stringsAsFactors = FALSE
   )
 }
@@ -112,9 +114,9 @@ g5_test_amd_ema_measurement_fixture <- function() {
     source_symbol_coverage = g5_symbol_coverage_artifact(
       bars = bars,
       requested_symbols = c("AMD", "SPY", "QQQ"),
-      latest_completed_session = as.Date("2026-04-03"),
+      latest_completed_session = as.Date("2026-04-06"),
       requested_start_date = as.Date("2025-12-29"),
-      requested_end_date = as.Date("2026-04-03")
+      requested_end_date = as.Date("2026-04-06")
     ),
     source_health = g5_test_amd_ema_measurement_health()
   )
@@ -174,6 +176,7 @@ g5_test_amd_ema_measurement_fixture <- function() {
   )
   application_readiness <- g5_build_wfa_amd_ema_parameter_application_readiness_review(application)
   list(
+    bars = bars,
     application = application,
     application_readiness = application_readiness
   )
@@ -310,6 +313,95 @@ test_that("AMD EMA OOS measurement contract preserves no-trade and rejects unacc
     contract$field_registry$validation_rule ==
       "must_reference_frozen_application_evidence_missing_rows_are_errors"
   ))
+})
+
+test_that("AMD EMA OOS session measurement values consume frozen signal/position evidence", {
+  fixture <- g5_test_amd_ema_measurement_fixture()
+  contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    g5_build_wfa_amd_ema_oos_measurement_contract(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+  signal_position <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    g5_build_wfa_amd_ema_oos_signal_position_application(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      bars = fixture$bars,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+
+  session_values <- g5_build_wfa_amd_ema_oos_session_measurement_values(
+    oos_measurement_contract = contract,
+    signal_position_application = signal_position,
+    bars = fixture$bars,
+    parameter_application_boundary = fixture$application
+  )
+
+  expect_identical(names(session_values), g5_wfa_required_amd_ema_oos_session_measurement_columns())
+  expect_equal(nrow(session_values), nrow(signal_position$signal_position_surface))
+  expect_identical(
+    session_values$application_row_id,
+    signal_position$signal_position_surface$source_application_row_id
+  )
+  expect_identical(
+    as.character(session_values$as_of_timestamp),
+    as.character(signal_position$signal_position_surface$as_of_timestamp)
+  )
+
+  no_trade <- session_values$subject_id == "no_trade_cash"
+  expect_true(all(session_values$comparison_order[no_trade] == 1L))
+  expect_true(all(session_values$position_state[no_trade] == "no_position"))
+  expect_true(all(session_values$asset_session_return_open_to_close[no_trade] == 0))
+  expect_true(all(session_values$strategy_session_return[no_trade] == 0))
+  expect_true(all(session_values$no_trade_session_return == 0))
+  expect_true(all(session_values$cash_no_position_return == 0))
+
+  candidate <- session_values$subject_id == "amd_ema_long_cash"
+  candidate_rows <- session_values[candidate, , drop = FALSE]
+  amd_bars <- fixture$bars[fixture$bars$symbol == "AMD", , drop = FALSE]
+  expected_asset_returns <- setNames(
+    as.numeric(amd_bars$close) / as.numeric(amd_bars$open) - 1,
+    as.character(as.Date(amd_bars$session_date))
+  )
+  expected_candidate_returns <- unname(expected_asset_returns[
+    as.character(as.Date(candidate_rows$session_date))
+  ])
+  expect_equal(candidate_rows$asset_session_return_open_to_close, expected_candidate_returns)
+  expect_equal(
+    candidate_rows$strategy_session_return,
+    ifelse(candidate_rows$position_state == "long", expected_candidate_returns, 0)
+  )
+  expect_true(all(candidate_rows$measurement_status %in% c("measured", "flat_no_position")))
+
+  missing_bar <- fixture$bars[
+    !(fixture$bars$symbol == "AMD" & fixture$bars$session_date == as.Date("2026-04-02")),
+    ,
+    drop = FALSE
+  ]
+  expect_error(
+    g5_build_wfa_amd_ema_oos_session_measurement_values(
+      oos_measurement_contract = contract,
+      signal_position_application = signal_position,
+      bars = missing_bar,
+      parameter_application_boundary = fixture$application
+    ),
+    "missing canonical AMD bars"
+  )
+
+  missing_signal <- signal_position
+  missing_signal$signal_position_surface <- missing_signal$signal_position_surface[-1L, , drop = FALSE]
+  expect_error(
+    g5_build_wfa_amd_ema_oos_session_measurement_values(
+      oos_measurement_contract = contract,
+      signal_position_application = missing_signal,
+      bars = fixture$bars,
+      parameter_application_boundary = fixture$application
+    ),
+    "no_trade first"
+  )
 })
 
 test_that("AMD EMA OOS session measurement validator is strict about frozen coverage", {
