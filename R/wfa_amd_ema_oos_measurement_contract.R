@@ -1166,6 +1166,340 @@ g5_build_wfa_amd_ema_oos_session_measurement_values <- function(
   )
 }
 
+g5_empty_wfa_amd_ema_oos_trade_lifecycle_measurements <- function() {
+  data.frame(
+    schema_version = character(),
+    measurement_contract_id = character(),
+    measurement_run_id = character(),
+    application_run_id = character(),
+    application_row_id = character(),
+    application_artifact_hash = character(),
+    parameter_pack_id = character(),
+    as_of_timestamp = character(),
+    oos_fold_id = character(),
+    comparison_order = integer(),
+    subject_id = character(),
+    symbol = character(),
+    strategy_id = character(),
+    trade_id = character(),
+    trade_status = character(),
+    position_state = character(),
+    entry_signal_session_date = as.Date(character()),
+    entry_execution_session_date = as.Date(character()),
+    exit_signal_session_date = as.Date(character()),
+    exit_execution_session_date = as.Date(character()),
+    share_quantity = numeric(),
+    trade_pnl = numeric(),
+    holding_period_sessions = integer(),
+    trade_return_open_to_open = numeric(),
+    stringsAsFactors = FALSE
+  )[g5_wfa_required_amd_ema_oos_trade_measurement_columns()]
+}
+
+g5_wfa_amd_ema_oos_holding_sessions <- function(candidate_rows, entry_execution_date, exit_execution_date) {
+  if (is.na(entry_execution_date) || is.na(exit_execution_date)) {
+    return(NA_integer_)
+  }
+  session_dates <- as.Date(candidate_rows$session_date)
+  as.integer(sum(session_dates >= as.Date(entry_execution_date) &
+    session_dates < as.Date(exit_execution_date)))
+}
+
+g5_build_wfa_amd_ema_oos_trade_lifecycle_measurements <- function(
+  oos_measurement_contract,
+  signal_position_application,
+  parameter_application_boundary = NULL
+) {
+  oos_measurement_contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    oos_measurement_contract
+  )
+  signal_position_application <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    signal_position_application
+  )
+  manifest <- oos_measurement_contract$run_manifest
+  signal_manifest <- signal_position_application$run_manifest
+  signal_surface <- signal_position_application$signal_position_surface
+
+  if (!identical(
+    as.character(signal_manifest$source_application_boundary_id[[1L]]),
+    as.character(manifest$source_application_boundary_id[[1L]])
+  )) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must consume the frozen signal/position evidence for the measurement contract application boundary.")
+  }
+  if (!identical(
+    as.character(signal_manifest$as_of_timestamp[[1L]]),
+    as.character(manifest$as_of_timestamp[[1L]])
+  ) ||
+      !identical(
+        as.Date(signal_manifest$latest_completed_session[[1L]]),
+        as.Date(manifest$latest_completed_session[[1L]])
+      )) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must preserve explicit as_of_timestamp and latest_completed_session lineage.")
+  }
+
+  measurement_run_id <- paste(
+    "amd_ema_oos_trade_lifecycle",
+    g5_wfa_sanitize_id_component(manifest$as_of_timestamp[[1L]], "as_of_timestamp"),
+    g5_wfa_sanitize_id_component(signal_manifest$signal_position_application_id[[1L]], "signal_position_application_id"),
+    sep = "_"
+  )
+
+  candidate_surface <- signal_surface[
+    as.character(signal_surface$subject_id) == "amd_ema_long_cash",
+    ,
+    drop = FALSE
+  ]
+  if (nrow(candidate_surface) == 0L) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements require candidate signal/position rows.")
+  }
+  rows <- list()
+  k <- 0L
+  for (fold_id in unique(as.character(candidate_surface$fold_id))) {
+    fold_rows <- candidate_surface[
+      as.character(candidate_surface$fold_id) == fold_id,
+      ,
+      drop = FALSE
+    ]
+    fold_rows <- fold_rows[order(as.Date(fold_rows$session_date)), , drop = FALSE]
+    previous_state <- "cash"
+    open_trade <- NULL
+    trade_index <- 0L
+    for (i in seq_len(nrow(fold_rows))) {
+      signal_row <- fold_rows[i, , drop = FALSE]
+      position_state <- as.character(signal_row$position_state_for_next_open[[1L]])
+      if (identical(position_state, "long") && !identical(previous_state, "long")) {
+        trade_index <- trade_index + 1L
+        open_trade <- list(
+          trade_id = paste(
+            "amd_ema_oos_trade",
+            g5_wfa_sanitize_id_component(fold_id, "fold_id"),
+            sprintf("%04d", trade_index),
+            sep = "_"
+          ),
+          entry_signal_session_date = as.Date(signal_row$signal_generated_after_close_date[[1L]]),
+          entry_execution_session_date = as.Date(signal_row$next_open_session_date[[1L]]),
+          source_row = signal_row
+        )
+      } else if (!identical(position_state, "long") && identical(previous_state, "long")) {
+        if (is.null(open_trade)) {
+          g5_stop("AMD EMA OOS trade lifecycle measurements found an exit transition without an open trade.")
+        }
+        k <- k + 1L
+        source_row <- open_trade$source_row
+        exit_signal_date <- as.Date(signal_row$signal_generated_after_close_date[[1L]])
+        exit_execution_date <- as.Date(signal_row$next_open_session_date[[1L]])
+        rows[[k]] <- data.frame(
+          schema_version = g5_wfa_amd_ema_oos_measurement_contract_schema_version(),
+          measurement_contract_id = as.character(manifest$measurement_contract_id[[1L]]),
+          measurement_run_id = measurement_run_id,
+          application_run_id = as.character(source_row$source_application_boundary_id[[1L]]),
+          application_row_id = as.character(source_row$source_application_row_id[[1L]]),
+          application_artifact_hash = as.character(manifest$source_application_artifact_hash[[1L]]),
+          parameter_pack_id = as.character(source_row$frozen_parameter_id[[1L]]),
+          as_of_timestamp = as.character(source_row$as_of_timestamp[[1L]]),
+          oos_fold_id = as.character(source_row$fold_id[[1L]]),
+          comparison_order = as.integer(source_row$comparison_order[[1L]]),
+          subject_id = "amd_ema_long_cash",
+          symbol = "AMD",
+          strategy_id = "ema_long_cash",
+          trade_id = open_trade$trade_id,
+          trade_status = "closed_trade_lifecycle",
+          position_state = "long",
+          entry_signal_session_date = open_trade$entry_signal_session_date,
+          entry_execution_session_date = open_trade$entry_execution_session_date,
+          exit_signal_session_date = exit_signal_date,
+          exit_execution_session_date = exit_execution_date,
+          share_quantity = NA_real_,
+          trade_pnl = NA_real_,
+          holding_period_sessions = g5_wfa_amd_ema_oos_holding_sessions(
+            candidate_rows = fold_rows,
+            entry_execution_date = open_trade$entry_execution_session_date,
+            exit_execution_date = exit_execution_date
+          ),
+          trade_return_open_to_open = NA_real_,
+          stringsAsFactors = FALSE
+        )
+        open_trade <- NULL
+      }
+      previous_state <- position_state
+    }
+    if (!is.null(open_trade)) {
+      k <- k + 1L
+      source_row <- open_trade$source_row
+      rows[[k]] <- data.frame(
+        schema_version = g5_wfa_amd_ema_oos_measurement_contract_schema_version(),
+        measurement_contract_id = as.character(manifest$measurement_contract_id[[1L]]),
+        measurement_run_id = measurement_run_id,
+        application_run_id = as.character(source_row$source_application_boundary_id[[1L]]),
+        application_row_id = as.character(source_row$source_application_row_id[[1L]]),
+        application_artifact_hash = as.character(manifest$source_application_artifact_hash[[1L]]),
+        parameter_pack_id = as.character(source_row$frozen_parameter_id[[1L]]),
+        as_of_timestamp = as.character(source_row$as_of_timestamp[[1L]]),
+        oos_fold_id = as.character(source_row$fold_id[[1L]]),
+        comparison_order = as.integer(source_row$comparison_order[[1L]]),
+        subject_id = "amd_ema_long_cash",
+        symbol = "AMD",
+        strategy_id = "ema_long_cash",
+        trade_id = open_trade$trade_id,
+        trade_status = "open_trade_unclosed",
+        position_state = "long",
+        entry_signal_session_date = open_trade$entry_signal_session_date,
+        entry_execution_session_date = open_trade$entry_execution_session_date,
+        exit_signal_session_date = as.Date(NA),
+        exit_execution_session_date = as.Date(NA),
+        share_quantity = NA_real_,
+        trade_pnl = NA_real_,
+        holding_period_sessions = NA_integer_,
+        trade_return_open_to_open = NA_real_,
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+
+  trade_measurements <- if (length(rows) == 0L) {
+    g5_empty_wfa_amd_ema_oos_trade_lifecycle_measurements()
+  } else {
+    out <- do.call(rbind, rows)
+    rownames(out) <- NULL
+    out[g5_wfa_required_amd_ema_oos_trade_measurement_columns()]
+  }
+  g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements(
+    trade_measurements = trade_measurements,
+    oos_measurement_contract = oos_measurement_contract,
+    signal_position_application = signal_position_application,
+    parameter_application_boundary = parameter_application_boundary
+  )
+}
+
+g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements <- function(
+  trade_measurements,
+  oos_measurement_contract,
+  signal_position_application = NULL,
+  parameter_application_boundary = NULL
+) {
+  if (!is.data.frame(trade_measurements)) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must be a data.frame.")
+  }
+  oos_measurement_contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    oos_measurement_contract
+  )
+  required <- g5_wfa_required_amd_ema_oos_trade_measurement_columns()
+  g5_wfa_reject_amd_ema_oos_measurement_extra_columns(
+    trade_measurements,
+    required,
+    "AMD EMA OOS trade lifecycle measurements"
+  )
+  manifest <- oos_measurement_contract$run_manifest
+  if (nrow(trade_measurements) == 0L) {
+    return(trade_measurements)
+  }
+  if (any(as.character(trade_measurements$schema_version) !=
+          g5_wfa_amd_ema_oos_measurement_contract_schema_version())) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements have an unexpected schema_version.")
+  }
+  if (any(as.character(trade_measurements$measurement_contract_id) !=
+          as.character(manifest$measurement_contract_id[[1L]]))) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must reference the measurement_contract_id.")
+  }
+  if (any(duplicated(as.character(trade_measurements$trade_id)))) {
+    g5_stop("AMD EMA OOS trade lifecycle measurement trade_id values must be unique.")
+  }
+  allowed_status <- c("closed_trade_lifecycle", "open_trade_unclosed")
+  if (any(!(as.character(trade_measurements$trade_status) %in% allowed_status))) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements have invalid trade_status values.")
+  }
+  if (any(as.character(trade_measurements$subject_id) != "amd_ema_long_cash") ||
+      any(as.character(trade_measurements$symbol) != "AMD") ||
+      any(as.character(trade_measurements$strategy_id) != "ema_long_cash") ||
+      any(as.character(trade_measurements$position_state) != "long")) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must contain AMD EMA candidate lifecycle rows only.")
+  }
+  if (any(!is.na(trade_measurements$share_quantity)) ||
+      any(!is.na(trade_measurements$trade_pnl)) ||
+      any(!is.na(trade_measurements$trade_return_open_to_open))) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements must not compute share quantity, trade PnL, or trade return.")
+  }
+
+  date_cols <- c(
+    "entry_signal_session_date",
+    "entry_execution_session_date",
+    "exit_signal_session_date",
+    "exit_execution_session_date"
+  )
+  for (col in date_cols) {
+    trade_measurements[[col]] <- as.Date(trade_measurements[[col]])
+  }
+  if (any(is.na(trade_measurements$entry_signal_session_date)) ||
+      any(is.na(trade_measurements$entry_execution_session_date)) ||
+      any(trade_measurements$entry_execution_session_date <=
+        trade_measurements$entry_signal_session_date)) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements have ambiguous entry execution dates.")
+  }
+  closed <- as.character(trade_measurements$trade_status) == "closed_trade_lifecycle"
+  open <- as.character(trade_measurements$trade_status) == "open_trade_unclosed"
+  if (any(is.na(trade_measurements$exit_signal_session_date[closed])) ||
+      any(is.na(trade_measurements$exit_execution_session_date[closed])) ||
+      any(trade_measurements$exit_signal_session_date[closed] <
+        trade_measurements$entry_signal_session_date[closed]) ||
+      any(trade_measurements$exit_execution_session_date[closed] <=
+        trade_measurements$exit_signal_session_date[closed])) {
+    g5_stop("AMD EMA OOS trade lifecycle measurements have ambiguous exit execution dates.")
+  }
+  if (any(!is.na(trade_measurements$exit_signal_session_date[open])) ||
+      any(!is.na(trade_measurements$exit_execution_session_date[open]))) {
+    g5_stop("AMD EMA OOS open trade lifecycle rows must not record exit dates.")
+  }
+  holding <- suppressWarnings(as.integer(trade_measurements$holding_period_sessions))
+  if (any(is.na(holding[closed])) || any(holding[closed] < 0L)) {
+    g5_stop("AMD EMA OOS closed trade lifecycle rows require deterministic non-negative holding_period_sessions.")
+  }
+  if (any(!is.na(holding[open]))) {
+    g5_stop("AMD EMA OOS open trade lifecycle rows must leave holding_period_sessions uncomputed.")
+  }
+  trade_measurements$holding_period_sessions <- holding
+
+  if (!is.null(signal_position_application)) {
+    signal_position_application <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+      signal_position_application
+    )
+    signal_manifest <- signal_position_application$run_manifest
+    if (!identical(
+      as.character(signal_manifest$source_application_boundary_id[[1L]]),
+      as.character(manifest$source_application_boundary_id[[1L]])
+    )) {
+      g5_stop("AMD EMA OOS trade lifecycle measurements must preserve frozen signal/position application lineage.")
+    }
+    candidate_ids <- unique(as.character(
+      signal_position_application$signal_position_surface$source_application_row_id[
+        signal_position_application$signal_position_surface$subject_id == "amd_ema_long_cash"
+      ]
+    ))
+    unknown_ids <- setdiff(as.character(trade_measurements$application_row_id), candidate_ids)
+    if (length(unknown_ids) > 0L) {
+      g5_stop(paste(
+        "AMD EMA OOS trade lifecycle measurements reference unknown application_row_id values:",
+        paste(unknown_ids, collapse = ", ")
+      ))
+    }
+  }
+  if (!is.null(parameter_application_boundary)) {
+    parameter_application_boundary <- g5_validate_wfa_amd_ema_parameter_application_boundary(
+      parameter_application_boundary
+    )
+    candidate_ids <- as.character(parameter_application_boundary$application_surface$application_row_id[
+      parameter_application_boundary$application_surface$subject_id == "amd_ema_long_cash"
+    ])
+    unknown_ids <- setdiff(as.character(trade_measurements$application_row_id), candidate_ids)
+    if (length(unknown_ids) > 0L) {
+      g5_stop(paste(
+        "AMD EMA OOS trade lifecycle measurements reference unknown application_row_id values:",
+        paste(unknown_ids, collapse = ", ")
+      ))
+    }
+  }
+  trade_measurements
+}
+
 g5_write_wfa_amd_ema_oos_measurement_contract_csvs <- function(
   oos_measurement_contract,
   manifest_path = NULL,

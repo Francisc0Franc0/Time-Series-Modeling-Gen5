@@ -225,6 +225,17 @@ g5_test_amd_ema_session_measurements <- function(contract, application) {
   out[g5_wfa_required_amd_ema_oos_session_measurement_columns()]
 }
 
+g5_test_amd_ema_trade_lifecycle_signal_position <- function(signal_position) {
+  surface <- signal_position$signal_position_surface
+  candidate_index <- which(surface$subject_id == "amd_ema_long_cash")
+  transition_states <- c("cash", "long", "long", "cash", "long", "cash")
+  transition_signals <- ifelse(transition_states == "long", "long_signal", "cash_signal")
+  surface$position_state_for_next_open[candidate_index] <- transition_states
+  surface$ema_signal_state[candidate_index] <- transition_signals
+  signal_position$signal_position_surface <- surface
+  g5_validate_wfa_amd_ema_oos_signal_position_application(signal_position)
+}
+
 test_that("AMD EMA OOS measurement contract consumes accepted application readiness and registers fields", {
   fixture <- g5_test_amd_ema_measurement_fixture()
 
@@ -401,6 +412,84 @@ test_that("AMD EMA OOS session measurement values consume frozen signal/position
       parameter_application_boundary = fixture$application
     ),
     "no_trade first"
+  )
+})
+
+test_that("AMD EMA OOS trade lifecycle scaffold records signal-position transitions only", {
+  fixture <- g5_test_amd_ema_measurement_fixture()
+  contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
+    g5_build_wfa_amd_ema_oos_measurement_contract(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+  signal_position <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    g5_build_wfa_amd_ema_oos_signal_position_application(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      bars = fixture$bars,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+  signal_position <- g5_test_amd_ema_trade_lifecycle_signal_position(signal_position)
+
+  lifecycle <- g5_build_wfa_amd_ema_oos_trade_lifecycle_measurements(
+    oos_measurement_contract = contract,
+    signal_position_application = signal_position,
+    parameter_application_boundary = fixture$application
+  )
+
+  expect_identical(names(lifecycle), g5_wfa_required_amd_ema_oos_trade_measurement_columns())
+  expect_equal(nrow(lifecycle), 2L)
+  expect_identical(
+    lifecycle$trade_status,
+    c("open_trade_unclosed", "closed_trade_lifecycle")
+  )
+  expect_identical(lifecycle$position_state, rep("long", 2L))
+  expect_identical(
+    as.Date(lifecycle$entry_signal_session_date),
+    as.Date(c("2026-02-02", "2026-04-02"))
+  )
+  expect_identical(
+    as.Date(lifecycle$entry_execution_session_date),
+    as.Date(c("2026-03-31", "2026-04-03"))
+  )
+  expect_identical(
+    as.Date(lifecycle$exit_signal_session_date),
+    as.Date(c(NA, "2026-04-03"))
+  )
+  expect_identical(
+    as.Date(lifecycle$exit_execution_session_date),
+    as.Date(c(NA, "2026-04-06"))
+  )
+  expect_identical(as.integer(lifecycle$holding_period_sessions), c(NA_integer_, 1L))
+  expect_true(all(is.na(lifecycle$share_quantity)))
+  expect_true(all(is.na(lifecycle$trade_pnl)))
+  expect_true(all(is.na(lifecycle$trade_return_open_to_open)))
+
+  with_quantity <- lifecycle
+  with_quantity$share_quantity[[1L]] <- 1
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements(
+      trade_measurements = with_quantity,
+      oos_measurement_contract = contract,
+      signal_position_application = signal_position,
+      parameter_application_boundary = fixture$application
+    ),
+    "must not compute share quantity"
+  )
+
+  unknown_application <- lifecycle
+  unknown_application$application_row_id[[1L]] <- "unknown_application_row"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_trade_lifecycle_measurements(
+      trade_measurements = unknown_application,
+      oos_measurement_contract = contract,
+      signal_position_application = signal_position,
+      parameter_application_boundary = fixture$application
+    ),
+    "unknown application_row_id"
   )
 })
 

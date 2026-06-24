@@ -1980,3 +1980,31 @@ Stop conditions:
 
 - Computing trade lifecycle rows before the separately queued lifecycle scaffold.
 - Computing share quantities, trade PnL, trade open-to-open returns, Sharpe, drawdown, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.
+
+### 52. Add AMD EMA OOS trade lifecycle scaffold
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Branch: `codex/gen5-amd-ema-oos-measurement-values-stack`
+
+Goal: Add trade lifecycle evidence rows from frozen AMD EMA OOS signal/position transitions only.
+
+Notes:
+
+- Added a trade lifecycle measurement builder and validator inside `R/wfa_amd_ema_oos_measurement_contract.R`.
+- Consumes the validated measurement contract and frozen signal/position application evidence with matching explicit `as_of_timestamp`, `latest_completed_session`, and application-boundary lineage.
+- Records deterministic `trade_id`, `trade_status`, `position_state`, `entry_signal_session_date`, `entry_execution_session_date`, `exit_signal_session_date`, `exit_execution_session_date`, and `holding_period_sessions` for closed lifecycle rows where determinable.
+- Leaves `share_quantity`, `trade_pnl`, and `trade_return_open_to_open` uncomputed as `NA`.
+- Keeps lifecycle rows limited to AMD EMA candidate transitions; no-trade remains first-class in the surrounding comparison/session surfaces and has no trade lifecycle rows.
+- Added non-network tests for deterministic entry/exit transition rows, holding-period counts, uncomputed accounting fields, and unknown application lineage rejection.
+- Did not compute trade PnL, trade returns, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Computing share quantity, trade PnL, trade open-to-open return, Sharpe, drawdown, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.
