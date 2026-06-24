@@ -163,6 +163,33 @@ WFA summaries should privilege fold stability over headline aggregate performanc
 
 The engine should not discard a candidate only because one OOS period failed. It should also not pass a candidate only because total OOS return finished high. The audit surface should make both facts visible so later research can distinguish "bad idea", "useful in some regimes", and "promising but not yet deployable".
 
+## Fold-Stability Summary Contract
+
+Fold-stability summaries are an operator-facing contract surface before they are an implementation. They exist to keep per-fold behavior visible and to prevent later aggregate results from hiding fragile evidence. This contract does not compute returns, drawdowns, volatility, benchmark comparisons, ranks, pass/fail scores, labels, regimes, strategy outcomes, or candidate selections.
+
+A future fold-stability summary artifact must include:
+
+- `schema_version`;
+- run manifest ID or path;
+- source workbench handoff manifest ID or path;
+- source `as_of_timestamp`;
+- source `latest_completed_session`;
+- fold geometry ID or path;
+- handoff gate status and review status;
+- frozen decision evidence artifact references;
+- evaluated OOS artifact references, populated only after OOS evaluation is separately authorized and completed;
+- fold count expected, fold count evaluated, and missing or partial fold coverage flags;
+- warning-context propagation fields from the source handoff and fold-local availability audit;
+- bad-fold visibility placeholders for later completed-OOS evidence;
+- outlier-dependence placeholders for later completed-OOS evidence;
+- no-trade and baseline comparison slots for later authorized evaluation;
+- leakage attestation reference confirming no OOS evidence changed any frozen fold decision;
+- code revision metadata when available.
+
+The summary must aggregate only already-frozen and already-evaluated OOS records. It may not reach backward into raw provider data, recompute latest-session authority, infer missing folds, repair data-health warnings, or update a frozen decision after seeing OOS evidence. Missing, partial, stale, or warning-heavy fold coverage must remain visible rather than being dropped from the summary.
+
+Until returns and performance evaluation are separately authorized, fold-stability artifacts may contain only schema fields, lineage, readiness status, coverage status, warning propagation, and explicit empty placeholders for future completed-OOS evidence. The absence of evaluated OOS records is a valid STOP state, not a reason to synthesize performance claims.
+
 ## No-Leakage Rules
 
 The following rules apply to all future WFA implementation work:

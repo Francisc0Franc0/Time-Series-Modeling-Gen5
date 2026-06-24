@@ -1092,9 +1092,19 @@ Stop conditions:
 
 ### 30. Define fold-stability summary contract
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-fold-stability-contract`
+
+Branch: `codex/gen5-wfa-post-foundation-guardrails`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the fold-stability summary contract surface to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Defined required lineage, fold coverage, warning propagation, bad-fold visibility, outlier-dependence placeholders, no-trade/baseline slots, and leakage attestation references for later authorized evaluation.
+- Kept the task documentation-only and did not compute returns, drawdowns, volatility, benchmark comparisons, ranks, pass/fail scores, labels, regimes, strategy outcomes, or candidate selections.
 
 Goal: Define the operator-facing and artifact-level contract for fold-stability summaries before any returns or performance values exist.
 
