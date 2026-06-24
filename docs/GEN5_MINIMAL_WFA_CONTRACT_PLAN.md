@@ -22,6 +22,8 @@ Implementation note: the first no-trade and reserved baseline-family evaluation 
 
 Implementation note: the AMD EMA long/cash strategy evaluation gate is now opened only as a narrow research authorization contract in `R/wfa_amd_ema_evaluation_gate.R`. It consumes accepted minimal WFA POC closeout evidence plus baseline evaluation readiness evidence, records the single `AMD` / `ema_long_cash` scope, preserves no-trade baseline discipline and leakage attestations, and keeps implementation status as gate-only. It does not compute EMA signals, returns, cash yields, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
 
+Implementation note: the first AMD EMA long/cash evaluation contract surface now exists as `R/wfa_amd_ema_evaluation_contract.R`. It consumes the accepted AMD EMA gate plus fold geometry, TRAIN/OOS split audit availability, frozen fold evidence, and no-trade baseline contract rows. It emits schema-only manifest and review rows with `no_trade_cash` first for every fold and `amd_ema_long_cash` second, deterministic ignored-run artifact paths, review-required reasons, and leakage attestations. It does not compute EMA signals, returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -383,7 +385,7 @@ That gate-opening prompt must also:
 - list allowed input artifacts and columns, prohibited inputs, TRAIN-only fit or parameter rules, OOS application rules, baseline/no-trade comparison scope, artifact outputs, ignored output locations, validation expectations, and leakage attestations;
 - state that dashboards, live advice, allocation, leverage, execution, and any broader strategy family remain unauthorized unless separately named.
 
-With that gate-opening prompt accepted, the repository now has a gate-only authorization surface. Actual EMA signal computation, return calculation, trade accounting, performance metrics, generated evaluation artifacts, interpretation, deployment, dashboards, live advice, allocation, leverage, execution, and broader strategy families remain separate follow-on tasks that must preserve the gate's scope and leakage controls.
+With that gate-opening prompt accepted, the repository now has a gate authorization surface plus a first schema-only AMD EMA evaluation contract surface. Actual EMA signal computation, return calculation, trade accounting, performance metrics, generated evaluation artifacts, interpretation, deployment, dashboards, live advice, allocation, leverage, execution, and broader strategy families remain separate follow-on tasks that must preserve the gate's scope and leakage controls.
 
 ## Minimal WFA POC Manifest Scaffold
 
