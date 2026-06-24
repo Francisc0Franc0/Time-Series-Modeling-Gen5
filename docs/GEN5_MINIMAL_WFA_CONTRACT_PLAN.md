@@ -16,6 +16,8 @@ Implementation note: the first frozen fold-decision evidence scaffold now exists
 
 Implementation note: the first baseline-family registry scaffold now exists as `R/wfa_baseline_registry.R`. It reserves `no_trade`/cash, broad-market buy-and-hold, per-asset buy-and-hold, fixed equal-weight basket buy-and-hold, and active-curation-with-passive-holding families as declarative definitions tied to the same accepted handoff, explicit quarterly fold calendar, frozen evidence, health gate, and audit discipline as later active candidates, without computing returns, choosing assets from OOS evidence, allocating capital, evaluating performance, or producing live-facing advice.
 
+Implementation note: the first Minimal WFA Foundation closeout check now exists as `tests/testthat/test_wfa_foundation_closeout.R`. It exercises the handoff gate result, explicit quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence scaffold, and declarative baseline-family registry as one non-network contract chain, and confirms generated artifacts remain under ignored run paths before any indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or active research candidates are added.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

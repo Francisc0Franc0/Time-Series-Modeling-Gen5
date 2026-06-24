@@ -1001,9 +1001,21 @@ Stop conditions:
 
 ### 28. Add first minimal WFA foundation closeout check
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-foundation-closeout`
+
+Branch: `codex/gen5-wfa-foundation-closeout`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `tests/testthat/test_wfa_foundation_closeout.R` as the first Minimal WFA Foundation closeout guard.
+- Confirmed the accepted handoff gate result, explicit quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence scaffold, and declarative baseline-family registry align as one contract chain.
+- Confirmed generated artifacts remain constrained to ignored run paths and `.gitignore` still covers `runs/`, `artifacts/`, `logs/`, and `data_cache/`.
+- Confirmed the default local validation runner remains non-network and does not invoke data refresh, credential preflight, research query, or Alpaca environment paths.
+- No indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or active research candidates were added.
 
 Goal: Confirm the first WFA foundation slices agree before any active research candidate, return calculation, indicator, label, regime, or strategy work begins.
 
