@@ -24,6 +24,8 @@ Implementation note: the AMD EMA long/cash strategy evaluation gate is now opene
 
 Implementation note: the first AMD EMA long/cash evaluation contract surface now exists as `R/wfa_amd_ema_evaluation_contract.R`. It consumes the accepted AMD EMA gate plus fold geometry, TRAIN/OOS split audit availability, frozen fold evidence, and no-trade baseline contract rows. It emits schema-only manifest, review rows, and a readiness review with `no_trade_cash` first for every fold and `amd_ema_long_cash` second, deterministic ignored-run artifact paths, guarded CSV writers, review-required reasons, and leakage attestations. It does not compute EMA signals, returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
 
+Implementation note: the first AMD EMA train-only parameter-freeze contract now exists as `R/wfa_amd_ema_parameter_freeze_contract.R`. It consumes the accepted AMD EMA evaluation contract readiness review, requires explicit operator acceptance of that readiness surface, freezes one explicit fast/slow EMA period decision per fold, preserves `no_trade_cash` as a first-class comparison row, and emits readiness/write helpers with deterministic ignored-run artifact paths. It does not compute EMA signals, apply frozen parameters to OOS rows, compute returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

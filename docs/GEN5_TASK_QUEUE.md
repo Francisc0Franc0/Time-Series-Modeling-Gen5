@@ -8,7 +8,7 @@ The completed v0.1 milestone still sits before PCA/state modeling, strategy rese
 
 Post-v0.1 Minimal WFA Foundation and guardrail slices now exist through handoff gating, quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence, reserved baseline-family scaffolding, baseline-evaluation contract scaffolding, and a first minimal WFA POC boundary. These remain WFA contract/scaffold surfaces, not strategy research or evaluation results.
 
-The next roadmap layer is Minimal WFA Engine Toward AMD EMA POC. It names AMD EMA long/cash as the first intended human-facing strategy vertical slice after the minimal WFA engine and evaluation contracts are ready, while keeping returns, trade accounting, performance metrics, EMA signals, active candidates, dashboards, live advice, allocation, leverage, and execution stopped until a later explicit gate is opened.
+The current roadmap layer is Minimal WFA Engine Toward AMD EMA POC. It now has the exact narrow AMD EMA gate open, plus schema/readiness contract surfaces for evaluation readiness and train-only parameter freeze. This remains a minimal WFA POC path, not a production strategy: returns, trade accounting, performance metrics, OOS measurement, allocation, leverage, dashboards, live advice, execution, broader strategy families, and performance claims remain stopped until separately queued and explicitly authorized.
 
 The visible behavior now available is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
@@ -1474,15 +1474,15 @@ Stop conditions:
 
 ## Larger Autonomous Milestone: Minimal WFA Engine Toward AMD EMA POC
 
-Milestone intent: move from WFA guardrail scaffolding toward a minimal WFA engine POC that can later support a first human-facing strategy vertical slice. The named first strategy destination is AMD EMA long/cash, but only after the minimal WFA engine and evaluation contracts are ready and an explicit later gate is opened.
+Milestone intent: move from WFA guardrail scaffolding toward a minimal WFA engine POC that can later support a first human-facing strategy vertical slice. The named first strategy destination is AMD EMA long/cash. The exact AMD EMA gate has now been opened only for narrow, non-live contract surfaces that preserve WFA lineage, no-trade comparison discipline, train-only freeze discipline, and STOP states before any OOS measurement or result computation.
 
-This milestone preserves the original `docs/GEN5_SYSTEM_DESIGN.md` build order. AMD EMA long/cash belongs inside the later strategy vertical slice; it does not move strategy work ahead of WFA engine and evaluation-contract readiness.
+This milestone preserves the original `docs/GEN5_SYSTEM_DESIGN.md` build order. AMD EMA long/cash now serves as the first minimal WFA POC vertical slice, but only through explicitly queued gates and schema/readiness contracts until later tasks authorize OOS application, return calculation, trade accounting, or performance evaluation.
 
 Reduced-confirmation autonomy:
 
 - Codex may proceed task-by-task through the pending autonomous tasks in this milestone when each completed slice validates cleanly and remains within the allowed files below.
 - Codex should summarize each completed slice and continue only to the next queued task in this milestone.
-- Codex must stop immediately at any stop condition below or before the exact AMD EMA gate.
+- Codex must stop immediately at any stop condition below or before any unqueued expansion beyond the exact AMD EMA contract sequence.
 
 Allowed source files for autonomous work:
 
@@ -1495,6 +1495,10 @@ Allowed source files for autonomous work:
 - `R/wfa_frozen_fold_evidence.R`
 - `R/wfa_baseline_registry.R`
 - `R/wfa_baseline_evaluation_contract.R`
+- `R/wfa_amd_ema_evaluation_gate.R`
+- `R/wfa_amd_ema_evaluation_contract.R`
+- `R/wfa_amd_ema_parameter_freeze_contract.R`
+- future AMD EMA application-boundary helpers only when explicitly queued, schema/readiness-only, and result computation remains stopped
 - new `R/wfa_minimal_poc_*.R` scaffold helpers that write schema/review surfaces only
 - `tests/testthat/test_wfa_*.R`
 - small synthetic fixtures under `tests/fixtures/wfa/` when needed for non-network tests
@@ -1506,14 +1510,14 @@ Allowed generated outputs:
 
 Milestone-wide stop conditions:
 
-- implementing returns, cash yields, benchmark math, trade accounting, position accounting, order simulation, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, active candidate scoring, EMA signals, EMA parameter selection, or performance claims;
+- implementing returns, cash yields, benchmark math, trade accounting, position accounting, order simulation, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidate scoring, OOS-informed EMA parameter selection, unqueued EMA signal generation, or performance claims;
 - using provider calls, credentials, `.Renviron`, unmanifested cache files, independent date authority, `Sys.Date()`, market-clock APIs, or live network checks;
 - adding package dependencies;
 - changing provider scope beyond Alpaca adjusted daily OHLCV;
 - changing the `GEN5_SYSTEM_DESIGN.md` build order;
 - committing generated run artifacts, cache files, credentials, or heavyweight data;
 - resolving an ambiguous operator decision by assumption;
-- treating AMD EMA long/cash as authorized implementation rather than a named later vertical slice.
+- treating AMD EMA long/cash contract surfaces as performance evidence, deployable strategy logic, or authorization for production/live behavior.
 
 Validation expectations:
 
@@ -1529,7 +1533,9 @@ powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
 
 Exact AMD EMA strategy evaluation gate:
 
-AMD EMA long/cash strategy evaluation implementation may begin only after a later operator prompt explicitly says:
+This gate was opened by an explicit operator prompt for a narrow AMD-only, EMA long/cash, research-only contract sequence. The opened gate authorizes only the queued schema/readiness surfaces needed for a minimal WFA POC. It does not authorize performance claims, dashboards, live advice, allocation, leverage, execution, or broader strategy families.
+
+Before that gate was opened, AMD EMA long/cash strategy evaluation implementation could begin only after a later operator prompt explicitly said:
 
 ```text
 Open the AMD EMA long/cash strategy evaluation gate.
@@ -1537,7 +1543,7 @@ Open the AMD EMA long/cash strategy evaluation gate.
 
 That same gate-opening prompt must name the branch, identify the accepted minimal WFA POC closeout evidence or fixture scope, confirm no-trade/reserved-baseline evaluation contract readiness has been reviewed and accepted, define which returns/trade-accounting/performance/EMA/active-candidate surfaces are authorized, list allowed input artifacts and columns, define prohibited inputs, TRAIN-only fit or parameter rules, OOS application rules, baseline/no-trade comparison scope, artifact outputs, ignored output locations, validation expectations, leakage attestations, and state that dashboards, live advice, allocation, leverage, execution, and broader strategy families remain unauthorized unless separately named.
 
-Without that exact gate-opening prompt, AMD EMA remains a roadmap target only and all strategy evaluation work remains `STOP`.
+With that exact gate-opening prompt accepted, AMD EMA is no longer only a roadmap label. It is now the minimal WFA POC candidate, but every downstream step remains task-gated: train-only decisions must be frozen before OOS application, no-trade must remain first-class, OOS measurement must not feed parameter choice, and returns/performance/trade-accounting behavior must remain `STOP` until separately queued.
 
 ### 39. Define Minimal WFA Engine Toward AMD EMA POC roadmap
 
@@ -1700,3 +1706,189 @@ Stop conditions:
 
 - Opening the AMD EMA strategy evaluation gate.
 - Defining EMA formulas, parameters, returns, trade accounting, performance metrics, active candidate scoring, dashboards, live advice, allocation, leverage, execution, or performance claims.
+
+### 44. Open the narrow AMD EMA evaluation gate
+
+Status: done
+
+Recommended branch: `codex/gen5-amd-ema-evaluation-gate`
+
+Branch: `codex/gen5-amd-ema-evaluation-gate`
+
+Goal: Consume accepted minimal WFA POC closeout evidence and baseline evaluation readiness evidence, then open only the single-symbol AMD EMA long/cash research gate.
+
+Likely files:
+
+- `R/wfa_amd_ema_evaluation_gate.R`
+- `tests/testthat/test_wfa_amd_ema_evaluation_gate.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a gate manifest surface for `AMD` / `ema_long_cash` only.
+- Preserved no-trade baseline discipline and leakage attestations.
+- Kept implementation status gate-only and non-live.
+- Did not compute EMA signals, returns, cash yields, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
+Stop conditions:
+
+- Computing EMA signals, returns, cash yields, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+- Treating the gate as strategy evidence or deployable advice.
+
+### 45. Add the first AMD EMA evaluation contract readiness surface
+
+Status: done
+
+Recommended branch: `codex/gen5-amd-ema-evaluation-contract`
+
+Branch: `codex/gen5-amd-ema-evaluation-contract`
+
+Goal: Consume the accepted AMD EMA gate, fold geometry, TRAIN/OOS split audit availability, frozen fold evidence, and no-trade baseline rows, then emit a no-results evaluation contract readiness surface.
+
+Likely files:
+
+- `R/wfa_amd_ema_evaluation_contract.R`
+- `tests/testthat/test_wfa_amd_ema_evaluation_contract.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added no-trade-first and AMD-EMA-second review rows for every fold.
+- Added deterministic ignored `runs/` artifact paths and guarded CSV writers.
+- Added a readiness review that records AMD train/OOS availability and STOP states.
+- Did not compute EMA signals, returns, cash yields, benchmark math, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
+Stop conditions:
+
+- Any OOS application, signal generation, result computation, metric calculation, trade accounting, allocation, live-facing output, or broader strategy-family expansion.
+
+### 46. Add AMD EMA train-only parameter-freeze contract
+
+Status: done
+
+Recommended branch: `codex/gen5-amd-ema-parameter-freeze-contract`
+
+Branch: `codex/gen5-amd-ema-parameter-freeze-contract`
+
+Commit: `07ae5a0 Add AMD EMA parameter freeze contract`
+
+Goal: Consume the accepted AMD EMA evaluation contract readiness review and freeze explicit train-only fast/slow EMA period decisions per fold before any OOS measurement.
+
+Likely files:
+
+- `R/wfa_amd_ema_parameter_freeze_contract.R`
+- `tests/testthat/test_wfa_amd_ema_parameter_freeze_contract.R`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a parameter-freeze manifest, fold surface, readiness review, validators, and guarded CSV writers.
+- Required explicit operator acceptance of the source evaluation readiness review.
+- Required one train-only parameter decision per fold with `fast_ema_period < slow_ema_period`.
+- Preserved no-trade as the first-class comparison row for every fold.
+- Rejected result-like parameter-decision columns and preserved leakage attestations.
+- Did not compute EMA signals, returns, cash yields, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
+Stop conditions:
+
+- Any OOS-informed parameter selection.
+- Any signal generation or OOS application before the freeze contract is consumed by a later explicit gate.
+- Any returns, performance metrics, trade accounting, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+### 47. Align the task queue with the opened AMD EMA minimal POC sequence
+
+Status: done
+
+Recommended branch: `codex/gen5-amd-ema-queue-alignment`
+
+Branch: `codex/gen5-amd-ema-queue-alignment`
+
+Goal: Update this queue so it accurately records the already-opened AMD EMA contract path while keeping the project concretely aimed at a minimal WFA POC and preventing scope creep.
+
+Likely files:
+
+- `docs/GEN5_TASK_QUEUE.md`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+
+Validation:
+
+- Documentation-only diff check.
+
+Notes:
+
+- Recorded that the exact AMD EMA gate is now open only for narrow non-live contract surfaces.
+- Recorded the completed evaluation gate, evaluation contract, and train-only parameter-freeze contract tasks.
+- Reframed stop conditions so train-only freeze is allowed only in the queued contract path, while OOS-informed selection and all result computation remain stopped.
+
+Stop conditions:
+
+- Adding implementation scope beyond documentation alignment.
+- Authorizing OOS measurement, return calculation, trade accounting, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, or performance claims.
+
+### 48. Add AMD EMA frozen-parameter application boundary
+
+Status: pending
+
+Recommended branch: `codex/gen5-amd-ema-frozen-parameter-application-boundary`
+
+Goal: Consume the accepted AMD EMA parameter-freeze readiness review and define the next boundary for applying frozen train-only EMA parameters to OOS rows, without computing returns, trade accounting, performance metrics, allocation, leverage, live advice, execution, dashboards, or broader strategy families.
+
+Likely files:
+
+- future `R/wfa_amd_ema_*application*.R` helper, if the task is implemented as code
+- `tests/testthat/test_wfa_amd_ema_*application*.R`
+- `docs/GEN5_TASK_QUEUE.md`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+
+Required behavior:
+
+- Consume only the accepted parameter-freeze readiness review and source contract surfaces.
+- Preserve one no-trade comparison row per fold.
+- Preserve frozen train-only fast/slow EMA parameters as pre-OOS authority.
+- Record OOS application readiness or schema rows only.
+- Keep OOS measurement, returns, cash yield, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy families, and performance claims stopped.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` if code or tests are added.
+- Use a focused documentation diff check if this remains documentation-only.
+
+Stop conditions:
+
+- Computing EMA signal outcomes, returns, cash yields, trade accounting, benchmark math, performance metrics, allocation, leverage, dashboards, execution, live advice, broader strategy-family comparisons, or performance claims.
+- Selecting, changing, or rejecting parameters based on OOS evidence.
+- Treating frozen parameter rows as completed strategy results.
+
+### 49. Later: authorize minimal OOS measurement contract only after application boundary review
+
+Status: deferred
+
+Recommended branch: `codex/gen5-amd-ema-minimal-oos-measurement-contract`
+
+Goal: Placeholder for a later explicit task that may define the first minimal OOS measurement contract for the already-frozen AMD EMA decisions and no-trade comparison, if the operator separately authorizes exactly which return, cash/no-position, trade-accounting, and metric fields are in scope.
+
+Required behavior:
+
+- Must consume frozen parameter/application evidence rather than recomputing authority.
+- Must keep no-trade first-class.
+- Must preserve fold-local WFA chronology and leakage attestations.
+- Must remain non-live and non-dashboard.
+
+Stop conditions:
+
+- Starting this task without a separate operator prompt that names the allowed measurement fields.
+- Adding allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
