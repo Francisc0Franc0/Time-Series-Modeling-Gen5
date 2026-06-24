@@ -1426,3 +1426,46 @@ Stop conditions:
 - Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
 - Opening the returns/performance gate without explicit operator authorization.
 - Treating reserved baseline definitions, contract rows, deterministic paths, or readiness statuses as baseline results.
+
+### 38. Plan first minimal WFA POC boundary
+
+Status: done
+
+Recommended branch: `codex/gen5-minimal-wfa-poc-plan`
+
+Branch: `codex/gen5-minimal-wfa-poc-plan`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added a documentation-only first minimal WFA POC plan to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Defined the POC as a contract rehearsal across handoff gate, explicit quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence, baseline-family readiness scaffolding, fold-stability placeholders, and leakage attestations.
+- Defined allowed inputs, prohibited inputs, planned artifact surfaces, review gates, STOP conditions, validation expectations, and exact separate authorization requirements for future evaluation work versus future active candidate work.
+- Kept the returns/performance gate closed and did not implement or authorize returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+
+Goal: Plan the first minimal WFA POC as documentation only, preserving guardrails before any evaluation or active candidate work begins.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Define the first POC objective as a lineage and review-surface rehearsal rather than a research result.
+- Name allowed inputs from accepted workbench/WFA scaffold artifacts and prohibit provider calls, credentials, unmanifested cache reads, independent date authority, OOS outcome authority, evaluation artifacts, and active-candidate inputs.
+- Name artifact surfaces as schemas/review records only, including scope decision log, run manifest, handoff review, fold geometry reference, split audit reference, frozen evidence reference, baseline readiness, fold-stability placeholder, and leakage attestation.
+- Define review gates, STOP conditions, validation expectations, and exact future authorization needed before no-trade/reserved-baseline evaluation or any active candidate work can begin.
+- Include operator-level questions and recommendations without resolving ambiguous future research decisions by assumption.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+- Opening the returns/performance gate without explicit operator authorization.
+- Naming, designing, fitting, scoring, selecting, or authorizing an active research candidate.
+- Treating the POC plan, artifact surfaces, review statuses, or reserved baseline definitions as baseline results.

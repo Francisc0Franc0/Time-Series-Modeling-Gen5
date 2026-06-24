@@ -273,6 +273,80 @@ The WFA post-foundation guardrails are closed through the baseline evaluation co
 
 This closeout does not open the returns/performance gate. It records readiness for an operator to decide whether to authorize a separate future baseline/no-trade evaluation task. Until that approval exists, contract rows, deterministic paths, review statuses, and reserved-family definitions remain scaffolding rather than baseline results.
 
+## First Minimal WFA POC Plan
+
+The first minimal WFA POC should be a contract rehearsal, not a research result. Its objective is to prove that one small, accepted WFA-ready handoff can be traced through the existing WFA guardrail surfaces: handoff gate, explicit quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence, baseline-family readiness scaffolding, fold-stability placeholders, and leakage attestations. The POC should demonstrate that the project can preserve lineage, warning context, fold boundaries, and STOP states before any evaluation or active candidate exists.
+
+This POC is documentation-only until a later implementation task is explicitly authorized. It does not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage value-add, dashboards, execution behavior, live advice, active candidates, or performance claims. It also does not open the returns/performance gate.
+
+Allowed inputs for the first minimal WFA POC are limited to:
+
+- this source-controlled contract plan and the task queue entry that authorizes the documentation boundary;
+- an accepted Research Data Workbench handoff manifest and its listed canonical adjusted daily bars, health rows, audit rows, symbol coverage, refresh plan, merge summary when present, and source-controlled universe registry rows;
+- existing WFA scaffold outputs or schemas for handoff gate status, quarterly fold geometry, TRAIN/OOS split audit, frozen fold evidence, baseline-family registry rows, baseline-evaluation contract readiness rows, fold-stability placeholder fields, and leakage attestations;
+- explicit `as_of_timestamp`, `latest_completed_session`, source handoff references, fold IDs, schema versions, code revision metadata, and ignored-run-path planning fields already carried by accepted artifacts;
+- operator review notes that accept or reject source warnings, missing or partial fold coverage, and unresolved baseline-family inclusion questions.
+
+Prohibited inputs for the first minimal WFA POC are:
+
+- Alpaca/provider calls, credentials, `.Renviron`, market-clock APIs, provider response payloads, or unmanifested cache files;
+- independent runtime date authority, including any new use of `Sys.Date()` or inferred latest sessions;
+- returns, cash yield assumptions, benchmark math, performance metric values, ranks, drawdown values, volatility values, allocation weights, leverage reports, dashboard outputs, live advice, execution artifacts, or performance claims;
+- OOS evidence used to select symbols, alter fold geometry, accept or reject warnings, tune parameters, rank alternatives, change baseline inclusion, or update frozen fold decisions;
+- indicators, labels, regimes, PCA, HMMs, strategy signals, exits, allocation logic, candidate-specific features, active candidate definitions, or active candidate outputs.
+
+The planned artifact surfaces for a later separately authorized POC implementation are schema and review surfaces only:
+
+- `poc_scope_decision_log`: records the operator-approved POC scope, excluded work, STOP states, and unresolved questions;
+- `poc_run_manifest`: links the accepted handoff, explicit timestamp/session authority, fold geometry reference, ignored output root, schema versions, and code revision metadata;
+- `poc_handoff_review_record`: records handoff gate status, accepted warnings, rejected warnings, and reviewer identity or review source;
+- `poc_fold_geometry_reference`: records that the POC uses one explicit quarterly geometry and no geometry search;
+- `poc_split_audit_reference`: links TRAIN/OOS disjointness, fold-local availability, warning context, and latest-session bounds;
+- `poc_frozen_evidence_reference`: links fold-level frozen no-active-decision evidence written before any OOS evaluation;
+- `poc_baseline_readiness_record`: keeps `no_trade` visible and records reserved baseline families as included, excluded, unavailable, or not yet authorized without computing results;
+- `poc_fold_stability_placeholder`: records expected/evidenced fold coverage, warning propagation, missing/partial coverage flags, and empty placeholders for future evaluated OOS evidence;
+- `poc_leakage_attestation`: records no provider calls, no credentials, no independent date authority, no OOS fitting, no OOS outcome authority, no return/performance computation, and no active-candidate input.
+
+The review gates for the first minimal WFA POC are:
+
+- Scope gate: confirm the POC remains a contract rehearsal and does not request evaluation, active candidates, or live-facing behavior.
+- Source gate: confirm the handoff gate is accepted or explicitly review-accepted, with all source warnings preserved.
+- Geometry gate: confirm one explicit quarterly geometry is used, with no geometry search or OOS-informed fold changes.
+- Split gate: confirm TRAIN/OOS split evidence is disjoint, bounded by `latest_completed_session`, and preserves fold-local availability decisions.
+- Frozen-evidence gate: confirm frozen fold evidence exists before any OOS application/evaluation and records no active decision unless a later authorized candidate exists.
+- Baseline-readiness gate: confirm `no_trade` remains first-class and any reserved baseline-family inclusion, exclusion, or unavailability is visible without becoming a result.
+- Leakage gate: confirm no provider calls, credentials, independent date authority, unmanifested cache reads, OOS fitting, OOS outcome authority, return/performance computation, or active-candidate input entered the POC.
+- Operator gate: require explicit operator acceptance of unresolved warnings, partial coverage, unavailable proxies, excluded reserved families, and the decision to stop before evaluation.
+
+The POC must stop if any of the following occur:
+
+- the work requires returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims;
+- a handoff artifact is missing, unaccepted, ambiguous, or inconsistent across `as_of_timestamp` or `latest_completed_session`;
+- source warnings, missing coverage, partial folds, stale symbols, unavailable proxies, or excluded baseline families cannot be represented without hiding them;
+- the POC would need provider access, credentials, unmanifested cache reads, runtime date authority, market-clock APIs, or generated outputs committed to source control;
+- any OOS evidence would affect fold construction, symbol eligibility, warning acceptance, baseline inclusion, frozen fold decisions, or active candidate design;
+- an operator request is ambiguous about whether the returns/performance gate should open.
+
+Validation expectations for this documentation task are limited to the repository validation wrapper:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+For any later implementation task, validation must remain non-network by default and must test schema fields, deterministic identifiers or ignored paths, source lineage, review statuses, leakage attestations, and STOP states. It must not add dependencies, provider calls, return formulas, performance calculations, benchmark comparisons, allocation logic, dashboards, execution behavior, live advice, active candidate definitions, or performance claims.
+
+The exact separate authorization required before any evaluation work can begin is a later operator prompt that explicitly says all of the following in substance: open the returns/performance gate for a no-trade and reserved baseline-family evaluation slice only; name the branch for that task; identify the accepted handoff/fold/frozen-evidence artifacts or fixture scope; name included and excluded reserved baseline families; authorize only the narrow evaluation artifact surfaces specified in that later prompt; and state that active candidates remain unauthorized. Without that later prompt, evaluation remains `STOP`.
+
+The exact separate authorization required before any active candidate work can begin is an even later operator prompt, after baseline/no-trade evaluation discipline has been reviewed, that explicitly names the first candidate, candidate family, allowed inputs and columns, prohibited inputs, TRAIN-only fit or selection rules, OOS application rules, baseline/no-trade comparison scope, artifact surfaces, ignored output locations, leakage attestations, and candidate-specific STOP conditions. Without that later prompt, active candidate work remains `STOP`.
+
+High-level questions to settle before opening any later gate:
+
+- Should the first POC be the thinnest possible lineage rehearsal, or should it intentionally include a warning-heavy handoff to test review discipline? The safer first insight is to start thin, then run a warning-heavy rehearsal only after the clean path is accepted.
+- Should `no_trade` be the only included baseline readiness row, with all other reserved families preserved as excluded/not-yet-authorized, or should unavailable broad-market and basket questions be surfaced in the same POC? The cleaner first insight is to keep `no_trade` included and make every other family explicitly visible but not evaluated.
+- Who has authority to accept WARN rows and partial fold coverage for POC use: the operator only, a named review note, or a future checklist status? The durable insight is that acceptance should be explicit and attributable rather than inferred from a passing script.
+- What minimum fold coverage is enough for a contract rehearsal without drifting into performance interpretation? The useful answer is coverage sufficient to exercise lineage, missing/partial flags, and STOP states, not coverage sufficient to persuade anyone of an outcome.
+- Should the next authorization stop at writing schema/review artifacts, or should it open the narrow no-trade/reserved-baseline evaluation gate? The current recommendation is to keep those as separate prompts so the project can inspect the POC surfaces before any evaluation begins.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.
