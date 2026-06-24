@@ -18,6 +18,8 @@ Implementation note: the first baseline-family registry scaffold now exists as `
 
 Implementation note: the first Minimal WFA Foundation closeout check now exists as `tests/testthat/test_wfa_foundation_closeout.R`. It exercises the handoff gate result, explicit quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence scaffold, and declarative baseline-family registry as one non-network contract chain, and confirms generated artifacts remain under ignored run paths before any indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or active research candidates are added.
 
+Implementation note: the first no-trade and reserved baseline-family evaluation contract scaffold now exists as `R/wfa_baseline_evaluation_contract.R`. It creates schema/readiness rows, deterministic ignored-run artifact paths, review status fields, and leakage attestations for `no_trade` first and then reserved baseline families, while keeping OOS application/evaluation status explicitly `not_applied` and `not_authorized`; it does not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:
@@ -255,6 +257,8 @@ The prohibited scope for that first implementation slice is:
 - creating dashboards, live advice, execution behavior, order-routing behavior, or deployability claims.
 
 The first implementation slice should stop if the contract cannot represent `no_trade` without an implicit return assumption, if a reserved baseline needs a proxy symbol that is absent from the accepted handoff, if fold coverage is missing or ambiguous, if source warnings have not been accepted, if generated outputs would need to be source-controlled, or if any requested behavior requires returns/performance computation rather than schema and audit preparation.
+
+The current implementation scaffold is intentionally limited to `g5_build_wfa_baseline_evaluation_contract_scaffold()` and related schema/path/readiness validators. It writes no generated files by default, reads no bars or provider data, and plans placeholder artifact paths under ignored `runs/` locations only. It records review-required reasons for unresolved cash/no-position assumptions, broad-market proxy availability, warning context, fixed-basket membership, and curation authorization without resolving those questions through OOS evidence or performance computation.
 
 ## First Candidate Authorization Boundary
 

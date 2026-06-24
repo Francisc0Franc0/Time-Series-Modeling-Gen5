@@ -1298,3 +1298,48 @@ Stop conditions:
 - Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
 - Naming, designing, fitting, scoring, or selecting an active research candidate.
 - Treating reserved baseline definitions or schema placeholders as baseline results.
+
+### 35. Add first no-trade and reserved baseline-family evaluation contract scaffold
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-baseline-evaluation-contract-scaffold`
+
+Branch: `codex/gen5-wfa-baseline-evaluation-contract-scaffold`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added `R/wfa_baseline_evaluation_contract.R` with schema/readiness helpers, deterministic ignored-run artifact path planning, review status fields, and leakage attestations for `no_trade` first and reserved baseline-family contract rows.
+- Added non-network tests in `tests/testthat/test_wfa_baseline_evaluation_contract.R` covering no-trade ordering, ignored output paths, review acceptance, scaffold-only status fields, and rejection of tainted OOS/performance evidence.
+- Updated `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md` to record the implemented scaffold without opening returns/performance evaluation or active candidate work.
+- Did not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+
+Goal: Implement only the first no-trade and reserved baseline-family evaluation contract scaffold without producing baseline results.
+
+Likely files:
+
+- `R/wfa_baseline_evaluation_contract.R`
+- `tests/testthat/test_wfa_baseline_evaluation_contract.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Start contract rows with `no_trade_cash`, followed only by reserved baseline families already represented by the baseline registry.
+- Preserve accepted handoff, explicit fold geometry, TRAIN/OOS split audit, frozen evidence, and baseline registry lineage.
+- Plan deterministic artifact paths under ignored `runs/` locations.
+- Record review statuses for warning context, no-trade assumptions, unavailable proxy checks, fold coverage, and excluded/not-yet-authorized family questions.
+- Record leakage attestations for no provider calls, credentials, unmanifested cache reads, latest-session inference, OOS outcome authority, OOS fitting, active-candidate inputs, or return/metric computation.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, or performance claims.
+- Selecting, removing, weighting, ranking, or tuning symbols by OOS evidence.
+- Naming, designing, fitting, scoring, or selecting an active research candidate.
+- Treating contract rows, deterministic paths, or readiness statuses as baseline results.
