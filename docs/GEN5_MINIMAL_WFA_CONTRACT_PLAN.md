@@ -210,6 +210,25 @@ The first future evaluation slice, if the gate is opened, must begin with no-tra
 
 This gate is documentation-only. It does not add return formulas, benchmark math, performance metrics, ranking rules, candidate scoring, allocation, leverage analysis, dashboard behavior, execution, live advice, or active research authorization.
 
+## First Candidate Authorization Boundary
+
+No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, or returns/performance stop/go gate. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.
+
+The first active candidate may be proposed or implemented only in a later task after the returns/performance evaluation gate has been explicitly opened for no-trade and reserved baseline-family evaluation discipline. That later task must name the candidate and receive explicit operator approval before any candidate-specific implementation begins.
+
+A first-candidate authorization request must define:
+
+- candidate name and candidate family;
+- allowed input artifacts and columns, limited to frozen WFA evidence and accepted handoff-derived artifacts;
+- prohibited input artifacts, including raw provider data, credentials, unmanifested cache files, OOS outcome authority, and independent date authority;
+- TRAIN-only fit, selection, parameter, and eligibility rules, if any;
+- OOS application rules for applying the frozen TRAIN decision without refitting;
+- baseline and no-trade comparison scope;
+- artifact outputs, schema versions, ignored output locations, and leakage attestations;
+- stop conditions for data-health warnings, missing fold coverage, ambiguous fit rules, or any need for out-of-scope modules.
+
+Inside this boundary-definition task, the project still prohibits indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, candidate-specific data sources, or candidate-specific feature engineering. Any future active candidate must preserve `no_trade` as a first-class competitor and consume frozen WFA evidence rather than recomputing authority from Alpaca or raw provider data.
+
 ## No-Leakage Rules
 
 The following rules apply to all future WFA implementation work:
@@ -360,6 +379,6 @@ After this planning record is accepted, the first implementation milestone shoul
 3. Add train/OOS split tests that prove fold rows are disjoint and bounded by `latest_completed_session`.
 4. Add frozen fold-decision evidence scaffolding before any strategy candidate exists.
 5. Add reserved baseline-family scaffolding for cash/no-position, broad-market buy-and-hold, per-asset buy-and-hold, fixed basket, and active-curation concepts before active strategy evaluation.
-6. Add the first active research candidate only after leakage tests, fold-stability summaries, and audit artifacts are stable.
+6. Add the first active research candidate only after leakage tests, fold-stability summaries, audit artifacts, baseline/no-trade evaluation discipline, and explicit operator authorization for a named candidate are stable.
 
 Each slice should remain generated-artifact aware and should keep default validation non-network.

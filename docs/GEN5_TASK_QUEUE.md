@@ -1175,9 +1175,20 @@ Stop conditions:
 
 ### 32. Define first candidate authorization boundary
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-first-candidate-boundary`
+
+Branch: `codex/gen5-wfa-post-foundation-guardrails`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the first active candidate authorization boundary to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Stated that foundation closeout, audit readiness, fold-stability contract, returns/performance gate, and baseline scaffolding do not authorize an active candidate.
+- Required any later first-candidate task to name the candidate, define allowed inputs, candidate family, TRAIN-only rules, OOS application rules, baseline/no-trade comparison scope, artifact outputs, ignored output locations, leakage attestations, and stop conditions before implementation.
+- Kept this task documentation-only and did not name or design a candidate, add indicators, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, candidate-specific data sources, or active research logic.
 
 Goal: Define the authorization boundary that must be crossed before the first active research candidate can be proposed or implemented.
 
