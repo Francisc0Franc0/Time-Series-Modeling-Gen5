@@ -1043,3 +1043,133 @@ Stop conditions:
 - Any unresolved leakage issue.
 - Any generated artifacts appearing as tracked files.
 - Any ambiguous decision about moving from WFA foundation into return/performance evaluation.
+
+## Recommended Next Queue: WFA Post-Foundation Guardrails
+
+These tasks are the next minimal WFA chunks after the first foundation closeout. They are intended to harden audit readiness and operator gates before any active research candidate, return calculation, performance evaluation, indicator, label, regime, PCA, HMM, strategy signal, exit, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration is authorized.
+
+### 29. Define WFA audit artifact schema and readiness checklist
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-audit-artifact-readiness`
+
+Goal: Document the minimum generated WFA audit artifact schemas and readiness checks that must exist before returns or performance evaluation can be added.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+- possibly a new schema note under `docs/`
+
+Required behavior:
+
+- Define the expected schema/readiness contract for run manifests, fold manifests, handoff gate results, fold-local availability, frozen decision evidence, baseline/candidate registries, OOS application/evaluation audit placeholders, leakage attestations, and later aggregate/stability summaries.
+- Require each generated artifact to link back to explicit `as_of_timestamp`, `latest_completed_session`, source workbench handoff, fold geometry, gate/review status, and code revision when available.
+- Require generated artifacts to remain under ignored run paths and source-controlled docs to describe schemas rather than store run evidence.
+- Define readiness checks for required columns, deterministic IDs or paths, schema-version fields, ignored-output locations, and no provider/network/date-authority dependencies.
+- Keep the task documentation-first unless a later implementation task is separately authorized.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Implementing returns, performance metrics, indicators, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or active research candidates.
+- Adding generated audit artifacts to source control.
+- Changing the current handoff, fold, split, frozen-evidence, or baseline helper behavior without a separate implementation task.
+
+### 30. Define fold-stability summary contract
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-fold-stability-contract`
+
+Goal: Define the operator-facing and artifact-level contract for fold-stability summaries before any returns or performance values exist.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+- possibly a new schema note under `docs/`
+
+Required behavior:
+
+- Define fold-stability summary fields as a contract surface, with explicit placeholders for future completed-OOS evidence only.
+- Preserve the project posture that fold consistency matters more than headline aggregate results.
+- Require summaries to identify outlier dependence, bad-fold visibility, missing/partial fold coverage, warning-context propagation, and no-trade/baseline comparison slots once evaluation is later authorized.
+- State that this task does not compute returns, drawdowns, benchmark comparisons, ranks, pass/fail scores, or candidate selections.
+- Require any later implementation to aggregate only already-frozen and already-evaluated OOS records.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, drawdowns, volatility, Sharpe-like metrics, benchmark performance, ranks, labels, regimes, or strategy outcomes.
+- Allowing OOS evidence to change a frozen fold decision.
+- Authorizing an active research candidate.
+
+### 31. Define explicit stop/go gate for returns and performance evaluation
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-returns-evaluation-gate`
+
+Goal: Add an explicit documentation gate that says what must be true before any return calculation, OOS performance evaluation, benchmark comparison, or performance claim can begin.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Define a `STOP` default posture for returns and performance evaluation until the audit artifact schema, fold-stability contract, ignored-artifact discipline, and leakage attestations are reviewed.
+- Define a `GO` checklist that requires accepted handoff gates, explicit fold geometry, split audit, frozen fold evidence, baseline-family registry, audit schema readiness, fold-stability summary contract, and operator approval for the first evaluation slice.
+- Require the first future evaluation slice, when authorized, to start with no-trade and reserved baseline-family evaluation discipline before any active candidate is evaluated.
+- Require performance artifacts to reference frozen fold decisions and prohibit recomputing authority from raw provider data.
+- Keep the gate documentation-only and avoid adding return formulas or metric implementations.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Adding returns, benchmark math, performance metrics, allocation, leverage reports, candidate scoring, strategy evaluation, dashboards, execution, or live advice.
+- Treating this gate as approval to begin active research.
+- Any ambiguous decision about whether evaluation should begin.
+
+### 32. Define first candidate authorization boundary
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-first-candidate-boundary`
+
+Goal: Define the authorization boundary that must be crossed before the first active research candidate can be proposed or implemented.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- State that no active research candidate is authorized by the foundation closeout, audit readiness work, fold-stability contract, or returns/performance stop/go gate.
+- Require explicit operator approval for a named first candidate in a later task, including allowed inputs, candidate family, TRAIN-only fit rules if any, OOS application rules, baseline comparison scope, artifact outputs, and stop conditions.
+- Require the first candidate authorization to come after the returns/performance evaluation gate is explicitly opened for baseline/no-trade evaluation discipline.
+- Prohibit adding indicators, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboards, execution, live-order logic, provider expansion, corporate-actions ingestion, earnings-data integration, or candidate-specific data sources inside this boundary-definition task.
+- Preserve no-trade as a first-class competitor and require any future active candidate to consume frozen WFA evidence rather than raw provider authority.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Naming or designing the first active candidate beyond the authorization checklist.
+- Implementing feature engineering, returns, labels, regimes, strategy signals, exits, allocation, dashboard, execution, live-order logic, or new data ingestion.
+- Treating baseline scaffolding as evidence that an active candidate is ready.
