@@ -210,11 +210,31 @@ The first future evaluation slice, if the gate is opened, must begin with no-tra
 
 This gate is documentation-only. It does not add return formulas, benchmark math, performance metrics, ranking rules, candidate scoring, allocation, leverage analysis, dashboard behavior, execution, live advice, or active research authorization.
 
+## No-Trade And Reserved Baseline Evaluation Authorization Boundary
+
+The first evaluation authorization boundary is for a future no-trade and reserved baseline-family slice only. This boundary is documentation-only. It does not open evaluation by itself and does not compute returns, benchmark math, performance metrics, ranks, allocation, leverage reports, dashboards, execution, live advice, or active candidates.
+
+A later baseline-evaluation implementation task may start only after the returns and performance evaluation gate is explicitly moved to `GO` for this narrow scope. That task must receive explicit operator approval and must state which reserved baseline families are in scope before any code or generated performance artifact is added.
+
+The first baseline-evaluation authorization request must define:
+
+- included baseline families, starting with `no_trade` and then only the reserved baseline families already present in the baseline registry;
+- excluded baseline families, including any leverage variants unless leverage evaluation is separately authorized;
+- allowed input artifacts, limited to accepted workbench handoff artifacts, explicit fold geometry, TRAIN/OOS split audit evidence, frozen fold evidence, baseline-family registry rows, and reviewed audit-schema contracts;
+- prohibited inputs, including Alpaca/provider calls, credentials, unmanifested cache files, independent date authority, active-candidate outputs, and OOS outcome evidence used to change fold decisions;
+- the future evaluation artifact surfaces to be created, including OOS application/evaluation audit records and fold-stability summary inputs, with schema versions and ignored output locations;
+- review gates for missing or partial fold coverage, source health warnings, stale symbols, unavailable broad-market proxies, and any ambiguity about cash/no-position interpretation;
+- leakage attestations proving that baseline application uses the same fold calendar, handoff gate, availability audit, warning context, and frozen evidence discipline as later active candidates.
+
+This boundary keeps `no_trade` visible as a first-class competitor before active research begins. It also prevents the reserved baseline registry from becoming an implicit performance claim: baseline definitions are not baseline results, and a future baseline-evaluation task must not use OOS evidence to select symbols, change fold geometry, repair data, rank alternatives, or update a frozen fold decision.
+
+The future baseline-evaluation slice remains separate from active candidate authorization. It may prepare the comparison discipline that active candidates must eventually face, but it must not name, design, fit, score, or select an active research candidate.
+
 ## First Candidate Authorization Boundary
 
-No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, or returns/performance stop/go gate. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.
+No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.
 
-The first active candidate may be proposed or implemented only in a later task after the returns/performance evaluation gate has been explicitly opened for no-trade and reserved baseline-family evaluation discipline. That later task must name the candidate and receive explicit operator approval before any candidate-specific implementation begins.
+The first active candidate may be proposed or implemented only in a later task after the returns/performance evaluation gate has been explicitly opened for no-trade and reserved baseline-family evaluation discipline, and after the baseline/no-trade comparison boundary has been reviewed. That later task must name the candidate and receive explicit operator approval before any candidate-specific implementation begins.
 
 A first-candidate authorization request must define:
 

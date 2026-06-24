@@ -1214,3 +1214,45 @@ Stop conditions:
 - Naming or designing the first active candidate beyond the authorization checklist.
 - Implementing feature engineering, returns, labels, regimes, strategy signals, exits, allocation, dashboard, execution, live-order logic, or new data ingestion.
 - Treating baseline scaffolding as evidence that an active candidate is ready.
+
+### 33. Define no-trade and reserved baseline-family evaluation authorization boundary
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-baseline-evaluation-authorization`
+
+Branch: `codex/gen5-wfa-baseline-evaluation-authorization`
+
+Validation: `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Notes:
+
+- Added the first documentation-only no-trade and reserved baseline-family evaluation authorization boundary to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Required any future baseline-evaluation implementation task to receive explicit operator approval, start with `no_trade`, stay limited to reserved baseline-family registry concepts, use accepted WFA artifacts only, and define artifact surfaces, ignored output locations, review gates, and leakage attestations before code is added.
+- Clarified that this boundary does not compute returns, benchmark math, performance metrics, ranks, allocation, leverage reports, dashboards, execution, live advice, active candidates, or performance claims.
+- Clarified that the baseline/no-trade boundary remains separate from active candidate authorization.
+
+Goal: Define the authorization boundary for a future no-trade and reserved baseline-family evaluation slice without implementing evaluation or opening active research.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Define that the first future evaluation authorization must begin with `no_trade` and only reserved baseline-family concepts already represented by the baseline registry.
+- Require allowed inputs to come from accepted workbench handoff artifacts, explicit fold geometry, TRAIN/OOS split audit evidence, frozen fold evidence, baseline-family registry rows, and reviewed audit-schema contracts.
+- Require prohibited inputs to include provider calls, credentials, unmanifested cache files, independent date authority, active-candidate outputs, and OOS evidence used to change fold decisions.
+- Require future artifact surfaces, schema versions, ignored output locations, warning/coverage review gates, and leakage attestations to be named before implementation.
+- Preserve the separation between baseline/no-trade evaluation discipline and active candidate authorization.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, benchmark math, performance metrics, ranks, allocation, leverage reports, dashboards, execution, live advice, or performance claims.
+- Naming, designing, fitting, scoring, or selecting an active research candidate.
+- Treating reserved baseline definitions as baseline results.
