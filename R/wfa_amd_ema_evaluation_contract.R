@@ -677,3 +677,149 @@ g5_validate_wfa_amd_ema_evaluation_contract_scaffold <- function(contract_scaffo
   }
   contract_scaffold
 }
+
+g5_wfa_required_amd_ema_contract_readiness_columns <- function() {
+  c(
+    "schema_version",
+    "readiness_review_id",
+    "readiness_status",
+    "contract_id",
+    "source_gate_id",
+    "source_gate_status",
+    "candidate_id",
+    "candidate_symbol",
+    "strategy_family",
+    "source_handoff_reference",
+    "source_gate_manifest_csv",
+    "handoff_gate_status",
+    "handoff_review_required",
+    "handoff_review_accepted",
+    "as_of_timestamp",
+    "latest_completed_session",
+    "fold_count",
+    "comparison_row_count",
+    "no_trade_row_count",
+    "candidate_row_count",
+    "no_trade_comparison_status",
+    "candidate_contract_status",
+    "amd_availability_review_status",
+    "artifact_path_policy_status",
+    "calculation_stop_status",
+    "out_of_scope_status",
+    "leakage_attestation_status",
+    "review_status",
+    "review_required_reason"
+  )
+}
+
+g5_build_wfa_amd_ema_evaluation_contract_readiness_review <- function(contract_scaffold) {
+  contract_scaffold <- g5_validate_wfa_amd_ema_evaluation_contract_scaffold(contract_scaffold)
+  manifest <- contract_scaffold$run_manifest
+  review_surface <- contract_scaffold$review_surface
+
+  review_reasons <- unique(unlist(strsplit(
+    paste(as.character(review_surface$review_required_reason), collapse = ";"),
+    ";",
+    fixed = TRUE
+  )))
+  review_reasons <- sort(unique(review_reasons[nzchar(review_reasons)]))
+  review_required <- any(as.character(review_surface$review_status) ==
+    "review_required_before_any_evaluation")
+
+  amd_rows <- review_surface[
+    as.character(review_surface$subject_id) == "amd_ema_long_cash",
+    ,
+    drop = FALSE
+  ]
+  amd_availability_review_status <- if (
+    all(as.integer(amd_rows$amd_train_row_count) > 0L) &&
+      all(as.integer(amd_rows$amd_oos_row_count) > 0L) &&
+      all(as.character(amd_rows$amd_fold_availability_status) == "train_and_oos_rows_recorded")
+  ) {
+    "amd_train_and_oos_rows_recorded_for_every_fold"
+  } else {
+    "amd_fold_availability_requires_operator_review"
+  }
+
+  data.frame(
+    schema_version = g5_wfa_amd_ema_evaluation_contract_schema_version(),
+    readiness_review_id = paste(
+      "amd_ema_eval_contract_readiness",
+      g5_wfa_sanitize_id_component(manifest$as_of_timestamp[[1L]], "as_of_timestamp"),
+      g5_wfa_sanitize_id_component(manifest$first_fold_id[[1L]], "first_fold_id"),
+      g5_wfa_sanitize_id_component(manifest$last_fold_id[[1L]], "last_fold_id"),
+      sep = "_"
+    ),
+    readiness_status = "ready_for_operator_review_no_results_computed",
+    contract_id = as.character(manifest$contract_id[[1L]]),
+    source_gate_id = as.character(manifest$source_gate_id[[1L]]),
+    source_gate_status = as.character(manifest$source_gate_status[[1L]]),
+    candidate_id = as.character(manifest$candidate_id[[1L]]),
+    candidate_symbol = as.character(manifest$candidate_symbol[[1L]]),
+    strategy_family = as.character(manifest$strategy_family[[1L]]),
+    source_handoff_reference = as.character(manifest$source_handoff_reference[[1L]]),
+    source_gate_manifest_csv = as.character(manifest$source_gate_manifest_csv[[1L]]),
+    handoff_gate_status = as.character(manifest$handoff_gate_status[[1L]]),
+    handoff_review_required = as.logical(manifest$handoff_review_required[[1L]]),
+    handoff_review_accepted = as.logical(manifest$handoff_review_accepted[[1L]]),
+    as_of_timestamp = as.character(manifest$as_of_timestamp[[1L]]),
+    latest_completed_session = as.Date(manifest$latest_completed_session[[1L]]),
+    fold_count = as.integer(manifest$fold_count[[1L]]),
+    comparison_row_count = as.integer(manifest$comparison_row_count[[1L]]),
+    no_trade_row_count = as.integer(manifest$no_trade_row_count[[1L]]),
+    candidate_row_count = as.integer(manifest$candidate_row_count[[1L]]),
+    no_trade_comparison_status = as.character(manifest$no_trade_comparison_status[[1L]]),
+    candidate_contract_status = as.character(manifest$candidate_contract_status[[1L]]),
+    amd_availability_review_status = amd_availability_review_status,
+    artifact_path_policy_status = "all_artifacts_planned_under_ignored_runs_paths",
+    calculation_stop_status = "ema_returns_cash_yield_trade_accounting_metrics_all_not_computed",
+    out_of_scope_status = "allocation_leverage_live_advice_execution_dashboards_broader_families_not_authorized",
+    leakage_attestation_status = "all_contract_leakage_attestations_true",
+    review_status = if (review_required) {
+      "review_required_before_any_evaluation"
+    } else {
+      "schema_ready_no_results_computed"
+    },
+    review_required_reason = paste(review_reasons, collapse = ";"),
+    stringsAsFactors = FALSE
+  )[g5_wfa_required_amd_ema_contract_readiness_columns()]
+}
+
+g5_validate_wfa_amd_ema_evaluation_contract_readiness_review <- function(readiness_review) {
+  g5_wfa_require_columns(
+    readiness_review,
+    g5_wfa_required_amd_ema_contract_readiness_columns(),
+    "AMD EMA evaluation contract readiness review"
+  )
+  if (nrow(readiness_review) != 1L) {
+    g5_stop("AMD EMA evaluation contract readiness review must contain exactly one row.")
+  }
+  expected_values <- c(
+    readiness_status = "ready_for_operator_review_no_results_computed",
+    source_gate_status = "GO_NARROW_RESEARCH_EVALUATION_ONLY",
+    candidate_id = "amd_ema_long_cash",
+    candidate_symbol = "AMD",
+    strategy_family = "ema_long_cash",
+    no_trade_comparison_status = "no_trade_cash_first_class_row_for_every_fold",
+    candidate_contract_status = "amd_ema_long_cash_contract_row_for_every_fold",
+    artifact_path_policy_status = "all_artifacts_planned_under_ignored_runs_paths",
+    calculation_stop_status = "ema_returns_cash_yield_trade_accounting_metrics_all_not_computed",
+    out_of_scope_status = "allocation_leverage_live_advice_execution_dashboards_broader_families_not_authorized",
+    leakage_attestation_status = "all_contract_leakage_attestations_true"
+  )
+  for (col in names(expected_values)) {
+    if (!identical(as.character(readiness_review[[col]][[1L]]), expected_values[[col]])) {
+      g5_stop(paste("AMD EMA evaluation contract readiness review has invalid", col))
+    }
+  }
+  if (as.integer(readiness_review$fold_count[[1L]]) <= 0L) {
+    g5_stop("AMD EMA evaluation contract readiness review must reference at least one fold.")
+  }
+  if (as.integer(readiness_review$no_trade_row_count[[1L]]) !=
+      as.integer(readiness_review$fold_count[[1L]]) ||
+      as.integer(readiness_review$candidate_row_count[[1L]]) !=
+        as.integer(readiness_review$fold_count[[1L]])) {
+    g5_stop("AMD EMA evaluation contract readiness review row counts must match fold_count.")
+  }
+  readiness_review
+}

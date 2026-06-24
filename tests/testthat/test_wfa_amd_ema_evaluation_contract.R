@@ -368,3 +368,86 @@ test_that("AMD EMA evaluation contract rejects non-ignored artifact paths and co
     "compute AMD EMA signals"
   )
 })
+
+test_that("AMD EMA evaluation contract readiness review summarizes STOP states", {
+  fixture <- g5_test_amd_ema_contract_fixture()
+  scaffold <- g5_validate_wfa_amd_ema_evaluation_contract_scaffold(
+    g5_build_wfa_amd_ema_evaluation_contract_scaffold(
+      amd_ema_gate = fixture$amd_gate,
+      fold_geometry = fixture$folds,
+      split_audit = fixture$audit,
+      frozen_fold_evidence = fixture$evidence,
+      baseline_evaluation_contract = fixture$baseline_contract
+    )
+  )
+
+  readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(scaffold)
+  readiness <- g5_validate_wfa_amd_ema_evaluation_contract_readiness_review(readiness)
+
+  expect_identical(names(readiness), g5_wfa_required_amd_ema_contract_readiness_columns())
+  expect_identical(
+    readiness$readiness_status[[1L]],
+    "ready_for_operator_review_no_results_computed"
+  )
+  expect_equal(readiness$fold_count[[1L]], nrow(fixture$folds))
+  expect_equal(readiness$comparison_row_count[[1L]], nrow(scaffold$review_surface))
+  expect_equal(readiness$no_trade_row_count[[1L]], nrow(fixture$folds))
+  expect_equal(readiness$candidate_row_count[[1L]], nrow(fixture$folds))
+  expect_identical(
+    readiness$no_trade_comparison_status[[1L]],
+    "no_trade_cash_first_class_row_for_every_fold"
+  )
+  expect_identical(
+    readiness$candidate_contract_status[[1L]],
+    "amd_ema_long_cash_contract_row_for_every_fold"
+  )
+  expect_identical(
+    readiness$artifact_path_policy_status[[1L]],
+    "all_artifacts_planned_under_ignored_runs_paths"
+  )
+  expect_identical(
+    readiness$calculation_stop_status[[1L]],
+    "ema_returns_cash_yield_trade_accounting_metrics_all_not_computed"
+  )
+  expect_identical(
+    readiness$out_of_scope_status[[1L]],
+    "allocation_leverage_live_advice_execution_dashboards_broader_families_not_authorized"
+  )
+  expect_identical(
+    readiness$leakage_attestation_status[[1L]],
+    "all_contract_leakage_attestations_true"
+  )
+})
+
+test_that("AMD EMA evaluation contract readiness preserves review-required reasons", {
+  fixture <- g5_test_amd_ema_contract_fixture()
+  scaffold <- g5_build_wfa_amd_ema_evaluation_contract_scaffold(
+    amd_ema_gate = fixture$amd_gate,
+    fold_geometry = fixture$folds,
+    split_audit = fixture$audit,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_evaluation_contract = fixture$baseline_contract
+  )
+  readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(scaffold)
+
+  expect_identical(readiness$review_status[[1L]], "review_required_before_any_evaluation")
+  expect_true(grepl(
+    "cash_no_position_return_assumption_not_defined",
+    readiness$review_required_reason,
+    fixed = TRUE
+  ))
+
+  broken <- readiness
+  broken$leakage_attestation_status[[1L]] <- "not_clean"
+  expect_error(
+    g5_validate_wfa_amd_ema_evaluation_contract_readiness_review(broken),
+    "leakage_attestation_status"
+  )
+
+  bad_counts <- readiness
+  bad_counts$no_trade_row_count[[1L]] <- 0L
+  expect_error(
+    g5_validate_wfa_amd_ema_evaluation_contract_readiness_review(bad_counts),
+    "row counts"
+  )
+})
