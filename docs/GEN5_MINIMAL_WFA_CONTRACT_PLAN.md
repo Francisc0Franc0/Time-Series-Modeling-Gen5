@@ -393,6 +393,20 @@ The scaffold may be used later as closeout evidence for deciding whether to open
 
 The closeout validation surface turns the scaffold into a compact pass/fail review table. It checks accepted handoff lineage, explicit fold geometry, TRAIN/OOS split evidence, frozen no-active-decision evidence, baseline readiness, fold-stability placeholder status, ignored run paths, STOP states, and leakage attestations. This closeout table remains a readiness review only; it does not write generated artifacts by default and does not evaluate OOS results.
 
+## Minimal WFA Engine Toward AMD EMA POC Closeout Review
+
+The Minimal WFA Engine Toward AMD EMA POC milestone is ready for operator review of a later gate decision. The repository now has schema-only surfaces for:
+
+- minimal WFA POC run manifest and fold review rows;
+- minimal WFA POC closeout validation;
+- baseline evaluation contract readiness review.
+
+These surfaces preserve accepted handoff lineage, explicit quarterly fold geometry, TRAIN/OOS split evidence, frozen no-active-decision evidence, `no_trade_cash` first-class readiness, reserved baseline family readiness, fold-stability placeholders, ignored `runs/` paths, STOP states, and leakage attestations.
+
+This closeout does not open the AMD EMA strategy evaluation gate. It also does not compute returns, cash yields, benchmark math, trade accounting, performance metrics, EMA signals, active candidate outputs, allocation, leverage, dashboards, live advice, execution, or performance claims.
+
+The project appears ready for the operator to consider the exact AMD EMA long/cash strategy evaluation gate prompt later, provided that prompt explicitly opens the gate and supplies the required scope, accepted evidence, authorized calculation surfaces, prohibited inputs, TRAIN-only rules, OOS application rules, artifact outputs, validation expectations, and leakage attestations. Until that prompt is given, AMD EMA remains a roadmap target only.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.

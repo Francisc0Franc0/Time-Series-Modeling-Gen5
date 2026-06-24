@@ -1672,9 +1672,11 @@ Stop conditions:
 
 ### 43. Perform milestone closeout and AMD gate readiness review
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-amd-ema-gate-readiness-review`
+
+Branch: `codex/gen5-amd-ema-gate-readiness-review`
 
 Goal: Perform a no-code closeout review of the minimal WFA engine POC and evaluation-contract readiness, then report whether the project is ready for the operator to decide on the exact AMD EMA long/cash strategy evaluation gate.
 
@@ -1686,6 +1688,13 @@ Likely files:
 Validation:
 
 - Documentation-only diff check unless code or tests change.
+
+Notes:
+
+- Added a no-code closeout review to `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+- Confirmed the milestone now has schema-only POC manifest/review rows, POC closeout validation, and baseline evaluation contract readiness review.
+- Confirmed the project appears ready for the operator to consider the exact AMD EMA gate prompt later.
+- Did not open the AMD EMA strategy evaluation gate and did not define EMA formulas, parameters, returns, trade accounting, performance metrics, active candidate scoring, dashboards, live advice, allocation, leverage, execution, or performance claims.
 
 Stop conditions:
 
