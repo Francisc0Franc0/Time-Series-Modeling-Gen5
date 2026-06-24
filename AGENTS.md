@@ -76,7 +76,7 @@ Within the Gen5 v0 market-data-layer milestone, Codex may work autonomously acro
 
 Codex may read repository files, modify scoped files, run the preferred local test runner, inspect git diffs, create branches with the `codex/` prefix, stage relevant files, and prepare commits when validation passes.
 
-When the operator authorizes an autonomous queue or milestone to push, Codex may push each completed task branch to `origin` after the task commit succeeds and the worktree is clean. Automatic pushes must remain limited to the relevant task branch or explicitly authorized queue branches, and Codex must still review `git status` so generated artifacts, caches, credentials, or heavyweight files are not staged or pushed.
+After Codex creates a task commit, Codex should push the completed task branch to `origin` once the commit succeeds and the worktree is clean. Automatic pushes must remain limited to Codex task branches and must still review `git status` so generated artifacts, caches, credentials, or heavyweight files are not staged or pushed.
 
 Codex must stop and ask before:
 
@@ -85,7 +85,7 @@ Codex must stop and ask before:
 - Adding WFA, PCA, strategy, exit, allocation, dashboard, or execution logic.
 - Changing live-facing behavior beyond advice-only market-data-layer outputs.
 - Deleting files or generated artifacts.
-- Pushing branches, unless explicitly authorized for the current task, queue, or milestone.
+- Pushing non-Codex branches or branches outside the current task, queue, or milestone.
 - Opening pull requests, unless explicitly authorized for the current task, queue, or milestone.
 
 For larger autonomous runs, Codex should proceed task-by-task, validate each completed slice, summarize the result, and then continue only within the authorized Gen5 v0 market-data-layer scope.
