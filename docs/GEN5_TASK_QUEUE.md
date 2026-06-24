@@ -4,21 +4,23 @@
 
 Gen5 has completed the v0 market-data-layer closeout and the v0.1 Research Data Workbench queue through the corporate-actions metadata spike. The repository currently has an R-first, Alpaca-only, adjusted daily OHLCV data layer with explicit `as_of_timestamp` handling, deterministic cache planning and merge behavior, validation output, freeze evidence, and workbench handoff artifacts under ignored local run paths.
 
-The completed v0.1 milestone still sits before WFA, PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench only makes adjusted daily data easier to query, inspect, chart, and hand off to later research.
+The completed v0.1 milestone still sits before PCA/state modeling, strategy research, exits, allocation, dashboard, execution, and live-order work. Those later modules remain out of scope. The workbench only makes adjusted daily data easier to query, inspect, chart, and hand off to later research.
 
-A post-v0.1 minimal WFA contract plan now exists as documentation only. It defines the first WFA build boundary without implementing folds, indicators, returns, labels, regimes, strategy signals, exits, allocation, dashboard, execution, or live-order logic.
+Post-v0.1 Minimal WFA Foundation and guardrail slices now exist through handoff gating, quarterly fold geometry, TRAIN/OOS split audit, frozen no-active-decision evidence, reserved baseline-family scaffolding, baseline-evaluation contract scaffolding, and a first minimal WFA POC boundary. These remain WFA contract/scaffold surfaces, not strategy research or evaluation results.
+
+The next roadmap layer is Minimal WFA Engine Toward AMD EMA POC. It names AMD EMA long/cash as the first intended human-facing strategy vertical slice after the minimal WFA engine and evaluation contracts are ready, while keeping returns, trade accounting, performance metrics, EMA signals, active candidates, dashboards, live advice, allocation, leverage, and execution stopped until a later explicit gate is opened.
 
 The visible behavior now available is practical: an operator can choose a small universe and date range, refresh or read the existing `data_cache/`, inspect severity-labeled data health, render a static candlestick PNG, and produce a canonical research input manifest that future WFA code can consume without calling Alpaca.
 
 ## Queue Rules
 
-Codex may work this queue only within the Gen5 data-layer and research-plumbing scope defined in `AGENTS.md` and `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`.
+Codex may work this queue within the Gen5 data-layer and research-plumbing scope defined in `AGENTS.md` and `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. For the Minimal WFA Engine Toward AMD EMA POC milestone below, Codex may also work autonomously within that section's allowed files, stop conditions, and validation expectations.
 
 For each task, Codex should:
 
 - read the relevant files before editing;
 - keep changes scoped to the task;
-- avoid WFA, PCA, strategy, exit, allocation, dashboard, execution, and live-order logic;
+- avoid unauthorized WFA expansion and avoid PCA, strategy, exit, allocation, dashboard, execution, and live-order logic;
 - preserve explicit `as_of_timestamp` and bounded-request invariants;
 - run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` when code, validation behavior, operator commands, or data-layer documentation meaningfully changes;
 - commit completed work with a clear message;
@@ -31,7 +33,7 @@ Codex must stop and ask before:
 - changing provider scope beyond Alpaca adjusted daily OHLCV;
 - making destructive file operations;
 - changing live-facing behavior beyond advice-only market-data-layer outputs;
-- starting WFA, PCA, strategy, exit, allocation, dashboard, execution, or order-routing work;
+- starting WFA outside the explicitly queued contract/scaffold tasks, or starting PCA, strategy, exit, allocation, dashboard, execution, or order-routing work;
 - resolving ambiguous project decisions by assumption.
 
 ## Status Legend
@@ -1469,3 +1471,198 @@ Stop conditions:
 - Opening the returns/performance gate without explicit operator authorization.
 - Naming, designing, fitting, scoring, selecting, or authorizing an active research candidate.
 - Treating the POC plan, artifact surfaces, review statuses, or reserved baseline definitions as baseline results.
+
+## Larger Autonomous Milestone: Minimal WFA Engine Toward AMD EMA POC
+
+Milestone intent: move from WFA guardrail scaffolding toward a minimal WFA engine POC that can later support a first human-facing strategy vertical slice. The named first strategy destination is AMD EMA long/cash, but only after the minimal WFA engine and evaluation contracts are ready and an explicit later gate is opened.
+
+This milestone preserves the original `docs/GEN5_SYSTEM_DESIGN.md` build order. AMD EMA long/cash belongs inside the later strategy vertical slice; it does not move strategy work ahead of WFA engine and evaluation-contract readiness.
+
+Reduced-confirmation autonomy:
+
+- Codex may proceed task-by-task through the pending autonomous tasks in this milestone when each completed slice validates cleanly and remains within the allowed files below.
+- Codex should summarize each completed slice and continue only to the next queued task in this milestone.
+- Codex must stop immediately at any stop condition below or before the exact AMD EMA gate.
+
+Allowed source files for autonomous work:
+
+- `docs/GEN5_TASK_QUEUE.md`
+- `docs/GEN5_SYSTEM_DESIGN.md`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `R/wfa_handoff_gate.R`
+- `R/wfa_fold_geometry.R`
+- `R/wfa_train_oos_split_audit.R`
+- `R/wfa_frozen_fold_evidence.R`
+- `R/wfa_baseline_registry.R`
+- `R/wfa_baseline_evaluation_contract.R`
+- new `R/wfa_minimal_poc_*.R` scaffold helpers that write schema/review surfaces only
+- `tests/testthat/test_wfa_*.R`
+- small synthetic fixtures under `tests/fixtures/wfa/` when needed for non-network tests
+
+Allowed generated outputs:
+
+- ignored local run artifacts under `runs/` for manual smoke checks only;
+- no generated run artifact may be added to source control.
+
+Milestone-wide stop conditions:
+
+- implementing returns, cash yields, benchmark math, trade accounting, position accounting, order simulation, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, dashboards, execution, live advice, active candidates, active candidate scoring, EMA signals, EMA parameter selection, or performance claims;
+- using provider calls, credentials, `.Renviron`, unmanifested cache files, independent date authority, `Sys.Date()`, market-clock APIs, or live network checks;
+- adding package dependencies;
+- changing provider scope beyond Alpaca adjusted daily OHLCV;
+- changing the `GEN5_SYSTEM_DESIGN.md` build order;
+- committing generated run artifacts, cache files, credentials, or heavyweight data;
+- resolving an ambiguous operator decision by assumption;
+- treating AMD EMA long/cash as authorized implementation rather than a named later vertical slice.
+
+Validation expectations:
+
+- Documentation-only tasks require a focused diff review and no tracked generated artifacts.
+- Any R helper, test, fixture, validation behavior, or operator command change must run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+- Validation must remain non-network by default and must test schema fields, deterministic identifiers or ignored paths, source lineage, review statuses, leakage attestations, and STOP states.
+- Validation must not require credentials, provider calls, return formulas, performance calculations, benchmark comparisons, allocation logic, dashboards, execution behavior, live advice, active candidate definitions, or performance claims.
+
+Exact AMD EMA strategy evaluation gate:
+
+AMD EMA long/cash strategy evaluation implementation may begin only after a later operator prompt explicitly says:
+
+```text
+Open the AMD EMA long/cash strategy evaluation gate.
+```
+
+That same gate-opening prompt must name the branch, identify the accepted minimal WFA POC closeout evidence or fixture scope, confirm no-trade/reserved-baseline evaluation contract readiness has been reviewed and accepted, define which returns/trade-accounting/performance/EMA/active-candidate surfaces are authorized, list allowed input artifacts and columns, define prohibited inputs, TRAIN-only fit or parameter rules, OOS application rules, baseline/no-trade comparison scope, artifact outputs, ignored output locations, validation expectations, leakage attestations, and state that dashboards, live advice, allocation, leverage, execution, and broader strategy families remain unauthorized unless separately named.
+
+Without that exact gate-opening prompt, AMD EMA remains a roadmap target only and all strategy evaluation work remains `STOP`.
+
+### 39. Define Minimal WFA Engine Toward AMD EMA POC roadmap
+
+Status: done
+
+Recommended branch: `codex/gen5-wfa-engine-to-amd-ema-poc-roadmap`
+
+Branch: `codex/gen5-wfa-engine-to-amd-ema-poc-roadmap`
+
+Validation: Documentation-only diff check.
+
+Notes:
+
+- Named AMD EMA long/cash as the first intended human-facing strategy vertical slice after minimal WFA engine and evaluation contracts are ready.
+- Preserved the original `GEN5_SYSTEM_DESIGN.md` build order.
+- Defined the larger autonomous milestone, allowed files, stop conditions, validation expectations, and exact AMD EMA strategy evaluation gate.
+- Did not implement or authorize returns, trade accounting, performance metrics, EMA signals, active candidates, dashboards, live advice, allocation, leverage, execution, or performance claims.
+
+Goal: Give Codex a bounded roadmap for multiple sequential WFA engine/contract subtasks while keeping AMD EMA strategy work gated.
+
+Likely files:
+
+- `docs/GEN5_SYSTEM_DESIGN.md`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Stop conditions:
+
+- Any code implementation.
+- Any change to build order.
+- Any attempt to open the AMD EMA gate inside this roadmap task.
+
+### 40. Add minimal WFA POC run-manifest and review-surface scaffold
+
+Status: pending
+
+Recommended branch: `codex/gen5-minimal-wfa-poc-scaffold`
+
+Goal: Add a minimal POC scaffold that records lineage, source handoff acceptance, fold geometry reference, split audit reference, frozen evidence reference, baseline readiness, fold-stability placeholder status, ignored output paths, and leakage attestation without evaluating OOS results.
+
+Likely files:
+
+- new `R/wfa_minimal_poc_*.R`
+- `tests/testthat/test_wfa_minimal_poc*.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Required behavior:
+
+- Consume only accepted WFA scaffold inputs or synthetic non-network fixtures.
+- Emit schema/review rows only, with explicit `not_evaluated` and `not_authorized` statuses where applicable.
+- Preserve `no_trade` and reserved baseline readiness without computing results.
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, trade accounting, performance metrics, EMA signals, active candidates, dashboards, live advice, allocation, leverage, execution, or performance claims.
+
+### 41. Add minimal WFA POC closeout validation
+
+Status: pending
+
+Recommended branch: `codex/gen5-minimal-wfa-poc-closeout-validation`
+
+Goal: Add a non-network closeout test or validation surface proving the POC scaffold preserves accepted handoff lineage, explicit quarterly geometry, TRAIN/OOS split evidence, frozen no-active-decision evidence, baseline readiness, fold-stability placeholders, ignored run paths, and STOP states.
+
+Likely files:
+
+- `tests/testthat/test_wfa_minimal_poc*.R`
+- `tests/fixtures/wfa/`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Adding live network requirements, credentials, provider calls, return formulas, performance values, strategy signals, active candidate outputs, or generated tracked artifacts.
+
+### 42. Harden evaluation-contract readiness without calculations
+
+Status: pending
+
+Recommended branch: `codex/gen5-wfa-evaluation-contract-readiness`
+
+Goal: Review and, if needed, tighten the no-trade/reserved-baseline evaluation contract readiness surfaces so the later AMD EMA gate can reference an accepted evaluation contract without implying performance computation.
+
+Likely files:
+
+- `R/wfa_baseline_evaluation_contract.R`
+- `tests/testthat/test_wfa_baseline_evaluation_contract.R`
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Stop conditions:
+
+- Computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, trade accounting, EMA signals, active candidate evaluation, dashboards, live advice, leverage, execution, or performance claims.
+
+### 43. Perform milestone closeout and AMD gate readiness review
+
+Status: pending
+
+Recommended branch: `codex/gen5-amd-ema-gate-readiness-review`
+
+Goal: Perform a no-code closeout review of the minimal WFA engine POC and evaluation-contract readiness, then report whether the project is ready for the operator to decide on the exact AMD EMA long/cash strategy evaluation gate.
+
+Likely files:
+
+- `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`
+- `docs/GEN5_TASK_QUEUE.md`
+
+Validation:
+
+- Documentation-only diff check unless code or tests change.
+
+Stop conditions:
+
+- Opening the AMD EMA strategy evaluation gate.
+- Defining EMA formulas, parameters, returns, trade accounting, performance metrics, active candidate scoring, dashboards, live advice, allocation, leverage, execution, or performance claims.

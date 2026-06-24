@@ -347,6 +347,40 @@ High-level questions to settle before opening any later gate:
 - What minimum fold coverage is enough for a contract rehearsal without drifting into performance interpretation? The useful answer is coverage sufficient to exercise lineage, missing/partial flags, and STOP states, not coverage sufficient to persuade anyone of an outcome.
 - Should the next authorization stop at writing schema/review artifacts, or should it open the narrow no-trade/reserved-baseline evaluation gate? The current recommendation is to keep those as separate prompts so the project can inspect the POC surfaces before any evaluation begins.
 
+## Minimal WFA Engine Toward AMD EMA POC Roadmap
+
+The next larger autonomous milestone is Minimal WFA Engine Toward AMD EMA POC. It sits after the Research Data Workbench and current WFA guardrails, and before strategy research. Its purpose is to make the minimal WFA engine, review surfaces, and evaluation contracts ready enough that a later operator can deliberately open a first human-facing strategy slice.
+
+The first intended human-facing strategy vertical slice after those prerequisites is AMD EMA long/cash: a single-symbol AMD long-or-cash EMA-family candidate evaluated inside WFA against explicit cash/no-position and reserved baseline discipline. This names the destination only. It does not authorize EMA signal code, return calculation, trade accounting, performance metrics, active candidate implementation, dashboards, live advice, allocation, leverage analysis, execution, or performance claims.
+
+Autonomous work inside this milestone may cover only:
+
+- documentation and queue updates that preserve the existing system-design build order;
+- WFA handoff, fold geometry, TRAIN/OOS split, frozen evidence, baseline readiness, fold-stability placeholder, and leakage-attestation schema/review surfaces;
+- minimal POC run-manifest and closeout scaffolding that records lineage, STOP states, warning context, deterministic ignored-run paths, and validation status;
+- non-network tests for schema fields, deterministic identifiers or paths, ignored-output locations, source lineage, review statuses, leakage attestations, and STOP states.
+
+Autonomous work inside this milestone must stop before:
+
+- computing returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, leverage reports, or performance claims;
+- adding trade accounting, position accounting, order simulation, exits, dashboards, live advice, execution, or live-order behavior;
+- implementing EMA signals, active candidates, active candidate features, active candidate scoring, parameter selection, or OOS-informed candidate decisions;
+- adding dependencies, provider calls, credentials, unmanifested cache reads, independent date authority, market-clock APIs, or source-controlled generated run artifacts;
+- changing the build order in `docs/GEN5_SYSTEM_DESIGN.md` or treating AMD EMA as authorized strategy work.
+
+The exact AMD EMA strategy evaluation gate is closed by default. AMD EMA evaluation implementation may begin only after a later operator prompt explicitly says: `Open the AMD EMA long/cash strategy evaluation gate`.
+
+That gate-opening prompt must also:
+
+- name the branch for the AMD EMA evaluation task;
+- identify the accepted minimal WFA POC closeout evidence or fixture scope;
+- confirm the relevant no-trade/reserved-baseline evaluation contract readiness has been reviewed and accepted;
+- define the exact evaluation scope, including which returns, trade-accounting, performance-metric, EMA-signal, and active-candidate surfaces are authorized for that task;
+- list allowed input artifacts and columns, prohibited inputs, TRAIN-only fit or parameter rules, OOS application rules, baseline/no-trade comparison scope, artifact outputs, ignored output locations, validation expectations, and leakage attestations;
+- state that dashboards, live advice, allocation, leverage, execution, and any broader strategy family remain unauthorized unless separately named.
+
+Without that exact gate-opening prompt, AMD EMA remains a named roadmap target only and all strategy evaluation work remains `STOP`.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.

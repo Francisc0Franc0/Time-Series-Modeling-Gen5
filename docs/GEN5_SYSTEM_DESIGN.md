@@ -18,7 +18,9 @@ These are architectural decisions and later build-order constraints, not a claim
 - Trading posture: long-only.
 - Live posture: advice-only.
 - Signal timing: after-close analysis for next-open manual market orders.
-- Initial strategy vertical slice: `ema_cross` plus `no_trade`.
+- Initial strategy family target: `ema_cross` plus `no_trade`.
+- First intended human-facing strategy vertical slice, after the minimal WFA engine and evaluation contracts are ready: AMD EMA long/cash.
+- AMD EMA long/cash is a roadmap target only until explicitly gated; it does not authorize EMA signals, return calculation, trade accounting, performance metrics, active candidates, dashboards, live advice, allocation, leverage analysis, or execution.
 - Initial state benchmark: asset-specific PCA, added after data layer and minimal WFA are stable.
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.
 - Leverage reports: always compare 1.0x baseline with 1.8x leveraged variant.
@@ -94,3 +96,5 @@ The v0.1 Research Data Workbench adds a handoff manifest and gate checklist for 
 - Allocation inside WFA.
 - Frozen decision pack.
 - Advice-only dashboard/live runner.
+
+Build-order note: AMD EMA long/cash belongs inside the later strategy vertical slice and only after the minimal WFA engine plus evaluation contracts are ready. Naming it here does not move strategy work ahead of WFA/evaluation readiness.
