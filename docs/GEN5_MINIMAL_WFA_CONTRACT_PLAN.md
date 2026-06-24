@@ -389,6 +389,8 @@ The scaffold does not evaluate OOS results. It records `not_evaluated`, `not_aut
 
 The scaffold may be used later as closeout evidence for deciding whether to open a narrower evaluation gate. It is not strategy evidence, not performance evidence, and not authorization for AMD EMA or any other active candidate.
 
+The closeout validation surface turns the scaffold into a compact pass/fail review table. It checks accepted handoff lineage, explicit fold geometry, TRAIN/OOS split evidence, frozen no-active-decision evidence, baseline readiness, fold-stability placeholder status, ignored run paths, STOP states, and leakage attestations. This closeout table remains a readiness review only; it does not write generated artifacts by default and does not evaluate OOS results.
+
 ## First Candidate Authorization Boundary
 
 No active research candidate is authorized by the foundation closeout, audit artifact readiness work, fold-stability summary contract, returns/performance stop/go gate, or no-trade/reserved-baseline evaluation boundary. Baseline scaffolding is not evidence that an active candidate is ready. It only preserves comparison discipline for the future.

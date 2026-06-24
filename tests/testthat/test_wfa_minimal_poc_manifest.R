@@ -335,3 +335,83 @@ test_that("minimal WFA POC scaffold rejects evaluation-enabled upstream inputs",
     "return, performance, or allocation-enabled"
   )
 })
+
+test_that("minimal WFA POC closeout validation proves lineage, STOP states, and leakage", {
+  gate_result <- g5_test_minimal_poc_gate_result()
+  fixture <- g5_test_minimal_poc_fixture(gate_result)
+  scaffold <- g5_validate_wfa_minimal_poc_scaffold(g5_build_wfa_minimal_poc_scaffold(
+    gate_result = gate_result,
+    fold_geometry = fixture$folds,
+    split_audit = fixture$audit,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_registry = fixture$registry,
+    baseline_evaluation_contract = fixture$contract
+  ))
+
+  closeout <- g5_build_wfa_minimal_poc_closeout_validation(scaffold)
+
+  expect_identical(names(closeout), g5_wfa_required_minimal_poc_closeout_columns())
+  expect_equal(nrow(closeout), 9L)
+  expect_true(all(closeout$schema_version == g5_wfa_minimal_poc_schema_version()))
+  expect_true(all(closeout$poc_run_id == scaffold$run_manifest$poc_run_id[[1L]]))
+  expect_true(all(closeout$check_status == "PASS"))
+  expect_true(all(closeout$review_status == "closeout_ready_no_evaluation_authorized"))
+  expect_setequal(
+    closeout$check_id,
+    c(
+      "accepted_handoff_lineage",
+      "explicit_quarterly_fold_geometry",
+      "train_oos_split_evidence",
+      "frozen_no_active_decision_evidence",
+      "baseline_readiness",
+      "fold_stability_placeholder",
+      "ignored_run_paths",
+      "stop_states_preserved",
+      "leakage_attestations"
+    )
+  )
+  expect_true(any(grepl(
+    "not_authorized_no_oos_evaluation",
+    closeout$evidence_value,
+    fixed = TRUE
+  )))
+  expect_true(any(grepl(
+    "leakage_no_provider_calls",
+    closeout$evidence_value,
+    fixed = TRUE
+  )))
+})
+
+test_that("minimal WFA POC closeout validation rejects broken lineage and STOP states", {
+  gate_result <- g5_test_minimal_poc_gate_result()
+  fixture <- g5_test_minimal_poc_fixture(gate_result)
+  scaffold <- g5_validate_wfa_minimal_poc_scaffold(g5_build_wfa_minimal_poc_scaffold(
+    gate_result = gate_result,
+    fold_geometry = fixture$folds,
+    split_audit = fixture$audit,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_registry = fixture$registry,
+    baseline_evaluation_contract = fixture$contract
+  ))
+
+  broken_lineage <- scaffold
+  broken_lineage$review_surface$source_gate_manifest_csv[[1L]] <- "runs/other/handoff.csv"
+  expect_error(
+    g5_build_wfa_minimal_poc_closeout_validation(broken_lineage),
+    "source gate manifest lineage"
+  )
+
+  broken_stop <- scaffold
+  broken_stop$review_surface$oos_result_status[[1L]] <- "evaluated"
+  expect_error(
+    g5_build_wfa_minimal_poc_closeout_validation(broken_stop),
+    "evaluated OOS results|OOS evaluation|STOP status"
+  )
+
+  broken_leakage <- scaffold
+  broken_leakage$review_surface$leakage_no_provider_calls[[1L]] <- FALSE
+  expect_error(
+    g5_build_wfa_minimal_poc_closeout_validation(broken_leakage),
+    "leakage attestation"
+  )
+})

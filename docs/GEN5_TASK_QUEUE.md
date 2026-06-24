@@ -1609,9 +1609,11 @@ Stop conditions:
 
 ### 41. Add minimal WFA POC closeout validation
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-minimal-wfa-poc-closeout-validation`
+
+Branch: `codex/gen5-minimal-wfa-poc-closeout-validation`
 
 Goal: Add a non-network closeout test or validation surface proving the POC scaffold preserves accepted handoff lineage, explicit quarterly geometry, TRAIN/OOS split evidence, frozen no-active-decision evidence, baseline readiness, fold-stability placeholders, ignored run paths, and STOP states.
 
@@ -1625,6 +1627,12 @@ Likely files:
 Validation:
 
 - Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Notes:
+
+- Added `g5_build_wfa_minimal_poc_closeout_validation()` to produce a compact readiness review table from the POC scaffold.
+- Expanded non-network tests to prove accepted lineage, quarterly geometry, split/frozen evidence, baseline readiness, fold-stability placeholders, ignored paths, STOP states, and leakage attestations.
+- Did not add provider calls, credentials, return formulas, performance values, strategy signals, active candidate outputs, or generated tracked artifacts.
 
 Stop conditions:
 

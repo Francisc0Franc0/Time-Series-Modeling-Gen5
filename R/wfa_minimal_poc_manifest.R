@@ -474,3 +474,168 @@ g5_validate_wfa_minimal_poc_scaffold <- function(scaffold) {
 
   scaffold
 }
+
+g5_wfa_required_minimal_poc_closeout_columns <- function() {
+  c(
+    "schema_version",
+    "poc_run_id",
+    "check_id",
+    "check_status",
+    "review_status",
+    "evidence_value",
+    "detail"
+  )
+}
+
+g5_wfa_minimal_poc_closeout_row <- function(
+  poc_run_id,
+  check_id,
+  evidence_value,
+  detail
+) {
+  data.frame(
+    schema_version = g5_wfa_minimal_poc_schema_version(),
+    poc_run_id = as.character(poc_run_id),
+    check_id = as.character(check_id),
+    check_status = "PASS",
+    review_status = "closeout_ready_no_evaluation_authorized",
+    evidence_value = as.character(evidence_value),
+    detail = as.character(detail),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_build_wfa_minimal_poc_closeout_validation <- function(scaffold) {
+  scaffold <- g5_validate_wfa_minimal_poc_scaffold(scaffold)
+  manifest <- scaffold$run_manifest
+  review <- scaffold$review_surface
+  poc_run_id <- as.character(manifest$poc_run_id[[1L]])
+
+  if (!as.character(manifest$handoff_gate_status[[1L]]) %in% c("PASS", "REVIEW_REQUIRED")) {
+    g5_stop("minimal WFA POC closeout requires an accepted handoff gate status.")
+  }
+  if (isTRUE(as.logical(manifest$handoff_review_required[[1L]])) &&
+      !isTRUE(as.logical(manifest$handoff_review_accepted[[1L]]))) {
+    g5_stop("minimal WFA POC closeout requires accepted REVIEW_REQUIRED handoff context.")
+  }
+  if (any(as.character(review$source_gate_manifest_csv) != as.character(manifest$source_gate_manifest_csv[[1L]]))) {
+    g5_stop("minimal WFA POC closeout requires review rows to preserve source gate manifest lineage.")
+  }
+  if (any(as.character(review$fold_stability_placeholder_status) !=
+          "not_evaluated_fold_stability_not_authorized")) {
+    g5_stop("minimal WFA POC closeout requires unevaluated fold-stability placeholders.")
+  }
+  if (any(!grepl("no_trade_cash", as.character(review$baseline_family_ids), fixed = TRUE))) {
+    g5_stop("minimal WFA POC closeout requires no_trade_cash readiness in every review row.")
+  }
+  if (any(!grepl("broad_market_buy_hold", as.character(review$baseline_family_ids), fixed = TRUE))) {
+    g5_stop("minimal WFA POC closeout requires reserved baseline family readiness in every review row.")
+  }
+  if (any(as.integer(review$source_warning_count) < 0L)) {
+    g5_stop("minimal WFA POC closeout source warning counts must be non-negative.")
+  }
+
+  stop_status_cols <- c(
+    "evaluation_authorization_status",
+    "oos_result_status",
+    "return_computation_status",
+    "cash_yield_status",
+    "benchmark_math_status",
+    "performance_metric_status",
+    "allocation_status",
+    "active_candidate_status"
+  )
+  stop_values <- c(
+    evaluation_authorization_status = "not_authorized_no_oos_evaluation",
+    oos_result_status = "not_evaluated_oos_results_not_read",
+    return_computation_status = "not_implemented_no_return_columns_read_or_created",
+    cash_yield_status = "not_implemented_no_cash_yield_assumption",
+    benchmark_math_status = "not_implemented_no_benchmark_math",
+    performance_metric_status = "not_implemented_no_performance_metrics",
+    allocation_status = "not_implemented_no_allocation_or_weighting",
+    active_candidate_status = "not_authorized_no_active_candidate_inputs"
+  )
+  for (col in stop_status_cols) {
+    if (any(as.character(manifest[[col]]) != stop_values[[col]]) ||
+        any(as.character(review[[col]]) != stop_values[[col]])) {
+      g5_stop(paste("minimal WFA POC closeout STOP status failed:", col))
+    }
+  }
+
+  leakage_cols <- c(
+    "leakage_no_provider_calls",
+    "leakage_no_credentials",
+    "leakage_no_unmanifested_cache",
+    "leakage_no_latest_session_inference",
+    "leakage_no_oos_outcome_authority",
+    "leakage_no_oos_fitting",
+    "leakage_no_active_candidate_inputs",
+    "leakage_no_return_or_metric_computation"
+  )
+  for (col in leakage_cols) {
+    if (any(!as.logical(manifest[[col]])) || any(!as.logical(review[[col]]))) {
+      g5_stop(paste("minimal WFA POC closeout leakage attestation failed:", col))
+    }
+  }
+
+  rows <- list(
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "accepted_handoff_lineage",
+      manifest$source_gate_manifest_csv[[1L]],
+      "source handoff manifest lineage preserved in run manifest and review rows"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "explicit_quarterly_fold_geometry",
+      paste(manifest$first_fold_id[[1L]], manifest$last_fold_id[[1L]], sep = ".."),
+      "explicit fold ids and OOS window bounds recorded without geometry search"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "train_oos_split_evidence",
+      manifest$train_oos_split_status[[1L]],
+      "TRAIN/OOS split audit status confirms no outcome-column membership"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "frozen_no_active_decision_evidence",
+      manifest$frozen_evidence_status[[1L]],
+      "frozen fold evidence is present before any active decision"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "baseline_readiness",
+      paste(unique(review$baseline_family_ids), collapse = "|"),
+      "no_trade_cash remains first and reserved baseline families remain declarative"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "fold_stability_placeholder",
+      manifest$fold_stability_placeholder_status[[1L]],
+      "fold stability remains an unevaluated placeholder"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "ignored_run_paths",
+      manifest$ignored_output_dir[[1L]],
+      "planned run manifest, review surface, and fold review paths are under ignored runs/"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "stop_states_preserved",
+      paste(stop_values, collapse = ";"),
+      "evaluation, return, benchmark, metric, allocation, and active candidate statuses remain stopped"
+    ),
+    g5_wfa_minimal_poc_closeout_row(
+      poc_run_id,
+      "leakage_attestations",
+      paste(leakage_cols, collapse = ";"),
+      "provider, credential, cache, latest-session, OOS authority, fitting, active-input, and return/metric leakage attestations are TRUE"
+    )
+  )
+
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out[g5_wfa_required_minimal_poc_closeout_columns()]
+}
