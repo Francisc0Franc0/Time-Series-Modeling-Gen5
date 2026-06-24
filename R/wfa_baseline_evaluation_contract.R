@@ -346,12 +346,41 @@ g5_validate_wfa_baseline_evaluation_contract_scaffold <- function(contract_scaff
   if (any(duplicated(as.character(contract_scaffold$contract_id)))) {
     g5_stop("baseline evaluation contract scaffold contract_id values must be unique.")
   }
+  family_fold_key <- paste(
+    as.character(contract_scaffold$baseline_family_id),
+    as.character(contract_scaffold$fold_id),
+    sep = "|"
+  )
+  if (any(duplicated(family_fold_key))) {
+    g5_stop("baseline evaluation contract scaffold must contain at most one row per baseline family and fold.")
+  }
   if (!identical(as.character(contract_scaffold$baseline_family_id[[1L]]), "no_trade_cash")) {
     g5_stop("baseline evaluation contract scaffold must keep no_trade_cash first.")
+  }
+  fold_ids <- unique(as.character(contract_scaffold$fold_id))
+  no_trade_folds <- unique(as.character(
+    contract_scaffold$fold_id[
+      as.character(contract_scaffold$baseline_family_id) == "no_trade_cash"
+    ]
+  ))
+  if (!setequal(fold_ids, no_trade_folds)) {
+    g5_stop("baseline evaluation contract scaffold requires a no_trade_cash row for every fold.")
+  }
+  if (length(unique(as.character(contract_scaffold$source_handoff_reference))) != 1L ||
+      !nzchar(as.character(contract_scaffold$source_handoff_reference[[1L]]))) {
+    g5_stop("baseline evaluation contract scaffold must preserve one source_handoff_reference.")
+  }
+  if (length(unique(as.character(contract_scaffold$source_gate_manifest_csv))) != 1L ||
+      !nzchar(as.character(contract_scaffold$source_gate_manifest_csv[[1L]]))) {
+    g5_stop("baseline evaluation contract scaffold must preserve one source_gate_manifest_csv.")
   }
   if (any(as.character(contract_scaffold$schema_version) !=
           g5_wfa_baseline_evaluation_contract_schema_version())) {
     g5_stop("baseline evaluation contract scaffold has an unexpected schema_version.")
+  }
+  if (any(as.character(contract_scaffold$application_status) !=
+          "not_applied_contract_scaffold_only")) {
+    g5_stop("baseline evaluation contract scaffold must not contain applied baseline rows.")
   }
   if (any(as.character(contract_scaffold$return_computation_status) !=
           "not_implemented_no_return_columns_read_or_created") ||
@@ -410,4 +439,122 @@ g5_validate_wfa_baseline_evaluation_contract_scaffold <- function(contract_scaff
     g5_stop("baseline evaluation contract scaffold artifact_path values must be under ignored runs/ paths.")
   }
   contract_scaffold
+}
+
+g5_wfa_required_baseline_evaluation_readiness_columns <- function() {
+  c(
+    "schema_version",
+    "readiness_review_id",
+    "readiness_status",
+    "contract_row_count",
+    "fold_count",
+    "baseline_family_count",
+    "included_baseline_family_ids",
+    "excluded_reserved_baseline_family_ids",
+    "source_handoff_reference",
+    "source_gate_manifest_csv",
+    "handoff_gate_status",
+    "handoff_review_required",
+    "handoff_review_accepted",
+    "as_of_timestamp",
+    "latest_completed_session",
+    "no_trade_readiness_status",
+    "reserved_baseline_readiness_status",
+    "artifact_path_policy_status",
+    "calculation_stop_status",
+    "leakage_attestation_status",
+    "operator_gate_reference_status",
+    "review_status",
+    "review_required_reason"
+  )
+}
+
+g5_build_wfa_baseline_evaluation_contract_readiness_review <- function(contract_scaffold) {
+  contract_scaffold <- g5_validate_wfa_baseline_evaluation_contract_scaffold(contract_scaffold)
+  fold_ids <- unique(as.character(contract_scaffold$fold_id))
+  family_ids <- unique(as.character(contract_scaffold$baseline_family_id))
+  excluded <- unique(as.character(contract_scaffold$excluded_reserved_baseline_family_ids))
+  excluded <- excluded[nzchar(excluded)]
+  review_reasons <- unique(unlist(strsplit(
+    paste(as.character(contract_scaffold$review_required_reason), collapse = ";"),
+    ";",
+    fixed = TRUE
+  )))
+  review_reasons <- sort(unique(review_reasons[nzchar(review_reasons)]))
+  review_required <- any(as.character(contract_scaffold$review_status) ==
+    "review_required_before_any_evaluation")
+
+  data.frame(
+    schema_version = g5_wfa_baseline_evaluation_contract_schema_version(),
+    readiness_review_id = paste(
+      "baseline_eval_readiness",
+      g5_wfa_sanitize_id_component(contract_scaffold$as_of_timestamp[[1L]], "as_of_timestamp"),
+      g5_wfa_sanitize_id_component(fold_ids[[1L]], "first_fold_id"),
+      g5_wfa_sanitize_id_component(fold_ids[[length(fold_ids)]], "last_fold_id"),
+      sep = "_"
+    ),
+    readiness_status = "ready_for_operator_review_no_evaluation_computed",
+    contract_row_count = as.integer(nrow(contract_scaffold)),
+    fold_count = as.integer(length(fold_ids)),
+    baseline_family_count = as.integer(length(family_ids)),
+    included_baseline_family_ids = paste(family_ids, collapse = ";"),
+    excluded_reserved_baseline_family_ids = paste(excluded, collapse = ";"),
+    source_handoff_reference = as.character(contract_scaffold$source_handoff_reference[[1L]]),
+    source_gate_manifest_csv = as.character(contract_scaffold$source_gate_manifest_csv[[1L]]),
+    handoff_gate_status = as.character(contract_scaffold$handoff_gate_status[[1L]]),
+    handoff_review_required = any(as.logical(contract_scaffold$handoff_review_required)),
+    handoff_review_accepted = any(as.logical(contract_scaffold$handoff_review_accepted)),
+    as_of_timestamp = as.character(contract_scaffold$as_of_timestamp[[1L]]),
+    latest_completed_session = as.Date(contract_scaffold$latest_completed_session[[1L]]),
+    no_trade_readiness_status = "no_trade_cash_present_for_every_fold_no_returns_computed",
+    reserved_baseline_readiness_status = if (length(excluded) > 0L) {
+      "reserved_baseline_families_declared_with_scope_exclusions"
+    } else {
+      "reserved_baseline_families_declared_in_contract_scope"
+    },
+    artifact_path_policy_status = "all_artifacts_planned_under_ignored_runs_paths",
+    calculation_stop_status = "returns_cash_yield_benchmark_math_metrics_all_not_implemented",
+    leakage_attestation_status = "all_contract_leakage_attestations_true",
+    operator_gate_reference_status = "may_be_referenced_by_later_explicit_evaluation_gate_after_operator_acceptance",
+    review_status = if (review_required) {
+      "review_required_before_any_evaluation"
+    } else {
+      "schema_ready_no_evaluation_authorized"
+    },
+    review_required_reason = paste(review_reasons, collapse = ";"),
+    stringsAsFactors = FALSE
+  )[g5_wfa_required_baseline_evaluation_readiness_columns()]
+}
+
+g5_validate_wfa_baseline_evaluation_contract_readiness_review <- function(readiness_review) {
+  g5_wfa_require_columns(
+    readiness_review,
+    g5_wfa_required_baseline_evaluation_readiness_columns(),
+    "baseline evaluation contract readiness review"
+  )
+  if (nrow(readiness_review) != 1L) {
+    g5_stop("baseline evaluation contract readiness review must contain exactly one row.")
+  }
+  if (!identical(
+    as.character(readiness_review$readiness_status[[1L]]),
+    "ready_for_operator_review_no_evaluation_computed"
+  )) {
+    g5_stop("baseline evaluation contract readiness review must remain review-only.")
+  }
+  if (!grepl("no_trade_cash", as.character(readiness_review$included_baseline_family_ids[[1L]]), fixed = TRUE)) {
+    g5_stop("baseline evaluation contract readiness review must include no_trade_cash.")
+  }
+  if (!identical(
+    as.character(readiness_review$calculation_stop_status[[1L]]),
+    "returns_cash_yield_benchmark_math_metrics_all_not_implemented"
+  )) {
+    g5_stop("baseline evaluation contract readiness review must preserve calculation STOP status.")
+  }
+  if (!identical(
+    as.character(readiness_review$leakage_attestation_status[[1L]]),
+    "all_contract_leakage_attestations_true"
+  )) {
+    g5_stop("baseline evaluation contract readiness review must preserve leakage attestations.")
+  }
+  readiness_review
 }

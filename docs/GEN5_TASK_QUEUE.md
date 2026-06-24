@@ -1640,9 +1640,11 @@ Stop conditions:
 
 ### 42. Harden evaluation-contract readiness without calculations
 
-Status: pending
+Status: done
 
 Recommended branch: `codex/gen5-wfa-evaluation-contract-readiness`
+
+Branch: `codex/gen5-wfa-evaluation-contract-readiness`
 
 Goal: Review and, if needed, tighten the no-trade/reserved-baseline evaluation contract readiness surfaces so the later AMD EMA gate can reference an accepted evaluation contract without implying performance computation.
 
@@ -1656,6 +1658,13 @@ Likely files:
 Validation:
 
 - Run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1`.
+
+Notes:
+
+- Tightened baseline evaluation contract validation for unique baseline-family/fold rows, `no_trade_cash` coverage on every fold, preserved source lineage, unapplied status, ignored paths, STOP statuses, and leakage attestations.
+- Added a one-row readiness review helper for operator acceptance or later explicit gate reference.
+- Expanded non-network tests for readiness summaries, scoped reserved-family exclusions, no-trade coverage, duplicate family/fold rejection, and source lineage preservation.
+- Did not compute returns, cash yields, benchmark math, performance metrics, ranks, drawdowns, volatility, allocation weights, trade accounting, EMA signals, active candidate evaluation, dashboards, live advice, leverage, execution, or performance claims.
 
 Stop conditions:
 

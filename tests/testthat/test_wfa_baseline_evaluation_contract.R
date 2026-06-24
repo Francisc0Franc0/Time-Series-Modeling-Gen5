@@ -299,3 +299,120 @@ test_that("baseline evaluation contract rejects non-ignored output paths and imp
     "return-enabled"
   )
 })
+
+test_that("baseline evaluation contract readiness review summarizes accepted scaffold only", {
+  gate_result <- g5_test_baseline_contract_gate_result()
+  fixture <- g5_test_baseline_contract_fixture(gate_result)
+
+  scaffold <- g5_build_wfa_baseline_evaluation_contract_scaffold(
+    gate_result = gate_result,
+    fold_geometry = fixture$folds,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_registry = fixture$registry
+  )
+
+  readiness <- g5_build_wfa_baseline_evaluation_contract_readiness_review(scaffold)
+  readiness <- g5_validate_wfa_baseline_evaluation_contract_readiness_review(readiness)
+
+  expect_identical(names(readiness), g5_wfa_required_baseline_evaluation_readiness_columns())
+  expect_identical(
+    readiness$readiness_status[[1L]],
+    "ready_for_operator_review_no_evaluation_computed"
+  )
+  expect_equal(readiness$contract_row_count[[1L]], nrow(scaffold))
+  expect_equal(readiness$fold_count[[1L]], nrow(fixture$folds))
+  expect_equal(readiness$baseline_family_count[[1L]], length(unique(scaffold$baseline_family_id)))
+  expect_true(grepl("no_trade_cash", readiness$included_baseline_family_ids, fixed = TRUE))
+  expect_true(grepl("broad_market_buy_hold", readiness$included_baseline_family_ids, fixed = TRUE))
+  expect_identical(
+    readiness$no_trade_readiness_status[[1L]],
+    "no_trade_cash_present_for_every_fold_no_returns_computed"
+  )
+  expect_identical(
+    readiness$artifact_path_policy_status[[1L]],
+    "all_artifacts_planned_under_ignored_runs_paths"
+  )
+  expect_identical(
+    readiness$calculation_stop_status[[1L]],
+    "returns_cash_yield_benchmark_math_metrics_all_not_implemented"
+  )
+  expect_identical(
+    readiness$leakage_attestation_status[[1L]],
+    "all_contract_leakage_attestations_true"
+  )
+  expect_identical(
+    readiness$operator_gate_reference_status[[1L]],
+    "may_be_referenced_by_later_explicit_evaluation_gate_after_operator_acceptance"
+  )
+})
+
+test_that("baseline evaluation contract readiness records scoped reserved-family exclusions", {
+  gate_result <- g5_test_baseline_contract_gate_result()
+  fixture <- g5_test_baseline_contract_fixture(gate_result)
+
+  scaffold <- g5_build_wfa_baseline_evaluation_contract_scaffold(
+    gate_result = gate_result,
+    fold_geometry = fixture$folds,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_registry = fixture$registry,
+    included_baseline_family_ids = "no_trade_cash"
+  )
+
+  readiness <- g5_build_wfa_baseline_evaluation_contract_readiness_review(scaffold)
+
+  expect_equal(readiness$baseline_family_count[[1L]], 1L)
+  expect_identical(readiness$included_baseline_family_ids[[1L]], "no_trade_cash")
+  expect_true(grepl(
+    "broad_market_buy_hold",
+    readiness$excluded_reserved_baseline_family_ids,
+    fixed = TRUE
+  ))
+  expect_identical(
+    readiness$reserved_baseline_readiness_status[[1L]],
+    "reserved_baseline_families_declared_with_scope_exclusions"
+  )
+  expect_identical(
+    readiness$review_status[[1L]],
+    "review_required_before_any_evaluation"
+  )
+  expect_true(grepl(
+    "reserved_baseline_families_excluded",
+    readiness$review_required_reason,
+    fixed = TRUE
+  ))
+})
+
+test_that("baseline evaluation contract validation rejects missing no-trade coverage and duplicate family folds", {
+  gate_result <- g5_test_baseline_contract_gate_result()
+  fixture <- g5_test_baseline_contract_fixture(gate_result)
+  scaffold <- g5_build_wfa_baseline_evaluation_contract_scaffold(
+    gate_result = gate_result,
+    fold_geometry = fixture$folds,
+    frozen_fold_evidence = fixture$evidence,
+    baseline_registry = fixture$registry
+  )
+
+  duplicate_family_fold <- rbind(scaffold, scaffold[1L, , drop = FALSE])
+  duplicate_family_fold$contract_id[nrow(duplicate_family_fold)] <- "duplicate_contract_id_for_family_fold"
+  expect_error(
+    g5_validate_wfa_baseline_evaluation_contract_scaffold(duplicate_family_fold),
+    "one row per baseline family and fold"
+  )
+
+  missing_no_trade <- scaffold[
+    !(scaffold$baseline_family_id == "no_trade_cash" & scaffold$fold_id == "fold_0002"),
+    ,
+    drop = FALSE
+  ]
+  expect_error(
+    g5_validate_wfa_baseline_evaluation_contract_scaffold(missing_no_trade),
+    "no_trade_cash row for every fold"
+  )
+
+  broken_source <- scaffold
+  broken_source$source_gate_manifest_csv[[1L]] <- ""
+  expect_error(
+    g5_validate_wfa_baseline_evaluation_contract_scaffold(broken_source),
+    "source_gate_manifest_csv"
+  )
+})

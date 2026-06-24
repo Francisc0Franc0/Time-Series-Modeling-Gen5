@@ -260,6 +260,8 @@ The first implementation slice should stop if the contract cannot represent `no_
 
 The current implementation scaffold is intentionally limited to `g5_build_wfa_baseline_evaluation_contract_scaffold()` and related schema/path/readiness validators. It writes no generated files by default, reads no bars or provider data, and plans placeholder artifact paths under ignored `runs/` locations only. It records review-required reasons for unresolved cash/no-position assumptions, broad-market proxy availability, warning context, fixed-basket membership, curation authorization, and any reserved baseline families intentionally excluded from a narrow slice without resolving those questions through OOS evidence or performance computation.
 
+The readiness review helper summarizes an already-validated baseline evaluation contract into one review-only row. It requires `no_trade_cash` coverage for every fold, unique baseline-family/fold rows, one preserved handoff lineage, ignored artifact path policy, calculation STOP status, and true leakage attestations. The review row may be cited by a later explicit operator gate after acceptance, but it remains non-computational evidence only.
+
 ## WFA Post-Guardrails Closeout Review
 
 The WFA post-foundation guardrails are closed through the baseline evaluation contract scaffold only. This closeout confirms that the audit artifact readiness contract, fold-stability summary contract, returns/performance `STOP` gate, first-candidate authorization boundary, no-trade/reserved-baseline authorization boundary, first baseline-evaluation implementation scope, and current baseline evaluation contract scaffold agree on the same status:
