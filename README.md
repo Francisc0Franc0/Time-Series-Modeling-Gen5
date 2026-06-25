@@ -225,6 +225,30 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proo
 
 Each packet includes canonical bars, manifest, audit, symbol coverage, refresh plan, health CSV, candlestick PNG, and summary CSV/Markdown outputs. It is an inspection/data-proof workflow only; it does not compute indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
 
+For repeated inspection, use `-LookbackDays` instead of typing a start date:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -LookbackDays 500 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+## Multi-Symbol Data Report
+
+For a small basket, the multi-symbol report writes one packet under ignored `runs/research_workbench/multi_symbol_reports/`, including a multi-pane candlestick PNG plus the same bars, manifest, audit, coverage, refresh-plan, health, and summary artifacts.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_multi_symbol_report.ps1 `
+  -Symbols "NVDA,SPY,QQQ,TSLA" `
+  -LookbackDays 120 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+Use `-Refresh` only when a credentialed Alpaca refresh is intended before rendering. If a symbol is stale, partial, empty, or missing from cache, the report keeps that visible in the health and coverage outputs. It charts symbols with available canonical bars and fails only when no requested symbol has chartable bars.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.

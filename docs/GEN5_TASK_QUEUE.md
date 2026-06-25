@@ -109,6 +109,27 @@ Stop conditions:
 - Any attempt to reintroduce a rigid implementation sequence beyond the completed data foundation.
 - Any attempt to authorize WFA, strategy, allocation, leverage, live advice, dashboard, or execution logic inside this planning-only task.
 
+### 3. Audit data-layer complexity posture
+
+Status: done
+
+Branch: `codex/Gen5.1-candidate-bc-inspection-reports`
+
+Goal: Decide whether the completed v0/v0.1 data layer needs broad refactoring because it was built under the older Codex workflow.
+
+Recommendation:
+
+- Keep the data layer as the active foundation.
+- Do not perform a broad refactor now.
+- Continue making targeted ergonomic improvements when real operator workflows expose friction.
+
+Notes:
+
+- The data layer remains focused on Alpaca adjusted daily OHLCV, explicit `as_of_timestamp`, cache/audit behavior, and inspection artifacts.
+- No WFA, strategy, PCA, allocation, dashboard, live advice, execution, or performance logic was found in the active `R/` modules.
+- `R/data_audit.R` is the largest data-layer file, but its size is mostly audit/health surface consolidation rather than downstream research creep.
+- Candidate B/C add operator ergonomics and inspection reports without changing provider scope or research methodology.
+
 ## Candidate Next Slices
 
 These are suggestions, not a required order.
@@ -142,9 +163,22 @@ Visible output:
 
 ### B. Reusable one-symbol inspection command
 
-Status: pending
+Status: done
 
 Goal: Make repeated one-symbol inspection easier for the operator without adding strategy logic.
+
+Branch: `codex/Gen5.1-candidate-bc-inspection-reports`
+
+Validation:
+
+- Focused chart/data-proof tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Operator smoke passed with cached `NVDA` data using `-LookbackDays`.
+
+Notes:
+
+- `scripts/inspect/render_symbol_data_proof.ps1` now accepts either `-StartDate` or `-LookbackDays`.
+- Missing/empty symbol requests now fail with a friendlier message recommending `-Refresh` or a cached symbol.
 
 Visible output:
 
@@ -152,9 +186,27 @@ Visible output:
 
 ### C. Multi-symbol workbench report
 
-Status: pending
+Status: done
 
 Goal: Produce a small-basket inspection report for selected symbols and dates.
+
+Branch: `codex/Gen5.1-candidate-bc-inspection-reports`
+
+Validation:
+
+- Focused chart/data-proof tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Operator smoke passed with cached `NVDA,SPY,QQQ,TSLA` data.
+- Generated multi-pane chart was visually inspected.
+
+Notes:
+
+- Added `scripts/inspect/render_multi_symbol_report.ps1` as the PowerShell-first launcher.
+- Added `scripts/inspect/render_multi_symbol_report.R` as the implementation script.
+- Added multi-symbol report helpers in `R/workbench_data_proof.R`.
+- Added reusable multi-pane candlestick rendering in `R/workbench_chart.R`.
+- Packets write under ignored `runs/research_workbench/multi_symbol_reports/`.
+- The workflow remains data-inspection only: no indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
 
 Visible output:
 
