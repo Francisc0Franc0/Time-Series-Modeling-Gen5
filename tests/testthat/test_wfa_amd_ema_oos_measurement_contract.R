@@ -9,6 +9,7 @@ source(test_path("..", "..", "R", "wfa_baseline_evaluation_contract.R"))
 source(test_path("..", "..", "R", "wfa_minimal_poc_manifest.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_gate.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_contract.R"))
+source(test_path("..", "..", "R", "wfa_amd_ema_train_grid_selection.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_parameter_freeze_contract.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_parameter_application_boundary.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_oos_signal_position_application.R"))
@@ -79,23 +80,19 @@ g5_test_amd_ema_measurement_health <- function() {
   )
 }
 
-g5_test_amd_ema_measurement_parameter_decisions <- function(evaluation_contract) {
-  amd_rows <- evaluation_contract$review_surface[
-    evaluation_contract$review_surface$subject_id == "amd_ema_long_cash",
+g5_test_amd_ema_measurement_parameter_decisions <- function(evaluation_contract, evaluation_readiness, bars) {
+  amd_bars <- bars[
+    as.character(bars$symbol) == "AMD",
     ,
     drop = FALSE
   ]
-  data.frame(
-    fold_id = as.character(amd_rows$fold_id),
-    fast_ema_period = rep(10L, nrow(amd_rows)),
-    slow_ema_period = rep(30L, nrow(amd_rows)),
-    parameter_source = rep("operator_accepted_train_only_amd_ema_review", nrow(amd_rows)),
-    selection_authority_status = rep(
-      "train_only_operator_accepted_no_oos_outcome_authority",
-      nrow(amd_rows)
-    ),
-    stringsAsFactors = FALSE
+  selection <- g5_build_wfa_amd_ema_train_grid_selection(
+    evaluation_contract_scaffold = evaluation_contract,
+    evaluation_contract_readiness_review = evaluation_readiness,
+    bars = amd_bars,
+    operator_accepts_readiness_review = TRUE
   )
+  selection$selected_parameters
 }
 
 g5_test_amd_ema_measurement_fixture <- function() {
@@ -165,7 +162,11 @@ g5_test_amd_ema_measurement_fixture <- function() {
   freeze <- g5_build_wfa_amd_ema_parameter_freeze_contract(
     evaluation_contract_scaffold = evaluation_contract,
     evaluation_contract_readiness_review = evaluation_readiness,
-    parameter_decisions = g5_test_amd_ema_measurement_parameter_decisions(evaluation_contract),
+    parameter_decisions = g5_test_amd_ema_measurement_parameter_decisions(
+      evaluation_contract,
+      evaluation_readiness,
+      bars
+    ),
     operator_accepts_readiness_review = TRUE
   )
   freeze_readiness <- g5_build_wfa_amd_ema_parameter_freeze_readiness_review(freeze)

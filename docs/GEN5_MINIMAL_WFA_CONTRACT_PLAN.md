@@ -40,6 +40,8 @@ Implementation note: the first AMD EMA OOS measurement stack validator now exist
 
 Implementation note: the first AMD EMA TRAIN-only grid-selection scaffold now exists as `R/wfa_amd_ema_train_grid_selection.R`. It consumes the accepted AMD EMA evaluation contract readiness review plus canonical Alpaca adjusted daily AMD bars with the same explicit `as_of_timestamp`, declares a small fast/slow EMA grid, emits fold-local TRAIN signal-count evidence for each grid pair, preserves `no_trade_cash` as the first TRAIN comparison row, and selects one EMA pair per fold under a predeclared deterministic TRAIN-only rule. It records that OOS rows are not read for selection and does not compute OOS results, return values, trade PnL, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
 
+Implementation note: the AMD EMA parameter-freeze and OOS application boundary path now accepts the TRAIN grid-selected authority status `train_only_grid_selected_no_oos_outcome_authority` in addition to the earlier operator-supplied train-only status. The downstream AMD EMA fixtures now freeze selected TRAIN grid parameters before OOS application, preserving the same no-trade-first comparison rows, explicit timestamp lineage, and STOP states. This changes parameter lineage only; it does not use OOS rows for selection or add live advice, execution, allocation, leverage, dashboards, broader strategy families, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

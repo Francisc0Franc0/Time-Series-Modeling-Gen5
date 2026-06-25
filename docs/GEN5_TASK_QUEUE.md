@@ -2069,3 +2069,33 @@ Stop conditions:
 - Using OOS rows or OOS outcomes to select parameters.
 - Expanding beyond AMD, Alpaca adjusted daily OHLCV, long/cash EMA periods, or the declared grid.
 - Computing Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.
+
+### 55. Connect TRAIN grid-selected parameters to freeze and application boundaries
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Goal: Replace fixture/operator-supplied frozen EMA parameters where appropriate with selected TRAIN grid parameters while preserving the existing frozen evidence discipline and STOP states.
+
+Notes:
+
+- Updated the parameter-freeze contract to accept `train_only_grid_selected_no_oos_outcome_authority` alongside the earlier operator-supplied train-only authority status.
+- Added a dynamic freeze manifest/readiness train-authority status for declared TRAIN grid-selected parameters.
+- Updated the parameter application boundary to preserve the new train-grid authority status without loosening OOS application, signal, or measurement constraints.
+- Updated freeze, application, signal/position, and OOS measurement fixtures to build selected TRAIN grid parameters from canonical AMD bars and pass those selected rows into the freeze contract.
+- Kept backward compatibility for existing operator-supplied train-only parameter decisions.
+- Did not let OOS rows influence selection and did not add Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- Focused `testthat::test_file()` run for freeze, application, signal/position, and OOS measurement tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Selecting, changing, or rejecting parameters from OOS evidence.
+- Treating selected parameters, signal/position rows, or OOS measurement values as live advice or performance claims.
+- Expanding beyond AMD EMA long/cash or adding allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.

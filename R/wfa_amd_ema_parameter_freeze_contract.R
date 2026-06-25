@@ -161,6 +161,22 @@ g5_wfa_amd_ema_parameter_freeze_artifact_path <- function(
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
+g5_wfa_amd_ema_allowed_parameter_selection_authority_statuses <- function() {
+  c(
+    "train_only_operator_accepted_no_oos_outcome_authority",
+    "train_only_grid_selected_no_oos_outcome_authority"
+  )
+}
+
+g5_wfa_amd_ema_freeze_train_authority_status <- function(parameter_decisions) {
+  statuses <- unique(as.character(parameter_decisions$selection_authority_status))
+  if (length(statuses) == 1L &&
+      identical(statuses[[1L]], "train_only_grid_selected_no_oos_outcome_authority")) {
+    return("parameter_values_selected_from_declared_train_grid_no_oos_outcome_authority")
+  }
+  "parameter_values_supplied_as_train_only_review_decisions_no_oos_outcome_authority"
+}
+
 g5_wfa_validate_amd_ema_parameter_decisions <- function(parameter_decisions, fold_ids) {
   g5_wfa_require_columns(
     parameter_decisions,
@@ -209,8 +225,8 @@ g5_wfa_validate_amd_ema_parameter_decisions <- function(parameter_decisions, fol
   if (any(fast >= slow)) {
     g5_stop("AMD EMA parameter freeze requires fast_ema_period to be less than slow_ema_period.")
   }
-  allowed_authority <- "train_only_operator_accepted_no_oos_outcome_authority"
-  if (any(as.character(parameter_decisions$selection_authority_status) != allowed_authority)) {
+  allowed_authority <- g5_wfa_amd_ema_allowed_parameter_selection_authority_statuses()
+  if (any(!(as.character(parameter_decisions$selection_authority_status) %in% allowed_authority))) {
     g5_stop("AMD EMA parameter freeze decisions must declare train-only selection authority.")
   }
   if (any(is.na(parameter_decisions$parameter_source)) ||
@@ -302,6 +318,7 @@ g5_build_wfa_amd_ema_parameter_freeze_contract <- function(
     parameter_decisions,
     fold_ids = amd_rows$fold_id
   )
+  train_authority_status <- g5_wfa_amd_ema_freeze_train_authority_status(parameter_decisions)
 
   first_amd <- amd_rows[1L, , drop = FALSE]
   last_amd <- amd_rows[nrow(amd_rows), , drop = FALSE]
@@ -475,7 +492,7 @@ g5_build_wfa_amd_ema_parameter_freeze_contract <- function(
     no_trade_comparison_status = "no_trade_cash_first_class_row_for_every_fold",
     parameter_freeze_status = "train_only_parameter_decisions_frozen_before_oos_measurement",
     ema_parameter_scope_status = "single_amd_ema_fast_slow_windows_only",
-    train_authority_status = "parameter_values_supplied_as_train_only_review_decisions_no_oos_outcome_authority",
+    train_authority_status = train_authority_status,
     oos_application_status = "not_applied_frozen_decision_contract_only",
     result_status = "not_evaluated_no_oos_results_recorded",
     return_computation_status = "not_implemented_no_return_columns_read_or_created",
@@ -593,8 +610,8 @@ g5_validate_wfa_amd_ema_parameter_freeze_contract <- function(parameter_freeze_c
       g5_stop(paste("AMD EMA parameter freeze has unauthorized implementation status in", col))
     }
   }
-  if (any(as.character(amd_rows$selection_authority_status) !=
-          "train_only_operator_accepted_no_oos_outcome_authority")) {
+  if (any(!(as.character(amd_rows$selection_authority_status) %in%
+            g5_wfa_amd_ema_allowed_parameter_selection_authority_statuses()))) {
     g5_stop("AMD EMA parameter freeze candidate rows must preserve train-only authority.")
   }
   if (any(as.character(amd_rows$parameter_freeze_status) !=
@@ -751,6 +768,14 @@ g5_validate_wfa_amd_ema_parameter_freeze_readiness_review <- function(readiness_
       as.integer(readiness_review$parameter_row_count[[1L]]) !=
         as.integer(readiness_review$fold_count[[1L]])) {
     g5_stop("AMD EMA parameter freeze readiness review row counts must match fold_count.")
+  }
+  allowed_train_authority_status <- c(
+    "parameter_values_supplied_as_train_only_review_decisions_no_oos_outcome_authority",
+    "parameter_values_selected_from_declared_train_grid_no_oos_outcome_authority"
+  )
+  if (!(as.character(readiness_review$train_authority_status[[1L]]) %in%
+        allowed_train_authority_status)) {
+    g5_stop("AMD EMA parameter freeze readiness review has invalid train_authority_status")
   }
   readiness_review
 }

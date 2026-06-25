@@ -255,7 +255,6 @@ g5_wfa_validate_amd_ema_application_source_review <- function(
     readiness_status = "ready_for_operator_review_no_results_computed",
     review_status = "operator_review_ready_frozen_parameters_no_results_computed",
     parameter_freeze_status = "train_only_parameter_decisions_frozen_before_oos_measurement",
-    train_authority_status = "parameter_values_supplied_as_train_only_review_decisions_no_oos_outcome_authority",
     calculation_stop_status = "ema_returns_cash_yield_trade_accounting_metrics_all_not_computed",
     out_of_scope_status = "allocation_leverage_live_advice_execution_dashboards_broader_families_not_authorized",
     leakage_attestation_status = "all_contract_leakage_attestations_true"
@@ -267,6 +266,14 @@ g5_wfa_validate_amd_ema_application_source_review <- function(
     )) {
       g5_stop(paste("AMD EMA parameter application boundary readiness review has invalid", col))
     }
+  }
+  allowed_train_authority_status <- c(
+    "parameter_values_supplied_as_train_only_review_decisions_no_oos_outcome_authority",
+    "parameter_values_selected_from_declared_train_grid_no_oos_outcome_authority"
+  )
+  if (!(as.character(parameter_freeze_readiness_review$train_authority_status[[1L]]) %in%
+        allowed_train_authority_status)) {
+    g5_stop("AMD EMA parameter application boundary readiness review has invalid train_authority_status")
   }
   list(
     manifest = manifest,
@@ -597,8 +604,8 @@ g5_validate_wfa_amd_ema_parameter_application_boundary <- function(parameter_app
       any(!is.na(no_trade_rows$slow_ema_period))) {
     g5_stop("AMD EMA parameter application no_trade rows must not contain EMA periods.")
   }
-  if (any(as.character(amd_rows$selection_authority_status) !=
-          "train_only_operator_accepted_no_oos_outcome_authority")) {
+  if (any(!(as.character(amd_rows$selection_authority_status) %in%
+            g5_wfa_amd_ema_allowed_parameter_selection_authority_statuses()))) {
     g5_stop("AMD EMA parameter application candidate rows must preserve train-only authority.")
   }
   if (any(as.character(amd_rows$parameter_freeze_status) !=

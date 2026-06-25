@@ -9,6 +9,7 @@ source(test_path("..", "..", "R", "wfa_baseline_evaluation_contract.R"))
 source(test_path("..", "..", "R", "wfa_minimal_poc_manifest.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_gate.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_contract.R"))
+source(test_path("..", "..", "R", "wfa_amd_ema_train_grid_selection.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_parameter_freeze_contract.R"))
 
 g5_test_amd_ema_freeze_code_metadata <- function() {
@@ -167,33 +168,34 @@ g5_test_amd_ema_freeze_fixture <- function(
   )
   eval_readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(eval_contract)
   list(
+    bars = bars,
     evaluation_contract = eval_contract,
     evaluation_readiness = eval_readiness
   )
 }
 
-g5_test_amd_ema_freeze_parameter_decisions <- function(evaluation_contract) {
-  amd_rows <- evaluation_contract$review_surface[
-    evaluation_contract$review_surface$subject_id == "amd_ema_long_cash",
+g5_test_amd_ema_freeze_parameter_decisions <- function(evaluation_contract, evaluation_readiness, bars) {
+  amd_bars <- bars[
+    as.character(bars$symbol) == "AMD",
     ,
     drop = FALSE
   ]
-  data.frame(
-    fold_id = as.character(amd_rows$fold_id),
-    fast_ema_period = rep(10L, nrow(amd_rows)),
-    slow_ema_period = rep(30L, nrow(amd_rows)),
-    parameter_source = rep("operator_accepted_train_only_amd_ema_review", nrow(amd_rows)),
-    selection_authority_status = rep(
-      "train_only_operator_accepted_no_oos_outcome_authority",
-      nrow(amd_rows)
-    ),
-    stringsAsFactors = FALSE
+  selection <- g5_build_wfa_amd_ema_train_grid_selection(
+    evaluation_contract_scaffold = evaluation_contract,
+    evaluation_contract_readiness_review = evaluation_readiness,
+    bars = amd_bars,
+    operator_accepts_readiness_review = TRUE
   )
+  selection$selected_parameters
 }
 
 test_that("AMD EMA parameter freeze consumes accepted evaluation readiness and freezes train-only periods", {
   fixture <- g5_test_amd_ema_freeze_fixture()
-  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(fixture$evaluation_contract)
+  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(
+    fixture$evaluation_contract,
+    fixture$evaluation_readiness,
+    fixture$bars
+  )
 
   freeze <- g5_build_wfa_amd_ema_parameter_freeze_contract(
     evaluation_contract_scaffold = fixture$evaluation_contract,
@@ -213,6 +215,10 @@ test_that("AMD EMA parameter freeze consumes accepted evaluation readiness and f
     freeze$run_manifest$parameter_freeze_status[[1L]],
     "train_only_parameter_decisions_frozen_before_oos_measurement"
   )
+  expect_identical(
+    freeze$run_manifest$train_authority_status[[1L]],
+    "parameter_values_selected_from_declared_train_grid_no_oos_outcome_authority"
+  )
   expect_true(all(freeze$freeze_surface$result_status == "not_evaluated_no_oos_results_recorded"))
   expect_true(all(freeze$freeze_surface$return_computation_status ==
     "not_implemented_no_return_columns_read_or_created"))
@@ -224,7 +230,11 @@ test_that("AMD EMA parameter freeze preserves no-trade as first-class comparison
     g5_build_wfa_amd_ema_parameter_freeze_contract(
       evaluation_contract_scaffold = fixture$evaluation_contract,
       evaluation_contract_readiness_review = fixture$evaluation_readiness,
-      parameter_decisions = g5_test_amd_ema_freeze_parameter_decisions(fixture$evaluation_contract),
+      parameter_decisions = g5_test_amd_ema_freeze_parameter_decisions(
+        fixture$evaluation_contract,
+        fixture$evaluation_readiness,
+        fixture$bars
+      ),
       operator_accepts_readiness_review = TRUE
     )
   )
@@ -245,7 +255,11 @@ test_that("AMD EMA parameter freeze preserves no-trade as first-class comparison
 
 test_that("AMD EMA parameter freeze requires explicit readiness acceptance and train-only authority", {
   fixture <- g5_test_amd_ema_freeze_fixture()
-  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(fixture$evaluation_contract)
+  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(
+    fixture$evaluation_contract,
+    fixture$evaluation_readiness,
+    fixture$bars
+  )
 
   expect_error(
     g5_build_wfa_amd_ema_parameter_freeze_contract(
@@ -283,7 +297,11 @@ test_that("AMD EMA parameter freeze requires explicit readiness acceptance and t
 
 test_that("AMD EMA parameter freeze rejects invalid periods, mismatched readiness, and non-ignored outputs", {
   fixture <- g5_test_amd_ema_freeze_fixture()
-  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(fixture$evaluation_contract)
+  parameter_decisions <- g5_test_amd_ema_freeze_parameter_decisions(
+    fixture$evaluation_contract,
+    fixture$evaluation_readiness,
+    fixture$bars
+  )
 
   bad_periods <- parameter_decisions
   bad_periods$fast_ema_period[[1L]] <- 50L
@@ -328,7 +346,11 @@ test_that("AMD EMA parameter freeze readiness and writers remain review-only", {
     g5_build_wfa_amd_ema_parameter_freeze_contract(
       evaluation_contract_scaffold = fixture$evaluation_contract,
       evaluation_contract_readiness_review = fixture$evaluation_readiness,
-      parameter_decisions = g5_test_amd_ema_freeze_parameter_decisions(fixture$evaluation_contract),
+      parameter_decisions = g5_test_amd_ema_freeze_parameter_decisions(
+        fixture$evaluation_contract,
+        fixture$evaluation_readiness,
+        fixture$bars
+      ),
       output_dir = output_dir,
       operator_accepts_readiness_review = TRUE
     )
