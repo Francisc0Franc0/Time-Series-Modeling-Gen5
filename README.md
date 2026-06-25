@@ -200,6 +200,31 @@ $env:GEN5_CHART_END_DATE="2026-06-23"
 
 Set `GEN5_CHART_REFRESH=true` only when a credentialed Alpaca refresh is intended before plotting. The PNG is an inspection artifact only; it does not add indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
+## Symbol Data Proof Packet
+
+Gen5.1 adds a friendlier one-symbol data proof launcher. It wraps the workbench query and static chart helper, then writes a tidy packet under ignored `runs/research_workbench/data_proofs/`.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -StartDate 2024-01-01 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+Use `-Refresh` only when a credentialed Alpaca refresh is intended before rendering:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -StartDate 2024-01-01 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00" `
+  -Refresh
+```
+
+Each packet includes canonical bars, manifest, audit, symbol coverage, refresh plan, health CSV, candlestick PNG, and summary CSV/Markdown outputs. It is an inspection/data-proof workflow only; it does not compute indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
@@ -212,11 +237,11 @@ The freeze evidence does not certify strategy, WFA, allocation, dashboard, execu
 
 The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.
 
-## Next Milestone Planning
+## Gen5.1 Planning
 
-The next planned milestone is Gen5 v0.1 Research Data Workbench, documented in `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. It is a research-plumbing milestone only: small basket/date-range queries, manual universe roles, severity-labeled data health, static candlestick PNG inspection, an opt-in Alpaca credential preflight, and a canonical research handoff manifest.
+Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-This milestone does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, or non-Alpaca providers. Future WFA code should consume the workbench handoff contract rather than calling Alpaca directly.
+Current Gen5.1 work does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 

@@ -115,9 +115,24 @@ These are suggestions, not a required order.
 
 ### A. AMD data proof report
 
-Status: pending
+Status: done
 
 Goal: Load/read AMD adjusted daily bars through the workbench, render a chart, and write a compact data-health table under ignored `runs/`.
+
+Branch: `codex/Gen5.1-candidate-a-data-proof`
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Operator launcher smoke passed with cached `NVDA` data because `AMD` was not present in the local ignored cache during implementation.
+
+Notes:
+
+- Added `scripts/inspect/render_symbol_data_proof.ps1` as the PowerShell-first operator launcher.
+- Added `scripts/inspect/render_symbol_data_proof.R` and `R/workbench_data_proof.R` for the reusable implementation.
+- Data proof packets write under ignored `runs/research_workbench/data_proofs/`.
+- Each packet includes bars, manifest, audit, symbol coverage, refresh plan, health, candlestick PNG, and summary CSV/Markdown outputs.
+- The workflow remains data-inspection only: no indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
 
 Visible output:
 
