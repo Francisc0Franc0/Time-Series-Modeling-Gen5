@@ -326,6 +326,31 @@ Notes:
 - OOS outputs include fold spec, train parameter table, train-selected metrics, OOS trades/events/equity/metrics, OOS strategy chart, and OOS equity curve.
 - The workflow remains one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
 
+### J. EMA cross three-fold stitched WFA POC
+
+Status: done
+
+Branch: `codex/Gen5.1-ema-cross-three-fold-wfa`
+
+Goal: Extend the one-fold WFA POC to three rolling train/OOS folds, stitch all OOS periods into one live-like simulation, and make fold transitions visually auditable.
+
+Validation:
+
+- Focused multi-fold EMA WFA tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Final one-symbol AMD operator smoke passed with `-Refresh`.
+- Generated stitched OOS strategy and equity charts were visually inspected.
+
+Notes:
+
+- Standard language now distinguishes `strategy_family` such as `ema_cross` from `model_instance_id` such as `ema_cross_fast12_slow30`.
+- Each fold selects one model instance from the EMA grid using train-window Sharpe, then return.
+- Open positions are carried across fold boundaries; future exit signals are governed by the current fold-selected model instance.
+- Final-bar fold signals may execute at the next open if that next session is inside the stitched OOS span.
+- Outputs include fold specs, selected model instances, train parameter performance by fold, model stability, fold-level OOS summaries, stitched trades/equity/metrics, and stitched OOS charts.
+- Stitched strategy and equity charts alternate fold backgrounds between white and light gray so fold transitions and EMA model-instance changes are auditable.
+- The workflow remains three-fold WFA plumbing only: it is not final research evidence, live advice, allocation logic, or a deployable strategy.
+
 ### D. First research experiment design discussion
 
 Status: pending

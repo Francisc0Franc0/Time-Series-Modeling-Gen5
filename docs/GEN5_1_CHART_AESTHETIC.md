@@ -28,6 +28,7 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 | Losing round-trip connector | `#F15A5A` | dashed line |
 | Equity baseline | `#000000` | solid line |
 | Equity drawdown shelf | `#F15A5A` | soft horizontal high-water mark line |
+| WFA fold banding | `#FFFFFF` / `#F2F3F5` | alternating OOS background bands |
 
 ## Layout Rules
 
@@ -38,5 +39,6 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 - Execution markers belong on the next-open bar where the trade is modeled as filled.
 - Equity curves should show the diagnostic strategy against a no-leverage buy-and-hold baseline when a baseline is included.
 - Strategy drawdowns should be shown as soft horizontal high-water mark shelf lines from the last peak through the drawdown/recovery span, not as full-height background bands.
+- Stitched WFA charts should alternate OOS fold backgrounds between white and very light gray so fold transitions are visible behind price, EMA, and equity lines.
 - Generated charts and reports belong under ignored `runs/` paths.
 - Chart styling must remain separate from research claims: inspection charts do not imply strategy, returns, WFA, allocation, live advice, or performance evidence.

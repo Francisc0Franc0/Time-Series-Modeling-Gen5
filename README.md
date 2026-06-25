@@ -322,6 +322,25 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_poc.p
 
 The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes the query artifacts, fold specification, train parameter-performance table, train-selected metrics, OOS context indicators, OOS trades/events/equity/metrics, an OOS strategy chart, and an OOS equity curve PNG. This is one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
 
+## EMA Cross Three-Fold WFA POC
+
+The three-fold WFA proof rolls the train window forward by one OOS period at a time. It still uses only the `ema_cross` strategy family, but each fold selects its own model instance, meaning the strategy family plus specific EMA parameters such as `ema_cross_fast12_slow30`. Open positions are carried across fold boundaries; once a new fold begins, future exit signals are governed by the current fold-selected model instance. A signal generated on the final bar of a fold may execute at the next open if that next session is inside the stitched OOS span.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_multi.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -FoldCount 3 `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model instances, train parameter performance by fold, model stability, fold-level OOS summaries, stitched trades, stitched equity, stitched metrics, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and EMA model-instance changes are auditable at a glance.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
