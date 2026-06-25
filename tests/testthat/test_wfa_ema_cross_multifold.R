@@ -1,6 +1,7 @@
 source(test_path("..", "..", "R", "data_contract.R"))
 source(test_path("..", "..", "R", "workbench_chart.R"))
 source(test_path("..", "..", "R", "strategy_ema_cross.R"))
+source(test_path("..", "..", "R", "strategy_bollinger_touch.R"))
 source(test_path("..", "..", "R", "wfa_ema_cross_poc.R"))
 source(test_path("..", "..", "R", "wfa_ema_cross_multifold.R"))
 
@@ -111,6 +112,7 @@ test_that("multi-fold EMA WFA selects a model instance per fold and stitches OOS
     wfa_end_date = max(bars$session_date),
     fast_periods = 2L,
     slow_periods = 4L,
+    candidate_families = "ema_cross",
     train_quarters = g5_test_multi_quarters_for_days(10),
     oos_quarters = g5_test_multi_quarters_for_days(5),
     fold_count = 3L
@@ -125,6 +127,37 @@ test_that("multi-fold EMA WFA selects a model instance per fold and stitches OOS
   expect_equal(nrow(wfa$fold_oos_summary), 3L)
   expect_equal(wfa$model_stability$selected_fold_count[[1L]], 3L)
   expect_true("carried_across_fold_boundary" %in% names(wfa$stitched_trades) || nrow(wfa$stitched_trades) == 0L)
+})
+
+test_that("multi-fold WFA can evaluate EMA cross and Bollinger touch candidates together", {
+  close <- c(
+    10, 10, 10, 9, 7, 8, 11, 13, 15, 13,
+    11, 9, 7, 8, 10, 12, 15, 14, 12, 10,
+    8, 7, 9, 12, 14, 16, 13, 11, 9, 8,
+    10, 13, 15, 14, 12, 10, 8, 9, 12, 15,
+    17, 15, 13, 11, 10
+  )
+  bars <- g5_test_wfa_multi_bars(close = close)
+
+  wfa <- g5_ema_cross_wfa_run_multi(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    fast_periods = 2L,
+    slow_periods = 4L,
+    bb_lookback_periods = c(3L, 4L),
+    bb_sd_multipliers = c(1, 1.5),
+    candidate_families = c("ema_cross", "bollinger_touch"),
+    train_quarters = g5_test_multi_quarters_for_days(10),
+    oos_quarters = g5_test_multi_quarters_for_days(5),
+    fold_count = 3L
+  )
+
+  expect_equal(nrow(wfa$selected_models), 3L)
+  expect_true(all(c("ema_cross", "bollinger_touch") %in% unique(wfa$train_parameter_performance$strategy_family)))
+  expect_true(all(wfa$selected_models$strategy_family %in% c("ema_cross", "bollinger_touch")))
+  expect_true(all(c("lookback_period", "sd_multiplier") %in% names(wfa$selected_models)))
 })
 
 test_that("multi-fold chart background spans cover plotted folds without side gaps", {
@@ -161,6 +194,7 @@ test_that("multi-fold WFA stitched charts render fold-shaded PNGs", {
     wfa_end_date = max(bars$session_date),
     fast_periods = 2L,
     slow_periods = 4L,
+    candidate_families = "ema_cross",
     train_quarters = g5_test_multi_quarters_for_days(10),
     oos_quarters = g5_test_multi_quarters_for_days(5),
     fold_count = 3L

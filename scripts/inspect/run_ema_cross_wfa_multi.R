@@ -21,6 +21,7 @@ source(file.path(repo_root, "R", "workbench_query.R"))
 source(file.path(repo_root, "R", "workbench_chart.R"))
 source(file.path(repo_root, "R", "workbench_data_proof.R"))
 source(file.path(repo_root, "R", "strategy_ema_cross.R"))
+source(file.path(repo_root, "R", "strategy_bollinger_touch.R"))
 source(file.path(repo_root, "R", "wfa_ema_cross_poc.R"))
 source(file.path(repo_root, "R", "wfa_ema_cross_multifold.R"))
 
@@ -35,6 +36,31 @@ g5_parse_int_list_env <- function(value, label) {
     g5_stop(paste0(label, " must be a comma-separated list of positive integers."))
   }
   sort(unique(parsed))
+}
+
+g5_parse_num_list_env <- function(value, label) {
+  if (!nzchar(value)) {
+    g5_stop(paste0(label, " must be a comma-separated list of positive numbers."))
+  }
+  raw <- trimws(strsplit(value, ",", fixed = TRUE)[[1L]])
+  raw <- raw[nzchar(raw)]
+  parsed <- suppressWarnings(as.numeric(raw))
+  if (length(parsed) == 0L || any(is.na(parsed)) || any(parsed <= 0)) {
+    g5_stop(paste0(label, " must be a comma-separated list of positive numbers."))
+  }
+  sort(unique(parsed))
+}
+
+g5_parse_character_list_env <- function(value, label) {
+  if (!nzchar(value)) {
+    g5_stop(paste0(label, " must be a comma-separated list."))
+  }
+  raw <- unique(trimws(strsplit(value, ",", fixed = TRUE)[[1L]]))
+  raw <- raw[nzchar(raw)]
+  if (length(raw) == 0L) {
+    g5_stop(paste0(label, " must be a comma-separated list."))
+  }
+  raw
 }
 
 g5_fmt_pct <- function(x) {
@@ -113,23 +139,29 @@ slow_periods <- g5_parse_int_list_env(Sys.getenv("GEN5_WFA_MULTI_SLOW_PERIODS", 
 if (!any(outer(fast_periods, slow_periods, FUN = "<"))) {
   g5_stop("EMA multi-fold WFA grid must include at least one fast_period < slow_period pair.")
 }
+bb_lookback_periods <- g5_parse_int_list_env(Sys.getenv("GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS", unset = "10,20,30"), "GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS")
+bb_sd_multipliers <- g5_parse_num_list_env(Sys.getenv("GEN5_WFA_MULTI_BB_SD_MULTIPLIERS", unset = "1.5,2,2.5"), "GEN5_WFA_MULTI_BB_SD_MULTIPLIERS")
+candidate_families <- g5_wfa_candidate_families(g5_parse_character_list_env(Sys.getenv("GEN5_WFA_MULTI_CANDIDATE_FAMILIES", unset = "ema_cross,bollinger_touch"), "GEN5_WFA_MULTI_CANDIDATE_FAMILIES"))
 refresh <- g5_parse_bool_env(Sys.getenv("GEN5_WFA_MULTI_REFRESH", unset = ""), default = FALSE)
 
-warmup_days <- max(slow_periods) * 4L
+warmup_days <- max(c(slow_periods, bb_lookback_periods)) * 4L
 query_start_date <- wfa_start_date - warmup_days
 
-message("Gen5 EMA cross three-fold WFA POC")
+message("Gen5 multi-signal three-fold WFA POC")
 message("Repository: ", repo_root)
 message("Cache root: ", cfg$cache$root)
 message("Symbol: ", symbol)
 message("WFA window: ", as.character(wfa_start_date), " to ", as.character(wfa_end_date))
-message("Query window with EMA warmup: ", as.character(query_start_date), " to ", as.character(wfa_end_date))
+message("Query window with indicator warmup: ", as.character(query_start_date), " to ", as.character(wfa_end_date))
 message("As of: ", as.character(as_of_timestamp))
 message("Train quarters: ", train_quarters, " (", g5_ema_cross_wfa_quarters_to_days(train_quarters), " days)")
 message("OOS quarters: ", oos_quarters, " (", g5_ema_cross_wfa_quarters_to_days(oos_quarters), " days)")
 message("Fold count: ", fold_count)
+message("Candidate families: ", paste(candidate_families, collapse = ", "))
 message("Fast periods: ", paste(fast_periods, collapse = ", "))
 message("Slow periods: ", paste(slow_periods, collapse = ", "))
+message("Bollinger lookback periods: ", paste(bb_lookback_periods, collapse = ", "))
+message("Bollinger SD multipliers: ", paste(bb_sd_multipliers, collapse = ", "))
 message("Leverage: 1x")
 message("Refresh: ", refresh)
 message("POC only: stitched OOS across rolling folds, not final research evidence, live advice, or a deployable strategy.")
@@ -156,6 +188,9 @@ written <- g5_write_ema_cross_wfa_multi_outputs(
   wfa_end_date = wfa_end_date,
   fast_periods = fast_periods,
   slow_periods = slow_periods,
+  bb_lookback_periods = bb_lookback_periods,
+  bb_sd_multipliers = bb_sd_multipliers,
+  candidate_families = candidate_families,
   train_quarters = train_quarters,
   oos_quarters = oos_quarters,
   fold_count = fold_count
@@ -165,9 +200,8 @@ metrics <- written$stitched_metrics
 message("")
 message("Resolved folds:")
 print(written$folds[, c("fold_id", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "oos_session_count")], row.names = FALSE)
-message("")
-message("Fold-selected model instances:")
-print(written$selected_models[, c("fold_id", "model_instance_id", "train_sharpe", "train_total_return")], row.names = FALSE)
+cat("\nFold-selected model instances:\n")
+print(written$selected_models[, c("fold_id", "strategy_family", "model_instance_id", "train_sharpe", "train_total_return")], row.names = FALSE)
 message("")
 message("Stitched OOS performance:")
 message("  Return: ", g5_fmt_pct(metrics$total_return[[1L]]))
@@ -190,7 +224,7 @@ message("")
 message("Data health:")
 g5_print_data_health_report(result$health)
 message("")
-message("Wrote EMA cross multi-fold WFA packet:")
+message("Wrote multi-signal WFA packet:")
 for (nm in names(written$paths)) {
   message("  ", nm, ": ", written$paths[[nm]])
 }

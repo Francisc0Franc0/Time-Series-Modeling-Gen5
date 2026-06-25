@@ -22,6 +22,12 @@ param(
 
   [string]$SlowPeriods = "30,50,80,120",
 
+  [string]$BbLookbackPeriods = "10,20,30",
+
+  [string]$BbSdMultipliers = "1.5,2,2.5",
+
+  [string]$CandidateFamilies = "ema_cross,bollinger_touch",
+
   [switch]$Refresh,
 
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
@@ -43,6 +49,15 @@ if ([string]::IsNullOrWhiteSpace($FastPeriods)) {
 }
 if ([string]::IsNullOrWhiteSpace($SlowPeriods)) {
   throw "-SlowPeriods must be a comma-separated list of positive integers."
+}
+if ([string]::IsNullOrWhiteSpace($BbLookbackPeriods)) {
+  throw "-BbLookbackPeriods must be a comma-separated list of positive integers."
+}
+if ([string]::IsNullOrWhiteSpace($BbSdMultipliers)) {
+  throw "-BbSdMultipliers must be a comma-separated list of positive numbers."
+}
+if ([string]::IsNullOrWhiteSpace($CandidateFamilies)) {
+  throw "-CandidateFamilies must be a comma-separated list."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -67,6 +82,9 @@ $env:GEN5_WFA_MULTI_OOS_QUARTERS = [string]$OosQuarters
 $env:GEN5_WFA_MULTI_FOLD_COUNT = [string]$FoldCount
 $env:GEN5_WFA_MULTI_FAST_PERIODS = $FastPeriods
 $env:GEN5_WFA_MULTI_SLOW_PERIODS = $SlowPeriods
+$env:GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS = $BbLookbackPeriods
+$env:GEN5_WFA_MULTI_BB_SD_MULTIPLIERS = $BbSdMultipliers
+$env:GEN5_WFA_MULTI_CANDIDATE_FAMILIES = $CandidateFamilies
 $env:GEN5_WFA_MULTI_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 
 Push-Location $repoRoot

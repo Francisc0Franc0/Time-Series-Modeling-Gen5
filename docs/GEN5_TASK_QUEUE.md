@@ -351,6 +351,29 @@ Notes:
 - Stitched strategy and equity charts alternate fold backgrounds between white and light gray so fold transitions and EMA model-instance changes are auditable.
 - The workflow remains three-fold WFA plumbing only: it is not final research evidence, live advice, allocation logic, or a deployable strategy.
 
+### C4. Multi-signal WFA candidate competition and report
+
+Status: done
+
+Branch: `codex/Gen5.1-multi-signal-wfa-report`
+
+Goal: Add a second basic signal family, let `ema_cross` and `bollinger_touch` model instances compete inside each TRAIN fold, and expand the stitched metrics markdown into a transparent run report.
+
+Validation:
+
+- Focused Bollinger touch strategy tests passed.
+- Focused multi-fold WFA tests passed with EMA-only and mixed-candidate paths.
+- Final one-symbol AMD operator smoke passed with `-Refresh`.
+- Generated stitched OOS strategy and equity charts were visually inspected.
+
+Notes:
+
+- `strategy_family` now includes `ema_cross` and `bollinger_touch`.
+- `model_instance_id` names the concrete family plus params, such as `bollinger_touch_n20_sd2p5`.
+- Each TRAIN fold selects the best candidate model instance across all enabled families using train-window Sharpe, then return.
+- The markdown report now includes run context, data/query window, WFA settings, fold calendar, candidate signal models, fold winners, fold OOS summaries, stitched OOS metrics, buy-and-hold baseline, model stability, and audit notes.
+- Stitched charts plot EMA overlays only in EMA-selected folds and Bollinger bands only in Bollinger-selected folds.
+
 ### D. First research experiment design discussion
 
 Status: pending
