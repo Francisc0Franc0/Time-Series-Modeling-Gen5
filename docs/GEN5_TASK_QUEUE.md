@@ -213,6 +213,29 @@ Visible output:
 - Per-symbol coverage table.
 - Per-symbol chart paths or a compact chart set.
 
+### E. Codify chart aesthetic language
+
+Status: done
+
+Branch: `codex/Gen5.1-chart-aesthetic-language`
+
+Goal: Give Gen5.1 charts a consistent visual language before strategy overlays exist.
+
+Validation:
+
+- Focused chart tests passed.
+- Multi-symbol report smoke passed from cache and generated a visually inspected chart.
+- Final local test wrapper passed.
+- Final credentialed refresh smoke was attempted because chart/cache workflows should refresh on final smoke unless blocked.
+
+Notes:
+
+- Added `docs/GEN5_1_CHART_AESTHETIC.md`.
+- Added `g5_chart_aesthetic()` with standard candlestick colors, future native entry/exit markers, non-native exit markers, and win/loss round-trip connector colors.
+- Updated single and multi-symbol candlestick charts to use warm backgrounds, teal/coral candles, muted ink axes/text, 45-degree date labels, and softer grids.
+- Multi-symbol charts now use shared outer x/y axis labels instead of repeating axis labels in every pane.
+- The workflow remains visual inspection only: no indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
+
 ### D. First research experiment design discussion
 
 Status: pending

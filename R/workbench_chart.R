@@ -1,10 +1,48 @@
 # Gen5 v0.1 static workbench chart helpers.
 
+g5_chart_aesthetic <- function() {
+  list(
+    background = "#FFF8EF",
+    panel_background = "#FFFDF8",
+    grid = "#E8DED2",
+    axis = "#3A3442",
+    text = "#242033",
+    up_candle = "#00A88F",
+    down_candle = "#F15A5A",
+    flat_candle = "#6E6878",
+    native_entry_color = "#2E86AB",
+    native_entry_pch = 24L,
+    native_exit_color = "#F6C85F",
+    native_exit_pch = 25L,
+    non_native_exit_color = "#9B5DE5",
+    non_native_exit_pch = 4L,
+    trade_win_line = "#00A88F",
+    trade_loss_line = "#F15A5A",
+    trade_line_lty = 2L
+  )
+}
+
 g5_candlestick_artifact_prefix <- function(as_of_timestamp, symbol) {
   stamp <- gsub("[^0-9A-Za-z]+", "_", as.character(as_of_timestamp))
   stamp <- gsub("_+$", "", stamp)
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
   paste("candlestick", symbol, stamp, sep = "_")
+}
+
+g5_axis_date_labels_45 <- function(positions, labels, cex = 0.72, line_offset = 0.075, color = "#3A3442") {
+  graphics::axis(1, at = positions, labels = FALSE, col = color, col.ticks = color)
+  usr <- graphics::par("usr")
+  y <- usr[[3L]] - diff(usr[3:4]) * line_offset
+  graphics::text(
+    x = positions,
+    y = y,
+    labels = labels,
+    srt = 45,
+    adj = 1,
+    xpd = NA,
+    cex = cex,
+    col = color
+  )
 }
 
 g5_prepare_candlestick_bars <- function(
@@ -61,8 +99,10 @@ g5_draw_candlestick_panel <- function(
   symbol,
   title = NULL,
   show_legend = TRUE,
+  show_axis_labels = TRUE,
   axis_tick_count = 8L,
-  cex_main = 1
+  cex_main = 1,
+  aesthetic = g5_chart_aesthetic()
 ) {
   bars <- g5_prepare_candlestick_bars(bars, symbol)
   symbol <- g5_standardize_symbol(symbol)[[1L]]
@@ -82,9 +122,9 @@ g5_draw_candlestick_panel <- function(
   }
   y_limits <- y_range + c(-padding, padding)
   candle_width <- 0.62
-  up_color <- "#1B9E77"
-  down_color <- "#D95F02"
-  flat_color <- "#4D4D4D"
+  up_color <- aesthetic$up_candle
+  down_color <- aesthetic$down_candle
+  flat_color <- aesthetic$flat_candle
   body_colors <- ifelse(close > open, up_color, ifelse(close < open, down_color, flat_color))
 
   if (is.null(title)) {
@@ -96,12 +136,18 @@ g5_draw_candlestick_panel <- function(
     y = y_limits,
     type = "n",
     xaxt = "n",
-    xlab = "Session date",
-    ylab = "Adjusted daily price",
+    xlab = if (isTRUE(show_axis_labels)) "Session date" else "",
+    ylab = if (isTRUE(show_axis_labels)) "Adjusted daily price" else "",
     main = title,
-    cex.main = cex_main
+    cex.main = cex_main,
+    col.axis = aesthetic$axis,
+    col.lab = aesthetic$text,
+    col.main = aesthetic$text,
+    fg = aesthetic$axis
   )
-  graphics::grid(nx = NA, ny = NULL, col = "gray90")
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
 
   graphics::segments(x0 = x, y0 = low, x1 = x, y1 = high, col = body_colors, lwd = 1.2)
   body_bottom <- pmin(open, close)
@@ -130,14 +176,19 @@ g5_draw_candlestick_panel <- function(
 
   tick_count <- min(axis_tick_count, length(x))
   tick_positions <- unique(round(seq(1L, length(x), length.out = tick_count)))
-  graphics::axis(1, at = tick_positions, labels = as.character(session_dates[tick_positions]), las = 2)
+  g5_axis_date_labels_45(
+    positions = tick_positions,
+    labels = as.character(session_dates[tick_positions]),
+    color = aesthetic$axis
+  )
   if (isTRUE(show_legend)) {
     graphics::legend(
       "topleft",
       legend = c("close above open", "close below open", "unchanged"),
       fill = c(up_color, down_color, flat_color),
       border = NA,
-      bty = "n"
+      bty = "n",
+      text.col = aesthetic$text
     )
   }
   graphics::mtext(
@@ -151,7 +202,8 @@ g5_draw_candlestick_panel <- function(
     ),
     side = 3,
     line = 0.3,
-    cex = 0.85
+    cex = 0.85,
+    col = aesthetic$text
   )
 
   invisible(bars)
@@ -179,10 +231,18 @@ g5_write_static_candlestick_png <- function(
   )
 
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height))
   on.exit(grDevices::dev.off(), add = TRUE)
-  graphics::par(mar = c(6, 5, 4, 2))
-  g5_draw_candlestick_panel(prepared, symbol = symbol, title = title, show_legend = TRUE)
+  graphics::par(
+    mar = c(7.5, 5.2, 4, 2),
+    bg = aesthetic$background,
+    col.axis = aesthetic$axis,
+    col.lab = aesthetic$text,
+    col.main = aesthetic$text,
+    fg = aesthetic$axis
+  )
+  g5_draw_candlestick_panel(prepared, symbol = symbol, title = title, show_legend = TRUE, aesthetic = aesthetic)
 
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
@@ -219,13 +279,23 @@ g5_write_multi_symbol_candlestick_png <- function(
   cols <- ceiling(sqrt(panel_count))
   rows <- ceiling(panel_count / cols)
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height))
   old_par <- graphics::par(no.readonly = TRUE)
   on.exit({
     graphics::par(old_par)
     grDevices::dev.off()
   }, add = TRUE)
-  graphics::par(mfrow = c(rows, cols), mar = c(5, 4, 3, 1.5), oma = c(0, 0, 3, 0))
+  graphics::par(
+    mfrow = c(rows, cols),
+    mar = c(4.6, 3.6, 3, 1.4),
+    oma = c(5.2, 5.2, 3.4, 0.8),
+    bg = aesthetic$background,
+    col.axis = aesthetic$axis,
+    col.lab = aesthetic$text,
+    col.main = aesthetic$text,
+    fg = aesthetic$axis
+  )
 
   for (sym in symbols) {
     panel_title <- paste(sym, "Adjusted Daily")
@@ -234,13 +304,17 @@ g5_write_multi_symbol_candlestick_png <- function(
       symbol = sym,
       title = panel_title,
       show_legend = FALSE,
+      show_axis_labels = FALSE,
       axis_tick_count = 5L,
-      cex_main = 0.9
+      cex_main = 0.9,
+      aesthetic = aesthetic
     )
   }
   if (!is.null(title)) {
-    graphics::mtext(title, outer = TRUE, side = 3, line = 1, cex = 1.1, font = 2)
+    graphics::mtext(title, outer = TRUE, side = 3, line = 1, cex = 1.1, font = 2, col = aesthetic$text)
   }
+  graphics::mtext("Session date", outer = TRUE, side = 1, line = 3.6, cex = 0.95, col = aesthetic$text)
+  graphics::mtext("Adjusted daily price", outer = TRUE, side = 2, line = 3.6, cex = 0.95, col = aesthetic$text)
 
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }

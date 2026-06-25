@@ -249,6 +249,8 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/render_multi_symbol_rep
 
 Use `-Refresh` only when a credentialed Alpaca refresh is intended before rendering. If a symbol is stale, partial, empty, or missing from cache, the report keeps that visible in the health and coverage outputs. It charts symbols with available canonical bars and fails only when no requested symbol has chartable bars.
 
+The shared chart aesthetic is documented in `docs/GEN5_1_CHART_AESTHETIC.md`. It defines the standard candlestick colors, future trade marker colors/symbols, round-trip connector colors, backgrounds, and multi-pane layout rules.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.

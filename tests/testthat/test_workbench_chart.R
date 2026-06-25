@@ -41,6 +41,18 @@ test_that("static candlestick PNG renders from canonical adjusted daily bars", {
   )
 })
 
+test_that("chart aesthetic exposes stable colors and future trade markers", {
+  source(test_path("..", "..", "R", "workbench_chart.R"))
+
+  aesthetic <- g5_chart_aesthetic()
+  expect_identical(aesthetic$up_candle, "#00A88F")
+  expect_identical(aesthetic$down_candle, "#F15A5A")
+  expect_identical(aesthetic$native_entry_pch, 24L)
+  expect_identical(aesthetic$native_exit_pch, 25L)
+  expect_identical(aesthetic$non_native_exit_pch, 4L)
+  expect_identical(aesthetic$trade_line_lty, 2L)
+})
+
 test_that("multi-symbol candlestick PNG renders chart panes from canonical bars", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "workbench_chart.R"))

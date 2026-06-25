@@ -42,10 +42,11 @@ For each non-trivial task:
 4. Make a scoped change.
 5. Produce a tangible output when practical.
 6. Run focused checks and the local test wrapper when code, validation behavior, or operator docs change.
-7. Review `git status` and avoid staging generated artifacts, caches, credentials, or local config.
-8. Commit with a clear message.
-9. Push Codex task branches when validation passes and the worktree is clean.
-10. Summarize what changed, what was validated, and what decision or next slice remains.
+7. For operator-facing data/cache/chart workflows, run the final smoke with a credentialed refresh unless there is a specific reason not to; state the reason if refresh is skipped or blocked.
+8. Review `git status` and avoid staging generated artifacts, caches, credentials, or local config.
+9. Commit with a clear message.
+10. Push Codex task branches when validation passes and the worktree is clean.
+11. Summarize what changed, what was validated, and what decision or next slice remains.
 
 ## Flexible Capability Backlog
 
