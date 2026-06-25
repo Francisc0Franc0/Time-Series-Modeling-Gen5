@@ -236,6 +236,28 @@ Notes:
 - Multi-symbol charts now use shared outer x/y axis labels instead of repeating axis labels in every pane.
 - The workflow remains visual inspection only: no indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
 
+### F. Green-day hold diagnostic strategy proof
+
+Status: done
+
+Branch: `codex/Gen5.1-green-day-hold-strategy-proof`
+
+Goal: Prove Gen5 can program, chart, and account for a simple next-open strategy before attempting a minimal WFA POC.
+
+Validation:
+
+- Focused green-day hold strategy tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Final one-symbol AMD operator smoke passed with `-Refresh`.
+
+Notes:
+
+- Added a diagnostic strategy where `close > open` produces an entry signal on that bar, entry occurs at the next open, the position holds for a fixed number of trading sessions, exit signal occurs at the close after the hold window, and exit execution occurs at the next open.
+- The implementation assumes one position at a time, no leverage, all-in sizing, and full round trips. Open trades are marked to the latest close for chart tracing and marked accounting.
+- Added separate chart symbols for signal bars and execution bars.
+- Added standard trade-history metrics: trade counts, closed/open split, win/loss/flat counts, win rate, compounded closed/marked return, average/median/best/worst return, average win/loss, gross profit/loss, profit factor, expectancy, exposure, average holding sessions, and closed-trade drawdown.
+- The workflow remains a diagnostic strategy proof only: it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
+
 ### D. First research experiment design discussion
 
 Status: pending

@@ -251,6 +251,23 @@ Use `-Refresh` only when a credentialed Alpaca refresh is intended before render
 
 The shared chart aesthetic is documented in `docs/GEN5_1_CHART_AESTHETIC.md`. It defines the standard candlestick colors, future trade marker colors/symbols, round-trip connector colors, backgrounds, and multi-pane layout rules.
 
+## Green-Day Hold Diagnostic Strategy
+
+Gen5.1 includes one deliberately simple strategy proof before WFA work: when a bar closes above its open, record an entry signal on that signal bar, enter at the next session open, hold for a fixed number of trading sessions, record the exit signal at the close after the hold window, and exit at the next session open. It assumes one position at a time, no leverage, all-in sizing, and full round trips only. If a trade is still open at the end of the chart, its dashed connector traces from entry execution to the latest close.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_green_day_hold_demo.ps1 `
+  -Symbol AMD `
+  -LookbackDays 180 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -HoldSessions 10
+```
+
+Use `-Refresh` when a credentialed Alpaca refresh is intended before rendering. The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes bars, manifest, audit, coverage, health, trade history, chart events, metrics CSV/Markdown, and a strategy chart with separate signal and execution markers.
+
+The standard metrics currently emitted are trade count, closed/open trade count, win/loss/flat count, win rate, compounded closed return, compounded marked return, average/median/best/worst closed-trade return, average win/loss, gross profit/loss, profit factor, expectancy, exposure fraction, average holding sessions, and closed-trade equity drawdown. This is diagnostic accounting only; it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.

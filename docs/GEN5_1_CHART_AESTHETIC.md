@@ -17,6 +17,8 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 | Up candlestick | `#00A88F` | teal body/wick |
 | Down candlestick | `#F15A5A` | coral body/wick |
 | Flat candlestick | `#6E6878` | muted gray-plum |
+| Entry signal | `#00B4D8` | hollow circle, `pch = 21` |
+| Exit signal | `#FF9F1C` | hollow square, `pch = 22` |
 | Native trade entry | `#2E86AB` | filled triangle up, `pch = 24` |
 | Native trade exit | `#F6C85F` | filled triangle down, `pch = 25` |
 | Non-native exit | `#9B5DE5` | cross, `pch = 4` |
@@ -28,5 +30,7 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 - Single-symbol charts may show their own x/y axis labels.
 - Multi-symbol pane charts should share outer x/y axis labels.
 - Date tick labels should use a 45-degree angle.
+- Signal markers belong on the bar whose close generated the decision.
+- Execution markers belong on the next-open bar where the trade is modeled as filled.
 - Generated charts and reports belong under ignored `runs/` paths.
 - Chart styling must remain separate from research claims: inspection charts do not imply strategy, returns, WFA, allocation, live advice, or performance evidence.
