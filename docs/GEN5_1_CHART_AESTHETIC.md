@@ -24,6 +24,8 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 | Non-native exit | `#9B5DE5` | cross, `pch = 4` |
 | Winning round-trip connector | `#00A88F` | dashed line |
 | Losing round-trip connector | `#F15A5A` | dashed line |
+| Equity baseline | `#000000` | solid line |
+| Equity drawdown shading | `#F15A5A` | soft alpha fill |
 
 ## Layout Rules
 
@@ -32,5 +34,7 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 - Date tick labels should use a 45-degree angle.
 - Signal markers belong on the bar whose close generated the decision.
 - Execution markers belong on the next-open bar where the trade is modeled as filled.
+- Equity curves should show the diagnostic strategy against a no-leverage buy-and-hold baseline when a baseline is included.
+- Strategy underwater periods may be shaded softly in the down-candle color.
 - Generated charts and reports belong under ignored `runs/` paths.
 - Chart styling must remain separate from research claims: inspection charts do not imply strategy, returns, WFA, allocation, live advice, or performance evidence.

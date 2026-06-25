@@ -14,6 +14,8 @@ param(
 
   [int]$HoldSessions = 10,
 
+  [double]$Leverage = 1.0,
+
   [switch]$Refresh,
 
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
@@ -29,6 +31,9 @@ if (-not [string]::IsNullOrWhiteSpace($StartDate) -and $LookbackDays -gt 0) {
 }
 if ($HoldSessions -lt 1) {
   throw "-HoldSessions must be a positive integer."
+}
+if ($Leverage -le 0) {
+  throw "-Leverage must be a positive number."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -49,6 +54,7 @@ $env:GEN5_GREEN_DAY_HOLD_LOOKBACK_DAYS = if ($LookbackDays -gt 0) { [string]$Loo
 $env:GEN5_GREEN_DAY_HOLD_END_DATE = $EndDate
 $env:GEN5_AS_OF_TIMESTAMP = $AsOfTimestamp
 $env:GEN5_GREEN_DAY_HOLD_SESSIONS = [string]$HoldSessions
+$env:GEN5_GREEN_DAY_HOLD_LEVERAGE = [string]$Leverage
 $env:GEN5_GREEN_DAY_HOLD_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 
 Push-Location $repoRoot

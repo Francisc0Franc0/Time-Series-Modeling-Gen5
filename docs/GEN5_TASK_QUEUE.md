@@ -258,6 +258,28 @@ Notes:
 - Added standard trade-history metrics: trade counts, closed/open split, win/loss/flat counts, win rate, compounded closed/marked return, average/median/best/worst return, average win/loss, gross profit/loss, profit factor, expectancy, exposure, average holding sessions, and closed-trade drawdown.
 - The workflow remains a diagnostic strategy proof only: it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
 
+### G. Equity metrics and leverage diagnostic proof
+
+Status: done
+
+Branch: `codex/Gen5.1-green-day-hold-equity-metrics`
+
+Goal: Extend the green-day hold proof with equity-path metrics, a buy-and-hold baseline, and a 1.8x leverage diagnostic run before WFA work.
+
+Validation:
+
+- Focused green-day hold strategy tests passed, including 1.8x leverage expectations.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Final one-symbol AMD operator smokes passed with `-Refresh` for 1.0x and 1.8x.
+
+Notes:
+
+- Added daily strategy equity curves, buy-and-hold baseline curves, CAGR, max drawdown, time underwater, and max underwater streak.
+- Added equity curve PNG output with a solid black buy-and-hold baseline and soft red shading when strategy equity is underwater.
+- Added `-Leverage` to the operator launcher. Leverage is modeled as simple linear return exposure with no financing-cost model for this diagnostic slice.
+- Trade history now keeps underlying returns and leveraged returns so leverage effects are auditable.
+- The workflow remains a diagnostic accounting proof only: it is not WFA evidence, live advice, margin policy, allocation logic, or a deployable strategy.
+
 ### D. First research experiment design discussion
 
 Status: pending

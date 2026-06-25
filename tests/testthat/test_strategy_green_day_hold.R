@@ -109,6 +109,53 @@ test_that("strategy metrics summarize closed and marked trade accounting", {
   expect_equal(metrics$compounded_marked_return[[1L]], (13 / 11) - 1)
   expect_equal(metrics$average_holding_sessions[[1L]], 2)
   expect_equal(metrics$exposure_fraction[[1L]], 0.5)
+  expect_equal(metrics$ending_equity[[1L]], 13 / 11)
+  expect_equal(metrics$total_return[[1L]], (13 / 11) - 1)
+  expect_true(is.finite(metrics$cagr[[1L]]))
+  expect_equal(metrics$max_drawdown[[1L]], (10 / 11) - 1)
+  expect_equal(metrics$underwater_session_count[[1L]], 1L)
+  expect_equal(metrics$underwater_fraction[[1L]], 0.25)
+  expect_equal(metrics$buy_hold_total_return[[1L]], (12.5 / 11) - 1)
+})
+
+test_that("strategy equity curve marks daily closes and buy-and-hold baseline", {
+  bars <- g5_test_strategy_bars(
+    dates = c("2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04"),
+    open = c(10, 11, 12, 13),
+    high = c(11.5, 11.5, 13.5, 13.5),
+    low = c(9.5, 9.5, 11.5, 12.5),
+    close = c(11, 10, 13, 12.5)
+  )
+  trades <- g5_green_day_hold_trades(bars, symbol = "AMD", hold_sessions = 2L)
+
+  curve <- g5_green_day_hold_equity_curve(trades, bars, symbol = "AMD")
+
+  expect_equal(curve$strategy_equity, c(1, 10 / 11, 13 / 11, 13 / 11))
+  expect_equal(curve$buy_hold_equity, c(1, 10 / 11, 13 / 11, 12.5 / 11))
+  expect_equal(curve$strategy_drawdown, c(0, (10 / 11) - 1, 0, 0))
+  expect_equal(curve$in_position, c(FALSE, TRUE, TRUE, FALSE))
+})
+
+test_that("1.8 leverage exaggerates trade returns and equity drawdowns", {
+  bars <- g5_test_strategy_bars(
+    dates = c("2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04"),
+    open = c(10, 11, 12, 13),
+    high = c(11.5, 11.5, 13.5, 13.5),
+    low = c(9.5, 9.5, 11.5, 12.5),
+    close = c(11, 10, 13, 12.5)
+  )
+
+  trades_1x <- g5_green_day_hold_trades(bars, symbol = "AMD", hold_sessions = 2L, leverage = 1)
+  trades_18x <- g5_green_day_hold_trades(bars, symbol = "AMD", hold_sessions = 2L, leverage = 1.8)
+  curve_1x <- g5_green_day_hold_equity_curve(trades_1x, bars, symbol = "AMD")
+  curve_18x <- g5_green_day_hold_equity_curve(trades_18x, bars, symbol = "AMD")
+  metrics_18x <- g5_green_day_hold_metrics(trades_18x, bars, symbol = "AMD", equity_curve = curve_18x)
+
+  expect_equal(trades_18x$underlying_realized_return[[1L]], (13 / 11) - 1)
+  expect_equal(trades_18x$realized_return[[1L]], 1.8 * ((13 / 11) - 1))
+  expect_equal(curve_18x$strategy_equity, c(1, 1 + 1.8 * ((10 / 11) - 1), 1 + 1.8 * ((13 / 11) - 1), 1 + 1.8 * ((13 / 11) - 1)))
+  expect_lt(metrics_18x$max_drawdown[[1L]], min(curve_1x$strategy_drawdown))
+  expect_gt(metrics_18x$total_return[[1L]], tail(curve_1x$strategy_equity, 1L) - 1)
 })
 
 test_that("green-day hold strategy chart renders a PNG with signal and execution markers", {
@@ -123,6 +170,26 @@ test_that("green-day hold strategy chart renders a PNG with signal and execution
   png_path <- tempfile("g5_green_day_hold_", fileext = ".png")
 
   written <- g5_write_green_day_hold_chart_png(bars, symbol = "AMD", trades = trades, path = png_path)
+
+  expect_true(file.exists(written))
+  expect_gt(file.info(written)$size, 0)
+  signature <- readBin(written, what = "raw", n = 8L)
+  expect_identical(as.integer(signature), c(137L, 80L, 78L, 71L, 13L, 10L, 26L, 10L))
+})
+
+test_that("green-day hold equity curve chart renders a PNG with underwater shading", {
+  bars <- g5_test_strategy_bars(
+    dates = c("2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04"),
+    open = c(10, 11, 12, 13),
+    high = c(11.5, 11.5, 13.5, 13.5),
+    low = c(9.5, 9.5, 11.5, 12.5),
+    close = c(11, 10, 13, 12.5)
+  )
+  trades <- g5_green_day_hold_trades(bars, symbol = "AMD", hold_sessions = 2L)
+  curve <- g5_green_day_hold_equity_curve(trades, bars, symbol = "AMD")
+  png_path <- tempfile("g5_green_day_hold_equity_", fileext = ".png")
+
+  written <- g5_write_green_day_hold_equity_curve_png(curve, symbol = "AMD", path = png_path)
 
   expect_true(file.exists(written))
   expect_gt(file.info(written)$size, 0)

@@ -49,6 +49,10 @@ if (is.na(hold_sessions) || hold_sessions < 1L) {
   g5_stop("GEN5_GREEN_DAY_HOLD_SESSIONS must be a positive integer.")
 }
 
+leverage_env <- Sys.getenv("GEN5_GREEN_DAY_HOLD_LEVERAGE", unset = "1")
+leverage <- suppressWarnings(as.numeric(leverage_env))
+leverage <- g5_green_day_hold_validate_leverage(leverage)
+
 start_env <- Sys.getenv("GEN5_GREEN_DAY_HOLD_START_DATE", unset = "")
 end_env <- Sys.getenv("GEN5_GREEN_DAY_HOLD_END_DATE", unset = "")
 lookback_env <- Sys.getenv("GEN5_GREEN_DAY_HOLD_LOOKBACK_DAYS", unset = "")
@@ -83,6 +87,7 @@ message("Symbol: ", symbol)
 message("Requested: ", as.character(start_date), " to ", as.character(end_date))
 message("As of: ", as.character(as_of_timestamp))
 message("Hold sessions: ", hold_sessions)
+message("Leverage: ", leverage, "x")
 message("Refresh: ", refresh)
 message("Diagnostic only: this is not WFA evidence, live advice, or a deployable strategy.")
 
@@ -99,8 +104,8 @@ result <- g5_workbench_query_adjusted_daily_bars(
 )
 
 g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
-output_dir <- g5_green_day_hold_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, hold_sessions)
-written <- g5_write_green_day_hold_outputs(result, symbol = symbol, output_dir = output_dir, hold_sessions = hold_sessions)
+output_dir <- g5_green_day_hold_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, hold_sessions, leverage = leverage)
+written <- g5_write_green_day_hold_outputs(result, symbol = symbol, output_dir = output_dir, hold_sessions = hold_sessions, leverage = leverage)
 
 metrics <- written$metrics
 pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
@@ -115,7 +120,11 @@ message("  Open trades: ", metrics$open_trade_count[[1L]])
 message("  Win rate: ", pct(metrics$win_rate[[1L]]))
 message("  Compounded closed return: ", pct(metrics$compounded_closed_return[[1L]]))
 message("  Compounded marked return: ", pct(metrics$compounded_marked_return[[1L]]))
+message("  CAGR: ", pct(metrics$cagr[[1L]]))
+message("  Max drawdown: ", pct(metrics$max_drawdown[[1L]]))
+message("  Time underwater: ", metrics$underwater_session_count[[1L]], " sessions / ", pct(metrics$underwater_fraction[[1L]]))
 message("  Strategy chart: ", written$paths$strategy_chart_png)
+message("  Equity curve: ", written$paths$equity_curve_png)
 message("  Metrics: ", written$paths$metrics_md)
 message("")
 message("Data health:")

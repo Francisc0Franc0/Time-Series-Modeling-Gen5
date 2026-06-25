@@ -261,12 +261,15 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_green_day_hold_demo
   -LookbackDays 180 `
   -EndDate 2026-06-24 `
   -AsOfTimestamp "2026-06-24 17:30:00" `
-  -HoldSessions 10
+  -HoldSessions 10 `
+  -Leverage 1.0
 ```
 
-Use `-Refresh` when a credentialed Alpaca refresh is intended before rendering. The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes bars, manifest, audit, coverage, health, trade history, chart events, metrics CSV/Markdown, and a strategy chart with separate signal and execution markers.
+Use `-Refresh` when a credentialed Alpaca refresh is intended before rendering. Set `-Leverage 1.8` to run the same diagnostic strategy with 1.8x return exposure and no financing-cost model. The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes bars, manifest, audit, coverage, health, trade history, chart events, equity curve CSV, metrics CSV/Markdown, a strategy chart with separate signal and execution markers, and an equity curve PNG.
 
-The standard metrics currently emitted are trade count, closed/open trade count, win/loss/flat count, win rate, compounded closed return, compounded marked return, average/median/best/worst closed-trade return, average win/loss, gross profit/loss, profit factor, expectancy, exposure fraction, average holding sessions, and closed-trade equity drawdown. This is diagnostic accounting only; it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
+The equity curve marks strategy equity at each session close: cash remains flat, open positions are marked from entry open to that close, and closed trades are marked at exit open on the exit-execution date. The baseline is no-leverage buy-and-hold on the same asset over the chart period, drawn as a solid black line. Strategy drawdown periods are softly shaded red.
+
+The standard metrics currently emitted are trade count, closed/open trade count, win/loss/flat count, win rate, compounded closed return, compounded marked return, CAGR, max drawdown, time underwater, max underwater streak, average/median/best/worst closed-trade return, average win/loss, gross profit/loss, profit factor, expectancy, exposure fraction, average holding sessions, closed-trade equity drawdown, and matching buy-and-hold return/CAGR/drawdown/time-underwater baseline metrics. This is diagnostic accounting only; it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
 
 ## Generated Local Files
 
