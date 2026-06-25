@@ -555,13 +555,22 @@ g5_write_green_day_hold_equity_curve_png <- function(
       peak_level <- strategy_peak[[idx[[1L]]]]
       segment_start <- max(1L, idx[[1L]] - 1L)
       segment_end <- idx[[length(idx)]]
+      segment_end_x <- x[[segment_end]]
       if (segment_end < length(x) && !isTRUE(underwater[[segment_end + 1L]])) {
-        segment_end <- segment_end + 1L
+        y0 <- as.numeric(equity_curve$strategy_equity[[segment_end]])
+        y1 <- as.numeric(equity_curve$strategy_equity[[segment_end + 1L]])
+        if (is.finite(y0) && is.finite(y1) && y1 != y0) {
+          crossing_fraction <- (peak_level - y0) / (y1 - y0)
+          crossing_fraction <- max(0, min(1, crossing_fraction))
+          segment_end_x <- x[[segment_end]] + crossing_fraction * (x[[segment_end + 1L]] - x[[segment_end]])
+        } else {
+          segment_end_x <- x[[segment_end + 1L]]
+        }
       }
       graphics::segments(
         x0 = x[[segment_start]],
         y0 = peak_level,
-        x1 = x[[segment_end]],
+        x1 = segment_end_x,
         y1 = peak_level,
         col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42),
         lwd = 2.4,
