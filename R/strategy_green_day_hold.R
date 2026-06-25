@@ -552,11 +552,16 @@ g5_write_green_day_hold_equity_curve_png <- function(
         next
       }
       idx <- seq(run_starts[[i]], run_ends[[i]])
-      graphics::polygon(
-        x = c(x[idx], rev(x[idx])),
-        y = c(strategy_peak[idx], rev(equity_curve$strategy_equity[idx])),
-        col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.25),
-        border = NA
+      peak_level <- strategy_peak[[idx[[1L]]]]
+      segment_start <- max(1L, idx[[1L]] - 1L)
+      graphics::segments(
+        x0 = x[[segment_start]],
+        y0 = peak_level,
+        x1 = x[[idx[[length(idx)]]]],
+        y1 = peak_level,
+        col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42),
+        lwd = 2.4,
+        lend = "round"
       )
     }
   }
@@ -574,11 +579,10 @@ g5_write_green_day_hold_equity_curve_png <- function(
   )
   graphics::legend(
     "topleft",
-    legend = c("strategy", "buy and hold", "drawdown area"),
-    lty = c(1, 1, NA),
-    lwd = c(2.2, 1.8, NA),
-    pch = c(NA, NA, 15),
-    col = c(aesthetic$trade_win_line, "#000000", grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.35)),
+    legend = c("strategy", "buy and hold", "drawdown shelf"),
+    lty = c(1, 1, 1),
+    lwd = c(2.2, 1.8, 2.4),
+    col = c(aesthetic$trade_win_line, "#000000", grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42)),
     bty = "n",
     text.col = aesthetic$text,
     cex = 0.9
