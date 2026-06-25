@@ -55,7 +55,7 @@ g5_ema_cross_wfa_resolve_folds <- function(
     }
     train_start_date <- min(train_start_candidates)
     train_end_target <- train_start_date + train_days - 1L
-    if (latest_date < train_end_target) {
+    if (fold_no == 1L && latest_date < train_end_target) {
       g5_stop(paste0(
         "Insufficient data for fold ",
         fold_no,
@@ -66,7 +66,14 @@ g5_ema_cross_wfa_resolve_folds <- function(
         "."
       ))
     }
-    train_end_date <- max(dates[dates <= train_end_target])
+    train_end_date <- if (fold_no == 1L) {
+      max(dates[dates <= train_end_target])
+    } else {
+      as.Date(folds[[fold_no - 1L]]$oos_end_date[[1L]])
+    }
+    if (train_end_date < train_start_date) {
+      g5_stop(paste0("Insufficient data for fold ", fold_no, ": rolling train window is empty."))
+    }
     oos_start_candidates <- dates[dates > train_end_date]
     if (length(oos_start_candidates) == 0L) {
       g5_stop(paste0("Insufficient data for fold ", fold_no, ": no OOS session exists after the train window."))
@@ -573,13 +580,60 @@ g5_ema_cross_wfa_model_stability <- function(selected_models) {
   out
 }
 
-g5_plot_fold_backgrounds <- function(session_dates, folds, color_a = "#FFFFFF", color_b = "#F2F3F5") {
+g5_ema_cross_wfa_fold_background_spans <- function(session_dates, folds, fold_ids = NULL, color_a = "#FFFFFF", color_b = "#F2F3F5") {
+  session_dates <- as.Date(session_dates)
+  if (!is.data.frame(folds) || nrow(folds) == 0L) {
+    g5_stop("folds must be a non-empty data.frame.")
+  }
+  if (length(session_dates) == 0L || anyNA(session_dates)) {
+    g5_stop("session_dates must be non-empty dates with no missing values.")
+  }
+  if (is.null(fold_ids)) {
+    fold_ids <- vapply(session_dates, function(session_date) {
+      idx <- which(session_date >= as.Date(folds$oos_start_date) & session_date <= as.Date(folds$oos_end_date))
+      if (length(idx) == 0L) NA_character_ else as.character(folds$fold_id[[idx[[1L]]]])
+    }, character(1L))
+  }
+  fold_ids <- as.character(fold_ids)
+  if (length(fold_ids) != length(session_dates)) {
+    g5_stop("fold_ids must be the same length as session_dates.")
+  }
+  if (anyNA(fold_ids)) {
+    g5_stop("Every plotted row must map to a WFA fold before drawing fold backgrounds.")
+  }
+  fold_match <- match(fold_ids, as.character(folds$fold_id))
+  if (anyNA(fold_match)) {
+    g5_stop("fold_ids contains a fold not present in folds.")
+  }
+
+  runs <- rle(fold_ids)
+  run_ends <- cumsum(runs$lengths)
+  run_starts <- run_ends - runs$lengths + 1L
+  rows <- vector("list", length(runs$values))
+  for (i in seq_along(runs$values)) {
+    fold_idx <- match(runs$values[[i]], as.character(folds$fold_id))
+    fold_no <- if ("fold_no" %in% names(folds)) as.integer(folds$fold_no[[fold_idx]]) else fold_idx
+    rows[[i]] <- data.frame(
+      fold_id = runs$values[[i]],
+      fold_no = fold_no,
+      start_index = run_starts[[i]],
+      end_index = run_ends[[i]],
+      xleft = if (run_starts[[i]] == 1L) 0.5 else run_starts[[i]] - 0.5,
+      xright = if (run_ends[[i]] == length(session_dates)) length(session_dates) + 0.5 else run_ends[[i]] + 0.5,
+      fill = if (fold_no %% 2L == 1L) color_a else color_b,
+      stringsAsFactors = FALSE
+    )
+  }
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out
+}
+
+g5_plot_fold_backgrounds <- function(session_dates, folds, fold_ids = NULL, color_a = "#FFFFFF", color_b = "#F2F3F5") {
   usr <- graphics::par("usr")
-  for (i in seq_len(nrow(folds))) {
-    start_idx <- min(which(as.Date(session_dates) >= as.Date(folds$oos_start_date[[i]])))
-    end_idx <- max(which(as.Date(session_dates) <= as.Date(folds$oos_end_date[[i]])))
-    col <- if (i %% 2L == 1L) color_a else color_b
-    graphics::rect(start_idx - 0.5, usr[[3L]], end_idx + 0.5, usr[[4L]], col = col, border = NA)
+  spans <- g5_ema_cross_wfa_fold_background_spans(session_dates, folds, fold_ids = fold_ids, color_a = color_a, color_b = color_b)
+  for (i in seq_len(nrow(spans))) {
+    graphics::rect(spans$xleft[[i]], usr[[3L]], spans$xright[[i]], usr[[4L]], col = spans$fill[[i]], border = NA)
   }
 }
 
@@ -602,8 +656,8 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height))
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(7.5, 5.2, 4, 2), bg = aesthetic$background, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
-  graphics::plot(x = c(0.5, length(x) + 0.5), y = y_limits, type = "n", xaxt = "n", xlab = "Session date", ylab = "Adjusted daily price", main = paste(symbol, "EMA Cross Three-Fold WFA OOS"), col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
-  g5_plot_fold_backgrounds(session_dates, folds)
+  graphics::plot(x = c(0.5, length(x) + 0.5), y = y_limits, type = "n", xaxt = "n", xaxs = "i", xlab = "Session date", ylab = "Adjusted daily price", main = paste(symbol, "EMA Cross Three-Fold WFA OOS"), col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
+  g5_plot_fold_backgrounds(session_dates, folds, fold_ids = indicators$fold_id)
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
   graphics::segments(x0 = x, y0 = indicators$low, x1 = x, y1 = indicators$high, col = body_colors, lwd = 1.2)
   candle_width <- 0.62
@@ -662,7 +716,7 @@ g5_write_ema_cross_wfa_stitched_equity_curve_png <- function(equity_curve, folds
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height))
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(7.5, 5.2, 4, 2), bg = aesthetic$background, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
-  graphics::plot(x = c(0.5, length(x) + 0.5), y = y_limits, type = "n", xaxt = "n", xlab = "Session date", ylab = "Equity, starting at 1.0", main = paste(symbol, "EMA Cross Three-Fold WFA Stitched OOS Equity"), col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
+  graphics::plot(x = c(0.5, length(x) + 0.5), y = y_limits, type = "n", xaxt = "n", xaxs = "i", xlab = "Session date", ylab = "Equity, starting at 1.0", main = paste(symbol, "EMA Cross Three-Fold WFA Stitched OOS Equity"), col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
   g5_plot_fold_backgrounds(session_dates, folds)
   underwater <- equity_curve$strategy_equity < strategy_peak
   if (any(underwater, na.rm = TRUE)) {

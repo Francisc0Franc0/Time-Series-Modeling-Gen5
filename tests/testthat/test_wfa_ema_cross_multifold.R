@@ -6,6 +6,10 @@ source(test_path("..", "..", "R", "wfa_ema_cross_multifold.R"))
 
 g5_test_wfa_multi_bars <- function(symbol = "AMD", close) {
   dates <- as.Date("2026-01-01") + seq_along(close) - 1L
+  g5_test_wfa_multi_bars_for_dates(symbol = symbol, dates = dates, close = close)
+}
+
+g5_test_wfa_multi_bars_for_dates <- function(symbol = "AMD", dates, close) {
   data.frame(
     symbol = symbol,
     session_date = dates,
@@ -50,6 +54,28 @@ test_that("multi-fold EMA WFA resolves rolling non-overlapping OOS folds", {
   expect_equal(folds$oos_start_date, as.Date(c("2026-01-11", "2026-01-16", "2026-01-21")))
   expect_equal(folds$oos_end_date, as.Date(c("2026-01-15", "2026-01-20", "2026-01-25")))
   expect_true(all(folds$oos_start_date[-1L] > folds$oos_end_date[-nrow(folds)]))
+})
+
+test_that("multi-fold EMA WFA rolls OOS folds by available sessions without overlap gaps", {
+  dates <- as.Date("2026-01-01") + 0:60
+  dates <- dates[!weekdays(dates) %in% c("Saturday", "Sunday")]
+  bars <- g5_test_wfa_multi_bars_for_dates(close = seq(10, 60, length.out = length(dates)), dates = dates)
+
+  folds <- g5_ema_cross_wfa_resolve_folds(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    train_quarters = g5_test_multi_quarters_for_days(10),
+    oos_quarters = g5_test_multi_quarters_for_days(10),
+    fold_count = 3L
+  )
+
+  for (i in 2:nrow(folds)) {
+    expected_start <- min(dates[dates > folds$oos_end_date[[i - 1L]]])
+    expect_equal(folds$oos_start_date[[i]], expected_start)
+    expect_gt(folds$oos_start_date[[i]], folds$oos_end_date[[i - 1L]])
+  }
 })
 
 test_that("multi-fold EMA WFA fails loudly when three folds cannot fit", {
@@ -99,6 +125,25 @@ test_that("multi-fold EMA WFA selects a model instance per fold and stitches OOS
   expect_equal(nrow(wfa$fold_oos_summary), 3L)
   expect_equal(wfa$model_stability$selected_fold_count[[1L]], 3L)
   expect_true("carried_across_fold_boundary" %in% names(wfa$stitched_trades) || nrow(wfa$stitched_trades) == 0L)
+})
+
+test_that("multi-fold chart background spans cover plotted folds without side gaps", {
+  folds <- data.frame(
+    fold_id = c("fold_001", "fold_002", "fold_003"),
+    fold_no = 1:3,
+    oos_start_date = as.Date(c("2026-01-02", "2026-01-05", "2026-01-08")),
+    oos_end_date = as.Date(c("2026-01-04", "2026-01-07", "2026-01-10")),
+    stringsAsFactors = FALSE
+  )
+  session_dates <- as.Date("2026-01-01") + 0:8
+  fold_ids <- c(rep("fold_001", 3L), rep("fold_002", 3L), rep("fold_003", 3L))
+
+  spans <- g5_ema_cross_wfa_fold_background_spans(session_dates, folds, fold_ids = fold_ids)
+
+  expect_equal(spans$fold_id, folds$fold_id)
+  expect_equal(spans$xleft, c(0.5, 3.5, 6.5))
+  expect_equal(spans$xright, c(3.5, 6.5, 9.5))
+  expect_equal(spans$fill, c("#FFFFFF", "#F2F3F5", "#FFFFFF"))
 })
 
 test_that("multi-fold WFA stitched charts render fold-shaded PNGs", {
