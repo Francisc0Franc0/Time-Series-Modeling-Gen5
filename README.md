@@ -303,6 +303,25 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_backtest.
 
 The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes the query artifacts, parameter-performance table, selected indicators, selected trade history, chart events, selected equity curve, metrics CSV/Markdown, a selected strategy chart, and selected equity curve PNG. This is a basic backtest proof only: it is not train/OOS validation, WFA evidence, live advice, allocation logic, or a deployable strategy.
 
+## EMA Cross One-Fold WFA POC
+
+The first WFA proof of concept runs exactly one earliest possible train/OOS fold. By default it pulls about 2.9 years of data, trains on 8 quarters, runs OOS on 1 quarter, selects EMA parameters by train-window Sharpe, then freezes that parameter set before running the OOS slice. The OOS strategy starts flat, except that an entry signal generated at the final train-session close may execute at the first OOS open.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_poc.ps1 `
+  -Symbol AMD `
+  -LookbackDays 1065 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes the query artifacts, fold specification, train parameter-performance table, train-selected metrics, OOS context indicators, OOS trades/events/equity/metrics, an OOS strategy chart, and an OOS equity curve PNG. This is one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.

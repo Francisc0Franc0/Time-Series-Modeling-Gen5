@@ -303,6 +303,29 @@ Notes:
 - Leverage is modeled as simple linear return exposure with no financing-cost model for this diagnostic slice.
 - The workflow remains a pure in-sample backtest proof only: it is not train/OOS validation, WFA evidence, live advice, allocation logic, or a deployable strategy.
 
+### I. EMA cross one-fold WFA POC
+
+Status: done
+
+Branch: `codex/Gen5.1-ema-cross-wfa-poc`
+
+Goal: Prove the smallest train/OOS boundary on top of the EMA cross backtest: one earliest possible fold, 8 train quarters, 1 OOS quarter, train-selected EMA parameters, frozen OOS execution, OOS charting, and OOS metrics.
+
+Validation:
+
+- Focused one-fold EMA WFA tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Final one-symbol AMD operator smoke passed with `-Refresh`.
+
+Notes:
+
+- The POC fails loudly when the data window cannot support one train/OOS fold.
+- The default operator launcher pulls about 2.9 years of requested data and extra EMA warmup history.
+- Train selection uses the existing EMA parameter grid and ranks by train-window Sharpe, then return.
+- OOS starts flat except that a final train-session close signal may execute at the first OOS open.
+- OOS outputs include fold spec, train parameter table, train-selected metrics, OOS trades/events/equity/metrics, OOS strategy chart, and OOS equity curve.
+- The workflow remains one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
+
 ### D. First research experiment design discussion
 
 Status: pending

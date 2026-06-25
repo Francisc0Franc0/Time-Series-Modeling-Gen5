@@ -641,7 +641,7 @@ g5_plot_ema_cross_overlays <- function(trades, indicators, aesthetic = g5_chart_
   invisible(TRUE)
 }
 
-g5_write_ema_cross_chart_png <- function(bars, symbol, trades, fast_period, slow_period, trading_start_date, trading_end_date, path, width = 1400L, height = 820L) {
+g5_write_ema_cross_chart_png <- function(bars, symbol, trades, fast_period, slow_period, trading_start_date, trading_end_date, path, width = 1400L, height = 820L, title = NULL) {
   indicators <- g5_ema_cross_indicators(
     bars,
     symbol = symbol,
@@ -652,13 +652,16 @@ g5_write_ema_cross_chart_png <- function(bars, symbol, trades, fast_period, slow
   )
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   aesthetic <- g5_chart_aesthetic()
+  if (is.null(title)) {
+    title <- paste(symbol, "EMA Cross Backtest")
+  }
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height))
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(7.5, 5.2, 4, 2), bg = aesthetic$background, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
   g5_draw_candlestick_panel(
     indicators,
     symbol = symbol,
-    title = paste(symbol, "EMA Cross Backtest"),
+    title = title,
     show_legend = FALSE,
     aesthetic = aesthetic
   )
