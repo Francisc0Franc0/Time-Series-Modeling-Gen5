@@ -25,7 +25,7 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 | Winning round-trip connector | `#00A88F` | dashed line |
 | Losing round-trip connector | `#F15A5A` | dashed line |
 | Equity baseline | `#000000` | solid line |
-| Equity drawdown shading | `#F15A5A` | soft alpha fill |
+| Equity drawdown shading | `#F15A5A` | soft alpha area below high-water mark |
 
 ## Layout Rules
 
@@ -35,6 +35,6 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 - Signal markers belong on the bar whose close generated the decision.
 - Execution markers belong on the next-open bar where the trade is modeled as filled.
 - Equity curves should show the diagnostic strategy against a no-leverage buy-and-hold baseline when a baseline is included.
-- Strategy underwater periods may be shaded softly in the down-candle color.
+- Strategy drawdowns should be shaded as the actual area between equity and the running high-water mark, not as full-height background bands.
 - Generated charts and reports belong under ignored `runs/` paths.
 - Chart styling must remain separate from research claims: inspection charts do not imply strategy, returns, WFA, allocation, live advice, or performance evidence.

@@ -507,7 +507,8 @@ g5_write_green_day_hold_equity_curve_png <- function(
     title <- paste(symbol, "Green-Day Hold Equity Curve")
   }
   x <- seq_len(nrow(equity_curve))
-  y <- range(c(equity_curve$strategy_equity, equity_curve$buy_hold_equity), finite = TRUE)
+  strategy_peak <- cummax(as.numeric(equity_curve$strategy_equity))
+  y <- range(c(equity_curve$strategy_equity, strategy_peak, equity_curve$buy_hold_equity), finite = TRUE)
   padding <- diff(y) * 0.08
   if (!is.finite(padding) || padding <= 0) {
     padding <- max(abs(y), 1) * 0.03
@@ -541,16 +542,23 @@ g5_write_green_day_hold_equity_curve_png <- function(
   )
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
-  underwater <- equity_curve$strategy_drawdown < 0
+  underwater <- equity_curve$strategy_equity < strategy_peak
   if (any(underwater, na.rm = TRUE)) {
-    graphics::rect(
-      xleft = x[underwater] - 0.5,
-      ybottom = usr[[3L]],
-      xright = x[underwater] + 0.5,
-      ytop = usr[[4L]],
-      col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.12),
-      border = NA
-    )
+    runs <- rle(underwater)
+    run_ends <- cumsum(runs$lengths)
+    run_starts <- run_ends - runs$lengths + 1L
+    for (i in seq_along(runs$values)) {
+      if (!isTRUE(runs$values[[i]])) {
+        next
+      }
+      idx <- seq(run_starts[[i]], run_ends[[i]])
+      graphics::polygon(
+        x = c(x[idx], rev(x[idx])),
+        y = c(strategy_peak[idx], rev(equity_curve$strategy_equity[idx])),
+        col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.25),
+        border = NA
+      )
+    }
   }
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
   graphics::abline(h = 1, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.35), lty = 3)
@@ -566,7 +574,7 @@ g5_write_green_day_hold_equity_curve_png <- function(
   )
   graphics::legend(
     "topleft",
-    legend = c("strategy", "buy and hold", "strategy underwater"),
+    legend = c("strategy", "buy and hold", "drawdown area"),
     lty = c(1, 1, NA),
     lwd = c(2.2, 1.8, NA),
     pch = c(NA, NA, 15),
