@@ -16,6 +16,8 @@ The visible behavior now available is practical: an operator can choose a small 
 
 Codex may work this queue within the Gen5 data-layer and research-plumbing scope defined in `AGENTS.md` and `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. For the Minimal WFA Engine Toward AMD EMA POC milestone below, Codex may also work autonomously within that section's allowed files, stop conditions, and validation expectations.
 
+The default operating model is delegated technical execution inside opened scopes. Codex may create `codex/` task branches, decompose a queued technical goal into serial slices, make conservative low-level implementation choices from repo context, run focused checks and the local test wrapper, update docs, commit validated slices, and push completed Codex branches without pausing for routine operator decisions. The operator retains authority over high-level gates, research direction, provider/dependency changes, live/execution behavior, allocation/leverage policy, performance claims, and any ambiguous decision that changes project trajectory.
+
 For each task, Codex should:
 
 - read the relevant files before editing;
@@ -24,7 +26,7 @@ For each task, Codex should:
 - preserve explicit `as_of_timestamp` and bounded-request invariants;
 - run `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` when code, validation behavior, operator commands, or data-layer documentation meaningfully changes;
 - commit completed work with a clear message;
-- push only when authorized for the current run;
+- push completed Codex task branches when validation passes and the worktree is clean, unless the operator explicitly says not to push;
 - update this queue when task status changes.
 
 Codex must stop and ask before:
@@ -33,8 +35,10 @@ Codex must stop and ask before:
 - changing provider scope beyond Alpaca adjusted daily OHLCV;
 - making destructive file operations;
 - changing live-facing behavior beyond advice-only market-data-layer outputs;
+- opening a new research gate or changing the accepted build order;
 - starting WFA outside the explicitly queued contract/scaffold tasks, or starting PCA, strategy, exit, allocation, dashboard, execution, or order-routing work;
-- resolving ambiguous project decisions by assumption.
+- computing or interpreting performance metrics, trade PnL, trade returns, fold/global summaries, allocation, leverage value-add, or performance claims unless the exact surface has been explicitly opened;
+- resolving ambiguous project, research, risk, or methodology decisions by assumption.
 
 ## Status Legend
 
