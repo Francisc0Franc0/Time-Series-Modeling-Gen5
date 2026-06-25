@@ -10,7 +10,7 @@ Gen5 targets a long-only, rolling walk-forward, regime-conditioned tactical equi
 
 ## Current Decisions
 
-These are architectural decisions and later build-order constraints, not a claim that downstream modules are already implemented. The current v0 implementation target remains the market-data layer.
+These are architectural decisions and desired capability areas, not a claim that downstream modules are already implemented. The current Gen5.1 base is the completed v0/v0.1 market-data layer and research workbench.
 
 - Core language: R-first.
 - Provider: Alpaca only for v0.
@@ -18,13 +18,13 @@ These are architectural decisions and later build-order constraints, not a claim
 - Trading posture: long-only.
 - Live posture: advice-only.
 - Signal timing: after-close analysis for next-open manual market orders.
-- Initial strategy vertical slice: `ema_cross` plus `no_trade`.
-- Initial state benchmark: asset-specific PCA, added after data layer and minimal WFA are stable.
+- Possible early strategy vertical slice: `ema_cross` plus `no_trade`.
+- Possible state benchmark: asset-specific PCA, added only if and when the operator opens that slice.
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.
 - Leverage reports: always compare 1.0x baseline with 1.8x leveraged variant.
 - Drawdown discomfort threshold: 25% is a major design warning level.
 - Local heavy cache: ignored repo-local `data_cache/` is acceptable for v0.1 simplicity; outside-OneDrive cache roots remain an optional operator optimization.
-- Research handoff: future WFA code must consume workbench handoff artifacts and must not call Alpaca directly.
+- Research handoff: future WFA or research code should consume workbench handoff artifacts and must not call Alpaca directly unless the operator explicitly opens a provider/data-layer change.
 
 ## Semantic Modules
 
@@ -79,16 +79,20 @@ The v0.1 Research Data Workbench adds a handoff manifest and gate checklist for 
 - Pipeline behavior controlled by large global side effects.
 - Live runner logic that reinterprets research authority.
 
-## Build Order
+## Flexible Capability Map
 
-- Data layer and cache contract.
-- Research Data Workbench: small basket/date-range query, universe registry, severity-labeled data health, static candlestick inspection, opt-in credential preflight, and research handoff manifest.
-- Minimal WFA engine.
-- Asset universe/taxonomy studies.
+The data layer and research workbench are complete enough to serve as the base. Everything after that is a capability backlog, not a rigid build order:
+
+- Better data inspection reports.
 - Feature engine.
-- PCA state model.
-- Strategy vertical slice with explicit cash/no-position and buy-and-hold baselines.
+- Asset universe/taxonomy studies.
+- Walk-forward evaluation methodology.
+- Strategy vertical slices with explicit cash/no-position and buy-and-hold baselines.
+- PCA or other state/regime models.
 - Trade-scoped exit policy layer.
-- Allocation inside WFA.
-- Frozen decision pack.
+- Allocation and concentration controls.
+- Leverage comparison reports.
+- Frozen decision packs.
 - Advice-only dashboard/live runner.
+
+The operator may choose the next slice organically. Codex should translate that direction into scoped, validated increments with tangible outputs rather than forcing the entire capability map into a predetermined sequence.
