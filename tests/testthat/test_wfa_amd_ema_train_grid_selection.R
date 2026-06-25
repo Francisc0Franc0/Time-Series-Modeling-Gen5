@@ -10,6 +10,8 @@ source(test_path("..", "..", "R", "wfa_minimal_poc_manifest.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_gate.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_evaluation_contract.R"))
 source(test_path("..", "..", "R", "wfa_amd_ema_train_grid_selection.R"))
+source(test_path("..", "..", "R", "wfa_amd_ema_parameter_freeze_contract.R"))
+source(test_path("..", "..", "R", "wfa_amd_ema_parameter_application_boundary.R"))
 
 g5_test_amd_ema_train_grid_code_metadata <- function() {
   data.frame(
@@ -332,5 +334,91 @@ test_that("AMD EMA TRAIN grid selection writers use ignored run paths", {
       manifest_path = file.path(tempdir(), "not_runs", "manifest.csv")
     ),
     "ignored runs"
+  )
+})
+
+test_that("AMD EMA TRAIN grid selection stack validates freeze and application lineage", {
+  fixture <- g5_test_amd_ema_train_grid_fixture()
+  selection <- g5_build_wfa_amd_ema_train_grid_selection(
+    evaluation_contract_scaffold = fixture$evaluation_contract,
+    evaluation_contract_readiness_review = fixture$evaluation_readiness,
+    bars = fixture$bars,
+    operator_accepts_readiness_review = TRUE
+  )
+  freeze <- g5_build_wfa_amd_ema_parameter_freeze_contract(
+    evaluation_contract_scaffold = fixture$evaluation_contract,
+    evaluation_contract_readiness_review = fixture$evaluation_readiness,
+    parameter_decisions = selection$selected_parameters,
+    operator_accepts_readiness_review = TRUE
+  )
+  freeze_readiness <- g5_build_wfa_amd_ema_parameter_freeze_readiness_review(freeze)
+  application <- g5_build_wfa_amd_ema_parameter_application_boundary(
+    parameter_freeze_contract = freeze,
+    parameter_freeze_readiness_review = freeze_readiness,
+    operator_accepts_freeze_readiness_review = TRUE
+  )
+
+  expect_silent(g5_validate_wfa_amd_ema_train_grid_selection_stack(
+    train_grid_selection = selection,
+    parameter_freeze_contract = freeze,
+    parameter_application_boundary = application,
+    bars = fixture$bars
+  ))
+
+  oos_usage_drift <- selection
+  oos_usage_drift$train_measurement_surface$oos_usage_status[[1L]] <- "oos_rows_used"
+  expect_error(
+    g5_validate_wfa_amd_ema_train_grid_selection_stack(
+      train_grid_selection = oos_usage_drift,
+      parameter_freeze_contract = freeze,
+      parameter_application_boundary = application,
+      bars = fixture$bars
+    ),
+    "OOS rows were not read"
+  )
+
+  frozen_drift <- freeze
+  candidate_index <- which(frozen_drift$freeze_surface$subject_id == "amd_ema_long_cash")[[1L]]
+  frozen_drift$freeze_surface$slow_ema_period[[candidate_index]] <-
+    frozen_drift$freeze_surface$slow_ema_period[[candidate_index]] + 1L
+  expect_error(
+    g5_validate_wfa_amd_ema_train_grid_selection_stack(
+      train_grid_selection = selection,
+      parameter_freeze_contract = frozen_drift,
+      parameter_application_boundary = NULL,
+      bars = fixture$bars
+    ),
+    "preserve selected TRAIN grid parameters"
+  )
+
+  non_amd_bars <- rbind(
+    fixture$bars,
+    data.frame(
+      symbol = "SPY",
+      session_date = as.Date("2026-04-06"),
+      open = 200,
+      high = 201,
+      low = 199,
+      close = 200.5,
+      volume = 2000,
+      adjusted = TRUE,
+      timeframe = "1D",
+      provider = "alpaca",
+      as_of_timestamp = "2026-04-06 17:00:00",
+      latest_completed_session = as.Date("2026-04-06"),
+      fetch_start_date = as.Date("2025-12-29"),
+      fetch_end_date = as.Date("2026-04-06"),
+      data_version_hash = "spy_hash_1",
+      stringsAsFactors = FALSE
+    )
+  )
+  expect_error(
+    g5_validate_wfa_amd_ema_train_grid_selection_stack(
+      train_grid_selection = selection,
+      parameter_freeze_contract = freeze,
+      parameter_application_boundary = application,
+      bars = non_amd_bars
+    ),
+    "AMD bars only"
   )
 })

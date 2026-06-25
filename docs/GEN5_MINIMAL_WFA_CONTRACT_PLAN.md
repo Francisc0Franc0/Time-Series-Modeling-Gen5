@@ -42,6 +42,8 @@ Implementation note: the first AMD EMA TRAIN-only grid-selection scaffold now ex
 
 Implementation note: the AMD EMA parameter-freeze and OOS application boundary path now accepts the TRAIN grid-selected authority status `train_only_grid_selected_no_oos_outcome_authority` in addition to the earlier operator-supplied train-only status. The downstream AMD EMA fixtures now freeze selected TRAIN grid parameters before OOS application, preserving the same no-trade-first comparison rows, explicit timestamp lineage, and STOP states. This changes parameter lineage only; it does not use OOS rows for selection or add live advice, execution, allocation, leverage, dashboards, broader strategy families, or performance claims.
 
+Implementation note: the AMD EMA TRAIN grid-selection stack validator now exists in `R/wfa_amd_ema_train_grid_selection.R`. It validates TRAIN grid selection, parameter freeze, optional OOS application boundary, and canonical AMD bars together; recomputes grid signal-count evidence from TRAIN rows only; proves selected periods came from the declared grid; checks no-trade-first rows, explicit timestamps, freeze/application lineage, and canonical Alpaca adjusted daily AMD input; and keeps OOS selection, provider calls, live advice, execution, allocation, leverage, dashboards, broader strategy families, and performance claims stopped.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

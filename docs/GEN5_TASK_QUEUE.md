@@ -2099,3 +2099,34 @@ Stop conditions:
 - Selecting, changing, or rejecting parameters from OOS evidence.
 - Treating selected parameters, signal/position rows, or OOS measurement values as live advice or performance claims.
 - Expanding beyond AMD EMA long/cash or adding allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+### 56. Add AMD EMA TRAIN grid-selection stack validator
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Goal: Add strict cross-surface validation proving TRAIN grid-selected parameters preserve lineage into freeze/application evidence without OOS selection leakage.
+
+Notes:
+
+- Added `g5_validate_wfa_amd_ema_train_grid_selection_stack()` inside `R/wfa_amd_ema_train_grid_selection.R`.
+- Validates TRAIN grid selection, parameter freeze, optional application boundary, and canonical AMD bars together.
+- Recomputes grid signal-count evidence from TRAIN rows only and rejects drift from recorded TRAIN measurement rows.
+- Proves selected periods come from the declared grid and match frozen/application fast/slow periods.
+- Checks no-trade-first comparison discipline across TRAIN selection, freeze, and application surfaces.
+- Checks explicit `as_of_timestamp` and `latest_completed_session` consistency across all selected/frozen/application surfaces.
+- Rejects non-AMD bars, noncanonical bars, OOS usage-status drift, selected/frozen period drift, and lineage mismatches.
+- Did not compute OOS results, return values, trade PnL, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Adding a summary/reporting surface or performance interpretation.
+- Using OOS rows or OOS outcomes to select parameters.
+- Expanding beyond AMD EMA long/cash, Alpaca adjusted daily OHLCV, or the declared TRAIN grid.

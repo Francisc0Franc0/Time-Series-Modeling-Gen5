@@ -1010,6 +1010,203 @@ g5_validate_wfa_amd_ema_train_grid_selection <- function(train_grid_selection) {
   train_grid_selection
 }
 
+g5_validate_wfa_amd_ema_train_grid_selection_stack <- function(
+  train_grid_selection,
+  parameter_freeze_contract,
+  parameter_application_boundary = NULL,
+  bars
+) {
+  train_grid_selection <- g5_validate_wfa_amd_ema_train_grid_selection(train_grid_selection)
+  parameter_freeze_contract <- g5_validate_wfa_amd_ema_parameter_freeze_contract(
+    parameter_freeze_contract
+  )
+  manifest <- train_grid_selection$run_manifest
+  grid <- train_grid_selection$declared_grid[g5_wfa_required_amd_ema_train_grid_columns()]
+  measurements <- train_grid_selection$train_measurement_surface
+  selected <- train_grid_selection$selected_parameters
+  freeze_manifest <- parameter_freeze_contract$run_manifest
+  freeze_surface <- parameter_freeze_contract$freeze_surface
+  bars <- g5_wfa_prepare_amd_ema_train_grid_bars(
+    bars = bars,
+    as_of_timestamp = manifest$as_of_timestamp[[1L]],
+    latest_completed_session = manifest$latest_completed_session[[1L]]
+  )
+
+  if (!identical(
+    as.character(freeze_manifest$source_evaluation_contract_id[[1L]]),
+    as.character(manifest$source_evaluation_contract_id[[1L]])
+  )) {
+    g5_stop("AMD EMA TRAIN grid-selection stack must preserve evaluation contract lineage.")
+  }
+  expected_as_of <- as.character(manifest$as_of_timestamp[[1L]])
+  expected_latest <- as.Date(manifest$latest_completed_session[[1L]])
+  as_of_values <- c(
+    as.character(manifest$as_of_timestamp),
+    as.character(measurements$as_of_timestamp),
+    as.character(selected$as_of_timestamp),
+    as.character(freeze_manifest$as_of_timestamp),
+    as.character(freeze_surface$as_of_timestamp)
+  )
+  latest_values <- c(
+    as.Date(manifest$latest_completed_session),
+    as.Date(measurements$latest_completed_session),
+    as.Date(selected$latest_completed_session),
+    as.Date(freeze_manifest$latest_completed_session),
+    as.Date(freeze_surface$latest_completed_session)
+  )
+  if (!is.null(parameter_application_boundary)) {
+    parameter_application_boundary <- g5_validate_wfa_amd_ema_parameter_application_boundary(
+      parameter_application_boundary
+    )
+    as_of_values <- c(
+      as_of_values,
+      as.character(parameter_application_boundary$run_manifest$as_of_timestamp),
+      as.character(parameter_application_boundary$application_surface$as_of_timestamp)
+    )
+    latest_values <- c(
+      latest_values,
+      as.Date(parameter_application_boundary$run_manifest$latest_completed_session),
+      as.Date(parameter_application_boundary$application_surface$latest_completed_session)
+    )
+  }
+  if (any(as_of_values != expected_as_of) || any(latest_values != expected_latest)) {
+    g5_stop("AMD EMA TRAIN grid-selection stack must preserve explicit as_of_timestamp and latest_completed_session.")
+  }
+
+  grid_ids <- as.character(grid$grid_id)
+  if (any(!(as.character(selected$selected_grid_id) %in% grid_ids))) {
+    g5_stop("AMD EMA TRAIN grid-selection stack selected periods must come from the declared grid.")
+  }
+  session_dates <- as.Date(bars$session_date)
+  for (i in seq_len(nrow(selected))) {
+    selected_row <- selected[i, , drop = FALSE]
+    fold_id <- as.character(selected_row$fold_id[[1L]])
+    fold_measurements <- measurements[
+      as.character(measurements$fold_id) == fold_id,
+      ,
+      drop = FALSE
+    ]
+    if (nrow(fold_measurements) != nrow(grid) + 1L ||
+        as.character(fold_measurements$subject_id[[1L]]) != "no_trade_cash") {
+      g5_stop("AMD EMA TRAIN grid-selection stack must preserve no-trade first-class TRAIN rows.")
+    }
+    if (any(as.character(fold_measurements$oos_usage_status) !=
+            "oos_rows_not_read_for_train_grid_selection") ||
+        any(as.Date(fold_measurements$train_latest_session) > as.Date(fold_measurements$train_end_date))) {
+      g5_stop("AMD EMA TRAIN grid-selection stack must not use OOS rows for parameter selection.")
+    }
+    train_bars <- bars[
+      session_dates >= as.Date(selected_row$train_start_date[[1L]]) &
+        session_dates <= as.Date(selected_row$train_end_date[[1L]]),
+      ,
+      drop = FALSE
+    ]
+    if (nrow(train_bars) != as.integer(selected_row$train_row_count[[1L]])) {
+      g5_stop("AMD EMA TRAIN grid-selection stack canonical bars do not match selected TRAIN coverage.")
+    }
+    for (j in seq_len(nrow(grid))) {
+      grid_row <- grid[j, , drop = FALSE]
+      measurement <- fold_measurements[
+        as.character(fold_measurements$grid_id) == as.character(grid_row$grid_id[[1L]]),
+        ,
+        drop = FALSE
+      ]
+      if (nrow(measurement) != 1L) {
+        g5_stop("AMD EMA TRAIN grid-selection stack measurement rows must cover every declared grid pair.")
+      }
+      counts <- g5_wfa_amd_ema_grid_signal_counts(
+        train_bars = train_bars,
+        fast_ema_period = grid_row$fast_ema_period[[1L]],
+        slow_ema_period = grid_row$slow_ema_period[[1L]]
+      )
+      if (as.integer(measurement$train_long_signal_count[[1L]]) != as.integer(counts$long_signal_count) ||
+          as.integer(measurement$train_cash_signal_count[[1L]]) != as.integer(counts$cash_signal_count) ||
+          as.integer(measurement$train_signal_switch_count[[1L]]) != as.integer(counts$signal_switch_count)) {
+        g5_stop("AMD EMA TRAIN grid-selection stack measurement rows must be reproducible from TRAIN rows only.")
+      }
+    }
+  }
+
+  freeze_candidate <- freeze_surface[
+    as.character(freeze_surface$subject_id) == "amd_ema_long_cash",
+    ,
+    drop = FALSE
+  ]
+  freeze_no_trade <- freeze_surface[
+    as.character(freeze_surface$subject_id) == "no_trade_cash",
+    ,
+    drop = FALSE
+  ]
+  if (nrow(freeze_candidate) != nrow(selected) ||
+      nrow(freeze_no_trade) != nrow(selected)) {
+    g5_stop("AMD EMA TRAIN grid-selection stack must preserve freeze rows for no-trade and AMD EMA.")
+  }
+  for (i in seq_len(nrow(selected))) {
+    selected_row <- selected[i, , drop = FALSE]
+    fold_id <- as.character(selected_row$fold_id[[1L]])
+    freeze_row <- freeze_candidate[as.character(freeze_candidate$fold_id) == fold_id, , drop = FALSE]
+    no_trade_row <- freeze_no_trade[as.character(freeze_no_trade$fold_id) == fold_id, , drop = FALSE]
+    if (nrow(freeze_row) != 1L || nrow(no_trade_row) != 1L ||
+        as.integer(no_trade_row$comparison_order[[1L]]) != 1L ||
+        as.integer(freeze_row$comparison_order[[1L]]) != 2L) {
+      g5_stop("AMD EMA TRAIN grid-selection stack must preserve no-trade first-class freeze rows.")
+    }
+    if (as.integer(freeze_row$fast_ema_period[[1L]]) != as.integer(selected_row$fast_ema_period[[1L]]) ||
+        as.integer(freeze_row$slow_ema_period[[1L]]) != as.integer(selected_row$slow_ema_period[[1L]]) ||
+        as.character(freeze_row$selection_authority_status[[1L]]) !=
+          "train_only_grid_selected_no_oos_outcome_authority") {
+      g5_stop("AMD EMA TRAIN grid-selection stack freeze rows must preserve selected TRAIN grid parameters.")
+    }
+  }
+
+  if (!is.null(parameter_application_boundary)) {
+    app_manifest <- parameter_application_boundary$run_manifest
+    app_surface <- parameter_application_boundary$application_surface
+    if (!identical(
+      as.character(app_manifest$source_freeze_contract_id[[1L]]),
+      as.character(freeze_manifest$freeze_contract_id[[1L]])
+    )) {
+      g5_stop("AMD EMA TRAIN grid-selection stack application boundary must preserve freeze lineage.")
+    }
+    app_candidate <- app_surface[
+      as.character(app_surface$subject_id) == "amd_ema_long_cash",
+      ,
+      drop = FALSE
+    ]
+    app_no_trade <- app_surface[
+      as.character(app_surface$subject_id) == "no_trade_cash",
+      ,
+      drop = FALSE
+    ]
+    if (nrow(app_candidate) != nrow(selected) || nrow(app_no_trade) != nrow(selected)) {
+      g5_stop("AMD EMA TRAIN grid-selection stack application boundary must preserve fold comparison rows.")
+    }
+    for (i in seq_len(nrow(selected))) {
+      selected_row <- selected[i, , drop = FALSE]
+      fold_id <- as.character(selected_row$fold_id[[1L]])
+      app_row <- app_candidate[as.character(app_candidate$fold_id) == fold_id, , drop = FALSE]
+      app_no_trade_row <- app_no_trade[as.character(app_no_trade$fold_id) == fold_id, , drop = FALSE]
+      if (nrow(app_row) != 1L || nrow(app_no_trade_row) != 1L ||
+          as.integer(app_no_trade_row$comparison_order[[1L]]) != 1L ||
+          as.integer(app_row$comparison_order[[1L]]) != 2L) {
+        g5_stop("AMD EMA TRAIN grid-selection stack must preserve no-trade first-class application rows.")
+      }
+      if (as.integer(app_row$fast_ema_period[[1L]]) != as.integer(selected_row$fast_ema_period[[1L]]) ||
+          as.integer(app_row$slow_ema_period[[1L]]) != as.integer(selected_row$slow_ema_period[[1L]]) ||
+          as.character(app_row$selection_authority_status[[1L]]) !=
+            "train_only_grid_selected_no_oos_outcome_authority") {
+        g5_stop("AMD EMA TRAIN grid-selection stack application rows must preserve selected TRAIN grid parameters.")
+      }
+    }
+  }
+
+  invisible(list(
+    train_grid_selection = train_grid_selection,
+    parameter_freeze_contract = parameter_freeze_contract,
+    parameter_application_boundary = parameter_application_boundary
+  ))
+}
+
 g5_write_wfa_amd_ema_train_grid_selection_csvs <- function(
   train_grid_selection,
   manifest_path = NULL,
