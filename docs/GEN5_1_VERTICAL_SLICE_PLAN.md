@@ -18,7 +18,7 @@ The branch keeps:
 - Research workbench query scripts.
 - Basic static chart rendering from canonical bars.
 - Diagnostic strategy proofs with trade accounting and equity charts.
-- A multi-signal, single-asset WFA POC where `ema_cross` and `bollinger_touch` model instances compete by TRAIN-fold metrics and produce stitched OOS reports.
+- A multi-signal, single-asset WFA POC where `ema_cross` and `bollinger_touch` model instances plus close-based exit stacks compete by TRAIN-fold metrics and produce stitched OOS reports.
 - Non-network local validation through `scripts/test/run_tests.ps1`.
 
 The branch intentionally does not treat the current WFA POC as final research evidence, live advice, allocation logic, or a deployable strategy.
@@ -85,7 +85,7 @@ Codex must stop and ask before:
 
 The next task does not have to follow a rigid roadmap. Good current Gen5.1 slices include:
 
-- Add a narrow exit-overlay POC on top of the multi-signal WFA runner.
+- Refine the close-based exit-stack POC on top of the multi-signal WFA runner.
 - Improve stitched WFA reporting and audit tables as new model surfaces are added.
 - Build a portfolio construction POC after trade ledgers include stable entry and exit attribution.
 - Explore state/regime filters only after trade generation and portfolio accounting surfaces are stable.

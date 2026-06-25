@@ -70,6 +70,39 @@ test_that("multi-signal WFA artifact prefix no longer uses EMA-only naming", {
   expect_false(grepl("ema_wfa3", prefix, fixed = TRUE))
 })
 
+test_that("exit stack grid names curated close-based stacks", {
+  stacks <- g5_wfa_exit_stack_grid(max_hold_sessions = c(5L, 10L, 20L), stop_loss_pcts = 0.10, take_profit_pcts = 0.25)
+
+  expect_true("native_only" %in% stacks$exit_stack_id)
+  expect_true("native_maxhold5" %in% stacks$exit_stack_id)
+  expect_true("native_stop10pct_take25pct_maxhold20" %in% stacks$exit_stack_id)
+  expect_equal(nrow(stacks), length(unique(stacks$exit_stack_id)))
+})
+
+test_that("exit stack arbitration uses earliest close signal with risk-first same-bar attribution", {
+  ind <- data.frame(
+    close = 90,
+    exit_signal = TRUE,
+    stringsAsFactors = FALSE
+  )
+  open_trade <- list(entry_execution_price = 100, entry_execution_idx = 1L)
+  stack <- data.frame(
+    exit_stack_id = "native_stop10pct_maxhold1",
+    include_native_exit = TRUE,
+    max_hold_sessions = 1L,
+    stop_loss_pct = 0.10,
+    take_profit_pct = NA_real_,
+    stringsAsFactors = FALSE
+  )
+
+  event <- g5_wfa_exit_event(ind, 1L, open_trade, stack)
+
+  expect_equal(event$primary_exit_reason, "stop_loss")
+  expect_equal(event$exit_attribution, "exit_stack")
+  expect_true(grepl("native_exit", event$triggered_exit_rules, fixed = TRUE))
+  expect_true(grepl("max_hold", event$triggered_exit_rules, fixed = TRUE))
+})
+
 test_that("multi-fold EMA WFA rolls OOS folds by available sessions without overlap gaps", {
   dates <- as.Date("2026-01-01") + 0:60
   dates <- dates[!weekdays(dates) %in% c("Saturday", "Sunday")]
@@ -135,6 +168,8 @@ test_that("multi-fold EMA WFA selects a model instance per fold and stitches OOS
   expect_equal(nrow(wfa$selected_models), 3L)
   expect_true(all(wfa$selected_models$strategy_family == "ema_cross"))
   expect_true(all(wfa$selected_models$model_instance_id == "ema_cross_fast2_slow4"))
+  expect_true(all(c("exit_stack_id", "strategy_spec_id") %in% names(wfa$selected_models)))
+  expect_true(all(c("exit_stack_id", "strategy_spec_id") %in% names(wfa$train_parameter_performance)))
   expect_equal(min(wfa$stitched_equity_curve$session_date), min(wfa$folds$oos_start_date))
   expect_equal(max(wfa$stitched_equity_curve$session_date), max(wfa$folds$oos_end_date))
   expect_equal(nrow(wfa$fold_oos_summary), 3L)
@@ -171,6 +206,7 @@ test_that("multi-fold WFA can evaluate EMA cross and Bollinger touch candidates 
   expect_true(all(c("ema_cross", "bollinger_touch") %in% unique(wfa$train_parameter_performance$strategy_family)))
   expect_true(all(wfa$selected_models$strategy_family %in% c("ema_cross", "bollinger_touch")))
   expect_true(all(c("lookback_period", "sd_multiplier") %in% names(wfa$selected_models)))
+  expect_true(all(c("exit_stack_id", "strategy_spec_id") %in% names(wfa$selected_models)))
 })
 
 test_that("multi-fold chart background spans cover plotted folds without side gaps", {

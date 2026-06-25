@@ -162,6 +162,158 @@ g5_wfa_model_parameter_label <- function(model) {
   ""
 }
 
+g5_wfa_pct_id_label <- function(x) {
+  x <- as.numeric(x)
+  if (length(x) != 1L || is.na(x) || !is.finite(x) || x <= 0) {
+    g5_stop("Percentage values for WFA IDs must be positive finite numbers.")
+  }
+  pct <- 100 * x
+  label <- if (abs(pct - round(pct)) < 1e-8) {
+    as.character(as.integer(round(pct)))
+  } else {
+    sub("\\.?0+$", "", format(pct, trim = TRUE, scientific = FALSE))
+  }
+  paste0(gsub("\\.", "p", label), "pct")
+}
+
+g5_wfa_exit_stack_id <- function(include_native_exit = TRUE, max_hold_sessions = NA_integer_, stop_loss_pct = NA_real_, take_profit_pct = NA_real_) {
+  parts <- character()
+  if (isTRUE(include_native_exit)) {
+    parts <- c(parts, "native")
+  }
+  if (!is.na(stop_loss_pct)) {
+    parts <- c(parts, paste0("stop", g5_wfa_pct_id_label(stop_loss_pct)))
+  }
+  if (!is.na(take_profit_pct)) {
+    parts <- c(parts, paste0("take", g5_wfa_pct_id_label(take_profit_pct)))
+  }
+  if (!is.na(max_hold_sessions)) {
+    parts <- c(parts, paste0("maxhold", as.integer(max_hold_sessions)))
+  }
+  if (length(parts) == 0L) {
+    g5_stop("Exit stack must include at least one exit rule.")
+  }
+  if (identical(parts, "native")) {
+    return("native_only")
+  }
+  paste(parts, collapse = "_")
+}
+
+g5_wfa_exit_stack_grid <- function(max_hold_sessions = c(10L, 20L, 40L), stop_loss_pcts = 0.10, take_profit_pcts = 0.25) {
+  max_hold_sessions <- sort(unique(as.integer(max_hold_sessions)))
+  max_hold_sessions <- max_hold_sessions[!is.na(max_hold_sessions) & max_hold_sessions > 0L]
+  stop_loss_pcts <- sort(unique(as.numeric(stop_loss_pcts)))
+  stop_loss_pcts <- stop_loss_pcts[!is.na(stop_loss_pcts) & is.finite(stop_loss_pcts) & stop_loss_pcts > 0]
+  take_profit_pcts <- sort(unique(as.numeric(take_profit_pcts)))
+  take_profit_pcts <- take_profit_pcts[!is.na(take_profit_pcts) & is.finite(take_profit_pcts) & take_profit_pcts > 0]
+  if (length(max_hold_sessions) == 0L || length(stop_loss_pcts) == 0L || length(take_profit_pcts) == 0L) {
+    g5_stop("Exit stack grid requires at least one max hold, stop loss, and take profit value.")
+  }
+
+  rows <- list(
+    data.frame(include_native_exit = TRUE, max_hold_sessions = NA_integer_, stop_loss_pct = NA_real_, take_profit_pct = NA_real_, stringsAsFactors = FALSE)
+  )
+  for (hold in max_hold_sessions) {
+    rows[[length(rows) + 1L]] <- data.frame(include_native_exit = TRUE, max_hold_sessions = hold, stop_loss_pct = NA_real_, take_profit_pct = NA_real_, stringsAsFactors = FALSE)
+  }
+  for (stop in stop_loss_pcts) {
+    rows[[length(rows) + 1L]] <- data.frame(include_native_exit = TRUE, max_hold_sessions = NA_integer_, stop_loss_pct = stop, take_profit_pct = NA_real_, stringsAsFactors = FALSE)
+  }
+  for (take in take_profit_pcts) {
+    rows[[length(rows) + 1L]] <- data.frame(include_native_exit = TRUE, max_hold_sessions = NA_integer_, stop_loss_pct = NA_real_, take_profit_pct = take, stringsAsFactors = FALSE)
+  }
+  for (stop in stop_loss_pcts) {
+    for (take in take_profit_pcts) {
+      rows[[length(rows) + 1L]] <- data.frame(include_native_exit = TRUE, max_hold_sessions = NA_integer_, stop_loss_pct = stop, take_profit_pct = take, stringsAsFactors = FALSE)
+      for (hold in max_hold_sessions) {
+        rows[[length(rows) + 1L]] <- data.frame(include_native_exit = TRUE, max_hold_sessions = hold, stop_loss_pct = stop, take_profit_pct = take, stringsAsFactors = FALSE)
+      }
+    }
+  }
+  out <- do.call(rbind, rows)
+  out$exit_stack_id <- mapply(
+    g5_wfa_exit_stack_id,
+    include_native_exit = out$include_native_exit,
+    max_hold_sessions = out$max_hold_sessions,
+    stop_loss_pct = out$stop_loss_pct,
+    take_profit_pct = out$take_profit_pct,
+    USE.NAMES = FALSE
+  )
+  out <- out[!duplicated(out$exit_stack_id), c("exit_stack_id", "include_native_exit", "max_hold_sessions", "stop_loss_pct", "take_profit_pct"), drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_wfa_exit_stack_label <- function(stack) {
+  stack_value <- function(col) {
+    if (col %in% names(stack)) stack[[col]][[1L]] else NA
+  }
+  present_number <- function(x) {
+    x <- suppressWarnings(as.numeric(x))
+    if (length(x) != 1L || is.na(x) || !is.finite(x)) NA_real_ else x
+  }
+  include_native <- stack_value("include_native_exit")
+  include_native <- isTRUE(include_native) || identical(toupper(as.character(include_native)), "TRUE")
+  stop_loss_pct <- present_number(stack_value("stop_loss_pct"))
+  take_profit_pct <- present_number(stack_value("take_profit_pct"))
+  max_hold_sessions <- present_number(stack_value("max_hold_sessions"))
+  parts <- character()
+  if (include_native) {
+    parts <- c(parts, "native")
+  }
+  if (!is.na(stop_loss_pct)) {
+    parts <- c(parts, paste0("stop=", sprintf("%.1f%%", 100 * stop_loss_pct)))
+  }
+  if (!is.na(take_profit_pct)) {
+    parts <- c(parts, paste0("take=", sprintf("%.1f%%", 100 * take_profit_pct)))
+  }
+  if (!is.na(max_hold_sessions)) {
+    parts <- c(parts, paste0("max_hold=", as.integer(max_hold_sessions), " sessions"))
+  }
+  paste(parts, collapse = " + ")
+}
+
+g5_wfa_strategy_spec_id <- function(model_instance_id, exit_stack_id) {
+  paste(as.character(model_instance_id), as.character(exit_stack_id), sep = "__")
+}
+
+g5_wfa_exit_event <- function(ind, idx, open_trade, exit_stack) {
+  triggered <- character()
+  close_price <- as.numeric(ind$close[[idx]])
+  if (isTRUE(exit_stack$include_native_exit[[1L]]) && isTRUE(ind$exit_signal[[idx]])) {
+    triggered <- c(triggered, "native_exit")
+  }
+  if (!is.na(exit_stack$stop_loss_pct[[1L]]) && is.finite(close_price)) {
+    stop_level <- open_trade$entry_execution_price * (1 - as.numeric(exit_stack$stop_loss_pct[[1L]]))
+    if (close_price <= stop_level) {
+      triggered <- c(triggered, "stop_loss")
+    }
+  }
+  if (!is.na(exit_stack$take_profit_pct[[1L]]) && is.finite(close_price)) {
+    take_level <- open_trade$entry_execution_price * (1 + as.numeric(exit_stack$take_profit_pct[[1L]]))
+    if (close_price >= take_level) {
+      triggered <- c(triggered, "take_profit")
+    }
+  }
+  if (!is.na(exit_stack$max_hold_sessions[[1L]])) {
+    holding_sessions <- idx - open_trade$entry_execution_idx + 1L
+    if (holding_sessions >= as.integer(exit_stack$max_hold_sessions[[1L]])) {
+      triggered <- c(triggered, "max_hold")
+    }
+  }
+  if (length(triggered) == 0L) {
+    return(NULL)
+  }
+  priority <- c("stop_loss", "native_exit", "take_profit", "max_hold")
+  primary <- priority[priority %in% triggered][[1L]]
+  list(
+    primary_exit_reason = primary,
+    exit_attribution = if (identical(primary, "native_exit")) "native" else "exit_stack",
+    triggered_exit_rules = paste(triggered, collapse = ";"),
+    exit_signal_rule = paste0(primary, "_close_based_next_open")
+  )
+}
+
 g5_wfa_normalize_indicator_columns <- function(ind, model) {
   for (col in c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower")) {
     if (!col %in% names(ind)) {
@@ -219,10 +371,7 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
   g5_stop(paste0("Unsupported WFA strategy_family: ", family))
 }
 
-g5_ema_cross_wfa_select_fold_models <- function(
-  bars,
-  symbol,
-  folds,
+g5_wfa_candidate_model_grid <- function(
   fast_periods,
   slow_periods,
   bb_lookback_periods = c(10L, 20L, 30L),
@@ -231,42 +380,379 @@ g5_ema_cross_wfa_select_fold_models <- function(
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
   rows <- list()
+  if ("ema_cross" %in% candidate_families) {
+    fast_periods <- sort(unique(as.integer(fast_periods)))
+    slow_periods <- sort(unique(as.integer(slow_periods)))
+    for (fast in fast_periods) {
+      for (slow in slow_periods) {
+        if (is.na(fast) || is.na(slow) || fast >= slow) {
+          next
+        }
+        rows[[length(rows) + 1L]] <- data.frame(
+          strategy_family = "ema_cross",
+          model_instance_id = g5_ema_cross_strategy_id(fast, slow),
+          fast_period = fast,
+          slow_period = slow,
+          lookback_period = NA_integer_,
+          sd_multiplier = NA_real_,
+          stringsAsFactors = FALSE
+        )
+      }
+    }
+  }
+  if ("bollinger_touch" %in% candidate_families) {
+    bb_lookback_periods <- sort(unique(as.integer(bb_lookback_periods)))
+    bb_sd_multipliers <- sort(unique(as.numeric(bb_sd_multipliers)))
+    for (lookback in bb_lookback_periods) {
+      for (sd_multiplier in bb_sd_multipliers) {
+        if (is.na(lookback) || lookback < 2L || is.na(sd_multiplier) || sd_multiplier <= 0) {
+          next
+        }
+        rows[[length(rows) + 1L]] <- data.frame(
+          strategy_family = "bollinger_touch",
+          model_instance_id = g5_bollinger_touch_strategy_id(lookback, sd_multiplier),
+          fast_period = NA_integer_,
+          slow_period = NA_integer_,
+          lookback_period = lookback,
+          sd_multiplier = sd_multiplier,
+          stringsAsFactors = FALSE
+        )
+      }
+    }
+  }
+  if (length(rows) == 0L) {
+    g5_stop("WFA candidate model grid resolved zero valid model instances.")
+  }
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out
+}
+
+g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, exit_stack, leverage = 1) {
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  leverage <- g5_ema_cross_validate_leverage(leverage)
+  closed <- if (is.data.frame(trades) && nrow(trades) > 0L) trades[trades$trade_status == "closed", , drop = FALSE] else data.frame()
+  open_trades <- if (is.data.frame(trades) && nrow(trades) > 0L) trades[trades$trade_status != "closed", , drop = FALSE] else data.frame()
+  closed_returns <- if (nrow(closed) > 0L) as.numeric(closed$realized_return) else numeric()
+  wins <- closed_returns[closed_returns > 0]
+  losses <- closed_returns[closed_returns < 0]
+  flats <- closed_returns[closed_returns == 0]
+  strategy_underwater <- g5_ema_cross_time_underwater_summary(equity_curve$strategy_drawdown)
+  buy_hold_underwater <- g5_ema_cross_time_underwater_summary(equity_curve$buy_hold_drawdown)
+  start_date <- min(equity_curve$session_date)
+  end_date <- max(equity_curve$session_date)
+  ending_equity <- tail(equity_curve$strategy_equity, 1L)
+  buy_hold_ending_equity <- tail(equity_curve$buy_hold_equity, 1L)
+  data.frame(
+    schema_version = g5_ema_cross_wfa_multi_schema_version(),
+    symbol = symbol,
+    strategy_family = model$strategy_family[[1L]],
+    model_instance_id = model$model_instance_id[[1L]],
+    exit_stack_id = exit_stack$exit_stack_id[[1L]],
+    strategy_spec_id = g5_wfa_strategy_spec_id(model$model_instance_id[[1L]], exit_stack$exit_stack_id[[1L]]),
+    include_native_exit = exit_stack$include_native_exit[[1L]],
+    max_hold_sessions = exit_stack$max_hold_sessions[[1L]],
+    stop_loss_pct = exit_stack$stop_loss_pct[[1L]],
+    take_profit_pct = exit_stack$take_profit_pct[[1L]],
+    fast_period = model$fast_period[[1L]],
+    slow_period = model$slow_period[[1L]],
+    lookback_period = model$lookback_period[[1L]],
+    sd_multiplier = model$sd_multiplier[[1L]],
+    leverage = leverage,
+    trade_count = if (is.data.frame(trades)) nrow(trades) else 0L,
+    closed_trade_count = nrow(closed),
+    open_trade_count = nrow(open_trades),
+    win_count = length(wins),
+    loss_count = length(losses),
+    flat_count = length(flats),
+    win_rate = if (length(closed_returns) == 0L) NA_real_ else length(wins) / length(closed_returns),
+    ending_equity = ending_equity,
+    total_return = ending_equity - 1,
+    cagr = g5_ema_cross_cagr(1, ending_equity, start_date, end_date),
+    sharpe = g5_ema_cross_sharpe(equity_curve$strategy_equity),
+    max_drawdown = min(equity_curve$strategy_drawdown, na.rm = TRUE),
+    underwater_session_count = strategy_underwater$count,
+    underwater_fraction = strategy_underwater$fraction,
+    max_underwater_streak = strategy_underwater$max_streak,
+    average_trade_return = if (length(closed_returns) == 0L) NA_real_ else mean(closed_returns),
+    best_trade_return = if (length(closed_returns) == 0L) NA_real_ else max(closed_returns),
+    worst_trade_return = if (length(closed_returns) == 0L) NA_real_ else min(closed_returns),
+    profit_factor = if (length(closed_returns) == 0L || length(losses) == 0L) {
+      if (length(wins) == 0L) NA_real_ else Inf
+    } else {
+      sum(wins) / abs(sum(losses))
+    },
+    exposure_fraction = mean(equity_curve$in_position, na.rm = TRUE),
+    buy_hold_ending_equity = buy_hold_ending_equity,
+    buy_hold_total_return = buy_hold_ending_equity - 1,
+    buy_hold_cagr = g5_ema_cross_cagr(1, buy_hold_ending_equity, start_date, end_date),
+    buy_hold_sharpe = g5_ema_cross_sharpe(equity_curve$buy_hold_equity),
+    buy_hold_max_drawdown = min(equity_curve$buy_hold_drawdown, na.rm = TRUE),
+    buy_hold_underwater_session_count = buy_hold_underwater$count,
+    buy_hold_underwater_fraction = buy_hold_underwater$fraction,
+    buy_hold_max_underwater_streak = buy_hold_underwater$max_streak,
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading_start_date, trading_end_date, leverage = 1) {
+  leverage <- g5_ema_cross_validate_leverage(leverage)
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  trading_start_date <- as.Date(trading_start_date)
+  trading_end_date <- as.Date(trading_end_date)
+  if (any(is.na(c(trading_start_date, trading_end_date))) || trading_start_date > trading_end_date) {
+    g5_stop("trading_start_date and trading_end_date must be valid ordered dates.")
+  }
+  all_bars <- g5_ema_cross_prepare_bars(bars, symbol = symbol, end_date = trading_end_date)
+  ind <- g5_wfa_model_indicators(all_bars, symbol, model)
+  session_dates <- as.Date(all_bars$session_date)
+  signal_indices <- which(session_dates >= trading_start_date & session_dates <= trading_end_date)
+  latest_idx <- max(which(session_dates <= trading_end_date))
+  strategy_spec_id <- g5_wfa_strategy_spec_id(model$model_instance_id[[1L]], exit_stack$exit_stack_id[[1L]])
+
+  model_value <- function(col, default = NA) {
+    if (col %in% names(model)) model[[col]][[1L]] else default
+  }
+
+  trades <- list()
+  trade_no <- 0L
+  in_position <- FALSE
+  open_trade <- NULL
+  pending_entry <- NULL
+  pending_exit <- NULL
+
+  for (idx in signal_indices) {
+    current_date <- session_dates[[idx]]
+
+    if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position) {
+      trade_no <- trade_no + 1L
+      open_trade <- c(
+        pending_entry,
+        list(
+          trade_no = trade_no,
+          entry_execution_idx = idx,
+          entry_execution_date = current_date,
+          entry_execution_price = as.numeric(all_bars$open[[idx]])
+        )
+      )
+      in_position <- TRUE
+      pending_entry <- NULL
+    }
+
+    if (!is.null(pending_exit) && identical(as.Date(pending_exit$execution_date), current_date) && in_position) {
+      entry_price <- open_trade$entry_execution_price
+      exit_price <- as.numeric(all_bars$open[[idx]])
+      underlying_realized_return <- (exit_price / entry_price) - 1
+      realized_return <- leverage * underlying_realized_return
+      trades[[length(trades) + 1L]] <- data.frame(
+        schema_version = g5_ema_cross_wfa_multi_schema_version(),
+        trade_id = sprintf("%s_%s_%03d", symbol, strategy_spec_id, open_trade$trade_no),
+        symbol = symbol,
+        strategy_family = model$strategy_family[[1L]],
+        model_instance_id = model$model_instance_id[[1L]],
+        exit_stack_id = exit_stack$exit_stack_id[[1L]],
+        strategy_spec_id = strategy_spec_id,
+        primary_exit_reason = pending_exit$primary_exit_reason,
+        triggered_exit_rules = pending_exit$triggered_exit_rules,
+        exit_attribution = pending_exit$exit_attribution,
+        fast_period = model_value("fast_period", NA_integer_),
+        slow_period = model_value("slow_period", NA_integer_),
+        lookback_period = model_value("lookback_period", NA_integer_),
+        sd_multiplier = model_value("sd_multiplier", NA_real_),
+        trade_status = "closed",
+        entry_signal_date = open_trade$entry_signal_date,
+        entry_signal_index = open_trade$entry_signal_idx,
+        entry_signal_price = open_trade$entry_signal_price,
+        entry_execution_date = open_trade$entry_execution_date,
+        entry_execution_index = open_trade$entry_execution_idx,
+        entry_execution_price = entry_price,
+        exit_signal_date = pending_exit$exit_signal_date,
+        exit_signal_index = pending_exit$exit_signal_idx,
+        exit_signal_price = pending_exit$exit_signal_price,
+        exit_execution_date = current_date,
+        exit_execution_index = idx,
+        exit_execution_price = exit_price,
+        latest_mark_date = session_dates[[latest_idx]],
+        latest_mark_price = as.numeric(all_bars$close[[latest_idx]]),
+        trace_end_date = current_date,
+        trace_end_index = idx,
+        trace_end_price = exit_price,
+        underlying_realized_return = underlying_realized_return,
+        underlying_unrealized_return = NA_real_,
+        realized_return = realized_return,
+        unrealized_return = NA_real_,
+        trace_return = realized_return,
+        trade_outcome = if (realized_return > 0) "win" else if (realized_return < 0) "loss" else "flat",
+        holding_sessions_completed = idx - open_trade$entry_execution_idx + 1L,
+        signal_rule = open_trade$entry_signal_rule,
+        entry_execution_rule = "next_session_open_after_entry_signal",
+        exit_signal_rule = pending_exit$exit_signal_rule,
+        exit_execution_rule = "next_session_open_after_exit_signal",
+        leverage = leverage,
+        capital_fraction = 1,
+        stringsAsFactors = FALSE
+      )
+      in_position <- FALSE
+      open_trade <- NULL
+      pending_exit <- NULL
+    }
+
+    next_idx <- idx + 1L
+    if (next_idx > nrow(all_bars) || session_dates[[next_idx]] > trading_end_date) {
+      next
+    }
+
+    if (!in_position && is.null(pending_entry) && isTRUE(ind$entry_signal[[idx]])) {
+      pending_entry <- list(
+        entry_signal_rule = ind$entry_signal_rule[[idx]],
+        entry_signal_date = current_date,
+        entry_signal_idx = idx,
+        entry_signal_price = as.numeric(all_bars$close[[idx]]),
+        execution_date = session_dates[[next_idx]]
+      )
+    }
+
+    if (in_position && is.null(pending_exit)) {
+      exit_event <- g5_wfa_exit_event(ind, idx, open_trade, exit_stack)
+      if (!is.null(exit_event)) {
+        pending_exit <- c(
+          exit_event,
+          list(
+            exit_signal_date = current_date,
+            exit_signal_idx = idx,
+            exit_signal_price = as.numeric(all_bars$close[[idx]]),
+            execution_date = session_dates[[next_idx]]
+          )
+        )
+      }
+    }
+  }
+
+  if (in_position && !is.null(open_trade)) {
+    entry_price <- open_trade$entry_execution_price
+    latest_close <- as.numeric(all_bars$close[[latest_idx]])
+    underlying_unrealized_return <- (latest_close / entry_price) - 1
+    unrealized_return <- leverage * underlying_unrealized_return
+    trades[[length(trades) + 1L]] <- data.frame(
+      schema_version = g5_ema_cross_wfa_multi_schema_version(),
+      trade_id = sprintf("%s_%s_%03d", symbol, strategy_spec_id, open_trade$trade_no),
+      symbol = symbol,
+      strategy_family = model$strategy_family[[1L]],
+      model_instance_id = model$model_instance_id[[1L]],
+      exit_stack_id = exit_stack$exit_stack_id[[1L]],
+      strategy_spec_id = strategy_spec_id,
+      primary_exit_reason = NA_character_,
+      triggered_exit_rules = NA_character_,
+      exit_attribution = NA_character_,
+      fast_period = model_value("fast_period", NA_integer_),
+      slow_period = model_value("slow_period", NA_integer_),
+      lookback_period = model_value("lookback_period", NA_integer_),
+      sd_multiplier = model_value("sd_multiplier", NA_real_),
+      trade_status = "open",
+      entry_signal_date = open_trade$entry_signal_date,
+      entry_signal_index = open_trade$entry_signal_idx,
+      entry_signal_price = open_trade$entry_signal_price,
+      entry_execution_date = open_trade$entry_execution_date,
+      entry_execution_index = open_trade$entry_execution_idx,
+      entry_execution_price = entry_price,
+      exit_signal_date = as.Date(NA),
+      exit_signal_index = NA_integer_,
+      exit_signal_price = NA_real_,
+      exit_execution_date = as.Date(NA),
+      exit_execution_index = NA_integer_,
+      exit_execution_price = NA_real_,
+      latest_mark_date = session_dates[[latest_idx]],
+      latest_mark_price = latest_close,
+      trace_end_date = session_dates[[latest_idx]],
+      trace_end_index = latest_idx,
+      trace_end_price = latest_close,
+      underlying_realized_return = NA_real_,
+      underlying_unrealized_return = underlying_unrealized_return,
+      realized_return = NA_real_,
+      unrealized_return = unrealized_return,
+      trace_return = unrealized_return,
+      trade_outcome = if (unrealized_return > 0) "win" else if (unrealized_return < 0) "loss" else "flat",
+      holding_sessions_completed = latest_idx - open_trade$entry_execution_idx + 1L,
+      signal_rule = open_trade$entry_signal_rule,
+      entry_execution_rule = "next_session_open_after_entry_signal",
+      exit_signal_rule = "active_exit_stack_when_long",
+      exit_execution_rule = "next_session_open_after_exit_signal",
+      leverage = leverage,
+      capital_fraction = 1,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  if (length(trades) == 0L) {
+    return(data.frame())
+  }
+  out <- do.call(rbind, trades)
+  rownames(out) <- NULL
+  out
+}
+
+g5_wfa_evaluate_strategy_spec_grid <- function(bars, symbol, trading_start_date, trading_end_date, model_grid, exit_stacks, leverage = 1) {
+  rows <- list()
+  for (model_i in seq_len(nrow(model_grid))) {
+    model <- model_grid[model_i, , drop = FALSE]
+    for (stack_i in seq_len(nrow(exit_stacks))) {
+      exit_stack <- exit_stacks[stack_i, , drop = FALSE]
+      trades <- g5_wfa_strategy_spec_trades(
+        bars,
+        symbol = symbol,
+        model = model,
+        exit_stack = exit_stack,
+        trading_start_date = trading_start_date,
+        trading_end_date = trading_end_date,
+        leverage = leverage
+      )
+      equity_curve <- g5_ema_cross_equity_curve(
+        trades,
+        bars,
+        symbol = symbol,
+        trading_start_date = trading_start_date,
+        trading_end_date = trading_end_date,
+        leverage = leverage
+      )
+      rows[[length(rows) + 1L]] <- g5_wfa_strategy_spec_metrics(trades, equity_curve, symbol, model, exit_stack, leverage)
+    }
+  }
+  out <- do.call(rbind, rows)
+  out <- out[order(
+    ifelse(is.na(out$sharpe), -Inf, out$sharpe),
+    ifelse(is.na(out$total_return), -Inf, out$total_return),
+    decreasing = TRUE
+  ), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_ema_cross_wfa_select_fold_models <- function(
+  bars,
+  symbol,
+  folds,
+  fast_periods,
+  slow_periods,
+  bb_lookback_periods = c(10L, 20L, 30L),
+  bb_sd_multipliers = c(1.5, 2, 2.5),
+  candidate_families = c("ema_cross", "bollinger_touch"),
+  exit_stacks = g5_wfa_exit_stack_grid()
+) {
+  candidate_families <- g5_wfa_candidate_families(candidate_families)
+  model_grid <- g5_wfa_candidate_model_grid(fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families)
+  rows <- list()
   grid_rows <- list()
   for (i in seq_len(nrow(folds))) {
     fold <- folds[i, , drop = FALSE]
-    evaluations <- list()
-    if ("ema_cross" %in% candidate_families) {
-      ema <- g5_ema_cross_evaluate_grid(
-        bars,
-        symbol = symbol,
-        trading_start_date = fold$train_start_date[[1L]],
-        trading_end_date = fold$train_end_date[[1L]],
-        fast_periods = fast_periods,
-        slow_periods = slow_periods,
-        leverage = 1
-      )
-      ema$parameter_performance$strategy_family <- "ema_cross"
-      ema$parameter_performance$model_instance_id <- ema$parameter_performance$strategy_id
-      evaluations[["ema_cross"]] <- ema$parameter_performance
-    }
-    if ("bollinger_touch" %in% candidate_families) {
-      bb <- g5_bollinger_touch_evaluate_grid(
-        bars,
-        symbol = symbol,
-        trading_start_date = fold$train_start_date[[1L]],
-        trading_end_date = fold$train_end_date[[1L]],
-        lookback_periods = bb_lookback_periods,
-        sd_multipliers = bb_sd_multipliers,
-        leverage = 1
-      )
-      evaluations[["bollinger_touch"]] <- bb$parameter_performance
-    }
-    grid <- g5_wfa_bind_rows_fill(evaluations)
-    grid <- grid[order(
-      ifelse(is.na(grid$sharpe), -Inf, grid$sharpe),
-      ifelse(is.na(grid$total_return), -Inf, grid$total_return),
-      decreasing = TRUE
-    ), , drop = FALSE]
+    grid <- g5_wfa_evaluate_strategy_spec_grid(
+      bars,
+      symbol = symbol,
+      trading_start_date = fold$train_start_date[[1L]],
+      trading_end_date = fold$train_end_date[[1L]],
+      model_grid = model_grid,
+      exit_stacks = exit_stacks,
+      leverage = 1
+    )
     selected <- grid[1L, , drop = FALSE]
     rows[[i]] <- data.frame(
       schema_version = g5_ema_cross_wfa_multi_schema_version(),
@@ -275,6 +761,12 @@ g5_ema_cross_wfa_select_fold_models <- function(
       symbol = fold$symbol[[1L]],
       strategy_family = selected$strategy_family[[1L]],
       model_instance_id = selected$model_instance_id[[1L]],
+      exit_stack_id = selected$exit_stack_id[[1L]],
+      strategy_spec_id = selected$strategy_spec_id[[1L]],
+      include_native_exit = selected$include_native_exit[[1L]],
+      max_hold_sessions = selected$max_hold_sessions[[1L]],
+      stop_loss_pct = selected$stop_loss_pct[[1L]],
+      take_profit_pct = selected$take_profit_pct[[1L]],
       fast_period = if ("fast_period" %in% names(selected)) selected$fast_period[[1L]] else NA_integer_,
       slow_period = if ("slow_period" %in% names(selected)) selected$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(selected)) selected$lookback_period[[1L]] else NA_integer_,
@@ -337,6 +829,16 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
   all_bars <- g5_ema_cross_prepare_bars(bars, symbol = symbol, end_date = final_oos_date)
   session_dates <- as.Date(all_bars$session_date)
   indicator_by_fold <- g5_ema_cross_wfa_make_indicator_by_fold(all_bars, symbol, selected_models, final_oos_date)
+  exit_stack_for_model <- function(model) {
+    data.frame(
+      exit_stack_id = model$exit_stack_id[[1L]],
+      include_native_exit = if ("include_native_exit" %in% names(model)) model$include_native_exit[[1L]] else TRUE,
+      max_hold_sessions = if ("max_hold_sessions" %in% names(model)) model$max_hold_sessions[[1L]] else NA_integer_,
+      stop_loss_pct = if ("stop_loss_pct" %in% names(model)) model$stop_loss_pct[[1L]] else NA_real_,
+      take_profit_pct = if ("take_profit_pct" %in% names(model)) model$take_profit_pct[[1L]] else NA_real_,
+      stringsAsFactors = FALSE
+    )
+  }
   date_to_index <- function(x) match(as.Date(x), session_dates)
   signal_indices <- which(session_dates >= first_signal_date & session_dates <= final_oos_date)
 
@@ -367,7 +869,9 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
             entry_execution_price = as.numeric(all_bars$open[[idx]]),
             entry_execution_fold_id = folds$fold_id[[execution_fold_no]],
             entry_execution_strategy_family = selected_models$strategy_family[[execution_fold_no]],
-            entry_execution_model_instance_id = selected_models$model_instance_id[[execution_fold_no]]
+            entry_execution_model_instance_id = selected_models$model_instance_id[[execution_fold_no]],
+            entry_execution_exit_stack_id = selected_models$exit_stack_id[[execution_fold_no]],
+            entry_execution_strategy_spec_id = selected_models$strategy_spec_id[[execution_fold_no]]
           )
         )
         in_position <- TRUE
@@ -388,6 +892,11 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
           symbol = symbol,
           strategy_family = open_trade$entry_signal_strategy_family,
           model_instance_id = open_trade$entry_signal_model_instance_id,
+          exit_stack_id = open_trade$entry_signal_exit_stack_id,
+          strategy_spec_id = open_trade$entry_signal_strategy_spec_id,
+          primary_exit_reason = pending_exit$primary_exit_reason,
+          triggered_exit_rules = pending_exit$triggered_exit_rules,
+          exit_attribution = pending_exit$exit_attribution,
           entry_signal_strategy_family = open_trade$entry_signal_strategy_family,
           entry_execution_strategy_family = open_trade$entry_execution_strategy_family,
           exit_signal_strategy_family = pending_exit$exit_signal_strategy_family,
@@ -396,6 +905,14 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
           entry_execution_model_instance_id = open_trade$entry_execution_model_instance_id,
           exit_signal_model_instance_id = pending_exit$exit_signal_model_instance_id,
           exit_execution_model_instance_id = selected_models$model_instance_id[[execution_fold_no]],
+          entry_signal_exit_stack_id = open_trade$entry_signal_exit_stack_id,
+          entry_execution_exit_stack_id = open_trade$entry_execution_exit_stack_id,
+          exit_signal_exit_stack_id = pending_exit$exit_signal_exit_stack_id,
+          exit_execution_exit_stack_id = selected_models$exit_stack_id[[execution_fold_no]],
+          entry_signal_strategy_spec_id = open_trade$entry_signal_strategy_spec_id,
+          entry_execution_strategy_spec_id = open_trade$entry_execution_strategy_spec_id,
+          exit_signal_strategy_spec_id = pending_exit$exit_signal_strategy_spec_id,
+          exit_execution_strategy_spec_id = selected_models$strategy_spec_id[[execution_fold_no]],
           fast_period = open_trade$entry_signal_fast_period,
           slow_period = open_trade$entry_signal_slow_period,
           lookback_period = open_trade$entry_signal_lookback_period,
@@ -470,6 +987,8 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
         entry_signal_fold_id = model$fold_id[[1L]],
         entry_signal_strategy_family = model$strategy_family[[1L]],
         entry_signal_model_instance_id = model$model_instance_id[[1L]],
+        entry_signal_exit_stack_id = model$exit_stack_id[[1L]],
+        entry_signal_strategy_spec_id = model$strategy_spec_id[[1L]],
         entry_signal_fast_period = model_value(model, "fast_period", NA_integer_),
         entry_signal_slow_period = model_value(model, "slow_period", NA_integer_),
         entry_signal_lookback_period = model_value(model, "lookback_period", NA_integer_),
@@ -482,16 +1001,26 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
       )
     }
 
-    if (in_position && is.null(pending_exit) && exit_signal) {
+    if (in_position && is.null(pending_exit)) {
+      exit_stack <- exit_stack_for_model(model)
+      exit_event <- g5_wfa_exit_event(ind, idx, open_trade, exit_stack)
+      if (is.null(exit_event)) {
+        next
+      }
       pending_exit <- list(
         exit_signal_fold_id = model$fold_id[[1L]],
         exit_signal_strategy_family = model$strategy_family[[1L]],
         exit_signal_model_instance_id = model$model_instance_id[[1L]],
+        exit_signal_exit_stack_id = model$exit_stack_id[[1L]],
+        exit_signal_strategy_spec_id = model$strategy_spec_id[[1L]],
+        primary_exit_reason = exit_event$primary_exit_reason,
+        triggered_exit_rules = exit_event$triggered_exit_rules,
+        exit_attribution = exit_event$exit_attribution,
         exit_signal_fast_period = model_value(model, "fast_period", NA_integer_),
         exit_signal_slow_period = model_value(model, "slow_period", NA_integer_),
         exit_signal_lookback_period = model_value(model, "lookback_period", NA_integer_),
         exit_signal_sd_multiplier = model_value(model, "sd_multiplier", NA_real_),
-        exit_signal_rule = ind$exit_signal_rule[[idx]],
+        exit_signal_rule = exit_event$exit_signal_rule,
         exit_signal_date = current_date,
         exit_signal_idx = idx,
         exit_signal_price = as.numeric(all_bars$close[[idx]]),
@@ -511,6 +1040,11 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
       symbol = symbol,
       strategy_family = open_trade$entry_signal_strategy_family,
       model_instance_id = open_trade$entry_signal_model_instance_id,
+      exit_stack_id = open_trade$entry_signal_exit_stack_id,
+      strategy_spec_id = open_trade$entry_signal_strategy_spec_id,
+      primary_exit_reason = NA_character_,
+      triggered_exit_rules = NA_character_,
+      exit_attribution = NA_character_,
       entry_signal_strategy_family = open_trade$entry_signal_strategy_family,
       entry_execution_strategy_family = open_trade$entry_execution_strategy_family,
       exit_signal_strategy_family = NA_character_,
@@ -519,6 +1053,14 @@ g5_ema_cross_wfa_simulate_stitched_oos <- function(bars, symbol, folds, selected
       entry_execution_model_instance_id = open_trade$entry_execution_model_instance_id,
       exit_signal_model_instance_id = NA_character_,
       exit_execution_model_instance_id = NA_character_,
+      entry_signal_exit_stack_id = open_trade$entry_signal_exit_stack_id,
+      entry_execution_exit_stack_id = open_trade$entry_execution_exit_stack_id,
+      exit_signal_exit_stack_id = NA_character_,
+      exit_execution_exit_stack_id = NA_character_,
+      entry_signal_strategy_spec_id = open_trade$entry_signal_strategy_spec_id,
+      entry_execution_strategy_spec_id = open_trade$entry_execution_strategy_spec_id,
+      exit_signal_strategy_spec_id = NA_character_,
+      exit_execution_strategy_spec_id = NA_character_,
       fast_period = open_trade$entry_signal_fast_period,
       slow_period = open_trade$entry_signal_slow_period,
       lookback_period = open_trade$entry_signal_lookback_period,
@@ -598,6 +1140,8 @@ g5_ema_cross_wfa_stitched_indicators <- function(bars, symbol, folds, selected_m
     part$fold_id <- fold$fold_id[[1L]]
     part$fold_no <- fold$fold_no[[1L]]
     part$model_instance_id <- model$model_instance_id[[1L]]
+    part$exit_stack_id <- model$exit_stack_id[[1L]]
+    part$strategy_spec_id <- model$strategy_spec_id[[1L]]
     rows[[i]] <- part
   }
   out <- do.call(rbind, rows)
@@ -631,6 +1175,8 @@ g5_ema_cross_wfa_stitched_metrics <- function(trades, equity_curve, symbol, fold
     closed_trade_count = nrow(closed),
     open_trade_count = nrow(open_trades),
     carried_trade_count = if (is.data.frame(trades) && nrow(trades) > 0L) sum(trades$carried_across_fold_boundary, na.rm = TRUE) else 0L,
+    native_exit_count = if (nrow(closed) > 0L && "exit_attribution" %in% names(closed)) sum(closed$exit_attribution == "native", na.rm = TRUE) else 0L,
+    exit_stack_exit_count = if (nrow(closed) > 0L && "exit_attribution" %in% names(closed)) sum(closed$exit_attribution == "exit_stack", na.rm = TRUE) else 0L,
     win_count = length(wins),
     loss_count = length(losses),
     flat_count = length(flats),
@@ -683,7 +1229,10 @@ g5_ema_cross_wfa_fold_oos_summary <- function(folds, selected_models, equity_cur
       fold_no = fold$fold_no[[1L]],
       strategy_family = model$strategy_family[[1L]],
       model_instance_id = model$model_instance_id[[1L]],
+      exit_stack_id = model$exit_stack_id[[1L]],
+      strategy_spec_id = model$strategy_spec_id[[1L]],
       model_parameters = g5_wfa_model_parameter_label(model),
+      exit_stack = g5_wfa_exit_stack_label(model),
       fast_period = if ("fast_period" %in% names(model)) model$fast_period[[1L]] else NA_integer_,
       slow_period = if ("slow_period" %in% names(model)) model$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(model)) model$lookback_period[[1L]] else NA_integer_,
@@ -705,14 +1254,18 @@ g5_ema_cross_wfa_fold_oos_summary <- function(folds, selected_models, equity_cur
 }
 
 g5_ema_cross_wfa_model_stability <- function(selected_models) {
-  keys <- unique(selected_models$model_instance_id)
+  key_col <- if ("strategy_spec_id" %in% names(selected_models)) "strategy_spec_id" else "model_instance_id"
+  keys <- unique(selected_models[[key_col]])
   rows <- lapply(keys, function(key) {
-    selected <- selected_models[selected_models$model_instance_id == key, , drop = FALSE]
+    selected <- selected_models[selected_models[[key_col]] == key, , drop = FALSE]
     data.frame(
       schema_version = g5_ema_cross_wfa_multi_schema_version(),
       strategy_family = selected$strategy_family[[1L]],
-      model_instance_id = key,
+      model_instance_id = selected$model_instance_id[[1L]],
+      exit_stack_id = if ("exit_stack_id" %in% names(selected)) selected$exit_stack_id[[1L]] else NA_character_,
+      strategy_spec_id = if ("strategy_spec_id" %in% names(selected)) selected$strategy_spec_id[[1L]] else key,
       model_parameters = g5_wfa_model_parameter_label(selected[1L, , drop = FALSE]),
+      exit_stack = if ("exit_stack_id" %in% names(selected)) g5_wfa_exit_stack_label(selected[1L, , drop = FALSE]) else NA_character_,
       fast_period = if ("fast_period" %in% names(selected)) selected$fast_period[[1L]] else NA_integer_,
       slow_period = if ("slow_period" %in% names(selected)) selected$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(selected)) selected$lookback_period[[1L]] else NA_integer_,
@@ -841,11 +1394,35 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
     graphics::points(match(trades$entry_execution_date, session_dates), trades$entry_execution_price, pch = aesthetic$native_entry_pch, col = aesthetic$native_entry_color, bg = aesthetic$native_entry_color, cex = 1.05)
     exit_signal_rows <- trades[!is.na(trades$exit_signal_date), , drop = FALSE]
     if (nrow(exit_signal_rows) > 0L) {
-      graphics::points(match(exit_signal_rows$exit_signal_date, session_dates), exit_signal_rows$exit_signal_price, pch = aesthetic$exit_signal_pch, col = aesthetic$exit_signal_color, bg = aesthetic$panel_background, cex = 1.1, lwd = 1.4)
+      if ("exit_attribution" %in% names(exit_signal_rows)) {
+        native_exit_signals <- exit_signal_rows[exit_signal_rows$exit_attribution == "native" | is.na(exit_signal_rows$exit_attribution), , drop = FALSE]
+        stack_exit_signals <- exit_signal_rows[exit_signal_rows$exit_attribution == "exit_stack", , drop = FALSE]
+      } else {
+        native_exit_signals <- exit_signal_rows
+        stack_exit_signals <- exit_signal_rows[FALSE, , drop = FALSE]
+      }
+      if (nrow(native_exit_signals) > 0L) {
+        graphics::points(match(native_exit_signals$exit_signal_date, session_dates), native_exit_signals$exit_signal_price, pch = aesthetic$exit_signal_pch, col = aesthetic$exit_signal_color, bg = aesthetic$panel_background, cex = 1.1, lwd = 1.4)
+      }
+      if (nrow(stack_exit_signals) > 0L) {
+        graphics::points(match(stack_exit_signals$exit_signal_date, session_dates), stack_exit_signals$exit_signal_price, pch = aesthetic$non_native_exit_pch, col = aesthetic$non_native_exit_color, bg = aesthetic$panel_background, cex = 1.2, lwd = 1.6)
+      }
     }
     closed_rows <- trades[!is.na(trades$exit_execution_date), , drop = FALSE]
     if (nrow(closed_rows) > 0L) {
-      graphics::points(match(closed_rows$exit_execution_date, session_dates), closed_rows$exit_execution_price, pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 1.05)
+      if ("exit_attribution" %in% names(closed_rows)) {
+        native_closed <- closed_rows[closed_rows$exit_attribution == "native" | is.na(closed_rows$exit_attribution), , drop = FALSE]
+        stack_closed <- closed_rows[closed_rows$exit_attribution == "exit_stack", , drop = FALSE]
+      } else {
+        native_closed <- closed_rows
+        stack_closed <- closed_rows[FALSE, , drop = FALSE]
+      }
+      if (nrow(native_closed) > 0L) {
+        graphics::points(match(native_closed$exit_execution_date, session_dates), native_closed$exit_execution_price, pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 1.05)
+      }
+      if (nrow(stack_closed) > 0L) {
+        graphics::points(match(stack_closed$exit_execution_date, session_dates), stack_closed$exit_execution_price, pch = aesthetic$non_native_exit_pch, col = aesthetic$non_native_exit_color, bg = aesthetic$panel_background, cex = 1.2, lwd = 1.6)
+      }
     }
   }
   tick_positions <- unique(round(seq(1L, length(x), length.out = min(8L, length(x)))))
@@ -871,11 +1448,19 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
     legend_col <- c(legend_col, aesthetic$native_entry_color, grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.7))
     legend_bg <- c(legend_bg, NA, NA)
   }
-  legend_text <- c(legend_text, "entry signal", "entry execution", "exit signal", "exit execution")
+  has_stack_exit <- is.data.frame(trades) && nrow(trades) > 0L && "exit_attribution" %in% names(trades) && any(trades$exit_attribution == "exit_stack", na.rm = TRUE)
+  legend_text <- c(legend_text, "entry signal", "entry execution", "native exit signal", "native exit execution")
   legend_lty <- c(legend_lty, NA, NA, NA, NA)
   legend_pch <- c(legend_pch, aesthetic$entry_signal_pch, aesthetic$native_entry_pch, aesthetic$exit_signal_pch, aesthetic$native_exit_pch)
   legend_col <- c(legend_col, aesthetic$entry_signal_color, aesthetic$native_entry_color, aesthetic$exit_signal_color, aesthetic$native_exit_color)
   legend_bg <- c(legend_bg, aesthetic$panel_background, aesthetic$native_entry_color, aesthetic$panel_background, aesthetic$native_exit_color)
+  if (has_stack_exit) {
+    legend_text <- c(legend_text, "exit stack signal/execution")
+    legend_lty <- c(legend_lty, NA)
+    legend_pch <- c(legend_pch, aesthetic$non_native_exit_pch)
+    legend_col <- c(legend_col, aesthetic$non_native_exit_color)
+    legend_bg <- c(legend_bg, aesthetic$panel_background)
+  }
   graphics::legend("topleft", legend = legend_text, lty = legend_lty, pch = legend_pch, col = legend_col, pt.bg = legend_bg, bty = "n", text.col = aesthetic$text, cex = 0.78)
   graphics::mtext(paste("Rows:", nrow(indicators), "|", min(session_dates), "to", max(session_dates), "| shaded regions: OOS folds"), side = 3, line = 0.3, cex = 0.85, col = aesthetic$text)
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
@@ -958,6 +1543,9 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
       " | ", row[["strategy_family"]],
       " | ", row[["model_instance_id"]],
       " | ", g5_wfa_model_parameter_label(model),
+      " | ", row[["exit_stack_id"]],
+      " | ", g5_wfa_exit_stack_label(model),
+      " | ", row[["strategy_spec_id"]],
       " | ", num(row[["train_sharpe"]]),
       " | ", pct(row[["train_total_return"]]),
       " |"
@@ -965,6 +1553,11 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
   }
   candidate_models <- unique(train_parameter_performance[, c("strategy_family", "model_instance_id"), drop = FALSE])
   candidate_models <- candidate_models[order(candidate_models$strategy_family, candidate_models$model_instance_id), , drop = FALSE]
+  candidate_exit_stacks <- unique(train_parameter_performance[, c("exit_stack_id", "include_native_exit", "max_hold_sessions", "stop_loss_pct", "take_profit_pct"), drop = FALSE])
+  candidate_exit_stacks$exit_stack <- apply(candidate_exit_stacks, 1, function(row) g5_wfa_exit_stack_label(as.data.frame(as.list(row), stringsAsFactors = FALSE)))
+  candidate_exit_stacks <- candidate_exit_stacks[order(candidate_exit_stacks$exit_stack_id), , drop = FALSE]
+  candidate_specs <- unique(train_parameter_performance[, c("strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id"), drop = FALSE])
+  candidate_specs <- candidate_specs[order(candidate_specs$strategy_family, candidate_specs$model_instance_id, candidate_specs$exit_stack_id), , drop = FALSE]
   family_counts <- do.call(rbind, lapply(split(candidate_models, candidate_models$strategy_family), function(df) {
     data.frame(
       strategy_family = df$strategy_family[[1L]],
@@ -1017,12 +1610,15 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     "",
     "## Candidate Signal Models",
     "",
-    "Each TRAIN fold evaluates the same candidate model grid. A model instance means a strategy family plus a concrete parameter set.",
+    "Each TRAIN fold evaluates the same candidate entry/native model grid. A model instance means a strategy family plus a concrete parameter set.",
     "",
     table_lines(family_counts, names(family_counts)),
     "",
     paste0("- EMA cross grid: fast periods `", paste(settings$fast_periods, collapse = ", "), "`, slow periods `", paste(settings$slow_periods, collapse = ", "), "`"),
     paste0("- Bollinger touch grid: lookback periods `", paste(settings$bb_lookback_periods, collapse = ", "), "`, SD multipliers `", paste(settings$bb_sd_multipliers, collapse = ", "), "`"),
+    paste0("- Exit stack max-hold sessions: `", paste(settings$max_hold_sessions, collapse = ", "), "`"),
+    paste0("- Exit stack stop-loss percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$stop_loss_pcts)), collapse = ", "), "`"),
+    paste0("- Exit stack take-profit percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$take_profit_pcts)), collapse = ", "), "`"),
     "",
     "<details>",
     "<summary>Tested model instances</summary>",
@@ -1031,15 +1627,28 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     "",
     "</details>",
     "",
-    "## Fold-Selected Model Instances",
+    "## Candidate Exit Stacks",
     "",
-    "| fold_id | strategy_family | model_instance_id | parameters | train_sharpe | train_return |",
-    "| --- | --- | --- | --- | --- | --- |",
+    "An exit stack is a bundle of close-based exit rules that are all active while long. The first valid exit signal wins; same-bar attribution uses risk-first priority.",
+    "",
+    table_lines(candidate_exit_stacks[, c("exit_stack_id", "exit_stack"), drop = FALSE], c("exit_stack_id", "exit_stack")),
+    "",
+    "<details>",
+    "<summary>Tested strategy specs</summary>",
+    "",
+    table_lines(candidate_specs, names(candidate_specs)),
+    "",
+    "</details>",
+    "",
+    "## Fold-Selected Strategy Specs",
+    "",
+    "| fold_id | strategy_family | model_instance_id | parameters | exit_stack_id | exit_stack | strategy_spec_id | train_sharpe | train_return |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     apply(selected_models, 1, fmt_model_row),
     "",
     "## Fold OOS Summary",
     "",
-    table_lines(oos_table[, c("fold_id", "strategy_family", "model_instance_id", "model_parameters", "train_sharpe", "train_total_return", "oos_return", "oos_max_drawdown", "oos_trade_touch_count"), drop = FALSE], c("fold_id", "strategy_family", "model_instance_id", "model_parameters", "train_sharpe", "train_total_return", "oos_return", "oos_max_drawdown", "oos_trade_touch_count")),
+    table_lines(oos_table[, c("fold_id", "strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id", "model_parameters", "exit_stack", "train_sharpe", "train_total_return", "oos_return", "oos_max_drawdown", "oos_trade_touch_count"), drop = FALSE], c("fold_id", "strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id", "model_parameters", "exit_stack", "train_sharpe", "train_total_return", "oos_return", "oos_max_drawdown", "oos_trade_touch_count")),
     "",
     "## Stitched OOS Performance",
     "",
@@ -1052,6 +1661,8 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     paste0("- Exposure: `", pct(stitched_metrics$exposure_fraction[[1L]]), "`"),
     paste0("- Trades: `", stitched_metrics$trade_count[[1L]], "` total, `", stitched_metrics$closed_trade_count[[1L]], "` closed, `", stitched_metrics$open_trade_count[[1L]], "` open"),
     paste0("- Carried trades: `", stitched_metrics$carried_trade_count[[1L]], "`"),
+    paste0("- Native exits: `", stitched_metrics$native_exit_count[[1L]], "`"),
+    paste0("- Exit-stack exits: `", stitched_metrics$exit_stack_exit_count[[1L]], "`"),
     paste0("- Win rate: `", pct(stitched_metrics$win_rate[[1L]]), "`"),
     paste0("- Profit factor: `", num(stitched_metrics$profit_factor[[1L]]), "`"),
     "",
@@ -1064,13 +1675,14 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     "",
     "## Model Stability",
     "",
-    table_lines(stability[, c("strategy_family", "model_instance_id", "model_parameters", "selected_fold_count", "selected_fold_fraction", "selected_folds"), drop = FALSE], c("strategy_family", "model_instance_id", "model_parameters", "selected_fold_count", "selected_fold_fraction", "selected_folds")),
+    table_lines(stability[, c("strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id", "model_parameters", "exit_stack", "selected_fold_count", "selected_fold_fraction", "selected_folds"), drop = FALSE], c("strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id", "model_parameters", "exit_stack", "selected_fold_count", "selected_fold_fraction", "selected_folds")),
     "",
     "## Audit Notes",
     "",
-    "- Selection metric for this POC is highest TRAIN Sharpe, with TRAIN total return as the existing secondary sort.",
+    "- Selection metric for this POC is highest TRAIN Sharpe over complete strategy specs, with TRAIN total return as the existing secondary sort.",
+    "- Exit stacks are close-based only in this POC and execute at the next session open.",
     "- OOS rows are stitched in chronological order to mimic updating the selected model instance at each fold boundary.",
-    "- Open positions are carried across fold boundaries and then managed by the current fold-selected model instance."
+    "- Open positions are carried across fold boundaries and then managed by the current fold-selected strategy spec."
   )
   writeLines(lines, con = path, useBytes = TRUE)
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
@@ -1086,12 +1698,16 @@ g5_ema_cross_wfa_run_multi <- function(
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
   candidate_families = c("ema_cross", "bollinger_touch"),
+  max_hold_sessions = c(10L, 20L, 40L),
+  stop_loss_pcts = 0.10,
+  take_profit_pcts = 0.25,
   train_quarters = 8,
   oos_quarters = 1,
   fold_count = 3L
 ) {
   folds <- g5_ema_cross_wfa_resolve_folds(bars, symbol, wfa_start_date, wfa_end_date, train_quarters, oos_quarters, fold_count)
-  selected <- g5_ema_cross_wfa_select_fold_models(bars, symbol, folds, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families)
+  exit_stacks <- g5_wfa_exit_stack_grid(max_hold_sessions, stop_loss_pcts, take_profit_pcts)
+  selected <- g5_ema_cross_wfa_select_fold_models(bars, symbol, folds, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families, exit_stacks)
   stitched <- g5_ema_cross_wfa_simulate_stitched_oos(bars, symbol, folds, selected$selected_models)
   indicators <- g5_ema_cross_wfa_stitched_indicators(bars, symbol, folds, selected$selected_models)
   stitched_metrics <- g5_ema_cross_wfa_stitched_metrics(stitched$trades, stitched$equity_curve, symbol, nrow(folds))
@@ -1099,6 +1715,7 @@ g5_ema_cross_wfa_run_multi <- function(
   stability <- g5_ema_cross_wfa_model_stability(selected$selected_models)
   list(
     folds = folds,
+    exit_stacks = exit_stacks,
     selected_models = selected$selected_models,
     train_parameter_performance = selected$train_parameter_performance,
     stitched_trades = stitched$trades,
@@ -1121,6 +1738,9 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
   candidate_families = c("ema_cross", "bollinger_touch"),
+  max_hold_sessions = c(10L, 20L, 40L),
+  stop_loss_pcts = 0.10,
+  take_profit_pcts = 0.25,
   train_quarters = 8,
   oos_quarters = 1,
   fold_count = 3L
@@ -1132,12 +1752,13 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   prefix <- g5_ema_cross_wfa_multi_artifact_prefix(result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
   written <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)
-  wfa <- g5_ema_cross_wfa_run_multi(result$bars, symbol, wfa_start_date, wfa_end_date, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families, train_quarters, oos_quarters, fold_count)
+  wfa <- g5_ema_cross_wfa_run_multi(result$bars, symbol, wfa_start_date, wfa_end_date, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families, max_hold_sessions, stop_loss_pcts, take_profit_pcts, train_quarters, oos_quarters, fold_count)
   paths <- c(
     written$paths,
     list(
       fold_spec_csv = file.path(output_dir, paste0(prefix, "_fold_spec.csv")),
       selected_models_csv = file.path(output_dir, paste0(prefix, "_selected_models.csv")),
+      exit_stacks_csv = file.path(output_dir, paste0(prefix, "_exit_stacks.csv")),
       train_parameter_performance_csv = file.path(output_dir, paste0(prefix, "_train_parameter_performance.csv")),
       model_stability_csv = file.path(output_dir, paste0(prefix, "_model_stability.csv")),
       fold_oos_summary_csv = file.path(output_dir, paste0(prefix, "_fold_oos_summary.csv")),
@@ -1156,6 +1777,7 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   }
   utils::write.csv(wfa$folds, paths$fold_spec_csv, row.names = FALSE)
   utils::write.csv(wfa$selected_models, paths$selected_models_csv, row.names = FALSE)
+  utils::write.csv(wfa$exit_stacks, paths$exit_stacks_csv, row.names = FALSE)
   utils::write.csv(wfa$train_parameter_performance, paths$train_parameter_performance_csv, row.names = FALSE)
   utils::write.csv(wfa$model_stability, paths$model_stability_csv, row.names = FALSE)
   utils::write.csv(wfa$fold_oos_summary, paths$fold_oos_summary_csv, row.names = FALSE)
@@ -1178,7 +1800,10 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
-    candidate_families = candidate_families
+    candidate_families = candidate_families,
+    max_hold_sessions = max_hold_sessions,
+    stop_loss_pcts = stop_loss_pcts,
+    take_profit_pcts = take_profit_pcts
   )
   g5_ema_cross_wfa_multi_metrics_markdown(wfa$folds, wfa$selected_models, wfa$train_parameter_performance, wfa$stitched_metrics, wfa$fold_oos_summary, wfa$model_stability, report_settings, paths$stitched_metrics_md)
   g5_write_ema_cross_wfa_stitched_strategy_chart_png(wfa$stitched_indicators, wfa$stitched_trades, wfa$folds, symbol, paths$stitched_strategy_chart_png)

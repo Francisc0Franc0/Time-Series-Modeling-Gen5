@@ -391,28 +391,28 @@ Notes:
 - `scripts/inspect/run_ema_cross_wfa_multi.ps1` and `.R` remain thin compatibility wrappers.
 - Generated packet prefixes now start with `multi_wfa_`.
 
-### C6. Exit overlay WFA POC planning
+### C6. Exit stack WFA POC
 
-Status: planned
+Status: done
 
-Proposed branch: `codex/Gen5.1-exit-overlay-wfa-poc`
+Branch: `codex/Gen5.1-exit-stack-wfa-poc`
 
-Goal: Add a narrow exit-overlay layer on top of the current multi-signal WFA POC. Compose `entry_model_instance_id` plus `exit_overlay_id` into a complete `strategy_spec_id`, evaluate complete strategy specs in TRAIN, and run selected specs in stitched OOS.
+Goal: Add a narrow close-based exit-stack layer on top of the current multi-signal WFA POC. Compose `model_instance_id` plus `exit_stack_id` into a complete `strategy_spec_id`, evaluate complete strategy specs in TRAIN, and run selected specs in stitched OOS.
 
-Recommended architecture:
+Implemented architecture:
 
 - Entry/native signal families remain upstream: currently `ema_cross` and `bollinger_touch`.
-- Exit overlays are additive trade-policy candidates, not post-hoc portfolio transformations.
+- Exit stacks are additive trade-policy candidates, not post-hoc portfolio transformations.
 - WFA selection authority should rank complete `strategy_spec_id`s rather than only entry model instances.
 - Reporting and charting consume selected specs and emit stitched trades, equity, charts, and run reports.
 
-Initial exit overlays:
+Initial exit stacks:
 
 - `native_only`
 - `max_hold_n_sessions`
 - `close_below_stop_pct`
 - `close_above_take_profit_pct`
-- optional combined stop/take-profit grid after single overlays work.
+- combined stop/take-profit/max-hold stacks.
 
 POC guardrails:
 
@@ -420,22 +420,34 @@ POC guardrails:
 - Use deterministic "earliest valid exit wins" behavior.
 - If multiple exit reasons trigger on the same signal bar, use risk-first attribution for reporting.
 - Preserve the current one-position-at-a-time, all-in, no-leverage assumptions unless the operator opens a sizing/leverage slice.
-- Record `entry_model_instance_id`, `exit_overlay_id`, `strategy_spec_id`, `exit_reason`, and native-versus-overlay exit attribution.
+- Record `model_instance_id`, `exit_stack_id`, `strategy_spec_id`, `primary_exit_reason`, triggered exit rules, and native-versus-stack exit attribution.
 - Keep grids modest.
 - Do not add portfolio allocation, state/regime filters, live advice, or intraday execution in this slice.
 
 Visible output:
 
 - WFA markdown report naming candidate strategy specs and fold-selected specs.
-- Stitched OOS strategy chart with native versus overlay exit markers.
+- Stitched OOS strategy chart with native versus exit-stack markers when both appear in selected OOS trades.
 - Stitched OOS equity chart and metrics.
 - CSV trade ledger with exit attribution.
+
+Validation:
+
+- Focused multi-fold WFA tests passed.
+- Full local runner passed.
+- Final AMD three-fold smoke passed with `-Refresh`.
+
+Notes:
+
+- Default exit-stack grid uses `native_only`, native plus max-hold sessions, native plus close-based stop loss, native plus close-based take profit, and combined native/stop/take/max-hold stacks.
+- The final AMD smoke selected `native_only` in fold 1 and `native_maxhold40` in folds 2-3.
+- In that AMD OOS path, both closed trades exited by native signal before the selected max-hold stack fired; the stack marker path is implemented but was not visually exercised by this specific selected OOS path.
 
 ### D. Later POC backlog discussion
 
 Status: deferred
 
-Goal: Decide conversationally whether the next independent POC after exit overlays should be portfolio construction, universe inspection, volatility ranking, state/regime filtering, or something else.
+Goal: Decide conversationally whether the next independent POC after exit stacks should be portfolio construction, universe inspection, volatility ranking, state/regime filtering, or something else.
 
 Visible output:
 

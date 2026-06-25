@@ -28,6 +28,12 @@ param(
 
   [string]$CandidateFamilies = "ema_cross,bollinger_touch",
 
+  [string]$MaxHoldSessions = "10,20,40",
+
+  [string]$StopLossPcts = "0.10",
+
+  [string]$TakeProfitPcts = "0.25",
+
   [switch]$Refresh,
 
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
@@ -59,6 +65,15 @@ if ([string]::IsNullOrWhiteSpace($BbSdMultipliers)) {
 if ([string]::IsNullOrWhiteSpace($CandidateFamilies)) {
   throw "-CandidateFamilies must be a comma-separated list."
 }
+if ([string]::IsNullOrWhiteSpace($MaxHoldSessions)) {
+  throw "-MaxHoldSessions must be a comma-separated list of positive integers."
+}
+if ([string]::IsNullOrWhiteSpace($StopLossPcts)) {
+  throw "-StopLossPcts must be a comma-separated list of positive decimal percentages, such as 0.10."
+}
+if ([string]::IsNullOrWhiteSpace($TakeProfitPcts)) {
+  throw "-TakeProfitPcts must be a comma-separated list of positive decimal percentages, such as 0.25."
+}
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Resolve-Path -LiteralPath (Join-Path $scriptDir "..\..")
@@ -85,6 +100,9 @@ $env:GEN5_WFA_MULTI_SLOW_PERIODS = $SlowPeriods
 $env:GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS = $BbLookbackPeriods
 $env:GEN5_WFA_MULTI_BB_SD_MULTIPLIERS = $BbSdMultipliers
 $env:GEN5_WFA_MULTI_CANDIDATE_FAMILIES = $CandidateFamilies
+$env:GEN5_WFA_MULTI_MAX_HOLD_SESSIONS = $MaxHoldSessions
+$env:GEN5_WFA_MULTI_STOP_LOSS_PCTS = $StopLossPcts
+$env:GEN5_WFA_MULTI_TAKE_PROFIT_PCTS = $TakeProfitPcts
 $env:GEN5_WFA_MULTI_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 
 Push-Location $repoRoot

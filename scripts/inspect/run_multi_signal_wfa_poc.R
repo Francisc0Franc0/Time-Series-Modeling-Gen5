@@ -142,6 +142,9 @@ if (!any(outer(fast_periods, slow_periods, FUN = "<"))) {
 bb_lookback_periods <- g5_parse_int_list_env(Sys.getenv("GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS", unset = "10,20,30"), "GEN5_WFA_MULTI_BB_LOOKBACK_PERIODS")
 bb_sd_multipliers <- g5_parse_num_list_env(Sys.getenv("GEN5_WFA_MULTI_BB_SD_MULTIPLIERS", unset = "1.5,2,2.5"), "GEN5_WFA_MULTI_BB_SD_MULTIPLIERS")
 candidate_families <- g5_wfa_candidate_families(g5_parse_character_list_env(Sys.getenv("GEN5_WFA_MULTI_CANDIDATE_FAMILIES", unset = "ema_cross,bollinger_touch"), "GEN5_WFA_MULTI_CANDIDATE_FAMILIES"))
+max_hold_sessions <- g5_parse_int_list_env(Sys.getenv("GEN5_WFA_MULTI_MAX_HOLD_SESSIONS", unset = "10,20,40"), "GEN5_WFA_MULTI_MAX_HOLD_SESSIONS")
+stop_loss_pcts <- g5_parse_num_list_env(Sys.getenv("GEN5_WFA_MULTI_STOP_LOSS_PCTS", unset = "0.10"), "GEN5_WFA_MULTI_STOP_LOSS_PCTS")
+take_profit_pcts <- g5_parse_num_list_env(Sys.getenv("GEN5_WFA_MULTI_TAKE_PROFIT_PCTS", unset = "0.25"), "GEN5_WFA_MULTI_TAKE_PROFIT_PCTS")
 refresh <- g5_parse_bool_env(Sys.getenv("GEN5_WFA_MULTI_REFRESH", unset = ""), default = FALSE)
 
 warmup_days <- max(c(slow_periods, bb_lookback_periods)) * 4L
@@ -162,9 +165,12 @@ message("Fast periods: ", paste(fast_periods, collapse = ", "))
 message("Slow periods: ", paste(slow_periods, collapse = ", "))
 message("Bollinger lookback periods: ", paste(bb_lookback_periods, collapse = ", "))
 message("Bollinger SD multipliers: ", paste(bb_sd_multipliers, collapse = ", "))
+message("Exit stack max-hold sessions: ", paste(max_hold_sessions, collapse = ", "))
+message("Exit stack stop-loss pcts: ", paste(stop_loss_pcts, collapse = ", "))
+message("Exit stack take-profit pcts: ", paste(take_profit_pcts, collapse = ", "))
 message("Leverage: 1x")
 message("Refresh: ", refresh)
-message("POC only: stitched OOS across rolling folds, not final research evidence, live advice, or a deployable strategy.")
+message("POC only: stitched OOS across rolling folds with close-based exit stacks, not final research evidence, live advice, or a deployable strategy.")
 
 result <- g5_workbench_query_adjusted_daily_bars(
   cfg = cfg,
@@ -191,6 +197,9 @@ written <- g5_write_ema_cross_wfa_multi_outputs(
   bb_lookback_periods = bb_lookback_periods,
   bb_sd_multipliers = bb_sd_multipliers,
   candidate_families = candidate_families,
+  max_hold_sessions = max_hold_sessions,
+  stop_loss_pcts = stop_loss_pcts,
+  take_profit_pcts = take_profit_pcts,
   train_quarters = train_quarters,
   oos_quarters = oos_quarters,
   fold_count = fold_count
@@ -201,7 +210,7 @@ message("")
 message("Resolved folds:")
 print(written$folds[, c("fold_id", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "oos_session_count")], row.names = FALSE)
 cat("\nFold-selected model instances:\n")
-print(written$selected_models[, c("fold_id", "strategy_family", "model_instance_id", "train_sharpe", "train_total_return")], row.names = FALSE)
+print(written$selected_models[, c("fold_id", "strategy_family", "model_instance_id", "exit_stack_id", "strategy_spec_id", "train_sharpe", "train_total_return")], row.names = FALSE)
 message("")
 message("Stitched OOS performance:")
 message("  Return: ", g5_fmt_pct(metrics$total_return[[1L]]))
@@ -209,14 +218,17 @@ message("  Sharpe: ", g5_fmt_num(metrics$sharpe[[1L]]))
 message("  Max drawdown: ", g5_fmt_pct(metrics$max_drawdown[[1L]]))
 message("  Trades: ", metrics$trade_count[[1L]])
 message("  Carried trades: ", metrics$carried_trade_count[[1L]])
+message("  Native exits: ", metrics$native_exit_count[[1L]])
+message("  Exit-stack exits: ", metrics$exit_stack_exit_count[[1L]])
 message("  Buy-and-hold return: ", g5_fmt_pct(metrics$buy_hold_total_return[[1L]]))
 message("")
-message("Model stability:")
-print(written$model_stability[, c("model_instance_id", "selected_fold_count", "selected_fold_fraction", "selected_folds")], row.names = FALSE)
+message("Strategy spec stability:")
+print(written$model_stability[, c("strategy_spec_id", "selected_fold_count", "selected_fold_fraction", "selected_folds")], row.names = FALSE)
 message("")
 message("Key outputs:")
 message("  Fold spec CSV: ", written$paths$fold_spec_csv)
 message("  Selected models CSV: ", written$paths$selected_models_csv)
+message("  Exit stacks CSV: ", written$paths$exit_stacks_csv)
 message("  Stitched strategy chart: ", written$paths$stitched_strategy_chart_png)
 message("  Stitched equity curve: ", written$paths$stitched_equity_curve_png)
 message("  Stitched metrics: ", written$paths$stitched_metrics_md)
