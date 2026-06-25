@@ -1,4 +1,4 @@
-# Gen5.1 multi-fold EMA cross WFA proof of concept.
+# Gen5.1 multi-signal WFA proof of concept.
 
 g5_ema_cross_wfa_multi_schema_version <- function() {
   "gen5_ema_cross_wfa_multi_v0.1"
@@ -13,7 +13,7 @@ g5_ema_cross_wfa_multi_artifact_prefix <- function(as_of_timestamp, symbol, wfa_
     "_to_",
     gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date)))
   )
-  paste(c("ema_wfa3", symbol, paste0(fold_count, "f"), window_label, stamp), collapse = "_")
+  paste(c("multi_wfa", symbol, paste0(fold_count, "f"), window_label, stamp), collapse = "_")
 }
 
 g5_ema_cross_wfa_multi_output_dir <- function(repo_root, as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count) {
@@ -1127,7 +1127,7 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
 ) {
   symbol <- g5_standardize_symbol(symbol)
   if (length(symbol) != 1L) {
-    g5_stop("EMA multi-fold WFA output writing requires exactly one symbol.")
+    g5_stop("Multi-signal WFA output writing requires exactly one symbol.")
   }
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   prefix <- g5_ema_cross_wfa_multi_artifact_prefix(result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
@@ -1150,6 +1150,10 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
       stitched_equity_curve_png = file.path(output_dir, paste0(prefix, "_stitched_equity_curve.png"))
     )
   )
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  if (!dir.exists(output_dir)) {
+    g5_stop(paste0("Could not create multi-signal WFA output directory: ", output_dir))
+  }
   utils::write.csv(wfa$folds, paths$fold_spec_csv, row.names = FALSE)
   utils::write.csv(wfa$selected_models, paths$selected_models_csv, row.names = FALSE)
   utils::write.csv(wfa$train_parameter_performance, paths$train_parameter_performance_csv, row.names = FALSE)

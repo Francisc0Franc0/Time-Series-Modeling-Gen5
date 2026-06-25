@@ -327,7 +327,7 @@ The packet is written under ignored `runs/research_workbench/wfa_pocs/` and incl
 The three-fold WFA proof rolls the train window forward by one OOS period at a time. By default, each TRAIN fold now evaluates both `ema_cross` and `bollinger_touch` signal families. A model instance means the strategy family plus concrete parameters, such as `ema_cross_fast12_slow30` or `bollinger_touch_n20_sd2p5`. The best TRAIN model instance by Sharpe, with return as the existing secondary sort, is selected for that fold and then traded on its OOS period. Open positions are carried across fold boundaries; once a new fold begins, future exit signals are governed by the current fold-selected model instance. A signal generated on the final bar of a fold may execute at the next open if that next session is inside the stitched OOS span.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_multi.ps1 `
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_poc.ps1 `
   -Symbol AMD `
   -EndDate 2026-06-24 `
   -AsOfTimestamp "2026-06-24 17:30:00" `
@@ -343,6 +343,8 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_multi
 ```
 
 The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model instances, train parameter performance by fold, model stability, fold-level OOS summaries, stitched trades, stitched equity, a markdown run report, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and model-instance changes are auditable at a glance. EMA overlays are plotted in EMA-selected folds; Bollinger bands are plotted in Bollinger-selected folds.
+
+The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix.
 
 ## Generated Local Files
 

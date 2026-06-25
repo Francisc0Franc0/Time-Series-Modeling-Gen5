@@ -57,6 +57,19 @@ test_that("multi-fold EMA WFA resolves rolling non-overlapping OOS folds", {
   expect_true(all(folds$oos_start_date[-1L] > folds$oos_end_date[-nrow(folds)]))
 })
 
+test_that("multi-signal WFA artifact prefix no longer uses EMA-only naming", {
+  prefix <- g5_ema_cross_wfa_multi_artifact_prefix(
+    as_of_timestamp = "2026-06-24 17:30:00",
+    symbol = "AMD",
+    wfa_start_date = as.Date("2023-09-23"),
+    wfa_end_date = as.Date("2026-06-24"),
+    fold_count = 3L
+  )
+
+  expect_true(startsWith(prefix, "multi_wfa_AMD_3f_"))
+  expect_false(grepl("ema_wfa3", prefix, fixed = TRUE))
+})
+
 test_that("multi-fold EMA WFA rolls OOS folds by available sessions without overlap gaps", {
   dates <- as.Date("2026-01-01") + 0:60
   dates <- dates[!weekdays(dates) %in% c("Saturday", "Sunday")]

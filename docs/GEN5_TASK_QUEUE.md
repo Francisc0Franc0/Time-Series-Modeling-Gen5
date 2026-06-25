@@ -326,7 +326,7 @@ Notes:
 - OOS outputs include fold spec, train parameter table, train-selected metrics, OOS trades/events/equity/metrics, OOS strategy chart, and OOS equity curve.
 - The workflow remains one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
 
-### J. EMA cross three-fold stitched WFA POC
+### J. Multi-signal three-fold stitched WFA POC
 
 Status: done
 
@@ -344,11 +344,11 @@ Validation:
 Notes:
 
 - Standard language now distinguishes `strategy_family` such as `ema_cross` from `model_instance_id` such as `ema_cross_fast12_slow30`.
-- Each fold selects one model instance from the EMA grid using train-window Sharpe, then return.
+- The original three-fold slice selected one model instance from the EMA grid using train-window Sharpe, then return; the current POC has since expanded this to multi-signal candidate competition.
 - Open positions are carried across fold boundaries; future exit signals are governed by the current fold-selected model instance.
 - Final-bar fold signals may execute at the next open if that next session is inside the stitched OOS span.
 - Outputs include fold specs, selected model instances, train parameter performance by fold, model stability, fold-level OOS summaries, stitched trades/equity/metrics, and stitched OOS charts.
-- Stitched strategy and equity charts alternate fold backgrounds between white and light gray so fold transitions and EMA model-instance changes are auditable.
+- Stitched strategy and equity charts alternate fold backgrounds between white and light gray so fold transitions and model-instance changes are auditable.
 - The workflow remains three-fold WFA plumbing only: it is not final research evidence, live advice, allocation logic, or a deployable strategy.
 
 ### C4. Multi-signal WFA candidate competition and report
@@ -371,8 +371,25 @@ Notes:
 - `strategy_family` now includes `ema_cross` and `bollinger_touch`.
 - `model_instance_id` names the concrete family plus params, such as `bollinger_touch_n20_sd2p5`.
 - Each TRAIN fold selects the best candidate model instance across all enabled families using train-window Sharpe, then return.
+- New operator-facing runner: `scripts/inspect/run_multi_signal_wfa_poc.ps1`.
+- Old EMA-named runner files remain as compatibility wrappers only.
+- New generated run folders/files use the `multi_wfa_...` artifact prefix instead of `ema_wfa3_...`.
 - The markdown report now includes run context, data/query window, WFA settings, fold calendar, candidate signal models, fold winners, fold OOS summaries, stitched OOS metrics, buy-and-hold baseline, model stability, and audit notes.
 - Stitched charts plot EMA overlays only in EMA-selected folds and Bollinger bands only in Bollinger-selected folds.
+
+### C5. Multi-signal WFA naming cleanup
+
+Status: done
+
+Branch: `codex/Gen5.1-multi-signal-naming-cleanup`
+
+Goal: Rename the current POC's outward-facing script and generated artifact prefix so they no longer imply EMA-only testing.
+
+Notes:
+
+- Preferred operator runner is `scripts/inspect/run_multi_signal_wfa_poc.ps1`.
+- `scripts/inspect/run_ema_cross_wfa_multi.ps1` and `.R` remain thin compatibility wrappers.
+- Generated packet prefixes now start with `multi_wfa_`.
 
 ### D. First research experiment design discussion
 
