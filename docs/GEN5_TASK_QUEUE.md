@@ -391,11 +391,51 @@ Notes:
 - `scripts/inspect/run_ema_cross_wfa_multi.ps1` and `.R` remain thin compatibility wrappers.
 - Generated packet prefixes now start with `multi_wfa_`.
 
-### D. First research experiment design discussion
+### C6. Exit overlay WFA POC planning
 
-Status: pending
+Status: planned
 
-Goal: Decide conversationally whether the first post-data experiment should be EMA long/cash, buy-and-hold/no-trade baselines, universe inspection, volatility ranking, or something else.
+Proposed branch: `codex/Gen5.1-exit-overlay-wfa-poc`
+
+Goal: Add a narrow exit-overlay layer on top of the current multi-signal WFA POC. Compose `entry_model_instance_id` plus `exit_overlay_id` into a complete `strategy_spec_id`, evaluate complete strategy specs in TRAIN, and run selected specs in stitched OOS.
+
+Recommended architecture:
+
+- Entry/native signal families remain upstream: currently `ema_cross` and `bollinger_touch`.
+- Exit overlays are additive trade-policy candidates, not post-hoc portfolio transformations.
+- WFA selection authority should rank complete `strategy_spec_id`s rather than only entry model instances.
+- Reporting and charting consume selected specs and emit stitched trades, equity, charts, and run reports.
+
+Initial exit overlays:
+
+- `native_only`
+- `max_hold_n_sessions`
+- `close_below_stop_pct`
+- `close_above_take_profit_pct`
+- optional combined stop/take-profit grid after single overlays work.
+
+POC guardrails:
+
+- Keep exits close-based with next-open execution to avoid intraday fill assumptions.
+- Use deterministic "earliest valid exit wins" behavior.
+- If multiple exit reasons trigger on the same signal bar, use risk-first attribution for reporting.
+- Preserve the current one-position-at-a-time, all-in, no-leverage assumptions unless the operator opens a sizing/leverage slice.
+- Record `entry_model_instance_id`, `exit_overlay_id`, `strategy_spec_id`, `exit_reason`, and native-versus-overlay exit attribution.
+- Keep grids modest.
+- Do not add portfolio allocation, state/regime filters, live advice, or intraday execution in this slice.
+
+Visible output:
+
+- WFA markdown report naming candidate strategy specs and fold-selected specs.
+- Stitched OOS strategy chart with native versus overlay exit markers.
+- Stitched OOS equity chart and metrics.
+- CSV trade ledger with exit attribution.
+
+### D. Later POC backlog discussion
+
+Status: deferred
+
+Goal: Decide conversationally whether the next independent POC after exit overlays should be portfolio construction, universe inspection, volatility ranking, state/regime filtering, or something else.
 
 Visible output:
 

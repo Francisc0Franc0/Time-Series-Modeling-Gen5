@@ -10,7 +10,7 @@ Gen5 targets a long-only, rolling walk-forward, regime-conditioned tactical equi
 
 ## Current Decisions
 
-These are architectural decisions and desired capability areas, not a claim that downstream modules are already implemented. The current Gen5.1 base is the completed v0/v0.1 market-data layer and research workbench.
+These are architectural decisions and desired capability areas, not a claim that downstream modules are production-ready. The current Gen5.1 base is the completed v0/v0.1 market-data layer, research workbench, diagnostic strategy proofs, and a multi-signal single-asset WFA POC.
 
 - Core language: R-first.
 - Provider: Alpaca only for v0.
@@ -18,7 +18,8 @@ These are architectural decisions and desired capability areas, not a claim that
 - Trading posture: long-only.
 - Live posture: advice-only.
 - Signal timing: after-close analysis for next-open manual market orders.
-- Possible early strategy vertical slice: `ema_cross` plus `no_trade`.
+- Current strategy/WFA POC: `ema_cross` and `bollinger_touch` model instances compete inside each TRAIN fold, with stitched OOS reporting.
+- Next planned trade-policy slice: close-based exit overlays composed with entry/native signal model instances into complete `strategy_spec_id` candidates.
 - Possible state benchmark: asset-specific PCA, added only if and when the operator opens that slice.
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.
 - Leverage reports: always compare 1.0x baseline with 1.8x leveraged variant.
@@ -32,10 +33,10 @@ These are architectural decisions and desired capability areas, not a claim that
 2. `features`: deterministic feature construction from canonical bars.
 3. `asset_taxonomy`: later causal universe screens and optional behavior grouping.
 4. `state_model`: asset-specific PCA first, with simpler baselines and other models later.
-5. `strategy_lab`: strategy event generation, starting with `ema_cross` and `no_trade`.
-6. `trade_policy`: native and overlay exit-policy mechanics bound to trade identity.
-7. `walk_forward`: rolling train/OOS fold engine and frozen selection authority.
-8. `capital_allocator`: portfolio construction tested inside WFA, not only after the fact.
+5. `strategy_lab`: entry and native-exit event generation, currently proven with `ema_cross` and `bollinger_touch` diagnostic families.
+6. `trade_policy`: composes entry/native event streams with exit overlays into complete `strategy_spec_id` candidates and trade ledgers.
+7. `walk_forward`: rolling train/OOS fold engine and frozen selection authority over complete model or strategy specs.
+8. `capital_allocator`: future portfolio construction, position sizing, exposure management, and allocation-policy simulation over WFA trade ledgers.
 9. `decision_pack`: frozen quarterly or period-specific execution evidence package.
 10. `live_advisor`: advice-only dashboard and console output for manual orders.
 
@@ -96,3 +97,7 @@ The data layer and research workbench are complete enough to serve as the base. 
 - Advice-only dashboard/live runner.
 
 The operator may choose the next slice organically. Codex should translate that direction into scoped, validated increments with tangible outputs rather than forcing the entire capability map into a predetermined sequence.
+
+## Current Prototype Path
+
+Gen5.1 currently has a multi-signal single-asset WFA POC. The next recommended POC is trade-policy and exit-overlay composition: an entry/native model instance plus an exit overlay becomes a `strategy_spec_id`, and WFA ranks complete specs rather than only entry models. Portfolio construction should follow once per-asset WFA trade ledgers carry stable exit attribution. State/regime filters remain deferred until trade generation and portfolio accounting surfaces are stable.

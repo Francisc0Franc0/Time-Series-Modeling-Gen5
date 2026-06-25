@@ -17,9 +17,11 @@ The branch keeps:
 - Source-controlled universe registry scaffolding.
 - Research workbench query scripts.
 - Basic static chart rendering from canonical bars.
+- Diagnostic strategy proofs with trade accounting and equity charts.
+- A multi-signal, single-asset WFA POC where `ema_cross` and `bollinger_touch` model instances compete by TRAIN-fold metrics and produce stitched OOS reports.
 - Non-network local validation through `scripts/test/run_tests.ps1`.
 
-The branch intentionally does not keep the large WFA/AMD EMA scaffold stack from later experimental branches.
+The branch intentionally does not treat the current WFA POC as final research evidence, live advice, allocation logic, or a deployable strategy.
 
 ## Core Values
 
@@ -79,13 +81,13 @@ Codex must stop and ask before:
 - Accepting data warnings when the acceptance changes research validity or deployment judgment.
 - Deleting files, generated artifacts, caches, credentials, or heavyweight outputs.
 
-## First Good Next Slices
+## Current Good Next Slices
 
-The next task does not have to be a WFA or EMA task. Good first Gen5.1 slices include:
+The next task does not have to follow a rigid roadmap. Good current Gen5.1 slices include:
 
-- Produce an AMD data proof report: load/read adjusted daily bars, render a chart, and write a compact data-health table.
-- Produce a multi-symbol data inspection report for a hand-picked basket.
-- Tighten the workbench chart command so it is easier for the operator to run repeatedly.
-- Add a tiny report wrapper that turns one workbench query into a folder containing bars, health CSV, and PNG.
+- Add a narrow exit-overlay POC on top of the multi-signal WFA runner.
+- Improve stitched WFA reporting and audit tables as new model surfaces are added.
+- Build a portfolio construction POC after trade ledgers include stable entry and exit attribution.
+- Explore state/regime filters only after trade generation and portfolio accounting surfaces are stable.
 
 The best next slice is whichever gives the operator the clearest immediate feedback.
