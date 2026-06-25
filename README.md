@@ -267,9 +267,41 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_green_day_hold_demo
 
 Use `-Refresh` when a credentialed Alpaca refresh is intended before rendering. Set `-Leverage 1.8` to run the same diagnostic strategy with 1.8x return exposure and no financing-cost model. The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes bars, manifest, audit, coverage, health, trade history, chart events, equity curve CSV, metrics CSV/Markdown, a strategy chart with separate signal and execution markers, and an equity curve PNG.
 
-The equity curve marks strategy equity at each session close: cash remains flat, open positions are marked from entry open to that close, and closed trades are marked at exit open on the exit-execution date. The baseline is no-leverage buy-and-hold on the same asset over the chart period, drawn as a solid black line. Strategy drawdown periods are softly shaded red.
+The equity curve marks strategy equity at each session close: cash remains flat, open positions are marked from entry open to that close, and closed trades are marked at exit open on the exit-execution date. The baseline is no-leverage buy-and-hold on the same asset over the chart period, drawn as a solid black line. Strategy drawdown periods are marked with soft red high-water shelf lines.
 
 The standard metrics currently emitted are trade count, closed/open trade count, win/loss/flat count, win rate, compounded closed return, compounded marked return, CAGR, max drawdown, time underwater, max underwater streak, average/median/best/worst closed-trade return, average win/loss, gross profit/loss, profit factor, expectancy, exposure fraction, average holding sessions, closed-trade equity drawdown, and matching buy-and-hold return/CAGR/drawdown/time-underwater baseline metrics. This is diagnostic accounting only; it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
+
+## EMA Cross Backtest Proof
+
+Gen5.1 also includes a pure in-sample EMA crossover proof. The fast EMA crossing above the slow EMA generates an entry signal at that close and enters at the next session open. The fast EMA crossing below the slow EMA generates an exit signal at that close and exits at the next session open. The runner uses a two-year trading window by default, fetches extra warmup bars for EMA calculation, evaluates a modest parameter grid, selects the highest-Sharpe row, and writes a sortable parameter-performance CSV plus selected strategy/equity charts.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_backtest.ps1 `
+  -Symbol AMD `
+  -TradingWindowDays 730 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Leverage 1.0 `
+  -Refresh
+```
+
+Run the same window at 1.8x simple return exposure:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_backtest.ps1 `
+  -Symbol AMD `
+  -TradingWindowDays 730 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Leverage 1.8 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes the query artifacts, parameter-performance table, selected indicators, selected trade history, chart events, selected equity curve, metrics CSV/Markdown, a selected strategy chart, and selected equity curve PNG. This is a basic backtest proof only: it is not train/OOS validation, WFA evidence, live advice, allocation logic, or a deployable strategy.
 
 ## Generated Local Files
 

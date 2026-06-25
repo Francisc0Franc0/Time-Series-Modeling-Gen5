@@ -280,6 +280,29 @@ Notes:
 - Trade history now keeps underlying returns and leveraged returns so leverage effects are auditable.
 - The workflow remains a diagnostic accounting proof only: it is not WFA evidence, live advice, margin policy, allocation logic, or a deployable strategy.
 
+### H. EMA cross in-sample backtest proof
+
+Status: done
+
+Branch: `codex/Gen5.1-ema-cross-backtest-proof`
+
+Goal: Replace the toy green-day signal with a simple EMA crossover strategy, evaluate a modest parameter grid inside one two-year trading window, select the highest-Sharpe parameter set, and emit the same style of operator-facing charts, accounting, metrics, and sortable parameter table.
+
+Validation:
+
+- Focused EMA cross strategy tests passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+- Final one-symbol AMD operator smokes passed with `-Refresh` for 1.0x and 1.8x.
+
+Notes:
+
+- Entry signals occur when the fast EMA crosses above the slow EMA at close; entry execution is modeled at the next session open.
+- Exit signals occur when the fast EMA crosses below the slow EMA at close; exit execution is modeled at the next session open.
+- The runner fetches extra warmup bars before the trading window so EMA state can initialize without pretending warmup dates are tradable experiment dates.
+- Parameter performance is written as a CSV sorted by Sharpe then return, with the selected parameter set written to separate trade, event, indicator, equity, metrics, strategy-chart, and equity-chart outputs.
+- Leverage is modeled as simple linear return exposure with no financing-cost model for this diagnostic slice.
+- The workflow remains a pure in-sample backtest proof only: it is not train/OOS validation, WFA evidence, live advice, allocation logic, or a deployable strategy.
+
 ### D. First research experiment design discussion
 
 Status: pending

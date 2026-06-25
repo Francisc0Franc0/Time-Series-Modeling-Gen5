@@ -22,6 +22,8 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 | Native trade entry | `#2E86AB` | filled triangle up, `pch = 24` |
 | Native trade exit | `#F6C85F` | filled triangle down, `pch = 25` |
 | Non-native exit | `#9B5DE5` | cross, `pch = 4` |
+| Fast EMA overlay | `#2E86AB` | solid line |
+| Slow EMA overlay | `#9B5DE5` | solid line |
 | Winning round-trip connector | `#00A88F` | dashed line |
 | Losing round-trip connector | `#F15A5A` | dashed line |
 | Equity baseline | `#000000` | solid line |
