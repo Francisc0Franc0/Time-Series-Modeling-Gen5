@@ -1516,7 +1516,8 @@ g5_validate_wfa_amd_ema_oos_measurement_stack <- function(
   signal_position_application,
   session_measurements,
   trade_lifecycle_measurements = NULL,
-  bars
+  bars,
+  train_grid_selection = NULL
 ) {
   oos_measurement_contract <- g5_validate_wfa_amd_ema_oos_measurement_contract(
     oos_measurement_contract
@@ -1662,13 +1663,108 @@ g5_validate_wfa_amd_ema_oos_measurement_stack <- function(
       g5_stop("AMD EMA OOS measurement stack trade lifecycle rows must reference known AMD EMA application rows.")
     }
   }
+  if (!is.null(train_grid_selection)) {
+    train_grid_selection <- g5_validate_wfa_amd_ema_train_grid_selection(train_grid_selection)
+    g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+      signal_position_application = signal_position_application,
+      parameter_application_boundary = parameter_application_boundary,
+      train_grid_selection = train_grid_selection
+    )
+    train_manifest <- train_grid_selection$run_manifest
+    selected <- train_grid_selection$selected_parameters
+    if (!identical(
+      as.character(manifest$source_evaluation_contract_id[[1L]]),
+      as.character(train_manifest$source_evaluation_contract_id[[1L]])
+    )) {
+      g5_stop("AMD EMA OOS measurement stack TRAIN grid lineage must preserve evaluation contract lineage.")
+    }
+    if (any(as.character(selected$selection_authority_status) !=
+            "train_only_grid_selected_no_oos_outcome_authority") ||
+        any(as.character(selected$oos_usage_status) !=
+          "oos_rows_not_read_for_train_grid_selection") ||
+        any(!as.logical(selected$leakage_no_oos_parameter_selection))) {
+      g5_stop("AMD EMA OOS measurement stack requires selected TRAIN grid parameters with no OOS selection authority.")
+    }
+    for (i in seq_len(nrow(selected))) {
+      selected_row <- selected[i, , drop = FALSE]
+      fold_id <- as.character(selected_row$fold_id[[1L]])
+      app_row <- application_surface[
+        as.character(application_surface$fold_id) == fold_id &
+          as.character(application_surface$subject_id) == "amd_ema_long_cash",
+        ,
+        drop = FALSE
+      ]
+      if (nrow(app_row) != 1L ||
+          as.integer(app_row$fast_ema_period[[1L]]) != as.integer(selected_row$fast_ema_period[[1L]]) ||
+          as.integer(app_row$slow_ema_period[[1L]]) != as.integer(selected_row$slow_ema_period[[1L]]) ||
+          !identical(
+            as.character(app_row$parameter_source[[1L]]),
+            as.character(selected_row$parameter_source[[1L]])
+          ) ||
+          as.character(app_row$selection_authority_status[[1L]]) !=
+            "train_only_grid_selected_no_oos_outcome_authority") {
+        g5_stop("AMD EMA OOS measurement stack application rows must consume selected TRAIN grid parameters.")
+      }
+      session_rows <- session_measurements[
+        as.character(session_measurements$application_row_id) ==
+          as.character(app_row$application_row_id[[1L]]),
+        ,
+        drop = FALSE
+      ]
+      if (nrow(session_rows) != as.integer(app_row$amd_oos_row_count[[1L]]) ||
+          any(as.character(session_rows$parameter_pack_id) !=
+            as.character(app_row$frozen_parameter_id[[1L]])) ||
+          any(as.character(session_rows$application_run_id) !=
+            as.character(app_row$application_boundary_id[[1L]])) ||
+          any(as.character(session_rows$subject_id) != "amd_ema_long_cash") ||
+          any(as.character(session_rows$symbol) != "AMD") ||
+          any(as.character(session_rows$strategy_id) != "ema_long_cash")) {
+        g5_stop("AMD EMA OOS session measurements must consume selected TRAIN-frozen parameter packs.")
+      }
+      signal_rows <- signal_surface[
+        as.character(signal_surface$source_application_row_id) ==
+          as.character(app_row$application_row_id[[1L]]),
+        ,
+        drop = FALSE
+      ]
+      if (!identical(
+        as.character(session_rows$parameter_pack_id),
+        as.character(signal_rows$frozen_parameter_id)
+      ) ||
+          !identical(
+            as.Date(session_rows$session_date),
+            as.Date(signal_rows$session_date)
+          )) {
+        g5_stop("AMD EMA OOS session measurements must preserve signal-position selected parameter lineage.")
+      }
+      if (!is.null(trade_lifecycle_measurements) && nrow(trade_lifecycle_measurements) > 0L) {
+        trade_rows <- trade_lifecycle_measurements[
+          as.character(trade_lifecycle_measurements$application_row_id) ==
+            as.character(app_row$application_row_id[[1L]]),
+          ,
+          drop = FALSE
+        ]
+        if (nrow(trade_rows) > 0L &&
+            (any(as.character(trade_rows$parameter_pack_id) !=
+              as.character(app_row$frozen_parameter_id[[1L]])) ||
+              any(as.character(trade_rows$subject_id) != "amd_ema_long_cash") ||
+              any(as.character(trade_rows$symbol) != "AMD") ||
+              any(as.character(trade_rows$strategy_id) != "ema_long_cash") ||
+              any(!is.na(trade_rows$trade_pnl)) ||
+              any(!is.na(trade_rows$trade_return_open_to_open)))) {
+          g5_stop("AMD EMA OOS trade lifecycle rows must consume selected TRAIN-frozen parameter packs without trade results.")
+        }
+      }
+    }
+  }
 
   invisible(list(
     oos_measurement_contract = oos_measurement_contract,
     parameter_application_boundary = parameter_application_boundary,
     signal_position_application = signal_position_application,
     session_measurements = session_measurements,
-    trade_lifecycle_measurements = trade_lifecycle_measurements
+    trade_lifecycle_measurements = trade_lifecycle_measurements,
+    train_grid_selection = train_grid_selection
   ))
 }
 

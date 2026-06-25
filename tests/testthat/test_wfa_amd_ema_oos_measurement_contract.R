@@ -159,14 +159,16 @@ g5_test_amd_ema_measurement_fixture <- function() {
   evaluation_readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(
     evaluation_contract
   )
+  train_selection <- g5_build_wfa_amd_ema_train_grid_selection(
+    evaluation_contract_scaffold = evaluation_contract,
+    evaluation_contract_readiness_review = evaluation_readiness,
+    bars = bars[bars$symbol == "AMD", , drop = FALSE],
+    operator_accepts_readiness_review = TRUE
+  )
   freeze <- g5_build_wfa_amd_ema_parameter_freeze_contract(
     evaluation_contract_scaffold = evaluation_contract,
     evaluation_contract_readiness_review = evaluation_readiness,
-    parameter_decisions = g5_test_amd_ema_measurement_parameter_decisions(
-      evaluation_contract,
-      evaluation_readiness,
-      bars
-    ),
+    parameter_decisions = train_selection$selected_parameters,
     operator_accepts_readiness_review = TRUE
   )
   freeze_readiness <- g5_build_wfa_amd_ema_parameter_freeze_readiness_review(freeze)
@@ -178,6 +180,8 @@ g5_test_amd_ema_measurement_fixture <- function() {
   application_readiness <- g5_build_wfa_amd_ema_parameter_application_readiness_review(application)
   list(
     bars = bars,
+    train_selection = train_selection,
+    freeze = freeze,
     application = application,
     application_readiness = application_readiness
   )
@@ -530,7 +534,8 @@ test_that("AMD EMA OOS measurement stack validator enforces cross-surface lineag
     signal_position_application = signal_position,
     session_measurements = session_values,
     trade_lifecycle_measurements = lifecycle,
-    bars = fixture$bars
+    bars = fixture$bars,
+    train_grid_selection = fixture$train_selection
   ))
 
   bad_timestamp <- session_values
@@ -542,7 +547,8 @@ test_that("AMD EMA OOS measurement stack validator enforces cross-surface lineag
       signal_position_application = signal_position,
       session_measurements = bad_timestamp,
       trade_lifecycle_measurements = lifecycle,
-      bars = fixture$bars
+      bars = fixture$bars,
+      train_grid_selection = fixture$train_selection
     ),
     "explicit as_of_timestamp"
   )
@@ -555,7 +561,8 @@ test_that("AMD EMA OOS measurement stack validator enforces cross-surface lineag
       signal_position_application = signal_position,
       session_measurements = missing_session,
       trade_lifecycle_measurements = lifecycle,
-      bars = fixture$bars
+      bars = fixture$bars,
+      train_grid_selection = fixture$train_selection
     ),
     "exactly the frozen OOS session count"
   )
@@ -569,9 +576,56 @@ test_that("AMD EMA OOS measurement stack validator enforces cross-surface lineag
       signal_position_application = signal_position,
       session_measurements = session_values,
       trade_lifecycle_measurements = lifecycle,
-      bars = noncanonical_bars
+      bars = noncanonical_bars,
+      train_grid_selection = fixture$train_selection
     ),
     "Alpaca adjusted daily OHLCV"
+  )
+
+  bad_pack <- session_values
+  candidate_index <- which(bad_pack$subject_id == "amd_ema_long_cash")[[1L]]
+  bad_pack$parameter_pack_id[[candidate_index]] <- "manual_fixture_pack"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = bad_pack,
+      trade_lifecycle_measurements = lifecycle,
+      bars = fixture$bars,
+      train_grid_selection = fixture$train_selection
+    ),
+    "selected TRAIN-frozen parameter packs|selected parameter lineage"
+  )
+
+  bad_lifecycle <- lifecycle
+  bad_lifecycle$parameter_pack_id[[1L]] <- "manual_fixture_pack"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = session_values,
+      trade_lifecycle_measurements = bad_lifecycle,
+      bars = fixture$bars,
+      train_grid_selection = fixture$train_selection
+    ),
+    "selected TRAIN-frozen parameter packs"
+  )
+
+  oos_usage_drift <- fixture$train_selection
+  oos_usage_drift$selected_parameters$oos_usage_status[[1L]] <- "oos_rows_used_for_selection"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_measurement_stack(
+      oos_measurement_contract = contract,
+      parameter_application_boundary = fixture$application,
+      signal_position_application = signal_position,
+      session_measurements = session_values,
+      trade_lifecycle_measurements = lifecycle,
+      bars = fixture$bars,
+      train_grid_selection = oos_usage_drift
+    ),
+    "OOS rows were not read|no OOS selection authority"
   )
 })
 

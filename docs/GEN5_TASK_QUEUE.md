@@ -2161,3 +2161,34 @@ Stop conditions:
 - Using OOS rows or OOS outcomes to select, change, reject, or rank parameters.
 - Treating OOS signal/position evidence as live advice, execution intent, allocation guidance, or a performance claim.
 - Expanding beyond AMD EMA long/cash, Alpaca adjusted daily OHLCV, no-trade comparison discipline, or the declared TRAIN grid.
+
+### 58. Harden AMD EMA OOS measurement and lifecycle TRAIN-selected lineage
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-selected-oos-lineage-stack`
+
+Branch: `codex/gen5-amd-ema-selected-oos-lineage-stack`
+
+Goal: Prove row-per-session OOS measurements and trade lifecycle scaffold rows remain downstream of the same TRAIN grid-selected frozen EMA parameters without adding performance interpretation.
+
+Notes:
+
+- Extended `g5_validate_wfa_amd_ema_oos_measurement_stack()` with an optional `train_grid_selection` input.
+- Reuses the signal-position TRAIN grid lineage validator and checks measurement contract lineage to the same selected TRAIN grid evaluation contract.
+- Proves row-per-session measurement values consume the selected TRAIN-frozen parameter packs from the application/signal-position rows.
+- Proves optional trade lifecycle rows consume known AMD EMA application rows and selected frozen parameter packs while leaving trade PnL and trade return uncomputed.
+- Keeps no-trade first-class in the application, signal-position, and session measurement surfaces; no-trade still has no trade lifecycle rows.
+- Added non-network tests covering aligned selected lineage plus session parameter-pack drift, lifecycle parameter-pack drift, and OOS usage-status drift.
+- Did not compute or interpret Sharpe, drawdown, trade returns, trade PnL, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- Focused `testthat::test_file()` run for `tests/testthat/test_wfa_amd_ema_oos_measurement_contract.R` passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Using OOS rows or OOS outcomes to select, change, reject, or rank parameters.
+- Summarizing, ranking, interpreting, or claiming performance from OOS session or lifecycle rows.
+- Adding allocation, leverage, live advice, execution, dashboard, broader strategy-family, or production/deployment behavior.
