@@ -191,14 +191,16 @@ g5_test_amd_ema_signal_position_fixture <- function(output_dir = NULL) {
   evaluation_readiness <- g5_build_wfa_amd_ema_evaluation_contract_readiness_review(
     evaluation_contract
   )
+  train_selection <- g5_build_wfa_amd_ema_train_grid_selection(
+    evaluation_contract_scaffold = evaluation_contract,
+    evaluation_contract_readiness_review = evaluation_readiness,
+    bars = bars[bars$symbol == "AMD", , drop = FALSE],
+    operator_accepts_readiness_review = TRUE
+  )
   freeze <- g5_build_wfa_amd_ema_parameter_freeze_contract(
     evaluation_contract_scaffold = evaluation_contract,
     evaluation_contract_readiness_review = evaluation_readiness,
-    parameter_decisions = g5_test_amd_ema_signal_position_parameter_decisions(
-      evaluation_contract,
-      evaluation_readiness,
-      bars
-    ),
+    parameter_decisions = train_selection$selected_parameters,
     operator_accepts_readiness_review = TRUE
   )
   freeze_readiness <- g5_build_wfa_amd_ema_parameter_freeze_readiness_review(freeze)
@@ -214,6 +216,8 @@ g5_test_amd_ema_signal_position_fixture <- function(output_dir = NULL) {
   application_readiness <- g5_build_wfa_amd_ema_parameter_application_readiness_review(application)
   list(
     bars = bars,
+    train_selection = train_selection,
+    freeze = freeze,
     application = application,
     application_readiness = application_readiness
   )
@@ -251,6 +255,65 @@ test_that("AMD EMA OOS signal/position application emits session evidence from f
     sum(fixture$application$application_surface$amd_oos_row_count[
       fixture$application$application_surface$subject_id == "amd_ema_long_cash"
     ])
+  )
+  expect_silent(g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+    signal_position_application = signal_position,
+    parameter_application_boundary = fixture$application,
+    train_grid_selection = fixture$train_selection
+  ))
+})
+
+test_that("AMD EMA OOS signal/position proves selected TRAIN grid parameter lineage", {
+  fixture <- g5_test_amd_ema_signal_position_fixture()
+  signal_position <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    g5_build_wfa_amd_ema_oos_signal_position_application(
+      parameter_application_boundary = fixture$application,
+      parameter_application_readiness_review = fixture$application_readiness,
+      bars = fixture$bars,
+      operator_accepts_application_readiness_review = TRUE
+    )
+  )
+
+  expect_silent(g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+    signal_position_application = signal_position,
+    parameter_application_boundary = fixture$application,
+    train_grid_selection = fixture$train_selection
+  ))
+
+  app_drift <- fixture$application
+  candidate_index <- which(app_drift$application_surface$subject_id == "amd_ema_long_cash")[[1L]]
+  app_drift$application_surface$fast_ema_period[[candidate_index]] <-
+    app_drift$application_surface$fast_ema_period[[candidate_index]] + 1L
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+      signal_position_application = signal_position,
+      parameter_application_boundary = app_drift,
+      train_grid_selection = fixture$train_selection
+    ),
+    "selected TRAIN grid parameters"
+  )
+
+  signal_drift <- signal_position
+  signal_candidate_index <- which(signal_drift$signal_position_surface$subject_id == "amd_ema_long_cash")[[1L]]
+  signal_drift$signal_position_surface$parameter_source[[signal_candidate_index]] <- "manual_fixture"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+      signal_position_application = signal_drift,
+      parameter_application_boundary = fixture$application,
+      train_grid_selection = fixture$train_selection
+    ),
+    "selected TRAIN grid parameters"
+  )
+
+  oos_usage_drift <- fixture$train_selection
+  oos_usage_drift$selected_parameters$oos_usage_status[[1L]] <- "oos_rows_used_for_selection"
+  expect_error(
+    g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage(
+      signal_position_application = signal_position,
+      parameter_application_boundary = fixture$application,
+      train_grid_selection = oos_usage_drift
+    ),
+    "OOS rows were not read|declared TRAIN grid"
   )
 })
 

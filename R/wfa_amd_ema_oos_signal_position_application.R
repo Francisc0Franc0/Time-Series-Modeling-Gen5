@@ -715,6 +715,183 @@ g5_validate_wfa_amd_ema_oos_signal_position_application <- function(signal_posit
   signal_position_application
 }
 
+g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage <- function(
+  signal_position_application,
+  parameter_application_boundary,
+  train_grid_selection
+) {
+  signal_position_application <- g5_validate_wfa_amd_ema_oos_signal_position_application(
+    signal_position_application
+  )
+  parameter_application_boundary <- g5_validate_wfa_amd_ema_parameter_application_boundary(
+    parameter_application_boundary
+  )
+  train_grid_selection <- g5_validate_wfa_amd_ema_train_grid_selection(train_grid_selection)
+
+  signal_manifest <- signal_position_application$run_manifest
+  signal_surface <- signal_position_application$signal_position_surface
+  application_manifest <- parameter_application_boundary$run_manifest
+  application_surface <- parameter_application_boundary$application_surface
+  train_manifest <- train_grid_selection$run_manifest
+  grid <- train_grid_selection$declared_grid[g5_wfa_required_amd_ema_train_grid_columns()]
+  selected <- train_grid_selection$selected_parameters
+
+  if (!identical(
+    as.character(signal_manifest$source_application_boundary_id[[1L]]),
+    as.character(application_manifest$application_boundary_id[[1L]])
+  ) ||
+      !identical(
+        as.character(application_manifest$source_evaluation_contract_id[[1L]]),
+        as.character(train_manifest$source_evaluation_contract_id[[1L]])
+      )) {
+    g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve evaluation and application boundary lineage.")
+  }
+
+  expected_as_of <- as.character(train_manifest$as_of_timestamp[[1L]])
+  expected_latest <- as.Date(train_manifest$latest_completed_session[[1L]])
+  as_of_values <- c(
+    as.character(train_manifest$as_of_timestamp),
+    as.character(selected$as_of_timestamp),
+    as.character(application_manifest$as_of_timestamp),
+    as.character(application_surface$as_of_timestamp),
+    as.character(signal_manifest$as_of_timestamp),
+    as.character(signal_surface$as_of_timestamp)
+  )
+  latest_values <- c(
+    as.Date(train_manifest$latest_completed_session),
+    as.Date(selected$latest_completed_session),
+    as.Date(application_manifest$latest_completed_session),
+    as.Date(application_surface$latest_completed_session),
+    as.Date(signal_manifest$latest_completed_session),
+    as.Date(signal_surface$latest_completed_session)
+  )
+  if (any(as_of_values != expected_as_of) || any(latest_values != expected_latest)) {
+    g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve explicit as_of_timestamp and latest_completed_session.")
+  }
+
+  grid_pairs <- paste(
+    as.integer(grid$fast_ema_period),
+    as.integer(grid$slow_ema_period),
+    sep = "|"
+  )
+  selected_pairs <- paste(
+    as.integer(selected$fast_ema_period),
+    as.integer(selected$slow_ema_period),
+    sep = "|"
+  )
+  if (any(!(selected_pairs %in% grid_pairs)) ||
+      any(as.character(selected$selection_authority_status) !=
+        "train_only_grid_selected_no_oos_outcome_authority") ||
+      any(as.character(selected$oos_usage_status) !=
+        "oos_rows_not_read_for_train_grid_selection") ||
+      any(!as.logical(selected$leakage_no_oos_parameter_selection))) {
+    g5_stop("AMD EMA OOS signal/position TRAIN grid lineage requires selected parameters from the declared TRAIN grid only.")
+  }
+
+  app_candidate <- application_surface[
+    as.character(application_surface$subject_id) == "amd_ema_long_cash",
+    ,
+    drop = FALSE
+  ]
+  app_no_trade <- application_surface[
+    as.character(application_surface$subject_id) == "no_trade_cash",
+    ,
+    drop = FALSE
+  ]
+  signal_candidate <- signal_surface[
+    as.character(signal_surface$subject_id) == "amd_ema_long_cash",
+    ,
+    drop = FALSE
+  ]
+  signal_no_trade <- signal_surface[
+    as.character(signal_surface$subject_id) == "no_trade_cash",
+    ,
+    drop = FALSE
+  ]
+  if (nrow(app_candidate) != nrow(selected) ||
+      nrow(app_no_trade) != nrow(selected) ||
+      nrow(signal_candidate) == 0L ||
+      nrow(signal_no_trade) != nrow(signal_candidate)) {
+    g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve selected folds and no-trade rows.")
+  }
+
+  for (i in seq_len(nrow(selected))) {
+    selected_row <- selected[i, , drop = FALSE]
+    fold_id <- as.character(selected_row$fold_id[[1L]])
+    app_row <- app_candidate[as.character(app_candidate$fold_id) == fold_id, , drop = FALSE]
+    app_cash <- app_no_trade[as.character(app_no_trade$fold_id) == fold_id, , drop = FALSE]
+    fold_signal <- signal_candidate[as.character(signal_candidate$fold_id) == fold_id, , drop = FALSE]
+    fold_cash_signal <- signal_no_trade[as.character(signal_no_trade$fold_id) == fold_id, , drop = FALSE]
+
+    if (nrow(app_row) != 1L || nrow(app_cash) != 1L ||
+        as.integer(app_cash$comparison_order[[1L]]) != 1L ||
+        as.integer(app_row$comparison_order[[1L]]) != 2L) {
+      g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve no-trade-first application rows.")
+    }
+    if (as.integer(app_row$fast_ema_period[[1L]]) != as.integer(selected_row$fast_ema_period[[1L]]) ||
+        as.integer(app_row$slow_ema_period[[1L]]) != as.integer(selected_row$slow_ema_period[[1L]]) ||
+        !identical(
+          as.character(app_row$parameter_source[[1L]]),
+          as.character(selected_row$parameter_source[[1L]])
+        ) ||
+        as.character(app_row$selection_authority_status[[1L]]) !=
+          "train_only_grid_selected_no_oos_outcome_authority") {
+      g5_stop("AMD EMA OOS signal/position application rows must consume selected TRAIN grid parameters.")
+    }
+    date_cols <- c("train_start_date", "train_end_date", "oos_start_date", "oos_end_date")
+    for (col in date_cols) {
+      if (!identical(as.Date(app_row[[col]][[1L]]), as.Date(selected_row[[col]][[1L]]))) {
+        g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve fold geometry dates.")
+      }
+    }
+    if (as.integer(app_row$amd_train_row_count[[1L]]) != as.integer(selected_row$train_row_count[[1L]])) {
+      g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve TRAIN row-count lineage.")
+    }
+
+    if (nrow(fold_signal) != as.integer(app_row$amd_oos_row_count[[1L]]) ||
+        nrow(fold_cash_signal) != nrow(fold_signal)) {
+      g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve exact OOS coverage.")
+    }
+    if (!identical(
+      as.character(fold_signal$source_application_row_id),
+      rep(as.character(app_row$application_row_id[[1L]]), nrow(fold_signal))
+    ) ||
+        !identical(
+          as.character(fold_signal$source_freeze_row_id),
+          rep(as.character(app_row$source_freeze_row_id[[1L]]), nrow(fold_signal))
+        )) {
+      g5_stop("AMD EMA OOS signal/position rows must preserve frozen application row lineage.")
+    }
+    if (any(as.integer(fold_signal$fast_ema_period) != as.integer(selected_row$fast_ema_period[[1L]])) ||
+        any(as.integer(fold_signal$slow_ema_period) != as.integer(selected_row$slow_ema_period[[1L]])) ||
+        any(as.character(fold_signal$parameter_source) != as.character(selected_row$parameter_source[[1L]]))) {
+      g5_stop("AMD EMA OOS signal/position rows must consume selected TRAIN grid parameters.")
+    }
+    if (any(as.Date(fold_signal$session_date) < as.Date(selected_row$oos_start_date[[1L]])) ||
+        any(as.Date(fold_signal$session_date) > as.Date(selected_row$oos_end_date[[1L]]))) {
+      g5_stop("AMD EMA OOS signal/position rows must remain inside the preserved OOS fold geometry.")
+    }
+    for (key in unique(as.Date(fold_signal$session_date))) {
+      rows <- signal_surface[
+        as.character(signal_surface$fold_id) == fold_id &
+          as.Date(signal_surface$session_date) == key,
+        ,
+        drop = FALSE
+      ]
+      if (!identical(as.integer(rows$comparison_order), c(1L, 2L)) ||
+          !identical(as.character(rows$subject_id), c("no_trade_cash", "amd_ema_long_cash"))) {
+        g5_stop("AMD EMA OOS signal/position TRAIN grid lineage must preserve no-trade first for every OOS session.")
+      }
+    }
+  }
+
+  invisible(list(
+    signal_position_application = signal_position_application,
+    parameter_application_boundary = parameter_application_boundary,
+    train_grid_selection = train_grid_selection
+  ))
+}
+
 g5_wfa_required_amd_ema_oos_signal_position_readiness_columns <- function() {
   c(
     "schema_version",

@@ -44,6 +44,8 @@ Implementation note: the AMD EMA parameter-freeze and OOS application boundary p
 
 Implementation note: the AMD EMA TRAIN grid-selection stack validator now exists in `R/wfa_amd_ema_train_grid_selection.R`. It validates TRAIN grid selection, parameter freeze, optional OOS application boundary, and canonical AMD bars together; recomputes grid signal-count evidence from TRAIN rows only; proves selected periods came from the declared grid; checks no-trade-first rows, explicit timestamps, freeze/application lineage, and canonical Alpaca adjusted daily AMD input; and keeps OOS selection, provider calls, live advice, execution, allocation, leverage, dashboards, broader strategy families, and performance claims stopped.
 
+Implementation note: the AMD EMA OOS signal/position TRAIN-selected lineage validator now exists in `R/wfa_amd_ema_oos_signal_position_application.R`. It validates the TRAIN grid-selection surface, frozen OOS application boundary, and OOS signal/position evidence together; proves OOS signal rows consume the selected TRAIN grid fast/slow periods, preserve fold geometry dates and OOS coverage, keep no-trade first for every session, and retain explicit timestamp lineage. It does not compute or interpret returns, trade PnL, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
 ## Scope
 
 This first WFA planning slice is documentation-only. It defines:

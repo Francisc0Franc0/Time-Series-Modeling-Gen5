@@ -2130,3 +2130,34 @@ Stop conditions:
 - Adding a summary/reporting surface or performance interpretation.
 - Using OOS rows or OOS outcomes to select parameters.
 - Expanding beyond AMD EMA long/cash, Alpaca adjusted daily OHLCV, or the declared TRAIN grid.
+
+### 57. Harden AMD EMA OOS signal-position TRAIN-selected lineage
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-selected-oos-lineage-stack`
+
+Branch: `codex/gen5-amd-ema-selected-oos-lineage-stack`
+
+Goal: Prove the OOS signal/position evidence consumes TRAIN grid-selected frozen EMA parameters through the existing freeze/application boundary without using OOS evidence for parameter selection.
+
+Notes:
+
+- Added `g5_validate_wfa_amd_ema_oos_signal_position_train_grid_lineage()` inside `R/wfa_amd_ema_oos_signal_position_application.R`.
+- Validates the TRAIN grid-selection surface, frozen parameter application boundary, and OOS signal/position evidence together.
+- Proves selected fast/slow periods come from the declared TRAIN grid and match the application and signal-position rows.
+- Checks explicit `as_of_timestamp` and `latest_completed_session` consistency across TRAIN selection, application, and signal-position surfaces.
+- Checks fold geometry date lineage, TRAIN row-count lineage, exact OOS signal coverage, and no-trade-first rows for every OOS session.
+- Added non-network tests covering aligned lineage plus application parameter drift, signal parameter-source drift, and OOS usage-status drift.
+- Did not compute or interpret returns, trade PnL, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- Focused `testthat::test_file()` run for `tests/testthat/test_wfa_amd_ema_oos_signal_position_application.R` passed.
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Using OOS rows or OOS outcomes to select, change, reject, or rank parameters.
+- Treating OOS signal/position evidence as live advice, execution intent, allocation guidance, or a performance claim.
+- Expanding beyond AMD EMA long/cash, Alpaca adjusted daily OHLCV, no-trade comparison discipline, or the declared TRAIN grid.
