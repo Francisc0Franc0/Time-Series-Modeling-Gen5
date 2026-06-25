@@ -2038,3 +2038,34 @@ Validation:
 Stop conditions:
 
 - Adding summary/performance validators that compute Sharpe, drawdown, trade return, allocation, leverage, live advice, execution, dashboard, broader strategy-family, or performance-claim outputs.
+
+### 54. Add AMD EMA TRAIN-only grid selection scaffold
+
+Status: complete
+
+Recommended branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Branch: `codex/gen5-amd-ema-train-grid-selection-stack`
+
+Goal: Add a modest TRAIN-only EMA fast/slow grid-selection evidence surface for AMD EMA long/cash before replacing fixture/operator-supplied frozen parameters.
+
+Notes:
+
+- Added `R/wfa_amd_ema_train_grid_selection.R` for declared TRAIN-only EMA grid rows, TRAIN measurement rows, selected-parameter rows, validators, and guarded CSV writers.
+- The declared default grid is intentionally small and boring: fast periods 2/3 crossed with slow periods 4/5, retaining only `fast_ema_period < slow_ema_period`.
+- Consumes the accepted AMD EMA evaluation contract readiness review and canonical Alpaca adjusted daily AMD bars carrying the same explicit `as_of_timestamp` and `latest_completed_session`.
+- Preserves `no_trade_cash` as the first TRAIN comparison row for every fold while selecting exactly one AMD EMA grid pair per fold.
+- Uses a predeclared deterministic TRAIN-only rule based on TRAIN long-signal count, signal-switch count, and period tie-breakers.
+- Records selected parameter lineage before OOS starts and proves selected periods come from the declared grid.
+- Fails loudly on unaccepted readiness, non-AMD bars, timestamp/session mismatches, OOS-tainted input columns, invalid grid pairs, row-count drift, and non-ignored output paths.
+- Did not compute OOS results, return values, trade PnL, Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy families, or performance claims.
+
+Validation:
+
+- `powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1` passed.
+
+Stop conditions:
+
+- Using OOS rows or OOS outcomes to select parameters.
+- Expanding beyond AMD, Alpaca adjusted daily OHLCV, long/cash EMA periods, or the declared grid.
+- Computing Sharpe, drawdown, fold/global summaries, allocation, leverage, live advice, execution, dashboards, broader strategy-family comparisons, or performance claims.
