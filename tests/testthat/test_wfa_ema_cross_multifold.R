@@ -238,8 +238,18 @@ test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", 
   )
   expect_true("bollinger_touch_n3_sd1" %in% grid$model_instance_id)
   expect_true("bollinger_mid_reversion_n3_sd1" %in% grid$model_instance_id)
+  expect_true("rsi_mr_n3_lo30_hi60" %in% grid$model_instance_id)
+  expect_true("pullback_up_f2_s5_lo35_hi55" %in% grid$model_instance_id)
   expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
   expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer") %in% names(grid)))
+})
+
+test_that("WFA numeric ID labels preserve integer zeros", {
+  expect_equal(g5_wfa_num_id_label(30), "30")
+  expect_equal(g5_wfa_num_id_label(60), "60")
+  expect_equal(g5_wfa_num_id_label(2.5), "2p5")
+  expect_equal(g5_wfa_num_id_label(0.10), "0p1")
+  expect_equal(g5_wfa_num_id_label(-0.25), "m0p25")
 })
 
 test_that("Gen4-inspired WFA indicators emit close-based signals", {

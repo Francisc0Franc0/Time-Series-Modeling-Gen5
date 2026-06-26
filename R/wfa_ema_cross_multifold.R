@@ -166,7 +166,10 @@ g5_wfa_num_id_label <- function(x) {
     g5_stop("Numeric WFA ID values must be finite numbers.")
   }
   label <- format(x, trim = TRUE, scientific = FALSE)
-  label <- sub("\\.?0+$", "", label)
+  if (grepl(".", label, fixed = TRUE)) {
+    label <- sub("0+$", "", label)
+    label <- sub("\\.$", "", label)
+  }
   if (!nzchar(label)) {
     label <- "0"
   }

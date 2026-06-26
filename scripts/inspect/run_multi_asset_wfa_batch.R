@@ -71,15 +71,16 @@ g5_batch_fmt_num <- function(x) {
   ifelse(is.na(x), "NA", ifelse(is.infinite(x), "Inf", sprintf("%.3f", as.numeric(x))))
 }
 
-g5_multi_asset_wfa_batch_prefix <- function(as_of_timestamp, symbols, wfa_start_date, wfa_end_date, fold_count) {
+g5_multi_asset_wfa_batch_prefix <- function(as_of_timestamp, symbols, wfa_start_date, wfa_end_date, fold_count, candidate_families) {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbols <- g5_standardize_symbol(symbols)
+  family_label <- paste0(length(g5_wfa_candidate_families(candidate_families)), "fam")
   window_label <- paste0(
     gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
     "_",
     gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date)))
   )
-  paste(c("mawfa", paste0(length(symbols), "a"), paste0(fold_count, "f"), window_label, stamp), collapse = "_")
+  paste(c("mawfa", paste0(length(symbols), "a"), paste0(fold_count, "f"), family_label, window_label, stamp), collapse = "_")
 }
 
 g5_multi_asset_table_lines <- function(df, cols) {
@@ -427,7 +428,7 @@ refresh <- g5_parse_bool_env(Sys.getenv("GEN5_WFA_BATCH_REFRESH", unset = ""), d
 
 warmup_days <- max(c(slow_periods, bb_lookback_periods)) * 4L
 query_start_date <- wfa_start_date - warmup_days
-batch_prefix <- g5_multi_asset_wfa_batch_prefix(as_of_timestamp, symbols, wfa_start_date, wfa_end_date, fold_count)
+batch_prefix <- g5_multi_asset_wfa_batch_prefix(as_of_timestamp, symbols, wfa_start_date, wfa_end_date, fold_count, candidate_families)
 batch_dir <- file.path(repo_root, "runs", "research_workbench", "wfa_pocs", batch_prefix)
 dir.create(batch_dir, recursive = TRUE, showWarnings = FALSE)
 
