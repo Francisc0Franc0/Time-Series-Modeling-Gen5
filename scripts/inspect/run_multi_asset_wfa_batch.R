@@ -177,11 +177,11 @@ g5_draw_wfa_strategy_contact_panel <- function(item) {
     part <- ind[ind$fold_id == fold_id, , drop = FALSE]
     part_x <- match(as.Date(part$session_date), session_dates)
     family <- unique(part$strategy_family)
-    if (length(family) > 0L && identical(family[[1L]], "ema_cross")) {
+    if (length(family) > 0L && family[[1L]] %in% c("ema_cross", "ema_trend", "pullback_in_uptrend")) {
       graphics::lines(part_x, part$fast_ema, col = aesthetic$native_entry_color, lwd = 0.9)
       graphics::lines(part_x, part$slow_ema, col = aesthetic$non_native_exit_color, lwd = 0.9)
     }
-    if (length(family) > 0L && identical(family[[1L]], "bollinger_touch")) {
+    if (length(family) > 0L && family[[1L]] %in% c("bollinger_touch", "bollinger_mid_reversion")) {
       band_col <- grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.65)
       graphics::lines(part_x, part$bb_mid, col = aesthetic$native_entry_color, lwd = 0.8)
       graphics::lines(part_x, part$bb_upper, col = band_col, lwd = 0.8, lty = 2)

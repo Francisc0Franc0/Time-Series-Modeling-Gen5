@@ -502,6 +502,32 @@ Visible output:
 - Batch contact-sheet index CSV.
 - Batch report contact-sheet table.
 
+### C9. Gen4-inspired strategy family ports
+
+Status: done
+
+Branch: `codex/Gen5.1-gen4-strategy-ports`
+
+Goal: Recreate the useful essence of the active Gen4 signal families in the Gen5 WFA POC without importing Gen4's registry complexity or expanding into unrelated research layers.
+
+Implemented candidate families:
+
+- `ema_cross`: fast EMA crosses above/below slow EMA.
+- `ema_trend`: fast EMA above slow EMA with positive fast-EMA slope.
+- `bollinger_touch`: lower-band entry and upper-band native exit.
+- `bollinger_mid_reversion`: Gen4-style lower-band entry and middle-band native exit.
+- `rsi_mr`: RSI mean-reversion entry/exit thresholds.
+- `zret_mr`: one-bar return z-score shock and normalization.
+- `breakout`: close above a rolling breakout level, exiting below a rolling midline.
+- `pullback_in_uptrend`: pullback entries while a slow EMA trend filter remains positive.
+
+Notes:
+
+- SMA variants are intentionally deferred.
+- The two Bollinger families are kept separate because their native exit semantics differ.
+- More complex Gen4 ideas such as volatility-expansion breakout, Donchian/volatility expansion, state-gated variants, and explicit no-trade competitors remain future slices.
+- The expanded family set can be passed through `-CandidateFamilies`; the existing smaller default remains available for focused smoke tests.
+
 ### D. Later POC backlog discussion
 
 Status: deferred

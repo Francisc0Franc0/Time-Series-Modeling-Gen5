@@ -18,7 +18,7 @@ These are architectural decisions and desired capability areas, not a claim that
 - Trading posture: long-only.
 - Live posture: advice-only.
 - Signal timing: after-close analysis for next-open manual market orders.
-- Current strategy/WFA POC: `ema_cross` and `bollinger_touch` model instances compete inside each TRAIN fold, with stitched OOS reporting.
+- Current strategy/WFA POC: a small Gen4-inspired candidate set can compete inside each TRAIN fold, with stitched OOS reporting. Current candidates are `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, and `pullback_in_uptrend`; SMA variants are deferred.
 - Current trade-policy POC: close-based exit stacks composed with entry/native signal model instances into complete `strategy_spec_id` candidates.
 - Possible state benchmark: asset-specific PCA, added only if and when the operator opens that slice.
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.
@@ -33,7 +33,7 @@ These are architectural decisions and desired capability areas, not a claim that
 2. `features`: deterministic feature construction from canonical bars.
 3. `asset_taxonomy`: later causal universe screens and optional behavior grouping.
 4. `state_model`: asset-specific PCA first, with simpler baselines and other models later.
-5. `strategy_lab`: entry and native-exit event generation, currently proven with `ema_cross` and `bollinger_touch` diagnostic families.
+5. `strategy_lab`: entry and native-exit event generation, currently proven with a small Gen4-inspired candidate set. `bollinger_touch` and `bollinger_mid_reversion` are kept as separate families because their native exits differ.
 6. `trade_policy`: composes entry/native event streams with close-based exit stacks into complete `strategy_spec_id` candidates and trade ledgers.
 7. `walk_forward`: rolling train/OOS fold engine and frozen selection authority over complete model or strategy specs.
 8. `capital_allocator`: future portfolio construction, position sizing, exposure management, and allocation-policy simulation over WFA trade ledgers.
@@ -100,4 +100,4 @@ The operator may choose the next slice organically. Codex should translate that 
 
 ## Current Prototype Path
 
-Gen5.1 currently has a multi-signal single-asset WFA POC with close-based exit-stack composition, plus a multi-asset batch runner that executes that POC independently per symbol and aggregates reports only. An entry/native model instance plus an exit stack becomes a `strategy_spec_id`, and WFA ranks complete specs rather than only entry models. Portfolio construction should follow once per-asset WFA trade ledgers carry stable exit attribution. State/regime filters remain deferred until trade generation and portfolio accounting surfaces are stable.
+Gen5.1 currently has a multi-signal single-asset WFA POC with close-based exit-stack composition, plus a multi-asset batch runner that executes that POC independently per symbol and aggregates reports only. An entry/native model instance plus an exit stack becomes a `strategy_spec_id`, and WFA ranks complete specs rather than only entry models. The current broadened candidate set is intentionally modest and excludes SMA until the operator opens that slice. Portfolio construction should follow once per-asset WFA trade ledgers carry stable exit attribution. State/regime filters remain deferred until trade generation and portfolio accounting surfaces are stable.

@@ -18,7 +18,7 @@ The branch keeps:
 - Research workbench query scripts.
 - Basic static chart rendering from canonical bars.
 - Diagnostic strategy proofs with trade accounting and equity charts.
-- A multi-signal, single-asset WFA POC where `ema_cross` and `bollinger_touch` model instances plus close-based exit stacks compete by TRAIN-fold metrics and produce stitched OOS reports.
+- A multi-signal, single-asset WFA POC where a small Gen4-inspired candidate set plus close-based exit stacks compete by TRAIN-fold metrics and produce stitched OOS reports.
 - A multi-asset WFA batch diagnostic that runs the single-asset POC independently per symbol and aggregates reports only.
 - Non-network local validation through `scripts/test/run_tests.ps1`.
 

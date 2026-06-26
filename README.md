@@ -12,7 +12,7 @@ This scope records contract constraints and future build direction; the current 
 - Alpaca provider only.
 - Adjusted daily OHLCV bars only.
 - After-close analysis for next-open manual market orders.
-- Initial strategy vertical slice later: `ema_cross` plus `no_trade`.
+- Initial strategy vertical slice later: `ema_cross` plus explicit cash/no-trade baselines.
 - Initial benchmark state model later: asset-specific PCA.
 - Portfolio baseline later: equal-weight top-N with 1.0x and 1.8x leverage reports.
 
@@ -326,6 +326,8 @@ The packet is written under ignored `runs/research_workbench/wfa_pocs/` and incl
 
 The three-fold WFA proof rolls the train window forward by one OOS period at a time. By default, each TRAIN fold evaluates both `ema_cross` and `bollinger_touch` signal families plus a modest close-based exit-stack grid. A model instance means the strategy family plus concrete entry/native-exit parameters, such as `ema_cross_fast12_slow30` or `bollinger_touch_n20_sd2p5`. An exit stack is a bundle of active close-based exit rules, such as `native_only`, `native_maxhold20`, or `native_stop10pct_take25pct_maxhold40`. The full selected unit is a `strategy_spec_id`: `model_instance_id + exit_stack_id`. The best TRAIN strategy spec by Sharpe, with return as the existing secondary sort, is selected for that fold and then traded on its OOS period. Open positions are carried across fold boundaries; once a new fold begins, future exit signals are governed by the current fold-selected strategy spec. A signal generated on the final bar of a fold may execute at the next open if that next session is inside the stitched OOS span.
 
+Gen5.1 can also run a broader Gen4-inspired POC candidate set: `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, and `pullback_in_uptrend`. The two Bollinger families are intentionally separate: `bollinger_touch` enters on a lower-band touch and exits on an upper-band touch, while `bollinger_mid_reversion` enters on a lower-band touch and exits on the middle band. SMA variants are intentionally deferred.
+
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_poc.ps1 `
   -Symbol AMD `
@@ -338,14 +340,14 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_po
   -SlowPeriods "30,50,80,120" `
   -BbLookbackPeriods "10,20,30" `
   -BbSdMultipliers "1.5,2,2.5" `
-  -CandidateFamilies "ema_cross,bollinger_touch" `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend" `
   -MaxHoldSessions "10,20,40" `
   -StopLossPcts "0.10" `
   -TakeProfitPcts "0.25" `
   -Refresh
 ```
 
-The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model/spec rows, exit stacks, train parameter performance by fold, model/spec stability, fold-level OOS summaries, stitched trades, stitched equity, a markdown run report, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and strategy-spec changes are auditable at a glance. EMA overlays are plotted in EMA-selected folds; Bollinger bands are plotted in Bollinger-selected folds. Native exits and exit-stack exits are attributed separately in the trade ledger and plotted with distinct exit markers when both appear in the selected OOS path.
+The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model/spec rows, exit stacks, train parameter performance by fold, model/spec stability, fold-level OOS summaries, stitched trades, stitched equity, a markdown run report, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and strategy-spec changes are auditable at a glance. EMA overlays are plotted in EMA-selected folds; Bollinger bands are plotted in Bollinger-selected folds, including both upper-exit and mid-band-exit variants. Native exits and exit-stack exits are attributed separately in the trade ledger and plotted with distinct exit markers when both appear in the selected OOS path.
 
 The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix.
 
@@ -381,7 +383,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC for `ema_cross` and `bollinger_touch` model instances plus close-based exit stacks, and an independent multi-asset batch report wrapper. It does not yet implement portfolio allocation, pooled/global parameter selection, state/regime modeling, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
+Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, and an independent multi-asset batch report wrapper. It does not yet implement portfolio allocation, pooled/global parameter selection, state/regime modeling, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 

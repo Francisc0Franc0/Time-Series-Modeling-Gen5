@@ -144,11 +144,37 @@ g5_wfa_bind_rows_fill <- function(rows) {
 g5_wfa_candidate_families <- function(candidate_families) {
   candidate_families <- unique(trimws(as.character(candidate_families)))
   candidate_families <- candidate_families[nzchar(candidate_families)]
-  allowed <- c("ema_cross", "bollinger_touch")
+  allowed <- c(
+    "ema_cross",
+    "ema_trend",
+    "bollinger_touch",
+    "bollinger_mid_reversion",
+    "rsi_mr",
+    "zret_mr",
+    "breakout",
+    "pullback_in_uptrend"
+  )
   if (length(candidate_families) == 0L || any(!candidate_families %in% allowed)) {
     g5_stop(paste0("candidate_families must be drawn from: ", paste(allowed, collapse = ", ")))
   }
   candidate_families
+}
+
+g5_wfa_num_id_label <- function(x) {
+  x <- as.numeric(x)
+  if (length(x) != 1L || is.na(x) || !is.finite(x)) {
+    g5_stop("Numeric WFA ID values must be finite numbers.")
+  }
+  label <- format(x, trim = TRUE, scientific = FALSE)
+  label <- sub("\\.?0+$", "", label)
+  if (!nzchar(label)) {
+    label <- "0"
+  }
+  gsub("-", "m", gsub(".", "p", label, fixed = TRUE), fixed = TRUE)
+}
+
+g5_wfa_model_value <- function(model, col, default = NA) {
+  if (col %in% names(model)) model[[col]][[1L]] else default
 }
 
 g5_wfa_model_parameter_label <- function(model) {
@@ -156,8 +182,26 @@ g5_wfa_model_parameter_label <- function(model) {
   if (identical(family, "ema_cross")) {
     return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]]))
   }
+  if (identical(family, "ema_trend")) {
+    return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", slope_lookback=3"))
+  }
   if (identical(family, "bollinger_touch")) {
-    return(paste0("lookback=", model$lookback_period[[1L]], ", sd=", model$sd_multiplier[[1L]]))
+    return(paste0("lookback=", model$lookback_period[[1L]], ", sd=", model$sd_multiplier[[1L]], ", exit=upper_band"))
+  }
+  if (identical(family, "bollinger_mid_reversion")) {
+    return(paste0("lookback=", model$lookback_period[[1L]], ", sd=", model$sd_multiplier[[1L]], ", exit=mid_band"))
+  }
+  if (identical(family, "rsi_mr")) {
+    return(paste0("rsi_n=", model$rsi_period[[1L]], ", lo=", model$rsi_lower[[1L]], ", hi=", model$rsi_upper[[1L]]))
+  }
+  if (identical(family, "zret_mr")) {
+    return(paste0("window=", model$zret_window[[1L]], ", entry_z=", model$zret_entry_z[[1L]], ", exit_z=", model$zret_exit_z[[1L]]))
+  }
+  if (identical(family, "breakout")) {
+    return(paste0("lookback=", model$breakout_lookback[[1L]], ", buffer=", model$breakout_buffer[[1L]]))
+  }
+  if (identical(family, "pullback_in_uptrend")) {
+    return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", rsi_lo=", model$rsi_lower[[1L]], ", rsi_hi=", model$rsi_upper[[1L]]))
   }
   ""
 }
@@ -315,7 +359,7 @@ g5_wfa_exit_event <- function(ind, idx, open_trade, exit_stack) {
 }
 
 g5_wfa_normalize_indicator_columns <- function(ind, model) {
-  for (col in c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower")) {
+  for (col in c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower", "rsi", "return_z", "breakout_high", "breakout_mid")) {
     if (!col %in% names(ind)) {
       ind[[col]] <- NA_real_
     }
@@ -329,6 +373,65 @@ g5_wfa_normalize_indicator_columns <- function(ind, model) {
   ind$strategy_family <- as.character(model$strategy_family[[1L]])
   ind$model_instance_id <- as.character(model$model_instance_id[[1L]])
   ind
+}
+
+g5_wfa_rolling_mean <- function(x, period) {
+  g5_bollinger_touch_rolling_mean(x, period)
+}
+
+g5_wfa_rolling_sd <- function(x, period) {
+  g5_bollinger_touch_rolling_sd(x, period)
+}
+
+g5_wfa_rolling_max <- function(x, period) {
+  period <- as.integer(period)
+  if (is.na(period) || period < 2L) {
+    g5_stop("Rolling max period must be an integer >= 2.")
+  }
+  x <- as.numeric(x)
+  out <- rep(NA_real_, length(x))
+  if (length(x) < period) {
+    return(out)
+  }
+  for (i in period:length(x)) {
+    out[[i]] <- max(x[(i - period + 1L):i], na.rm = FALSE)
+  }
+  out
+}
+
+g5_wfa_rsi <- function(close, period) {
+  period <- as.integer(period)
+  if (is.na(period) || period < 2L) {
+    g5_stop("RSI period must be an integer >= 2.")
+  }
+  close <- as.numeric(close)
+  delta <- c(NA_real_, diff(close))
+  gains <- pmax(delta, 0, na.rm = FALSE)
+  losses <- pmax(-delta, 0, na.rm = FALSE)
+  avg_gain <- g5_wfa_rolling_mean(gains, period)
+  avg_loss <- g5_wfa_rolling_mean(losses, period)
+  rs <- avg_gain / avg_loss
+  rsi <- 100 - (100 / (1 + rs))
+  rsi[is.finite(avg_gain) & avg_loss == 0 & avg_gain > 0] <- 100
+  rsi[is.finite(avg_loss) & avg_gain == 0 & avg_loss > 0] <- 0
+  rsi[is.finite(avg_gain) & is.finite(avg_loss) & avg_gain == 0 & avg_loss == 0] <- 50
+  rsi
+}
+
+g5_wfa_signal_state_from_position <- function(desired_position) {
+  desired_position <- as.numeric(desired_position)
+  entry <- desired_position > 0 & c(TRUE, head(desired_position, -1L) <= 0)
+  exit <- desired_position <= 0 & c(FALSE, head(desired_position, -1L) > 0)
+  list(entry = entry, exit = exit)
+}
+
+g5_wfa_bollinger_mid_reversion_strategy_id <- function(lookback_period, sd_multiplier) {
+  lookback_period <- as.integer(lookback_period)
+  sd_multiplier <- as.numeric(sd_multiplier)
+  if (is.na(lookback_period) || lookback_period < 2L || is.na(sd_multiplier) || sd_multiplier <= 0) {
+    g5_stop("Bollinger mid reversion parameters must be lookback_period >= 2 and sd_multiplier > 0.")
+  }
+  paste0("bollinger_mid_reversion_n", lookback_period, "_sd", g5_bollinger_touch_sd_label(sd_multiplier))
 }
 
 g5_wfa_model_indicators <- function(bars, symbol, model) {
@@ -357,6 +460,29 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
     ind$exit_signal_rule <- "fast_ema_cross_below_slow_when_long"
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
+  if (identical(family, "ema_trend")) {
+    fast_period <- as.integer(model$fast_period[[1L]])
+    slow_period <- as.integer(model$slow_period[[1L]])
+    ind <- g5_ema_cross_indicators(
+      bars,
+      symbol = symbol,
+      fast_period = fast_period,
+      slow_period = slow_period
+    )
+    slope <- ind$fast_ema / c(rep(NA_real_, 3L), head(ind$fast_ema, -3L)) - 1
+    trend_on <- is.finite(ind$fast_ema) & is.finite(ind$slow_ema) & is.finite(slope) & ind$fast_ema > ind$slow_ema & slope > 0
+    trend_on[is.na(trend_on)] <- FALSE
+    state <- g5_wfa_signal_state_from_position(as.numeric(trend_on))
+    ind$strategy_family <- "ema_trend"
+    ind$strategy_id <- paste0("ema_trend_fast", fast_period, "_slow", slow_period)
+    ind$model_instance_id <- ind$strategy_id
+    ind$entry_signal <- state$entry
+    ind$exit_signal <- state$exit
+    ind$entry_signal_rule <- "fast_ema_above_slow_with_positive_fast_slope_turns_on"
+    ind$exit_signal_rule <- "ema_trend_condition_turns_off"
+    ind$signal_state <- ifelse(trend_on, "trend_on", "trend_off")
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
   if (identical(family, "bollinger_touch")) {
     ind <- g5_bollinger_touch_indicators(
       bars,
@@ -368,6 +494,112 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
     ind$exit_signal_rule <- "upper_bollinger_band_touched_when_long"
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
+  if (identical(family, "bollinger_mid_reversion")) {
+    ind <- g5_bollinger_touch_indicators(
+      bars,
+      symbol = symbol,
+      lookback_period = model$lookback_period[[1L]],
+      sd_multiplier = model$sd_multiplier[[1L]]
+    )
+    ind$strategy_family <- "bollinger_mid_reversion"
+    ind$strategy_id <- g5_wfa_bollinger_mid_reversion_strategy_id(model$lookback_period[[1L]], model$sd_multiplier[[1L]])
+    ind$model_instance_id <- ind$strategy_id
+    ind$entry_signal <- is.finite(ind$bb_lower) & as.numeric(ind$low) <= ind$bb_lower
+    ind$exit_signal <- is.finite(ind$bb_mid) & as.numeric(ind$close) >= ind$bb_mid
+    ind$entry_signal_rule <- "lower_bollinger_band_touched_when_flat"
+    ind$exit_signal_rule <- "close_recovered_to_bollinger_mid_when_long"
+    ind$signal_state <- ifelse(ind$entry_signal, "lower_band_touched", ifelse(ind$exit_signal, "mid_band_recovered", ifelse(is.finite(ind$bb_mid), "inside_bands", "unknown")))
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "rsi_mr")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    rsi_period <- as.integer(model$rsi_period[[1L]])
+    rsi_lower <- as.numeric(model$rsi_lower[[1L]])
+    rsi_upper <- as.numeric(model$rsi_upper[[1L]])
+    ind$strategy_family <- "rsi_mr"
+    ind$strategy_id <- paste0("rsi_mr_n", rsi_period, "_lo", g5_wfa_num_id_label(rsi_lower), "_hi", g5_wfa_num_id_label(rsi_upper))
+    ind$model_instance_id <- ind$strategy_id
+    ind$rsi_period <- rsi_period
+    ind$rsi_lower <- rsi_lower
+    ind$rsi_upper <- rsi_upper
+    ind$rsi <- g5_wfa_rsi(ind$close, rsi_period)
+    ind$entry_signal <- is.finite(ind$rsi) & ind$rsi < rsi_lower
+    ind$exit_signal <- is.finite(ind$rsi) & ind$rsi > rsi_upper
+    ind$entry_signal_rule <- "rsi_below_oversold_threshold_when_flat"
+    ind$exit_signal_rule <- "rsi_above_recovery_threshold_when_long"
+    ind$signal_state <- ifelse(ind$entry_signal, "rsi_oversold", ifelse(ind$exit_signal, "rsi_recovered", ifelse(is.finite(ind$rsi), "rsi_neutral", "unknown")))
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "zret_mr")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    zret_window <- as.integer(model$zret_window[[1L]])
+    entry_z <- as.numeric(model$zret_entry_z[[1L]])
+    exit_z <- as.numeric(model$zret_exit_z[[1L]])
+    ret1 <- ind$close / c(NA_real_, head(ind$close, -1L)) - 1
+    mu <- g5_wfa_rolling_mean(ret1, zret_window)
+    sigma <- g5_wfa_rolling_sd(ret1, zret_window)
+    sigma[!is.finite(sigma) | sigma <= 1e-8] <- NA_real_
+    z_ret <- (ret1 - mu) / sigma
+    ind$strategy_family <- "zret_mr"
+    ind$strategy_id <- paste0("zret_mr_n", zret_window, "_ent", g5_wfa_num_id_label(entry_z), "_ex", g5_wfa_num_id_label(exit_z))
+    ind$model_instance_id <- ind$strategy_id
+    ind$zret_window <- zret_window
+    ind$zret_entry_z <- entry_z
+    ind$zret_exit_z <- exit_z
+    ind$return_z <- z_ret
+    ind$entry_signal <- is.finite(z_ret) & z_ret <= -entry_z
+    ind$exit_signal <- is.finite(z_ret) & z_ret >= -exit_z
+    ind$entry_signal_rule <- "negative_return_zscore_shock_when_flat"
+    ind$exit_signal_rule <- "return_zscore_normalized_when_long"
+    ind$signal_state <- ifelse(ind$entry_signal, "negative_return_shock", ifelse(ind$exit_signal, "return_normalized", ifelse(is.finite(z_ret), "return_z_neutral", "unknown")))
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "breakout")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    lookback <- as.integer(model$breakout_lookback[[1L]])
+    buffer <- as.numeric(model$breakout_buffer[[1L]])
+    prior_high <- c(NA_real_, head(g5_wfa_rolling_max(ind$close, lookback), -1L))
+    mid <- g5_wfa_rolling_mean(ind$close, lookback)
+    entry_level <- prior_high * (1 + buffer)
+    ind$strategy_family <- "breakout"
+    ind$strategy_id <- paste0("breakout_lb", lookback, "_buf", g5_wfa_num_id_label(buffer))
+    ind$model_instance_id <- ind$strategy_id
+    ind$breakout_lookback <- lookback
+    ind$breakout_buffer <- buffer
+    ind$breakout_high <- entry_level
+    ind$breakout_mid <- mid
+    ind$entry_signal <- is.finite(entry_level) & ind$close > entry_level
+    ind$exit_signal <- is.finite(mid) & ind$close < mid
+    ind$entry_signal_rule <- "close_above_prior_rolling_high_plus_buffer_when_flat"
+    ind$exit_signal_rule <- "close_below_breakout_midline_when_long"
+    ind$signal_state <- ifelse(ind$entry_signal, "breakout", ifelse(ind$exit_signal, "midline_failure", ifelse(is.finite(mid), "inside_channel", "unknown")))
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "pullback_in_uptrend")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    fast_period <- as.integer(model$fast_period[[1L]])
+    slow_period <- as.integer(model$slow_period[[1L]])
+    rsi_lower <- as.numeric(model$rsi_lower[[1L]])
+    rsi_upper <- as.numeric(model$rsi_upper[[1L]])
+    ind$fast_ema <- g5_ema_cross_ema(ind$close, fast_period)
+    ind$slow_ema <- g5_ema_cross_ema(ind$close, slow_period)
+    slow_slope <- ind$slow_ema / c(rep(NA_real_, 3L), head(ind$slow_ema, -3L)) - 1
+    ind$rsi <- g5_wfa_rsi(ind$close, 14L)
+    touch_fast <- is.finite(ind$fast_ema) & abs(ind$close / pmax(ind$fast_ema, 1e-8) - 1) < 0.003
+    uptrend <- is.finite(ind$slow_ema) & is.finite(slow_slope) & ind$close > ind$slow_ema & slow_slope > 0
+    ind$strategy_family <- "pullback_in_uptrend"
+    ind$strategy_id <- paste0("pullback_up_f", fast_period, "_s", slow_period, "_lo", g5_wfa_num_id_label(rsi_lower), "_hi", g5_wfa_num_id_label(rsi_upper))
+    ind$model_instance_id <- ind$strategy_id
+    ind$rsi_period <- 14L
+    ind$rsi_lower <- rsi_lower
+    ind$rsi_upper <- rsi_upper
+    ind$entry_signal <- uptrend & ((is.finite(ind$rsi) & ind$rsi < rsi_lower) | touch_fast)
+    ind$exit_signal <- is.finite(ind$rsi) & ind$rsi > rsi_upper
+    ind$entry_signal_rule <- "uptrend_pullback_rsi_or_fast_ema_touch_when_flat"
+    ind$exit_signal_rule <- "rsi_recovered_from_pullback_when_long"
+    ind$signal_state <- ifelse(ind$entry_signal, "uptrend_pullback", ifelse(ind$exit_signal, "pullback_recovered", ifelse(uptrend, "uptrend_no_pullback", "no_uptrend")))
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
   g5_stop(paste0("Unsupported WFA strategy_family: ", family))
 }
 
@@ -376,10 +608,43 @@ g5_wfa_candidate_model_grid <- function(
   slow_periods,
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
   candidate_families = c("ema_cross", "bollinger_touch")
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
   rows <- list()
+  add_model <- function(strategy_family, model_instance_id, fast_period = NA_integer_, slow_period = NA_integer_, lookback_period = NA_integer_, sd_multiplier = NA_real_, rsi_period = NA_integer_, rsi_lower = NA_real_, rsi_upper = NA_real_, zret_window = NA_integer_, zret_entry_z = NA_real_, zret_exit_z = NA_real_, breakout_lookback = NA_integer_, breakout_buffer = NA_real_) {
+    rows[[length(rows) + 1L]] <<- data.frame(
+      strategy_family = strategy_family,
+      model_instance_id = model_instance_id,
+      fast_period = fast_period,
+      slow_period = slow_period,
+      lookback_period = lookback_period,
+      sd_multiplier = sd_multiplier,
+      rsi_period = rsi_period,
+      rsi_lower = rsi_lower,
+      rsi_upper = rsi_upper,
+      zret_window = zret_window,
+      zret_entry_z = zret_entry_z,
+      zret_exit_z = zret_exit_z,
+      breakout_lookback = breakout_lookback,
+      breakout_buffer = breakout_buffer,
+      stringsAsFactors = FALSE
+    )
+  }
   if ("ema_cross" %in% candidate_families) {
     fast_periods <- sort(unique(as.integer(fast_periods)))
     slow_periods <- sort(unique(as.integer(slow_periods)))
@@ -388,19 +653,23 @@ g5_wfa_candidate_model_grid <- function(
         if (is.na(fast) || is.na(slow) || fast >= slow) {
           next
         }
-        rows[[length(rows) + 1L]] <- data.frame(
-          strategy_family = "ema_cross",
-          model_instance_id = g5_ema_cross_strategy_id(fast, slow),
-          fast_period = fast,
-          slow_period = slow,
-          lookback_period = NA_integer_,
-          sd_multiplier = NA_real_,
-          stringsAsFactors = FALSE
-        )
+        add_model("ema_cross", g5_ema_cross_strategy_id(fast, slow), fast_period = fast, slow_period = slow)
       }
     }
   }
-  if ("bollinger_touch" %in% candidate_families) {
+  if ("ema_trend" %in% candidate_families) {
+    ema_trend_fast_periods <- sort(unique(as.integer(ema_trend_fast_periods)))
+    ema_trend_slow_periods <- sort(unique(as.integer(ema_trend_slow_periods)))
+    for (fast in ema_trend_fast_periods) {
+      for (slow in ema_trend_slow_periods) {
+        if (is.na(fast) || is.na(slow) || fast >= slow) {
+          next
+        }
+        add_model("ema_trend", paste0("ema_trend_fast", fast, "_slow", slow), fast_period = fast, slow_period = slow)
+      }
+    }
+  }
+  if (any(c("bollinger_touch", "bollinger_mid_reversion") %in% candidate_families)) {
     bb_lookback_periods <- sort(unique(as.integer(bb_lookback_periods)))
     bb_sd_multipliers <- sort(unique(as.numeric(bb_sd_multipliers)))
     for (lookback in bb_lookback_periods) {
@@ -408,15 +677,72 @@ g5_wfa_candidate_model_grid <- function(
         if (is.na(lookback) || lookback < 2L || is.na(sd_multiplier) || sd_multiplier <= 0) {
           next
         }
-        rows[[length(rows) + 1L]] <- data.frame(
-          strategy_family = "bollinger_touch",
-          model_instance_id = g5_bollinger_touch_strategy_id(lookback, sd_multiplier),
-          fast_period = NA_integer_,
-          slow_period = NA_integer_,
-          lookback_period = lookback,
-          sd_multiplier = sd_multiplier,
-          stringsAsFactors = FALSE
-        )
+        if ("bollinger_touch" %in% candidate_families) {
+          add_model("bollinger_touch", g5_bollinger_touch_strategy_id(lookback, sd_multiplier), lookback_period = lookback, sd_multiplier = sd_multiplier)
+        }
+        if ("bollinger_mid_reversion" %in% candidate_families) {
+          add_model("bollinger_mid_reversion", g5_wfa_bollinger_mid_reversion_strategy_id(lookback, sd_multiplier), lookback_period = lookback, sd_multiplier = sd_multiplier)
+        }
+      }
+    }
+  }
+  if ("rsi_mr" %in% candidate_families) {
+    rsi_periods <- sort(unique(as.integer(rsi_periods)))
+    rsi_lower_thresholds <- sort(unique(as.numeric(rsi_lower_thresholds)))
+    rsi_upper_thresholds <- sort(unique(as.numeric(rsi_upper_thresholds)))
+    for (period in rsi_periods) {
+      for (lo in rsi_lower_thresholds) {
+        for (hi in rsi_upper_thresholds) {
+          if (is.na(period) || period < 2L || is.na(lo) || is.na(hi) || hi <= lo || (hi - lo) < 20) {
+            next
+          }
+          add_model("rsi_mr", paste0("rsi_mr_n", period, "_lo", g5_wfa_num_id_label(lo), "_hi", g5_wfa_num_id_label(hi)), rsi_period = period, rsi_lower = lo, rsi_upper = hi)
+        }
+      }
+    }
+  }
+  if ("zret_mr" %in% candidate_families) {
+    zret_windows <- sort(unique(as.integer(zret_windows)))
+    zret_entry_z <- sort(unique(as.numeric(zret_entry_z)))
+    zret_exit_z <- sort(unique(as.numeric(zret_exit_z)))
+    for (window in zret_windows) {
+      for (entry_z in zret_entry_z) {
+        for (exit_z in zret_exit_z) {
+          if (is.na(window) || window < 2L || is.na(entry_z) || entry_z <= 0 || is.na(exit_z) || exit_z < 0) {
+            next
+          }
+          add_model("zret_mr", paste0("zret_mr_n", window, "_ent", g5_wfa_num_id_label(entry_z), "_ex", g5_wfa_num_id_label(exit_z)), zret_window = window, zret_entry_z = entry_z, zret_exit_z = exit_z)
+        }
+      }
+    }
+  }
+  if ("breakout" %in% candidate_families) {
+    breakout_lookbacks <- sort(unique(as.integer(breakout_lookbacks)))
+    breakout_buffers <- sort(unique(as.numeric(breakout_buffers)))
+    for (lookback in breakout_lookbacks) {
+      for (buffer in breakout_buffers) {
+        if (is.na(lookback) || lookback < 2L || is.na(buffer) || buffer < 0) {
+          next
+        }
+        add_model("breakout", paste0("breakout_lb", lookback, "_buf", g5_wfa_num_id_label(buffer)), breakout_lookback = lookback, breakout_buffer = buffer)
+      }
+    }
+  }
+  if ("pullback_in_uptrend" %in% candidate_families) {
+    pullback_fast_periods <- sort(unique(as.integer(pullback_fast_periods)))
+    pullback_slow_periods <- sort(unique(as.integer(pullback_slow_periods)))
+    pullback_rsi_lower_thresholds <- sort(unique(as.numeric(pullback_rsi_lower_thresholds)))
+    pullback_rsi_upper_thresholds <- sort(unique(as.numeric(pullback_rsi_upper_thresholds)))
+    for (fast in pullback_fast_periods) {
+      for (slow in pullback_slow_periods) {
+        for (lo in pullback_rsi_lower_thresholds) {
+          for (hi in pullback_rsi_upper_thresholds) {
+            if (is.na(fast) || is.na(slow) || fast >= slow || is.na(lo) || is.na(hi) || hi <= lo) {
+              next
+            }
+            add_model("pullback_in_uptrend", paste0("pullback_up_f", fast, "_s", slow, "_lo", g5_wfa_num_id_label(lo), "_hi", g5_wfa_num_id_label(hi)), fast_period = fast, slow_period = slow, rsi_period = 14L, rsi_lower = lo, rsi_upper = hi)
+          }
+        }
       }
     }
   }
@@ -458,6 +784,14 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
     slow_period = model$slow_period[[1L]],
     lookback_period = model$lookback_period[[1L]],
     sd_multiplier = model$sd_multiplier[[1L]],
+    rsi_period = g5_wfa_model_value(model, "rsi_period", NA_integer_),
+    rsi_lower = g5_wfa_model_value(model, "rsi_lower", NA_real_),
+    rsi_upper = g5_wfa_model_value(model, "rsi_upper", NA_real_),
+    zret_window = g5_wfa_model_value(model, "zret_window", NA_integer_),
+    zret_entry_z = g5_wfa_model_value(model, "zret_entry_z", NA_real_),
+    zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
+    breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
+    breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
     leverage = leverage,
     trade_count = if (is.data.frame(trades)) nrow(trades) else 0L,
     closed_trade_count = nrow(closed),
@@ -510,10 +844,6 @@ g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading
   latest_idx <- max(which(session_dates <= trading_end_date))
   strategy_spec_id <- g5_wfa_strategy_spec_id(model$model_instance_id[[1L]], exit_stack$exit_stack_id[[1L]])
 
-  model_value <- function(col, default = NA) {
-    if (col %in% names(model)) model[[col]][[1L]] else default
-  }
-
   trades <- list()
   trade_no <- 0L
   in_position <- FALSE
@@ -555,10 +885,18 @@ g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading
         primary_exit_reason = pending_exit$primary_exit_reason,
         triggered_exit_rules = pending_exit$triggered_exit_rules,
         exit_attribution = pending_exit$exit_attribution,
-        fast_period = model_value("fast_period", NA_integer_),
-        slow_period = model_value("slow_period", NA_integer_),
-        lookback_period = model_value("lookback_period", NA_integer_),
-        sd_multiplier = model_value("sd_multiplier", NA_real_),
+        fast_period = g5_wfa_model_value(model, "fast_period", NA_integer_),
+        slow_period = g5_wfa_model_value(model, "slow_period", NA_integer_),
+        lookback_period = g5_wfa_model_value(model, "lookback_period", NA_integer_),
+        sd_multiplier = g5_wfa_model_value(model, "sd_multiplier", NA_real_),
+        rsi_period = g5_wfa_model_value(model, "rsi_period", NA_integer_),
+        rsi_lower = g5_wfa_model_value(model, "rsi_lower", NA_real_),
+        rsi_upper = g5_wfa_model_value(model, "rsi_upper", NA_real_),
+        zret_window = g5_wfa_model_value(model, "zret_window", NA_integer_),
+        zret_entry_z = g5_wfa_model_value(model, "zret_entry_z", NA_real_),
+        zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
+        breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
+        breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
         trade_status = "closed",
         entry_signal_date = open_trade$entry_signal_date,
         entry_signal_index = open_trade$entry_signal_idx,
@@ -644,10 +982,18 @@ g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading
       primary_exit_reason = NA_character_,
       triggered_exit_rules = NA_character_,
       exit_attribution = NA_character_,
-      fast_period = model_value("fast_period", NA_integer_),
-      slow_period = model_value("slow_period", NA_integer_),
-      lookback_period = model_value("lookback_period", NA_integer_),
-      sd_multiplier = model_value("sd_multiplier", NA_real_),
+      fast_period = g5_wfa_model_value(model, "fast_period", NA_integer_),
+      slow_period = g5_wfa_model_value(model, "slow_period", NA_integer_),
+      lookback_period = g5_wfa_model_value(model, "lookback_period", NA_integer_),
+      sd_multiplier = g5_wfa_model_value(model, "sd_multiplier", NA_real_),
+      rsi_period = g5_wfa_model_value(model, "rsi_period", NA_integer_),
+      rsi_lower = g5_wfa_model_value(model, "rsi_lower", NA_real_),
+      rsi_upper = g5_wfa_model_value(model, "rsi_upper", NA_real_),
+      zret_window = g5_wfa_model_value(model, "zret_window", NA_integer_),
+      zret_entry_z = g5_wfa_model_value(model, "zret_entry_z", NA_real_),
+      zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
+      breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
+      breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
       trade_status = "open",
       entry_signal_date = open_trade$entry_signal_date,
       entry_signal_index = open_trade$entry_signal_idx,
@@ -735,11 +1081,45 @@ g5_ema_cross_wfa_select_fold_models <- function(
   slow_periods,
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
   candidate_families = c("ema_cross", "bollinger_touch"),
   exit_stacks = g5_wfa_exit_stack_grid()
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
-  model_grid <- g5_wfa_candidate_model_grid(fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families)
+  model_grid <- g5_wfa_candidate_model_grid(
+    fast_periods = fast_periods,
+    slow_periods = slow_periods,
+    bb_lookback_periods = bb_lookback_periods,
+    bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
+    candidate_families = candidate_families
+  )
   rows <- list()
   grid_rows <- list()
   for (i in seq_len(nrow(folds))) {
@@ -771,6 +1151,14 @@ g5_ema_cross_wfa_select_fold_models <- function(
       slow_period = if ("slow_period" %in% names(selected)) selected$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(selected)) selected$lookback_period[[1L]] else NA_integer_,
       sd_multiplier = if ("sd_multiplier" %in% names(selected)) selected$sd_multiplier[[1L]] else NA_real_,
+      rsi_period = if ("rsi_period" %in% names(selected)) selected$rsi_period[[1L]] else NA_integer_,
+      rsi_lower = if ("rsi_lower" %in% names(selected)) selected$rsi_lower[[1L]] else NA_real_,
+      rsi_upper = if ("rsi_upper" %in% names(selected)) selected$rsi_upper[[1L]] else NA_real_,
+      zret_window = if ("zret_window" %in% names(selected)) selected$zret_window[[1L]] else NA_integer_,
+      zret_entry_z = if ("zret_entry_z" %in% names(selected)) selected$zret_entry_z[[1L]] else NA_real_,
+      zret_exit_z = if ("zret_exit_z" %in% names(selected)) selected$zret_exit_z[[1L]] else NA_real_,
+      breakout_lookback = if ("breakout_lookback" %in% names(selected)) selected$breakout_lookback[[1L]] else NA_integer_,
+      breakout_buffer = if ("breakout_buffer" %in% names(selected)) selected$breakout_buffer[[1L]] else NA_real_,
       train_sharpe = selected$sharpe[[1L]],
       train_total_return = selected$total_return[[1L]],
       train_cagr = selected$cagr[[1L]],
@@ -1376,11 +1764,11 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
     part <- indicators[indicators$fold_id == fold_id, , drop = FALSE]
     part_x <- match(as.Date(part$session_date), session_dates)
     family <- unique(part$strategy_family)
-    if (length(family) > 0L && identical(family[[1L]], "ema_cross")) {
+    if (length(family) > 0L && family[[1L]] %in% c("ema_cross", "ema_trend", "pullback_in_uptrend")) {
       graphics::lines(part_x, part$fast_ema, col = aesthetic$native_entry_color, lwd = 1.4)
       graphics::lines(part_x, part$slow_ema, col = aesthetic$non_native_exit_color, lwd = 1.4)
     }
-    if (length(family) > 0L && identical(family[[1L]], "bollinger_touch")) {
+    if (length(family) > 0L && family[[1L]] %in% c("bollinger_touch", "bollinger_mid_reversion")) {
       band_col <- grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.7)
       graphics::lines(part_x, part$bb_mid, col = aesthetic$native_entry_color, lwd = 1.1)
       graphics::lines(part_x, part$bb_upper, col = band_col, lwd = 1.1, lty = 2)
@@ -1427,8 +1815,8 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
   }
   tick_positions <- unique(round(seq(1L, length(x), length.out = min(8L, length(x)))))
   g5_axis_date_labels_45(tick_positions, as.character(session_dates[tick_positions]), color = aesthetic$axis)
-  has_ema <- any(indicators$strategy_family == "ema_cross", na.rm = TRUE)
-  has_bb <- any(indicators$strategy_family == "bollinger_touch", na.rm = TRUE)
+  has_ema <- any(indicators$strategy_family %in% c("ema_cross", "ema_trend", "pullback_in_uptrend"), na.rm = TRUE)
+  has_bb <- any(indicators$strategy_family %in% c("bollinger_touch", "bollinger_mid_reversion"), na.rm = TRUE)
   legend_text <- character()
   legend_lty <- numeric()
   legend_pch <- numeric()
@@ -1450,13 +1838,13 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
   }
   has_stack_exit <- is.data.frame(trades) && nrow(trades) > 0L && "exit_attribution" %in% names(trades) && any(trades$exit_attribution == "exit_stack", na.rm = TRUE)
   legend_text <- c(legend_text, "entry signal", "entry execution", "native exit signal", "native exit execution")
-  legend_lty <- c(legend_lty, NA, NA, NA, NA)
+  legend_lty <- c(legend_lty, 0, 0, 0, 0)
   legend_pch <- c(legend_pch, aesthetic$entry_signal_pch, aesthetic$native_entry_pch, aesthetic$exit_signal_pch, aesthetic$native_exit_pch)
   legend_col <- c(legend_col, aesthetic$entry_signal_color, aesthetic$native_entry_color, aesthetic$exit_signal_color, aesthetic$native_exit_color)
   legend_bg <- c(legend_bg, aesthetic$panel_background, aesthetic$native_entry_color, aesthetic$panel_background, aesthetic$native_exit_color)
   if (has_stack_exit) {
     legend_text <- c(legend_text, "exit stack signal/execution")
-    legend_lty <- c(legend_lty, NA)
+    legend_lty <- c(legend_lty, 0)
     legend_pch <- c(legend_pch, aesthetic$non_native_exit_pch)
     legend_col <- c(legend_col, aesthetic$non_native_exit_color)
     legend_bg <- c(legend_bg, aesthetic$panel_background)
@@ -1615,7 +2003,13 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     table_lines(family_counts, names(family_counts)),
     "",
     paste0("- EMA cross grid: fast periods `", paste(settings$fast_periods, collapse = ", "), "`, slow periods `", paste(settings$slow_periods, collapse = ", "), "`"),
+    paste0("- EMA trend grid: fast periods `", paste(settings$ema_trend_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$ema_trend_slow_periods, collapse = ", "), "`"),
     paste0("- Bollinger touch grid: lookback periods `", paste(settings$bb_lookback_periods, collapse = ", "), "`, SD multipliers `", paste(settings$bb_sd_multipliers, collapse = ", "), "`"),
+    "- Bollinger mid-reversion uses the same Bollinger grid but exits on recovery to the mid-band instead of the upper band.",
+    paste0("- RSI mean-reversion grid: periods `", paste(settings$rsi_periods, collapse = ", "), "`, lower thresholds `", paste(settings$rsi_lower_thresholds, collapse = ", "), "`, upper thresholds `", paste(settings$rsi_upper_thresholds, collapse = ", "), "`"),
+    paste0("- Return-z mean-reversion grid: windows `", paste(settings$zret_windows, collapse = ", "), "`, entry z `", paste(settings$zret_entry_z, collapse = ", "), "`, exit z `", paste(settings$zret_exit_z, collapse = ", "), "`"),
+    paste0("- Breakout grid: lookbacks `", paste(settings$breakout_lookbacks, collapse = ", "), "`, buffers `", paste(settings$breakout_buffers, collapse = ", "), "`"),
+    paste0("- Pullback-in-uptrend grid: fast periods `", paste(settings$pullback_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$pullback_slow_periods, collapse = ", "), "`, RSI lower `", paste(settings$pullback_rsi_lower_thresholds, collapse = ", "), "`, RSI upper `", paste(settings$pullback_rsi_upper_thresholds, collapse = ", "), "`"),
     paste0("- Exit stack max-hold sessions: `", paste(settings$max_hold_sessions, collapse = ", "), "`"),
     paste0("- Exit stack stop-loss percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$stop_loss_pcts)), collapse = ", "), "`"),
     paste0("- Exit stack take-profit percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$take_profit_pcts)), collapse = ", "), "`"),
@@ -1697,6 +2091,20 @@ g5_ema_cross_wfa_run_multi <- function(
   slow_periods = c(30L, 50L, 80L, 120L),
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
   candidate_families = c("ema_cross", "bollinger_touch"),
   max_hold_sessions = c(10L, 20L, 40L),
   stop_loss_pcts = 0.10,
@@ -1707,7 +2115,31 @@ g5_ema_cross_wfa_run_multi <- function(
 ) {
   folds <- g5_ema_cross_wfa_resolve_folds(bars, symbol, wfa_start_date, wfa_end_date, train_quarters, oos_quarters, fold_count)
   exit_stacks <- g5_wfa_exit_stack_grid(max_hold_sessions, stop_loss_pcts, take_profit_pcts)
-  selected <- g5_ema_cross_wfa_select_fold_models(bars, symbol, folds, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families, exit_stacks)
+  selected <- g5_ema_cross_wfa_select_fold_models(
+    bars = bars,
+    symbol = symbol,
+    folds = folds,
+    fast_periods = fast_periods,
+    slow_periods = slow_periods,
+    bb_lookback_periods = bb_lookback_periods,
+    bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
+    candidate_families = candidate_families,
+    exit_stacks = exit_stacks
+  )
   stitched <- g5_ema_cross_wfa_simulate_stitched_oos(bars, symbol, folds, selected$selected_models)
   indicators <- g5_ema_cross_wfa_stitched_indicators(bars, symbol, folds, selected$selected_models)
   stitched_metrics <- g5_ema_cross_wfa_stitched_metrics(stitched$trades, stitched$equity_curve, symbol, nrow(folds))
@@ -1737,6 +2169,20 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   slow_periods,
   bb_lookback_periods = c(10L, 20L, 30L),
   bb_sd_multipliers = c(1.5, 2, 2.5),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
   candidate_families = c("ema_cross", "bollinger_touch"),
   max_hold_sessions = c(10L, 20L, 40L),
   stop_loss_pcts = 0.10,
@@ -1752,7 +2198,37 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   prefix <- g5_ema_cross_wfa_multi_artifact_prefix(result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
   written <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)
-  wfa <- g5_ema_cross_wfa_run_multi(result$bars, symbol, wfa_start_date, wfa_end_date, fast_periods, slow_periods, bb_lookback_periods, bb_sd_multipliers, candidate_families, max_hold_sessions, stop_loss_pcts, take_profit_pcts, train_quarters, oos_quarters, fold_count)
+  wfa <- g5_ema_cross_wfa_run_multi(
+    bars = result$bars,
+    symbol = symbol,
+    wfa_start_date = wfa_start_date,
+    wfa_end_date = wfa_end_date,
+    fast_periods = fast_periods,
+    slow_periods = slow_periods,
+    bb_lookback_periods = bb_lookback_periods,
+    bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
+    candidate_families = candidate_families,
+    max_hold_sessions = max_hold_sessions,
+    stop_loss_pcts = stop_loss_pcts,
+    take_profit_pcts = take_profit_pcts,
+    train_quarters = train_quarters,
+    oos_quarters = oos_quarters,
+    fold_count = fold_count
+  )
   paths <- c(
     written$paths,
     list(
@@ -1800,6 +2276,20 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
     candidate_families = candidate_families,
     max_hold_sessions = max_hold_sessions,
     stop_loss_pcts = stop_loss_pcts,

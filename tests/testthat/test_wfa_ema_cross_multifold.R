@@ -209,6 +209,68 @@ test_that("multi-fold WFA can evaluate EMA cross and Bollinger touch candidates 
   expect_true(all(c("exit_stack_id", "strategy_spec_id") %in% names(wfa$selected_models)))
 })
 
+test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", {
+  grid <- g5_wfa_candidate_model_grid(
+    fast_periods = 2L,
+    slow_periods = 4L,
+    bb_lookback_periods = 3L,
+    bb_sd_multipliers = 1,
+    ema_trend_fast_periods = 2L,
+    ema_trend_slow_periods = 5L,
+    rsi_periods = 3L,
+    rsi_lower_thresholds = 30,
+    rsi_upper_thresholds = 60,
+    zret_windows = 3L,
+    zret_entry_z = 1.5,
+    zret_exit_z = 0.5,
+    breakout_lookbacks = 3L,
+    breakout_buffers = 0,
+    pullback_fast_periods = 2L,
+    pullback_slow_periods = 5L,
+    pullback_rsi_lower_thresholds = 35,
+    pullback_rsi_upper_thresholds = 55,
+    candidate_families = c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend")
+  )
+
+  expect_equal(
+    sort(unique(grid$strategy_family)),
+    sort(c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend"))
+  )
+  expect_true("bollinger_touch_n3_sd1" %in% grid$model_instance_id)
+  expect_true("bollinger_mid_reversion_n3_sd1" %in% grid$model_instance_id)
+  expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
+  expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer") %in% names(grid)))
+})
+
+test_that("Gen4-inspired WFA indicators emit close-based signals", {
+  bars <- g5_test_wfa_multi_bars(close = c(10, 11, 12, 13, 14, 13, 12, 13, 14, 15, 16, 17))
+
+  ema_trend <- g5_wfa_model_indicators(
+    bars,
+    "AMD",
+    data.frame(strategy_family = "ema_trend", model_instance_id = "ema_trend_fast2_slow4", fast_period = 2L, slow_period = 4L, stringsAsFactors = FALSE)
+  )
+  expect_true(any(ema_trend$entry_signal, na.rm = TRUE))
+  expect_equal(unique(ema_trend$entry_signal_rule), "fast_ema_above_slow_with_positive_fast_slope_turns_on")
+
+  breakout <- g5_wfa_model_indicators(
+    bars,
+    "AMD",
+    data.frame(strategy_family = "breakout", model_instance_id = "breakout_lb3_buf0", breakout_lookback = 3L, breakout_buffer = 0, stringsAsFactors = FALSE)
+  )
+  expect_true(any(breakout$entry_signal, na.rm = TRUE))
+  expect_true(all(c("breakout_high", "breakout_mid") %in% names(breakout)))
+
+  rsi <- g5_wfa_model_indicators(
+    g5_test_wfa_multi_bars(close = c(10, 9, 8, 7, 8, 9, 10, 11)),
+    "AMD",
+    data.frame(strategy_family = "rsi_mr", model_instance_id = "rsi_mr_n3_lo40_hi60", rsi_period = 3L, rsi_lower = 40, rsi_upper = 60, stringsAsFactors = FALSE)
+  )
+  expect_true(any(rsi$entry_signal, na.rm = TRUE))
+  expect_true(any(rsi$exit_signal, na.rm = TRUE))
+  expect_equal(unique(rsi$entry_signal_rule), "rsi_below_oversold_threshold_when_flat")
+})
+
 test_that("stitched indicators tolerate mixed selected model families", {
   close <- c(
     10, 10, 10, 9, 7, 8, 11, 13, 15, 13,
