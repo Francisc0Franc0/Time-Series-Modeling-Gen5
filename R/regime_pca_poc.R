@@ -428,7 +428,7 @@ g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path
     function(i) grDevices::adjustcolor(pal[[plot_rows$state_id[[i]]]], alpha.f = alpha[[i]]),
     character(1L)
   )
-  pch <- ifelse(plot_rows$split == "OOS", 21L, 16L)
+  pch <- ifelse(plot_rows$split == "OOS", 21L, 23L)
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 120)
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(5.2, 5.4, 4.2, 10), xpd = FALSE, bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
@@ -452,8 +452,16 @@ g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path
   for (b in pc2_breaks[2:(length(pc2_breaks) - 1L)]) {
     graphics::abline(h = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
   }
-  graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 1.0, 0.7))
-  graphics::legend("topright", legend = c("TRAIN", "OOS"), pch = c(16L, 21L), pt.bg = c(aesthetic$flat_candle, aesthetic$native_entry_color), col = c(aesthetic$flat_candle, aesthetic$native_entry_color), bty = "n", text.col = aesthetic$text)
+  graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 1.0, 0.72))
+  graphics::legend(
+    "topright",
+    legend = c("TRAIN", "OOS"),
+    pch = c(23L, 21L),
+    pt.bg = c(grDevices::adjustcolor(aesthetic$flat_candle, alpha.f = 0.55), aesthetic$native_entry_color),
+    col = c(grDevices::adjustcolor(aesthetic$flat_candle, alpha.f = 0.55), aesthetic$native_entry_color),
+    bty = "n",
+    text.col = aesthetic$text
+  )
   graphics::par(xpd = NA)
   graphics::legend("right", inset = c(-0.19, 0), legend = names(pal), fill = pal, border = NA, bty = "n", cex = 0.75, text.col = aesthetic$text, title = "state")
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
@@ -492,7 +500,7 @@ g5_write_pca_regime_price_png <- function(scores, path, symbol, train_end_date, 
   pal <- g5_pca_regime_state_palette(sort(unique(stats::na.omit(scores$state_id))))
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 120)
   on.exit(grDevices::dev.off(), add = TRUE)
-  graphics::par(mar = c(8.4, 5.4, 4.2, 10), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  graphics::par(mar = c(10.1, 5.4, 4.2, 10), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
   graphics::plot(
     c(0.5, length(x) + 0.5),
     y_limits,
@@ -525,8 +533,8 @@ g5_write_pca_regime_price_png <- function(scores, path, symbol, train_end_date, 
   graphics::lines(x, y, col = aesthetic$text, lwd = 1.2)
   tick_count <- min(8L, length(x))
   tick_positions <- unique(round(seq(1L, length(x), length.out = tick_count)))
-  g5_axis_date_labels_45(tick_positions, as.character(as.Date(scores$session_date)[tick_positions]), color = aesthetic$axis)
-  graphics::mtext("Session date", side = 1, line = 6.5, cex = 1.1, col = aesthetic$text)
+  g5_axis_date_labels_45(tick_positions, as.character(as.Date(scores$session_date)[tick_positions]), line_offset = 0.066, color = aesthetic$axis)
+  graphics::mtext("Session date", side = 1, line = 8.0, cex = 1.1, col = aesthetic$text)
   graphics::mtext(
     paste0("TRAIN through ", as.Date(train_end_date), " | OOS starts ", as.Date(oos_start_date), " | colored bands: PCA states"),
     side = 3,
