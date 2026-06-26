@@ -34,6 +34,7 @@ The palette is inspired by vaporwave contrast and Wes Anderson-style warmth: sof
 
 - Single-symbol charts may show their own x/y axis labels.
 - Multi-symbol pane charts should share outer x/y axis labels.
+- Multi-asset WFA contact sheets should cap facets per image by an operator setting, defaulting to six panels, while preserving the full single-symbol charts for detailed inspection.
 - Date tick labels should use a 45-degree angle.
 - Signal markers belong on the bar whose close generated the decision.
 - Execution markers belong on the next-open bar where the trade is modeled as filled.

@@ -480,6 +480,28 @@ Observed six-symbol smoke result:
 - TSLA: 3.26% return, Sharpe 0.394, 1 exit-stack exit.
 - META: -11.75% return, Sharpe -0.512, 4 native exits and 1 exit-stack exit.
 
+### C8. Multi-asset WFA chart contact sheets
+
+Status: done
+
+Branch: `codex/Gen5.1-wfa-chart-contact-sheets`
+
+Goal: Make multi-asset WFA visual inspection less click-heavy by chunking strategy and equity charts into contact-sheet images with at most six facets per image by default.
+
+Implemented architecture:
+
+- The batch runner keeps the detailed per-symbol WFA packets unchanged.
+- It additionally renders compact strategy contact sheets and equity contact sheets directly from the in-memory stitched OOS data.
+- Contact-sheet pages are indexed in a CSV and linked from the batch Markdown report.
+- `-MaxFacetsPerImage` controls the chunk size from the PowerShell wrapper.
+
+Visible output:
+
+- Strategy contact-sheet PNGs under the batch output folder.
+- Equity contact-sheet PNGs under the batch output folder.
+- Batch contact-sheet index CSV.
+- Batch report contact-sheet table.
+
 ### D. Later POC backlog discussion
 
 Status: deferred

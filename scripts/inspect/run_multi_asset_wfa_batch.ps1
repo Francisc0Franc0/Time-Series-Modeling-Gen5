@@ -17,6 +17,8 @@ param(
 
   [int]$FoldCount = 3,
 
+  [int]$MaxFacetsPerImage = 6,
+
   [string]$FastPeriods = "8,12,20",
 
   [string]$SlowPeriods = "30,50,80,120",
@@ -51,6 +53,9 @@ if ($OosQuarters -le 0) {
 }
 if ($FoldCount -lt 1) {
   throw "-FoldCount must be a positive integer."
+}
+if ($MaxFacetsPerImage -lt 1) {
+  throw "-MaxFacetsPerImage must be a positive integer."
 }
 if ([string]::IsNullOrWhiteSpace($FastPeriods)) {
   throw "-FastPeriods must be a comma-separated list of positive integers."
@@ -97,6 +102,7 @@ $env:GEN5_WFA_BATCH_AS_OF_TIMESTAMP = $AsOfTimestamp
 $env:GEN5_WFA_BATCH_TRAIN_QUARTERS = [string]$TrainQuarters
 $env:GEN5_WFA_BATCH_OOS_QUARTERS = [string]$OosQuarters
 $env:GEN5_WFA_BATCH_FOLD_COUNT = [string]$FoldCount
+$env:GEN5_WFA_BATCH_MAX_FACETS_PER_IMAGE = [string]$MaxFacetsPerImage
 $env:GEN5_WFA_BATCH_FAST_PERIODS = $FastPeriods
 $env:GEN5_WFA_BATCH_SLOW_PERIODS = $SlowPeriods
 $env:GEN5_WFA_BATCH_BB_LOOKBACK_PERIODS = $BbLookbackPeriods

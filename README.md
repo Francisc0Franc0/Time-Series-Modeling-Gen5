@@ -359,10 +359,11 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_asset_wfa_bat
   -EndDate 2026-06-24 `
   -AsOfTimestamp "2026-06-24 17:30:00" `
   -FoldCount 3 `
+  -MaxFacetsPerImage 6 `
   -Refresh
 ```
 
-The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix to avoid Windows path-length issues. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, Markdown batch report, and per-symbol WFA packets/charts.
+The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix to avoid Windows path-length issues. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, contact-sheet index CSV, Markdown batch report, strategy/equity contact-sheet PNGs capped by `-MaxFacetsPerImage`, and per-symbol WFA packets/charts.
 
 ## Generated Local Files
 
