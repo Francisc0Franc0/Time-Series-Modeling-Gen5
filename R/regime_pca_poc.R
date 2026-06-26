@@ -453,12 +453,16 @@ g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path
     graphics::abline(h = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
   }
   graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 1.0, 0.72))
+  split_legend_col <- c(
+    grDevices::adjustcolor(aesthetic$text, alpha.f = 0.45),
+    grDevices::adjustcolor(aesthetic$text, alpha.f = 0.9)
+  )
   graphics::legend(
     "topright",
     legend = c("TRAIN", "OOS"),
     pch = c(23L, 21L),
-    pt.bg = c(grDevices::adjustcolor(aesthetic$flat_candle, alpha.f = 0.55), aesthetic$native_entry_color),
-    col = c(grDevices::adjustcolor(aesthetic$flat_candle, alpha.f = 0.55), aesthetic$native_entry_color),
+    pt.bg = split_legend_col,
+    col = split_legend_col,
     bty = "n",
     text.col = aesthetic$text
   )
