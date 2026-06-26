@@ -167,7 +167,8 @@ g5_wfa_candidate_families <- function(candidate_families) {
     "breakout",
     "pullback_in_uptrend",
     "vol_expansion_breakout",
-    "donchian_breakout_vol_expand"
+    "donchian_breakout_vol_expand",
+    "no_trade"
   )
   if (length(candidate_families) == 0L || any(!candidate_families %in% allowed)) {
     g5_stop(paste0("candidate_families must be drawn from: ", paste(allowed, collapse = ", ")))
@@ -226,6 +227,9 @@ g5_wfa_model_parameter_label <- function(model) {
   }
   if (identical(family, "pullback_in_uptrend")) {
     return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", rsi_lo=", model$rsi_lower[[1L]], ", rsi_hi=", model$rsi_upper[[1L]]))
+  }
+  if (identical(family, "no_trade")) {
+    return("cash/no-position benchmark")
   }
   ""
 }
@@ -312,6 +316,28 @@ g5_wfa_exit_stack_grid <- function(max_hold_sessions = c(10L, 20L, 40L), stop_lo
   out
 }
 
+g5_wfa_no_trade_exit_stack <- function() {
+  data.frame(
+    exit_stack_id = "no_exit",
+    include_native_exit = FALSE,
+    max_hold_sessions = NA_integer_,
+    stop_loss_pct = NA_real_,
+    take_profit_pct = NA_real_,
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_wfa_exit_stacks_for_candidates <- function(exit_stacks, candidate_families) {
+  candidate_families <- g5_wfa_candidate_families(candidate_families)
+  if (!"no_trade" %in% candidate_families) {
+    return(exit_stacks)
+  }
+  out <- rbind(exit_stacks, g5_wfa_no_trade_exit_stack())
+  out <- out[!duplicated(out$exit_stack_id), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
 g5_wfa_exit_stack_label <- function(stack) {
   stack_value <- function(col) {
     if (col %in% names(stack)) stack[[col]][[1L]] else NA
@@ -337,6 +363,9 @@ g5_wfa_exit_stack_label <- function(stack) {
   }
   if (!is.na(max_hold_sessions)) {
     parts <- c(parts, paste0("max_hold=", as.integer(max_hold_sessions), " sessions"))
+  }
+  if (length(parts) == 0L) {
+    return("no exits (cash)")
   }
   paste(parts, collapse = " + ")
 }
@@ -527,6 +556,18 @@ g5_wfa_vol_expansion_breakout_indicators <- function(bars, symbol, model, requir
 
 g5_wfa_model_indicators <- function(bars, symbol, model) {
   family <- as.character(model$strategy_family[[1L]])
+  if (identical(family, "no_trade")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    ind$strategy_family <- "no_trade"
+    ind$strategy_id <- "no_trade"
+    ind$model_instance_id <- "no_trade"
+    ind$entry_signal <- FALSE
+    ind$exit_signal <- FALSE
+    ind$entry_signal_rule <- "no_trade_never_enters"
+    ind$exit_signal_rule <- "no_trade_no_exit"
+    ind$signal_state <- "cash"
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
   if (identical(family, "ema_cross")) {
     ind <- g5_ema_cross_indicators(
       bars,
@@ -746,6 +787,9 @@ g5_wfa_candidate_model_grid <- function(
       stringsAsFactors = FALSE
     )
   }
+  if ("no_trade" %in% candidate_families) {
+    add_model("no_trade", "no_trade")
+  }
   if ("ema_cross" %in% candidate_families) {
     fast_periods <- sort(unique(as.integer(fast_periods)))
     slow_periods <- sort(unique(as.integer(slow_periods)))
@@ -902,6 +946,7 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
   end_date <- max(equity_curve$session_date)
   ending_equity <- tail(equity_curve$strategy_equity, 1L)
   buy_hold_ending_equity <- tail(equity_curve$buy_hold_equity, 1L)
+  is_no_trade <- identical(as.character(model$strategy_family[[1L]]), "no_trade")
   data.frame(
     schema_version = g5_ema_cross_wfa_multi_schema_version(),
     symbol = symbol,
@@ -937,7 +982,7 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
     ending_equity = ending_equity,
     total_return = ending_equity - 1,
     cagr = g5_ema_cross_cagr(1, ending_equity, start_date, end_date),
-    sharpe = g5_ema_cross_sharpe(equity_curve$strategy_equity),
+    sharpe = if (is_no_trade) 0 else g5_ema_cross_sharpe(equity_curve$strategy_equity),
     max_drawdown = min(equity_curve$strategy_drawdown, na.rm = TRUE),
     underwater_session_count = strategy_underwater$count,
     underwater_fraction = strategy_underwater$fraction,
@@ -1177,8 +1222,13 @@ g5_wfa_evaluate_strategy_spec_grid <- function(bars, symbol, trading_start_date,
   rows <- list()
   for (model_i in seq_len(nrow(model_grid))) {
     model <- model_grid[model_i, , drop = FALSE]
-    for (stack_i in seq_len(nrow(exit_stacks))) {
-      exit_stack <- exit_stacks[stack_i, , drop = FALSE]
+    stacks_for_model <- if (identical(as.character(model$strategy_family[[1L]]), "no_trade")) {
+      g5_wfa_no_trade_exit_stack()
+    } else {
+      exit_stacks[exit_stacks$exit_stack_id != "no_exit", , drop = FALSE]
+    }
+    for (stack_i in seq_len(nrow(stacks_for_model))) {
+      exit_stack <- stacks_for_model[stack_i, , drop = FALSE]
       trades <- g5_wfa_strategy_spec_trades(
         bars,
         symbol = symbol,
@@ -1236,6 +1286,7 @@ g5_ema_cross_wfa_select_fold_models <- function(
   exit_stacks = g5_wfa_exit_stack_grid()
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
+  exit_stacks <- g5_wfa_exit_stacks_for_candidates(exit_stacks, candidate_families)
   model_grid <- g5_wfa_candidate_model_grid(
     fast_periods = fast_periods,
     slow_periods = slow_periods,
@@ -2139,6 +2190,9 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
   if ("pullback_in_uptrend" %in% active_families) {
     candidate_grid_lines <- c(candidate_grid_lines, paste0("- Pullback-in-uptrend grid: fast periods `", paste(settings$pullback_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$pullback_slow_periods, collapse = ", "), "`, RSI lower `", paste(settings$pullback_rsi_lower_thresholds, collapse = ", "), "`, RSI upper `", paste(settings$pullback_rsi_upper_thresholds, collapse = ", "), "`"))
   }
+  if ("no_trade" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, "- No-trade grid: one inert cash/no-position candidate with zero exposure and no exits.")
+  }
   fold_table <- data.frame(
     fold_id = folds$fold_id,
     train_range = paste0(folds$train_start_date, " to ", folds$train_end_date),
@@ -2292,8 +2346,12 @@ g5_ema_cross_wfa_run_multi <- function(
   oos_quarters = 1,
   fold_count = 3L
 ) {
+  candidate_families <- g5_wfa_candidate_families(candidate_families)
   folds <- g5_ema_cross_wfa_resolve_folds(bars, symbol, wfa_start_date, wfa_end_date, train_quarters, oos_quarters, fold_count)
-  exit_stacks <- g5_wfa_exit_stack_grid(max_hold_sessions, stop_loss_pcts, take_profit_pcts)
+  exit_stacks <- g5_wfa_exit_stacks_for_candidates(
+    g5_wfa_exit_stack_grid(max_hold_sessions, stop_loss_pcts, take_profit_pcts),
+    candidate_families
+  )
   selected <- g5_ema_cross_wfa_select_fold_models(
     bars = bars,
     symbol = symbol,

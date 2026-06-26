@@ -522,12 +522,13 @@ Implemented candidate families:
 - `pullback_in_uptrend`: pullback entries while a slow EMA trend filter remains positive.
 - `vol_expansion_breakout`: breakout entry only when normalized Bollinger width expands enough.
 - `donchian_breakout_vol_expand`: Donchian-style breakout after prior Bollinger-width compression and current expansion.
+- `no_trade`: inert cash/no-position competitor with zero exposure and one `no_exit` pseudo stack.
 
 Notes:
 
 - SMA variants are intentionally deferred.
 - The two Bollinger families are kept separate because their native exit semantics differ.
-- State-gated variants and explicit no-trade competitors remain future slices.
+- State-gated variants remain future slices.
 - The expanded family set can be passed through `-CandidateFamilies`; the existing smaller default remains available for focused smoke tests.
 
 ### C10. Volatility-expansion breakout family ports
@@ -549,6 +550,21 @@ Notes:
 - No new dependencies were added.
 - The focused smoke should run only these two families first before adding them to broad candidate runs.
 - The state-gated volatility-expansion variant remains deferred until a regime/state layer is opened.
+
+### C11. No-trade WFA competitor
+
+Status: done
+
+Branch: `codex/Gen5.1-no-trade-competitor`
+
+Goal: Add no-trade/cash as an inert TRAIN competitor so the WFA selector can choose not to trade when all active strategy specs are unattractive.
+
+Implemented behavior:
+
+- `no_trade` emits no entry or exit signals.
+- It uses one `no_exit` pseudo exit stack instead of multiplying across stop, take-profit, or max-hold combinations.
+- TRAIN metrics use zero return, zero exposure, and Sharpe `0`, so no-trade can beat negative active specs without being ranked as missing data.
+- Stitched OOS behavior remains ordinary cash/no-position accounting when selected.
 
 ### D. Later POC backlog discussion
 

@@ -18,7 +18,7 @@ These are architectural decisions and desired capability areas, not a claim that
 - Trading posture: long-only.
 - Live posture: advice-only.
 - Signal timing: after-close analysis for next-open manual market orders.
-- Current strategy/WFA POC: a small Gen4-inspired candidate set can compete inside each TRAIN fold, with stitched OOS reporting. Current candidates are `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, and `donchian_breakout_vol_expand`; SMA variants and explicit no-trade competition are deferred.
+- Current strategy/WFA POC: a small Gen4-inspired candidate set can compete inside each TRAIN fold, with stitched OOS reporting. Current candidates are `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, `donchian_breakout_vol_expand`, and `no_trade`; SMA variants are deferred.
 - Current trade-policy POC: close-based exit stacks composed with entry/native signal model instances into complete `strategy_spec_id` candidates.
 - Possible state benchmark: asset-specific PCA, added only if and when the operator opens that slice.
 - Max default simultaneous positions: 5, with future tests at 1, 2, 3, 5, 8, and 10.

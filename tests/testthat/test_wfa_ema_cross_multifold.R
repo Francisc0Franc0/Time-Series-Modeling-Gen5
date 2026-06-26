@@ -231,12 +231,12 @@ test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", 
     pullback_slow_periods = 5L,
     pullback_rsi_lower_thresholds = 35,
     pullback_rsi_upper_thresholds = 55,
-    candidate_families = c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand")
+    candidate_families = c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand", "no_trade")
   )
 
   expect_equal(
     sort(unique(grid$strategy_family)),
-    sort(c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand"))
+    sort(c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand", "no_trade"))
   )
   expect_true("bollinger_touch_n3_sd1" %in% grid$model_instance_id)
   expect_true("bollinger_mid_reversion_n3_sd1" %in% grid$model_instance_id)
@@ -244,6 +244,7 @@ test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", 
   expect_true("pullback_up_f2_s5_lo35_hi55" %in% grid$model_instance_id)
   expect_true("vol_expansion_breakout_lb3_buf0_vx0p1" %in% grid$model_instance_id)
   expect_true("donchian_volexp_lb3_buf0_vx0p1" %in% grid$model_instance_id)
+  expect_true("no_trade" %in% grid$model_instance_id)
   expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
   expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer", "vol_expand_threshold") %in% names(grid)))
 })
@@ -292,6 +293,15 @@ test_that("Gen4-inspired WFA indicators emit close-based signals", {
   expect_true(any(donchian$entry_signal, na.rm = TRUE))
   expect_equal(unique(donchian$entry_signal_rule), "close_above_donchian_high_with_prior_compression_and_vol_expansion_when_flat")
 
+  no_trade <- g5_wfa_model_indicators(
+    bars,
+    "AMD",
+    data.frame(strategy_family = "no_trade", model_instance_id = "no_trade", stringsAsFactors = FALSE)
+  )
+  expect_false(any(no_trade$entry_signal, na.rm = TRUE))
+  expect_false(any(no_trade$exit_signal, na.rm = TRUE))
+  expect_equal(unique(no_trade$signal_state), "cash")
+
   rsi <- g5_wfa_model_indicators(
     g5_test_wfa_multi_bars(close = c(10, 9, 8, 7, 8, 9, 10, 11)),
     "AMD",
@@ -300,6 +310,34 @@ test_that("Gen4-inspired WFA indicators emit close-based signals", {
   expect_true(any(rsi$entry_signal, na.rm = TRUE))
   expect_true(any(rsi$exit_signal, na.rm = TRUE))
   expect_equal(unique(rsi$entry_signal_rule), "rsi_below_oversold_threshold_when_flat")
+})
+
+test_that("no-trade candidate is inert and uses one cash exit stack", {
+  bars <- g5_test_wfa_multi_bars(close = c(10, 9.8, 9.6, 9.5, 9.4, 9.2, 9.1, 9.0, 8.9, 8.8, 8.7, 8.6))
+  model_grid <- g5_wfa_candidate_model_grid(
+    fast_periods = 2L,
+    slow_periods = 4L,
+    breakout_lookbacks = 3L,
+    breakout_buffers = 0,
+    candidate_families = c("breakout", "no_trade")
+  )
+  exit_stacks <- g5_wfa_exit_stacks_for_candidates(g5_wfa_exit_stack_grid(max_hold_sessions = 3L, stop_loss_pcts = 0.1, take_profit_pcts = 0.2), c("breakout", "no_trade"))
+  grid <- g5_wfa_evaluate_strategy_spec_grid(
+    bars,
+    symbol = "AMD",
+    trading_start_date = min(bars$session_date),
+    trading_end_date = max(bars$session_date),
+    model_grid = model_grid,
+    exit_stacks = exit_stacks
+  )
+  no_trade_rows <- grid[grid$strategy_family == "no_trade", , drop = FALSE]
+
+  expect_equal(nrow(no_trade_rows), 1L)
+  expect_equal(no_trade_rows$exit_stack_id[[1L]], "no_exit")
+  expect_equal(no_trade_rows$total_return[[1L]], 0)
+  expect_equal(no_trade_rows$sharpe[[1L]], 0)
+  expect_equal(no_trade_rows$exposure_fraction[[1L]], 0)
+  expect_equal(no_trade_rows$trade_count[[1L]], 0L)
 })
 
 test_that("stitched indicators tolerate mixed selected model families", {
