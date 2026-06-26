@@ -163,7 +163,7 @@ g5_draw_wfa_strategy_contact_panel <- function(item) {
   aesthetic <- g5_chart_aesthetic()
   session_dates <- as.Date(ind$session_date)
   x <- seq_len(nrow(ind))
-  y_range <- range(c(ind$low, ind$high, ind$fast_ema, ind$slow_ema, ind$bb_mid, ind$bb_upper, ind$bb_lower), finite = TRUE)
+  y_range <- range(c(ind$low, ind$high, ind$fast_ema, ind$slow_ema, ind$bb_mid, ind$bb_upper, ind$bb_lower, ind$breakout_high, ind$breakout_mid), finite = TRUE)
   padding <- diff(y_range) * 0.06
   if (!is.finite(padding) || padding <= 0) {
     padding <- max(abs(y_range), 1) * 0.02
@@ -187,6 +187,10 @@ g5_draw_wfa_strategy_contact_panel <- function(item) {
       graphics::lines(part_x, part$bb_mid, col = aesthetic$native_entry_color, lwd = 0.8)
       graphics::lines(part_x, part$bb_upper, col = band_col, lwd = 0.8, lty = 2)
       graphics::lines(part_x, part$bb_lower, col = band_col, lwd = 0.8, lty = 2)
+    }
+    if (length(family) > 0L && family[[1L]] %in% c("breakout", "vol_expansion_breakout", "donchian_breakout_vol_expand")) {
+      graphics::lines(part_x, part$breakout_high, col = grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.65), lwd = 0.8, lty = 2)
+      graphics::lines(part_x, part$breakout_mid, col = grDevices::adjustcolor(aesthetic$native_entry_color, alpha.f = 0.65), lwd = 0.8)
     }
   }
   if (is.data.frame(trades) && nrow(trades) > 0L) {

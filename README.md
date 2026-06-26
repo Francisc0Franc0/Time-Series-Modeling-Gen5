@@ -326,7 +326,7 @@ The packet is written under ignored `runs/research_workbench/wfa_pocs/` and incl
 
 The three-fold WFA proof rolls the train window forward by one OOS period at a time. By default, each TRAIN fold evaluates both `ema_cross` and `bollinger_touch` signal families plus a modest close-based exit-stack grid. A model instance means the strategy family plus concrete entry/native-exit parameters, such as `ema_cross_fast12_slow30` or `bollinger_touch_n20_sd2p5`. An exit stack is a bundle of active close-based exit rules, such as `native_only`, `native_maxhold20`, or `native_stop10pct_take25pct_maxhold40`. The full selected unit is a `strategy_spec_id`: `model_instance_id + exit_stack_id`. The best TRAIN strategy spec by Sharpe, with return as the existing secondary sort, is selected for that fold and then traded on its OOS period. Open positions are carried across fold boundaries; once a new fold begins, future exit signals are governed by the current fold-selected strategy spec. A signal generated on the final bar of a fold may execute at the next open if that next session is inside the stitched OOS span.
 
-Gen5.1 can also run a broader Gen4-inspired POC candidate set: `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, and `pullback_in_uptrend`. The two Bollinger families are intentionally separate: `bollinger_touch` enters on a lower-band touch and exits on an upper-band touch, while `bollinger_mid_reversion` enters on a lower-band touch and exits on the middle band. SMA variants are intentionally deferred.
+Gen5.1 can also run a broader Gen4-inspired POC candidate set: `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, and `donchian_breakout_vol_expand`. The two Bollinger families are intentionally separate: `bollinger_touch` enters on a lower-band touch and exits on an upper-band touch, while `bollinger_mid_reversion` enters on a lower-band touch and exits on the middle band. The volatility-expansion breakout families require breakout confirmation plus expanding Bollinger width; the Donchian variant also requires prior Bollinger-width compression. SMA variants and explicit no-trade/cash competition are intentionally deferred.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_poc.ps1 `
@@ -340,7 +340,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_po
   -SlowPeriods "30,50,80,120" `
   -BbLookbackPeriods "10,20,30" `
   -BbSdMultipliers "1.5,2,2.5" `
-  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend" `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand" `
   -MaxHoldSessions "10,20,40" `
   -StopLossPcts "0.10" `
   -TakeProfitPcts "0.25" `
@@ -349,7 +349,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_po
 
 The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model/spec rows, exit stacks, train parameter performance by fold, model/spec stability, fold-level OOS summaries, stitched trades, stitched equity, a markdown run report, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and strategy-spec changes are auditable at a glance. EMA overlays are plotted in EMA-selected folds; Bollinger bands are plotted in Bollinger-selected folds, including both upper-exit and mid-band-exit variants. Native exits and exit-stack exits are attributed separately in the trade ledger and plotted with distinct exit markers when both appear in the selected OOS path.
 
-The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix.
+The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix, including a candidate-family count such as `multi_wfa_AMD_3f_2fam_...` so focused runs do not collide with broad candidate runs for the same symbol/date/as-of settings.
 
 ## Multi-Asset WFA Batch Diagnostic
 

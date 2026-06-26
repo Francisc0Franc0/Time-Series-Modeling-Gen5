@@ -185,7 +185,7 @@ result <- g5_workbench_query_adjusted_daily_bars(
 )
 
 g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
-output_dir <- g5_ema_cross_wfa_multi_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
+output_dir <- g5_ema_cross_wfa_multi_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count, candidate_families)
 written <- g5_write_ema_cross_wfa_multi_outputs(
   result,
   symbol = symbol,

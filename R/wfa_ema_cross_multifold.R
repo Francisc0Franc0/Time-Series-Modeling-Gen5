@@ -4,25 +4,26 @@ g5_ema_cross_wfa_multi_schema_version <- function() {
   "gen5_ema_cross_wfa_multi_v0.1"
 }
 
-g5_ema_cross_wfa_multi_artifact_prefix <- function(as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count) {
+g5_ema_cross_wfa_multi_artifact_prefix <- function(as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count, candidate_families = c("ema_cross", "bollinger_touch")) {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  family_label <- paste0(length(g5_wfa_candidate_families(candidate_families)), "fam")
   window_label <- paste0(
     "w",
     gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
     "_to_",
     gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date)))
   )
-  paste(c("multi_wfa", symbol, paste0(fold_count, "f"), window_label, stamp), collapse = "_")
+  paste(c("multi_wfa", symbol, paste0(fold_count, "f"), family_label, window_label, stamp), collapse = "_")
 }
 
-g5_ema_cross_wfa_multi_output_dir <- function(repo_root, as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count) {
+g5_ema_cross_wfa_multi_output_dir <- function(repo_root, as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count, candidate_families = c("ema_cross", "bollinger_touch")) {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "wfa_pocs",
-    g5_ema_cross_wfa_multi_artifact_prefix(as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
+    g5_ema_cross_wfa_multi_artifact_prefix(as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count, candidate_families)
   )
 }
 
@@ -141,6 +142,18 @@ g5_wfa_bind_rows_fill <- function(rows) {
   out
 }
 
+g5_wfa_write_csv <- function(x, path) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  tryCatch(
+    utils::write.csv(x, path, row.names = FALSE),
+    error = function(e) {
+      dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+      utils::write.csv(x, path, row.names = FALSE)
+    }
+  )
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
 g5_wfa_candidate_families <- function(candidate_families) {
   candidate_families <- unique(trimws(as.character(candidate_families)))
   candidate_families <- candidate_families[nzchar(candidate_families)]
@@ -152,7 +165,9 @@ g5_wfa_candidate_families <- function(candidate_families) {
     "rsi_mr",
     "zret_mr",
     "breakout",
-    "pullback_in_uptrend"
+    "pullback_in_uptrend",
+    "vol_expansion_breakout",
+    "donchian_breakout_vol_expand"
   )
   if (length(candidate_families) == 0L || any(!candidate_families %in% allowed)) {
     g5_stop(paste0("candidate_families must be drawn from: ", paste(allowed, collapse = ", ")))
@@ -202,6 +217,12 @@ g5_wfa_model_parameter_label <- function(model) {
   }
   if (identical(family, "breakout")) {
     return(paste0("lookback=", model$breakout_lookback[[1L]], ", buffer=", model$breakout_buffer[[1L]]))
+  }
+  if (identical(family, "vol_expansion_breakout")) {
+    return(paste0("lookback=", model$breakout_lookback[[1L]], ", buffer=", model$breakout_buffer[[1L]], ", vol_expand>=", model$vol_expand_threshold[[1L]]))
+  }
+  if (identical(family, "donchian_breakout_vol_expand")) {
+    return(paste0("lookback=", model$breakout_lookback[[1L]], ", buffer=", model$breakout_buffer[[1L]], ", vol_expand>=", model$vol_expand_threshold[[1L]], ", compression=prior_width_below_mean"))
   }
   if (identical(family, "pullback_in_uptrend")) {
     return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", rsi_lo=", model$rsi_lower[[1L]], ", rsi_hi=", model$rsi_upper[[1L]]))
@@ -362,7 +383,7 @@ g5_wfa_exit_event <- function(ind, idx, open_trade, exit_stack) {
 }
 
 g5_wfa_normalize_indicator_columns <- function(ind, model) {
-  for (col in c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower", "rsi", "return_z", "breakout_high", "breakout_mid")) {
+  for (col in c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower", "rsi", "return_z", "breakout_high", "breakout_mid", "vol_width", "vol_width_mean", "vol_expansion")) {
     if (!col %in% names(ind)) {
       ind[[col]] <- NA_real_
     }
@@ -384,6 +405,16 @@ g5_wfa_rolling_mean <- function(x, period) {
 
 g5_wfa_rolling_sd <- function(x, period) {
   g5_bollinger_touch_rolling_sd(x, period)
+}
+
+g5_wfa_bollinger_width <- function(close, period, sd_multiplier = 2) {
+  mid <- g5_wfa_rolling_mean(close, period)
+  sigma <- g5_wfa_rolling_sd(close, period)
+  upper <- mid + sd_multiplier * sigma
+  lower <- mid - sd_multiplier * sigma
+  width <- (upper - lower) / pmax(mid, 1e-8)
+  width[!is.finite(width)] <- NA_real_
+  width
 }
 
 g5_wfa_rolling_max <- function(x, period) {
@@ -435,6 +466,63 @@ g5_wfa_bollinger_mid_reversion_strategy_id <- function(lookback_period, sd_multi
     g5_stop("Bollinger mid reversion parameters must be lookback_period >= 2 and sd_multiplier > 0.")
   }
   paste0("bollinger_mid_reversion_n", lookback_period, "_sd", g5_bollinger_touch_sd_label(sd_multiplier))
+}
+
+g5_wfa_vol_expansion_breakout_id <- function(strategy_family, lookback, buffer, vol_expand_threshold) {
+  lookback <- as.integer(lookback)
+  buffer <- as.numeric(buffer)
+  vol_expand_threshold <- as.numeric(vol_expand_threshold)
+  if (is.na(lookback) || lookback < 2L || is.na(buffer) || buffer < 0 || is.na(vol_expand_threshold) || vol_expand_threshold < 0) {
+    g5_stop("Volatility-expansion breakout parameters must be lookback >= 2, buffer >= 0, and vol_expand_threshold >= 0.")
+  }
+  prefix <- switch(
+    as.character(strategy_family),
+    vol_expansion_breakout = "vol_expansion_breakout",
+    donchian_breakout_vol_expand = "donchian_volexp",
+    g5_stop(paste0("Unsupported volatility breakout strategy family for ID: ", strategy_family))
+  )
+  paste0(prefix, "_lb", lookback, "_buf", g5_wfa_num_id_label(buffer), "_vx", g5_wfa_num_id_label(vol_expand_threshold))
+}
+
+g5_wfa_vol_expansion_breakout_indicators <- function(bars, symbol, model, require_prior_compression = FALSE) {
+  ind <- g5_ema_cross_prepare_bars(bars, symbol)
+  family <- as.character(model$strategy_family[[1L]])
+  lookback <- as.integer(model$breakout_lookback[[1L]])
+  buffer <- as.numeric(model$breakout_buffer[[1L]])
+  threshold <- as.numeric(model$vol_expand_threshold[[1L]])
+  prior_high <- c(NA_real_, head(g5_wfa_rolling_max(ind$close, lookback), -1L))
+  mid <- g5_wfa_rolling_mean(ind$close, lookback)
+  width <- g5_wfa_bollinger_width(ind$close, lookback, sd_multiplier = 2)
+  prior_width <- c(NA_real_, head(width, -1L))
+  width_mean <- g5_wfa_rolling_mean(width, lookback)
+  vol_expand <- width / prior_width - 1
+  vol_expand[!is.finite(vol_expand)] <- NA_real_
+  compression_ok <- rep(TRUE, nrow(ind))
+  if (isTRUE(require_prior_compression)) {
+    compression_ok <- is.finite(prior_width) & is.finite(width_mean) & prior_width < width_mean
+  }
+  entry_level <- prior_high * (1 + buffer)
+  ind$strategy_family <- family
+  ind$strategy_id <- g5_wfa_vol_expansion_breakout_id(family, lookback, buffer, threshold)
+  ind$model_instance_id <- ind$strategy_id
+  ind$breakout_lookback <- lookback
+  ind$breakout_buffer <- buffer
+  ind$vol_expand_threshold <- threshold
+  ind$breakout_high <- entry_level
+  ind$breakout_mid <- mid
+  ind$vol_width <- width
+  ind$vol_width_mean <- width_mean
+  ind$vol_expansion <- vol_expand
+  ind$entry_signal <- is.finite(entry_level) & is.finite(vol_expand) & compression_ok & ind$close > entry_level & vol_expand >= threshold
+  ind$exit_signal <- is.finite(mid) & ind$close < mid
+  ind$entry_signal_rule <- if (isTRUE(require_prior_compression)) {
+    "close_above_donchian_high_with_prior_compression_and_vol_expansion_when_flat"
+  } else {
+    "close_above_prior_rolling_high_with_vol_expansion_when_flat"
+  }
+  ind$exit_signal_rule <- "close_below_breakout_midline_when_long"
+  ind$signal_state <- ifelse(ind$entry_signal, "vol_expansion_breakout", ifelse(ind$exit_signal, "midline_failure", ifelse(is.finite(vol_expand), "waiting_for_breakout_or_expansion", "unknown")))
+  ind
 }
 
 g5_wfa_model_indicators <- function(bars, symbol, model) {
@@ -578,6 +666,14 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
     ind$signal_state <- ifelse(ind$entry_signal, "breakout", ifelse(ind$exit_signal, "midline_failure", ifelse(is.finite(mid), "inside_channel", "unknown")))
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
+  if (identical(family, "vol_expansion_breakout")) {
+    ind <- g5_wfa_vol_expansion_breakout_indicators(bars, symbol, model, require_prior_compression = FALSE)
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "donchian_breakout_vol_expand")) {
+    ind <- g5_wfa_vol_expansion_breakout_indicators(bars, symbol, model, require_prior_compression = TRUE)
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
   if (identical(family, "pullback_in_uptrend")) {
     ind <- g5_ema_cross_prepare_bars(bars, symbol)
     fast_period <- as.integer(model$fast_period[[1L]])
@@ -621,6 +717,7 @@ g5_wfa_candidate_model_grid <- function(
   zret_exit_z = c(0.0, 0.5),
   breakout_lookbacks = c(20L, 30L),
   breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
   pullback_fast_periods = c(5L, 10L),
   pullback_slow_periods = c(25L, 50L),
   pullback_rsi_lower_thresholds = c(35, 40),
@@ -629,7 +726,7 @@ g5_wfa_candidate_model_grid <- function(
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
   rows <- list()
-  add_model <- function(strategy_family, model_instance_id, fast_period = NA_integer_, slow_period = NA_integer_, lookback_period = NA_integer_, sd_multiplier = NA_real_, rsi_period = NA_integer_, rsi_lower = NA_real_, rsi_upper = NA_real_, zret_window = NA_integer_, zret_entry_z = NA_real_, zret_exit_z = NA_real_, breakout_lookback = NA_integer_, breakout_buffer = NA_real_) {
+  add_model <- function(strategy_family, model_instance_id, fast_period = NA_integer_, slow_period = NA_integer_, lookback_period = NA_integer_, sd_multiplier = NA_real_, rsi_period = NA_integer_, rsi_lower = NA_real_, rsi_upper = NA_real_, zret_window = NA_integer_, zret_entry_z = NA_real_, zret_exit_z = NA_real_, breakout_lookback = NA_integer_, breakout_buffer = NA_real_, vol_expand_threshold = NA_real_) {
     rows[[length(rows) + 1L]] <<- data.frame(
       strategy_family = strategy_family,
       model_instance_id = model_instance_id,
@@ -645,6 +742,7 @@ g5_wfa_candidate_model_grid <- function(
       zret_exit_z = zret_exit_z,
       breakout_lookback = breakout_lookback,
       breakout_buffer = breakout_buffer,
+      vol_expand_threshold = vol_expand_threshold,
       stringsAsFactors = FALSE
     )
   }
@@ -731,6 +829,38 @@ g5_wfa_candidate_model_grid <- function(
       }
     }
   }
+  if (any(c("vol_expansion_breakout", "donchian_breakout_vol_expand") %in% candidate_families)) {
+    breakout_lookbacks <- sort(unique(as.integer(breakout_lookbacks)))
+    breakout_buffers <- sort(unique(as.numeric(breakout_buffers)))
+    vol_expand_thresholds <- sort(unique(as.numeric(vol_expand_thresholds)))
+    for (lookback in breakout_lookbacks) {
+      for (buffer in breakout_buffers) {
+        for (threshold in vol_expand_thresholds) {
+          if (is.na(lookback) || lookback < 2L || is.na(buffer) || buffer < 0 || is.na(threshold) || threshold < 0) {
+            next
+          }
+          if ("vol_expansion_breakout" %in% candidate_families) {
+            add_model(
+              "vol_expansion_breakout",
+              g5_wfa_vol_expansion_breakout_id("vol_expansion_breakout", lookback, buffer, threshold),
+              breakout_lookback = lookback,
+              breakout_buffer = buffer,
+              vol_expand_threshold = threshold
+            )
+          }
+          if ("donchian_breakout_vol_expand" %in% candidate_families) {
+            add_model(
+              "donchian_breakout_vol_expand",
+              g5_wfa_vol_expansion_breakout_id("donchian_breakout_vol_expand", lookback, buffer, threshold),
+              breakout_lookback = lookback,
+              breakout_buffer = buffer,
+              vol_expand_threshold = threshold
+            )
+          }
+        }
+      }
+    }
+  }
   if ("pullback_in_uptrend" %in% candidate_families) {
     pullback_fast_periods <- sort(unique(as.integer(pullback_fast_periods)))
     pullback_slow_periods <- sort(unique(as.integer(pullback_slow_periods)))
@@ -795,6 +925,7 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
     zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
     breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
     breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
+    vol_expand_threshold = g5_wfa_model_value(model, "vol_expand_threshold", NA_real_),
     leverage = leverage,
     trade_count = if (is.data.frame(trades)) nrow(trades) else 0L,
     closed_trade_count = nrow(closed),
@@ -900,6 +1031,7 @@ g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading
         zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
         breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
         breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
+        vol_expand_threshold = g5_wfa_model_value(model, "vol_expand_threshold", NA_real_),
         trade_status = "closed",
         entry_signal_date = open_trade$entry_signal_date,
         entry_signal_index = open_trade$entry_signal_idx,
@@ -997,6 +1129,7 @@ g5_wfa_strategy_spec_trades <- function(bars, symbol, model, exit_stack, trading
       zret_exit_z = g5_wfa_model_value(model, "zret_exit_z", NA_real_),
       breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
       breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
+      vol_expand_threshold = g5_wfa_model_value(model, "vol_expand_threshold", NA_real_),
       trade_status = "open",
       entry_signal_date = open_trade$entry_signal_date,
       entry_signal_index = open_trade$entry_signal_idx,
@@ -1094,6 +1227,7 @@ g5_ema_cross_wfa_select_fold_models <- function(
   zret_exit_z = c(0.0, 0.5),
   breakout_lookbacks = c(20L, 30L),
   breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
   pullback_fast_periods = c(5L, 10L),
   pullback_slow_periods = c(25L, 50L),
   pullback_rsi_lower_thresholds = c(35, 40),
@@ -1117,6 +1251,7 @@ g5_ema_cross_wfa_select_fold_models <- function(
     zret_exit_z = zret_exit_z,
     breakout_lookbacks = breakout_lookbacks,
     breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
     pullback_fast_periods = pullback_fast_periods,
     pullback_slow_periods = pullback_slow_periods,
     pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
@@ -1162,6 +1297,7 @@ g5_ema_cross_wfa_select_fold_models <- function(
       zret_exit_z = if ("zret_exit_z" %in% names(selected)) selected$zret_exit_z[[1L]] else NA_real_,
       breakout_lookback = if ("breakout_lookback" %in% names(selected)) selected$breakout_lookback[[1L]] else NA_integer_,
       breakout_buffer = if ("breakout_buffer" %in% names(selected)) selected$breakout_buffer[[1L]] else NA_real_,
+      vol_expand_threshold = if ("vol_expand_threshold" %in% names(selected)) selected$vol_expand_threshold[[1L]] else NA_real_,
       train_sharpe = selected$sharpe[[1L]],
       train_total_return = selected$total_return[[1L]],
       train_cagr = selected$cagr[[1L]],
@@ -1628,6 +1764,7 @@ g5_ema_cross_wfa_fold_oos_summary <- function(folds, selected_models, equity_cur
       slow_period = if ("slow_period" %in% names(model)) model$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(model)) model$lookback_period[[1L]] else NA_integer_,
       sd_multiplier = if ("sd_multiplier" %in% names(model)) model$sd_multiplier[[1L]] else NA_real_,
+      vol_expand_threshold = if ("vol_expand_threshold" %in% names(model)) model$vol_expand_threshold[[1L]] else NA_real_,
       train_sharpe = model$train_sharpe[[1L]],
       train_total_return = model$train_total_return[[1L]],
       oos_start_date = fold$oos_start_date[[1L]],
@@ -1661,6 +1798,7 @@ g5_ema_cross_wfa_model_stability <- function(selected_models) {
       slow_period = if ("slow_period" %in% names(selected)) selected$slow_period[[1L]] else NA_integer_,
       lookback_period = if ("lookback_period" %in% names(selected)) selected$lookback_period[[1L]] else NA_integer_,
       sd_multiplier = if ("sd_multiplier" %in% names(selected)) selected$sd_multiplier[[1L]] else NA_real_,
+      vol_expand_threshold = if ("vol_expand_threshold" %in% names(selected)) selected$vol_expand_threshold[[1L]] else NA_real_,
       selected_fold_count = nrow(selected),
       selected_fold_fraction = nrow(selected) / nrow(selected_models),
       selected_folds = paste(selected$fold_id, collapse = ","),
@@ -1738,7 +1876,7 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
   aesthetic <- g5_chart_aesthetic()
   session_dates <- as.Date(indicators$session_date)
   x <- seq_len(nrow(indicators))
-  y_range <- range(c(indicators$low, indicators$high, indicators$fast_ema, indicators$slow_ema, indicators$bb_mid, indicators$bb_upper, indicators$bb_lower), finite = TRUE)
+  y_range <- range(c(indicators$low, indicators$high, indicators$fast_ema, indicators$slow_ema, indicators$bb_mid, indicators$bb_upper, indicators$bb_lower, indicators$breakout_high, indicators$breakout_mid), finite = TRUE)
   padding <- diff(y_range) * 0.06
   if (!is.finite(padding) || padding <= 0) {
     padding <- max(abs(y_range), 1) * 0.02
@@ -1776,6 +1914,10 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
       graphics::lines(part_x, part$bb_mid, col = aesthetic$native_entry_color, lwd = 1.1)
       graphics::lines(part_x, part$bb_upper, col = band_col, lwd = 1.1, lty = 2)
       graphics::lines(part_x, part$bb_lower, col = band_col, lwd = 1.1, lty = 2)
+    }
+    if (length(family) > 0L && family[[1L]] %in% c("breakout", "vol_expansion_breakout", "donchian_breakout_vol_expand")) {
+      graphics::lines(part_x, part$breakout_high, col = grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.7), lwd = 1.1, lty = 2)
+      graphics::lines(part_x, part$breakout_mid, col = grDevices::adjustcolor(aesthetic$native_entry_color, alpha.f = 0.7), lwd = 1.0)
     }
   }
   if (is.data.frame(trades) && nrow(trades) > 0L) {
@@ -1820,6 +1962,7 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
   g5_axis_date_labels_45(tick_positions, as.character(session_dates[tick_positions]), color = aesthetic$axis)
   has_ema <- any(indicators$strategy_family %in% c("ema_cross", "ema_trend", "pullback_in_uptrend"), na.rm = TRUE)
   has_bb <- any(indicators$strategy_family %in% c("bollinger_touch", "bollinger_mid_reversion"), na.rm = TRUE)
+  has_breakout <- any(indicators$strategy_family %in% c("breakout", "vol_expansion_breakout", "donchian_breakout_vol_expand"), na.rm = TRUE)
   legend_text <- character()
   legend_lty <- numeric()
   legend_pch <- numeric()
@@ -1837,6 +1980,13 @@ g5_write_ema_cross_wfa_stitched_strategy_chart_png <- function(indicators, trade
     legend_lty <- c(legend_lty, 1, 2)
     legend_pch <- c(legend_pch, NA, NA)
     legend_col <- c(legend_col, aesthetic$native_entry_color, grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.7))
+    legend_bg <- c(legend_bg, NA, NA)
+  }
+  if (has_breakout) {
+    legend_text <- c(legend_text, "breakout level", "breakout mid")
+    legend_lty <- c(legend_lty, 2, 1)
+    legend_pch <- c(legend_pch, NA, NA)
+    legend_col <- c(legend_col, grDevices::adjustcolor(aesthetic$non_native_exit_color, alpha.f = 0.7), grDevices::adjustcolor(aesthetic$native_entry_color, alpha.f = 0.7))
     legend_bg <- c(legend_bg, NA, NA)
   }
   has_stack_exit <- is.data.frame(trades) && nrow(trades) > 0L && "exit_attribution" %in% names(trades) && any(trades$exit_attribution == "exit_stack", na.rm = TRUE)
@@ -1957,6 +2107,38 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     )
   }))
   names(family_counts) <- c("strategy_family", "tested_model_instances_per_fold")
+  active_families <- unique(candidate_models$strategy_family)
+  candidate_grid_lines <- character()
+  if ("ema_cross" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- EMA cross grid: fast periods `", paste(settings$fast_periods, collapse = ", "), "`, slow periods `", paste(settings$slow_periods, collapse = ", "), "`"))
+  }
+  if ("ema_trend" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- EMA trend grid: fast periods `", paste(settings$ema_trend_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$ema_trend_slow_periods, collapse = ", "), "`"))
+  }
+  if ("bollinger_touch" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- Bollinger touch grid: lookback periods `", paste(settings$bb_lookback_periods, collapse = ", "), "`, SD multipliers `", paste(settings$bb_sd_multipliers, collapse = ", "), "`"))
+  }
+  if ("bollinger_mid_reversion" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, "- Bollinger mid-reversion uses the Bollinger lookback and SD grid, but exits on recovery to the mid-band instead of the upper band.")
+  }
+  if ("rsi_mr" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- RSI mean-reversion grid: periods `", paste(settings$rsi_periods, collapse = ", "), "`, lower thresholds `", paste(settings$rsi_lower_thresholds, collapse = ", "), "`, upper thresholds `", paste(settings$rsi_upper_thresholds, collapse = ", "), "`"))
+  }
+  if ("zret_mr" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- Return-z mean-reversion grid: windows `", paste(settings$zret_windows, collapse = ", "), "`, entry z `", paste(settings$zret_entry_z, collapse = ", "), "`, exit z `", paste(settings$zret_exit_z, collapse = ", "), "`"))
+  }
+  if (any(active_families %in% c("breakout", "vol_expansion_breakout", "donchian_breakout_vol_expand"))) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- Breakout grid: lookbacks `", paste(settings$breakout_lookbacks, collapse = ", "), "`, buffers `", paste(settings$breakout_buffers, collapse = ", "), "`"))
+  }
+  if (any(active_families %in% c("vol_expansion_breakout", "donchian_breakout_vol_expand"))) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- Volatility-expansion breakout threshold grid: `", paste(settings$vol_expand_thresholds, collapse = ", "), "`"))
+  }
+  if ("donchian_breakout_vol_expand" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, "- Donchian volatility-expansion breakout uses the breakout grid plus prior Bollinger-width compression before the expansion filter.")
+  }
+  if ("pullback_in_uptrend" %in% active_families) {
+    candidate_grid_lines <- c(candidate_grid_lines, paste0("- Pullback-in-uptrend grid: fast periods `", paste(settings$pullback_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$pullback_slow_periods, collapse = ", "), "`, RSI lower `", paste(settings$pullback_rsi_lower_thresholds, collapse = ", "), "`, RSI upper `", paste(settings$pullback_rsi_upper_thresholds, collapse = ", "), "`"))
+  }
   fold_table <- data.frame(
     fold_id = folds$fold_id,
     train_range = paste0(folds$train_start_date, " to ", folds$train_end_date),
@@ -2005,14 +2187,7 @@ g5_ema_cross_wfa_multi_metrics_markdown <- function(folds, selected_models, trai
     "",
     table_lines(family_counts, names(family_counts)),
     "",
-    paste0("- EMA cross grid: fast periods `", paste(settings$fast_periods, collapse = ", "), "`, slow periods `", paste(settings$slow_periods, collapse = ", "), "`"),
-    paste0("- EMA trend grid: fast periods `", paste(settings$ema_trend_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$ema_trend_slow_periods, collapse = ", "), "`"),
-    paste0("- Bollinger touch grid: lookback periods `", paste(settings$bb_lookback_periods, collapse = ", "), "`, SD multipliers `", paste(settings$bb_sd_multipliers, collapse = ", "), "`"),
-    "- Bollinger mid-reversion uses the same Bollinger grid but exits on recovery to the mid-band instead of the upper band.",
-    paste0("- RSI mean-reversion grid: periods `", paste(settings$rsi_periods, collapse = ", "), "`, lower thresholds `", paste(settings$rsi_lower_thresholds, collapse = ", "), "`, upper thresholds `", paste(settings$rsi_upper_thresholds, collapse = ", "), "`"),
-    paste0("- Return-z mean-reversion grid: windows `", paste(settings$zret_windows, collapse = ", "), "`, entry z `", paste(settings$zret_entry_z, collapse = ", "), "`, exit z `", paste(settings$zret_exit_z, collapse = ", "), "`"),
-    paste0("- Breakout grid: lookbacks `", paste(settings$breakout_lookbacks, collapse = ", "), "`, buffers `", paste(settings$breakout_buffers, collapse = ", "), "`"),
-    paste0("- Pullback-in-uptrend grid: fast periods `", paste(settings$pullback_fast_periods, collapse = ", "), "`, slow periods `", paste(settings$pullback_slow_periods, collapse = ", "), "`, RSI lower `", paste(settings$pullback_rsi_lower_thresholds, collapse = ", "), "`, RSI upper `", paste(settings$pullback_rsi_upper_thresholds, collapse = ", "), "`"),
+    candidate_grid_lines,
     paste0("- Exit stack max-hold sessions: `", paste(settings$max_hold_sessions, collapse = ", "), "`"),
     paste0("- Exit stack stop-loss percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$stop_loss_pcts)), collapse = ", "), "`"),
     paste0("- Exit stack take-profit percentages: `", paste(sprintf("%.1f%%", 100 * as.numeric(settings$take_profit_pcts)), collapse = ", "), "`"),
@@ -2104,6 +2279,7 @@ g5_ema_cross_wfa_run_multi <- function(
   zret_exit_z = c(0.0, 0.5),
   breakout_lookbacks = c(20L, 30L),
   breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
   pullback_fast_periods = c(5L, 10L),
   pullback_slow_periods = c(25L, 50L),
   pullback_rsi_lower_thresholds = c(35, 40),
@@ -2136,6 +2312,7 @@ g5_ema_cross_wfa_run_multi <- function(
     zret_exit_z = zret_exit_z,
     breakout_lookbacks = breakout_lookbacks,
     breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
     pullback_fast_periods = pullback_fast_periods,
     pullback_slow_periods = pullback_slow_periods,
     pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
@@ -2182,6 +2359,7 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   zret_exit_z = c(0.0, 0.5),
   breakout_lookbacks = c(20L, 30L),
   breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
   pullback_fast_periods = c(5L, 10L),
   pullback_slow_periods = c(25L, 50L),
   pullback_rsi_lower_thresholds = c(35, 40),
@@ -2199,7 +2377,8 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
     g5_stop("Multi-signal WFA output writing requires exactly one symbol.")
   }
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-  prefix <- g5_ema_cross_wfa_multi_artifact_prefix(result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count)
+  candidate_families <- g5_wfa_candidate_families(candidate_families)
+  prefix <- g5_ema_cross_wfa_multi_artifact_prefix(result$resolved_session$as_of_timestamp, symbol, wfa_start_date, wfa_end_date, fold_count, candidate_families)
   written <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)
   wfa <- g5_ema_cross_wfa_run_multi(
     bars = result$bars,
@@ -2220,6 +2399,7 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
     zret_exit_z = zret_exit_z,
     breakout_lookbacks = breakout_lookbacks,
     breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
     pullback_fast_periods = pullback_fast_periods,
     pullback_slow_periods = pullback_slow_periods,
     pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
@@ -2235,35 +2415,35 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
   paths <- c(
     written$paths,
     list(
-      fold_spec_csv = file.path(output_dir, paste0(prefix, "_fold_spec.csv")),
-      selected_models_csv = file.path(output_dir, paste0(prefix, "_selected_models.csv")),
-      exit_stacks_csv = file.path(output_dir, paste0(prefix, "_exit_stacks.csv")),
-      train_parameter_performance_csv = file.path(output_dir, paste0(prefix, "_train_parameter_performance.csv")),
-      model_stability_csv = file.path(output_dir, paste0(prefix, "_model_stability.csv")),
-      fold_oos_summary_csv = file.path(output_dir, paste0(prefix, "_fold_oos_summary.csv")),
-      stitched_indicators_csv = file.path(output_dir, paste0(prefix, "_stitched_indicators.csv")),
-      stitched_trades_csv = file.path(output_dir, paste0(prefix, "_stitched_trades.csv")),
-      stitched_equity_curve_csv = file.path(output_dir, paste0(prefix, "_stitched_equity_curve.csv")),
-      stitched_metrics_csv = file.path(output_dir, paste0(prefix, "_stitched_metrics.csv")),
-      stitched_metrics_md = file.path(output_dir, paste0(prefix, "_stitched_metrics.md")),
-      stitched_strategy_chart_png = file.path(output_dir, paste0(prefix, "_stitched_strategy_chart.png")),
-      stitched_equity_curve_png = file.path(output_dir, paste0(prefix, "_stitched_equity_curve.png"))
+      fold_spec_csv = file.path(output_dir, paste0(prefix, "_folds.csv")),
+      selected_models_csv = file.path(output_dir, paste0(prefix, "_selected.csv")),
+      exit_stacks_csv = file.path(output_dir, paste0(prefix, "_exits.csv")),
+      train_parameter_performance_csv = file.path(output_dir, paste0(prefix, "_train_perf.csv")),
+      model_stability_csv = file.path(output_dir, paste0(prefix, "_stability.csv")),
+      fold_oos_summary_csv = file.path(output_dir, paste0(prefix, "_fold_oos.csv")),
+      stitched_indicators_csv = file.path(output_dir, paste0(prefix, "_indicators.csv")),
+      stitched_trades_csv = file.path(output_dir, paste0(prefix, "_trades.csv")),
+      stitched_equity_curve_csv = file.path(output_dir, paste0(prefix, "_equity.csv")),
+      stitched_metrics_csv = file.path(output_dir, paste0(prefix, "_metrics.csv")),
+      stitched_metrics_md = file.path(output_dir, paste0(prefix, "_metrics.md")),
+      stitched_strategy_chart_png = file.path(output_dir, paste0(prefix, "_strategy.png")),
+      stitched_equity_curve_png = file.path(output_dir, paste0(prefix, "_equity.png"))
     )
   )
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   if (!dir.exists(output_dir)) {
     g5_stop(paste0("Could not create multi-signal WFA output directory: ", output_dir))
   }
-  utils::write.csv(wfa$folds, paths$fold_spec_csv, row.names = FALSE)
-  utils::write.csv(wfa$selected_models, paths$selected_models_csv, row.names = FALSE)
-  utils::write.csv(wfa$exit_stacks, paths$exit_stacks_csv, row.names = FALSE)
-  utils::write.csv(wfa$train_parameter_performance, paths$train_parameter_performance_csv, row.names = FALSE)
-  utils::write.csv(wfa$model_stability, paths$model_stability_csv, row.names = FALSE)
-  utils::write.csv(wfa$fold_oos_summary, paths$fold_oos_summary_csv, row.names = FALSE)
-  utils::write.csv(wfa$stitched_indicators, paths$stitched_indicators_csv, row.names = FALSE)
-  utils::write.csv(wfa$stitched_trades, paths$stitched_trades_csv, row.names = FALSE)
-  utils::write.csv(wfa$stitched_equity_curve, paths$stitched_equity_curve_csv, row.names = FALSE)
-  utils::write.csv(wfa$stitched_metrics, paths$stitched_metrics_csv, row.names = FALSE)
+  g5_wfa_write_csv(wfa$folds, paths$fold_spec_csv)
+  g5_wfa_write_csv(wfa$selected_models, paths$selected_models_csv)
+  g5_wfa_write_csv(wfa$exit_stacks, paths$exit_stacks_csv)
+  g5_wfa_write_csv(wfa$train_parameter_performance, paths$train_parameter_performance_csv)
+  g5_wfa_write_csv(wfa$model_stability, paths$model_stability_csv)
+  g5_wfa_write_csv(wfa$fold_oos_summary, paths$fold_oos_summary_csv)
+  g5_wfa_write_csv(wfa$stitched_indicators, paths$stitched_indicators_csv)
+  g5_wfa_write_csv(wfa$stitched_trades, paths$stitched_trades_csv)
+  g5_wfa_write_csv(wfa$stitched_equity_curve, paths$stitched_equity_curve_csv)
+  g5_wfa_write_csv(wfa$stitched_metrics, paths$stitched_metrics_csv)
   report_settings <- list(
     as_of_timestamp = result$resolved_session$as_of_timestamp,
     query_start_date = min(as.Date(result$bars$session_date)),
@@ -2289,6 +2469,7 @@ g5_write_ema_cross_wfa_multi_outputs <- function(
     zret_exit_z = zret_exit_z,
     breakout_lookbacks = breakout_lookbacks,
     breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
     pullback_fast_periods = pullback_fast_periods,
     pullback_slow_periods = pullback_slow_periods,
     pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,

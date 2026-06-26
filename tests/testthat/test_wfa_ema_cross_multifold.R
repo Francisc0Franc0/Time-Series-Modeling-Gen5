@@ -63,10 +63,11 @@ test_that("multi-signal WFA artifact prefix no longer uses EMA-only naming", {
     symbol = "AMD",
     wfa_start_date = as.Date("2023-09-23"),
     wfa_end_date = as.Date("2026-06-24"),
-    fold_count = 3L
+    fold_count = 3L,
+    candidate_families = c("vol_expansion_breakout", "donchian_breakout_vol_expand")
   )
 
-  expect_true(startsWith(prefix, "multi_wfa_AMD_3f_"))
+  expect_true(startsWith(prefix, "multi_wfa_AMD_3f_2fam_"))
   expect_false(grepl("ema_wfa3", prefix, fixed = TRUE))
 })
 
@@ -225,23 +226,26 @@ test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", 
     zret_exit_z = 0.5,
     breakout_lookbacks = 3L,
     breakout_buffers = 0,
+    vol_expand_thresholds = 0.1,
     pullback_fast_periods = 2L,
     pullback_slow_periods = 5L,
     pullback_rsi_lower_thresholds = 35,
     pullback_rsi_upper_thresholds = 55,
-    candidate_families = c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend")
+    candidate_families = c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand")
   )
 
   expect_equal(
     sort(unique(grid$strategy_family)),
-    sort(c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend"))
+    sort(c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand"))
   )
   expect_true("bollinger_touch_n3_sd1" %in% grid$model_instance_id)
   expect_true("bollinger_mid_reversion_n3_sd1" %in% grid$model_instance_id)
   expect_true("rsi_mr_n3_lo30_hi60" %in% grid$model_instance_id)
   expect_true("pullback_up_f2_s5_lo35_hi55" %in% grid$model_instance_id)
+  expect_true("vol_expansion_breakout_lb3_buf0_vx0p1" %in% grid$model_instance_id)
+  expect_true("donchian_volexp_lb3_buf0_vx0p1" %in% grid$model_instance_id)
   expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
-  expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer") %in% names(grid)))
+  expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer", "vol_expand_threshold") %in% names(grid)))
 })
 
 test_that("WFA numeric ID labels preserve integer zeros", {
@@ -270,6 +274,23 @@ test_that("Gen4-inspired WFA indicators emit close-based signals", {
   )
   expect_true(any(breakout$entry_signal, na.rm = TRUE))
   expect_true(all(c("breakout_high", "breakout_mid") %in% names(breakout)))
+
+  vol_bars <- g5_test_wfa_multi_bars(close = c(10, 10.1, 10, 10.05, 10, 10.1, 10.05, 11.5, 12, 11.8, 12.2, 12.5))
+  vol_expansion <- g5_wfa_model_indicators(
+    vol_bars,
+    "AMD",
+    data.frame(strategy_family = "vol_expansion_breakout", model_instance_id = "vol_expansion_breakout_lb3_buf0_vx0", breakout_lookback = 3L, breakout_buffer = 0, vol_expand_threshold = 0, stringsAsFactors = FALSE)
+  )
+  expect_true(any(vol_expansion$entry_signal, na.rm = TRUE))
+  expect_true(all(c("breakout_high", "breakout_mid", "vol_width", "vol_expansion") %in% names(vol_expansion)))
+
+  donchian <- g5_wfa_model_indicators(
+    vol_bars,
+    "AMD",
+    data.frame(strategy_family = "donchian_breakout_vol_expand", model_instance_id = "donchian_volexp_lb3_buf0_vx0", breakout_lookback = 3L, breakout_buffer = 0, vol_expand_threshold = 0, stringsAsFactors = FALSE)
+  )
+  expect_true(any(donchian$entry_signal, na.rm = TRUE))
+  expect_equal(unique(donchian$entry_signal_rule), "close_above_donchian_high_with_prior_compression_and_vol_expansion_when_flat")
 
   rsi <- g5_wfa_model_indicators(
     g5_test_wfa_multi_bars(close = c(10, 9, 8, 7, 8, 9, 10, 11)),

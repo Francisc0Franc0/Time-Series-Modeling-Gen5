@@ -520,13 +520,35 @@ Implemented candidate families:
 - `zret_mr`: one-bar return z-score shock and normalization.
 - `breakout`: close above a rolling breakout level, exiting below a rolling midline.
 - `pullback_in_uptrend`: pullback entries while a slow EMA trend filter remains positive.
+- `vol_expansion_breakout`: breakout entry only when normalized Bollinger width expands enough.
+- `donchian_breakout_vol_expand`: Donchian-style breakout after prior Bollinger-width compression and current expansion.
 
 Notes:
 
 - SMA variants are intentionally deferred.
 - The two Bollinger families are kept separate because their native exit semantics differ.
-- More complex Gen4 ideas such as volatility-expansion breakout, Donchian/volatility expansion, state-gated variants, and explicit no-trade competitors remain future slices.
+- State-gated variants and explicit no-trade competitors remain future slices.
 - The expanded family set can be passed through `-CandidateFamilies`; the existing smaller default remains available for focused smoke tests.
+
+### C10. Volatility-expansion breakout family ports
+
+Status: done
+
+Branch: `codex/Gen5.1-vol-expansion-breakouts`
+
+Goal: Add the two raw Gen4 volatility-expansion breakout candidates as focused Gen5 WFA POC families, keeping them testable independently from the larger candidate library.
+
+Implemented candidate families:
+
+- `vol_expansion_breakout`: close above the prior rolling close-high plus buffer, with normalized Bollinger width expanding by at least the threshold; native exit below the rolling midline.
+- `donchian_breakout_vol_expand`: the same close-based breakout/expansion confirmation, but only after prior normalized Bollinger width is below its own rolling mean, approximating the Gen4 intent of post-compression expansion; native exit below the rolling midline.
+
+Notes:
+
+- Both families remain close-signal, next-open-execution strategies.
+- No new dependencies were added.
+- The focused smoke should run only these two families first before adding them to broad candidate runs.
+- The state-gated volatility-expansion variant remains deferred until a regime/state layer is opened.
 
 ### D. Later POC backlog discussion
 
