@@ -26,6 +26,36 @@ In other words, folds decide what is known and frozen; states decide which fold-
 - How many states are useful before overfitting and interpretability break down?
 - How do we show state labels on charts so the operator can audit them visually?
 
+## State-Routed Trade Ownership Policies
+
+When a regime/state layer is allowed to route strategy specs, open trades need an explicit ownership policy. Two policies are currently worth preserving:
+
+### Option A: Entry-State Ownership
+
+The state active on the entry signal date selects the complete `strategy_spec_id`. Once the trade opens, that same spec owns native exits and exit-stack management until the trade closes, even if the PCA state changes before exit.
+
+Why this is the first Gen5 POC policy:
+
+- attribution is clean: each trade belongs to one entry state and one complete spec;
+- TRAIN evaluation can select specs using trades whose entry signals occurred in that TRAIN state;
+- OOS replay is simple to audit because state changes cannot silently replace the trade manager mid-trade;
+- it is the conservative baseline before testing more flexible state-adaptive exits.
+
+Risk: it may be slower to react when the market state changes sharply after entry.
+
+### Option B: State-Adaptive Exit Management
+
+The entry state chooses the entry spec, but once a trade is open, the current state can apply its own selected exit/risk authority. This is closer to the Gen4 behavior where open trades were carried through state changes but could be closed by the strategy active in the new state.
+
+Why it remains a later POC:
+
+- it can be a valid institutional design if entry alpha and risk management are intentionally separate layers;
+- however, attribution becomes harder because a trade can be entered by one state/spec and exited by another;
+- TRAIN evaluation must prove the same handoff behavior without hindsight or post-hoc exit cherry-picking;
+- it is easier to overfit because state switching creates a more flexible trade-management surface.
+
+Gen5 should not blend these policies implicitly. Each regime-aware WFA run should report which ownership policy it used.
+
 ## Candidate POCs
 
 ### 1. Simple Volatility Regime Baseline
@@ -83,6 +113,35 @@ Implemented operator artifacts:
 - price chart with colored state bands and dashed TRAIN/OOS boundary;
 - scores CSV, model-contract CSV, diagnostics CSV, state-coverage CSV, run-length CSV, and markdown report;
 - refreshed-cache smoke command documented in the README.
+
+### 2A. PCA-Routed WFA Option A
+
+Purpose: prove the smallest state-aware WFA integration before attempting multi-fold state routing.
+
+Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement a one-fold AMD PCA-routed WFA proof. The run fits PCA and 3x3 bin breaks on the TRAIN fold, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen state/spec choices in OOS.
+
+Current policy:
+
+- ownership policy is Option A: `entry_state_owns_trade_until_exit`;
+- current OOS state can select entries only while flat;
+- once a trade opens, the entry-state spec owns native exits and exit-stack management until the trade closes;
+- sparse TRAIN states are allowed to route to `no_trade`.
+
+Implemented operator artifacts:
+
+- selected state/spec CSV;
+- TRAIN state performance CSV;
+- PCA scores and model-contract CSVs;
+- OOS trades, equity, and metrics CSVs;
+- markdown report;
+- state-banded OOS strategy chart;
+- OOS equity curve.
+
+Next unimplemented escalation steps:
+
+- one-fold PCA-routed WFA with the full candidate family set as a standard smoke;
+- five-fold AMD PCA-routed WFA with all candidate families;
+- Option B state-adaptive exit management as a separate POC, not a silent change to Option A.
 
 ### 3. PCA Plus Clustering
 
