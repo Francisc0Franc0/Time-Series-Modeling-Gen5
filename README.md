@@ -363,7 +363,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_asset_wfa_bat
   -Refresh
 ```
 
-The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix to avoid Windows path-length issues. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, contact-sheet index CSV, Markdown batch report, strategy/equity contact-sheet PNGs capped by `-MaxFacetsPerImage`, and per-symbol WFA packets/charts.
+The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix, meaning multi-asset WFA, to avoid Windows path-length issues. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, contact-sheet index CSV, Markdown batch report, strategy/equity contact-sheet PNGs capped by `-MaxFacetsPerImage`, and per-symbol WFA packets/charts.
 
 ## Generated Local Files
 

@@ -114,6 +114,46 @@ g5_draw_contact_date_axis <- function(session_dates, tick_positions, aesthetic) 
   )
 }
 
+g5_draw_contact_drawdown_shelves <- function(x, strategy_equity, aesthetic, lwd = 1.6) {
+  strategy_equity <- as.numeric(strategy_equity)
+  strategy_peak <- cummax(strategy_equity)
+  underwater <- strategy_equity < strategy_peak
+  if (!any(underwater, na.rm = TRUE)) {
+    return(invisible(NULL))
+  }
+  runs <- rle(underwater)
+  run_ends <- cumsum(runs$lengths)
+  run_starts <- run_ends - runs$lengths + 1L
+  for (i in seq_along(runs$values)) {
+    if (!isTRUE(runs$values[[i]])) {
+      next
+    }
+    idx <- seq(run_starts[[i]], run_ends[[i]])
+    peak_level <- strategy_peak[[idx[[1L]]]]
+    segment_start <- max(1L, idx[[1L]] - 1L)
+    segment_end <- idx[[length(idx)]]
+    segment_end_x <- x[[segment_end]]
+    if (segment_end < length(x) && !isTRUE(underwater[[segment_end + 1L]])) {
+      y0 <- strategy_equity[[segment_end]]
+      y1 <- strategy_equity[[segment_end + 1L]]
+      if (is.finite(y0) && is.finite(y1) && y1 != y0) {
+        crossing_fraction <- max(0, min(1, (peak_level - y0) / (y1 - y0)))
+        segment_end_x <- x[[segment_end]] + crossing_fraction * (x[[segment_end + 1L]] - x[[segment_end]])
+      }
+    }
+    graphics::segments(
+      x0 = x[[segment_start]],
+      y0 = peak_level,
+      x1 = segment_end_x,
+      y1 = peak_level,
+      col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42),
+      lwd = lwd,
+      lend = "round"
+    )
+  }
+  invisible(NULL)
+}
+
 g5_draw_wfa_strategy_contact_panel <- function(item) {
   ind <- item$stitched_indicators
   trades <- item$stitched_trades
@@ -175,13 +215,15 @@ g5_draw_wfa_equity_contact_panel <- function(item) {
   aesthetic <- g5_chart_aesthetic()
   session_dates <- as.Date(curve$session_date)
   x <- seq_len(nrow(curve))
-  y_range <- range(c(curve$strategy_equity, curve$buy_hold_equity), finite = TRUE)
+  strategy_peak <- cummax(as.numeric(curve$strategy_equity))
+  y_range <- range(c(curve$strategy_equity, strategy_peak, curve$buy_hold_equity), finite = TRUE)
   padding <- diff(y_range) * 0.08
   if (!is.finite(padding) || padding <= 0) {
     padding <- max(abs(y_range), 1) * 0.03
   }
   graphics::plot(x = c(0.5, length(x) + 0.5), y = y_range + c(-padding, padding), type = "n", xaxt = "n", xlab = "", ylab = "", main = symbol, cex.main = 1, xaxs = "i", col.axis = aesthetic$axis, col.main = aesthetic$text, fg = aesthetic$axis)
   g5_plot_fold_backgrounds(session_dates, folds)
+  g5_draw_contact_drawdown_shelves(x, curve$strategy_equity, aesthetic)
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
   graphics::abline(h = 1, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.35), lty = 3)
   graphics::lines(x, curve$buy_hold_equity, col = "#000000", lwd = 1)
@@ -202,7 +244,7 @@ g5_write_wfa_contact_sheet_pages <- function(items, batch_dir, batch_prefix, cha
     cols <- if (panel_count == 1L) 1L else 2L
     rows_n <- ceiling(panel_count / cols)
     path <- file.path(batch_dir, paste0(batch_prefix, "_", chart_type, "_contact_sheet_", sprintf("%02d", page_no), ".png"))
-    grDevices::png(filename = path, width = 1800L, height = max(760L, rows_n * 620L))
+    grDevices::png(filename = path, width = 3600L, height = max(1520L, rows_n * 1240L), res = 180L)
     old_par <- graphics::par(
       mfrow = c(rows_n, cols),
       mar = c(4.2, 3.8, 2.2, 1),
