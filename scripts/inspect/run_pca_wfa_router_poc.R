@@ -1,4 +1,4 @@
-# Gen5.1 PCA-routed one-fold WFA proof of concept.
+# Gen5.1 PCA-routed WFA proof of concept.
 
 script_path <- tryCatch(normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE), error = function(e) NULL)
 repo_root <- if (!is.null(script_path) && nzchar(script_path)) {
@@ -63,10 +63,12 @@ if (!nzchar(as_of_timestamp)) g5_stop("GEN5_PCA_WFA_AS_OF_TIMESTAMP is required.
 
 train_quarters <- as.numeric(env_or("GEN5_PCA_WFA_TRAIN_QUARTERS", "8"))
 oos_quarters <- as.numeric(env_or("GEN5_PCA_WFA_OOS_QUARTERS", "1"))
+fold_count <- as.integer(env_or("GEN5_PCA_WFA_FOLD_COUNT", "1"))
 grid_n <- as.integer(env_or("GEN5_PCA_WFA_GRID_N", "3"))
 min_train_state_rows <- as.integer(env_or("GEN5_PCA_WFA_MIN_TRAIN_STATE_ROWS", "20"))
 warmup_days <- as.integer(env_or("GEN5_PCA_WFA_WARMUP_DAYS", "340"))
 refresh <- g5_parse_bool_env(env_or("GEN5_PCA_WFA_REFRESH", "false"), default = FALSE)
+if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_PCA_WFA_FOLD_COUNT must be a positive integer.")
 
 fast_periods <- parse_int_list("GEN5_PCA_WFA_FAST_PERIODS", "8,12")
 slow_periods <- parse_int_list("GEN5_PCA_WFA_SLOW_PERIODS", "30,50")
@@ -77,10 +79,10 @@ candidate_families <- unique(c(candidate_families, "no_trade"))
 
 train_days <- g5_ema_cross_wfa_quarters_to_days(train_quarters)
 oos_days <- g5_ema_cross_wfa_quarters_to_days(oos_quarters)
-wfa_start_date <- end_date - train_days - oos_days - 2L
+wfa_start_date <- end_date - train_days - (fold_count * oos_days) - 2L
 query_start_date <- wfa_start_date - warmup_days
 
-message("Gen5 PCA-routed one-fold WFA POC")
+message("Gen5 PCA-routed WFA POC")
 message("Repository: ", repo_root)
 message("Symbol: ", symbol)
 message("WFA window: ", wfa_start_date, " to ", end_date)
@@ -88,6 +90,7 @@ message("Query window with PCA/indicator warmup: ", query_start_date, " to ", en
 message("As of: ", as_of_timestamp)
 message("Train quarters: ", train_quarters)
 message("OOS quarters: ", oos_quarters)
+message("Fold count: ", fold_count)
 message("PCA grid: ", grid_n, "x", grid_n)
 message("Candidate families: ", paste(candidate_families, collapse = ", "))
 message("Ownership policy: entry_state_owns_trade_until_exit")
@@ -107,7 +110,7 @@ result <- g5_workbench_query_adjusted_daily_bars(
 )
 g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
 
-pca_wfa <- g5_pca_wfa_run_one_fold(
+pca_wfa <- g5_pca_wfa_run_multi(
   result$bars,
   symbol = symbol,
   wfa_start_date = wfa_start_date,
@@ -119,11 +122,12 @@ pca_wfa <- g5_pca_wfa_run_one_fold(
   candidate_families = candidate_families,
   train_quarters = train_quarters,
   oos_quarters = oos_quarters,
+  fold_count = fold_count,
   grid_n = grid_n,
   min_train_state_rows = min_train_state_rows
 )
 
-output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, 1L, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families)
+output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families)
 prefix <- "pcawfa"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 written_query <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)
@@ -131,11 +135,11 @@ written <- g5_write_pca_wfa_outputs(pca_wfa, output_dir, prefix, symbol, result$
 
 metric <- pca_wfa$oos_metrics[1L, , drop = FALSE]
 message("")
-message("Fold:")
+message("Folds:")
 print(pca_wfa$folds[, c("fold_id", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "oos_session_count")], row.names = FALSE)
 message("")
 message("Selected state specs:")
-print(pca_wfa$selected_states[, c("state_id", "strategy_family", "strategy_spec_id", "train_state_row_count", "train_state_trade_count", "sharpe", "total_return", "selection_reason")], row.names = FALSE)
+print(pca_wfa$selected_states[, c("fold_id", "state_id", "strategy_family", "strategy_spec_id", "train_state_row_count", "train_state_trade_count", "sharpe", "total_return", "selection_reason")], row.names = FALSE)
 message("")
 message("OOS performance:")
 message("  Return: ", fmt_pct(metric$total_return[[1L]]))

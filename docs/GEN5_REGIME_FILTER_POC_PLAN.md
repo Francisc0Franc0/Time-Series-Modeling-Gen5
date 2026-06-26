@@ -116,32 +116,32 @@ Implemented operator artifacts:
 
 ### 2A. PCA-Routed WFA Option A
 
-Purpose: prove the smallest state-aware WFA integration before attempting multi-fold state routing.
+Purpose: prove state-aware WFA integration with conservative trade ownership before attempting state-adaptive exits or alternative regime methods.
 
-Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement a one-fold AMD PCA-routed WFA proof. The run fits PCA and 3x3 bin breaks on the TRAIN fold, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen state/spec choices in OOS.
+Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement one-or-more-fold AMD PCA-routed WFA proof runs. Each fold fits PCA and 3x3 bin breaks on TRAIN, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen fold-local state/spec choices in stitched OOS.
 
 Current policy:
 
 - ownership policy is Option A: `entry_state_owns_trade_until_exit`;
 - current OOS state can select entries only while flat;
 - once a trade opens, the entry-state spec owns native exits and exit-stack management until the trade closes;
+- a trade may carry across OOS fold boundaries, but its manager does not change;
 - sparse TRAIN states are allowed to route to `no_trade`.
 
 Implemented operator artifacts:
 
-- selected state/spec CSV;
+- selected fold/state/spec CSV;
 - TRAIN state performance CSV;
 - PCA scores and model-contract CSVs;
-- OOS trades, equity, and metrics CSVs;
+- stitched OOS trades, equity, and metrics CSVs;
 - markdown report;
-- state-banded OOS strategy chart;
-- OOS equity curve.
+- state-banded OOS strategy chart with dashed fold boundaries;
+- stitched OOS equity curve.
 
 Next unimplemented escalation steps:
 
-- one-fold PCA-routed WFA with the full candidate family set as a standard smoke;
-- five-fold AMD PCA-routed WFA with all candidate families;
 - Option B state-adaptive exit management as a separate POC, not a silent change to Option A.
+- compare PCA plus clustering, a simple volatility percentile baseline, and HMMs as separate isolated POCs before canonizing a regime method.
 
 ### 3. PCA Plus Clustering
 

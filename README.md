@@ -386,7 +386,7 @@ The packet is written under ignored `runs/research_workbench/regime_pocs/` with 
 
 ## PCA-Routed WFA POC
 
-The PCA-routed WFA runner is the first state-aware WFA integration proof. It fits PCA and 3x3 state bins on one TRAIN fold only, selects one complete `strategy_spec_id` per TRAIN state, and replays the frozen state router on one AMD OOS fold. This POC uses the conservative Option A ownership policy: the entry state owns the trade until exit, so state changes after entry do not swap the trade manager.
+The PCA-routed WFA runner is the first state-aware WFA integration proof. For each fold, it fits PCA and 3x3 state bins on TRAIN only, selects one complete `strategy_spec_id` per TRAIN state, and replays the frozen state router on stitched OOS folds. This POC uses the conservative Option A ownership policy: the entry state owns the trade until exit, so state changes after entry do not swap the trade manager.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
@@ -394,13 +394,29 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.
   -EndDate 2026-06-24 `
   -AsOfTimestamp "2026-06-24 17:30:00" `
   -CandidateFamilies "ema_cross,bollinger_touch,no_trade" `
+  -FoldCount 1 `
   -GridN 3 `
   -TrainQuarters 8 `
   -OosQuarters 1 `
   -Refresh
 ```
 
-The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. The folder name carries the run identity with a short `pcawfa_...` prefix, while files inside use short names such as `pcawfa_report.md` to avoid Windows path-length issues. Outputs include selected state specs, TRAIN state performance, PCA scores and model contract, OOS trades, OOS equity, OOS metrics, a state-banded strategy chart, and an equity curve.
+For a heavier AMD stress smoke with five folds and the current full candidate-family set:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. The folder name carries the run identity with a short `pcawfa_...` prefix, while files inside use short names such as `pcawfa_report.md` to avoid Windows path-length issues. Outputs include selected state specs by fold/state, TRAIN state performance, fold-tagged PCA scores and model contracts, stitched OOS trades, stitched OOS equity, OOS metrics, a state-banded strategy chart with dashed fold boundaries, and an equity curve.
 
 ## Generated Local Files
 
@@ -418,7 +434,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, an independent multi-asset batch report wrapper, a diagnostic-only PCA 3x3 regime-labeling POC, and a one-fold PCA-routed WFA integration POC. It does not yet implement portfolio allocation, pooled/global parameter selection, multi-fold state-routed WFA, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
+Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, an independent multi-asset batch report wrapper, a diagnostic-only PCA 3x3 regime-labeling POC, and a PCA-routed WFA Option A POC that can run one or more stitched OOS folds. It does not yet implement portfolio allocation, pooled/global parameter selection, state-adaptive exits, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 

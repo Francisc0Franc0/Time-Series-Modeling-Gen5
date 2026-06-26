@@ -454,6 +454,428 @@ g5_pca_wfa_route_metrics <- function(trades, equity_curve, symbol) {
   )
 }
 
+g5_pca_wfa_fit_fold_models <- function(
+  bars,
+  symbol,
+  folds,
+  model_grid,
+  grid_n = 3L,
+  min_train_state_rows = 20L
+) {
+  fold_models <- list()
+  selected_rows <- list()
+  perf_rows <- list()
+  coverage_rows <- list()
+  score_rows <- list()
+  contract_rows <- list()
+  for (fold_i in seq_len(nrow(folds))) {
+    fold <- folds[fold_i, , drop = FALSE]
+    features <- g5_pca_regime_feature_table(bars, symbol, end_date = fold$oos_end_date[[1L]])
+    pca <- g5_pca_regime_fit(
+      features,
+      train_start_date = fold$train_start_date[[1L]],
+      train_end_date = fold$train_end_date[[1L]],
+      oos_start_date = fold$oos_start_date[[1L]],
+      oos_end_date = fold$oos_end_date[[1L]],
+      grid_n = grid_n
+    )
+    selection <- g5_pca_wfa_select_state_specs(
+      bars,
+      symbol = symbol,
+      pca_result = pca,
+      fold = fold,
+      model_grid = model_grid,
+      exit_stacks = g5_pca_wfa_native_only_exit_stack(),
+      min_train_state_rows = min_train_state_rows
+    )
+    pca$scores$fold_id <- fold$fold_id[[1L]]
+    pca$scores$fold_no <- fold$fold_no[[1L]]
+    pca$model_contract$fold_id <- fold$fold_id[[1L]]
+    pca$model_contract$fold_no <- fold$fold_no[[1L]]
+    selection$state_coverage$fold_id <- fold$fold_id[[1L]]
+    selection$state_coverage$fold_no <- fold$fold_no[[1L]]
+
+    fold_models[[fold$fold_id[[1L]]]] <- list(fold = fold, pca = pca, selection = selection)
+    selected_rows[[length(selected_rows) + 1L]] <- selection$selected_states
+    perf_rows[[length(perf_rows) + 1L]] <- selection$train_state_performance
+    coverage_rows[[length(coverage_rows) + 1L]] <- selection$state_coverage
+    score_rows[[length(score_rows) + 1L]] <- pca$scores
+    contract_rows[[length(contract_rows) + 1L]] <- pca$model_contract
+  }
+  list(
+    fold_models = fold_models,
+    selected_states = g5_wfa_bind_rows_fill(selected_rows),
+    train_state_performance = g5_wfa_bind_rows_fill(perf_rows),
+    state_coverage = g5_wfa_bind_rows_fill(coverage_rows),
+    pca_scores = g5_wfa_bind_rows_fill(score_rows),
+    pca_model_contract = g5_wfa_bind_rows_fill(contract_rows)
+  )
+}
+
+g5_pca_wfa_simulate_stitched_oos <- function(bars, symbol, folds, fold_models, selected_states, leverage = 1) {
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  final_oos_date <- as.Date(folds$oos_end_date[[nrow(folds)]])
+  first_oos_date <- as.Date(folds$oos_start_date[[1L]])
+  first_signal_date <- as.Date(folds$train_end_date[[1L]])
+  all_bars <- g5_ema_cross_prepare_bars(bars, symbol = symbol, end_date = final_oos_date)
+  session_dates <- as.Date(all_bars$session_date)
+  date_to_index <- function(x) match(as.Date(x), session_dates)
+
+  state_lookup_by_fold <- list()
+  for (fold_id in names(fold_models)) {
+    state_lookup_by_fold[[fold_id]] <- g5_pca_wfa_state_lookup(fold_models[[fold_id]]$pca$scores)
+  }
+  state_for <- function(fold_no, date) {
+    if (is.na(fold_no) || fold_no < 1L || fold_no > nrow(folds)) return(NA_character_)
+    fold_id <- folds$fold_id[[fold_no]]
+    out <- unname(state_lookup_by_fold[[fold_id]][[as.character(as.Date(date))]])
+    if (is.null(out) || is.na(out)) NA_character_ else out
+  }
+
+  selected_keys <- paste(selected_states$fold_id, selected_states$state_id, sep = "::")
+  selected_by_key <- split(selected_states, selected_keys)
+  get_selected <- function(fold_no, state) {
+    if (is.na(fold_no) || is.na(state)) return(selected_states[0L, , drop = FALSE])
+    key <- paste(folds$fold_id[[fold_no]], state, sep = "::")
+    if (key %in% names(selected_by_key)) return(selected_by_key[[key]][1L, , drop = FALSE])
+    selected_states[0L, , drop = FALSE]
+  }
+
+  indicator_cache <- list()
+  for (i in seq_len(nrow(selected_states))) {
+    row <- selected_states[i, , drop = FALSE]
+    spec_id <- row$strategy_spec_id[[1L]]
+    if (!spec_id %in% names(indicator_cache)) {
+      indicator_cache[[spec_id]] <- g5_wfa_model_indicators(all_bars, symbol, g5_pca_wfa_model_from_metric(row))
+    }
+  }
+
+  signal_indices <- which(session_dates >= first_signal_date & session_dates <= final_oos_date)
+  trades <- list()
+  trade_no <- 0L
+  in_position <- FALSE
+  open_trade <- NULL
+  pending_entry <- NULL
+  pending_exit <- NULL
+
+  for (idx in signal_indices) {
+    current_date <- session_dates[[idx]]
+
+    if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position && current_date >= first_oos_date) {
+      execution_fold_no <- g5_ema_cross_wfa_fold_for_execution_date(current_date, folds)
+      execution_state <- state_for(execution_fold_no, current_date)
+      if (!is.na(execution_fold_no)) {
+        trade_no <- trade_no + 1L
+        open_trade <- c(
+          pending_entry,
+          list(
+            trade_no = trade_no,
+            entry_execution_idx = idx,
+            entry_execution_date = current_date,
+            entry_execution_price = as.numeric(all_bars$open[[idx]]),
+            entry_execution_fold_id = folds$fold_id[[execution_fold_no]],
+            entry_execution_state_id = execution_state
+          )
+        )
+        in_position <- TRUE
+      }
+      pending_entry <- NULL
+    }
+
+    if (!is.null(pending_exit) && identical(as.Date(pending_exit$execution_date), current_date) && in_position) {
+      execution_fold_no <- g5_ema_cross_wfa_fold_for_execution_date(current_date, folds)
+      execution_state <- state_for(execution_fold_no, current_date)
+      if (!is.na(execution_fold_no)) {
+        entry_price <- open_trade$entry_execution_price
+        exit_price <- as.numeric(all_bars$open[[idx]])
+        underlying_realized_return <- (exit_price / entry_price) - 1
+        realized_return <- leverage * underlying_realized_return
+        carried <- open_trade$entry_execution_fold_id != folds$fold_id[[execution_fold_no]]
+        trades[[length(trades) + 1L]] <- data.frame(
+          schema_version = g5_pca_wfa_schema_version(),
+          trade_id = sprintf("%s_pca_wfa_%03d", symbol, open_trade$trade_no),
+          symbol = symbol,
+          fold_id = open_trade$entry_signal_fold_id,
+          fold_no = open_trade$entry_signal_fold_no,
+          ownership_policy = "entry_state_owns_trade_until_exit",
+          entry_state_id = open_trade$entry_state_id,
+          entry_execution_state_id = open_trade$entry_execution_state_id,
+          exit_signal_state_id = pending_exit$exit_signal_state_id,
+          exit_execution_state_id = execution_state,
+          entry_signal_fold_id = open_trade$entry_signal_fold_id,
+          entry_execution_fold_id = open_trade$entry_execution_fold_id,
+          exit_signal_fold_id = pending_exit$exit_signal_fold_id,
+          exit_execution_fold_id = folds$fold_id[[execution_fold_no]],
+          carried_across_fold_boundary = carried,
+          strategy_family = open_trade$strategy_family,
+          model_instance_id = open_trade$model_instance_id,
+          exit_stack_id = open_trade$exit_stack_id,
+          strategy_spec_id = open_trade$strategy_spec_id,
+          primary_exit_reason = pending_exit$primary_exit_reason,
+          triggered_exit_rules = pending_exit$triggered_exit_rules,
+          exit_attribution = pending_exit$exit_attribution,
+          fast_period = open_trade$fast_period,
+          slow_period = open_trade$slow_period,
+          lookback_period = open_trade$lookback_period,
+          sd_multiplier = open_trade$sd_multiplier,
+          trade_status = "closed",
+          entry_signal_date = open_trade$entry_signal_date,
+          entry_signal_index = open_trade$entry_signal_idx,
+          entry_signal_price = open_trade$entry_signal_price,
+          entry_execution_date = open_trade$entry_execution_date,
+          entry_execution_index = open_trade$entry_execution_idx,
+          entry_execution_price = entry_price,
+          exit_signal_date = pending_exit$exit_signal_date,
+          exit_signal_index = pending_exit$exit_signal_idx,
+          exit_signal_price = pending_exit$exit_signal_price,
+          exit_execution_date = current_date,
+          exit_execution_index = idx,
+          exit_execution_price = exit_price,
+          latest_mark_date = final_oos_date,
+          latest_mark_price = as.numeric(all_bars$close[[date_to_index(final_oos_date)]]),
+          trace_end_date = current_date,
+          trace_end_index = idx,
+          trace_end_price = exit_price,
+          underlying_realized_return = underlying_realized_return,
+          underlying_unrealized_return = NA_real_,
+          realized_return = realized_return,
+          unrealized_return = NA_real_,
+          trace_return = realized_return,
+          trade_outcome = if (realized_return > 0) "win" else if (realized_return < 0) "loss" else "flat",
+          holding_sessions_completed = idx - open_trade$entry_execution_idx + 1L,
+          signal_rule = open_trade$entry_signal_rule,
+          entry_execution_rule = "next_session_open_after_entry_signal",
+          exit_signal_rule = pending_exit$exit_signal_rule,
+          exit_execution_rule = "next_session_open_after_exit_signal",
+          leverage = leverage,
+          capital_fraction = 1,
+          stringsAsFactors = FALSE
+        )
+        in_position <- FALSE
+        open_trade <- NULL
+      }
+      pending_exit <- NULL
+    }
+
+    signal_fold_no <- g5_ema_cross_wfa_fold_for_signal_date(current_date, folds)
+    if (is.na(signal_fold_no)) {
+      next
+    }
+    signal_fold_id <- folds$fold_id[[signal_fold_no]]
+    current_state <- state_for(signal_fold_no, current_date)
+    next_idx <- idx + 1L
+    if (next_idx > nrow(all_bars) || session_dates[[next_idx]] > final_oos_date) {
+      next
+    }
+    next_execution_fold_no <- g5_ema_cross_wfa_fold_for_execution_date(session_dates[[next_idx]], folds)
+    if (is.na(next_execution_fold_no)) {
+      next
+    }
+
+    if (!in_position && is.null(pending_entry)) {
+      selected <- get_selected(signal_fold_no, current_state)
+      if (nrow(selected) == 0L || identical(as.character(selected$strategy_family[[1L]]), "no_trade")) {
+        next
+      }
+      ind <- indicator_cache[[selected$strategy_spec_id[[1L]]]]
+      if (isTRUE(ind$entry_signal[[idx]])) {
+        pending_entry <- list(
+          entry_state_id = current_state,
+          entry_signal_fold_id = signal_fold_id,
+          entry_signal_fold_no = signal_fold_no,
+          strategy_family = selected$strategy_family[[1L]],
+          model_instance_id = selected$model_instance_id[[1L]],
+          exit_stack_id = selected$exit_stack_id[[1L]],
+          strategy_spec_id = selected$strategy_spec_id[[1L]],
+          fast_period = g5_wfa_model_value(selected, "fast_period", NA_integer_),
+          slow_period = g5_wfa_model_value(selected, "slow_period", NA_integer_),
+          lookback_period = g5_wfa_model_value(selected, "lookback_period", NA_integer_),
+          sd_multiplier = g5_wfa_model_value(selected, "sd_multiplier", NA_real_),
+          entry_signal_rule = ind$entry_signal_rule[[idx]],
+          entry_signal_date = current_date,
+          entry_signal_idx = idx,
+          entry_signal_price = as.numeric(all_bars$close[[idx]]),
+          execution_date = session_dates[[next_idx]]
+        )
+      }
+    }
+
+    if (in_position && is.null(pending_exit)) {
+      owner <- selected_states[
+        selected_states$fold_id == open_trade$entry_signal_fold_id &
+          selected_states$state_id == open_trade$entry_state_id &
+          selected_states$strategy_spec_id == open_trade$strategy_spec_id,
+        ,
+        drop = FALSE
+      ]
+      if (nrow(owner) == 0L) {
+        owner <- selected_states[selected_states$strategy_spec_id == open_trade$strategy_spec_id, , drop = FALSE][1L, , drop = FALSE]
+      }
+      ind <- indicator_cache[[open_trade$strategy_spec_id]]
+      exit_event <- g5_wfa_exit_event(ind, idx, open_trade, g5_pca_wfa_exit_stack_from_metric(owner))
+      if (!is.null(exit_event)) {
+        pending_exit <- c(
+          exit_event,
+          list(
+            exit_signal_fold_id = signal_fold_id,
+            exit_signal_state_id = current_state,
+            exit_signal_date = current_date,
+            exit_signal_idx = idx,
+            exit_signal_price = as.numeric(all_bars$close[[idx]]),
+            execution_date = session_dates[[next_idx]]
+          )
+        )
+      }
+    }
+  }
+
+  if (in_position && !is.null(open_trade)) {
+    latest_idx <- date_to_index(final_oos_date)
+    latest_close <- as.numeric(all_bars$close[[latest_idx]])
+    underlying_unrealized_return <- (latest_close / open_trade$entry_execution_price) - 1
+    unrealized_return <- leverage * underlying_unrealized_return
+    final_fold_no <- g5_ema_cross_wfa_fold_for_execution_date(final_oos_date, folds)
+    trades[[length(trades) + 1L]] <- data.frame(
+      schema_version = g5_pca_wfa_schema_version(),
+      trade_id = sprintf("%s_pca_wfa_%03d", symbol, open_trade$trade_no),
+      symbol = symbol,
+      fold_id = open_trade$entry_signal_fold_id,
+      fold_no = open_trade$entry_signal_fold_no,
+      ownership_policy = "entry_state_owns_trade_until_exit",
+      entry_state_id = open_trade$entry_state_id,
+      entry_execution_state_id = open_trade$entry_execution_state_id,
+      exit_signal_state_id = NA_character_,
+      exit_execution_state_id = NA_character_,
+      entry_signal_fold_id = open_trade$entry_signal_fold_id,
+      entry_execution_fold_id = open_trade$entry_execution_fold_id,
+      exit_signal_fold_id = NA_character_,
+      exit_execution_fold_id = NA_character_,
+      carried_across_fold_boundary = open_trade$entry_execution_fold_id != folds$fold_id[[final_fold_no]],
+      strategy_family = open_trade$strategy_family,
+      model_instance_id = open_trade$model_instance_id,
+      exit_stack_id = open_trade$exit_stack_id,
+      strategy_spec_id = open_trade$strategy_spec_id,
+      primary_exit_reason = NA_character_,
+      triggered_exit_rules = NA_character_,
+      exit_attribution = NA_character_,
+      fast_period = open_trade$fast_period,
+      slow_period = open_trade$slow_period,
+      lookback_period = open_trade$lookback_period,
+      sd_multiplier = open_trade$sd_multiplier,
+      trade_status = "open",
+      entry_signal_date = open_trade$entry_signal_date,
+      entry_signal_index = open_trade$entry_signal_idx,
+      entry_signal_price = open_trade$entry_signal_price,
+      entry_execution_date = open_trade$entry_execution_date,
+      entry_execution_index = open_trade$entry_execution_idx,
+      entry_execution_price = open_trade$entry_execution_price,
+      exit_signal_date = as.Date(NA),
+      exit_signal_index = NA_integer_,
+      exit_signal_price = NA_real_,
+      exit_execution_date = as.Date(NA),
+      exit_execution_index = NA_integer_,
+      exit_execution_price = NA_real_,
+      latest_mark_date = final_oos_date,
+      latest_mark_price = latest_close,
+      trace_end_date = final_oos_date,
+      trace_end_index = latest_idx,
+      trace_end_price = latest_close,
+      underlying_realized_return = NA_real_,
+      underlying_unrealized_return = underlying_unrealized_return,
+      realized_return = NA_real_,
+      unrealized_return = unrealized_return,
+      trace_return = unrealized_return,
+      trade_outcome = if (unrealized_return > 0) "win" else if (unrealized_return < 0) "loss" else "flat",
+      holding_sessions_completed = latest_idx - open_trade$entry_execution_idx + 1L,
+      signal_rule = open_trade$entry_signal_rule,
+      entry_execution_rule = "next_session_open_after_entry_signal",
+      exit_signal_rule = "entry_state_owned_spec_until_exit",
+      exit_execution_rule = "next_session_open_after_exit_signal",
+      leverage = leverage,
+      capital_fraction = 1,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  trades_out <- if (length(trades) == 0L) data.frame() else do.call(rbind, trades)
+  if (nrow(trades_out) > 0L) rownames(trades_out) <- NULL
+  equity_curve <- g5_ema_cross_equity_curve(
+    trades_out,
+    all_bars,
+    symbol = symbol,
+    trading_start_date = first_oos_date,
+    trading_end_date = final_oos_date,
+    leverage = leverage
+  )
+  list(trades = trades_out, equity_curve = equity_curve)
+}
+
+g5_pca_wfa_run_multi <- function(
+  bars,
+  symbol,
+  wfa_start_date,
+  wfa_end_date,
+  fast_periods = c(8L, 12L),
+  slow_periods = c(30L, 50L),
+  bb_lookback_periods = c(10L, 20L),
+  bb_sd_multipliers = c(1.5, 2),
+  candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+  train_quarters = 8,
+  oos_quarters = 1,
+  fold_count = 1L,
+  grid_n = 3L,
+  min_train_state_rows = 20L
+) {
+  candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
+  folds <- g5_ema_cross_wfa_resolve_folds(
+    bars,
+    symbol = symbol,
+    wfa_start_date = wfa_start_date,
+    wfa_end_date = wfa_end_date,
+    train_quarters = train_quarters,
+    oos_quarters = oos_quarters,
+    fold_count = fold_count
+  )
+  model_grid <- g5_wfa_candidate_model_grid(
+    fast_periods = fast_periods,
+    slow_periods = slow_periods,
+    bb_lookback_periods = bb_lookback_periods,
+    bb_sd_multipliers = bb_sd_multipliers,
+    candidate_families = candidate_families
+  )
+  fitted <- g5_pca_wfa_fit_fold_models(
+    bars,
+    symbol = symbol,
+    folds = folds,
+    model_grid = model_grid,
+    grid_n = grid_n,
+    min_train_state_rows = min_train_state_rows
+  )
+  oos <- g5_pca_wfa_simulate_stitched_oos(bars, symbol, folds, fitted$fold_models, fitted$selected_states)
+  metrics <- g5_pca_wfa_route_metrics(oos$trades, oos$equity_curve, symbol)
+  list(
+    folds = folds,
+    pca = fitted$fold_models[[folds$fold_id[[1L]]]]$pca,
+    fold_models = fitted$fold_models,
+    pca_scores = fitted$pca_scores,
+    pca_model_contract = fitted$pca_model_contract,
+    model_grid = model_grid,
+    selected_states = fitted$selected_states,
+    train_state_performance = fitted$train_state_performance,
+    state_coverage = fitted$state_coverage,
+    oos_trades = oos$trades,
+    oos_equity_curve = oos$equity_curve,
+    oos_metrics = metrics,
+    settings = list(
+      ownership_policy = "entry_state_owns_trade_until_exit",
+      candidate_families = candidate_families,
+      fold_count = nrow(folds),
+      grid_n = grid_n,
+      min_train_state_rows = min_train_state_rows
+    )
+  )
+}
+
 g5_pca_wfa_run_one_fold <- function(
   bars,
   symbol,
@@ -469,72 +891,39 @@ g5_pca_wfa_run_one_fold <- function(
   grid_n = 3L,
   min_train_state_rows = 20L
 ) {
-  candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
-  folds <- g5_ema_cross_wfa_resolve_folds(
-    bars,
+  g5_pca_wfa_run_multi(
+    bars = bars,
     symbol = symbol,
     wfa_start_date = wfa_start_date,
     wfa_end_date = wfa_end_date,
-    train_quarters = train_quarters,
-    oos_quarters = oos_quarters,
-    fold_count = 1L
-  )
-  fold <- folds[1L, , drop = FALSE]
-  features <- g5_pca_regime_feature_table(bars, symbol, end_date = fold$oos_end_date[[1L]])
-  pca <- g5_pca_regime_fit(
-    features,
-    train_start_date = fold$train_start_date[[1L]],
-    train_end_date = fold$train_end_date[[1L]],
-    oos_start_date = fold$oos_start_date[[1L]],
-    oos_end_date = fold$oos_end_date[[1L]],
-    grid_n = grid_n
-  )
-  model_grid <- g5_wfa_candidate_model_grid(
     fast_periods = fast_periods,
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
-    candidate_families = candidate_families
-  )
-  selection <- g5_pca_wfa_select_state_specs(
-    bars,
-    symbol = symbol,
-    pca_result = pca,
-    fold = fold,
-    model_grid = model_grid,
-    exit_stacks = g5_pca_wfa_native_only_exit_stack(),
+    candidate_families = candidate_families,
+    train_quarters = train_quarters,
+    oos_quarters = oos_quarters,
+    fold_count = 1L,
+    grid_n = grid_n,
     min_train_state_rows = min_train_state_rows
-  )
-  oos <- g5_pca_wfa_simulate_oos(bars, symbol, fold, pca, selection$selected_states)
-  metrics <- g5_pca_wfa_route_metrics(oos$trades, oos$equity_curve, symbol)
-  list(
-    folds = folds,
-    pca = pca,
-    model_grid = model_grid,
-    selected_states = selection$selected_states,
-    train_state_performance = selection$train_state_performance,
-    state_coverage = selection$state_coverage,
-    oos_trades = oos$trades,
-    oos_equity_curve = oos$equity_curve,
-    oos_metrics = metrics,
-    settings = list(
-      ownership_policy = "entry_state_owns_trade_until_exit",
-      candidate_families = candidate_families,
-      grid_n = grid_n,
-      min_train_state_rows = min_train_state_rows
-    )
   )
 }
 
 g5_pca_wfa_write_state_price_chart_png <- function(pca_wfa, symbol, path, width = 1500L, height = 850L) {
-  scores <- pca_wfa$pca$scores
-  fold <- pca_wfa$folds[1L, , drop = FALSE]
+  scores <- if ("pca_scores" %in% names(pca_wfa)) pca_wfa$pca_scores else pca_wfa$pca$scores
+  folds <- pca_wfa$folds
   trades <- pca_wfa$oos_trades
-  scores <- scores[order(as.Date(scores$session_date)), , drop = FALSE]
+  scores <- scores[order(as.Date(scores$session_date), scores$fold_no), , drop = FALSE]
   aesthetic <- g5_chart_aesthetic()
   pal <- g5_pca_regime_state_palette(sort(unique(stats::na.omit(scores$state_id))))
-  keep <- as.Date(scores$session_date) >= as.Date(fold$train_end_date[[1L]]) & as.Date(scores$session_date) <= as.Date(fold$oos_end_date[[1L]])
+  first_signal_date <- as.Date(folds$train_end_date[[1L]])
+  final_oos_date <- as.Date(folds$oos_end_date[[nrow(folds)]])
+  keep <- !is.na(scores$split) & scores$split == "OOS" & as.Date(scores$session_date) <= final_oos_date
+  first_context <- as.Date(scores$session_date) == first_signal_date & scores$fold_id == folds$fold_id[[1L]]
+  keep <- keep | ifelse(is.na(first_context), FALSE, first_context)
   plot_rows <- scores[keep, , drop = FALSE]
+  plot_rows <- plot_rows[!duplicated(paste(plot_rows$session_date, plot_rows$fold_id)), , drop = FALSE]
+  plot_rows <- plot_rows[order(as.Date(plot_rows$session_date), plot_rows$fold_no), , drop = FALSE]
   x <- seq_len(nrow(plot_rows))
   y <- range(c(plot_rows$low, plot_rows$high), finite = TRUE)
   padding <- diff(y) * 0.06
@@ -546,18 +935,23 @@ g5_pca_wfa_write_state_price_chart_png <- function(pca_wfa, symbol, path, width 
   graphics::plot(c(0.5, length(x) + 0.5), y_limits, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted daily price", main = paste(g5_standardize_symbol(symbol)[[1L]], "PCA-Routed WFA OOS"), xaxs = "i")
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
-  runs <- g5_pca_regime_state_runs_for_plot(plot_rows)
-  if (nrow(runs)) {
-    for (i in seq_len(nrow(runs))) {
-      state <- runs$state_id[[i]]
+  if (nrow(plot_rows)) {
+    run_key <- paste(plot_rows$fold_id, plot_rows$state_id, sep = "::")
+    runs <- rle(run_key)
+    run_ends <- cumsum(runs$lengths)
+    run_starts <- run_ends - runs$lengths + 1L
+    for (i in seq_along(runs$values)) {
+      state <- plot_rows$state_id[[run_starts[[i]]]]
       if (!is.na(state) && state %in% names(pal)) {
-        graphics::rect(runs$xleft[[i]], usr[[3L]], runs$xright[[i]], usr[[4L]], col = grDevices::adjustcolor(pal[[state]], alpha.f = 0.16), border = NA)
+        graphics::rect(run_starts[[i]] - 0.5, usr[[3L]], run_ends[[i]] + 0.5, usr[[4L]], col = grDevices::adjustcolor(pal[[state]], alpha.f = 0.16), border = NA)
       }
     }
   }
-  boundary_idx <- match(as.Date(fold$oos_start_date[[1L]]), as.Date(plot_rows$session_date))
-  if (!is.na(boundary_idx)) {
-    graphics::abline(v = boundary_idx - 0.5, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.8), lty = 2, lwd = 1.3)
+  for (i in seq_len(nrow(folds))) {
+    boundary_idx <- match(as.Date(folds$oos_start_date[[i]]), as.Date(plot_rows$session_date))
+    if (!is.na(boundary_idx)) {
+      graphics::abline(v = boundary_idx - 0.5, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.8), lty = 2, lwd = 1.3)
+    }
   }
   body_cols <- ifelse(plot_rows$close > plot_rows$open, aesthetic$up_candle, ifelse(plot_rows$close < plot_rows$open, aesthetic$down_candle, aesthetic$flat_candle))
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
@@ -578,13 +972,13 @@ g5_pca_wfa_write_state_price_chart_png <- function(pca_wfa, symbol, path, width 
   tick_positions <- unique(round(seq(1L, length(x), length.out = min(8L, length(x)))))
   g5_axis_date_labels_45(tick_positions, as.character(as.Date(plot_rows$session_date)[tick_positions]), line_offset = 0.066, color = aesthetic$axis)
   graphics::mtext("Session date", side = 1, line = 7.7, cex = 1.05, col = aesthetic$text)
-  graphics::mtext("Colored bands: PCA states | dashed line: TRAIN/OOS boundary | policy: entry-state owns trade until exit", side = 3, line = 0.3, cex = 0.75, col = aesthetic$text)
+  graphics::mtext("Colored bands: fold-local PCA states | dashed lines: OOS fold starts | policy: entry-state owns trade until exit", side = 3, line = 0.3, cex = 0.75, col = aesthetic$text)
   graphics::par(xpd = NA)
   graphics::legend("right", inset = c(-0.19, 0), legend = names(pal), fill = grDevices::adjustcolor(pal, alpha.f = 0.55), border = NA, bty = "n", cex = 0.75, text.col = aesthetic$text, title = "state")
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
-g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, width = 1500L, height = 760L) {
+g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL, width = 1500L, height = 760L) {
   aesthetic <- g5_chart_aesthetic()
   x <- seq_len(nrow(equity_curve))
   y <- range(c(equity_curve$strategy_equity, equity_curve$buy_hold_equity), finite = TRUE)
@@ -598,13 +992,45 @@ g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, width = 1500
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
+  if (is.data.frame(folds) && nrow(folds)) {
+    for (i in seq_len(nrow(folds))) {
+      boundary_idx <- match(as.Date(folds$oos_start_date[[i]]), as.Date(equity_curve$session_date))
+      if (!is.na(boundary_idx)) {
+        graphics::abline(v = boundary_idx - 0.5, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.65), lty = 2, lwd = 1.1)
+      }
+    }
+  }
+  strategy_peak <- cummax(as.numeric(equity_curve$strategy_equity))
+  underwater <- equity_curve$strategy_equity < strategy_peak
+  if (any(underwater, na.rm = TRUE)) {
+    runs <- rle(underwater)
+    run_ends <- cumsum(runs$lengths)
+    run_starts <- run_ends - runs$lengths + 1L
+    for (i in seq_along(runs$values)) {
+      if (!isTRUE(runs$values[[i]])) next
+      idx <- seq(run_starts[[i]], run_ends[[i]])
+      peak_level <- strategy_peak[[idx[[1L]]]]
+      segment_start <- max(1L, idx[[1L]] - 1L)
+      segment_end <- idx[[length(idx)]]
+      segment_end_x <- x[[segment_end]]
+      if (segment_end < length(x) && !isTRUE(underwater[[segment_end + 1L]])) {
+        y0 <- as.numeric(equity_curve$strategy_equity[[segment_end]])
+        y1 <- as.numeric(equity_curve$strategy_equity[[segment_end + 1L]])
+        if (is.finite(y0) && is.finite(y1) && y1 != y0) {
+          crossing_fraction <- max(0, min(1, (peak_level - y0) / (y1 - y0)))
+          segment_end_x <- x[[segment_end]] + crossing_fraction * (x[[segment_end + 1L]] - x[[segment_end]])
+        }
+      }
+      graphics::segments(x[[segment_start]], peak_level, segment_end_x, peak_level, col = grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42), lwd = 2.3, lend = "round")
+    }
+  }
   graphics::abline(h = 1, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 3)
   graphics::lines(x, equity_curve$strategy_equity, col = aesthetic$trade_win_line, lwd = 2.1)
   graphics::lines(x, equity_curve$buy_hold_equity, col = "#000000", lwd = 1.2)
   tick_positions <- unique(round(seq(1L, length(x), length.out = min(8L, length(x)))))
   g5_axis_date_labels_45(tick_positions, as.character(as.Date(equity_curve$session_date)[tick_positions]), line_offset = 0.08, color = aesthetic$axis)
   graphics::mtext("Session date", side = 1, line = 7.4, cex = 1.05, col = aesthetic$text)
-  graphics::legend("topleft", legend = c("PCA-routed strategy", "buy and hold"), col = c(aesthetic$trade_win_line, "#000000"), lty = 1, lwd = c(2.1, 1.2), bty = "n", text.col = aesthetic$text)
+  graphics::legend("topleft", legend = c("PCA-routed strategy", "buy and hold", "drawdown shelf", "fold start"), col = c(aesthetic$trade_win_line, "#000000", grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42), grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.65)), lty = c(1, 1, 1, 2), lwd = c(2.1, 1.2, 2.3, 1.1), bty = "n", text.col = aesthetic$text)
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
@@ -613,27 +1039,35 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   selected <- pca_wfa$selected_states
   selected_lines <- apply(
-    selected[, c("state_id", "strategy_family", "strategy_spec_id", "train_state_row_count", "train_state_trade_count", "sharpe", "total_return", "selection_reason"), drop = FALSE],
+    selected[, c("fold_id", "state_id", "strategy_family", "strategy_spec_id", "train_state_row_count", "train_state_trade_count", "sharpe", "total_return", "selection_reason"), drop = FALSE],
+    1,
+    function(x) paste0("| ", paste(x, collapse = " | "), " |")
+  )
+  fold_lines <- apply(
+    pca_wfa$folds[, c("fold_id", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "train_session_count", "oos_session_count"), drop = FALSE],
     1,
     function(x) paste0("| ", paste(x, collapse = " | "), " |")
   )
   lines <- c(
     paste0("# PCA-Routed WFA POC: ", g5_standardize_symbol(symbol)[[1L]]),
     "",
-    "Diagnostic POC only: PCA states route one-fold OOS strategy specs, but this is not production WFA evidence or live advice.",
+    "Diagnostic POC only: PCA states route OOS strategy specs, but this is not production WFA evidence or live advice.",
     "",
     "## Policy",
     "",
-    "- Regime method: PCA 3x3 quantile grid fit on TRAIN only.",
+    paste0("- Regime method: PCA ", pca_wfa$settings$grid_n, "x", pca_wfa$settings$grid_n, " quantile grid fit on each TRAIN fold only."),
+    paste0("- Fold count: `", nrow(pca_wfa$folds), "`."),
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
     "- OOS behavior: current state can select entries only while flat; open trades remain managed by the entry-state spec.",
     "- Sparse TRAIN states route to `no_trade`.",
+    paste0("- Candidate families: `", paste(pca_wfa$settings$candidate_families, collapse = ", "), "`"),
     paste0("- As-of timestamp: `", as.character(as_of_timestamp), "`"),
     "",
-    "## Fold",
+    "## Folds",
     "",
-    paste0("- TRAIN: `", pca_wfa$folds$train_start_date[[1L]], " to ", pca_wfa$folds$train_end_date[[1L]], "`"),
-    paste0("- OOS: `", pca_wfa$folds$oos_start_date[[1L]], " to ", pca_wfa$folds$oos_end_date[[1L]], "`"),
+    "| fold_id | train_start | train_end | oos_start | oos_end | train_sessions | oos_sessions |",
+    "|---|---|---|---|---|---:|---:|",
+    fold_lines,
     "",
     "## OOS Metrics",
     "",
@@ -643,10 +1077,10 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
     paste0("- Trades: `", metric$trade_count[[1L]], "`"),
     paste0("- Buy-and-hold return: `", pct(metric$buy_hold_total_return[[1L]]), "`"),
     "",
-    "## Selected Spec By PCA State",
+    "## Selected Spec By Fold And PCA State",
     "",
-    "| state_id | family | strategy_spec_id | train_state_rows | train_state_trades | train_sharpe | train_return | selection_reason |",
-    "|---|---|---|---:|---:|---:|---:|---|",
+    "| fold_id | state_id | family | strategy_spec_id | train_state_rows | train_state_trades | train_sharpe | train_return | selection_reason |",
+    "|---|---|---|---|---:|---:|---:|---:|---|",
     selected_lines,
     "",
     "## Artifacts",
@@ -683,13 +1117,15 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
   g5_wfa_write_csv(pca_wfa$selected_states, paths$selected_states_csv)
   g5_wfa_write_csv(pca_wfa$train_state_performance, paths$train_state_performance_csv)
   g5_wfa_write_csv(pca_wfa$state_coverage, paths$state_coverage_csv)
-  g5_wfa_write_csv(pca_wfa$pca$scores, paths$pca_scores_csv)
-  g5_wfa_write_csv(pca_wfa$pca$model_contract, paths$pca_model_contract_csv)
+  pca_scores <- if ("pca_scores" %in% names(pca_wfa)) pca_wfa$pca_scores else pca_wfa$pca$scores
+  pca_model_contract <- if ("pca_model_contract" %in% names(pca_wfa)) pca_wfa$pca_model_contract else pca_wfa$pca$model_contract
+  g5_wfa_write_csv(pca_scores, paths$pca_scores_csv)
+  g5_wfa_write_csv(pca_model_contract, paths$pca_model_contract_csv)
   g5_wfa_write_csv(pca_wfa$oos_trades, paths$oos_trades_csv)
   g5_wfa_write_csv(pca_wfa$oos_equity_curve, paths$oos_equity_csv)
   g5_wfa_write_csv(pca_wfa$oos_metrics, paths$oos_metrics_csv)
   paths$state_strategy_chart_png <- g5_pca_wfa_write_state_price_chart_png(pca_wfa, symbol, paths$state_strategy_chart_png)
-  paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol)
+  paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol, pca_wfa$folds)
   paths$report_md <- g5_pca_wfa_markdown_report(pca_wfa, paths, symbol, as_of_timestamp, paths$report_md)
   list(paths = paths, result = pca_wfa)
 }

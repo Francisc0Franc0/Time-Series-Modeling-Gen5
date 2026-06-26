@@ -11,6 +11,8 @@ param(
 
   [double]$OosQuarters = 1,
 
+  [int]$FoldCount = 1,
+
   [int]$GridN = 3,
 
   [int]$MinTrainStateRows = 20,
@@ -40,6 +42,9 @@ if ($TrainQuarters -le 0) {
 if ($OosQuarters -le 0) {
   throw "-OosQuarters must be positive."
 }
+if ($FoldCount -lt 1) {
+  throw "-FoldCount must be a positive integer."
+}
 if ($GridN -lt 2 -or $GridN -gt 5) {
   throw "-GridN must be between 2 and 5."
 }
@@ -67,6 +72,7 @@ $env:GEN5_PCA_WFA_END_DATE = $EndDate
 $env:GEN5_PCA_WFA_AS_OF_TIMESTAMP = $AsOfTimestamp
 $env:GEN5_PCA_WFA_TRAIN_QUARTERS = [string]$TrainQuarters
 $env:GEN5_PCA_WFA_OOS_QUARTERS = [string]$OosQuarters
+$env:GEN5_PCA_WFA_FOLD_COUNT = [string]$FoldCount
 $env:GEN5_PCA_WFA_GRID_N = [string]$GridN
 $env:GEN5_PCA_WFA_MIN_TRAIN_STATE_ROWS = [string]$MinTrainStateRows
 $env:GEN5_PCA_WFA_CANDIDATE_FAMILIES = $CandidateFamilies
