@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: planning memory
+Status: PCA quantile-grid diagnostic POC implemented; other regime POCs remain planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -52,6 +52,8 @@ Why it matters: if a simple frozen percentile rule works about as well as a comp
 
 Purpose: recreate the familiar Gen4 idea in cleaner Gen5 form.
 
+Current Gen5.1 POC: `R/regime_pca_poc.R` and `scripts/inspect/run_pca_regime_poc.ps1` implement a diagnostic-only 3x3 PCA quantile grid. The POC fits PCA center/scale/loadings and PC1/PC2 bin breaks on TRAIN rows only, scores TRAIN and OOS rows with the frozen TRAIN model, extends outer OOS scoring bins to `-Inf/+Inf`, and writes a model contract so the state assignment can be audited. It does not route strategy selection, exits, allocation, leverage, or live advice.
+
 Gen4-style approach:
 
 - compute PCA on a curated feature panel;
@@ -74,6 +76,13 @@ Gen5 improvement ideas:
 - report per-state sample counts, OOS coverage, return/vol/drawdown, and selected strategy specs;
 - plot PC1/PC2 scatter with state colors and OOS points marked separately;
 - show state backgrounds on price/equity charts.
+
+Implemented operator artifacts:
+
+- PCA scatter plot with TRAIN/OOS marker differences, state colors, and TRAIN-derived grid lines;
+- price chart with colored state bands and dashed TRAIN/OOS boundary;
+- scores CSV, model-contract CSV, diagnostics CSV, state-coverage CSV, run-length CSV, and markdown report;
+- refreshed-cache smoke command documented in the README.
 
 ### 3. PCA Plus Clustering
 
@@ -149,4 +158,3 @@ Do not wire a regime method into WFA selection until:
 - sparse states are detected and reported;
 - state labels are stable enough across folds to interpret;
 - the operator accepts the state semantics as useful enough for the next POC.
-

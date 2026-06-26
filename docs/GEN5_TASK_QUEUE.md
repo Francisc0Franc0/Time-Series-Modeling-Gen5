@@ -578,12 +578,14 @@ Visible output:
 
 ### E. Regime/state filter POC roadmap
 
-Status: planning
+Status: PCA quantile-grid diagnostic POC implemented; remaining regime methods are planned.
 
 Planning memory: `docs/GEN5_REGIME_FILTER_POC_PLAN.md`
 
-Current leaning:
+Current state:
 
-- Start with a PCA quantile-grid demonstrator because it is the closest Gen4 bridge and the operator has the most practical experience with it.
+- `R/regime_pca_poc.R` and `scripts/inspect/run_pca_regime_poc.ps1` implement a diagnostic-only PCA 3x3 state-labeling POC.
+- The POC writes state scores, model contract, diagnostics, state coverage, run lengths, markdown report, PC1/PC2 scatter, and price/state chart under ignored `runs/research_workbench/regime_pocs/`.
+- It does not yet route WFA strategy selection, exits, allocation, leverage, or live advice.
 - Then compare PCA plus clustering, a simple volatility percentile baseline, and HMMs as separate isolated POCs.
 - Do not let any regime method route WFA strategy selection until its state labels, coverage, and leakage controls are auditable.

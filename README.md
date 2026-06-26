@@ -367,6 +367,23 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_asset_wfa_bat
 
 The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix, meaning multi-asset WFA, to avoid Windows path-length issues. The prefix includes asset count, fold count, and candidate-family count, such as `mawfa_6a_3f_8fam_...`, so broad-family runs do not collide with narrower smoke tests. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, contact-sheet index CSV, Markdown batch report, strategy/equity contact-sheet PNGs capped by `-MaxFacetsPerImage`, and per-symbol WFA packets/charts.
 
+## PCA Regime Diagnostic POC
+
+The PCA regime runner is a diagnostic-only Gen5.1 state-labeling proof. It fits PCA center/scale/loadings and PC1/PC2 3x3 quantile breaks on TRAIN rows only, then scores OOS rows with the frozen TRAIN model. It does not route WFA strategy selection, exits, allocation, leverage, or live advice.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_regime_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/regime_pocs/` with a `pca_regime_...` prefix. It includes canonical data-query artifacts, PCA scores, a model contract, diagnostics, state coverage, run lengths, a markdown report, a PC1/PC2 scatter plot with TRAIN/OOS markers and grid lines, and a price chart with colored state bands plus a dashed TRAIN/OOS boundary.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
@@ -383,7 +400,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, and an independent multi-asset batch report wrapper. It does not yet implement portfolio allocation, pooled/global parameter selection, state/regime modeling, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
+Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, an independent multi-asset batch report wrapper, and a diagnostic-only PCA 3x3 regime-labeling POC. It does not yet implement portfolio allocation, pooled/global parameter selection, state-routed WFA selection, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 
