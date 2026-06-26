@@ -575,3 +575,15 @@ Goal: Decide conversationally whether the next independent POC after exit stacks
 Visible output:
 
 - A short written experiment contract naming inputs, outputs, allowed calculations, and stop gates.
+
+### E. Regime/state filter POC roadmap
+
+Status: planning
+
+Planning memory: `docs/GEN5_REGIME_FILTER_POC_PLAN.md`
+
+Current leaning:
+
+- Start with a PCA quantile-grid demonstrator because it is the closest Gen4 bridge and the operator has the most practical experience with it.
+- Then compare PCA plus clustering, a simple volatility percentile baseline, and HMMs as separate isolated POCs.
+- Do not let any regime method route WFA strategy selection until its state labels, coverage, and leakage controls are auditable.
