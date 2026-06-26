@@ -443,6 +443,43 @@ Notes:
 - The final AMD smoke selected `native_only` in fold 1 and `native_maxhold40` in folds 2-3.
 - In that AMD OOS path, both closed trades exited by native signal before the selected max-hold stack fired; the stack marker path is implemented but was not visually exercised by this specific selected OOS path.
 
+### C7. Multi-asset independent WFA batch diagnostic
+
+Status: done
+
+Branch: `codex/Gen5.1-multi-asset-wfa-batch`
+
+Goal: Run the existing multi-signal/exit-stack WFA POC independently across a small asset basket and emit a cross-asset report without pooling TRAIN data or introducing portfolio allocation.
+
+Implemented architecture:
+
+- Each symbol gets its own data query, TRAIN folds, selected `strategy_spec_id`s, OOS trades, equity curve, charts, and run report.
+- Batch-level outputs summarize already-generated per-symbol packets only.
+- No global parameter selection, pooled training, cross-asset ranking authority, capital allocation, or portfolio construction is introduced.
+
+Visible output:
+
+- `scripts/inspect/run_multi_asset_wfa_batch.ps1`
+- Batch asset summary CSV.
+- Batch selected specs by fold CSV.
+- Batch path index CSV.
+- Batch Markdown report.
+- Per-symbol stitched strategy/equity charts under the batch output folder.
+
+Validation:
+
+- Focused multi-fold WFA tests passed after adding coverage for mixed selected strategy families.
+- Six-symbol refreshed batch passed for `AMD,NVDA,TSLA,META,QQQ,SPY`.
+
+Observed six-symbol smoke result:
+
+- QQQ: 16.68% return, Sharpe 1.917, 2 exit-stack exits.
+- SPY: 6.64% return, Sharpe 1.601, 1 exit-stack exit.
+- AMD: 16.08% return, Sharpe 1.269, 2 native exits.
+- NVDA: 12.00% return, Sharpe 0.930, 1 native exit and 1 exit-stack exit.
+- TSLA: 3.26% return, Sharpe 0.394, 1 exit-stack exit.
+- META: -11.75% return, Sharpe -0.512, 4 native exits and 1 exit-stack exit.
+
 ### D. Later POC backlog discussion
 
 Status: deferred

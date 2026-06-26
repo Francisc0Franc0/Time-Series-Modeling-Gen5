@@ -1144,7 +1144,7 @@ g5_ema_cross_wfa_stitched_indicators <- function(bars, symbol, folds, selected_m
     part$strategy_spec_id <- model$strategy_spec_id[[1L]]
     rows[[i]] <- part
   }
-  out <- do.call(rbind, rows)
+  out <- g5_wfa_bind_rows_fill(rows)
   out <- out[!duplicated(paste(out$session_date, out$fold_id)), , drop = FALSE]
   out <- out[as.Date(out$session_date) >= first_context_date, , drop = FALSE]
   rownames(out) <- NULL

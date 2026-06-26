@@ -209,6 +209,54 @@ test_that("multi-fold WFA can evaluate EMA cross and Bollinger touch candidates 
   expect_true(all(c("exit_stack_id", "strategy_spec_id") %in% names(wfa$selected_models)))
 })
 
+test_that("stitched indicators tolerate mixed selected model families", {
+  close <- c(
+    10, 10, 10, 9, 7, 8, 11, 13, 15, 13,
+    11, 9, 7, 8, 10, 12, 15, 14, 12, 10,
+    8, 7, 9, 12, 14, 16, 13, 11, 9, 8,
+    10, 13, 15, 14, 12
+  )
+  bars <- g5_test_wfa_multi_bars(close = close)
+  folds <- g5_ema_cross_wfa_resolve_folds(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    train_quarters = g5_test_multi_quarters_for_days(10),
+    oos_quarters = g5_test_multi_quarters_for_days(5),
+    fold_count = 2L
+  )
+  selected_models <- data.frame(
+    schema_version = g5_ema_cross_wfa_multi_schema_version(),
+    fold_id = folds$fold_id,
+    fold_no = folds$fold_no,
+    symbol = "AMD",
+    strategy_family = c("ema_cross", "bollinger_touch"),
+    model_instance_id = c("ema_cross_fast2_slow4", "bollinger_touch_n3_sd1"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("ema_cross_fast2_slow4__native_only", "bollinger_touch_n3_sd1__native_only"),
+    include_native_exit = TRUE,
+    max_hold_sessions = NA_integer_,
+    stop_loss_pct = NA_real_,
+    take_profit_pct = NA_real_,
+    fast_period = c(2L, NA_integer_),
+    slow_period = c(4L, NA_integer_),
+    lookback_period = c(NA_integer_, 3L),
+    sd_multiplier = c(NA_real_, 1),
+    train_sharpe = 1,
+    train_total_return = 0.1,
+    train_cagr = 0.1,
+    train_max_drawdown = -0.1,
+    train_trade_count = 1L,
+    stringsAsFactors = FALSE
+  )
+
+  indicators <- g5_ema_cross_wfa_stitched_indicators(bars, "AMD", folds, selected_models)
+
+  expect_true(all(c("fast_ema", "slow_ema", "bb_mid", "bb_upper", "bb_lower") %in% names(indicators)))
+  expect_true(all(c("ema_cross", "bollinger_touch") %in% unique(indicators$strategy_family)))
+})
+
 test_that("multi-fold chart background spans cover plotted folds without side gaps", {
   folds <- data.frame(
     fold_id = c("fold_001", "fold_002", "fold_003"),

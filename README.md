@@ -349,6 +349,21 @@ The packet is written under ignored `runs/research_workbench/wfa_pocs/` and incl
 
 The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix.
 
+## Multi-Asset WFA Batch Diagnostic
+
+The multi-asset batch runner executes the same single-asset WFA POC independently for each requested symbol. It does not pool TRAIN data, choose global parameters, or perform portfolio allocation. Its only aggregate layer is reporting: one row per asset, one row per selected asset/fold spec, and path links to each per-asset WFA packet.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_asset_wfa_batch.ps1 `
+  -Symbols "AMD,NVDA,TSLA,META,QQQ,SPY" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 3 `
+  -Refresh
+```
+
+The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix to avoid Windows path-length issues. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, Markdown batch report, and per-symbol WFA packets/charts.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
@@ -365,7 +380,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-Current Gen5.1 includes diagnostic strategy proofs and a multi-signal, single-asset WFA POC for `ema_cross` and `bollinger_touch` model instances plus close-based exit stacks. It does not yet implement portfolio allocation, state/regime modeling, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
+Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC for `ema_cross` and `bollinger_touch` model instances plus close-based exit stacks, and an independent multi-asset batch report wrapper. It does not yet implement portfolio allocation, pooled/global parameter selection, state/regime modeling, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 

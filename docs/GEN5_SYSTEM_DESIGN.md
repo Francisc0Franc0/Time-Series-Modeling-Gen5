@@ -10,7 +10,7 @@ Gen5 targets a long-only, rolling walk-forward, regime-conditioned tactical equi
 
 ## Current Decisions
 
-These are architectural decisions and desired capability areas, not a claim that downstream modules are production-ready. The current Gen5.1 base is the completed v0/v0.1 market-data layer, research workbench, diagnostic strategy proofs, and a multi-signal single-asset WFA POC.
+These are architectural decisions and desired capability areas, not a claim that downstream modules are production-ready. The current Gen5.1 base is the completed v0/v0.1 market-data layer, research workbench, diagnostic strategy proofs, a multi-signal single-asset WFA POC, and an independent multi-asset WFA batch report wrapper.
 
 - Core language: R-first.
 - Provider: Alpaca only for v0.
@@ -100,4 +100,4 @@ The operator may choose the next slice organically. Codex should translate that 
 
 ## Current Prototype Path
 
-Gen5.1 currently has a multi-signal single-asset WFA POC with close-based exit-stack composition. An entry/native model instance plus an exit stack becomes a `strategy_spec_id`, and WFA ranks complete specs rather than only entry models. Portfolio construction should follow once per-asset WFA trade ledgers carry stable exit attribution. State/regime filters remain deferred until trade generation and portfolio accounting surfaces are stable.
+Gen5.1 currently has a multi-signal single-asset WFA POC with close-based exit-stack composition, plus a multi-asset batch runner that executes that POC independently per symbol and aggregates reports only. An entry/native model instance plus an exit stack becomes a `strategy_spec_id`, and WFA ranks complete specs rather than only entry models. Portfolio construction should follow once per-asset WFA trade ledgers carry stable exit attribution. State/regime filters remain deferred until trade generation and portfolio accounting surfaces are stable.
