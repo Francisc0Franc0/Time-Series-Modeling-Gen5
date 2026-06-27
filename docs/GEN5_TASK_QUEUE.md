@@ -590,6 +590,7 @@ Current state:
 - `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement a PCA-routed WFA POC that can run one or more AMD OOS folds using either `quantile_grid` or `pca_kmeans`.
 - The routed WFA POC can widen the state feature panel with `-RegimeContextSymbols`, while keeping the Research Candidate Universe, Tradeable Universe, and Active Allocation Set limited to the target `-Symbol`.
 - `-PcaPanelMode date_aligned_context` builds one synchronized wide row per date; `-PcaPanelMode pooled_asset_day` stacks context asset-days into one long Gen4-style PCA training panel, then routes only the target symbol's scored states.
+- `scripts/inspect/run_pca_router_workbench.ps1` is the clean operator wrapper for the two main experiment toggles: `-PanelMode contextual_snapshot|behavioral_pool` and `-StateMap quantile_grid|kmeans`.
 - The routed POC selects one complete `strategy_spec_id` per TRAIN PCA state per fold and replays those fold-local state selections in stitched OOS using Option A: entry state owns the trade until exit, including across fold boundaries.
 - Routed POC outputs are written under ignored `runs/research_workbench/regime_wfa_pocs/` with short `pcawfa` filenames to avoid Windows path-length issues.
 - It does not yet implement state-adaptive exits, portfolio allocation, leverage, live advice, or execution.

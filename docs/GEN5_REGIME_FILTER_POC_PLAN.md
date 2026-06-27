@@ -68,6 +68,26 @@ What it means:
 
 Tradeoff: it increases sample size and mirrors the Gen4 mechanics, but it can blur asset identity if feature normalization is not carefully audited. It also answers a different question than date-aligned context: "what kind of asset-day is this?" rather than "what is the synchronized market context today?"
 
+## PCA Router Workbench Toggles
+
+The operator-facing wrapper `scripts/inspect/run_pca_router_workbench.ps1` keeps the working POCs intact while exposing two clean experiment axes:
+
+- `-PanelMode contextual_snapshot`: same as `date_aligned_context`; asks what same-day multi-asset context surrounds the traded asset.
+- `-PanelMode behavioral_pool`: same as `pooled_asset_day`; asks what recurring asset-day behavior type the traded asset resembles.
+- `-StateMap quantile_grid`: PC1/PC2 quantile bins; `-StateCount 3` means a 3x3 grid.
+- `-StateMap kmeans`: k-means clustering on TRAIN PC1/PC2; `-StateCount 9` means nine clusters.
+
+This creates four direct comparison families without changing the downstream WFA replay contract:
+
+| PanelMode | StateMap | Internal panel | Internal state engine |
+|---|---|---|---|
+| `contextual_snapshot` | `quantile_grid` | `date_aligned_context` | `quantile_grid` |
+| `contextual_snapshot` | `kmeans` | `date_aligned_context` | `pca_kmeans` |
+| `behavioral_pool` | `quantile_grid` | `pooled_asset_day` | `quantile_grid` |
+| `behavioral_pool` | `kmeans` | `pooled_asset_day` | `pca_kmeans` |
+
+The wrapper is an operator convenience layer only. It delegates to `run_pca_wfa_router_poc.ps1`, which remains the stable implementation runner for the current POC.
+
 ## State-Routed Trade Ownership Policies
 
 When a regime/state layer is allowed to route strategy specs, open trades need an explicit ownership policy. Two policies are currently worth preserving:

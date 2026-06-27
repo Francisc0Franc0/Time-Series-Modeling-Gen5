@@ -408,6 +408,28 @@ The PCA-routed WFA runner is the first state-aware WFA integration proof. For ea
 
 The runner also supports a deliberately narrow universe expansion. `-RegimeContextSymbols` defines the **Regime Context Universe** used to build the PCA feature panel and state labels. The **Research Candidate Universe**, **Tradeable Universe**, and **Active Allocation Set** remain the single `-Symbol` for this POC. For example, AMD can be the only traded asset while AMD, NVDA, and TSLA all contribute state-context features. This is not pooled strategy optimization, portfolio allocation, or multi-asset trading.
 
+The clean operator wrapper is:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_router_workbench.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -PanelMode contextual_snapshot `
+  -StateMap quantile_grid `
+  -StateCount 3 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -Refresh
+```
+
+The wrapper exposes two experiment toggles while delegating to the stable lower-level WFA runner:
+
+- `-PanelMode contextual_snapshot`: date-aligned wide PCA panel, internally `date_aligned_context`.
+- `-PanelMode behavioral_pool`: Gen4-style long pooled asset-day PCA panel, internally `pooled_asset_day`.
+- `-StateMap quantile_grid`: PC1/PC2 quantile binning, with `-StateCount 3` meaning a 3x3 grid.
+- `-StateMap kmeans`: PCA k-means state map, with `-StateCount 9` meaning nine clusters.
+
 Two PCA panel modes are available:
 
 - `date_aligned_context`: the default Gen5.1 mode. It builds one row per session date, with context features widened into columns such as `AMD__rsi_14`, `NVDA__rsi_14`, and `TSLA__rsi_14`. This treats the context universe as same-day market sensors.
