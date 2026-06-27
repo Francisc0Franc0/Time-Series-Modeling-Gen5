@@ -582,6 +582,8 @@ Status: PCA quantile-grid and PCA k-means diagnostic POCs implemented; PCA-route
 
 Planning memory: `docs/GEN5_REGIME_FILTER_POC_PLAN.md`
 
+Restart handoff: `docs/GEN5_1_CURRENT_HANDOFF.md`
+
 Current state:
 
 - `R/regime_pca_poc.R` and `scripts/inspect/run_pca_regime_poc.ps1` implement a diagnostic-only PCA 3x3 state-labeling POC.

@@ -1,0 +1,107 @@
+# Gen5.1 Current Handoff
+
+Status date: 2026-06-27
+
+This note is the quick restart surface for a new Codex conversation. It summarizes what is working now, where the relevant docs live, and what should not be assumed yet.
+
+## Current Working State
+
+Gen5.1 has a working R-first research POC stack on top of the completed Alpaca adjusted-daily data layer:
+
+- data/workbench queries can load and cache adjusted daily Alpaca bars;
+- charting can render single-symbol, multi-symbol, strategy, WFA, and PCA state charts;
+- strategy POCs include the green-day hold toy strategy, EMA cross, Bollinger variants, RSI/z-score mean reversion, breakout/pullback variants, volatility-expansion breakout, Donchian volatility breakout, and `no_trade`;
+- close-based exit stacks exist in the multi-signal WFA POC, but the current PCA-routed WFA path uses native-only exit stacks;
+- multi-fold stitched OOS WFA works for one traded symbol;
+- PCA regime labeling works with quantile grids and k-means;
+- PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
+
+The newest operator surface is:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_router_workbench.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -PanelMode contextual_snapshot `
+  -StateMap quantile_grid `
+  -StateCount 3 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -Refresh
+```
+
+The wrapper delegates to the stable lower-level runner, `scripts/inspect/run_pca_wfa_router_poc.ps1`.
+
+## Current PCA Vocabulary
+
+Universes:
+
+- **Regime Context Universe**: symbols used to create the PCA state feature panel, such as `AMD,NVDA,TSLA`.
+- **Research Candidate Universe**: symbols whose strategy specs are evaluated. Current PCA-routed POC: the single `-Symbol`.
+- **Tradeable Universe**: symbols the replay may trade. Current PCA-routed POC: the single `-Symbol`.
+- **Active Allocation Set**: symbols actually held/allocated during replay. Current PCA-routed POC: the single `-Symbol`, all-in/flat.
+
+Panel modes:
+
+- `contextual_snapshot`: operator name for the wide/date-aligned PCA panel. Internally this maps to `date_aligned_context`. It asks: what same-day multi-asset context surrounds the traded asset?
+- `behavioral_pool`: operator name for the long/pooled asset-day PCA panel. Internally this maps to `pooled_asset_day`. It asks: what recurring asset-day behavior type does the traded asset resemble?
+
+State maps:
+
+- `quantile_grid`: PC1/PC2 quantile binning. `-StateCount 3` means a 3x3 grid.
+- `kmeans`: k-means clustering on TRAIN PC1/PC2. `-StateCount 9` means nine clusters.
+
+## Important Current Policy
+
+PCA-routed WFA currently uses Option A: `entry_state_owns_trade_until_exit`.
+
+That means the state active on the entry signal date selects the complete `strategy_spec_id`. Once the trade opens, that same spec owns native exits until the trade closes, even if the PCA state changes. This is conservative and auditable. Option B, state-adaptive exit management, is documented but not implemented.
+
+## What Is Not Implemented Yet
+
+Do not assume any of the following exist as production-ready systems:
+
+- portfolio allocation;
+- multi-asset pooled/global parameter selection;
+- state-adaptive exits;
+- leverage/risk overlay beyond earlier isolated POCs;
+- live advice generation;
+- dashboards;
+- broker execution;
+- non-Alpaca providers.
+
+Generated run artifacts live under ignored `runs/` folders and should not be committed.
+
+## Key Docs To Read Next
+
+- `README.md`: operator commands and current POC surfaces.
+- `docs/GEN5_REGIME_FILTER_POC_PLAN.md`: regime/PCA theory, vocabulary, policies, and next POC ideas.
+- `docs/GEN5_TASK_QUEUE.md`: current status and backlog memory.
+- `AGENTS.md`: autonomy/collaboration rules and validation expectations.
+
+## Suggested Next Conversation Prompts
+
+Use one of these as the first prompt in a new conversation:
+
+```text
+Please start on branch codex/Gen5.1-pca-comparison-report. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Then build a compact comparison report runner for the PCA router workbench that runs or consumes the four combinations of PanelMode x StateMap for AMD with RegimeContextSymbols AMD,NVDA,TSLA, and summarizes OOS metrics, state coverage, selected families, and artifact paths. Ask before adding dependencies.
+```
+
+```text
+Please start on branch codex/Gen5.1-regime-universe-scaleout. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Then propose and implement a careful next expansion of the Regime Context Universe beyond AMD,NVDA,TSLA while keeping Research Candidate Universe, Tradeable Universe, and Active Allocation Set as AMD only. Produce concrete charts/reports and validate.
+```
+
+```text
+Please start on branch codex/Gen5.1-state-adaptive-exit-plan. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Do not implement yet. Compare Option A entry-state ownership versus Option B state-adaptive exit management, define leakage-safe TRAIN/OOS mechanics for Option B, and propose the smallest POC task list.
+```
+
+## Validation Reminder
+
+Before closing implementation branches, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1
+```
+
+For final operator smokes that touch cached market data, prefer `-Refresh` unless there is a specific reason not to refresh.

@@ -515,7 +515,7 @@ The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DAT
 
 ## Gen5.1 Planning
 
-Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
+Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The fastest restart surface for a new Codex conversation is `docs/GEN5_1_CURRENT_HANDOFF.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
 Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, an independent multi-asset batch report wrapper, diagnostic PCA quantile-grid and PCA k-means regime-labeling POCs, and a PCA-routed WFA Option A POC that can run one or more stitched OOS folds with either state engine, an optional multi-asset Regime Context Universe, and either date-aligned or pooled asset-day PCA panels. It does not yet implement portfolio allocation, pooled/global parameter selection, state-adaptive exits, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
