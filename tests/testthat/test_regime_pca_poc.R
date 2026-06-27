@@ -64,6 +64,22 @@ test_that("PCA regime context feature table builds a wide multi-asset panel for 
   expect_equal(unique(features$regime_context_symbols), "AMD,NVDA,TSLA")
 })
 
+test_that("PCA pooled feature table stacks asset-days with common feature names", {
+  bars <- rbind(
+    g5_test_pca_bars(symbol = "AMD"),
+    transform(g5_test_pca_bars(symbol = "NVDA"), close = close * 1.2, open = open * 1.2, high = high * 1.2, low = low * 1.2),
+    transform(g5_test_pca_bars(symbol = "TSLA"), close = close * 0.8, open = open * 0.8, high = high * 0.8, low = low * 0.8)
+  )
+  features <- g5_pca_regime_pooled_feature_table(bars, "AMD", c("AMD", "NVDA", "TSLA"))
+
+  expect_equal(sort(unique(features$symbol)), c("AMD", "NVDA", "TSLA"))
+  expect_true(all(g5_pca_regime_default_features() %in% names(features)))
+  expect_false(any(grepl("^NVDA__", names(features))))
+  expect_equal(unique(features$pca_panel_mode), "pooled_asset_day")
+  expect_equal(unique(features$research_candidate_symbol), "AMD")
+  expect_equal(unique(features$regime_context_symbols), "AMD,NVDA,TSLA")
+})
+
 test_that("PCA regime coverage includes all 3x3 states even when sparse", {
   bars <- g5_test_pca_bars()
   fit <- g5_pca_regime_fit(

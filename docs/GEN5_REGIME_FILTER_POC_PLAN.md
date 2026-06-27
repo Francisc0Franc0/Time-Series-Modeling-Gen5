@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; multi-asset regime context is implemented for the routed WFA POC; remaining regime methods are planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; multi-asset regime context is implemented for the routed WFA POC with both date-aligned and pooled asset-day PCA panel modes; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -37,6 +37,36 @@ Regime POCs now use these names to keep data expansion separate from trading aut
 - **Active Allocation Set**: assets actually held or allocated to at a given point in the replay. Current PCA-routed POC: one symbol only, all-in/flat accounting.
 
 This lets Gen5 test whether broader market/context data improves regime labels without silently becoming pooled optimization, cross-asset parameter selection, or portfolio allocation.
+
+## PCA Panel Modes
+
+Gen5.1 now names two distinct ways to turn a multi-asset Regime Context Universe into PCA training data:
+
+### `date_aligned_context`
+
+This is the first Gen5.1 context design. It creates one row per `session_date` and widens each context asset's features into separate columns, such as `AMD__vol_20`, `NVDA__vol_20`, and `TSLA__vol_20`.
+
+What it means:
+
+- each row is a synchronized market snapshot;
+- assets act as same-day regime sensors;
+- PCA can learn cross-asset context available on that date;
+- OOS routing is naturally one state per traded asset date.
+
+Tradeoff: row count is limited by the number of shared dates, and feature count grows quickly as the context universe expands.
+
+### `pooled_asset_day`
+
+This is the Gen4-style comparison design. It stacks asset-days into one long table with common feature names, such as `vol_20`, `rsi_14`, and `dist_anchor_200`, while keeping `symbol` as row identity.
+
+What it means:
+
+- each row is one asset on one date;
+- PCA trains on a larger pool of asset-day observations;
+- states describe cross-sectional asset behavior rather than one synchronized market snapshot;
+- after PCA scoring, the current WFA POC filters scored states back to the target `-Symbol` before route selection, so OOS trades remain single-asset and date lookup stays unambiguous.
+
+Tradeoff: it increases sample size and mirrors the Gen4 mechanics, but it can blur asset identity if feature normalization is not carefully audited. It also answers a different question than date-aligned context: "what kind of asset-day is this?" rather than "what is the synchronized market context today?"
 
 ## State-Routed Trade Ownership Policies
 
@@ -132,12 +162,13 @@ Purpose: prove state-aware WFA integration with conservative trade ownership bef
 
 Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement one-or-more-fold AMD PCA-routed WFA proof runs. Each fold fits a TRAIN-only PCA state engine, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen fold-local state/spec choices in stitched OOS. Supported state engines are the 3x3 quantile grid and PCA k-means.
 
-The routed WFA POC can now accept `-RegimeContextSymbols`, so state detection can use a wider multi-asset feature panel while WFA still researches and trades only the requested `-Symbol`. Example: `-Symbol AMD -RegimeContextSymbols "AMD,NVDA,TSLA"` builds PCA features from all three assets but emits AMD-only trades and AMD-only stitched OOS charts.
+The routed WFA POC can now accept `-RegimeContextSymbols`, so state detection can use a wider multi-asset feature panel while WFA still researches and trades only the requested `-Symbol`. Example: `-Symbol AMD -RegimeContextSymbols "AMD,NVDA,TSLA"` builds PCA features from all three assets but emits AMD-only trades and AMD-only stitched OOS charts. Use `-PcaPanelMode date_aligned_context` for the default synchronized wide panel or `-PcaPanelMode pooled_asset_day` for the Gen4-style long panel.
 
 Current policy:
 
 - ownership policy is Option A: `entry_state_owns_trade_until_exit`;
 - Regime Context Universe can be multi-asset, but Research Candidate Universe, Tradeable Universe, and Active Allocation Set remain the single target symbol in this POC;
+- PCA panel mode is explicit and reported in each run;
 - current OOS state can select entries only while flat;
 - once a trade opens, the entry-state spec owns native exits and exit-stack management until the trade closes;
 - a trade may carry across OOS fold boundaries, but its manager does not change;

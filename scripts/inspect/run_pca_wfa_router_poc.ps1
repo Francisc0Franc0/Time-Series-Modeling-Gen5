@@ -22,6 +22,9 @@ param(
 
   [string]$RegimeContextSymbols = "",
 
+  [ValidateSet("date_aligned_context", "pooled_asset_day")]
+  [string]$PcaPanelMode = "date_aligned_context",
+
   [int]$MinTrainStateRows = 20,
 
   [string]$CandidateFamilies = "ema_cross,bollinger_touch,no_trade",
@@ -90,6 +93,7 @@ $env:GEN5_PCA_WFA_GRID_N = [string]$GridN
 $env:GEN5_PCA_WFA_STATE_ENGINE = $StateEngine
 $env:GEN5_PCA_WFA_KMEANS_NSTART = [string]$KmeansNstart
 $env:GEN5_PCA_WFA_REGIME_CONTEXT_SYMBOLS = $RegimeContextSymbols
+$env:GEN5_PCA_WFA_PANEL_MODE = $PcaPanelMode
 $env:GEN5_PCA_WFA_MIN_TRAIN_STATE_ROWS = [string]$MinTrainStateRows
 $env:GEN5_PCA_WFA_CANDIDATE_FAMILIES = $CandidateFamilies
 $env:GEN5_PCA_WFA_FAST_PERIODS = $FastPeriods

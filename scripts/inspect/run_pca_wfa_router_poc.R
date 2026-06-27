@@ -67,12 +67,14 @@ oos_quarters <- as.numeric(env_or("GEN5_PCA_WFA_OOS_QUARTERS", "1"))
 fold_count <- as.integer(env_or("GEN5_PCA_WFA_FOLD_COUNT", "1"))
 grid_n <- as.integer(env_or("GEN5_PCA_WFA_GRID_N", "3"))
 state_engine <- env_or("GEN5_PCA_WFA_STATE_ENGINE", "quantile_grid")
+pca_panel_mode <- env_or("GEN5_PCA_WFA_PANEL_MODE", "date_aligned_context")
 kmeans_nstart <- as.integer(env_or("GEN5_PCA_WFA_KMEANS_NSTART", "30"))
 min_train_state_rows <- as.integer(env_or("GEN5_PCA_WFA_MIN_TRAIN_STATE_ROWS", "20"))
 warmup_days <- as.integer(env_or("GEN5_PCA_WFA_WARMUP_DAYS", "340"))
 refresh <- g5_parse_bool_env(env_or("GEN5_PCA_WFA_REFRESH", "false"), default = FALSE)
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_PCA_WFA_FOLD_COUNT must be a positive integer.")
 if (!state_engine %in% c("quantile_grid", "pca_kmeans")) g5_stop("GEN5_PCA_WFA_STATE_ENGINE must be quantile_grid or pca_kmeans.")
+if (!pca_panel_mode %in% c("date_aligned_context", "pooled_asset_day")) g5_stop("GEN5_PCA_WFA_PANEL_MODE must be date_aligned_context or pooled_asset_day.")
 if (is.na(kmeans_nstart) || kmeans_nstart < 1L) g5_stop("GEN5_PCA_WFA_KMEANS_NSTART must be a positive integer.")
 
 fast_periods <- parse_int_list("GEN5_PCA_WFA_FAST_PERIODS", "8,12")
@@ -101,6 +103,7 @@ message("Train quarters: ", train_quarters)
 message("OOS quarters: ", oos_quarters)
 message("Fold count: ", fold_count)
 message("State engine: ", state_engine)
+message("PCA panel mode: ", pca_panel_mode)
 message(if (identical(state_engine, "pca_kmeans")) paste0("PCA k-means clusters: ", grid_n) else paste0("PCA grid: ", grid_n, "x", grid_n))
 message("Candidate families: ", paste(candidate_families, collapse = ", "))
 message("Ownership policy: entry_state_owns_trade_until_exit")
@@ -137,10 +140,11 @@ pca_wfa <- g5_pca_wfa_run_multi(
   state_engine = state_engine,
   kmeans_nstart = kmeans_nstart,
   regime_context_symbols = regime_context_symbols,
+  pca_panel_mode = pca_panel_mode,
   min_train_state_rows = min_train_state_rows
 )
 
-output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine, regime_context_symbols)
+output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode)
 prefix <- "pcawfa"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 written_query <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)

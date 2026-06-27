@@ -180,6 +180,40 @@ test_that("PCA-routed WFA can use a multi-asset regime context while trading one
   }
 })
 
+test_that("PCA-routed WFA can train pooled asset-day states while routing one symbol", {
+  bars <- g5_test_pca_wfa_context_bars()
+  wfa <- g5_pca_wfa_run_multi(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    fast_periods = c(3L, 5L),
+    slow_periods = c(12L, 20L),
+    bb_lookback_periods = 10L,
+    bb_sd_multipliers = 1.5,
+    candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+    train_quarters = g5_test_pca_wfa_quarters_for_days(380),
+    oos_quarters = g5_test_pca_wfa_quarters_for_days(60),
+    fold_count = 2L,
+    grid_n = 3L,
+    regime_context_symbols = c("AMD", "NVDA", "TSLA"),
+    pca_panel_mode = "pooled_asset_day",
+    min_train_state_rows = 5L
+  )
+
+  expect_equal(wfa$settings$pca_panel_mode, "pooled_asset_day")
+  expect_equal(wfa$settings$regime_context_symbols, c("AMD", "NVDA", "TSLA"))
+  expect_true(all(wfa$pca_scores$symbol == "AMD"))
+  expect_true(all(wfa$pca_scores$pca_panel_mode == "pooled_asset_day"))
+  expect_false(any(grepl("^NVDA__", wfa$pca_model_contract$feature)))
+  expect_false(any(grepl("^TSLA__", wfa$pca_model_contract$feature)))
+  expect_true(any(wfa$pca_model_contract$pca_panel_mode == "pooled_asset_day"))
+  expect_true(any(wfa$pca_model_contract$routing_symbol == "AMD"))
+  if (nrow(wfa$oos_trades) > 0L) {
+    expect_true(all(wfa$oos_trades$symbol == "AMD"))
+  }
+})
+
 test_that("PCA-routed WFA output PNGs render", {
   bars <- g5_test_pca_wfa_bars()
   wfa <- g5_pca_wfa_run_one_fold(

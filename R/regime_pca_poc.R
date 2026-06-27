@@ -276,6 +276,36 @@ g5_pca_regime_context_feature_table <- function(
   out
 }
 
+g5_pca_regime_pooled_feature_table <- function(
+  bars,
+  target_symbol,
+  context_symbols,
+  end_date = NULL,
+  feature_cols = g5_pca_regime_default_features()
+) {
+  target_symbol <- g5_standardize_symbol(target_symbol)[[1L]]
+  context_symbols <- unique(c(target_symbol, g5_standardize_symbol(context_symbols)))
+  parts <- lapply(context_symbols, function(symbol) {
+    features <- g5_pca_regime_feature_table(bars, symbol, end_date = end_date)
+    keep <- c("schema_version", "symbol", "session_date", "open", "high", "low", "close", "volume", feature_cols)
+    missing <- setdiff(keep, names(features))
+    if (length(missing)) {
+      g5_stop(paste0("Missing pooled PCA features for ", symbol, ": ", paste(missing, collapse = ",")))
+    }
+    features <- features[, keep, drop = FALSE]
+    features$pca_training_symbol <- symbol
+    features
+  })
+  out <- do.call(rbind, parts)
+  out <- out[order(as.Date(out$session_date), out$symbol), , drop = FALSE]
+  rownames(out) <- NULL
+  out$regime_context_symbols <- paste(context_symbols, collapse = ",")
+  out$research_candidate_symbol <- target_symbol
+  out$pca_panel_mode <- "pooled_asset_day"
+  attr(out, "feature_cols") <- feature_cols
+  out
+}
+
 g5_pca_regime_state_palette <- function(state_ids) {
   all_states <- as.vector(outer(seq_len(3L), seq_len(3L), function(x, y) paste0("S", x, "_", y)))
   colors <- c(
