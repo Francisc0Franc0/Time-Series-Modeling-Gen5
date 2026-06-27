@@ -103,6 +103,37 @@ test_that("PCA-routed multi-fold WFA stitches fold-local state routers", {
   }
 })
 
+test_that("PCA k-means-routed multi-fold WFA reuses the same downstream router contract", {
+  bars <- g5_test_pca_wfa_bars(n = 760L)
+  wfa <- g5_pca_wfa_run_multi(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    fast_periods = c(3L, 5L),
+    slow_periods = c(12L, 20L),
+    bb_lookback_periods = 10L,
+    bb_sd_multipliers = 1.5,
+    candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+    train_quarters = g5_test_pca_wfa_quarters_for_days(380),
+    oos_quarters = g5_test_pca_wfa_quarters_for_days(60),
+    fold_count = 3L,
+    grid_n = 5L,
+    state_engine = "pca_kmeans",
+    kmeans_nstart = 5L,
+    min_train_state_rows = 5L
+  )
+
+  expect_equal(nrow(wfa$folds), 3L)
+  expect_equal(nrow(wfa$selected_states), 15L)
+  expect_equal(sort(unique(wfa$selected_states$state_id)), g5_pca_regime_kmeans_states(5L))
+  expect_equal(wfa$settings$state_engine, "pca_kmeans")
+  expect_true(all(c("cluster_raw", "cluster_distance", "state_id", "split") %in% names(wfa$pca_scores)))
+  expect_equal(min(wfa$oos_equity_curve$session_date), min(wfa$folds$oos_start_date))
+  expect_equal(max(wfa$oos_equity_curve$session_date), max(wfa$folds$oos_end_date))
+  expect_true(all(wfa$selected_states$ownership_policy == "entry_state_owns_trade_until_exit"))
+})
+
 test_that("PCA-routed WFA output PNGs render", {
   bars <- g5_test_pca_wfa_bars()
   wfa <- g5_pca_wfa_run_one_fold(

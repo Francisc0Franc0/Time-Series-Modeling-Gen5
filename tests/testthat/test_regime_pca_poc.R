@@ -67,6 +67,29 @@ test_that("PCA regime coverage includes all 3x3 states even when sparse", {
   expect_true(all(paste0("S", rep(1:3, each = 3), "_", rep(1:3, times = 3)) %in% coverage$state_id))
 })
 
+test_that("PCA k-means regime POC fits TRAIN clusters and scores OOS by frozen centroids", {
+  bars <- g5_test_pca_bars()
+  fit <- g5_pca_regime_fit_kmeans(
+    g5_pca_regime_feature_table(bars, "AMD"),
+    train_start_date = as.Date("2025-07-20"),
+    train_end_date = as.Date("2025-11-30"),
+    oos_start_date = as.Date("2025-12-01"),
+    oos_end_date = as.Date("2025-12-26"),
+    cluster_count = 5L,
+    min_train_rows = 60L,
+    nstart = 5L
+  )
+  coverage <- g5_pca_regime_state_coverage(fit$scores, fit$grid_n, fit$state_ids)
+
+  expect_equal(fit$state_engine, "pca_kmeans")
+  expect_equal(fit$cluster_count, 5L)
+  expect_equal(sort(unique(fit$scores$state_id)), sort(unique(stats::na.omit(fit$scores$state_id))))
+  expect_true(all(g5_pca_regime_kmeans_states(5L) %in% coverage$state_id))
+  expect_true(all(c("cluster_raw", "cluster_distance") %in% names(fit$scores)))
+  expect_true(all(c("kmeans_centroid", "meta", "feature") %in% fit$model_contract$record_type))
+  expect_true(all(is.finite(fit$scores$cluster_distance)))
+})
+
 test_that("PCA regime diagnostic PNGs render", {
   bars <- g5_test_pca_bars()
   fit <- g5_pca_regime_fit(
@@ -82,6 +105,32 @@ test_that("PCA regime diagnostic PNGs render", {
   price_path <- tempfile("g5_pca_price_", fileext = ".png")
 
   written_scatter <- g5_write_pca_regime_scatter_png(fit$scores, fit$pc1_breaks, fit$pc2_breaks, scatter_path)
+  written_price <- g5_write_pca_regime_price_png(fit$scores, price_path, "AMD", as.Date("2025-11-30"), as.Date("2025-12-01"))
+
+  expect_true(file.exists(written_scatter))
+  expect_true(file.exists(written_price))
+  expect_gt(file.info(written_scatter)$size, 0)
+  expect_gt(file.info(written_price)$size, 0)
+  expect_identical(as.integer(readBin(written_scatter, what = "raw", n = 8L)), c(137L, 80L, 78L, 71L, 13L, 10L, 26L, 10L))
+  expect_identical(as.integer(readBin(written_price, what = "raw", n = 8L)), c(137L, 80L, 78L, 71L, 13L, 10L, 26L, 10L))
+})
+
+test_that("PCA k-means diagnostic PNGs render with centroid markers", {
+  bars <- g5_test_pca_bars()
+  fit <- g5_pca_regime_fit_kmeans(
+    g5_pca_regime_feature_table(bars, "AMD"),
+    train_start_date = as.Date("2025-07-20"),
+    train_end_date = as.Date("2025-11-30"),
+    oos_start_date = as.Date("2025-12-01"),
+    oos_end_date = as.Date("2025-12-26"),
+    cluster_count = 5L,
+    min_train_rows = 60L,
+    nstart = 5L
+  )
+  scatter_path <- tempfile("g5_pca_kmeans_scatter_", fileext = ".png")
+  price_path <- tempfile("g5_pca_kmeans_price_", fileext = ".png")
+
+  written_scatter <- g5_write_pca_regime_scatter_png(fit$scores, fit$pc1_breaks, fit$pc2_breaks, scatter_path, centroids = fit$kmeans_centers)
   written_price <- g5_write_pca_regime_price_png(fit$scores, price_path, "AMD", as.Date("2025-11-30"), as.Date("2025-12-01"))
 
   expect_true(file.exists(written_scatter))

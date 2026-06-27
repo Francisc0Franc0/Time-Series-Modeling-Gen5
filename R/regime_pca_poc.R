@@ -40,6 +40,28 @@ g5_pca_regime_output_dir <- function(repo_root, as_of_timestamp, symbol, grid_n,
   )
 }
 
+g5_pca_kmeans_regime_artifact_prefix <- function(as_of_timestamp, symbol, cluster_count, train_start_date, oos_end_date) {
+  stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
+  symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  window_label <- paste0(
+    "w",
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(train_start_date))),
+    "_to_",
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(oos_end_date)))
+  )
+  paste(c("pca_kmeans", symbol, paste0("k", as.integer(cluster_count)), window_label, stamp), collapse = "_")
+}
+
+g5_pca_kmeans_regime_output_dir <- function(repo_root, as_of_timestamp, symbol, cluster_count, train_start_date, oos_end_date) {
+  file.path(
+    repo_root,
+    "runs",
+    "research_workbench",
+    "regime_pocs",
+    g5_pca_kmeans_regime_artifact_prefix(as_of_timestamp, symbol, cluster_count, train_start_date, oos_end_date)
+  )
+}
+
 g5_pca_regime_rolling_mean <- function(x, n) {
   x <- as.numeric(x)
   n <- as.integer(n)
@@ -228,6 +250,10 @@ g5_pca_regime_state_palette <- function(state_ids) {
   colors[as.character(state_ids)]
 }
 
+g5_pca_regime_kmeans_states <- function(cluster_count) {
+  sprintf("K%02d", seq_len(as.integer(cluster_count)))
+}
+
 g5_pca_regime_assign_split <- function(features, train_start_date, train_end_date, oos_start_date, oos_end_date) {
   dates <- as.Date(features$session_date)
   split <- rep(NA_character_, nrow(features))
@@ -356,14 +382,181 @@ g5_pca_regime_fit <- function(
     diagnostics = diagnostics,
     kept_features = keep,
     dropped_features = dropped,
+    state_engine = "quantile_grid",
+    state_ids = as.vector(outer(seq_len(grid_n), seq_len(grid_n), function(x, y) paste0("S", x, "_", y))),
     grid_n = grid_n,
     pc1_breaks = pc1_q,
     pc2_breaks = pc2_q
   )
 }
 
-g5_pca_regime_state_coverage <- function(scores, grid_n = 3L) {
-  states <- as.vector(outer(seq_len(grid_n), seq_len(grid_n), function(x, y) paste0("S", x, "_", y)))
+g5_pca_regime_fit_kmeans <- function(
+  features,
+  train_start_date,
+  train_end_date,
+  oos_start_date,
+  oos_end_date,
+  feature_cols = g5_pca_regime_default_features(),
+  cluster_count = 9L,
+  min_train_rows = 120L,
+  nstart = 30L
+) {
+  if (!is.data.frame(features) || nrow(features) == 0L) {
+    g5_stop("PCA k-means regime fit requires non-empty features.")
+  }
+  cluster_count <- as.integer(cluster_count)
+  if (is.na(cluster_count) || cluster_count < 2L || cluster_count > 25L) {
+    g5_stop("cluster_count must be an integer from 2 to 25.")
+  }
+  nstart <- as.integer(nstart)
+  if (is.na(nstart) || nstart < 1L) {
+    g5_stop("nstart must be a positive integer.")
+  }
+  feature_cols <- intersect(as.character(feature_cols), names(features))
+  if (length(feature_cols) < 3L) {
+    g5_stop("PCA k-means regime fit requires at least three available feature columns.")
+  }
+  features <- features[order(as.Date(features$session_date)), , drop = FALSE]
+  features$split <- g5_pca_regime_assign_split(features, train_start_date, train_end_date, oos_start_date, oos_end_date)
+  scored_base <- features[features$split %in% c("TRAIN", "OOS"), , drop = FALSE]
+  if (!nrow(scored_base)) {
+    g5_stop("PCA k-means regime fit has no rows inside TRAIN/OOS windows.")
+  }
+  finite_train <- scored_base[scored_base$split == "TRAIN", , drop = FALSE]
+  finite_train <- finite_train[stats::complete.cases(finite_train[, feature_cols, drop = FALSE]), , drop = FALSE]
+  if (nrow(finite_train) < min_train_rows) {
+    g5_stop(paste0("PCA k-means regime fit requires at least ", min_train_rows, " fully finite TRAIN rows."))
+  }
+  if (nrow(finite_train) <= cluster_count) {
+    g5_stop("PCA k-means regime fit requires more finite TRAIN rows than clusters.")
+  }
+  keep <- feature_cols[vapply(feature_cols, function(col) {
+    x <- as.numeric(finite_train[[col]])
+    stats::sd(x, na.rm = TRUE) > 0 && all(is.finite(x))
+  }, logical(1))]
+  if (length(keep) < 3L) {
+    g5_stop("PCA k-means regime fit has fewer than three finite non-zero-variance TRAIN features.")
+  }
+  dropped <- setdiff(feature_cols, keep)
+  train_used <- finite_train[, keep, drop = FALSE]
+  x_train <- scale(as.matrix(train_used))
+  center <- attr(x_train, "scaled:center")
+  scale <- attr(x_train, "scaled:scale")
+  pca <- stats::prcomp(x_train, center = FALSE, scale. = FALSE)
+  scoring_rows <- scored_base[stats::complete.cases(scored_base[, keep, drop = FALSE]), , drop = FALSE]
+  x_all <- as.matrix(scoring_rows[, keep, drop = FALSE])
+  x_all <- sweep(x_all, 2, center, "-")
+  x_all <- sweep(x_all, 2, scale, "/")
+  score <- x_all %*% pca$rotation[, 1:2, drop = FALSE]
+  scoring_rows$pc1 <- as.numeric(score[, 1L])
+  scoring_rows$pc2 <- as.numeric(score[, 2L])
+  train_scored <- scoring_rows[scoring_rows$split == "TRAIN", , drop = FALSE]
+  set.seed(5101L)
+  km <- stats::kmeans(train_scored[, c("pc1", "pc2"), drop = FALSE], centers = cluster_count, nstart = nstart)
+  centers <- as.matrix(km$centers[, c("pc1", "pc2"), drop = FALSE])
+  center_order <- order(centers[, 1L], centers[, 2L])
+  raw_to_state <- stats::setNames(g5_pca_regime_kmeans_states(cluster_count), as.character(center_order))
+  distances <- sapply(seq_len(cluster_count), function(i) {
+    (scoring_rows$pc1 - centers[i, 1L])^2 + (scoring_rows$pc2 - centers[i, 2L])^2
+  })
+  assigned_raw <- max.col(-distances, ties.method = "first")
+  scoring_rows$cluster_raw <- assigned_raw
+  scoring_rows$state_id <- unname(raw_to_state[as.character(assigned_raw)])
+  scoring_rows$cluster_distance <- sqrt(distances[cbind(seq_len(nrow(distances)), assigned_raw)])
+  explained <- (pca$sdev^2) / sum(pca$sdev^2)
+  centroid_rows <- data.frame(
+    record_type = "kmeans_centroid",
+    feature = NA_character_,
+    center = NA_real_,
+    scale = NA_real_,
+    loading_pc1 = NA_real_,
+    loading_pc2 = NA_real_,
+    break_axis = NA_character_,
+    break_index = NA_integer_,
+    break_value = NA_real_,
+    cluster_raw = as.integer(names(raw_to_state)),
+    state_id = as.character(raw_to_state),
+    centroid_pc1 = centers[as.integer(names(raw_to_state)), 1L],
+    centroid_pc2 = centers[as.integer(names(raw_to_state)), 2L],
+    key = NA_character_,
+    value = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  contract <- rbind(
+    data.frame(
+      record_type = "feature",
+      feature = keep,
+      center = as.numeric(center[keep]),
+      scale = as.numeric(scale[keep]),
+      loading_pc1 = as.numeric(pca$rotation[keep, 1L]),
+      loading_pc2 = as.numeric(pca$rotation[keep, 2L]),
+      break_axis = NA_character_,
+      break_index = NA_integer_,
+      break_value = NA_real_,
+      cluster_raw = NA_integer_,
+      state_id = NA_character_,
+      centroid_pc1 = NA_real_,
+      centroid_pc2 = NA_real_,
+      key = NA_character_,
+      value = NA_character_,
+      stringsAsFactors = FALSE
+    ),
+    centroid_rows,
+    data.frame(
+      record_type = "meta",
+      feature = NA_character_,
+      center = NA_real_,
+      scale = NA_real_,
+      loading_pc1 = NA_real_,
+      loading_pc2 = NA_real_,
+      break_axis = NA_character_,
+      break_index = NA_integer_,
+      break_value = NA_real_,
+      cluster_raw = NA_integer_,
+      state_id = NA_character_,
+      centroid_pc1 = NA_real_,
+      centroid_pc2 = NA_real_,
+      key = c("state_engine", "cluster_count", "nstart", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "dropped_features"),
+      value = c("pca_kmeans", as.character(cluster_count), as.character(nstart), as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), paste(dropped, collapse = ";")),
+      stringsAsFactors = FALSE
+    )
+  )
+  diagnostics <- data.frame(
+    component = c("PC1", "PC2"),
+    explained_variance = explained[1:2],
+    stringsAsFactors = FALSE
+  )
+  cluster_diagnostics <- aggregate(
+    cluster_distance ~ split + state_id,
+    data = scoring_rows,
+    FUN = function(x) c(row_count = length(x), mean_distance = mean(x), max_distance = max(x))
+  )
+  cluster_diagnostics <- do.call(data.frame, cluster_diagnostics)
+  names(cluster_diagnostics) <- c("split", "state_id", "row_count", "mean_distance", "max_distance")
+  list(
+    scores = scoring_rows,
+    model_contract = contract,
+    diagnostics = diagnostics,
+    cluster_diagnostics = cluster_diagnostics,
+    kept_features = keep,
+    dropped_features = dropped,
+    state_engine = "pca_kmeans",
+    state_ids = g5_pca_regime_kmeans_states(cluster_count),
+    grid_n = cluster_count,
+    cluster_count = cluster_count,
+    kmeans_nstart = nstart,
+    kmeans_centers = centroid_rows[, c("state_id", "cluster_raw", "centroid_pc1", "centroid_pc2"), drop = FALSE],
+    pc1_breaks = numeric(),
+    pc2_breaks = numeric()
+  )
+}
+
+g5_pca_regime_state_coverage <- function(scores, grid_n = 3L, state_ids = NULL) {
+  states <- if (is.null(state_ids)) {
+    as.vector(outer(seq_len(grid_n), seq_len(grid_n), function(x, y) paste0("S", x, "_", y)))
+  } else {
+    as.character(state_ids)
+  }
   splits <- c("TRAIN", "OOS")
   rows <- list()
   for (split in splits) {
@@ -414,7 +607,7 @@ g5_pca_regime_write_csv <- function(x, path) {
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path, title = "PCA Regime State Space", width = 1300L, height = 900L) {
+g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path, title = "PCA Regime State Space", width = 1300L, height = 900L, centroids = NULL) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   aesthetic <- g5_chart_aesthetic()
   plot_rows <- scores[is.finite(scores$pc1) & is.finite(scores$pc2) & !is.na(scores$state_id), , drop = FALSE]
@@ -446,13 +639,21 @@ g5_write_pca_regime_scatter_png <- function(scores, pc1_breaks, pc2_breaks, path
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
   graphics::grid(col = aesthetic$grid)
-  for (b in pc1_breaks[2:(length(pc1_breaks) - 1L)]) {
-    graphics::abline(v = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
+  if (length(pc1_breaks) > 2L) {
+    for (b in pc1_breaks[2:(length(pc1_breaks) - 1L)]) {
+      graphics::abline(v = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
+    }
   }
-  for (b in pc2_breaks[2:(length(pc2_breaks) - 1L)]) {
-    graphics::abline(h = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
+  if (length(pc2_breaks) > 2L) {
+    for (b in pc2_breaks[2:(length(pc2_breaks) - 1L)]) {
+      graphics::abline(h = b, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.45), lty = 2)
+    }
   }
   graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 1.0, 0.72))
+  if (is.data.frame(centroids) && nrow(centroids)) {
+    centroid_cols <- grDevices::adjustcolor(pal[as.character(centroids$state_id)], alpha.f = 1)
+    graphics::points(centroids$centroid_pc1, centroids$centroid_pc2, pch = 4L, col = centroid_cols, cex = 1.6, lwd = 2.1)
+  }
   split_legend_col <- c(
     grDevices::adjustcolor(aesthetic$text, alpha.f = 0.45),
     grDevices::adjustcolor(aesthetic$text, alpha.f = 0.9)
@@ -569,7 +770,8 @@ g5_pca_regime_markdown_report <- function(result, paths, symbol, as_of_timestamp
     "## Model",
     "",
     paste0("- As-of timestamp: `", as.character(as_of_timestamp), "`"),
-    paste0("- Grid: `", result$grid_n, "x", result$grid_n, "`"),
+    paste0("- State engine: `", if ("state_engine" %in% names(result)) result$state_engine else "quantile_grid", "`"),
+    paste0("- State count: `", length(result$state_ids), "`"),
     paste0("- TRAIN: `", min(scores$session_date[scores$split == "TRAIN"]), " to ", max(scores$session_date[scores$split == "TRAIN"]), "`"),
     paste0("- OOS: `", min(scores$session_date[scores$split == "OOS"]), " to ", max(scores$session_date[scores$split == "OOS"]), "`"),
     paste0("- Kept features: `", paste(result$kept_features, collapse = ", "), "`"),
@@ -588,7 +790,8 @@ g5_pca_regime_markdown_report <- function(result, paths, symbol, as_of_timestamp
     paste0("- Price/state chart: `", paths$price_state_png, "`"),
     paste0("- Scores CSV: `", paths$scores_csv, "`"),
     paste0("- Model contract CSV: `", paths$model_contract_csv, "`"),
-    paste0("- State coverage CSV: `", paths$state_coverage_csv, "`")
+    paste0("- State coverage CSV: `", paths$state_coverage_csv, "`"),
+    paste0("- Cluster diagnostics CSV: `", if ("cluster_diagnostics_csv" %in% names(paths)) paths$cluster_diagnostics_csv else "not_applicable", "`")
   )
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path, useBytes = TRUE)
@@ -601,23 +804,36 @@ g5_write_pca_regime_outputs <- function(pca_result, output_dir, prefix, symbol, 
     scores_csv = file.path(output_dir, paste0(prefix, "_scores.csv")),
     model_contract_csv = file.path(output_dir, paste0(prefix, "_model_contract.csv")),
     diagnostics_csv = file.path(output_dir, paste0(prefix, "_diagnostics.csv")),
+    cluster_diagnostics_csv = file.path(output_dir, paste0(prefix, "_cluster_diagnostics.csv")),
     state_coverage_csv = file.path(output_dir, paste0(prefix, "_state_coverage.csv")),
     run_lengths_csv = file.path(output_dir, paste0(prefix, "_run_lengths.csv")),
     pca_scatter_png = file.path(output_dir, paste0(prefix, "_pca_scatter.png")),
     price_state_png = file.path(output_dir, paste0(prefix, "_price_states.png")),
     report_md = file.path(output_dir, paste0(prefix, "_report.md"))
   )
-  pca_result$state_coverage <- g5_pca_regime_state_coverage(pca_result$scores, pca_result$grid_n)
+  pca_result$state_coverage <- g5_pca_regime_state_coverage(pca_result$scores, pca_result$grid_n, pca_result$state_ids)
   pca_result$run_lengths <- g5_pca_regime_run_lengths(pca_result$scores)
   paths$scores_csv <- g5_pca_regime_write_csv(pca_result$scores, paths$scores_csv)
   paths$model_contract_csv <- g5_pca_regime_write_csv(pca_result$model_contract, paths$model_contract_csv)
   paths$diagnostics_csv <- g5_pca_regime_write_csv(pca_result$diagnostics, paths$diagnostics_csv)
+  if ("cluster_diagnostics" %in% names(pca_result)) {
+    paths$cluster_diagnostics_csv <- g5_pca_regime_write_csv(pca_result$cluster_diagnostics, paths$cluster_diagnostics_csv)
+  } else {
+    paths$cluster_diagnostics_csv <- NA_character_
+  }
   paths$state_coverage_csv <- g5_pca_regime_write_csv(pca_result$state_coverage, paths$state_coverage_csv)
   paths$run_lengths_csv <- g5_pca_regime_write_csv(pca_result$run_lengths, paths$run_lengths_csv)
   train_end <- max(pca_result$scores$session_date[pca_result$scores$split == "TRAIN"])
   oos_start <- min(pca_result$scores$session_date[pca_result$scores$split == "OOS"])
-  paths$pca_scatter_png <- g5_write_pca_regime_scatter_png(pca_result$scores, pca_result$pc1_breaks, pca_result$pc2_breaks, paths$pca_scatter_png, title = paste(g5_standardize_symbol(symbol)[[1L]], "PCA 3x3 State Space"))
-  paths$price_state_png <- g5_write_pca_regime_price_png(pca_result$scores, paths$price_state_png, symbol, train_end_date = train_end, oos_start_date = oos_start)
+  centroids <- if ("kmeans_centers" %in% names(pca_result)) pca_result$kmeans_centers else NULL
+  title_suffix <- if (identical(pca_result$state_engine, "pca_kmeans")) "PCA K-Means State Space" else "PCA 3x3 State Space"
+  paths$pca_scatter_png <- g5_write_pca_regime_scatter_png(pca_result$scores, pca_result$pc1_breaks, pca_result$pc2_breaks, paths$pca_scatter_png, title = paste(g5_standardize_symbol(symbol)[[1L]], title_suffix), centroids = centroids)
+  price_title <- if (identical(pca_result$state_engine, "pca_kmeans")) {
+    paste(g5_standardize_symbol(symbol)[[1L]], "PCA K-Means Regime Diagnostic")
+  } else {
+    paste(g5_standardize_symbol(symbol)[[1L]], "PCA 3x3 Regime Diagnostic")
+  }
+  paths$price_state_png <- g5_write_pca_regime_price_png(pca_result$scores, paths$price_state_png, symbol, train_end_date = train_end, oos_start_date = oos_start, title = price_title)
   paths$report_md <- g5_pca_regime_markdown_report(pca_result, paths, symbol, as_of_timestamp, paths$report_md)
   list(paths = paths, result = pca_result)
 }

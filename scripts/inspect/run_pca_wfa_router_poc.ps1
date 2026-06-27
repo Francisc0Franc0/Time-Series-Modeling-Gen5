@@ -15,6 +15,11 @@ param(
 
   [int]$GridN = 3,
 
+  [ValidateSet("quantile_grid", "pca_kmeans")]
+  [string]$StateEngine = "quantile_grid",
+
+  [int]$KmeansNstart = 30,
+
   [int]$MinTrainStateRows = 20,
 
   [string]$CandidateFamilies = "ema_cross,bollinger_touch,no_trade",
@@ -45,8 +50,14 @@ if ($OosQuarters -le 0) {
 if ($FoldCount -lt 1) {
   throw "-FoldCount must be a positive integer."
 }
-if ($GridN -lt 2 -or $GridN -gt 5) {
-  throw "-GridN must be between 2 and 5."
+if ($StateEngine -eq "quantile_grid" -and ($GridN -lt 2 -or $GridN -gt 5)) {
+  throw "-GridN must be between 2 and 5 for quantile grids, or use -ClusterCount semantics through -GridN for k-means."
+}
+if ($StateEngine -eq "pca_kmeans" -and ($GridN -lt 2 -or $GridN -gt 25)) {
+  throw "For -StateEngine pca_kmeans, -GridN is interpreted as cluster count and must be between 2 and 25."
+}
+if ($KmeansNstart -lt 1) {
+  throw "-KmeansNstart must be positive."
 }
 if ($MinTrainStateRows -lt 1) {
   throw "-MinTrainStateRows must be positive."
@@ -74,6 +85,8 @@ $env:GEN5_PCA_WFA_TRAIN_QUARTERS = [string]$TrainQuarters
 $env:GEN5_PCA_WFA_OOS_QUARTERS = [string]$OosQuarters
 $env:GEN5_PCA_WFA_FOLD_COUNT = [string]$FoldCount
 $env:GEN5_PCA_WFA_GRID_N = [string]$GridN
+$env:GEN5_PCA_WFA_STATE_ENGINE = $StateEngine
+$env:GEN5_PCA_WFA_KMEANS_NSTART = [string]$KmeansNstart
 $env:GEN5_PCA_WFA_MIN_TRAIN_STATE_ROWS = [string]$MinTrainStateRows
 $env:GEN5_PCA_WFA_CANDIDATE_FAMILIES = $CandidateFamilies
 $env:GEN5_PCA_WFA_FAST_PERIODS = $FastPeriods

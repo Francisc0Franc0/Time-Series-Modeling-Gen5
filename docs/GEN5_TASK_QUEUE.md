@@ -578,7 +578,7 @@ Visible output:
 
 ### E. Regime/state filter POC roadmap
 
-Status: PCA quantile-grid diagnostic POC and PCA-routed WFA Option A POC implemented for one-or-more stitched OOS folds; remaining regime methods are planned.
+Status: PCA quantile-grid and PCA k-means diagnostic POCs implemented; PCA-routed WFA Option A POC implemented for one-or-more stitched OOS folds with either state engine; remaining regime methods are planned.
 
 Planning memory: `docs/GEN5_REGIME_FILTER_POC_PLAN.md`
 
@@ -586,7 +586,8 @@ Current state:
 
 - `R/regime_pca_poc.R` and `scripts/inspect/run_pca_regime_poc.ps1` implement a diagnostic-only PCA 3x3 state-labeling POC.
 - The POC writes state scores, model contract, diagnostics, state coverage, run lengths, markdown report, PC1/PC2 scatter, and price/state chart under ignored `runs/research_workbench/regime_pocs/`.
-- `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement a PCA-routed WFA POC that can run one or more AMD OOS folds.
+- `R/regime_pca_poc.R` and `scripts/inspect/run_pca_kmeans_regime_poc.ps1` implement a diagnostic-only PCA k-means state-labeling POC.
+- `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement a PCA-routed WFA POC that can run one or more AMD OOS folds using either `quantile_grid` or `pca_kmeans`.
 - The routed POC selects one complete `strategy_spec_id` per TRAIN PCA state per fold and replays those fold-local state selections in stitched OOS using Option A: entry state owns the trade until exit, including across fold boundaries.
 - Routed POC outputs are written under ignored `runs/research_workbench/regime_wfa_pocs/` with short `pcawfa` filenames to avoid Windows path-length issues.
 - It does not yet implement state-adaptive exits, portfolio allocation, leverage, live advice, or execution.

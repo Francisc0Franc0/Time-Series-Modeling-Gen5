@@ -4,16 +4,17 @@ g5_pca_wfa_schema_version <- function() {
   "gen5_pca_wfa_router_poc_v0.1"
 }
 
-g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families) {
+g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
   families <- sort(unique(as.character(candidate_families)))
+  engine_label <- if (identical(as.character(state_engine), "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(grid_n, "x", grid_n)
   paste(
     c(
       "pcawfa",
       symbol,
       paste0(fold_count, "f"),
-      paste0(grid_n, "x", grid_n),
+      engine_label,
       paste0(length(families), "fam"),
       gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
       gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
@@ -23,18 +24,25 @@ g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid
   )
 }
 
-g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families) {
+g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "regime_wfa_pocs",
-    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families)
+    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine)
   )
 }
 
 g5_pca_wfa_all_states <- function(grid_n) {
   as.vector(outer(seq_len(grid_n), seq_len(grid_n), function(x, y) paste0("S", x, "_", y)))
+}
+
+g5_pca_wfa_state_ids <- function(pca_result, grid_n) {
+  if ("state_ids" %in% names(pca_result) && length(pca_result$state_ids)) {
+    return(as.character(pca_result$state_ids))
+  }
+  g5_pca_wfa_all_states(grid_n)
 }
 
 g5_pca_wfa_native_only_exit_stack <- function() {
@@ -105,10 +113,10 @@ g5_pca_wfa_select_state_specs <- function(
   min_train_state_rows = 20L,
   leverage = 1
 ) {
-  states <- g5_pca_wfa_all_states(pca_result$grid_n)
+  states <- g5_pca_wfa_state_ids(pca_result, pca_result$grid_n)
   scores <- pca_result$scores
   state_lookup <- g5_pca_wfa_state_lookup(scores)
-  coverage <- g5_pca_regime_state_coverage(scores, pca_result$grid_n)
+  coverage <- g5_pca_regime_state_coverage(scores, pca_result$grid_n, states)
   train_coverage <- coverage[coverage$split == "TRAIN", , drop = FALSE]
   train_rows_by_state <- stats::setNames(train_coverage$row_count, train_coverage$state_id)
   exit_stacks <- g5_wfa_exit_stacks_for_candidates(exit_stacks, unique(model_grid$strategy_family))
@@ -460,8 +468,11 @@ g5_pca_wfa_fit_fold_models <- function(
   folds,
   model_grid,
   grid_n = 3L,
+  state_engine = c("quantile_grid", "pca_kmeans"),
+  kmeans_nstart = 30L,
   min_train_state_rows = 20L
 ) {
+  state_engine <- match.arg(state_engine)
   fold_models <- list()
   selected_rows <- list()
   perf_rows <- list()
@@ -471,14 +482,26 @@ g5_pca_wfa_fit_fold_models <- function(
   for (fold_i in seq_len(nrow(folds))) {
     fold <- folds[fold_i, , drop = FALSE]
     features <- g5_pca_regime_feature_table(bars, symbol, end_date = fold$oos_end_date[[1L]])
-    pca <- g5_pca_regime_fit(
-      features,
-      train_start_date = fold$train_start_date[[1L]],
-      train_end_date = fold$train_end_date[[1L]],
-      oos_start_date = fold$oos_start_date[[1L]],
-      oos_end_date = fold$oos_end_date[[1L]],
-      grid_n = grid_n
-    )
+    pca <- if (identical(state_engine, "pca_kmeans")) {
+      g5_pca_regime_fit_kmeans(
+        features,
+        train_start_date = fold$train_start_date[[1L]],
+        train_end_date = fold$train_end_date[[1L]],
+        oos_start_date = fold$oos_start_date[[1L]],
+        oos_end_date = fold$oos_end_date[[1L]],
+        cluster_count = grid_n,
+        nstart = kmeans_nstart
+      )
+    } else {
+      g5_pca_regime_fit(
+        features,
+        train_start_date = fold$train_start_date[[1L]],
+        train_end_date = fold$train_end_date[[1L]],
+        oos_start_date = fold$oos_start_date[[1L]],
+        oos_end_date = fold$oos_end_date[[1L]],
+        grid_n = grid_n
+      )
+    }
     selection <- g5_pca_wfa_select_state_specs(
       bars,
       symbol = symbol,
@@ -824,8 +847,11 @@ g5_pca_wfa_run_multi <- function(
   oos_quarters = 1,
   fold_count = 1L,
   grid_n = 3L,
+  state_engine = c("quantile_grid", "pca_kmeans"),
+  kmeans_nstart = 30L,
   min_train_state_rows = 20L
 ) {
+  state_engine <- match.arg(state_engine)
   candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
   folds <- g5_ema_cross_wfa_resolve_folds(
     bars,
@@ -849,6 +875,8 @@ g5_pca_wfa_run_multi <- function(
     folds = folds,
     model_grid = model_grid,
     grid_n = grid_n,
+    state_engine = state_engine,
+    kmeans_nstart = kmeans_nstart,
     min_train_state_rows = min_train_state_rows
   )
   oos <- g5_pca_wfa_simulate_stitched_oos(bars, symbol, folds, fitted$fold_models, fitted$selected_states)
@@ -871,6 +899,8 @@ g5_pca_wfa_run_multi <- function(
       candidate_families = candidate_families,
       fold_count = nrow(folds),
       grid_n = grid_n,
+      state_engine = state_engine,
+      kmeans_nstart = kmeans_nstart,
       min_train_state_rows = min_train_state_rows
     )
   )
@@ -889,6 +919,8 @@ g5_pca_wfa_run_one_fold <- function(
   train_quarters = 8,
   oos_quarters = 1,
   grid_n = 3L,
+  state_engine = c("quantile_grid", "pca_kmeans"),
+  kmeans_nstart = 30L,
   min_train_state_rows = 20L
 ) {
   g5_pca_wfa_run_multi(
@@ -905,6 +937,8 @@ g5_pca_wfa_run_one_fold <- function(
     oos_quarters = oos_quarters,
     fold_count = 1L,
     grid_n = grid_n,
+    state_engine = state_engine,
+    kmeans_nstart = kmeans_nstart,
     min_train_state_rows = min_train_state_rows
   )
 }
@@ -932,7 +966,8 @@ g5_pca_wfa_write_state_price_chart_png <- function(pca_wfa, symbol, path, width 
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 120)
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(9.6, 5.4, 4.2, 10), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
-  graphics::plot(c(0.5, length(x) + 0.5), y_limits, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted daily price", main = paste(g5_standardize_symbol(symbol)[[1L]], "PCA-Routed WFA OOS"), xaxs = "i")
+  engine_label <- if ("settings" %in% names(pca_wfa) && identical(pca_wfa$settings$state_engine, "pca_kmeans")) "PCA K-Means-Routed WFA OOS" else "PCA-Routed WFA OOS"
+  graphics::plot(c(0.5, length(x) + 0.5), y_limits, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted daily price", main = paste(g5_standardize_symbol(symbol)[[1L]], engine_label), xaxs = "i")
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
   if (nrow(plot_rows)) {
@@ -978,7 +1013,7 @@ g5_pca_wfa_write_state_price_chart_png <- function(pca_wfa, symbol, path, width 
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
-g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL, width = 1500L, height = 760L) {
+g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL, width = 1500L, height = 760L, state_engine = "quantile_grid") {
   aesthetic <- g5_chart_aesthetic()
   x <- seq_len(nrow(equity_curve))
   y <- range(c(equity_curve$strategy_equity, equity_curve$buy_hold_equity), finite = TRUE)
@@ -988,7 +1023,9 @@ g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 120)
   on.exit(grDevices::dev.off(), add = TRUE)
   graphics::par(mar = c(9.2, 5.4, 4.2, 2), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
-  graphics::plot(c(0.5, length(x) + 0.5), y_limits, type = "n", xaxt = "n", xlab = "", ylab = "Equity, starting at 1.0", main = paste(g5_standardize_symbol(symbol)[[1L]], "PCA-Routed WFA OOS Equity"), xaxs = "i")
+  route_label <- if (identical(as.character(state_engine), "pca_kmeans")) "PCA K-Means-routed strategy" else "PCA-routed strategy"
+  title_label <- if (identical(as.character(state_engine), "pca_kmeans")) "PCA K-Means-Routed WFA OOS Equity" else "PCA-Routed WFA OOS Equity"
+  graphics::plot(c(0.5, length(x) + 0.5), y_limits, type = "n", xaxt = "n", xlab = "", ylab = "Equity, starting at 1.0", main = paste(g5_standardize_symbol(symbol)[[1L]], title_label), xaxs = "i")
   usr <- graphics::par("usr")
   graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
@@ -1030,7 +1067,7 @@ g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL
   tick_positions <- unique(round(seq(1L, length(x), length.out = min(8L, length(x)))))
   g5_axis_date_labels_45(tick_positions, as.character(as.Date(equity_curve$session_date)[tick_positions]), line_offset = 0.08, color = aesthetic$axis)
   graphics::mtext("Session date", side = 1, line = 7.4, cex = 1.05, col = aesthetic$text)
-  graphics::legend("topleft", legend = c("PCA-routed strategy", "buy and hold", "drawdown shelf", "fold start"), col = c(aesthetic$trade_win_line, "#000000", grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42), grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.65)), lty = c(1, 1, 1, 2), lwd = c(2.1, 1.2, 2.3, 1.1), bty = "n", text.col = aesthetic$text)
+  graphics::legend("topleft", legend = c(route_label, "buy and hold", "drawdown shelf", "fold start"), col = c(aesthetic$trade_win_line, "#000000", grDevices::adjustcolor(aesthetic$down_candle, alpha.f = 0.42), grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.65)), lty = c(1, 1, 1, 2), lwd = c(2.1, 1.2, 2.3, 1.1), bty = "n", text.col = aesthetic$text)
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
@@ -1055,7 +1092,7 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
     "",
     "## Policy",
     "",
-    paste0("- Regime method: PCA ", pca_wfa$settings$grid_n, "x", pca_wfa$settings$grid_n, " quantile grid fit on each TRAIN fold only."),
+    paste0("- Regime method: `", if (identical(pca_wfa$settings$state_engine, "pca_kmeans")) paste0("PCA k-means, k=", pca_wfa$settings$grid_n) else paste0("PCA ", pca_wfa$settings$grid_n, "x", pca_wfa$settings$grid_n, " quantile grid"), "` fit on each TRAIN fold only."),
     paste0("- Fold count: `", nrow(pca_wfa$folds), "`."),
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
     "- OOS behavior: current state can select entries only while flat; open trades remain managed by the entry-state spec.",
@@ -1125,7 +1162,7 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
   g5_wfa_write_csv(pca_wfa$oos_equity_curve, paths$oos_equity_csv)
   g5_wfa_write_csv(pca_wfa$oos_metrics, paths$oos_metrics_csv)
   paths$state_strategy_chart_png <- g5_pca_wfa_write_state_price_chart_png(pca_wfa, symbol, paths$state_strategy_chart_png)
-  paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol, pca_wfa$folds)
+  paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol, pca_wfa$folds, state_engine = pca_wfa$settings$state_engine)
   paths$report_md <- g5_pca_wfa_markdown_report(pca_wfa, paths, symbol, as_of_timestamp, paths$report_md)
   list(paths = paths, result = pca_wfa)
 }

@@ -118,7 +118,7 @@ Implemented operator artifacts:
 
 Purpose: prove state-aware WFA integration with conservative trade ownership before attempting state-adaptive exits or alternative regime methods.
 
-Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement one-or-more-fold AMD PCA-routed WFA proof runs. Each fold fits PCA and 3x3 bin breaks on TRAIN, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen fold-local state/spec choices in stitched OOS.
+Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement one-or-more-fold AMD PCA-routed WFA proof runs. Each fold fits a TRAIN-only PCA state engine, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen fold-local state/spec choices in stitched OOS. Supported state engines are the 3x3 quantile grid and PCA k-means.
 
 Current policy:
 
@@ -141,15 +141,20 @@ Implemented operator artifacts:
 Next unimplemented escalation steps:
 
 - Option B state-adaptive exit management as a separate POC, not a silent change to Option A.
-- compare PCA plus clustering, a simple volatility percentile baseline, and HMMs as separate isolated POCs before canonizing a regime method.
+- compare PCA quantile-grid, PCA k-means, a simple volatility percentile baseline, and HMMs as separate isolated POCs before canonizing a regime method.
 
 ### 3. PCA Plus Clustering
 
 Purpose: keep PCA as the feature-compression step, but let clustering find state shapes rather than forcing rectangular PC bins.
 
-Possible clustering methods:
+Implemented Gen5.1 k-means POC:
 
-- k-means on the first few PCs;
+- `R/regime_pca_poc.R` includes `g5_pca_regime_fit_kmeans()`.
+- `scripts/inspect/run_pca_kmeans_regime_poc.ps1` writes a diagnostic-only AMD k-means packet.
+- The WFA router can use `-StateEngine pca_kmeans` with `-GridN` interpreted as cluster count.
+
+Possible future clustering methods:
+
 - Gaussian mixture models;
 - hierarchical clustering for inspection, not necessarily production.
 
