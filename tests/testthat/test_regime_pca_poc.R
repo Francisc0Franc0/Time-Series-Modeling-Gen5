@@ -49,6 +49,21 @@ test_that("PCA regime POC fits on TRAIN and scores OOS with frozen states", {
   expect_true("extend_to_infinity_for_oos_extremes" %in% fit$model_contract$value)
 })
 
+test_that("PCA regime context feature table builds a wide multi-asset panel for one target", {
+  bars <- rbind(
+    g5_test_pca_bars(symbol = "AMD"),
+    transform(g5_test_pca_bars(symbol = "NVDA"), close = close * 1.2, open = open * 1.2, high = high * 1.2, low = low * 1.2),
+    transform(g5_test_pca_bars(symbol = "TSLA"), close = close * 0.8, open = open * 0.8, high = high * 0.8, low = low * 0.8)
+  )
+  features <- g5_pca_regime_context_feature_table(bars, "AMD", c("AMD", "NVDA", "TSLA"))
+  context_cols <- g5_pca_regime_context_feature_cols(c("AMD", "NVDA", "TSLA"))
+
+  expect_true(all(context_cols %in% names(features)))
+  expect_true(all(c("open", "high", "low", "close", "volume") %in% names(features)))
+  expect_equal(unique(features$symbol), "AMD")
+  expect_equal(unique(features$regime_context_symbols), "AMD,NVDA,TSLA")
+})
+
 test_that("PCA regime coverage includes all 3x3 states even when sparse", {
   bars <- g5_test_pca_bars()
   fit <- g5_pca_regime_fit(

@@ -56,6 +56,7 @@ g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 
 symbol <- g5_standardize_symbol(env_or("GEN5_PCA_WFA_SYMBOL", "AMD"))[[1L]]
+regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(parse_character_list("GEN5_PCA_WFA_REGIME_CONTEXT_SYMBOLS", symbol))))
 end_date <- as.Date(env_or("GEN5_PCA_WFA_END_DATE", ""))
 as_of_timestamp <- env_or("GEN5_PCA_WFA_AS_OF_TIMESTAMP", env_or("GEN5_AS_OF_TIMESTAMP", ""))
 if (is.na(end_date)) g5_stop("GEN5_PCA_WFA_END_DATE must be a valid date.")
@@ -89,6 +90,10 @@ query_start_date <- wfa_start_date - warmup_days
 message("Gen5 PCA-routed WFA POC")
 message("Repository: ", repo_root)
 message("Symbol: ", symbol)
+message("Regime Context Universe: ", paste(regime_context_symbols, collapse = ", "))
+message("Research Candidate Universe: ", symbol)
+message("Tradeable Universe: ", symbol)
+message("Active Allocation Set: ", symbol)
 message("WFA window: ", wfa_start_date, " to ", end_date)
 message("Query window with PCA/indicator warmup: ", query_start_date, " to ", end_date)
 message("As of: ", as_of_timestamp)
@@ -107,9 +112,9 @@ result <- g5_workbench_query_adjusted_daily_bars(
   start_date = query_start_date,
   end_date = end_date,
   as_of_timestamp = as_of_timestamp,
-  symbols = symbol,
-  universe_name = paste0("pca_wfa_router_poc_", symbol),
-  universe_roles = "research_universe",
+  symbols = regime_context_symbols,
+  universe_name = paste0("pca_wfa_router_poc_", symbol, "_ctx_", paste(regime_context_symbols, collapse = "_")),
+  universe_roles = "regime_context_universe",
   refresh = refresh,
   repo_root = repo_root
 )
@@ -131,10 +136,11 @@ pca_wfa <- g5_pca_wfa_run_multi(
   grid_n = grid_n,
   state_engine = state_engine,
   kmeans_nstart = kmeans_nstart,
+  regime_context_symbols = regime_context_symbols,
   min_train_state_rows = min_train_state_rows
 )
 
-output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine)
+output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine, regime_context_symbols)
 prefix <- "pcawfa"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 written_query <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)

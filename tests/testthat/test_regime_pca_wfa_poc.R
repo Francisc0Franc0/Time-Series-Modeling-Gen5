@@ -38,6 +38,21 @@ g5_test_pca_wfa_quarters_for_days <- function(days) {
   as.numeric(days) / (365.25 / 4)
 }
 
+g5_test_pca_wfa_context_bars <- function(n = 760L) {
+  amd <- g5_test_pca_wfa_bars(n = n, symbol = "AMD")
+  nvda <- g5_test_pca_wfa_bars(n = n, symbol = "NVDA")
+  nvda$close <- nvda$close * (1.15 + 0.04 * sin(seq_len(n) / 31))
+  nvda$open <- nvda$open * (1.15 + 0.04 * sin(seq_len(n) / 31))
+  nvda$high <- nvda$high * (1.15 + 0.04 * sin(seq_len(n) / 31))
+  nvda$low <- nvda$low * (1.15 + 0.04 * sin(seq_len(n) / 31))
+  tsla <- g5_test_pca_wfa_bars(n = n, symbol = "TSLA")
+  tsla$close <- tsla$close * (0.85 + 0.05 * cos(seq_len(n) / 27))
+  tsla$open <- tsla$open * (0.85 + 0.05 * cos(seq_len(n) / 27))
+  tsla$high <- tsla$high * (0.85 + 0.05 * cos(seq_len(n) / 27))
+  tsla$low <- tsla$low * (0.85 + 0.05 * cos(seq_len(n) / 27))
+  rbind(amd, nvda, tsla)
+}
+
 test_that("PCA-routed one-fold WFA selects one spec per state with entry-state ownership", {
   bars <- g5_test_pca_wfa_bars()
   wfa <- g5_pca_wfa_run_one_fold(
@@ -132,6 +147,37 @@ test_that("PCA k-means-routed multi-fold WFA reuses the same downstream router c
   expect_equal(min(wfa$oos_equity_curve$session_date), min(wfa$folds$oos_start_date))
   expect_equal(max(wfa$oos_equity_curve$session_date), max(wfa$folds$oos_end_date))
   expect_true(all(wfa$selected_states$ownership_policy == "entry_state_owns_trade_until_exit"))
+})
+
+test_that("PCA-routed WFA can use a multi-asset regime context while trading one symbol", {
+  bars <- g5_test_pca_wfa_context_bars()
+  wfa <- g5_pca_wfa_run_multi(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    fast_periods = c(3L, 5L),
+    slow_periods = c(12L, 20L),
+    bb_lookback_periods = 10L,
+    bb_sd_multipliers = 1.5,
+    candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+    train_quarters = g5_test_pca_wfa_quarters_for_days(380),
+    oos_quarters = g5_test_pca_wfa_quarters_for_days(60),
+    fold_count = 2L,
+    grid_n = 3L,
+    regime_context_symbols = c("AMD", "NVDA", "TSLA"),
+    min_train_state_rows = 5L
+  )
+
+  expect_equal(nrow(wfa$folds), 2L)
+  expect_equal(wfa$settings$regime_context_symbols, c("AMD", "NVDA", "TSLA"))
+  expect_equal(wfa$settings$research_candidate_universe, "AMD")
+  expect_true(all(grepl("AMD,NVDA,TSLA", wfa$pca_scores$regime_context_symbols)))
+  expect_true(any(grepl("^NVDA__", wfa$pca_model_contract$feature)))
+  expect_true(any(grepl("^TSLA__", wfa$pca_model_contract$feature)))
+  if (nrow(wfa$oos_trades) > 0L) {
+    expect_true(all(wfa$oos_trades$symbol == "AMD"))
+  }
 })
 
 test_that("PCA-routed WFA output PNGs render", {

@@ -4,17 +4,20 @@ g5_pca_wfa_schema_version <- function() {
   "gen5_pca_wfa_router_poc_v0.1"
 }
 
-g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid") {
+g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol) {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
   families <- sort(unique(as.character(candidate_families)))
   engine_label <- if (identical(as.character(state_engine), "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(grid_n, "x", grid_n)
+  context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  context_label <- paste0("ctx", length(context_symbols), "a")
   paste(
     c(
       "pcawfa",
       symbol,
       paste0(fold_count, "f"),
       engine_label,
+      context_label,
       paste0(length(families), "fam"),
       gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
       gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
@@ -24,13 +27,13 @@ g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid
   )
 }
 
-g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid") {
+g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol) {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "regime_wfa_pocs",
-    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine)
+    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols)
   )
 }
 
@@ -470,9 +473,12 @@ g5_pca_wfa_fit_fold_models <- function(
   grid_n = 3L,
   state_engine = c("quantile_grid", "pca_kmeans"),
   kmeans_nstart = 30L,
+  regime_context_symbols = symbol,
   min_train_state_rows = 20L
 ) {
   state_engine <- match.arg(state_engine)
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
   fold_models <- list()
   selected_rows <- list()
   perf_rows <- list()
@@ -481,7 +487,17 @@ g5_pca_wfa_fit_fold_models <- function(
   contract_rows <- list()
   for (fold_i in seq_len(nrow(folds))) {
     fold <- folds[fold_i, , drop = FALSE]
-    features <- g5_pca_regime_feature_table(bars, symbol, end_date = fold$oos_end_date[[1L]])
+    use_context_panel <- length(regime_context_symbols) > 1L || !identical(regime_context_symbols[[1L]], symbol)
+    features <- if (use_context_panel) {
+      g5_pca_regime_context_feature_table(bars, symbol, regime_context_symbols, end_date = fold$oos_end_date[[1L]])
+    } else {
+      g5_pca_regime_feature_table(bars, symbol, end_date = fold$oos_end_date[[1L]])
+    }
+    pca_feature_cols <- if (use_context_panel) {
+      g5_pca_regime_context_feature_cols(regime_context_symbols)
+    } else {
+      g5_pca_regime_default_features()
+    }
     pca <- if (identical(state_engine, "pca_kmeans")) {
       g5_pca_regime_fit_kmeans(
         features,
@@ -489,6 +505,7 @@ g5_pca_wfa_fit_fold_models <- function(
         train_end_date = fold$train_end_date[[1L]],
         oos_start_date = fold$oos_start_date[[1L]],
         oos_end_date = fold$oos_end_date[[1L]],
+        feature_cols = pca_feature_cols,
         cluster_count = grid_n,
         nstart = kmeans_nstart
       )
@@ -499,9 +516,13 @@ g5_pca_wfa_fit_fold_models <- function(
         train_end_date = fold$train_end_date[[1L]],
         oos_start_date = fold$oos_start_date[[1L]],
         oos_end_date = fold$oos_end_date[[1L]],
+        feature_cols = pca_feature_cols,
         grid_n = grid_n
       )
     }
+    pca$scores$regime_context_symbols <- paste(regime_context_symbols, collapse = ",")
+    pca$model_contract$regime_context_symbols <- paste(regime_context_symbols, collapse = ",")
+    pca$model_contract$research_candidate_symbol <- symbol
     selection <- g5_pca_wfa_select_state_specs(
       bars,
       symbol = symbol,
@@ -849,9 +870,12 @@ g5_pca_wfa_run_multi <- function(
   grid_n = 3L,
   state_engine = c("quantile_grid", "pca_kmeans"),
   kmeans_nstart = 30L,
+  regime_context_symbols = symbol,
   min_train_state_rows = 20L
 ) {
   state_engine <- match.arg(state_engine)
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
   candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
   folds <- g5_ema_cross_wfa_resolve_folds(
     bars,
@@ -877,6 +901,7 @@ g5_pca_wfa_run_multi <- function(
     grid_n = grid_n,
     state_engine = state_engine,
     kmeans_nstart = kmeans_nstart,
+    regime_context_symbols = regime_context_symbols,
     min_train_state_rows = min_train_state_rows
   )
   oos <- g5_pca_wfa_simulate_stitched_oos(bars, symbol, folds, fitted$fold_models, fitted$selected_states)
@@ -901,6 +926,10 @@ g5_pca_wfa_run_multi <- function(
       grid_n = grid_n,
       state_engine = state_engine,
       kmeans_nstart = kmeans_nstart,
+      regime_context_symbols = regime_context_symbols,
+      research_candidate_universe = symbol,
+      tradeable_universe = symbol,
+      active_allocation_set = symbol,
       min_train_state_rows = min_train_state_rows
     )
   )
@@ -921,6 +950,7 @@ g5_pca_wfa_run_one_fold <- function(
   grid_n = 3L,
   state_engine = c("quantile_grid", "pca_kmeans"),
   kmeans_nstart = 30L,
+  regime_context_symbols = symbol,
   min_train_state_rows = 20L
 ) {
   g5_pca_wfa_run_multi(
@@ -939,6 +969,7 @@ g5_pca_wfa_run_one_fold <- function(
     grid_n = grid_n,
     state_engine = state_engine,
     kmeans_nstart = kmeans_nstart,
+    regime_context_symbols = regime_context_symbols,
     min_train_state_rows = min_train_state_rows
   )
 }
@@ -1094,6 +1125,10 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
     "",
     paste0("- Regime method: `", if (identical(pca_wfa$settings$state_engine, "pca_kmeans")) paste0("PCA k-means, k=", pca_wfa$settings$grid_n) else paste0("PCA ", pca_wfa$settings$grid_n, "x", pca_wfa$settings$grid_n, " quantile grid"), "` fit on each TRAIN fold only."),
     paste0("- Fold count: `", nrow(pca_wfa$folds), "`."),
+    paste0("- Regime Context Universe: `", paste(pca_wfa$settings$regime_context_symbols, collapse = ", "), "`."),
+    paste0("- Research Candidate Universe: `", paste(pca_wfa$settings$research_candidate_universe, collapse = ", "), "`."),
+    paste0("- Tradeable Universe: `", paste(pca_wfa$settings$tradeable_universe, collapse = ", "), "`."),
+    paste0("- Active Allocation Set: `", paste(pca_wfa$settings$active_allocation_set, collapse = ", "), "`."),
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
     "- OOS behavior: current state can select entries only while flat; open trades remain managed by the entry-state spec.",
     "- Sparse TRAIN states route to `no_trade`.",

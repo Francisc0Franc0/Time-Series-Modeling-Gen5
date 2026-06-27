@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid diagnostic POC implemented; other regime POCs remain planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; multi-asset regime context is implemented for the routed WFA POC; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -21,10 +21,22 @@ In other words, folds decide what is known and frozen; states decide which fold-
 
 - What feature panel defines market state?
 - Is the state model asset-specific, market-level, or both?
+- Which assets should contribute to state context, versus which assets are allowed to be researched, traded, or actively allocated?
 - Are states hard labels, probabilities, or both?
 - Does WFA choose one strategy spec per state, or does a state only gate risk/no-trade?
 - How many states are useful before overfitting and interpretability break down?
 - How do we show state labels on charts so the operator can audit them visually?
+
+## Universe Vocabulary
+
+Regime POCs now use these names to keep data expansion separate from trading authority:
+
+- **Regime Context Universe**: assets whose feature panels are allowed to inform state detection. Example: `AMD,NVDA,TSLA`.
+- **Research Candidate Universe**: assets whose signal models and strategy specs are evaluated by WFA. Current PCA-routed POC: one symbol only.
+- **Tradeable Universe**: assets the system is allowed to place trades in. Current PCA-routed POC: one symbol only.
+- **Active Allocation Set**: assets actually held or allocated to at a given point in the replay. Current PCA-routed POC: one symbol only, all-in/flat accounting.
+
+This lets Gen5 test whether broader market/context data improves regime labels without silently becoming pooled optimization, cross-asset parameter selection, or portfolio allocation.
 
 ## State-Routed Trade Ownership Policies
 
@@ -120,9 +132,12 @@ Purpose: prove state-aware WFA integration with conservative trade ownership bef
 
 Current Gen5.1 POC: `R/regime_pca_wfa_poc.R` and `scripts/inspect/run_pca_wfa_router_poc.ps1` implement one-or-more-fold AMD PCA-routed WFA proof runs. Each fold fits a TRAIN-only PCA state engine, selects one complete `strategy_spec_id` per TRAIN state using trades whose entry signals occurred in that state, and replays those frozen fold-local state/spec choices in stitched OOS. Supported state engines are the 3x3 quantile grid and PCA k-means.
 
+The routed WFA POC can now accept `-RegimeContextSymbols`, so state detection can use a wider multi-asset feature panel while WFA still researches and trades only the requested `-Symbol`. Example: `-Symbol AMD -RegimeContextSymbols "AMD,NVDA,TSLA"` builds PCA features from all three assets but emits AMD-only trades and AMD-only stitched OOS charts.
+
 Current policy:
 
 - ownership policy is Option A: `entry_state_owns_trade_until_exit`;
+- Regime Context Universe can be multi-asset, but Research Candidate Universe, Tradeable Universe, and Active Allocation Set remain the single target symbol in this POC;
 - current OOS state can select entries only while flat;
 - once a trade opens, the entry-state spec owns native exits and exit-stack management until the trade closes;
 - a trade may carry across OOS fold boundaries, but its manager does not change;

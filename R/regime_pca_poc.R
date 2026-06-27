@@ -233,6 +233,49 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
   )
 }
 
+g5_pca_regime_context_feature_name <- function(symbol, feature) {
+  safe_symbol <- gsub("[^0-9A-Za-z]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  paste0(safe_symbol, "__", as.character(feature))
+}
+
+g5_pca_regime_context_feature_cols <- function(context_symbols, feature_cols = g5_pca_regime_default_features()) {
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  unlist(lapply(context_symbols, function(symbol) {
+    vapply(feature_cols, function(feature) g5_pca_regime_context_feature_name(symbol, feature), character(1L))
+  }), use.names = FALSE)
+}
+
+g5_pca_regime_context_feature_table <- function(
+  bars,
+  target_symbol,
+  context_symbols,
+  end_date = NULL,
+  feature_cols = g5_pca_regime_default_features()
+) {
+  target_symbol <- g5_standardize_symbol(target_symbol)[[1L]]
+  context_symbols <- unique(c(target_symbol, g5_standardize_symbol(context_symbols)))
+  target <- g5_pca_regime_feature_table(bars, target_symbol, end_date = end_date)
+  base_cols <- c("schema_version", "symbol", "session_date", "open", "high", "low", "close", "volume")
+  out <- target[, base_cols, drop = FALSE]
+  for (symbol in context_symbols) {
+    features <- g5_pca_regime_feature_table(bars, symbol, end_date = end_date)
+    keep <- intersect(feature_cols, names(features))
+    if (length(keep) < length(feature_cols)) {
+      missing <- setdiff(feature_cols, keep)
+      g5_stop(paste0("Missing PCA context features for ", symbol, ": ", paste(missing, collapse = ",")))
+    }
+    part <- features[, c("session_date", keep), drop = FALSE]
+    names(part)[match(keep, names(part))] <- vapply(keep, function(feature) g5_pca_regime_context_feature_name(symbol, feature), character(1L))
+    out <- merge(out, part, by = "session_date", all = FALSE, sort = FALSE)
+  }
+  out <- out[order(as.Date(out$session_date)), , drop = FALSE]
+  rownames(out) <- NULL
+  out$regime_context_symbols <- paste(context_symbols, collapse = ",")
+  out$research_candidate_symbol <- target_symbol
+  attr(out, "feature_cols") <- g5_pca_regime_context_feature_cols(context_symbols, feature_cols)
+  out
+}
+
 g5_pca_regime_state_palette <- function(state_ids) {
   all_states <- as.vector(outer(seq_len(3L), seq_len(3L), function(x, y) paste0("S", x, "_", y)))
   colors <- c(
