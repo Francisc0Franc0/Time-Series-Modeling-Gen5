@@ -78,5 +78,12 @@ message("  Report: ", written$paths$report_md)
 message("  Universe definitions: ", written$paths$universe_definitions_csv)
 message("  Universe index: ", written$paths$universe_index_csv)
 message("  Summary CSV: ", written$paths$summary_csv)
+message("  Overview graphics index: ", written$paths$overview_graphics_csv)
+message("  Metrics overview: ", written$paths$metrics_overview_png)
+for (i in seq_len(nrow(written$overview_graphics))) {
+  if (!identical(written$overview_graphics$graphic_id[[i]], "metrics_overview")) {
+    message("  ", written$overview_graphics$graphic_id[[i]], ": ", written$overview_graphics$path[[i]])
+  }
+}
 message("")
 message("Wrote PCA context-universe comparison packet: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))

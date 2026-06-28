@@ -1532,7 +1532,8 @@ g5_pca_wfa_comparison_table_lines <- function(df, cols) {
 }
 
 g5_pca_wfa_comparison_item_label <- function(item) {
-  paste0(item$panel_mode, " / ", item$state_map)
+  prefix <- if (!is.null(item$universe_id) && nzchar(item$universe_id)) paste0(item$universe_id, " / ") else ""
+  paste0(prefix, item$panel_mode, " / ", item$state_map)
 }
 
 g5_pca_wfa_comparison_plot_date_axis <- function(session_dates, tick_count = 4L, cex = 0.62) {
@@ -1987,6 +1988,159 @@ g5_pca_wfa_universe_summary <- function(universe_index) {
   do.call(rbind, rows)
 }
 
+g5_pca_wfa_universe_read_items <- function(universe_index) {
+  items <- list()
+  for (i in seq_len(nrow(universe_index))) {
+    path_index <- g5_pca_wfa_read_csv_if_exists(universe_index$path_index_csv[[i]])
+    if (!nrow(path_index)) next
+    child_items <- g5_pca_wfa_read_comparison_items(path_index)
+    for (j in seq_along(child_items)) {
+      child_items[[j]]$universe_id <- universe_index$universe_id[[i]]
+      child_items[[j]]$universe_label <- universe_index$universe_label[[i]]
+      child_items[[j]]$regime_context_symbols <- universe_index$regime_context_symbols[[i]]
+      items[[length(items) + 1L]] <- child_items[[j]]
+    }
+  }
+  items
+}
+
+g5_pca_wfa_universe_write_contact_sheet <- function(items, path, chart_type = c("equity", "strategy", "pca_scatter"), title = NULL, width = 2200L, height = 1450L) {
+  chart_type <- match.arg(chart_type)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 130)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(2L, 3L), mar = c(5.8, 4.1, 3.2, 1.4), oma = c(0, 0, 3.4, 0), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  for (item in items) {
+    if (identical(chart_type, "equity")) {
+      g5_pca_wfa_draw_comparison_equity_panel(item)
+    } else if (identical(chart_type, "strategy")) {
+      g5_pca_wfa_draw_comparison_strategy_panel(item)
+    } else {
+      g5_pca_wfa_draw_comparison_scatter_panel(item)
+    }
+  }
+  if (length(items) < 6L) {
+    for (i in seq_len(6L - length(items))) graphics::plot.new()
+  }
+  graphics::mtext(title, side = 3, outer = TRUE, line = 1, col = aesthetic$text, font = 2)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_pca_wfa_metric_cell_colors <- function(values, higher_is_better = TRUE) {
+  x <- as.numeric(values)
+  if (!any(is.finite(x))) {
+    return(rep("#E8E2D6", length(x)))
+  }
+  rng <- range(x, finite = TRUE)
+  if (diff(rng) <= 0) {
+    scaled <- rep(0.5, length(x))
+  } else {
+    scaled <- (x - rng[[1L]]) / diff(rng)
+  }
+  if (!higher_is_better) scaled <- 1 - scaled
+  lo <- grDevices::col2rgb("#C46A52")
+  mid <- grDevices::col2rgb("#F4E8D0")
+  hi <- grDevices::col2rgb("#4F9A7A")
+  vapply(scaled, function(s) {
+    if (!is.finite(s)) return("#E8E2D6")
+    if (s <= 0.5) {
+      w <- s / 0.5
+      rgb <- lo * (1 - w) + mid * w
+    } else {
+      w <- (s - 0.5) / 0.5
+      rgb <- mid * (1 - w) + hi * w
+    }
+    grDevices::rgb(rgb[1, 1] / 255, rgb[2, 1] / 255, rgb[3, 1] / 255)
+  }, character(1L))
+}
+
+g5_pca_wfa_draw_metric_heatmap_panel <- function(summary, metric, title, value_fmt = "%.2f", multiplier = 1, higher_is_better = TRUE) {
+  rows <- unique(summary$universe_id)
+  cols <- c("contextual_snapshot/quantile_grid", "contextual_snapshot/kmeans", "behavioral_pool/quantile_grid", "behavioral_pool/kmeans")
+  values <- matrix(NA_real_, nrow = length(rows), ncol = length(cols), dimnames = list(rows, cols))
+  for (i in seq_len(nrow(summary))) {
+    row <- match(summary$universe_id[[i]], rows)
+    col <- match(paste(summary$panel_mode[[i]], summary$state_map[[i]], sep = "/"), cols)
+    if (!is.na(row) && !is.na(col) && metric %in% names(summary)) {
+      values[row, col] <- as.numeric(summary[[metric]][[i]]) * multiplier
+    }
+  }
+  aesthetic <- g5_chart_aesthetic()
+  graphics::plot(c(0, ncol(values)), c(0, nrow(values)), type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = title, xaxs = "i", yaxs = "i", col.main = aesthetic$text)
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  colors <- matrix(g5_pca_wfa_metric_cell_colors(as.vector(values), higher_is_better = higher_is_better), nrow = nrow(values), ncol = ncol(values))
+  for (r in seq_len(nrow(values))) {
+    for (c in seq_len(ncol(values))) {
+      y0 <- nrow(values) - r
+      graphics::rect(c - 1, y0, c, y0 + 1, col = colors[r, c], border = "#FFFFFF")
+      label <- if (is.na(values[r, c])) "NA" else sprintf(value_fmt, values[r, c])
+      graphics::text(c - 0.5, y0 + 0.5, label, cex = 0.82, col = aesthetic$text)
+    }
+  }
+  graphics::axis(1, at = seq_along(cols) - 0.5, labels = c("ctx/grid", "ctx/k", "pool/grid", "pool/k"), tick = FALSE, las = 2, cex.axis = 0.72)
+  graphics::axis(2, at = rev(seq_along(rows) - 0.5), labels = rows, tick = FALSE, las = 2, cex.axis = 0.72)
+  invisible(NULL)
+}
+
+g5_pca_wfa_write_universe_metrics_overview <- function(summary, path, width = 1900L, height = 1300L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 130)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(2L, 2L), mar = c(7.2, 9.4, 3.1, 1.2), oma = c(0, 0, 3.2, 0), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  g5_pca_wfa_draw_metric_heatmap_panel(summary, "total_return", "Total Return (%)", value_fmt = "%.1f", multiplier = 100, higher_is_better = TRUE)
+  g5_pca_wfa_draw_metric_heatmap_panel(summary, "sharpe", "Sharpe", value_fmt = "%.2f", multiplier = 1, higher_is_better = TRUE)
+  g5_pca_wfa_draw_metric_heatmap_panel(summary, "max_drawdown", "Max Drawdown (%)", value_fmt = "%.1f", multiplier = 100, higher_is_better = TRUE)
+  g5_pca_wfa_draw_metric_heatmap_panel(summary, "trade_count", "Trade Count", value_fmt = "%.0f", multiplier = 1, higher_is_better = TRUE)
+  graphics::mtext("Gen5 PCA Context Universe Metrics Overview", side = 3, outer = TRUE, line = 1, col = aesthetic$text, font = 2)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_pca_wfa_write_universe_overview_graphics <- function(universe_index, summary, output_dir, prefix = "pcawfa_universe_cmp") {
+  items <- g5_pca_wfa_universe_read_items(universe_index)
+  paths <- list()
+  overview_rows <- list()
+  metrics_path <- file.path(output_dir, paste0(prefix, "_metrics_overview.png"))
+  paths$metrics_overview_png <- g5_pca_wfa_write_universe_metrics_overview(summary, metrics_path)
+  overview_rows[[length(overview_rows) + 1L]] <- data.frame(
+    graphic_id = "metrics_overview",
+    chart_type = "metrics",
+    panel_mode = "all",
+    path = paths$metrics_overview_png,
+    stringsAsFactors = FALSE
+  )
+  panel_modes <- c("contextual_snapshot", "behavioral_pool")
+  chart_types <- c("equity", "strategy", "pca_scatter")
+  for (chart_type in chart_types) {
+    for (panel_mode in panel_modes) {
+      panel_items <- items[vapply(items, function(item) identical(item$panel_mode, panel_mode), logical(1L))]
+      panel_items <- panel_items[order(
+        vapply(panel_items, function(item) match(item$universe_id, universe_index$universe_id), integer(1L)),
+        vapply(panel_items, function(item) match(item$state_map, c("quantile_grid", "kmeans")), integer(1L))
+      )]
+      path_name <- paste0(prefix, "_", chart_type, "_", panel_mode, "_overview.png")
+      graphic_id <- paste(chart_type, panel_mode, sep = "_")
+      path <- file.path(output_dir, path_name)
+      title <- paste("Gen5 PCA Context Universe", chart_type, panel_mode, "overview")
+      paths[[paste0(graphic_id, "_png")]] <- g5_pca_wfa_universe_write_contact_sheet(panel_items, path, chart_type = chart_type, title = title)
+      overview_rows[[length(overview_rows) + 1L]] <- data.frame(
+        graphic_id = graphic_id,
+        chart_type = chart_type,
+        panel_mode = panel_mode,
+        path = paths[[paste0(graphic_id, "_png")]],
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  list(paths = paths, overview_graphics = do.call(rbind, overview_rows))
+}
+
 g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, universe_index, summary, settings, path) {
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
@@ -1997,6 +2151,11 @@ g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, univer
   summary_table$sharpe <- num(summary_table$sharpe)
   universe_table <- universe_defs[, c("universe_id", "universe_label", "symbols", "rationale"), drop = FALSE]
   index_table <- universe_index[, c("universe_id", "run_status", "report_md", "equity_contact_sheet_png", "strategy_contact_sheet_png", "pca_scatter_contact_sheet_png"), drop = FALSE]
+  overview_table <- if (!is.null(settings$overview_graphics) && nrow(settings$overview_graphics)) {
+    settings$overview_graphics[, c("graphic_id", "chart_type", "panel_mode", "path"), drop = FALSE]
+  } else {
+    data.frame(graphic_id = character(), chart_type = character(), panel_mode = character(), path = character(), stringsAsFactors = FALSE)
+  }
   lines <- c(
     "# Gen5 PCA Context Universe Comparison",
     "",
@@ -2029,6 +2188,10 @@ g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, univer
     "",
     g5_pca_wfa_comparison_table_lines(index_table, names(index_table)),
     "",
+    "## Cross-Universe Overview Graphics",
+    "",
+    g5_pca_wfa_comparison_table_lines(overview_table, names(overview_table)),
+    "",
     "## Interpretation Guardrails",
     "",
     "- The diverse-context and similar-asset hypotheses are inspection prompts, not assumptions baked into selection.",
@@ -2046,18 +2209,22 @@ g5_write_pca_wfa_universe_comparison_outputs <- function(universe_defs, output_d
   paths <- list(
     universe_definitions_csv = file.path(output_dir, paste0(prefix, "_universe_definitions.csv")),
     universe_index_csv = file.path(output_dir, paste0(prefix, "_universe_index.csv")),
+    overview_graphics_csv = file.path(output_dir, paste0(prefix, "_overview_graphics.csv")),
     summary_csv = file.path(output_dir, paste0(prefix, "_summary.csv")),
     report_md = file.path(output_dir, paste0(prefix, "_report.md"))
   )
+  overview <- g5_pca_wfa_write_universe_overview_graphics(universe_index, summary, output_dir, prefix = prefix)
+  paths <- c(paths, overview$paths)
   utils::write.csv(universe_defs, paths$universe_definitions_csv, row.names = FALSE)
   utils::write.csv(universe_index, paths$universe_index_csv, row.names = FALSE)
+  utils::write.csv(overview$overview_graphics, paths$overview_graphics_csv, row.names = FALSE)
   utils::write.csv(summary, paths$summary_csv, row.names = FALSE)
   paths$report_md <- g5_pca_wfa_universe_comparison_markdown_report(
     universe_defs,
     universe_index,
     summary,
-    settings = list(symbol = symbol, fold_count = fold_count, end_date = wfa_end_date, as_of_timestamp = as_of_timestamp),
+    settings = list(symbol = symbol, fold_count = fold_count, end_date = wfa_end_date, as_of_timestamp = as_of_timestamp, overview_graphics = overview$overview_graphics),
     path = paths$report_md
   )
-  list(paths = paths, universe_index = universe_index, summary = summary, universe_definitions = universe_defs)
+  list(paths = paths, universe_index = universe_index, summary = summary, universe_definitions = universe_defs, overview_graphics = overview$overview_graphics)
 }

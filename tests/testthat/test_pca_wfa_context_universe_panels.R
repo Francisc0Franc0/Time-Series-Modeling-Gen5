@@ -37,6 +37,86 @@ test_that("PCA WFA context universe top-level report summarizes child comparison
       wfa_end_date = as.Date("2026-06-24")
     )
     dir.create(comparison_dir, recursive = TRUE)
+    run_index <- data.frame(
+      panel_mode = c("contextual_snapshot", "behavioral_pool"),
+      state_map = c("quantile_grid", "kmeans"),
+      internal_panel_mode = c("date_aligned_context", "pooled_asset_day"),
+      state_engine = c("quantile_grid", "pca_kmeans"),
+      state_count = c(3L, 9L),
+      run_dir = file.path(comparison_dir, c("aligned_grid", "pooled_kmeans")),
+      stringsAsFactors = FALSE
+    )
+    for (j in seq_len(nrow(run_index))) {
+      dir.create(run_index$run_dir[[j]], recursive = TRUE)
+      utils::write.csv(
+        data.frame(
+          fold_id = "fold_1",
+          fold_no = 1L,
+          train_start_date = as.Date("2024-01-01"),
+          train_end_date = as.Date("2024-12-31"),
+          oos_start_date = as.Date("2025-01-02"),
+          oos_end_date = as.Date("2025-01-07"),
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_index$run_dir[[j]], "pcawfa_folds.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(
+          session_date = as.Date("2025-01-02") + 0:5,
+          strategy_equity = cumprod(1 + rep(0.01 * i * j, 6L)),
+          buy_hold_equity = cumprod(1 + rep(0.004, 6L)),
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_index$run_dir[[j]], "pcawfa_oos_equity.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(
+          fold_id = "fold_1",
+          fold_no = 1L,
+          split = rep(c("TRAIN", "OOS"), each = 6L),
+          session_date = as.Date("2025-01-02") + 0:11,
+          open = 100 + 0:11,
+          high = 102 + 0:11,
+          low = 99 + 0:11,
+          close = 101 + 0:11,
+          pc1 = seq(-1, 1, length.out = 12L),
+          pc2 = rev(seq(-1, 1, length.out = 12L)),
+          state_id = rep(c("S1_1", "S1_2", "S1_3"), 4L),
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_index$run_dir[[j]], "pcawfa_pca_scores.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(
+          entry_execution_date = as.Date("2025-01-03"),
+          entry_execution_price = 101,
+          trace_end_date = as.Date("2025-01-06"),
+          trace_end_price = 104,
+          exit_execution_date = as.Date("2025-01-06"),
+          exit_execution_price = 104,
+          trade_outcome = "win",
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_index$run_dir[[j]], "pcawfa_oos_trades.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(
+          total_return = 0.01 * i * j,
+          sharpe = 0.3 * i * j,
+          max_drawdown = -0.04 * j,
+          trade_count = j + 1L,
+          buy_hold_total_return = 0.1,
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_index$run_dir[[j]], "pcawfa_oos_metrics.csv"),
+        row.names = FALSE
+      )
+    }
+    utils::write.csv(run_index, file.path(comparison_dir, "pcawfa_cmp_path_index.csv"), row.names = FALSE)
     utils::write.csv(
       data.frame(
         panel_mode = c("contextual_snapshot", "behavioral_pool"),
@@ -73,16 +153,22 @@ test_that("PCA WFA context universe top-level report summarizes child comparison
 
   expect_true(file.exists(written$paths$universe_definitions_csv))
   expect_true(file.exists(written$paths$universe_index_csv))
+  expect_true(file.exists(written$paths$overview_graphics_csv))
   expect_true(file.exists(written$paths$summary_csv))
   expect_true(file.exists(written$paths$report_md))
+  expect_true(file.exists(written$paths$metrics_overview_png))
   expect_equal(nrow(written$universe_index), 3L)
   expect_true(all(written$universe_index$run_status == "ok"))
   expect_equal(nrow(written$summary), 6L)
+  expect_equal(nrow(written$overview_graphics), 7L)
   expect_true(all(written$summary$universe_id %in% defs$universe_id))
   expect_true(all(grepl("pcawfa_cmp_equity_2x2.png", written$universe_index$equity_contact_sheet_png, fixed = TRUE)))
+  expect_true(all(file.exists(written$overview_graphics$path)))
+  expect_true(all(file.info(written$overview_graphics$path)$size > 0))
 
   report <- readLines(written$paths$report_md, warn = FALSE)
   expect_true(any(grepl("Research Candidate Universe: `AMD`", report, fixed = TRUE)))
   expect_true(any(grepl("not final research evidence", report, fixed = TRUE)))
   expect_true(any(grepl("diverse_market_risk_context", report, fixed = TRUE)))
+  expect_true(any(grepl("Cross-Universe Overview Graphics", report, fixed = TRUE)))
 })

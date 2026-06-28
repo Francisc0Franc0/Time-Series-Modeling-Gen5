@@ -52,7 +52,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_univers
   -Refresh
 ```
 
-The top-level packet is written under ignored `runs/research_workbench/regime_wfa_universe_comparisons/`. Treat it as a comparison scaffold, not final research evidence.
+The top-level packet is written under ignored `runs/research_workbench/regime_wfa_universe_comparisons/`. It includes a metrics overview PNG plus cross-universe equity, stitched OOS/state-band, and PCA scatter overview PNGs split by `contextual_snapshot` and `behavioral_pool` so each image has six panels instead of one overloaded 12-panel contact sheet. Treat it as a comparison scaffold, not final research evidence.
 
 ## Context Discipline For New Threads
 

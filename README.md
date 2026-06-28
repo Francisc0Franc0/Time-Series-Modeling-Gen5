@@ -459,13 +459,20 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_univers
   -Refresh
 ```
 
-The context-universe wrapper runs one 2x2 comparison packet per named universe, then writes a top-level packet under ignored `runs/research_workbench/regime_wfa_universe_comparisons/` with universe definitions, a universe index, a long summary CSV, and a Markdown report with paths to the three 2x2 contact sheets for each universe. The current named universes are:
+The context-universe wrapper runs one 2x2 comparison packet per named universe, then writes a top-level packet under ignored `runs/research_workbench/regime_wfa_universe_comparisons/` with universe definitions, a universe index, a long summary CSV, a metrics overview PNG, split cross-universe contact sheets, and a Markdown report with paths to the three 2x2 contact sheets for each universe. The current named universes are:
 
 - `baseline_context`: `AMD,NVDA,TSLA`.
 - `similar_high_beta_tech_semis`: `AMD,NVDA,TSLA,SMH,AVGO,MU,INTC`.
 - `diverse_market_risk_context`: `AMD,NVDA,TSLA,SPY,QQQ,IWM,SMH,TLT,GLD,VXX`.
 
 This is an experiment/reporting surface only. It does not make a research gate decision and does not expand the Research Candidate Universe, Tradeable Universe, or Active Allocation Set beyond AMD.
+
+The cross-universe overview graphics are split to avoid one overloaded 12-panel image:
+
+- one metrics overview PNG with total return, Sharpe, max drawdown, and trade count panels;
+- equity overview PNGs split by `contextual_snapshot` and `behavioral_pool`;
+- stitched OOS/state-band overview PNGs split by `contextual_snapshot` and `behavioral_pool`;
+- PCA scatter overview PNGs split by `contextual_snapshot` and `behavioral_pool`.
 
 Two PCA panel modes are available:
 
