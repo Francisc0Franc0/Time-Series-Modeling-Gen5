@@ -81,6 +81,7 @@ fast_periods <- parse_int_list("GEN5_PCA_WFA_FAST_PERIODS", "8,12")
 slow_periods <- parse_int_list("GEN5_PCA_WFA_SLOW_PERIODS", "30,50")
 bb_lookback_periods <- parse_int_list("GEN5_PCA_WFA_BB_LOOKBACK_PERIODS", "10,20")
 bb_sd_multipliers <- parse_num_list("GEN5_PCA_WFA_BB_SD_MULTIPLIERS", "1.5,2")
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_WFA_STRATEGY_GRID_PRESET", "standard"))
 candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PCA_WFA_CANDIDATE_FAMILIES", "ema_cross,bollinger_touch,no_trade"))
 candidate_families <- unique(c(candidate_families, "no_trade"))
 
@@ -106,6 +107,7 @@ message("State engine: ", state_engine)
 message("PCA panel mode: ", pca_panel_mode)
 message(if (identical(state_engine, "pca_kmeans")) paste0("PCA k-means clusters: ", grid_n) else paste0("PCA grid: ", grid_n, "x", grid_n))
 message("Candidate families: ", paste(candidate_families, collapse = ", "))
+message("Strategy grid preset: ", strategy_grid_preset)
 message("Ownership policy: entry_state_owns_trade_until_exit")
 message("Refresh: ", refresh)
 message("POC only: PCA states route strategy-spec entries in OOS; not final research evidence or live advice.")
@@ -132,6 +134,7 @@ pca_wfa <- g5_pca_wfa_run_multi(
   slow_periods = slow_periods,
   bb_lookback_periods = bb_lookback_periods,
   bb_sd_multipliers = bb_sd_multipliers,
+  strategy_grid_preset = strategy_grid_preset,
   candidate_families = candidate_families,
   train_quarters = train_quarters,
   oos_quarters = oos_quarters,
@@ -144,7 +147,7 @@ pca_wfa <- g5_pca_wfa_run_multi(
   min_train_state_rows = min_train_state_rows
 )
 
-output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode)
+output_dir <- g5_pca_wfa_output_dir(repo_root, result$resolved_session$as_of_timestamp, symbol, fold_count, grid_n, min(pca_wfa$folds$train_start_date), end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode, strategy_grid_preset)
 prefix <- "pcawfa"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 written_query <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = prefix)

@@ -176,6 +176,43 @@ g5_wfa_candidate_families <- function(candidate_families) {
   candidate_families
 }
 
+g5_wfa_strategy_grid_preset <- function(strategy_grid_preset = "standard") {
+  preset <- as.character(strategy_grid_preset)[[1L]]
+  allowed <- c("standard", "modest_expanded")
+  if (!preset %in% allowed) {
+    g5_stop(paste0("strategy_grid_preset must be one of: ", paste(allowed, collapse = ", ")))
+  }
+  preset
+}
+
+g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard") {
+  preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
+  if (identical(preset, "modest_expanded")) {
+    return(list(
+      fast_periods = c(8L, 12L, 16L),
+      slow_periods = c(30L, 50L),
+      bb_lookback_periods = c(10L, 20L, 30L),
+      bb_sd_multipliers = c(1.5, 2, 2.5),
+      ema_trend_fast_periods = c(5L, 10L, 15L, 20L),
+      ema_trend_slow_periods = c(25L, 50L, 75L),
+      rsi_periods = c(7L, 14L),
+      rsi_lower_thresholds = c(25, 30, 35),
+      rsi_upper_thresholds = c(60, 70, 75),
+      zret_windows = c(10L, 20L, 30L),
+      zret_entry_z = c(2.0, 2.5),
+      zret_exit_z = c(0.0, 0.5),
+      breakout_lookbacks = c(20L, 30L, 40L),
+      breakout_buffers = c(0, 0.005),
+      vol_expand_thresholds = c(0.0, 0.10, 0.20),
+      pullback_fast_periods = c(5L, 10L, 15L),
+      pullback_slow_periods = c(25L, 50L),
+      pullback_rsi_lower_thresholds = c(30, 35, 40),
+      pullback_rsi_upper_thresholds = c(55, 60)
+    ))
+  }
+  list()
+}
+
 g5_wfa_num_id_label <- function(x) {
   x <- as.numeric(x)
   if (length(x) != 1L || is.na(x) || !is.finite(x)) {

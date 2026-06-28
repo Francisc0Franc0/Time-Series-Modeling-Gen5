@@ -35,6 +35,7 @@ symbol <- g5_standardize_symbol(env_or("GEN5_PCA_UNIVERSE_COMPARISON_SYMBOL", "A
 end_date <- as.Date(env_or("GEN5_PCA_UNIVERSE_COMPARISON_END_DATE", ""))
 as_of_timestamp <- env_or("GEN5_PCA_UNIVERSE_COMPARISON_AS_OF_TIMESTAMP", env_or("GEN5_AS_OF_TIMESTAMP", ""))
 fold_count <- as.integer(env_or("GEN5_PCA_UNIVERSE_COMPARISON_FOLD_COUNT", "5"))
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_UNIVERSE_COMPARISON_STRATEGY_GRID_PRESET", "standard"))
 universe_ids <- parse_character_list(
   "GEN5_PCA_UNIVERSE_COMPARISON_UNIVERSE_IDS",
   "baseline_context,similar_high_beta_tech_semis,diverse_market_risk_context"
@@ -52,7 +53,7 @@ if (length(missing_universes)) {
 universe_defs <- all_defs[match(universe_ids, all_defs$universe_id), , drop = FALSE]
 rownames(universe_defs) <- NULL
 
-output_dir <- g5_pca_wfa_universe_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, nrow(universe_defs), end_date)
+output_dir <- g5_pca_wfa_universe_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, nrow(universe_defs), end_date, strategy_grid_preset)
 written <- g5_write_pca_wfa_universe_comparison_outputs(
   universe_defs = universe_defs,
   output_dir = output_dir,
@@ -60,7 +61,8 @@ written <- g5_write_pca_wfa_universe_comparison_outputs(
   as_of_timestamp = as_of_timestamp,
   symbol = symbol,
   fold_count = fold_count,
-  wfa_end_date = end_date
+  wfa_end_date = end_date,
+  strategy_grid_preset = strategy_grid_preset
 )
 
 message("Gen5 PCA context-universe comparison")
@@ -69,6 +71,7 @@ message("Symbol: ", symbol)
 message("Fold count: ", fold_count)
 message("End date: ", end_date)
 message("As of: ", as_of_timestamp)
+message("Strategy grid preset: ", strategy_grid_preset)
 message("")
 message("Universe index:")
 print(written$universe_index[, c("universe_id", "symbol_count", "run_status", "report_md", "equity_contact_sheet_png", "strategy_contact_sheet_png", "pca_scatter_contact_sheet_png")], row.names = FALSE)

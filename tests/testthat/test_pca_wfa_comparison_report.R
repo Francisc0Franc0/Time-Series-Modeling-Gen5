@@ -187,3 +187,36 @@ test_that("PCA WFA comparison resolver finds actual resolved-fold output folders
 
   expect_equal(found, normalizePath(expected_dir, winslash = "/", mustWork = FALSE))
 })
+
+test_that("PCA WFA artifact paths distinguish expanded strategy grid preset", {
+  families <- c("ema_cross", "bollinger_touch", "no_trade")
+  standard <- g5_pca_wfa_artifact_prefix(
+    as_of_timestamp = "2026-06-24 17:30:00",
+    symbol = "AMD",
+    fold_count = 5L,
+    grid_n = 3L,
+    wfa_start_date = as.Date("2024-01-01"),
+    wfa_end_date = as.Date("2026-06-24"),
+    candidate_families = families,
+    state_engine = "quantile_grid",
+    regime_context_symbols = c("AMD", "NVDA", "TSLA"),
+    pca_panel_mode = "date_aligned_context"
+  )
+  expanded <- g5_pca_wfa_artifact_prefix(
+    as_of_timestamp = "2026-06-24 17:30:00",
+    symbol = "AMD",
+    fold_count = 5L,
+    grid_n = 3L,
+    wfa_start_date = as.Date("2024-01-01"),
+    wfa_end_date = as.Date("2026-06-24"),
+    candidate_families = families,
+    state_engine = "quantile_grid",
+    regime_context_symbols = c("AMD", "NVDA", "TSLA"),
+    pca_panel_mode = "date_aligned_context",
+    strategy_grid_preset = "modest_expanded"
+  )
+
+  expect_false(grepl("gridmodestexpanded", standard, fixed = TRUE))
+  expect_true(grepl("gridmodestexpanded", expanded, fixed = TRUE))
+  expect_false(identical(standard, expanded))
+})

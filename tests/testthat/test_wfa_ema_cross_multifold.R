@@ -249,6 +249,45 @@ test_that("Gen4-inspired WFA candidate grid keeps Bollinger variants distinct", 
   expect_true(all(c("rsi_period", "zret_window", "breakout_lookback", "breakout_buffer", "vol_expand_threshold") %in% names(grid)))
 })
 
+test_that("modest expanded WFA strategy grid preset adds local flexibility", {
+  families <- c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand", "no_trade")
+  standard <- do.call(
+    g5_wfa_candidate_model_grid,
+    c(
+      list(
+        fast_periods = c(8L, 12L),
+        slow_periods = c(30L, 50L),
+        bb_lookback_periods = c(10L, 20L),
+        bb_sd_multipliers = c(1.5, 2),
+        candidate_families = families
+      ),
+      g5_wfa_strategy_grid_preset_values("standard")
+    )
+  )
+  expanded <- do.call(
+    g5_wfa_candidate_model_grid,
+    c(
+      list(candidate_families = families),
+      g5_wfa_strategy_grid_preset_values("modest_expanded")
+    )
+  )
+
+  expect_equal(g5_wfa_strategy_grid_preset("modest_expanded"), "modest_expanded")
+  expect_gt(nrow(expanded), nrow(standard))
+  expect_true("ema_cross_fast16_slow30" %in% expanded$model_instance_id)
+  expect_true("ema_trend_fast20_slow25" %in% expanded$model_instance_id)
+  expect_true("bollinger_touch_n30_sd2p5" %in% expanded$model_instance_id)
+  expect_true("bollinger_mid_reversion_n30_sd2p5" %in% expanded$model_instance_id)
+  expect_true("rsi_mr_n14_lo25_hi75" %in% expanded$model_instance_id)
+  expect_true("zret_mr_n30_ent2_ex0" %in% expanded$model_instance_id)
+  expect_true("breakout_lb40_buf0p005" %in% expanded$model_instance_id)
+  expect_true("vol_expansion_breakout_lb40_buf0p005_vx0p2" %in% expanded$model_instance_id)
+  expect_true("donchian_volexp_lb40_buf0p005_vx0p2" %in% expanded$model_instance_id)
+  expect_true("pullback_up_f15_s25_lo30_hi55" %in% expanded$model_instance_id)
+  expect_equal(nrow(expanded), length(unique(expanded$model_instance_id)))
+  expect_error(g5_wfa_strategy_grid_preset("wide_open"), "strategy_grid_preset")
+})
+
 test_that("WFA numeric ID labels preserve integer zeros", {
   expect_equal(g5_wfa_num_id_label(30), "30")
   expect_equal(g5_wfa_num_id_label(60), "60")

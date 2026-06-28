@@ -33,6 +33,9 @@ param(
 
   [string]$BbSdMultipliers = "1.5,2",
 
+  [ValidateSet("standard", "modest_expanded")]
+  [string]$StrategyGridPreset = "standard",
+
   [int]$WarmupDays = 340,
 
   [switch]$Refresh,
@@ -103,6 +106,7 @@ Write-Host "  Quantile grid: ${QuantileStateCount}x$QuantileStateCount"
 Write-Host "  K-means clusters: $KmeansStateCount"
 Write-Host "  End date: $EndDate"
 Write-Host "  As of: $AsOfTimestamp"
+Write-Host "  Strategy grid preset: $StrategyGridPreset"
 Write-Host "  Refresh: $($Refresh.IsPresent)"
 Write-Host "  Skip child runs: $($SkipChildRuns.IsPresent)"
 
@@ -128,6 +132,7 @@ if (-not $SkipChildRuns.IsPresent) {
       SlowPeriods = $SlowPeriods
       BbLookbackPeriods = $BbLookbackPeriods
       BbSdMultipliers = $BbSdMultipliers
+      StrategyGridPreset = $StrategyGridPreset
       WarmupDays = $WarmupDays
       RscriptPath = $RscriptPath
     }
@@ -151,6 +156,7 @@ $env:GEN5_PCA_COMPARISON_FOLD_COUNT = [string]$FoldCount
 $env:GEN5_PCA_COMPARISON_QUANTILE_STATE_COUNT = [string]$QuantileStateCount
 $env:GEN5_PCA_COMPARISON_KMEANS_STATE_COUNT = [string]$KmeansStateCount
 $env:GEN5_PCA_COMPARISON_CANDIDATE_FAMILIES = $CandidateFamilies
+$env:GEN5_PCA_COMPARISON_STRATEGY_GRID_PRESET = $StrategyGridPreset
 
 Push-Location $repoRoot
 try {

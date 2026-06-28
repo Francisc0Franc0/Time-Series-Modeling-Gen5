@@ -18,40 +18,53 @@ g5_pca_wfa_panel_label <- function(panel_mode) {
   if (identical(mode, "pooled_asset_day")) "pooled" else "aligned"
 }
 
-g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context") {
+g5_pca_wfa_strategy_grid_label <- function(strategy_grid_preset = "standard") {
+  preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
+  if (identical(preset, "standard")) "" else paste0("grid", gsub("[^0-9A-Za-z]+", "", preset))
+}
+
+g5_pca_wfa_artifact_prefix <- function(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context", strategy_grid_preset = "standard") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
   families <- sort(unique(as.character(candidate_families)))
   engine_label <- if (identical(as.character(state_engine), "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(grid_n, "x", grid_n)
   context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
   context_label <- paste0(g5_pca_wfa_panel_label(pca_panel_mode), length(context_symbols), "a")
+  grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
+  parts <- c(
+    "pcawfa",
+    symbol,
+    paste0(fold_count, "f"),
+    engine_label,
+    context_label,
+    paste0(length(families), "fam")
+  )
+  if (nzchar(grid_label)) {
+    parts <- c(parts, grid_label)
+  }
+  parts <- c(
+    parts,
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
+    stamp
+  )
   paste(
-    c(
-      "pcawfa",
-      symbol,
-      paste0(fold_count, "f"),
-      engine_label,
-      context_label,
-      paste0(length(families), "fam"),
-      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_start_date))),
-      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
-      stamp
-    ),
+    parts,
     collapse = "_"
   )
 }
 
-g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context") {
+g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context", strategy_grid_preset = "standard") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "regime_wfa_pocs",
-    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode)
+    g5_pca_wfa_artifact_prefix(as_of_timestamp, symbol, fold_count, grid_n, wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode, strategy_grid_preset)
   )
 }
 
-g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context", fallback_wfa_start_date = NULL) {
+g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context", fallback_wfa_start_date = NULL, strategy_grid_preset = "standard") {
   base_dir <- file.path(repo_root, "runs", "research_workbench", "regime_wfa_pocs")
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol_label <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
@@ -59,6 +72,8 @@ g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_
   engine_label <- if (identical(as.character(state_engine), "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(grid_n, "x", grid_n)
   context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
   context_label <- paste0(g5_pca_wfa_panel_label(pca_panel_mode), length(context_symbols), "a")
+  grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
+  grid_pattern <- if (nzchar(grid_label)) paste0("_", grid_label) else ""
   end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date)))
   pattern <- paste0(
     "^pcawfa_",
@@ -71,7 +86,9 @@ g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_
     context_label,
     "_",
     length(families),
-    "fam_[0-9]+_",
+    "fam",
+    grid_pattern,
+    "_[0-9]+_",
     end_label,
     "_",
     stamp,
@@ -88,7 +105,7 @@ g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_
   }
   if (!is.null(fallback_wfa_start_date)) {
     return(normalizePath(
-      g5_pca_wfa_output_dir(repo_root, as_of_timestamp, symbol, fold_count, grid_n, fallback_wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode),
+      g5_pca_wfa_output_dir(repo_root, as_of_timestamp, symbol, fold_count, grid_n, fallback_wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode, strategy_grid_preset),
       winslash = "/",
       mustWork = FALSE
     ))
@@ -969,6 +986,22 @@ g5_pca_wfa_run_multi <- function(
   slow_periods = c(30L, 50L),
   bb_lookback_periods = c(10L, 20L),
   bb_sd_multipliers = c(1.5, 2),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
+  strategy_grid_preset = "standard",
   candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
   train_quarters = 8,
   oos_quarters = 1,
@@ -982,6 +1015,11 @@ g5_pca_wfa_run_multi <- function(
 ) {
   state_engine <- match.arg(state_engine)
   pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
+  strategy_grid_preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
+  preset_values <- g5_wfa_strategy_grid_preset_values(strategy_grid_preset)
+  for (nm in names(preset_values)) {
+    assign(nm, preset_values[[nm]])
+  }
   symbol <- g5_standardize_symbol(symbol)[[1L]]
   regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
   candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
@@ -999,6 +1037,21 @@ g5_pca_wfa_run_multi <- function(
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
     candidate_families = candidate_families
   )
   fitted <- g5_pca_wfa_fit_fold_models(
@@ -1030,6 +1083,7 @@ g5_pca_wfa_run_multi <- function(
     oos_metrics = metrics,
     settings = list(
       ownership_policy = "entry_state_owns_trade_until_exit",
+      strategy_grid_preset = strategy_grid_preset,
       candidate_families = candidate_families,
       fold_count = nrow(folds),
       grid_n = grid_n,
@@ -1054,6 +1108,22 @@ g5_pca_wfa_run_one_fold <- function(
   slow_periods = c(30L, 50L),
   bb_lookback_periods = c(10L, 20L),
   bb_sd_multipliers = c(1.5, 2),
+  ema_trend_fast_periods = c(5L, 10L, 15L),
+  ema_trend_slow_periods = c(25L, 50L, 75L),
+  rsi_periods = c(7L, 14L),
+  rsi_lower_thresholds = c(30, 35),
+  rsi_upper_thresholds = c(60, 70),
+  zret_windows = c(10L, 20L),
+  zret_entry_z = c(2.0, 2.5),
+  zret_exit_z = c(0.0, 0.5),
+  breakout_lookbacks = c(20L, 30L),
+  breakout_buffers = c(0),
+  vol_expand_thresholds = c(0.0, 0.10, 0.20),
+  pullback_fast_periods = c(5L, 10L),
+  pullback_slow_periods = c(25L, 50L),
+  pullback_rsi_lower_thresholds = c(35, 40),
+  pullback_rsi_upper_thresholds = c(55, 60),
+  strategy_grid_preset = "standard",
   candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
   train_quarters = 8,
   oos_quarters = 1,
@@ -1073,6 +1143,22 @@ g5_pca_wfa_run_one_fold <- function(
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
+    rsi_periods = rsi_periods,
+    rsi_lower_thresholds = rsi_lower_thresholds,
+    rsi_upper_thresholds = rsi_upper_thresholds,
+    zret_windows = zret_windows,
+    zret_entry_z = zret_entry_z,
+    zret_exit_z = zret_exit_z,
+    breakout_lookbacks = breakout_lookbacks,
+    breakout_buffers = breakout_buffers,
+    vol_expand_thresholds = vol_expand_thresholds,
+    pullback_fast_periods = pullback_fast_periods,
+    pullback_slow_periods = pullback_slow_periods,
+    pullback_rsi_lower_thresholds = pullback_rsi_lower_thresholds,
+    pullback_rsi_upper_thresholds = pullback_rsi_upper_thresholds,
+    strategy_grid_preset = strategy_grid_preset,
     candidate_families = candidate_families,
     train_quarters = train_quarters,
     oos_quarters = oos_quarters,
@@ -1317,6 +1403,7 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
     "- OOS behavior: current state can select entries only while flat; open trades remain managed by the entry-state spec.",
     "- Sparse TRAIN states route to `no_trade`.",
     paste0("- Candidate families: `", paste(pca_wfa$settings$candidate_families, collapse = ", "), "`"),
+    paste0("- Strategy grid preset: `", pca_wfa$settings$strategy_grid_preset, "`"),
     paste0("- As-of timestamp: `", as.character(as_of_timestamp), "`"),
     "",
     "## Folds",
@@ -1389,30 +1476,38 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
   list(paths = paths, result = pca_wfa)
 }
 
-g5_pca_wfa_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date) {
+g5_pca_wfa_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date, strategy_grid_preset = "standard") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
   context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
+  parts <- c(
+    "pcawfa_cmp",
+    symbol,
+    paste0(fold_count, "f"),
+    paste0(length(context_symbols), "ctx")
+  )
+  if (nzchar(grid_label)) {
+    parts <- c(parts, grid_label)
+  }
+  parts <- c(
+    parts,
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
+    stamp
+  )
   paste(
-    c(
-      "pcawfa_cmp",
-      symbol,
-      paste0(fold_count, "f"),
-      paste0(length(context_symbols), "ctx"),
-      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
-      stamp
-    ),
+    parts,
     collapse = "_"
   )
 }
 
-g5_pca_wfa_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date) {
+g5_pca_wfa_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date, strategy_grid_preset = "standard") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "regime_wfa_comparisons",
-    g5_pca_wfa_comparison_prefix(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date)
+    g5_pca_wfa_comparison_prefix(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date, strategy_grid_preset)
   )
 }
 
@@ -1750,6 +1845,7 @@ g5_pca_wfa_comparison_markdown_report <- function(summary, family_counts, path_i
     paste0("- Fold count: `", settings$fold_count, "`"),
     paste0("- End date: `", settings$end_date, "`"),
     paste0("- As-of timestamp: `", settings$as_of_timestamp, "`"),
+    paste0("- Strategy grid preset: `", if (!is.null(settings$strategy_grid_preset)) settings$strategy_grid_preset else "standard", "`"),
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
     "",
     "## Comparison Summary",
@@ -1870,29 +1966,37 @@ g5_pca_wfa_context_universe_symbols <- function(universe_id, symbol = "AMD") {
   g5_standardize_symbol(strsplit(defs$symbols[[idx]], ",", fixed = TRUE)[[1L]])
 }
 
-g5_pca_wfa_universe_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date) {
+g5_pca_wfa_universe_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date, strategy_grid_preset = "standard") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
+  parts <- c(
+    "pcawfa_universe_cmp",
+    symbol,
+    paste0(fold_count, "f"),
+    paste0(as.integer(universe_count), "u")
+  )
+  if (nzchar(grid_label)) {
+    parts <- c(parts, grid_label)
+  }
+  parts <- c(
+    parts,
+    gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
+    stamp
+  )
   paste(
-    c(
-      "pcawfa_universe_cmp",
-      symbol,
-      paste0(fold_count, "f"),
-      paste0(as.integer(universe_count), "u"),
-      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
-      stamp
-    ),
+    parts,
     collapse = "_"
   )
 }
 
-g5_pca_wfa_universe_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date) {
+g5_pca_wfa_universe_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date, strategy_grid_preset = "standard") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "regime_wfa_universe_comparisons",
-    g5_pca_wfa_universe_comparison_prefix(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date)
+    g5_pca_wfa_universe_comparison_prefix(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date, strategy_grid_preset)
   )
 }
 
@@ -1908,11 +2012,11 @@ g5_pca_wfa_universe_contact_paths <- function(comparison_dir, prefix = "pcawfa_c
   )
 }
 
-g5_pca_wfa_universe_index <- function(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date) {
+g5_pca_wfa_universe_index <- function(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date, strategy_grid_preset = "standard") {
   rows <- list()
   for (i in seq_len(nrow(universe_defs))) {
     symbols <- g5_standardize_symbol(strsplit(universe_defs$symbols[[i]], ",", fixed = TRUE)[[1L]])
-    comparison_dir <- g5_pca_wfa_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, symbols, wfa_end_date)
+    comparison_dir <- g5_pca_wfa_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, symbols, wfa_end_date, strategy_grid_preset)
     paths <- g5_pca_wfa_universe_contact_paths(comparison_dir)
     rows[[length(rows) + 1L]] <- data.frame(
       universe_id = universe_defs$universe_id[[i]],
@@ -2170,6 +2274,7 @@ g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, univer
     paste0("- Fold count: `", settings$fold_count, "`"),
     paste0("- End date: `", settings$end_date, "`"),
     paste0("- As-of timestamp: `", settings$as_of_timestamp, "`"),
+    paste0("- Strategy grid preset: `", if (!is.null(settings$strategy_grid_preset)) settings$strategy_grid_preset else "standard", "`"),
     "- Child surface: `PanelMode x StateMap` with contextual snapshot/behavioral pool and quantile grid/k-means.",
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
     "",
@@ -2202,9 +2307,9 @@ g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, univer
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_write_pca_wfa_universe_comparison_outputs <- function(universe_defs, output_dir, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date, prefix = "pcawfa_universe_cmp") {
+g5_write_pca_wfa_universe_comparison_outputs <- function(universe_defs, output_dir, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date, prefix = "pcawfa_universe_cmp", strategy_grid_preset = "standard") {
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-  universe_index <- g5_pca_wfa_universe_index(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date)
+  universe_index <- g5_pca_wfa_universe_index(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date, strategy_grid_preset)
   summary <- g5_pca_wfa_universe_summary(universe_index)
   paths <- list(
     universe_definitions_csv = file.path(output_dir, paste0(prefix, "_universe_definitions.csv")),
@@ -2223,7 +2328,7 @@ g5_write_pca_wfa_universe_comparison_outputs <- function(universe_defs, output_d
     universe_defs,
     universe_index,
     summary,
-    settings = list(symbol = symbol, fold_count = fold_count, end_date = wfa_end_date, as_of_timestamp = as_of_timestamp, overview_graphics = overview$overview_graphics),
+    settings = list(symbol = symbol, fold_count = fold_count, end_date = wfa_end_date, as_of_timestamp = as_of_timestamp, strategy_grid_preset = strategy_grid_preset, overview_graphics = overview$overview_graphics),
     path = paths$report_md
   )
   list(paths = paths, universe_index = universe_index, summary = summary, universe_definitions = universe_defs, overview_graphics = overview$overview_graphics)

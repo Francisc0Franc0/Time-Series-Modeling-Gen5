@@ -37,6 +37,9 @@ param(
 
   [string]$BbSdMultipliers = "1.5,2",
 
+  [ValidateSet("standard", "modest_expanded")]
+  [string]$StrategyGridPreset = "standard",
+
   [int]$WarmupDays = 340,
 
   [switch]$Refresh,
@@ -100,6 +103,7 @@ $env:GEN5_PCA_WFA_FAST_PERIODS = $FastPeriods
 $env:GEN5_PCA_WFA_SLOW_PERIODS = $SlowPeriods
 $env:GEN5_PCA_WFA_BB_LOOKBACK_PERIODS = $BbLookbackPeriods
 $env:GEN5_PCA_WFA_BB_SD_MULTIPLIERS = $BbSdMultipliers
+$env:GEN5_PCA_WFA_STRATEGY_GRID_PRESET = $StrategyGridPreset
 $env:GEN5_PCA_WFA_WARMUP_DAYS = [string]$WarmupDays
 $env:GEN5_PCA_WFA_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 

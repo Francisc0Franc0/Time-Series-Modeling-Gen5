@@ -37,6 +37,9 @@ param(
 
   [string]$BbSdMultipliers = "1.5,2",
 
+  [ValidateSet("standard", "modest_expanded")]
+  [string]$StrategyGridPreset = "standard",
+
   [int]$WarmupDays = 340,
 
   [switch]$Refresh,
@@ -93,6 +96,7 @@ $runnerParams = @{
   SlowPeriods = $SlowPeriods
   BbLookbackPeriods = $BbLookbackPeriods
   BbSdMultipliers = $BbSdMultipliers
+  StrategyGridPreset = $StrategyGridPreset
   WarmupDays = $WarmupDays
   RscriptPath = $RscriptPath
 }

@@ -54,6 +54,7 @@ if (is.na(kmeans_state_count) || kmeans_state_count < 2L || kmeans_state_count >
 
 candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PCA_COMPARISON_CANDIDATE_FAMILIES", "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade"))
 candidate_families <- unique(c(candidate_families, "no_trade"))
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_COMPARISON_STRATEGY_GRID_PRESET", "standard"))
 
 train_days <- g5_ema_cross_wfa_quarters_to_days(train_quarters)
 oos_days <- g5_ema_cross_wfa_quarters_to_days(oos_quarters)
@@ -78,7 +79,8 @@ for (panel_mode in panel_modes) {
       state_engine = state_engine,
       regime_context_symbols = regime_context_symbols,
       pca_panel_mode = internal_panel_mode,
-      fallback_wfa_start_date = wfa_start_date
+      fallback_wfa_start_date = wfa_start_date,
+      strategy_grid_preset = strategy_grid_preset
     )
     rows[[length(rows) + 1L]] <- data.frame(
       panel_mode = panel_mode,
@@ -93,13 +95,14 @@ for (panel_mode in panel_modes) {
 }
 run_index <- do.call(rbind, rows)
 
-output_dir <- g5_pca_wfa_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, regime_context_symbols, end_date)
+output_dir <- g5_pca_wfa_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, regime_context_symbols, end_date, strategy_grid_preset)
 settings <- list(
   symbol = symbol,
   regime_context_symbols = regime_context_symbols,
   fold_count = fold_count,
   end_date = end_date,
-  as_of_timestamp = as_of_timestamp
+  as_of_timestamp = as_of_timestamp,
+  strategy_grid_preset = strategy_grid_preset
 )
 written <- g5_write_pca_wfa_comparison_outputs(
   run_index = run_index,
@@ -114,6 +117,7 @@ message("Regime Context Universe: ", paste(regime_context_symbols, collapse = ",
 message("Fold count: ", fold_count)
 message("End date: ", end_date)
 message("As of: ", as_of_timestamp)
+message("Strategy grid preset: ", strategy_grid_preset)
 message("")
 message("Comparison summary:")
 print(written$summary[, c("panel_mode", "state_map", "state_count", "run_status", "total_return", "sharpe", "max_drawdown", "trade_count", "oos_covered_states", "selected_families")], row.names = FALSE)

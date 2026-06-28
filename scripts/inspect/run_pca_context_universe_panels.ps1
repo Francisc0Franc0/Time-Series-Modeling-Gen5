@@ -33,6 +33,9 @@ param(
 
   [string]$BbSdMultipliers = "1.5,2",
 
+  [ValidateSet("standard", "modest_expanded")]
+  [string]$StrategyGridPreset = "standard",
+
   [int]$WarmupDays = 340,
 
   [switch]$Refresh,
@@ -94,6 +97,7 @@ Write-Host "  Universe ids: $($universeList -join ', ')"
 Write-Host "  Fold count: $FoldCount"
 Write-Host "  End date: $EndDate"
 Write-Host "  As of: $AsOfTimestamp"
+Write-Host "  Strategy grid preset: $StrategyGridPreset"
 Write-Host "  Refresh: $($Refresh.IsPresent)"
 Write-Host "  Skip child runs: $($SkipChildRuns.IsPresent)"
 
@@ -119,6 +123,7 @@ if (-not $SkipChildRuns.IsPresent) {
       SlowPeriods = $SlowPeriods
       BbLookbackPeriods = $BbLookbackPeriods
       BbSdMultipliers = $BbSdMultipliers
+      StrategyGridPreset = $StrategyGridPreset
       WarmupDays = $WarmupDays
       RscriptPath = $RscriptPath
     }
@@ -137,6 +142,7 @@ $env:GEN5_PCA_UNIVERSE_COMPARISON_END_DATE = $EndDate
 $env:GEN5_PCA_UNIVERSE_COMPARISON_AS_OF_TIMESTAMP = $AsOfTimestamp
 $env:GEN5_PCA_UNIVERSE_COMPARISON_FOLD_COUNT = [string]$FoldCount
 $env:GEN5_PCA_UNIVERSE_COMPARISON_UNIVERSE_IDS = ($universeList -join ",")
+$env:GEN5_PCA_UNIVERSE_COMPARISON_STRATEGY_GRID_PRESET = $StrategyGridPreset
 
 Push-Location $repoRoot
 try {
