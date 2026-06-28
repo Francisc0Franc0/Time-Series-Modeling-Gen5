@@ -12,9 +12,11 @@ g5_pca_regime_default_features <- function() {
     "vol_20",
     "atr_pct",
     "dist_anchor_200",
+    "chop_14",
     "bb_width",
     "efficiency_ratio_20",
-    "z_close_sma20"
+    "z_close_sma20",
+    "ret_skew_20"
   )
 }
 
@@ -100,6 +102,48 @@ g5_pca_regime_rolling_sd <- function(x, n) {
   out
 }
 
+g5_pca_regime_rolling_sum <- function(x, n) {
+  x <- as.numeric(x)
+  n <- as.integer(n)
+  if (is.na(n) || n < 1L) {
+    g5_stop("rolling sum period must be positive.")
+  }
+  out <- rep(NA_real_, length(x))
+  if (length(x) < n) {
+    return(out)
+  }
+  for (i in n:length(x)) {
+    window <- x[(i - n + 1L):i]
+    if (all(is.finite(window))) {
+      out[[i]] <- sum(window)
+    }
+  }
+  out
+}
+
+g5_pca_regime_rolling_skewness <- function(x, n) {
+  x <- as.numeric(x)
+  n <- as.integer(n)
+  if (is.na(n) || n < 3L) {
+    g5_stop("rolling skewness period must be >= 3.")
+  }
+  out <- rep(NA_real_, length(x))
+  if (length(x) < n) {
+    return(out)
+  }
+  for (i in n:length(x)) {
+    window <- x[(i - n + 1L):i]
+    if (all(is.finite(window))) {
+      s <- stats::sd(window)
+      if (is.finite(s) && s > 0) {
+        m <- mean(window)
+        out[[i]] <- mean(((window - m) / s)^3)
+      }
+    }
+  }
+  out
+}
+
 g5_pca_regime_ema <- function(x, n) {
   x <- as.numeric(x)
   n <- as.integer(n)
@@ -151,6 +195,32 @@ g5_pca_regime_true_range <- function(high, low, close) {
   close <- as.numeric(close)
   prior_close <- c(NA_real_, head(close, -1L))
   pmax(high - low, abs(high - prior_close), abs(low - prior_close), na.rm = TRUE)
+}
+
+g5_pca_regime_adx <- function(high, low, close, n = 14L) {
+  high <- as.numeric(high)
+  low <- as.numeric(low)
+  close <- as.numeric(close)
+  n <- as.integer(n)
+  if (is.na(n) || n < 2L) {
+    g5_stop("ADX period must be >= 2.")
+  }
+  if (length(close) < n * 2L) {
+    return(rep(NA_real_, length(close)))
+  }
+  prior_high <- c(NA_real_, head(high, -1L))
+  prior_low <- c(NA_real_, head(low, -1L))
+  up_move <- high - prior_high
+  down_move <- prior_low - low
+  plus_dm <- ifelse(is.finite(up_move) & is.finite(down_move) & up_move > down_move & up_move > 0, up_move, 0)
+  minus_dm <- ifelse(is.finite(up_move) & is.finite(down_move) & down_move > up_move & down_move > 0, down_move, 0)
+  tr_sum <- g5_pca_regime_rolling_sum(g5_pca_regime_true_range(high, low, close), n)
+  plus_di <- 100 * g5_pca_regime_rolling_sum(plus_dm, n) / pmax(tr_sum, 1e-8)
+  minus_di <- 100 * g5_pca_regime_rolling_sum(minus_dm, n) / pmax(tr_sum, 1e-8)
+  dx <- 100 * abs(plus_di - minus_di) / pmax(plus_di + minus_di, 1e-8)
+  out <- g5_pca_regime_rolling_mean(dx, n)
+  out[!is.finite(out)] <- NA_real_
+  out
 }
 
 g5_pca_regime_efficiency_ratio <- function(close, n = 20L) {
@@ -226,9 +296,11 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
     vol_20 = vol_20,
     atr_pct = atr_14 / close,
     dist_anchor_200 = close / sma_200 - 1,
+    chop_14 = g5_pca_regime_adx(high, low, close, 14L),
     bb_width = (bb_up - bb_dn) / pmax(bb_mid, 1e-8),
     efficiency_ratio_20 = g5_pca_regime_efficiency_ratio(close, 20L),
     z_close_sma20 = (close - sma_20) / pmax(sd_20_close, 1e-8),
+    ret_skew_20 = g5_pca_regime_rolling_skewness(ret1, 20L),
     stringsAsFactors = FALSE
   )
 }

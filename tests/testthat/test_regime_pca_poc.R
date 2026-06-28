@@ -31,6 +31,12 @@ g5_test_pca_bars <- function(n = 360L, symbol = "AMD", start = as.Date("2025-01-
 test_that("PCA regime POC fits on TRAIN and scores OOS with frozen states", {
   bars <- g5_test_pca_bars()
   features <- g5_pca_regime_feature_table(bars, "AMD")
+
+  expect_true(all(c("chop_14", "ret_skew_20") %in% g5_pca_regime_default_features()))
+  expect_true(all(g5_pca_regime_default_features() %in% names(features)))
+  expect_gt(sum(is.finite(features$chop_14)), 0L)
+  expect_gt(sum(is.finite(features$ret_skew_20)), 0L)
+
   fit <- g5_pca_regime_fit(
     features,
     train_start_date = as.Date("2025-07-20"),
