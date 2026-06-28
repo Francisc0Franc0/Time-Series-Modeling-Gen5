@@ -16,6 +16,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - PCA regime labeling works with quantile grids and k-means;
 - PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
 - PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
+- The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 
 The newest operator surface is:
 
@@ -32,6 +33,16 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_repo
 ```
 
 The comparison wrapper runs four child packets through `scripts/inspect/run_pca_router_workbench.ps1`, then writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`. Use `-SkipChildRuns` to rebuild the comparison report and visual contact sheets from already-generated child packets.
+
+## Context Discipline For New Threads
+
+To keep Codex context usage manageable:
+
+- Read `AGENTS.md` and this handoff first; only read deeper docs when the task needs them.
+- Use generated report paths under ignored `runs/` as evidence surfaces; do not paste large generated tables into prompts unless necessary.
+- Prefer Medium reasoning for scoped implementation, known reruns, doc updates, commits, and pushes.
+- Prefer High reasoning for research gates, leakage-safety design, result interpretation, and new methodology decisions.
+- Keep handoffs compact: state the current branch, exact artifact/report path, active decision, and STOP states rather than copying full experiment output.
 
 ## Current PCA Vocabulary
 
