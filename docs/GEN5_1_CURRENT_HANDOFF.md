@@ -16,6 +16,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - PCA regime labeling works with quantile grids and k-means;
 - PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
 - PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
+- PCA context-universe comparison reporting can run the same 2x2 surface for named context universes, then write a top-level universe index/summary with contact-sheet paths while keeping AMD as the only researched/traded/allocated asset.
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 
 The newest operator surface is:
@@ -33,6 +34,25 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_repo
 ```
 
 The comparison wrapper runs four child packets through `scripts/inspect/run_pca_router_workbench.ps1`, then writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`. Use `-SkipChildRuns` to rebuild the comparison report and visual contact sheets from already-generated child packets.
+
+The context-universe wrapper runs the comparison wrapper for:
+
+- `baseline_context`: `AMD,NVDA,TSLA`
+- `similar_high_beta_tech_semis`: `AMD,NVDA,TSLA,SMH,AVGO,MU,INTC`
+- `diverse_market_risk_context`: `AMD,NVDA,TSLA,SPY,QQQ,IWM,SMH,TLT,GLD,VXX`
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_universe_panels.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
+  -Refresh
+```
+
+The top-level packet is written under ignored `runs/research_workbench/regime_wfa_universe_comparisons/`. Treat it as a comparison scaffold, not final research evidence.
 
 ## Context Discipline For New Threads
 

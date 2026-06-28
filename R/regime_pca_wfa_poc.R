@@ -1828,3 +1828,236 @@ g5_write_pca_wfa_comparison_outputs <- function(run_index, output_dir, settings,
   paths$report_md <- g5_pca_wfa_comparison_markdown_report(summary, family_counts, path_index, settings, paths$report_md)
   list(paths = paths, summary = summary, selected_family_counts = family_counts, path_index = path_index)
 }
+
+g5_pca_wfa_context_universe_definitions <- function(symbol = "AMD") {
+  target <- g5_standardize_symbol(symbol)[[1L]]
+  make_symbols <- function(extra) unique(c(target, g5_standardize_symbol(extra)))
+  rows <- list(
+    data.frame(
+      universe_id = "baseline_context",
+      universe_label = "Baseline context",
+      symbols = paste(make_symbols(c("NVDA", "TSLA")), collapse = ","),
+      rationale = "Current AMD/NVDA/TSLA regime context for continuity with the existing PCA router comparison surface.",
+      stringsAsFactors = FALSE
+    ),
+    data.frame(
+      universe_id = "similar_high_beta_tech_semis",
+      universe_label = "Similar high-beta tech and semiconductors",
+      symbols = paste(make_symbols(c("NVDA", "TSLA", "SMH", "AVGO", "MU", "INTC")), collapse = ","),
+      rationale = "Adds liquid semiconductor peers and a semiconductor ETF around the current high-beta AMD/NVDA/TSLA anchor set.",
+      stringsAsFactors = FALSE
+    ),
+    data.frame(
+      universe_id = "diverse_market_risk_context",
+      universe_label = "Diverse market and risk context",
+      symbols = paste(make_symbols(c("NVDA", "TSLA", "SPY", "QQQ", "IWM", "SMH", "TLT", "GLD", "VXX")), collapse = ","),
+      rationale = "Adds broad equity, growth, small-cap, semiconductor, duration, gold, and volatility-proxy context while keeping AMD as the only traded symbol.",
+      stringsAsFactors = FALSE
+    )
+  )
+  defs <- do.call(rbind, rows)
+  defs$symbol_count <- vapply(strsplit(defs$symbols, ",", fixed = TRUE), length, integer(1L))
+  defs
+}
+
+g5_pca_wfa_context_universe_symbols <- function(universe_id, symbol = "AMD") {
+  defs <- g5_pca_wfa_context_universe_definitions(symbol)
+  idx <- match(as.character(universe_id)[[1L]], defs$universe_id)
+  if (is.na(idx)) {
+    g5_stop(paste0("Unknown PCA WFA context universe: ", universe_id))
+  }
+  g5_standardize_symbol(strsplit(defs$symbols[[idx]], ",", fixed = TRUE)[[1L]])
+}
+
+g5_pca_wfa_universe_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date) {
+  stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
+  symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  paste(
+    c(
+      "pcawfa_universe_cmp",
+      symbol,
+      paste0(fold_count, "f"),
+      paste0(as.integer(universe_count), "u"),
+      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
+      stamp
+    ),
+    collapse = "_"
+  )
+}
+
+g5_pca_wfa_universe_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date) {
+  file.path(
+    repo_root,
+    "runs",
+    "research_workbench",
+    "regime_wfa_universe_comparisons",
+    g5_pca_wfa_universe_comparison_prefix(as_of_timestamp, symbol, fold_count, universe_count, wfa_end_date)
+  )
+}
+
+g5_pca_wfa_universe_contact_paths <- function(comparison_dir, prefix = "pcawfa_cmp") {
+  list(
+    summary_csv = file.path(comparison_dir, paste0(prefix, "_summary.csv")),
+    selected_family_counts_csv = file.path(comparison_dir, paste0(prefix, "_selected_family_counts.csv")),
+    path_index_csv = file.path(comparison_dir, paste0(prefix, "_path_index.csv")),
+    equity_contact_sheet_png = file.path(comparison_dir, paste0(prefix, "_equity_2x2.png")),
+    strategy_contact_sheet_png = file.path(comparison_dir, paste0(prefix, "_stitched_oos_2x2.png")),
+    pca_scatter_contact_sheet_png = file.path(comparison_dir, paste0(prefix, "_pca_scatter_2x2.png")),
+    report_md = file.path(comparison_dir, paste0(prefix, "_report.md"))
+  )
+}
+
+g5_pca_wfa_universe_index <- function(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date) {
+  rows <- list()
+  for (i in seq_len(nrow(universe_defs))) {
+    symbols <- g5_standardize_symbol(strsplit(universe_defs$symbols[[i]], ",", fixed = TRUE)[[1L]])
+    comparison_dir <- g5_pca_wfa_comparison_output_dir(repo_root, as_of_timestamp, symbol, fold_count, symbols, wfa_end_date)
+    paths <- g5_pca_wfa_universe_contact_paths(comparison_dir)
+    rows[[length(rows) + 1L]] <- data.frame(
+      universe_id = universe_defs$universe_id[[i]],
+      universe_label = universe_defs$universe_label[[i]],
+      regime_context_symbols = paste(symbols, collapse = ","),
+      symbol_count = length(symbols),
+      comparison_dir = normalizePath(comparison_dir, winslash = "/", mustWork = FALSE),
+      run_status = if (file.exists(paths$summary_csv)) "ok" else "missing_outputs",
+      report_md = normalizePath(paths$report_md, winslash = "/", mustWork = FALSE),
+      summary_csv = normalizePath(paths$summary_csv, winslash = "/", mustWork = FALSE),
+      selected_family_counts_csv = normalizePath(paths$selected_family_counts_csv, winslash = "/", mustWork = FALSE),
+      path_index_csv = normalizePath(paths$path_index_csv, winslash = "/", mustWork = FALSE),
+      equity_contact_sheet_png = normalizePath(paths$equity_contact_sheet_png, winslash = "/", mustWork = FALSE),
+      strategy_contact_sheet_png = normalizePath(paths$strategy_contact_sheet_png, winslash = "/", mustWork = FALSE),
+      pca_scatter_contact_sheet_png = normalizePath(paths$pca_scatter_contact_sheet_png, winslash = "/", mustWork = FALSE),
+      rationale = universe_defs$rationale[[i]],
+      stringsAsFactors = FALSE
+    )
+  }
+  do.call(rbind, rows)
+}
+
+g5_pca_wfa_universe_summary <- function(universe_index) {
+  rows <- list()
+  for (i in seq_len(nrow(universe_index))) {
+    summary <- g5_pca_wfa_read_csv_if_exists(universe_index$summary_csv[[i]])
+    if (!nrow(summary)) {
+      rows[[length(rows) + 1L]] <- data.frame(
+        universe_id = universe_index$universe_id[[i]],
+        universe_label = universe_index$universe_label[[i]],
+        regime_context_symbols = universe_index$regime_context_symbols[[i]],
+        symbol_count = universe_index$symbol_count[[i]],
+        panel_mode = NA_character_,
+        state_map = NA_character_,
+        state_count = NA_integer_,
+        run_status = "missing_outputs",
+        total_return = NA_real_,
+        sharpe = NA_real_,
+        max_drawdown = NA_real_,
+        trade_count = NA_real_,
+        buy_hold_total_return = NA_real_,
+        oos_covered_states = NA_integer_,
+        oos_state_count = NA_integer_,
+        no_trade_state_selections = NA_integer_,
+        selected_families = NA_character_,
+        report_md = universe_index$report_md[[i]],
+        equity_contact_sheet_png = universe_index$equity_contact_sheet_png[[i]],
+        strategy_contact_sheet_png = universe_index$strategy_contact_sheet_png[[i]],
+        pca_scatter_contact_sheet_png = universe_index$pca_scatter_contact_sheet_png[[i]],
+        stringsAsFactors = FALSE
+      )
+      next
+    }
+    summary$universe_id <- universe_index$universe_id[[i]]
+    summary$universe_label <- universe_index$universe_label[[i]]
+    summary$regime_context_symbols <- universe_index$regime_context_symbols[[i]]
+    summary$symbol_count <- universe_index$symbol_count[[i]]
+    summary$report_md <- universe_index$report_md[[i]]
+    summary$equity_contact_sheet_png <- universe_index$equity_contact_sheet_png[[i]]
+    summary$strategy_contact_sheet_png <- universe_index$strategy_contact_sheet_png[[i]]
+    summary$pca_scatter_contact_sheet_png <- universe_index$pca_scatter_contact_sheet_png[[i]]
+    keep <- c(
+      "universe_id", "universe_label", "regime_context_symbols", "symbol_count",
+      "panel_mode", "state_map", "state_count", "run_status",
+      "total_return", "sharpe", "max_drawdown", "trade_count", "buy_hold_total_return",
+      "oos_covered_states", "oos_state_count", "no_trade_state_selections", "selected_families",
+      "report_md", "equity_contact_sheet_png", "strategy_contact_sheet_png", "pca_scatter_contact_sheet_png"
+    )
+    missing <- setdiff(keep, names(summary))
+    for (nm in missing) summary[[nm]] <- NA
+    rows[[length(rows) + 1L]] <- summary[, keep, drop = FALSE]
+  }
+  do.call(rbind, rows)
+}
+
+g5_pca_wfa_universe_comparison_markdown_report <- function(universe_defs, universe_index, summary, settings, path) {
+  pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
+  num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
+  summary_table <- summary
+  summary_table$total_return <- pct(summary_table$total_return)
+  summary_table$max_drawdown <- pct(summary_table$max_drawdown)
+  summary_table$buy_hold_total_return <- pct(summary_table$buy_hold_total_return)
+  summary_table$sharpe <- num(summary_table$sharpe)
+  universe_table <- universe_defs[, c("universe_id", "universe_label", "symbols", "rationale"), drop = FALSE]
+  index_table <- universe_index[, c("universe_id", "run_status", "report_md", "equity_contact_sheet_png", "strategy_contact_sheet_png", "pca_scatter_contact_sheet_png"), drop = FALSE]
+  lines <- c(
+    "# Gen5 PCA Context Universe Comparison",
+    "",
+    "POC only: this report compares named Regime Context Universes through the existing PCA-routed WFA 2x2 surface. It keeps AMD as the Research Candidate Universe, Tradeable Universe, and Active Allocation Set, and it is not final research evidence.",
+    "",
+    "## Run Context",
+    "",
+    paste0("- Symbol: `", settings$symbol, "`"),
+    paste0("- Research Candidate Universe: `", settings$symbol, "`"),
+    paste0("- Tradeable Universe: `", settings$symbol, "`"),
+    paste0("- Active Allocation Set: `", settings$symbol, "`"),
+    paste0("- Fold count: `", settings$fold_count, "`"),
+    paste0("- End date: `", settings$end_date, "`"),
+    paste0("- As-of timestamp: `", settings$as_of_timestamp, "`"),
+    "- Child surface: `PanelMode x StateMap` with contextual snapshot/behavioral pool and quantile grid/k-means.",
+    "- Ownership policy: `entry_state_owns_trade_until_exit`.",
+    "",
+    "## Named Universes",
+    "",
+    g5_pca_wfa_comparison_table_lines(universe_table, names(universe_table)),
+    "",
+    "## Variant Summary",
+    "",
+    g5_pca_wfa_comparison_table_lines(
+      summary_table,
+      c("universe_id", "panel_mode", "state_map", "state_count", "run_status", "total_return", "sharpe", "max_drawdown", "trade_count", "buy_hold_total_return", "oos_covered_states", "oos_state_count", "selected_families")
+    ),
+    "",
+    "## Contact Sheets And Reports",
+    "",
+    g5_pca_wfa_comparison_table_lines(index_table, names(index_table)),
+    "",
+    "## Interpretation Guardrails",
+    "",
+    "- The diverse-context and similar-asset hypotheses are inspection prompts, not assumptions baked into selection.",
+    "- Differences here are early POC evidence only; do not treat them as accepted research gates, deployment evidence, or live advice."
+  )
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path, useBytes = TRUE)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_write_pca_wfa_universe_comparison_outputs <- function(universe_defs, output_dir, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date, prefix = "pcawfa_universe_cmp") {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  universe_index <- g5_pca_wfa_universe_index(universe_defs, repo_root, as_of_timestamp, symbol, fold_count, wfa_end_date)
+  summary <- g5_pca_wfa_universe_summary(universe_index)
+  paths <- list(
+    universe_definitions_csv = file.path(output_dir, paste0(prefix, "_universe_definitions.csv")),
+    universe_index_csv = file.path(output_dir, paste0(prefix, "_universe_index.csv")),
+    summary_csv = file.path(output_dir, paste0(prefix, "_summary.csv")),
+    report_md = file.path(output_dir, paste0(prefix, "_report.md"))
+  )
+  utils::write.csv(universe_defs, paths$universe_definitions_csv, row.names = FALSE)
+  utils::write.csv(universe_index, paths$universe_index_csv, row.names = FALSE)
+  utils::write.csv(summary, paths$summary_csv, row.names = FALSE)
+  paths$report_md <- g5_pca_wfa_universe_comparison_markdown_report(
+    universe_defs,
+    universe_index,
+    summary,
+    settings = list(symbol = symbol, fold_count = fold_count, end_date = wfa_end_date, as_of_timestamp = as_of_timestamp),
+    path = paths$report_md
+  )
+  list(paths = paths, universe_index = universe_index, summary = summary, universe_definitions = universe_defs)
+}

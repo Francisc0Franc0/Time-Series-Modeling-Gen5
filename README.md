@@ -446,6 +446,27 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_repo
 
 This comparison runner executes or, with `-SkipChildRuns`, consumes the four child packets from `PanelMode x StateMap`: contextual snapshot plus quantile grid, contextual snapshot plus k-means, behavioral pool plus quantile grid, and behavioral pool plus k-means. It writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/` with a Markdown report, OOS metrics summary, state-coverage summary, selected-family counts, child artifact paths, and three 2x2 contact-sheet PNGs: stitched equity, stitched OOS/state bands, and PCA state-space scatter. It remains an inspection/reporting layer over Option A; it does not add state-adaptive exits, allocation, live advice, or execution.
 
+To compare named Regime Context Universe variants through that same 2x2 surface while still researching/trading/allocating AMD only:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_universe_panels.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
+  -Refresh
+```
+
+The context-universe wrapper runs one 2x2 comparison packet per named universe, then writes a top-level packet under ignored `runs/research_workbench/regime_wfa_universe_comparisons/` with universe definitions, a universe index, a long summary CSV, and a Markdown report with paths to the three 2x2 contact sheets for each universe. The current named universes are:
+
+- `baseline_context`: `AMD,NVDA,TSLA`.
+- `similar_high_beta_tech_semis`: `AMD,NVDA,TSLA,SMH,AVGO,MU,INTC`.
+- `diverse_market_risk_context`: `AMD,NVDA,TSLA,SPY,QQQ,IWM,SMH,TLT,GLD,VXX`.
+
+This is an experiment/reporting surface only. It does not make a research gate decision and does not expand the Research Candidate Universe, Tradeable Universe, or Active Allocation Set beyond AMD.
+
 Two PCA panel modes are available:
 
 - `date_aligned_context`: the default Gen5.1 mode. It builds one row per session date, with context features widened into columns such as `AMD__rsi_14`, `NVDA__rsi_14`, and `TSLA__rsi_14`. This treats the context universe as same-day market sensors.
