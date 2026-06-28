@@ -17,6 +17,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
 - PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
 - PCA context-universe comparison reporting can run the same 2x2 surface for named context universes, then write a top-level universe index/summary with contact-sheet paths while keeping AMD as the only researched/traded/allocated asset.
+- Portfolio strategy accounting POC can run five single-symbol PCA-routed WFA child packets, then combine their stitched OOS trades into a shared-account portfolio replay with dynamic equal-slot, cash-capped entry sizing. The first default Active Allocation Set is `AMD,NVDA,TSLA,COIN,MSTR`; treat this as accounting validation, not accepted allocation research.
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 
 The newest operator surface is:
@@ -54,6 +55,23 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_univers
 
 The top-level packet is written under ignored `runs/research_workbench/regime_wfa_universe_comparisons/`. It includes a metrics overview PNG plus cross-universe equity, stitched OOS/state-band, and PCA scatter overview PNGs split by `contextual_snapshot` and `behavioral_pool` so each image has six panels instead of one overloaded 12-panel contact sheet. Treat it as a comparison scaffold, not final research evidence.
 
+The newest portfolio accounting POC surface is:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_portfolio_strategy_poc.ps1 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -Refresh
+```
+
+Default active symbols are `AMD,NVDA,TSLA,COIN,MSTR`; default context symbols are `AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX`; default surface is `behavioral_pool + quantile_grid 3x3`, five folds, standard strategy grid, `$100,000` initial capital, five slots. The first completed packet is:
+
+`runs/research_workbench/portfolio_strategy_pocs/portfolio_poc_AMD-NVDA-TSLA-COIN-MSTR_5f_3x3_pooled12ctx_20260624_20260624173000/`
+
+It includes a report, event ledger, portfolio equity curve, standalone per-symbol reference curves, symbol summary, child artifact index, and PNG chart. The portfolio curve is the authoritative accounting POC output; per-symbol curves are standalone references scaled to one slot.
+
+Use `-SkipChildRuns` to rebuild the portfolio accounting/report packet from already-generated child PCA WFA packets without rerunning all five child WFA simulations.
+
 ## Context Discipline For New Threads
 
 To keep Codex context usage manageable:
@@ -69,9 +87,9 @@ To keep Codex context usage manageable:
 Universes:
 
 - **Regime Context Universe**: symbols used to create the PCA state feature panel, such as `AMD,NVDA,TSLA`.
-- **Research Candidate Universe**: symbols whose strategy specs are evaluated. Current PCA-routed POC: the single `-Symbol`.
-- **Tradeable Universe**: symbols the replay may trade. Current PCA-routed POC: the single `-Symbol`.
-- **Active Allocation Set**: symbols actually held/allocated during replay. Current PCA-routed POC: the single `-Symbol`, all-in/flat.
+- **Research Candidate Universe**: symbols whose strategy specs are evaluated. Current single-symbol PCA-routed POC: the single `-Symbol`; portfolio accounting POC default: `AMD,NVDA,TSLA,COIN,MSTR`.
+- **Tradeable Universe**: symbols the replay may trade. Current single-symbol PCA-routed POC: the single `-Symbol`; portfolio accounting POC default: `AMD,NVDA,TSLA,COIN,MSTR`.
+- **Active Allocation Set**: symbols actually held/allocated during replay. Current single-symbol PCA-routed POC: the single `-Symbol`, all-in/flat; portfolio accounting POC default: five shared-account slots.
 
 Panel modes:
 
@@ -108,6 +126,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 
 - `README.md`: operator commands and current POC surfaces.
 - `docs/GEN5_REGIME_FILTER_POC_PLAN.md`: regime/PCA theory, vocabulary, policies, and next POC ideas.
+- `docs/GEN5_1_PORTFOLIO_STRATEGY_POC_PLAN.md`: first portfolio accounting POC policy, defaults, STOP guardrails, and output contract.
 - `docs/GEN5_TASK_QUEUE.md`: current status and backlog memory.
 - `AGENTS.md`: autonomy/collaboration rules and validation expectations.
 
