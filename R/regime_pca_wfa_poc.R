@@ -1221,6 +1221,70 @@ g5_pca_wfa_write_equity_png <- function(equity_curve, path, symbol, folds = NULL
   invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
 }
 
+g5_pca_wfa_scatter_title <- function(symbol, state_engine, pca_panel_mode) {
+  engine <- if (identical(as.character(state_engine), "pca_kmeans")) "PCA k-means" else "PCA quantile grid"
+  panel <- if (identical(g5_pca_wfa_panel_mode(pca_panel_mode), "pooled_asset_day")) "pooled asset-day" else "date-aligned context"
+  paste(g5_standardize_symbol(symbol)[[1L]], engine, panel, "fold-local scores")
+}
+
+g5_pca_wfa_write_pca_scatter_from_scores <- function(scores, path, title = "PCA-Routed WFA State Space", width = 1300L, height = 900L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
+  plot_rows <- scores[is.finite(scores$pc1) & is.finite(scores$pc2) & !is.na(scores$state_id), , drop = FALSE]
+  if (nrow(plot_rows) == 0L) {
+    g5_stop("PCA WFA scatter plot requires scored rows.")
+  }
+  pal <- g5_pca_regime_state_palette(sort(unique(plot_rows$state_id)))
+  alpha <- ifelse(plot_rows$split == "OOS", 0.9, 0.30)
+  cols <- vapply(
+    seq_len(nrow(plot_rows)),
+    function(i) grDevices::adjustcolor(pal[[plot_rows$state_id[[i]]]], alpha.f = alpha[[i]]),
+    character(1L)
+  )
+  pch <- ifelse(plot_rows$split == "OOS", 21L, 23L)
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 120)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  graphics::par(mar = c(5.2, 5.4, 4.2, 10), xpd = FALSE, bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  graphics::plot(
+    plot_rows$pc1,
+    plot_rows$pc2,
+    type = "n",
+    xlab = "PC1",
+    ylab = "PC2",
+    main = title,
+    col.axis = aesthetic$axis,
+    col.lab = aesthetic$text,
+    col.main = aesthetic$text
+  )
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  graphics::grid(col = aesthetic$grid)
+  graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 0.95, 0.58))
+  split_legend_col <- c(
+    grDevices::adjustcolor(aesthetic$text, alpha.f = 0.45),
+    grDevices::adjustcolor(aesthetic$text, alpha.f = 0.9)
+  )
+  graphics::legend(
+    "topright",
+    legend = c("TRAIN", "OOS"),
+    pch = c(23L, 21L),
+    pt.bg = split_legend_col,
+    col = split_legend_col,
+    bty = "n",
+    text.col = aesthetic$text
+  )
+  graphics::mtext("Fold-local PCA coordinates are overlaid for inspection; axes are not a single global PCA fit.", side = 3, line = 0.2, cex = 0.72, col = aesthetic$text)
+  graphics::par(xpd = NA)
+  graphics::legend("right", inset = c(-0.19, 0), legend = names(pal), fill = pal, border = NA, bty = "n", cex = 0.72, text.col = aesthetic$text, title = "state")
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
+g5_pca_wfa_write_pca_scatter_png <- function(pca_wfa, path, symbol, width = 1300L, height = 900L) {
+  scores <- if ("pca_scores" %in% names(pca_wfa)) pca_wfa$pca_scores else pca_wfa$pca$scores
+  title <- g5_pca_wfa_scatter_title(symbol, pca_wfa$settings$state_engine, pca_wfa$settings$pca_panel_mode)
+  g5_pca_wfa_write_pca_scatter_from_scores(scores, path, title = title, width = width, height = height)
+}
+
 g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, path) {
   metric <- pca_wfa$oos_metrics[1L, , drop = FALSE]
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
@@ -1281,6 +1345,7 @@ g5_pca_wfa_markdown_report <- function(pca_wfa, paths, symbol, as_of_timestamp, 
     paste0("- Train state performance: `", paths$train_state_performance_csv, "`"),
     paste0("- OOS trades: `", paths$oos_trades_csv, "`"),
     paste0("- OOS equity: `", paths$oos_equity_csv, "`"),
+    paste0("- PCA scatter: `", paths$pca_scatter_png, "`"),
     paste0("- State strategy chart: `", paths$state_strategy_chart_png, "`"),
     paste0("- Equity chart: `", paths$equity_chart_png, "`")
   )
@@ -1301,6 +1366,7 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
     oos_trades_csv = file.path(output_dir, paste0(prefix, "_oos_trades.csv")),
     oos_equity_csv = file.path(output_dir, paste0(prefix, "_oos_equity.csv")),
     oos_metrics_csv = file.path(output_dir, paste0(prefix, "_oos_metrics.csv")),
+    pca_scatter_png = file.path(output_dir, paste0(prefix, "_pca_scatter.png")),
     state_strategy_chart_png = file.path(output_dir, paste0(prefix, "_state_strategy_chart.png")),
     equity_chart_png = file.path(output_dir, paste0(prefix, "_equity_curve.png")),
     report_md = file.path(output_dir, paste0(prefix, "_report.md"))
@@ -1316,6 +1382,7 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
   g5_wfa_write_csv(pca_wfa$oos_trades, paths$oos_trades_csv)
   g5_wfa_write_csv(pca_wfa$oos_equity_curve, paths$oos_equity_csv)
   g5_wfa_write_csv(pca_wfa$oos_metrics, paths$oos_metrics_csv)
+  paths$pca_scatter_png <- g5_pca_wfa_write_pca_scatter_png(pca_wfa, paths$pca_scatter_png, symbol)
   paths$state_strategy_chart_png <- g5_pca_wfa_write_state_price_chart_png(pca_wfa, symbol, paths$state_strategy_chart_png)
   paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol, pca_wfa$folds, state_engine = pca_wfa$settings$state_engine, pca_panel_mode = pca_wfa$settings$pca_panel_mode)
   paths$report_md <- g5_pca_wfa_markdown_report(pca_wfa, paths, symbol, as_of_timestamp, paths$report_md)
@@ -1367,6 +1434,7 @@ g5_pca_wfa_comparison_artifact_paths <- function(run_dir) {
     oos_trades_csv = file.path(run_dir, "pcawfa_oos_trades.csv"),
     oos_equity_csv = file.path(run_dir, "pcawfa_oos_equity.csv"),
     oos_metrics_csv = file.path(run_dir, "pcawfa_oos_metrics.csv"),
+    pca_scatter_png = file.path(run_dir, "pcawfa_pca_scatter.png"),
     state_strategy_chart_png = file.path(run_dir, "pcawfa_state_strategy_chart.png"),
     equity_chart_png = file.path(run_dir, "pcawfa_equity_curve.png"),
     report_md = file.path(run_dir, "pcawfa_report.md")
@@ -1463,6 +1531,198 @@ g5_pca_wfa_comparison_table_lines <- function(df, cols) {
   c(header, sep, rows)
 }
 
+g5_pca_wfa_comparison_item_label <- function(item) {
+  paste0(item$panel_mode, " / ", item$state_map)
+}
+
+g5_pca_wfa_comparison_plot_date_axis <- function(session_dates, tick_count = 4L, cex = 0.62) {
+  if (!length(session_dates)) return(invisible(NULL))
+  tick_positions <- unique(round(seq(1L, length(session_dates), length.out = min(tick_count, length(session_dates)))))
+  graphics::axis(1, at = tick_positions, labels = FALSE)
+  usr <- graphics::par("usr")
+  y <- usr[[3L]] - diff(usr[3:4]) * 0.055
+  graphics::text(
+    x = tick_positions,
+    y = y,
+    labels = format(as.Date(session_dates[tick_positions]), "%Y-%m"),
+    srt = 45,
+    adj = 1,
+    xpd = NA,
+    cex = cex,
+    col = g5_chart_aesthetic()$axis
+  )
+}
+
+g5_pca_wfa_read_comparison_items <- function(path_index) {
+  items <- vector("list", nrow(path_index))
+  for (i in seq_len(nrow(path_index))) {
+    paths <- g5_pca_wfa_comparison_artifact_paths(path_index$run_dir[[i]])
+    items[[i]] <- list(
+      panel_mode = path_index$panel_mode[[i]],
+      state_map = path_index$state_map[[i]],
+      state_count = path_index$state_count[[i]],
+      run_dir = path_index$run_dir[[i]],
+      folds = g5_pca_wfa_read_csv_if_exists(paths$fold_spec_csv),
+      scores = g5_pca_wfa_read_csv_if_exists(paths$pca_scores_csv),
+      trades = g5_pca_wfa_read_csv_if_exists(paths$oos_trades_csv),
+      equity = g5_pca_wfa_read_csv_if_exists(paths$oos_equity_csv),
+      metrics = g5_pca_wfa_read_csv_if_exists(paths$oos_metrics_csv)
+    )
+  }
+  items
+}
+
+g5_pca_wfa_draw_comparison_equity_panel <- function(item) {
+  aesthetic <- g5_chart_aesthetic()
+  curve <- item$equity
+  if (!is.data.frame(curve) || !nrow(curve)) {
+    graphics::plot.new()
+    graphics::title(g5_pca_wfa_comparison_item_label(item))
+    graphics::text(0.5, 0.5, "missing equity")
+    return(invisible(NULL))
+  }
+  session_dates <- as.Date(curve$session_date)
+  x <- seq_len(nrow(curve))
+  y <- range(c(curve$strategy_equity, curve$buy_hold_equity), finite = TRUE)
+  padding <- diff(y) * 0.08
+  if (!is.finite(padding) || padding <= 0) padding <- 0.05
+  graphics::plot(c(0.5, length(x) + 0.5), y + c(-padding, padding), type = "n", xaxt = "n", xlab = "", ylab = "", main = g5_pca_wfa_comparison_item_label(item), xaxs = "i", col.main = aesthetic$text)
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
+  folds <- item$folds
+  if (is.data.frame(folds) && nrow(folds)) {
+    for (j in seq_len(nrow(folds))) {
+      boundary_idx <- match(as.Date(folds$oos_start_date[[j]]), session_dates)
+      if (!is.na(boundary_idx)) graphics::abline(v = boundary_idx - 0.5, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.55), lty = 2)
+    }
+  }
+  graphics::abline(h = 1, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.4), lty = 3)
+  graphics::lines(x, curve$strategy_equity, col = aesthetic$trade_win_line, lwd = 1.8)
+  graphics::lines(x, curve$buy_hold_equity, col = "#000000", lwd = 1)
+  g5_pca_wfa_comparison_plot_date_axis(session_dates)
+  metric <- if (is.data.frame(item$metrics) && nrow(item$metrics)) item$metrics[1L, , drop = FALSE] else data.frame()
+  if (nrow(metric)) {
+    label <- sprintf("ret %.1f%% | sharpe %.2f | dd %.1f%%", 100 * metric$total_return[[1L]], metric$sharpe[[1L]], 100 * metric$max_drawdown[[1L]])
+    graphics::mtext(label, side = 3, line = -1.1, cex = 0.72, col = aesthetic$text)
+  }
+  invisible(NULL)
+}
+
+g5_pca_wfa_draw_comparison_strategy_panel <- function(item) {
+  aesthetic <- g5_chart_aesthetic()
+  scores <- item$scores
+  if (!is.data.frame(scores) || !nrow(scores)) {
+    graphics::plot.new()
+    graphics::title(g5_pca_wfa_comparison_item_label(item))
+    graphics::text(0.5, 0.5, "missing scores")
+    return(invisible(NULL))
+  }
+  scores <- scores[order(as.Date(scores$session_date), scores$fold_no), , drop = FALSE]
+  plot_rows <- scores[!is.na(scores$split) & scores$split == "OOS", , drop = FALSE]
+  plot_rows <- plot_rows[!duplicated(paste(plot_rows$session_date, plot_rows$fold_id)), , drop = FALSE]
+  plot_rows <- plot_rows[order(as.Date(plot_rows$session_date), plot_rows$fold_no), , drop = FALSE]
+  session_dates <- as.Date(plot_rows$session_date)
+  x <- seq_len(nrow(plot_rows))
+  y <- range(c(plot_rows$low, plot_rows$high), finite = TRUE)
+  padding <- diff(y) * 0.06
+  if (!is.finite(padding) || padding <= 0) padding <- 1
+  pal <- g5_pca_regime_state_palette(sort(unique(stats::na.omit(plot_rows$state_id))))
+  graphics::plot(c(0.5, length(x) + 0.5), y + c(-padding, padding), type = "n", xaxt = "n", xlab = "", ylab = "", main = g5_pca_wfa_comparison_item_label(item), xaxs = "i", col.main = aesthetic$text)
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  if (nrow(plot_rows)) {
+    run_key <- paste(plot_rows$fold_id, plot_rows$state_id, sep = "::")
+    runs <- rle(run_key)
+    run_ends <- cumsum(runs$lengths)
+    run_starts <- run_ends - runs$lengths + 1L
+    for (j in seq_along(runs$values)) {
+      state <- plot_rows$state_id[[run_starts[[j]]]]
+      if (!is.na(state) && state %in% names(pal)) {
+        graphics::rect(run_starts[[j]] - 0.5, usr[[3L]], run_ends[[j]] + 0.5, usr[[4L]], col = grDevices::adjustcolor(pal[[state]], alpha.f = 0.14), border = NA)
+      }
+    }
+  }
+  graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
+  body_cols <- ifelse(plot_rows$close > plot_rows$open, aesthetic$up_candle, ifelse(plot_rows$close < plot_rows$open, aesthetic$down_candle, aesthetic$flat_candle))
+  graphics::segments(x, plot_rows$low, x, plot_rows$high, col = body_cols, lwd = 0.75)
+  graphics::segments(x, plot_rows$open, x, plot_rows$close, col = body_cols, lwd = 1.9)
+  folds <- item$folds
+  if (is.data.frame(folds) && nrow(folds)) {
+    for (j in seq_len(nrow(folds))) {
+      boundary_idx <- match(as.Date(folds$oos_start_date[[j]]), session_dates)
+      if (!is.na(boundary_idx)) graphics::abline(v = boundary_idx - 0.5, col = grDevices::adjustcolor(aesthetic$axis, alpha.f = 0.65), lty = 2)
+    }
+  }
+  trades <- item$trades
+  if (is.data.frame(trades) && nrow(trades)) {
+    line_cols <- ifelse(trades$trade_outcome == "win", aesthetic$trade_win_line, ifelse(trades$trade_outcome == "loss", aesthetic$trade_loss_line, aesthetic$flat_candle))
+    graphics::segments(match(as.Date(trades$entry_execution_date), session_dates), trades$entry_execution_price, match(as.Date(trades$trace_end_date), session_dates), trades$trace_end_price, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 0.95)
+    graphics::points(match(as.Date(trades$entry_execution_date), session_dates), trades$entry_execution_price, pch = aesthetic$native_entry_pch, col = aesthetic$native_entry_color, bg = aesthetic$native_entry_color, cex = 0.65)
+    closed <- trades[!is.na(trades$exit_execution_date), , drop = FALSE]
+    if (nrow(closed)) {
+      graphics::points(match(as.Date(closed$exit_execution_date), session_dates), closed$exit_execution_price, pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 0.65)
+    }
+  }
+  g5_pca_wfa_comparison_plot_date_axis(session_dates)
+  invisible(NULL)
+}
+
+g5_pca_wfa_draw_comparison_scatter_panel <- function(item) {
+  aesthetic <- g5_chart_aesthetic()
+  scores <- item$scores
+  plot_rows <- if (is.data.frame(scores) && nrow(scores)) scores[is.finite(scores$pc1) & is.finite(scores$pc2) & !is.na(scores$state_id), , drop = FALSE] else data.frame()
+  if (!nrow(plot_rows)) {
+    graphics::plot.new()
+    graphics::title(g5_pca_wfa_comparison_item_label(item))
+    graphics::text(0.5, 0.5, "missing PCA scores")
+    return(invisible(NULL))
+  }
+  pal <- g5_pca_regime_state_palette(sort(unique(plot_rows$state_id)))
+  alpha <- ifelse(plot_rows$split == "OOS", 0.92, 0.25)
+  cols <- vapply(seq_len(nrow(plot_rows)), function(i) grDevices::adjustcolor(pal[[plot_rows$state_id[[i]]]], alpha.f = alpha[[i]]), character(1L))
+  pch <- ifelse(plot_rows$split == "OOS", 21L, 23L)
+  graphics::plot(plot_rows$pc1, plot_rows$pc2, type = "n", xlab = "", ylab = "", main = g5_pca_wfa_comparison_item_label(item), col.main = aesthetic$text)
+  usr <- graphics::par("usr")
+  graphics::rect(usr[[1L]], usr[[3L]], usr[[2L]], usr[[4L]], col = aesthetic$panel_background, border = NA)
+  graphics::grid(col = aesthetic$grid)
+  graphics::points(plot_rows$pc1, plot_rows$pc2, pch = pch, bg = cols, col = cols, cex = ifelse(plot_rows$split == "OOS", 0.72, 0.42))
+  graphics::mtext("PC1", side = 1, line = 2.1, cex = 0.72, col = aesthetic$text)
+  graphics::mtext("PC2", side = 2, line = 2.1, cex = 0.72, col = aesthetic$text)
+  invisible(NULL)
+}
+
+g5_pca_wfa_write_comparison_contact_sheet <- function(items, path, chart_type = c("equity", "strategy", "pca_scatter"), title = NULL, width = 1800L, height = 1300L) {
+  chart_type <- match.arg(chart_type)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 130)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(2L, 2L), mar = c(5.8, 4.1, 3.1, 1.4), oma = c(0, 0, 3.2, 0), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  for (item in items) {
+    if (identical(chart_type, "equity")) {
+      g5_pca_wfa_draw_comparison_equity_panel(item)
+    } else if (identical(chart_type, "strategy")) {
+      g5_pca_wfa_draw_comparison_strategy_panel(item)
+    } else {
+      g5_pca_wfa_draw_comparison_scatter_panel(item)
+    }
+  }
+  if (length(items) < 4L) {
+    for (i in seq_len(4L - length(items))) graphics::plot.new()
+  }
+  default_title <- switch(
+    chart_type,
+    equity = "Gen5 PCA Router 2x2 Equity Contact Sheet",
+    strategy = "Gen5 PCA Router 2x2 Stitched OOS Contact Sheet",
+    pca_scatter = "Gen5 PCA Router 2x2 PCA State-Space Contact Sheet"
+  )
+  graphics::mtext(if (is.null(title)) default_title else title, side = 3, outer = TRUE, line = 1, col = aesthetic$text, font = 2)
+  invisible(normalizePath(path, winslash = "/", mustWork = FALSE))
+}
+
 g5_pca_wfa_comparison_markdown_report <- function(summary, family_counts, path_index, settings, path) {
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
@@ -1512,6 +1772,12 @@ g5_pca_wfa_comparison_markdown_report <- function(summary, family_counts, path_i
       c("panel_mode", "state_map", "state_count", "strategy_family", "selected_state_count", "selected_fold_count")
     ),
     "",
+    "## Contact Sheets",
+    "",
+    paste0("- Equity 2x2: `", settings$equity_contact_sheet_png, "`"),
+    paste0("- Stitched OOS 2x2: `", settings$strategy_contact_sheet_png, "`"),
+    paste0("- PCA scatter 2x2: `", settings$pca_scatter_contact_sheet_png, "`"),
+    "",
     "## Child Artifacts",
     "",
     g5_pca_wfa_comparison_table_lines(artifact_table, names(artifact_table))
@@ -1531,14 +1797,31 @@ g5_write_pca_wfa_comparison_outputs <- function(run_index, output_dir, settings,
   path_index$selected_states_csv <- vapply(artifact_paths, function(x) x$selected_states_csv, character(1L))
   path_index$state_coverage_csv <- vapply(artifact_paths, function(x) x$state_coverage_csv, character(1L))
   path_index$oos_metrics_csv <- vapply(artifact_paths, function(x) x$oos_metrics_csv, character(1L))
+  path_index$pca_scatter_png <- vapply(artifact_paths, function(x) x$pca_scatter_png, character(1L))
   path_index$state_strategy_chart_png <- vapply(artifact_paths, function(x) x$state_strategy_chart_png, character(1L))
   path_index$equity_chart_png <- vapply(artifact_paths, function(x) x$equity_chart_png, character(1L))
   paths <- list(
     summary_csv = file.path(output_dir, paste0(prefix, "_summary.csv")),
     selected_family_counts_csv = file.path(output_dir, paste0(prefix, "_selected_family_counts.csv")),
     path_index_csv = file.path(output_dir, paste0(prefix, "_path_index.csv")),
+    equity_contact_sheet_png = file.path(output_dir, paste0(prefix, "_equity_2x2.png")),
+    strategy_contact_sheet_png = file.path(output_dir, paste0(prefix, "_stitched_oos_2x2.png")),
+    pca_scatter_contact_sheet_png = file.path(output_dir, paste0(prefix, "_pca_scatter_2x2.png")),
     report_md = file.path(output_dir, paste0(prefix, "_report.md"))
   )
+  items <- g5_pca_wfa_read_comparison_items(path_index)
+  for (i in seq_along(items)) {
+    if (!file.exists(path_index$pca_scatter_png[[i]]) && is.data.frame(items[[i]]$scores) && nrow(items[[i]]$scores)) {
+      child_title <- paste0(items[[i]]$panel_mode, " / ", items[[i]]$state_map, " fold-local PCA scores")
+      g5_pca_wfa_write_pca_scatter_from_scores(items[[i]]$scores, path_index$pca_scatter_png[[i]], title = child_title)
+    }
+  }
+  paths$equity_contact_sheet_png <- g5_pca_wfa_write_comparison_contact_sheet(items, paths$equity_contact_sheet_png, chart_type = "equity")
+  paths$strategy_contact_sheet_png <- g5_pca_wfa_write_comparison_contact_sheet(items, paths$strategy_contact_sheet_png, chart_type = "strategy")
+  paths$pca_scatter_contact_sheet_png <- g5_pca_wfa_write_comparison_contact_sheet(items, paths$pca_scatter_contact_sheet_png, chart_type = "pca_scatter")
+  settings$equity_contact_sheet_png <- paths$equity_contact_sheet_png
+  settings$strategy_contact_sheet_png <- paths$strategy_contact_sheet_png
+  settings$pca_scatter_contact_sheet_png <- paths$pca_scatter_contact_sheet_png
   utils::write.csv(summary, paths$summary_csv, row.names = FALSE)
   utils::write.csv(family_counts, paths$selected_family_counts_csv, row.names = FALSE)
   utils::write.csv(path_index, paths$path_index_csv, row.names = FALSE)

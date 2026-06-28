@@ -15,7 +15,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - multi-fold stitched OOS WFA works for one traded symbol;
 - PCA regime labeling works with quantile grids and k-means;
 - PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
-- PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, and artifact paths.
+- PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
 
 The newest operator surface is:
 
@@ -31,7 +31,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_repo
   -Refresh
 ```
 
-The comparison wrapper runs four child packets through `scripts/inspect/run_pca_router_workbench.ps1`, then writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`. Use `-SkipChildRuns` to rebuild the comparison report from already-generated child packets.
+The comparison wrapper runs four child packets through `scripts/inspect/run_pca_router_workbench.ps1`, then writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`. Use `-SkipChildRuns` to rebuild the comparison report and visual contact sheets from already-generated child packets.
 
 ## Current PCA Vocabulary
 

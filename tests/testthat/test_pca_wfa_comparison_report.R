@@ -55,6 +55,60 @@ test_that("PCA WFA comparison report summarizes child packets", {
       file.path(run_index$run_dir[[i]], "pcawfa_state_coverage.csv"),
       row.names = FALSE
     )
+    utils::write.csv(
+      data.frame(
+        fold_id = rep(c("fold_1", "fold_2"), each = 6L),
+        fold_no = rep(c(1L, 2L), each = 6L),
+        split = rep(c("TRAIN", "TRAIN", "TRAIN", "OOS", "OOS", "OOS"), 2L),
+        session_date = as.Date("2025-01-01") + seq_len(12L),
+        open = 100 + seq_len(12L),
+        high = 102 + seq_len(12L),
+        low = 99 + seq_len(12L),
+        close = 101 + seq_len(12L),
+        pc1 = seq(-1, 1, length.out = 12L) + i / 10,
+        pc2 = rev(seq(-1, 1, length.out = 12L)) - i / 10,
+        state_id = rep(c("S1_1", "S1_2", "S1_3"), 4L),
+        stringsAsFactors = FALSE
+      ),
+      file.path(run_index$run_dir[[i]], "pcawfa_pca_scores.csv"),
+      row.names = FALSE
+    )
+    utils::write.csv(
+      data.frame(
+        fold_id = c("fold_1", "fold_2"),
+        train_start_date = as.Date(c("2024-01-01", "2024-04-01")),
+        train_end_date = as.Date(c("2024-12-31", "2025-03-31")),
+        oos_start_date = as.Date(c("2025-01-05", "2025-01-11")),
+        oos_end_date = as.Date(c("2025-01-10", "2025-01-12")),
+        stringsAsFactors = FALSE
+      ),
+      file.path(run_index$run_dir[[i]], "pcawfa_folds.csv"),
+      row.names = FALSE
+    )
+    utils::write.csv(
+      data.frame(
+        session_date = as.Date("2025-01-05") + 0:7,
+        strategy_equity = cumprod(1 + rep(0.01 * i, 8L)),
+        buy_hold_equity = cumprod(1 + rep(0.005, 8L)),
+        stringsAsFactors = FALSE
+      ),
+      file.path(run_index$run_dir[[i]], "pcawfa_oos_equity.csv"),
+      row.names = FALSE
+    )
+    utils::write.csv(
+      data.frame(
+        entry_execution_date = as.Date("2025-01-06"),
+        entry_execution_price = 102,
+        trace_end_date = as.Date("2025-01-09"),
+        trace_end_price = 105,
+        exit_execution_date = as.Date("2025-01-09"),
+        exit_execution_price = 105,
+        trade_outcome = "win",
+        stringsAsFactors = FALSE
+      ),
+      file.path(run_index$run_dir[[i]], "pcawfa_oos_trades.csv"),
+      row.names = FALSE
+    )
     writeLines("child report", file.path(run_index$run_dir[[i]], "pcawfa_report.md"), useBytes = TRUE)
   }
 
@@ -74,15 +128,23 @@ test_that("PCA WFA comparison report summarizes child packets", {
   expect_true(file.exists(written$paths$summary_csv))
   expect_true(file.exists(written$paths$selected_family_counts_csv))
   expect_true(file.exists(written$paths$path_index_csv))
+  expect_true(file.exists(written$paths$equity_contact_sheet_png))
+  expect_true(file.exists(written$paths$strategy_contact_sheet_png))
+  expect_true(file.exists(written$paths$pca_scatter_contact_sheet_png))
   expect_true(file.exists(written$paths$report_md))
+  expect_gt(file.info(written$paths$equity_contact_sheet_png)$size, 0)
+  expect_gt(file.info(written$paths$strategy_contact_sheet_png)$size, 0)
+  expect_gt(file.info(written$paths$pca_scatter_contact_sheet_png)$size, 0)
   expect_equal(nrow(written$summary), 4L)
   expect_true(all(written$summary$run_status == "ok"))
   expect_equal(written$summary$oos_covered_states, rep(2L, 4L))
   expect_true(any(written$selected_family_counts$strategy_family == "no_trade"))
-  expect_true(all(c("report_md", "oos_metrics_csv", "state_strategy_chart_png") %in% names(written$path_index)))
+  expect_true(all(c("report_md", "oos_metrics_csv", "pca_scatter_png", "state_strategy_chart_png") %in% names(written$path_index)))
+  expect_true(all(file.exists(written$path_index$pca_scatter_png)))
   report <- readLines(written$paths$report_md, warn = FALSE)
   expect_true(any(grepl("entry_state_owns_trade_until_exit", report, fixed = TRUE)))
   expect_true(any(grepl("contextual_snapshot", report, fixed = TRUE)))
+  expect_true(any(grepl("Contact Sheets", report, fixed = TRUE)))
 })
 
 test_that("PCA WFA comparison resolver finds actual resolved-fold output folders", {

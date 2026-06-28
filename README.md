@@ -444,7 +444,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_repo
   -Refresh
 ```
 
-This comparison runner executes or, with `-SkipChildRuns`, consumes the four child packets from `PanelMode x StateMap`: contextual snapshot plus quantile grid, contextual snapshot plus k-means, behavioral pool plus quantile grid, and behavioral pool plus k-means. It writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/` with a Markdown report, OOS metrics summary, state-coverage summary, selected-family counts, and child artifact paths. It remains an inspection/reporting layer over Option A; it does not add state-adaptive exits, allocation, live advice, or execution.
+This comparison runner executes or, with `-SkipChildRuns`, consumes the four child packets from `PanelMode x StateMap`: contextual snapshot plus quantile grid, contextual snapshot plus k-means, behavioral pool plus quantile grid, and behavioral pool plus k-means. It writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/` with a Markdown report, OOS metrics summary, state-coverage summary, selected-family counts, child artifact paths, and three 2x2 contact-sheet PNGs: stitched equity, stitched OOS/state bands, and PCA state-space scatter. It remains an inspection/reporting layer over Option A; it does not add state-adaptive exits, allocation, live advice, or execution.
 
 Two PCA panel modes are available:
 
@@ -515,7 +515,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.
   -Refresh
 ```
 
-The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. The folder name carries the run identity with a short `pcawfa_...` prefix and a panel/context label such as `aligned3a` or `pooled3a`, while files inside use short names such as `pcawfa_report.md` to avoid Windows path-length issues. Outputs include selected state specs by fold/state, TRAIN state performance, fold-tagged PCA scores and model contracts, stitched OOS trades, stitched OOS equity, OOS metrics, a state-banded strategy chart with dashed fold boundaries, and an equity curve.
+The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. The folder name carries the run identity with a short `pcawfa_...` prefix and a panel/context label such as `aligned3a` or `pooled3a`, while files inside use short names such as `pcawfa_report.md` to avoid Windows path-length issues. Outputs include selected state specs by fold/state, TRAIN state performance, fold-tagged PCA scores and model contracts, stitched OOS trades, stitched OOS equity, OOS metrics, a PCA scatter plot of fold-local state space, a state-banded strategy chart with dashed fold boundaries, and an equity curve.
 
 ## Generated Local Files
 
