@@ -66,3 +66,29 @@ test_that("portfolio POC sizes entries to dynamic equal slots and caps by cash",
   expect_equal(round(final$portfolio_equity[[1L]], 6), 118.333333)
   expect_equal(accounting$symbol_summary$cash_capped_entries[accounting$symbol_summary$symbol == "BBB"], 1L)
 })
+
+test_that("portfolio POC builds SPY and active-set buy-and-hold baselines", {
+  dates <- as.Date("2026-01-01") + 0:2
+  bars <- rbind(
+    data.frame(symbol = "SPY", session_date = dates, close = c(100, 110, 120), stringsAsFactors = FALSE),
+    data.frame(symbol = "AAA", session_date = dates, close = c(10, 15, 20), stringsAsFactors = FALSE),
+    data.frame(symbol = "BBB", session_date = dates, close = c(20, 10, 20), stringsAsFactors = FALSE)
+  )
+
+  baselines <- g5_portfolio_poc_build_baselines(
+    bars = bars,
+    dates = dates,
+    active_symbols = c("AAA", "BBB"),
+    initial_capital = 100,
+    baseline_symbol = "SPY"
+  )
+
+  expect_equal(baselines$spy_buy_hold_equity, c(100, 110, 120))
+  expect_equal(baselines$active_equal_buy_hold_equity, c(100, 100, 150))
+  expect_equal(round(baselines$spy_buy_hold_return[[3L]], 6), 0.2)
+  expect_equal(round(baselines$active_equal_buy_hold_return[[3L]], 6), 0.5)
+
+  metrics <- g5_portfolio_poc_baseline_metrics(baselines, initial_capital = 100)
+  expect_equal(metrics$baseline_id, c("spy_buy_hold", "active_equal_buy_hold"))
+  expect_equal(metrics$ending_equity, c(120, 150))
+})

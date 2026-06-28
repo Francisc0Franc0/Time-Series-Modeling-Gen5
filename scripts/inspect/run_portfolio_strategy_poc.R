@@ -56,10 +56,12 @@ cfg <- g5_load_data_layer_config(repo_root)
 
 active_symbols <- g5_portfolio_poc_symbols(parse_character_list("GEN5_PORTFOLIO_POC_ACTIVE_SYMBOLS", "AMD,NVDA,TSLA,COIN,MSTR"), "GEN5_PORTFOLIO_POC_ACTIVE_SYMBOLS")
 regime_context_symbols <- g5_portfolio_poc_symbols(parse_character_list("GEN5_PORTFOLIO_POC_REGIME_CONTEXT_SYMBOLS", "AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX"), "GEN5_PORTFOLIO_POC_REGIME_CONTEXT_SYMBOLS")
+baseline_symbol <- g5_standardize_symbol(env_or("GEN5_PORTFOLIO_POC_BASELINE_SYMBOL", "SPY"))[[1L]]
 missing_active_context <- setdiff(active_symbols, regime_context_symbols)
 if (length(missing_active_context)) {
   regime_context_symbols <- unique(c(active_symbols, regime_context_symbols))
 }
+query_symbols <- unique(c(regime_context_symbols, active_symbols, baseline_symbol))
 
 end_date <- as.Date(env_or("GEN5_PORTFOLIO_POC_END_DATE", ""))
 as_of_timestamp <- env_or("GEN5_PORTFOLIO_POC_AS_OF_TIMESTAMP", env_or("GEN5_AS_OF_TIMESTAMP", ""))
@@ -105,6 +107,7 @@ message("Regime Context Universe: ", paste(regime_context_symbols, collapse = ",
 message("Research Candidate Universe: ", paste(active_symbols, collapse = ", "))
 message("Tradeable Universe: ", paste(active_symbols, collapse = ", "))
 message("Active Allocation Set: ", paste(active_symbols, collapse = ", "))
+message("Passive baseline symbol: ", baseline_symbol)
 message("WFA window: ", wfa_start_date, " to ", end_date)
 message("Query window with PCA/indicator warmup: ", query_start_date, " to ", end_date)
 message("As of: ", as_of_timestamp)
@@ -125,15 +128,16 @@ result <- g5_workbench_query_adjusted_daily_bars(
   start_date = query_start_date,
   end_date = end_date,
   as_of_timestamp = as_of_timestamp,
-  symbols = regime_context_symbols,
+  symbols = query_symbols,
   universe_name = paste0("portfolio_strategy_poc_ctx_", paste(regime_context_symbols, collapse = "_")),
-  universe_roles = "regime_context_universe",
+  universe_roles = "regime_context_universe,portfolio_baseline_reference",
   refresh = refresh,
   repo_root = repo_root
 )
 for (symbol in active_symbols) {
   g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
 }
+g5_require_chartable_symbol(result, symbol = baseline_symbol, refresh = refresh)
 
 read_child_csv <- function(path, label) {
   if (!file.exists(path)) {
@@ -246,6 +250,13 @@ accounting <- g5_portfolio_poc_build_accounting(
   initial_capital = initial_capital,
   slot_count = slot_count
 )
+accounting$baselines <- g5_portfolio_poc_build_baselines(
+  bars = result$bars,
+  dates = accounting$equity$session_date,
+  active_symbols = active_symbols,
+  initial_capital = initial_capital,
+  baseline_symbol = baseline_symbol
+)
 child_artifact_index <- do.call(rbind, child_index)
 
 stamp <- gsub("[^0-9A-Za-z]+", "", as.character(result$resolved_session$as_of_timestamp))
@@ -275,13 +286,17 @@ settings <- list(
   fold_count = fold_count,
   end_date = end_date,
   as_of_timestamp = result$resolved_session$as_of_timestamp,
-  strategy_grid_preset = strategy_grid_preset
+  strategy_grid_preset = strategy_grid_preset,
+  baseline_symbol = baseline_symbol
 )
 written <- g5_portfolio_poc_write_outputs(accounting, child_artifact_index, output_dir, settings)
 
 message("")
 message("Portfolio POC metrics:")
 print(written$metrics, row.names = FALSE)
+message("")
+message("Passive baseline metrics:")
+print(written$baseline_metrics, row.names = FALSE)
 message("")
 message("Symbol summary:")
 print(accounting$symbol_summary, row.names = FALSE)

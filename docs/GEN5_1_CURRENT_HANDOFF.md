@@ -64,11 +64,11 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_portfolio_strategy_
   -Refresh
 ```
 
-Default active symbols are `AMD,NVDA,TSLA,COIN,MSTR`; default context symbols are `AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX`; default surface is `behavioral_pool + quantile_grid 3x3`, five folds, standard strategy grid, `$100,000` initial capital, five slots. The first completed packet is:
+Default active symbols are `AMD,NVDA,TSLA,COIN,MSTR`; default context symbols are `AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX`; default surface is `behavioral_pool + quantile_grid 3x3`, five folds, standard strategy grid, `$100,000` initial capital, five slots, and SPY as the passive market baseline. The first completed packet is:
 
 `runs/research_workbench/portfolio_strategy_pocs/portfolio_poc_AMD-NVDA-TSLA-COIN-MSTR_5f_3x3_pooled12ctx_20260624_20260624173000/`
 
-It includes a report, event ledger, portfolio equity curve, standalone per-symbol reference curves, symbol summary, child artifact index, and PNG chart. The portfolio curve is the authoritative accounting POC output; per-symbol curves are standalone references scaled to one slot.
+It includes a report, event ledger, portfolio equity curve, passive baseline curves/metrics, standalone per-symbol reference curves, symbol summary, child artifact index, and PNG chart. The portfolio curve is the authoritative accounting POC output; passive baselines include full-capital SPY buy-and-hold and equal active-set buy-and-hold; per-symbol curves are standalone references scaled to one slot.
 
 Use `-SkipChildRuns` to rebuild the portfolio accounting/report packet from already-generated child PCA WFA packets without rerunning all five child WFA simulations.
 

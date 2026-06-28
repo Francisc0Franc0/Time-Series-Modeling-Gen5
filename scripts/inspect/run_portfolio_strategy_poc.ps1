@@ -3,6 +3,8 @@ param(
 
   [string]$RegimeContextSymbols = "AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX",
 
+  [string]$BaselineSymbol = "SPY",
+
   [Parameter(Mandatory = $true)]
   [string]$EndDate,
 
@@ -103,6 +105,7 @@ if (-not (Test-Path -LiteralPath $RscriptPath)) {
 
 $env:GEN5_PORTFOLIO_POC_ACTIVE_SYMBOLS = $ActiveSymbols
 $env:GEN5_PORTFOLIO_POC_REGIME_CONTEXT_SYMBOLS = $RegimeContextSymbols
+$env:GEN5_PORTFOLIO_POC_BASELINE_SYMBOL = $BaselineSymbol
 $env:GEN5_PORTFOLIO_POC_END_DATE = $EndDate
 $env:GEN5_PORTFOLIO_POC_AS_OF_TIMESTAMP = $AsOfTimestamp
 $env:GEN5_PORTFOLIO_POC_INITIAL_CAPITAL = [string]$InitialCapital
@@ -128,6 +131,7 @@ $env:GEN5_PORTFOLIO_POC_SKIP_CHILD_RUNS = if ($SkipChildRuns.IsPresent) { "true"
 Write-Host "Gen5 Portfolio Strategy Accounting POC"
 Write-Host "  Active Allocation Set: $ActiveSymbols"
 Write-Host "  Regime Context Universe: $RegimeContextSymbols"
+Write-Host "  Passive baseline symbol: $BaselineSymbol"
 Write-Host "  End date: $EndDate"
 Write-Host "  As of: $AsOfTimestamp"
 Write-Host "  Initial capital: $InitialCapital"

@@ -83,6 +83,76 @@ g5_portfolio_poc_as_list_by_symbol <- function(items, symbols, field_name) {
   out
 }
 
+g5_portfolio_poc_bars_table <- function(bars) {
+  if (!is.data.frame(bars) || !nrow(bars)) {
+    g5_portfolio_poc_stop("baseline bars must be a non-empty data frame.")
+  }
+  required <- c("symbol", "session_date", "close")
+  missing <- setdiff(required, names(bars))
+  if (length(missing)) {
+    g5_portfolio_poc_stop(paste0("baseline bars are missing columns: ", paste(missing, collapse = ", ")))
+  }
+  bars$symbol <- g5_standardize_symbol(bars$symbol)
+  bars$session_date <- as.Date(bars$session_date)
+  bars$close <- as.numeric(bars$close)
+  bars[order(bars$symbol, bars$session_date), , drop = FALSE]
+}
+
+g5_portfolio_poc_close_series <- function(bars, symbol, dates) {
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  bars <- bars[bars$symbol == symbol, , drop = FALSE]
+  if (!nrow(bars)) {
+    g5_portfolio_poc_stop(paste0("No baseline bars found for ", symbol, "."))
+  }
+  values <- as.numeric(bars$close)
+  names(values) <- as.character(as.Date(bars$session_date))
+  out <- rep(NA_real_, length(dates))
+  last_value <- NA_real_
+  for (i in seq_along(dates)) {
+    key <- as.character(as.Date(dates[[i]], origin = "1970-01-01"))
+    value <- unname(values[key])
+    if (length(value) && is.finite(value)) {
+      last_value <- as.numeric(value)
+    }
+    out[[i]] <- last_value
+  }
+  if (!is.finite(out[[1L]])) {
+    g5_portfolio_poc_stop(paste0("Baseline ", symbol, " is missing a close on the first portfolio session."))
+  }
+  out
+}
+
+g5_portfolio_poc_build_baselines <- function(bars, dates, active_symbols, initial_capital = 100000, baseline_symbol = "SPY") {
+  active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
+  baseline_symbol <- g5_standardize_symbol(baseline_symbol)[[1L]]
+  bars <- g5_portfolio_poc_bars_table(bars)
+  dates <- as.Date(dates)
+  if (!length(dates)) {
+    g5_portfolio_poc_stop("dates must contain at least one session.")
+  }
+  spy_close <- g5_portfolio_poc_close_series(bars, baseline_symbol, dates)
+  spy_equity <- initial_capital * spy_close / spy_close[[1L]]
+
+  active_curves <- lapply(active_symbols, function(symbol) {
+    close <- g5_portfolio_poc_close_series(bars, symbol, dates)
+    (initial_capital / length(active_symbols)) * close / close[[1L]]
+  })
+  active_equal_buy_hold <- Reduce(`+`, active_curves)
+  out <- data.frame(
+    schema_version = g5_portfolio_poc_schema_version(),
+    session_date = dates,
+    baseline_symbol = baseline_symbol,
+    spy_buy_hold_equity = spy_equity,
+    active_equal_buy_hold_equity = active_equal_buy_hold,
+    spy_buy_hold_return = spy_equity / initial_capital - 1,
+    active_equal_buy_hold_return = active_equal_buy_hold / initial_capital - 1,
+    stringsAsFactors = FALSE
+  )
+  out$spy_buy_hold_drawdown <- out$spy_buy_hold_equity / cummax(out$spy_buy_hold_equity) - 1
+  out$active_equal_buy_hold_drawdown <- out$active_equal_buy_hold_equity / cummax(out$active_equal_buy_hold_equity) - 1
+  out
+}
+
 g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol, active_symbols, initial_capital = 100000, slot_count = length(active_symbols)) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   if (!is.numeric(initial_capital) || length(initial_capital) != 1L || !is.finite(initial_capital) || initial_capital <= 0) {
@@ -303,7 +373,8 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
     equity = equity,
     events = events,
     standalone_symbol_equity = standalone,
-    symbol_summary = summary
+    symbol_summary = summary,
+    baselines = data.frame()
   )
 }
 
@@ -325,6 +396,31 @@ g5_portfolio_poc_metrics <- function(portfolio_equity, initial_capital = 100000)
   )
 }
 
+g5_portfolio_poc_baseline_metrics <- function(baselines, initial_capital = 100000) {
+  if (!is.data.frame(baselines) || !nrow(baselines)) {
+    return(data.frame())
+  }
+  data.frame(
+    schema_version = g5_portfolio_poc_schema_version(),
+    baseline_id = c("spy_buy_hold", "active_equal_buy_hold"),
+    ending_equity = c(tail(baselines$spy_buy_hold_equity, 1L), tail(baselines$active_equal_buy_hold_equity, 1L)),
+    total_return = c(tail(baselines$spy_buy_hold_equity, 1L), tail(baselines$active_equal_buy_hold_equity, 1L)) / initial_capital - 1,
+    cagr = c(
+      g5_ema_cross_cagr(initial_capital, tail(baselines$spy_buy_hold_equity, 1L), min(baselines$session_date), max(baselines$session_date)),
+      g5_ema_cross_cagr(initial_capital, tail(baselines$active_equal_buy_hold_equity, 1L), min(baselines$session_date), max(baselines$session_date))
+    ),
+    sharpe = c(
+      g5_ema_cross_sharpe(as.numeric(baselines$spy_buy_hold_equity)),
+      g5_ema_cross_sharpe(as.numeric(baselines$active_equal_buy_hold_equity))
+    ),
+    max_drawdown = c(
+      min(as.numeric(baselines$spy_buy_hold_drawdown), na.rm = TRUE),
+      min(as.numeric(baselines$active_equal_buy_hold_drawdown), na.rm = TRUE)
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_portfolio_poc_write_png <- function(accounting, path, active_symbols, width = 1700L, height = 1100L) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
@@ -335,16 +431,29 @@ g5_portfolio_poc_write_png <- function(accounting, path, active_symbols, width =
 
   equity <- accounting$equity
   standalone <- accounting$standalone_symbol_equity
+  baselines <- accounting$baselines
   x <- seq_len(nrow(equity))
   graphics::layout(matrix(c(1, 2), nrow = 2L), heights = c(0.58, 0.42))
   graphics::par(mar = c(4.5, 4.7, 3.2, 1.5))
 
-  y <- range(equity$portfolio_equity, finite = TRUE)
-  graphics::plot(x, equity$portfolio_equity, type = "l", col = "#2364AA", lwd = 2.2, xaxt = "n", xlab = "", ylab = "Portfolio equity ($)", main = "Dynamic Equal-Slot Portfolio Accounting")
+  y <- range(c(equity$portfolio_equity, baselines$spy_buy_hold_equity, baselines$active_equal_buy_hold_equity), finite = TRUE)
+  graphics::plot(x, equity$portfolio_equity, type = "l", col = "#2364AA", lwd = 2.2, xaxt = "n", xlab = "", ylab = "Portfolio equity ($)", ylim = y, main = "Active Portfolio vs Passive Baselines")
   graphics::grid(col = "#E6E8EB")
+  if (is.data.frame(baselines) && nrow(baselines)) {
+    graphics::lines(x, baselines$spy_buy_hold_equity, col = "#111111", lwd = 1.7, lty = 2)
+    graphics::lines(x, baselines$active_equal_buy_hold_equity, col = "#D95F02", lwd = 1.8, lty = 3)
+  }
   ticks <- unique(round(seq(1, nrow(equity), length.out = min(7L, nrow(equity)))))
   graphics::axis(1, at = ticks, labels = as.character(as.Date(equity$session_date)[ticks]), las = 2, cex.axis = 0.72)
-  graphics::legend("topleft", legend = c("Portfolio equity", "Entry sizing: current equity / slots; cash-capped"), col = c("#2364AA", NA), lwd = c(2.2, NA), bty = "n", cex = 0.82)
+  graphics::legend(
+    "topleft",
+    legend = c("Active portfolio", "SPY buy-and-hold", "Equal active-set buy-and-hold"),
+    col = c("#2364AA", "#111111", "#D95F02"),
+    lwd = c(2.2, 1.7, 1.8),
+    lty = c(1, 2, 3),
+    bty = "n",
+    cex = 0.82
+  )
 
   graphics::par(mar = c(4.5, 4.7, 3.0, 1.5))
   y2 <- range(standalone$standalone_slot_equity, finite = TRUE)
@@ -362,7 +471,7 @@ g5_portfolio_poc_write_png <- function(accounting, path, active_symbols, width =
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_portfolio_poc_write_report <- function(paths, settings, metrics, symbol_summary) {
+g5_portfolio_poc_write_report <- function(paths, settings, metrics, baseline_metrics, symbol_summary) {
   fmt_pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   fmt_dol <- function(x) ifelse(is.na(x), "NA", sprintf("$%.2f", as.numeric(x)))
   lines <- c(
@@ -387,12 +496,13 @@ g5_portfolio_poc_write_report <- function(paths, settings, metrics, symbol_summa
     paste0("- Slot count: `", settings$slot_count, "`"),
     "- Sizing policy: `dynamic_equal_slot_cash_capped`.",
     "- Ownership policy: `entry_state_owns_trade_until_exit`.",
+    paste0("- Passive baseline symbol: `", settings$baseline_symbol, "`"),
     "",
     "## Accounting Rule",
     "",
     "On each session, exits execute first and return cash to the shared account. New entries then target current portfolio equity divided by the slot count. If the target is larger than available cash, the POC takes a smaller cash-capped position. Open positions are not resized by scheduled rebalance.",
     "",
-    "Per-symbol curves in this report are standalone reference curves scaled to one slot. The portfolio curve is the authoritative accounting POC output.",
+    "Per-symbol curves in this report are standalone active-strategy reference curves scaled to one slot. The portfolio curve is the authoritative accounting POC output. Passive baselines are inspection references only.",
     "",
     "## Portfolio Metrics",
     "",
@@ -401,6 +511,17 @@ g5_portfolio_poc_write_report <- function(paths, settings, metrics, symbol_summa
     paste0("- CAGR: `", fmt_pct(metrics$cagr[[1L]]), "`"),
     paste0("- Sharpe: `", ifelse(is.na(metrics$sharpe[[1L]]), "NA", sprintf("%.3f", metrics$sharpe[[1L]])), "`"),
     paste0("- Max drawdown: `", fmt_pct(metrics$max_drawdown[[1L]]), "`"),
+    "",
+    "## Passive Baselines",
+    "",
+    paste(
+      c("| baseline | ending_equity | total_return | CAGR | Sharpe | max_drawdown |",
+        "| --- | ---: | ---: | ---: | ---: | ---: |",
+        apply(baseline_metrics, 1L, function(row) {
+          paste0("| ", row[["baseline_id"]], " | ", fmt_dol(row[["ending_equity"]]), " | ", fmt_pct(row[["total_return"]]), " | ", fmt_pct(row[["cagr"]]), " | ", ifelse(is.na(as.numeric(row[["sharpe"]])), "NA", sprintf("%.3f", as.numeric(row[["sharpe"]]))), " | ", fmt_pct(row[["max_drawdown"]]), " |")
+        })),
+      collapse = "\n"
+    ),
     "",
     "## Symbol Summary",
     "",
@@ -418,6 +539,8 @@ g5_portfolio_poc_write_report <- function(paths, settings, metrics, symbol_summa
     paste0("- Portfolio chart: `", paths$chart_png, "`"),
     paste0("- Portfolio equity: `", paths$portfolio_equity_csv, "`"),
     paste0("- Portfolio events: `", paths$portfolio_events_csv, "`"),
+    paste0("- Passive baselines: `", paths$baseline_equity_csv, "`"),
+    paste0("- Passive baseline metrics: `", paths$baseline_metrics_csv, "`"),
     paste0("- Standalone symbol equity: `", paths$standalone_symbol_equity_csv, "`"),
     paste0("- Symbol summary: `", paths$symbol_summary_csv, "`"),
     paste0("- Child artifact index: `", paths$child_artifact_index_csv, "`"),
@@ -438,21 +561,26 @@ g5_portfolio_poc_write_outputs <- function(accounting, child_artifact_index, out
   paths <- list(
     portfolio_equity_csv = file.path(output_dir, "portfolio_poc_equity.csv"),
     portfolio_events_csv = file.path(output_dir, "portfolio_poc_events.csv"),
+    baseline_equity_csv = file.path(output_dir, "portfolio_poc_baselines.csv"),
     standalone_symbol_equity_csv = file.path(output_dir, "portfolio_poc_standalone_symbol_equity.csv"),
     symbol_summary_csv = file.path(output_dir, "portfolio_poc_symbol_summary.csv"),
     child_artifact_index_csv = file.path(output_dir, "portfolio_poc_child_artifact_index.csv"),
     metrics_csv = file.path(output_dir, "portfolio_poc_metrics.csv"),
+    baseline_metrics_csv = file.path(output_dir, "portfolio_poc_baseline_metrics.csv"),
     chart_png = file.path(output_dir, "portfolio_poc_equity_curves.png"),
     report_md = file.path(output_dir, "portfolio_poc_report.md")
   )
   metrics <- g5_portfolio_poc_metrics(accounting$equity, settings$initial_capital)
+  baseline_metrics <- g5_portfolio_poc_baseline_metrics(accounting$baselines, settings$initial_capital)
   utils::write.csv(accounting$equity, paths$portfolio_equity_csv, row.names = FALSE)
   utils::write.csv(accounting$events, paths$portfolio_events_csv, row.names = FALSE)
+  utils::write.csv(accounting$baselines, paths$baseline_equity_csv, row.names = FALSE)
   utils::write.csv(accounting$standalone_symbol_equity, paths$standalone_symbol_equity_csv, row.names = FALSE)
   utils::write.csv(accounting$symbol_summary, paths$symbol_summary_csv, row.names = FALSE)
   utils::write.csv(child_artifact_index, paths$child_artifact_index_csv, row.names = FALSE)
   utils::write.csv(metrics, paths$metrics_csv, row.names = FALSE)
+  utils::write.csv(baseline_metrics, paths$baseline_metrics_csv, row.names = FALSE)
   paths$chart_png <- g5_portfolio_poc_write_png(accounting, paths$chart_png, settings$active_symbols)
-  paths$report_md <- g5_portfolio_poc_write_report(paths, settings, metrics, accounting$symbol_summary)
-  list(paths = paths, metrics = metrics)
+  paths$report_md <- g5_portfolio_poc_write_report(paths, settings, metrics, baseline_metrics, accounting$symbol_summary)
+  list(paths = paths, metrics = metrics, baseline_metrics = baseline_metrics)
 }

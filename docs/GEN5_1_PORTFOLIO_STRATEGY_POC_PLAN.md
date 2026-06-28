@@ -28,6 +28,7 @@ For the first POC, the Research Candidate Universe, Tradeable Universe, and Acti
 - Strategy grid preset: `standard`
 - Initial capital: `$100,000`
 - Slot count: `5`
+- Passive baseline symbol: `SPY`
 
 The selected assets are intentionally active and volatile enough to exercise accounting behavior, while the context universe adds broad equity, growth, small-cap, semiconductor, duration, gold, and volatility context.
 
@@ -80,12 +81,18 @@ Expected outputs:
 - portfolio report Markdown;
 - portfolio equity CSV;
 - portfolio event ledger CSV;
+- passive baseline equity CSV for SPY buy-and-hold and equal active-set buy-and-hold;
+- passive baseline metrics CSV;
 - standalone per-symbol reference equity CSV;
 - symbol summary CSV;
 - child artifact index CSV;
-- PNG chart showing portfolio equity and per-symbol standalone reference curves.
+- PNG chart showing active portfolio equity versus passive baselines, plus per-symbol standalone reference curves.
 
 The portfolio curve is the authoritative accounting POC output. Per-symbol curves are standalone reference curves scaled to one slot, not a claim that the real portfolio uses isolated fixed sleeves.
+Passive baselines are inspection references only:
+
+- **SPY buy-and-hold**: park the full initial capital in SPY at the first portfolio session and hold.
+- **Equal active-set buy-and-hold**: split the initial capital evenly across the Active Allocation Set at the first portfolio session and hold. Only total portfolio equity is reported.
 
 After child WFA packets exist, rerun the wrapper with `-SkipChildRuns` to rebuild only the portfolio accounting/report packet from the existing child artifacts.
 
