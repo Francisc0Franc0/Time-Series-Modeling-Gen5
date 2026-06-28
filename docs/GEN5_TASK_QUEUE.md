@@ -578,7 +578,7 @@ Visible output:
 
 ### E. Regime/state filter POC roadmap
 
-Status: PCA quantile-grid and PCA k-means diagnostic POCs implemented; PCA-routed WFA Option A POC implemented for one-or-more stitched OOS folds with either state engine, optional multi-asset Regime Context Universe, and date-aligned or pooled asset-day PCA panel modes; remaining regime methods are planned.
+Status: PCA quantile-grid and PCA k-means diagnostic POCs implemented; PCA-routed WFA Option A POC implemented for one-or-more stitched OOS folds with either state engine, optional multi-asset Regime Context Universe, and date-aligned or pooled asset-day PCA panel modes; PCA router comparison reporting added for the current two-by-two panel/state-map surface; remaining regime methods are planned.
 
 Planning memory: `docs/GEN5_REGIME_FILTER_POC_PLAN.md`
 
@@ -593,6 +593,7 @@ Current state:
 - The routed WFA POC can widen the state feature panel with `-RegimeContextSymbols`, while keeping the Research Candidate Universe, Tradeable Universe, and Active Allocation Set limited to the target `-Symbol`.
 - `-PcaPanelMode date_aligned_context` builds one synchronized wide row per date; `-PcaPanelMode pooled_asset_day` stacks context asset-days into one long Gen4-style PCA training panel, then routes only the target symbol's scored states.
 - `scripts/inspect/run_pca_router_workbench.ps1` is the clean operator wrapper for the two main experiment toggles: `-PanelMode contextual_snapshot|behavioral_pool` and `-StateMap quantile_grid|kmeans`.
+- `scripts/inspect/run_pca_comparison_report.ps1` runs or consumes the four `PanelMode x StateMap` combinations and writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`, including OOS metrics, state coverage, selected-family counts, and child artifact paths.
 - The routed POC selects one complete `strategy_spec_id` per TRAIN PCA state per fold and replays those fold-local state selections in stitched OOS using Option A: entry state owns the trade until exit, including across fold boundaries.
 - Routed POC outputs are written under ignored `runs/research_workbench/regime_wfa_pocs/` with short `pcawfa` filenames to avoid Windows path-length issues.
 - It does not yet implement state-adaptive exits, portfolio allocation, leverage, live advice, or execution.

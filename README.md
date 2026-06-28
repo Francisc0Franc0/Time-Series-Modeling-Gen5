@@ -430,6 +430,22 @@ The wrapper exposes two experiment toggles while delegating to the stable lower-
 - `-StateMap quantile_grid`: PC1/PC2 quantile binning, with `-StateCount 3` meaning a 3x3 grid.
 - `-StateMap kmeans`: PCA k-means state map, with `-StateCount 9` meaning nine clusters.
 
+To run the current two-by-two comparison surface for AMD with AMD/NVDA/TSLA regime context:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_report.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
+  -Refresh
+```
+
+This comparison runner executes or, with `-SkipChildRuns`, consumes the four child packets from `PanelMode x StateMap`: contextual snapshot plus quantile grid, contextual snapshot plus k-means, behavioral pool plus quantile grid, and behavioral pool plus k-means. It writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/` with a Markdown report, OOS metrics summary, state-coverage summary, selected-family counts, and child artifact paths. It remains an inspection/reporting layer over Option A; it does not add state-adaptive exits, allocation, live advice, or execution.
+
 Two PCA panel modes are available:
 
 - `date_aligned_context`: the default Gen5.1 mode. It builds one row per session date, with context features widened into columns such as `AMD__rsi_14`, `NVDA__rsi_14`, and `TSLA__rsi_14`. This treats the context universe as same-day market sensors.

@@ -1,6 +1,6 @@
 # Gen5.1 Current Handoff
 
-Status date: 2026-06-27
+Status date: 2026-06-28
 
 This note is the quick restart surface for a new Codex conversation. It summarizes what is working now, where the relevant docs live, and what should not be assumed yet.
 
@@ -15,23 +15,23 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - multi-fold stitched OOS WFA works for one traded symbol;
 - PCA regime labeling works with quantile grids and k-means;
 - PCA-routed WFA Option A works with a multi-asset Regime Context Universe and one traded target symbol.
+- PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, and artifact paths.
 
 The newest operator surface is:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_router_workbench.ps1 `
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_report.ps1 `
   -Symbol AMD `
   -RegimeContextSymbols "AMD,NVDA,TSLA" `
-  -PanelMode contextual_snapshot `
-  -StateMap quantile_grid `
-  -StateCount 3 `
   -EndDate 2026-06-24 `
   -AsOfTimestamp "2026-06-24 17:30:00" `
   -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
   -Refresh
 ```
 
-The wrapper delegates to the stable lower-level runner, `scripts/inspect/run_pca_wfa_router_poc.ps1`.
+The comparison wrapper runs four child packets through `scripts/inspect/run_pca_router_workbench.ps1`, then writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/`. Use `-SkipChildRuns` to rebuild the comparison report from already-generated child packets.
 
 ## Current PCA Vocabulary
 
@@ -83,10 +83,6 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 ## Suggested Next Conversation Prompts
 
 Use one of these as the first prompt in a new conversation:
-
-```text
-Please start on branch codex/Gen5.1-pca-comparison-report. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Then build a compact comparison report runner for the PCA router workbench that runs or consumes the four combinations of PanelMode x StateMap for AMD with RegimeContextSymbols AMD,NVDA,TSLA, and summarizes OOS metrics, state coverage, selected families, and artifact paths. Ask before adding dependencies.
-```
 
 ```text
 Please start on branch codex/Gen5.1-regime-universe-scaleout. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Then propose and implement a careful next expansion of the Regime Context Universe beyond AMD,NVDA,TSLA while keeping Research Candidate Universe, Tradeable Universe, and Active Allocation Set as AMD only. Produce concrete charts/reports and validate.

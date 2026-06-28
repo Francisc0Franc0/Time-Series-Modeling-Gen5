@@ -51,6 +51,51 @@ g5_pca_wfa_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count
   )
 }
 
+g5_pca_wfa_find_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, grid_n, wfa_end_date, candidate_families, state_engine = "quantile_grid", regime_context_symbols = symbol, pca_panel_mode = "date_aligned_context", fallback_wfa_start_date = NULL) {
+  base_dir <- file.path(repo_root, "runs", "research_workbench", "regime_wfa_pocs")
+  stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
+  symbol_label <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  families <- sort(unique(as.character(candidate_families)))
+  engine_label <- if (identical(as.character(state_engine), "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(grid_n, "x", grid_n)
+  context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  context_label <- paste0(g5_pca_wfa_panel_label(pca_panel_mode), length(context_symbols), "a")
+  end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date)))
+  pattern <- paste0(
+    "^pcawfa_",
+    symbol_label,
+    "_",
+    as.integer(fold_count),
+    "f_",
+    engine_label,
+    "_",
+    context_label,
+    "_",
+    length(families),
+    "fam_[0-9]+_",
+    end_label,
+    "_",
+    stamp,
+    "$"
+  )
+  if (dir.exists(base_dir)) {
+    dirs <- list.dirs(base_dir, recursive = FALSE, full.names = TRUE)
+    matches <- dirs[grepl(pattern, basename(dirs))]
+    if (length(matches)) {
+      info <- file.info(matches)
+      matches <- matches[order(info$mtime, matches)]
+      return(normalizePath(matches[[length(matches)]], winslash = "/", mustWork = FALSE))
+    }
+  }
+  if (!is.null(fallback_wfa_start_date)) {
+    return(normalizePath(
+      g5_pca_wfa_output_dir(repo_root, as_of_timestamp, symbol, fold_count, grid_n, fallback_wfa_start_date, wfa_end_date, candidate_families, state_engine, regime_context_symbols, pca_panel_mode),
+      winslash = "/",
+      mustWork = FALSE
+    ))
+  }
+  normalizePath(file.path(base_dir, paste0("missing_", gsub("[^0-9A-Za-z_.-]+", "_", pattern))), winslash = "/", mustWork = FALSE)
+}
+
 g5_pca_wfa_all_states <- function(grid_n) {
   as.vector(outer(seq_len(grid_n), seq_len(grid_n), function(x, y) paste0("S", x, "_", y)))
 }
@@ -1275,4 +1320,228 @@ g5_write_pca_wfa_outputs <- function(pca_wfa, output_dir, prefix, symbol, as_of_
   paths$equity_chart_png <- g5_pca_wfa_write_equity_png(pca_wfa$oos_equity_curve, paths$equity_chart_png, symbol, pca_wfa$folds, state_engine = pca_wfa$settings$state_engine, pca_panel_mode = pca_wfa$settings$pca_panel_mode)
   paths$report_md <- g5_pca_wfa_markdown_report(pca_wfa, paths, symbol, as_of_timestamp, paths$report_md)
   list(paths = paths, result = pca_wfa)
+}
+
+g5_pca_wfa_comparison_prefix <- function(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date) {
+  stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
+  symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
+  context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  paste(
+    c(
+      "pcawfa_cmp",
+      symbol,
+      paste0(fold_count, "f"),
+      paste0(length(context_symbols), "ctx"),
+      gsub("[^0-9A-Za-z]+", "", as.character(as.Date(wfa_end_date))),
+      stamp
+    ),
+    collapse = "_"
+  )
+}
+
+g5_pca_wfa_comparison_output_dir <- function(repo_root, as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date) {
+  file.path(
+    repo_root,
+    "runs",
+    "research_workbench",
+    "regime_wfa_comparisons",
+    g5_pca_wfa_comparison_prefix(as_of_timestamp, symbol, fold_count, regime_context_symbols, wfa_end_date)
+  )
+}
+
+g5_pca_wfa_read_csv_if_exists <- function(path) {
+  if (!file.exists(path)) {
+    return(data.frame())
+  }
+  utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
+}
+
+g5_pca_wfa_comparison_artifact_paths <- function(run_dir) {
+  list(
+    fold_spec_csv = file.path(run_dir, "pcawfa_folds.csv"),
+    selected_states_csv = file.path(run_dir, "pcawfa_selected_states.csv"),
+    train_state_performance_csv = file.path(run_dir, "pcawfa_train_state_performance.csv"),
+    state_coverage_csv = file.path(run_dir, "pcawfa_state_coverage.csv"),
+    pca_scores_csv = file.path(run_dir, "pcawfa_pca_scores.csv"),
+    pca_model_contract_csv = file.path(run_dir, "pcawfa_pca_model_contract.csv"),
+    oos_trades_csv = file.path(run_dir, "pcawfa_oos_trades.csv"),
+    oos_equity_csv = file.path(run_dir, "pcawfa_oos_equity.csv"),
+    oos_metrics_csv = file.path(run_dir, "pcawfa_oos_metrics.csv"),
+    state_strategy_chart_png = file.path(run_dir, "pcawfa_state_strategy_chart.png"),
+    equity_chart_png = file.path(run_dir, "pcawfa_equity_curve.png"),
+    report_md = file.path(run_dir, "pcawfa_report.md")
+  )
+}
+
+g5_pca_wfa_comparison_family_counts <- function(run_index) {
+  rows <- list()
+  for (i in seq_len(nrow(run_index))) {
+    paths <- g5_pca_wfa_comparison_artifact_paths(run_index$run_dir[[i]])
+    selected <- g5_pca_wfa_read_csv_if_exists(paths$selected_states_csv)
+    if (!nrow(selected) || !"strategy_family" %in% names(selected)) {
+      rows[[length(rows) + 1L]] <- data.frame(
+        panel_mode = run_index$panel_mode[[i]],
+        state_map = run_index$state_map[[i]],
+        state_count = run_index$state_count[[i]],
+        strategy_family = NA_character_,
+        selected_state_count = 0L,
+        selected_fold_count = 0L,
+        stringsAsFactors = FALSE
+      )
+      next
+    }
+    counts <- as.data.frame(table(selected$strategy_family), stringsAsFactors = FALSE)
+    names(counts) <- c("strategy_family", "selected_state_count")
+    counts$selected_state_count <- as.integer(counts$selected_state_count)
+    fold_counts <- if ("fold_id" %in% names(selected)) {
+      aggregate(fold_id ~ strategy_family, selected, function(x) length(unique(x)))
+    } else {
+      data.frame(strategy_family = counts$strategy_family, fold_id = NA_integer_, stringsAsFactors = FALSE)
+    }
+    names(fold_counts) <- c("strategy_family", "selected_fold_count")
+    merged <- merge(counts, fold_counts, by = "strategy_family", all.x = TRUE, sort = FALSE)
+    merged$panel_mode <- run_index$panel_mode[[i]]
+    merged$state_map <- run_index$state_map[[i]]
+    merged$state_count <- run_index$state_count[[i]]
+    rows[[length(rows) + 1L]] <- merged[, c("panel_mode", "state_map", "state_count", "strategy_family", "selected_state_count", "selected_fold_count"), drop = FALSE]
+  }
+  do.call(rbind, rows)
+}
+
+g5_pca_wfa_comparison_summary <- function(run_index) {
+  rows <- list()
+  for (i in seq_len(nrow(run_index))) {
+    paths <- g5_pca_wfa_comparison_artifact_paths(run_index$run_dir[[i]])
+    metrics <- g5_pca_wfa_read_csv_if_exists(paths$oos_metrics_csv)
+    selected <- g5_pca_wfa_read_csv_if_exists(paths$selected_states_csv)
+    coverage <- g5_pca_wfa_read_csv_if_exists(paths$state_coverage_csv)
+    oos_coverage <- if (nrow(coverage) && "split" %in% names(coverage)) coverage[coverage$split == "OOS", , drop = FALSE] else data.frame()
+    selected_families <- if (nrow(selected) && "strategy_family" %in% names(selected)) {
+      paste(sort(unique(selected$strategy_family)), collapse = ",")
+    } else {
+      ""
+    }
+    metric <- if (nrow(metrics)) metrics[1L, , drop = FALSE] else data.frame()
+    metric_value <- function(name) {
+      if (nrow(metric) && name %in% names(metric)) metric[[name]][[1L]] else NA
+    }
+    rows[[length(rows) + 1L]] <- data.frame(
+      panel_mode = run_index$panel_mode[[i]],
+      state_map = run_index$state_map[[i]],
+      internal_panel_mode = run_index$internal_panel_mode[[i]],
+      state_engine = run_index$state_engine[[i]],
+      state_count = run_index$state_count[[i]],
+      run_status = if (file.exists(paths$oos_metrics_csv)) "ok" else "missing_outputs",
+      total_return = metric_value("total_return"),
+      sharpe = metric_value("sharpe"),
+      max_drawdown = metric_value("max_drawdown"),
+      trade_count = metric_value("trade_count"),
+      buy_hold_total_return = metric_value("buy_hold_total_return"),
+      oos_state_count = if (nrow(oos_coverage)) nrow(oos_coverage) else 0L,
+      oos_covered_states = if (nrow(oos_coverage) && "row_count" %in% names(oos_coverage)) sum(oos_coverage$row_count > 0, na.rm = TRUE) else 0L,
+      oos_total_state_rows = if (nrow(oos_coverage) && "row_count" %in% names(oos_coverage)) sum(oos_coverage$row_count, na.rm = TRUE) else 0L,
+      min_oos_state_fraction = if (nrow(oos_coverage) && "row_fraction" %in% names(oos_coverage)) min(oos_coverage$row_fraction, na.rm = TRUE) else NA_real_,
+      max_oos_state_fraction = if (nrow(oos_coverage) && "row_fraction" %in% names(oos_coverage)) max(oos_coverage$row_fraction, na.rm = TRUE) else NA_real_,
+      selected_state_count = if (nrow(selected)) nrow(selected) else 0L,
+      no_trade_state_selections = if (nrow(selected) && "strategy_family" %in% names(selected)) sum(selected$strategy_family == "no_trade", na.rm = TRUE) else 0L,
+      selected_families = selected_families,
+      run_dir = run_index$run_dir[[i]],
+      report_md = paths$report_md,
+      state_strategy_chart_png = paths$state_strategy_chart_png,
+      equity_chart_png = paths$equity_chart_png,
+      stringsAsFactors = FALSE
+    )
+  }
+  do.call(rbind, rows)
+}
+
+g5_pca_wfa_comparison_table_lines <- function(df, cols) {
+  df <- df[, cols, drop = FALSE]
+  header <- paste(c("", names(df), ""), collapse = " | ")
+  sep <- paste(c("", rep("---", ncol(df)), ""), collapse = " | ")
+  rows <- if (nrow(df)) apply(df, 1, function(row) paste(c("", as.character(row), ""), collapse = " | ")) else character()
+  c(header, sep, rows)
+}
+
+g5_pca_wfa_comparison_markdown_report <- function(summary, family_counts, path_index, settings, path) {
+  pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
+  num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
+  summary_table <- summary
+  summary_table$total_return <- pct(summary_table$total_return)
+  summary_table$max_drawdown <- pct(summary_table$max_drawdown)
+  summary_table$buy_hold_total_return <- pct(summary_table$buy_hold_total_return)
+  summary_table$sharpe <- num(summary_table$sharpe)
+  summary_table$min_oos_state_fraction <- pct(summary_table$min_oos_state_fraction)
+  summary_table$max_oos_state_fraction <- pct(summary_table$max_oos_state_fraction)
+  artifact_table <- path_index[, c("panel_mode", "state_map", "state_count", "run_dir", "report_md"), drop = FALSE]
+  lines <- c(
+    "# Gen5 PCA Router Comparison Report",
+    "",
+    "POC only: this comparison summarizes already-generated PCA-routed WFA packets. It does not introduce portfolio allocation, live advice, execution, or state-adaptive exits.",
+    "",
+    "## Run Context",
+    "",
+    paste0("- Symbol: `", settings$symbol, "`"),
+    paste0("- Regime Context Universe: `", paste(settings$regime_context_symbols, collapse = ", "), "`"),
+    paste0("- Research Candidate Universe: `", settings$symbol, "`"),
+    paste0("- Tradeable Universe: `", settings$symbol, "`"),
+    paste0("- Active Allocation Set: `", settings$symbol, "`"),
+    paste0("- Fold count: `", settings$fold_count, "`"),
+    paste0("- End date: `", settings$end_date, "`"),
+    paste0("- As-of timestamp: `", settings$as_of_timestamp, "`"),
+    "- Ownership policy: `entry_state_owns_trade_until_exit`.",
+    "",
+    "## Comparison Summary",
+    "",
+    g5_pca_wfa_comparison_table_lines(
+      summary_table,
+      c("panel_mode", "state_map", "state_count", "run_status", "total_return", "sharpe", "max_drawdown", "trade_count", "buy_hold_total_return", "oos_covered_states", "oos_state_count", "selected_families")
+    ),
+    "",
+    "## OOS State Coverage",
+    "",
+    g5_pca_wfa_comparison_table_lines(
+      summary_table,
+      c("panel_mode", "state_map", "state_count", "oos_total_state_rows", "oos_covered_states", "oos_state_count", "min_oos_state_fraction", "max_oos_state_fraction")
+    ),
+    "",
+    "## Selected Family Counts",
+    "",
+    g5_pca_wfa_comparison_table_lines(
+      family_counts,
+      c("panel_mode", "state_map", "state_count", "strategy_family", "selected_state_count", "selected_fold_count")
+    ),
+    "",
+    "## Child Artifacts",
+    "",
+    g5_pca_wfa_comparison_table_lines(artifact_table, names(artifact_table))
+  )
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path, useBytes = TRUE)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_write_pca_wfa_comparison_outputs <- function(run_index, output_dir, settings, prefix = "pcawfa_cmp") {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  summary <- g5_pca_wfa_comparison_summary(run_index)
+  family_counts <- g5_pca_wfa_comparison_family_counts(run_index)
+  path_index <- run_index
+  artifact_paths <- lapply(path_index$run_dir, g5_pca_wfa_comparison_artifact_paths)
+  path_index$report_md <- vapply(artifact_paths, function(x) x$report_md, character(1L))
+  path_index$selected_states_csv <- vapply(artifact_paths, function(x) x$selected_states_csv, character(1L))
+  path_index$state_coverage_csv <- vapply(artifact_paths, function(x) x$state_coverage_csv, character(1L))
+  path_index$oos_metrics_csv <- vapply(artifact_paths, function(x) x$oos_metrics_csv, character(1L))
+  path_index$state_strategy_chart_png <- vapply(artifact_paths, function(x) x$state_strategy_chart_png, character(1L))
+  path_index$equity_chart_png <- vapply(artifact_paths, function(x) x$equity_chart_png, character(1L))
+  paths <- list(
+    summary_csv = file.path(output_dir, paste0(prefix, "_summary.csv")),
+    selected_family_counts_csv = file.path(output_dir, paste0(prefix, "_selected_family_counts.csv")),
+    path_index_csv = file.path(output_dir, paste0(prefix, "_path_index.csv")),
+    report_md = file.path(output_dir, paste0(prefix, "_report.md"))
+  )
+  utils::write.csv(summary, paths$summary_csv, row.names = FALSE)
+  utils::write.csv(family_counts, paths$selected_family_counts_csv, row.names = FALSE)
+  utils::write.csv(path_index, paths$path_index_csv, row.names = FALSE)
+  paths$report_md <- g5_pca_wfa_comparison_markdown_report(summary, family_counts, path_index, settings, paths$report_md)
+  list(paths = paths, summary = summary, selected_family_counts = family_counts, path_index = path_index)
 }
