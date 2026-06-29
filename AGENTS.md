@@ -100,6 +100,7 @@ For long Gen5.1 research/inspection runs, Codex should keep the shared inspectio
 - Use `-SkipChildRuns` when rebuilding reports or portfolio packets from existing child artifacts.
 - Treat ignored `runs/` packets as the shared evidence surface between operator and Codex.
 - Summarize findings with artifact paths and STOP decisions, not raw table dumps.
+- At the conclusion of each POC or research-inspection slice, update `docs/GEN5_1_POC_PROGRESS_LOG.md` with the question, scope, key artifacts, readout, and next decision or STOP state.
 - For sequential approved slices in the same milestone, Codex may continue implementation, validation, commit, and push on the named `codex/` branch without requiring a fresh strategic prompt, as long as scope does not change.
 
 ## Collaboration Style
