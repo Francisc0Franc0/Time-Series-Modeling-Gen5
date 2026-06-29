@@ -644,25 +644,54 @@ g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", 
   ))
 }
 
-g5_context_factorial_prefix <- function(as_of_timestamp, active_symbols, fold_count, universe_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard") {
+g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L) {
+  if (isTRUE(medium_grid)) {
+    return(data.frame(
+      surface_id = c(
+        "contextual_snapshot_quantile_grid",
+        "contextual_snapshot_kmeans",
+        "behavioral_pool_quantile_grid",
+        "behavioral_pool_kmeans"
+      ),
+      pca_panel_mode = c("date_aligned_context", "date_aligned_context", "pooled_asset_day", "pooled_asset_day"),
+      state_engine = c("quantile_grid", "pca_kmeans", "quantile_grid", "pca_kmeans"),
+      grid_n = c(3L, 9L, 3L, 9L),
+      state_count = c("3x3", "k9", "3x3", "k9"),
+      stringsAsFactors = FALSE
+    ))
+  }
+  pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
+  state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else as.character(state_engine)
+  data.frame(
+    surface_id = "single_surface",
+    pca_panel_mode = pca_panel_mode,
+    state_engine = state_engine,
+    grid_n = as.integer(grid_n),
+    state_count = if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n)),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_context_factorial_prefix <- function(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(end_date)))
   active_label <- paste0("A", length(g5_standardize_symbol(active_symbols)))
   panel_label <- if (identical(g5_pca_wfa_panel_label(pca_panel_mode), "pooled")) "pool" else "align"
   engine_label <- if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n))
   grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
-  parts <- c("ctxfac", active_label, paste0(fold_count, "f"), paste0(universe_count, "u"), panel_label, engine_label)
+  surface_label <- if (as.integer(surface_count) > 1L) paste0(as.integer(surface_count), "s") else paste(panel_label, engine_label, sep = "_")
+  parts <- c("ctxfac", active_label, paste0(fold_count, "f"), paste0(universe_count, "u"), surface_label)
   if (nzchar(grid_label)) parts <- c(parts, grid_label)
   paste(c(parts, end_label, stamp), collapse = "_")
 }
 
-g5_context_factorial_output_dir <- function(repo_root, as_of_timestamp, active_symbols, fold_count, universe_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard") {
+g5_context_factorial_output_dir <- function(repo_root, as_of_timestamp, active_symbols, fold_count, universe_count, surface_count = 1L, grid_n = 3L, state_engine = "quantile_grid", pca_panel_mode = "pooled_asset_day", end_date, strategy_grid_preset = "standard") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "context_universe_factorials",
-    g5_context_factorial_prefix(as_of_timestamp, active_symbols, fold_count, universe_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset)
+    g5_context_factorial_prefix(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset)
   )
 }
 
@@ -701,31 +730,38 @@ g5_read_csv_if_exists <- function(path) {
   utils::read.csv(path, stringsAsFactors = FALSE)
 }
 
-g5_context_factorial_portfolio_index <- function(universe_defs, repo_root, as_of_timestamp, active_symbols, fold_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard") {
+g5_context_factorial_portfolio_index <- function(universe_defs, surface_defs, repo_root, as_of_timestamp, active_symbols, fold_count, end_date, strategy_grid_preset = "standard") {
   rows <- list()
-  for (i in seq_len(nrow(universe_defs))) {
-    symbols <- g5_standardize_symbol(strsplit(universe_defs$symbols[[i]], ",", fixed = TRUE)[[1L]])
-    portfolio_dir <- g5_portfolio_poc_packet_dir(repo_root, as_of_timestamp, active_symbols, fold_count, grid_n, state_engine, pca_panel_mode, symbols, end_date, strategy_grid_preset)
-    paths <- g5_context_factorial_portfolio_paths(portfolio_dir)
-    rows[[length(rows) + 1L]] <- data.frame(
-      schema_version = g5_context_factorial_schema_version(),
-      universe_id = universe_defs$universe_id[[i]],
-      universe_label = universe_defs$universe_label[[i]],
-      regime_context_symbols = paste(symbols, collapse = ","),
-      symbol_count = length(symbols),
-      active_overlap_count = universe_defs$active_overlap_count[[i]],
-      diversity_class = universe_defs$diversity_class[[i]],
-      similarity_class = universe_defs$similarity_class[[i]],
-      portfolio_dir = normalizePath(portfolio_dir, winslash = "/", mustWork = FALSE),
-      run_status = if (file.exists(paths$metrics_csv) && file.exists(paths$report_md)) "ok" else "missing_outputs",
-      report_md = normalizePath(paths$report_md, winslash = "/", mustWork = FALSE),
-      metrics_csv = normalizePath(paths$metrics_csv, winslash = "/", mustWork = FALSE),
-      baseline_metrics_csv = normalizePath(paths$baseline_metrics_csv, winslash = "/", mustWork = FALSE),
-      symbol_summary_csv = normalizePath(paths$symbol_summary_csv, winslash = "/", mustWork = FALSE),
-      child_artifact_index_csv = normalizePath(paths$child_artifact_index_csv, winslash = "/", mustWork = FALSE),
-      chart_png = normalizePath(paths$chart_png, winslash = "/", mustWork = FALSE),
-      stringsAsFactors = FALSE
-    )
+  for (s in seq_len(nrow(surface_defs))) {
+    for (i in seq_len(nrow(universe_defs))) {
+      symbols <- g5_standardize_symbol(strsplit(universe_defs$symbols[[i]], ",", fixed = TRUE)[[1L]])
+      portfolio_dir <- g5_portfolio_poc_packet_dir(repo_root, as_of_timestamp, active_symbols, fold_count, surface_defs$grid_n[[s]], surface_defs$state_engine[[s]], surface_defs$pca_panel_mode[[s]], symbols, end_date, strategy_grid_preset)
+      paths <- g5_context_factorial_portfolio_paths(portfolio_dir)
+      rows[[length(rows) + 1L]] <- data.frame(
+        schema_version = g5_context_factorial_schema_version(),
+        universe_id = universe_defs$universe_id[[i]],
+        universe_label = universe_defs$universe_label[[i]],
+        surface_id = surface_defs$surface_id[[s]],
+        pca_panel_mode = surface_defs$pca_panel_mode[[s]],
+        state_engine = surface_defs$state_engine[[s]],
+        state_count = surface_defs$state_count[[s]],
+        grid_n = surface_defs$grid_n[[s]],
+        regime_context_symbols = paste(symbols, collapse = ","),
+        symbol_count = length(symbols),
+        active_overlap_count = universe_defs$active_overlap_count[[i]],
+        diversity_class = universe_defs$diversity_class[[i]],
+        similarity_class = universe_defs$similarity_class[[i]],
+        portfolio_dir = normalizePath(portfolio_dir, winslash = "/", mustWork = FALSE),
+        run_status = if (file.exists(paths$metrics_csv) && file.exists(paths$report_md)) "ok" else "missing_outputs",
+        report_md = normalizePath(paths$report_md, winslash = "/", mustWork = FALSE),
+        metrics_csv = normalizePath(paths$metrics_csv, winslash = "/", mustWork = FALSE),
+        baseline_metrics_csv = normalizePath(paths$baseline_metrics_csv, winslash = "/", mustWork = FALSE),
+        symbol_summary_csv = normalizePath(paths$symbol_summary_csv, winslash = "/", mustWork = FALSE),
+        child_artifact_index_csv = normalizePath(paths$child_artifact_index_csv, winslash = "/", mustWork = FALSE),
+        chart_png = normalizePath(paths$chart_png, winslash = "/", mustWork = FALSE),
+        stringsAsFactors = FALSE
+      )
+    }
   }
   do.call(rbind, rows)
 }
@@ -739,6 +775,10 @@ g5_context_factorial_summary <- function(portfolio_index) {
       rows[[length(rows) + 1L]] <- data.frame(
         universe_id = portfolio_index$universe_id[[i]],
         universe_label = portfolio_index$universe_label[[i]],
+        surface_id = portfolio_index$surface_id[[i]],
+        pca_panel_mode = portfolio_index$pca_panel_mode[[i]],
+        state_engine = portfolio_index$state_engine[[i]],
+        state_count = portfolio_index$state_count[[i]],
         run_status = portfolio_index$run_status[[i]],
         ending_equity = NA_real_,
         total_return = NA_real_,
@@ -756,6 +796,10 @@ g5_context_factorial_summary <- function(portfolio_index) {
     rows[[length(rows) + 1L]] <- data.frame(
       universe_id = portfolio_index$universe_id[[i]],
       universe_label = portfolio_index$universe_label[[i]],
+      surface_id = portfolio_index$surface_id[[i]],
+      pca_panel_mode = portfolio_index$pca_panel_mode[[i]],
+      state_engine = portfolio_index$state_engine[[i]],
+      state_count = portfolio_index$state_count[[i]],
       run_status = portfolio_index$run_status[[i]],
       ending_equity = as.numeric(metrics$ending_equity[[1L]]),
       total_return = as.numeric(metrics$total_return[[1L]]),
@@ -779,6 +823,10 @@ g5_context_factorial_child_artifact_index <- function(portfolio_index) {
     if (!nrow(child)) next
     child$universe_id <- portfolio_index$universe_id[[i]]
     child$universe_label <- portfolio_index$universe_label[[i]]
+    child$surface_id <- portfolio_index$surface_id[[i]]
+    child$pca_panel_mode <- portfolio_index$pca_panel_mode[[i]]
+    child$state_engine <- portfolio_index$state_engine[[i]]
+    child$state_count <- portfolio_index$state_count[[i]]
     child$regime_context_symbols <- portfolio_index$regime_context_symbols[[i]]
     rows[[length(rows) + 1L]] <- child
   }
@@ -786,8 +834,79 @@ g5_context_factorial_child_artifact_index <- function(portfolio_index) {
     return(data.frame())
   }
   out <- do.call(rbind, rows)
-  front <- c("universe_id", "universe_label", "regime_context_symbols")
+  front <- c("universe_id", "universe_label", "surface_id", "pca_panel_mode", "state_engine", "state_count", "regime_context_symbols")
   out[, c(front, setdiff(names(out), front)), drop = FALSE]
+}
+
+g5_context_factorial_child_metric_summary <- function(child_index) {
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(data.frame())
+  if (!all(c("oos_metrics_csv", "symbol") %in% names(child_index))) return(data.frame())
+  rows <- list()
+  for (i in seq_len(nrow(child_index))) {
+    metrics <- g5_read_csv_if_exists(child_index$oos_metrics_csv[[i]])
+    if (!nrow(metrics)) next
+    metric_cols <- intersect(c("total_return", "sharpe", "max_drawdown", "trade_count", "closed_trade_count", "buy_hold_total_return"), names(metrics))
+    if (!length(metric_cols)) next
+    rows[[length(rows) + 1L]] <- cbind(
+      child_index[i, c("universe_id", "surface_id", "pca_panel_mode", "state_engine", "state_count", "symbol"), drop = FALSE],
+      metrics[1L, metric_cols, drop = FALSE]
+    )
+  }
+  if (!length(rows)) data.frame() else do.call(rbind, rows)
+}
+
+g5_context_factorial_state_coverage_summary <- function(child_index) {
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(data.frame())
+  if (!all(c("run_dir", "symbol") %in% names(child_index))) return(data.frame())
+  rows <- list()
+  for (i in seq_len(nrow(child_index))) {
+    coverage_path <- file.path(child_index$run_dir[[i]], "pcawfa_state_coverage.csv")
+    coverage <- g5_read_csv_if_exists(coverage_path)
+    if (!nrow(coverage) || !all(c("split", "row_count") %in% names(coverage))) next
+    oos <- coverage[coverage$split == "OOS", , drop = FALSE]
+    train <- coverage[coverage$split == "TRAIN", , drop = FALSE]
+    oos_rows <- as.numeric(oos$row_count)
+    train_rows <- as.numeric(train$row_count)
+    rows[[length(rows) + 1L]] <- data.frame(
+      universe_id = child_index$universe_id[[i]],
+      surface_id = child_index$surface_id[[i]],
+      pca_panel_mode = child_index$pca_panel_mode[[i]],
+      state_engine = child_index$state_engine[[i]],
+      state_count = child_index$state_count[[i]],
+      symbol = child_index$symbol[[i]],
+      train_states_with_rows = sum(train_rows > 0, na.rm = TRUE),
+      oos_states_with_rows = sum(oos_rows > 0, na.rm = TRUE),
+      oos_rows = sum(oos_rows, na.rm = TRUE),
+      min_oos_state_rows = if (length(oos_rows)) min(oos_rows, na.rm = TRUE) else NA_real_,
+      max_oos_state_rows = if (length(oos_rows)) max(oos_rows, na.rm = TRUE) else NA_real_,
+      stringsAsFactors = FALSE
+    )
+  }
+  if (!length(rows)) data.frame() else do.call(rbind, rows)
+}
+
+g5_context_factorial_selected_family_summary <- function(child_index) {
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(data.frame())
+  if (!all(c("run_dir", "symbol") %in% names(child_index))) return(data.frame())
+  rows <- list()
+  for (i in seq_len(nrow(child_index))) {
+    selected_path <- file.path(child_index$run_dir[[i]], "pcawfa_selected_states.csv")
+    selected <- g5_read_csv_if_exists(selected_path)
+    if (!nrow(selected) || !"strategy_family" %in% names(selected)) next
+    tab <- sort(table(selected$strategy_family), decreasing = TRUE)
+    rows[[length(rows) + 1L]] <- data.frame(
+      universe_id = child_index$universe_id[[i]],
+      surface_id = child_index$surface_id[[i]],
+      pca_panel_mode = child_index$pca_panel_mode[[i]],
+      state_engine = child_index$state_engine[[i]],
+      state_count = child_index$state_count[[i]],
+      symbol = child_index$symbol[[i]],
+      selected_families = paste(paste(names(tab), as.integer(tab), sep = "="), collapse = ";"),
+      no_trade_state_selections = if ("no_trade" %in% names(tab)) as.integer(tab[["no_trade"]]) else 0L,
+      stringsAsFactors = FALSE
+    )
+  }
+  if (!length(rows)) data.frame() else do.call(rbind, rows)
 }
 
 g5_context_factorial_write_metrics_overview <- function(summary, path, width = 1700L, height = 1000L) {
@@ -796,14 +915,14 @@ g5_context_factorial_write_metrics_overview <- function(summary, path, width = 1
   on.exit(grDevices::dev.off(), add = TRUE)
   old_par <- graphics::par(no.readonly = TRUE)
   on.exit(graphics::par(old_par), add = TRUE)
-  graphics::par(mfrow = c(2L, 2L), mar = c(7, 4.5, 3, 1.2), oma = c(0, 0, 3, 0))
-  cols <- c("#2364AA", "#1B9E77", "#D95F02")
-  labels <- summary$universe_id
+  graphics::par(mfrow = c(2L, 2L), mar = c(7, 4.8, 3, 1.2), oma = c(0, 0, 3, 0))
+  cols <- grDevices::hcl.colors(max(3L, nrow(summary)), palette = "Dark 3")
+  labels <- if ("surface_id" %in% names(summary) && length(unique(summary$surface_id)) > 1L) paste(summary$universe_id, summary$surface_id, sep = "\n") else summary$universe_id
   draw_bar <- function(values, title, ylab, pct = FALSE) {
     v <- as.numeric(values)
     names(v) <- labels
     plot_vals <- if (pct) 100 * v else v
-    graphics::barplot(plot_vals, col = cols[seq_along(plot_vals)], las = 2, cex.names = 0.72, main = title, ylab = ylab)
+    graphics::barplot(plot_vals, col = cols[seq_along(plot_vals)], las = 2, cex.names = if (length(plot_vals) > 6L) 0.45 else 0.72, main = title, ylab = ylab)
     graphics::grid(nx = NA, ny = NULL, col = "#E6E8EB")
   }
   draw_bar(summary$total_return, "Portfolio Total Return", "Percent", pct = TRUE)
@@ -814,7 +933,7 @@ g5_context_factorial_write_metrics_overview <- function(summary, path, width = 1
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_context_factorial_markdown_report <- function(paths, universe_defs, portfolio_index, summary, run_spec, purpose, path) {
+g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, purpose, path) {
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
   dol <- function(x) ifelse(is.na(x), "NA", sprintf("$%.2f", as.numeric(x)))
@@ -838,9 +957,7 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, portfolio
     paste0("- Research Candidate Universe: `", run_spec$research_candidate_symbols[[1L]], "`"),
     paste0("- Tradeable Universe: `", run_spec$tradeable_symbols[[1L]], "`"),
     paste0("- Active Allocation Set: `", run_spec$active_allocation_symbols[[1L]], "`"),
-    paste0("- PCA panel mode: `", run_spec$pca_panel_mode[[1L]], "`"),
-    paste0("- State engine: `", run_spec$state_engine[[1L]], "`"),
-    paste0("- State count/grid: `", run_spec$state_count[[1L]], "`"),
+    paste0("- Surface count: `", run_spec$surface_count[[1L]], "`"),
     paste0("- Fold count: `", run_spec$fold_count[[1L]], "`"),
     paste0("- End date: `", run_spec$end_date[[1L]], "`"),
     paste0("- As-of timestamp: `", run_spec$as_of_timestamp[[1L]], "`"),
@@ -852,13 +969,26 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, portfolio
     "",
     g5_pca_wfa_comparison_table_lines(universe_defs[, c("universe_id", "symbols", "active_overlap_count", "diversity_class", "similarity_class", "rationale"), drop = FALSE], c("universe_id", "symbols", "active_overlap_count", "diversity_class", "similarity_class", "rationale")),
     "",
+    "## PCA Surfaces",
+    "",
+    g5_pca_wfa_comparison_table_lines(surface_defs[, c("surface_id", "pca_panel_mode", "state_engine", "state_count"), drop = FALSE], c("surface_id", "pca_panel_mode", "state_engine", "state_count")),
+    "",
     "## Portfolio Accounting Summary",
     "",
-    g5_pca_wfa_comparison_table_lines(summary_table, c("universe_id", "run_status", "ending_equity", "total_return", "cagr", "sharpe", "max_drawdown", "total_entry_fills", "total_skipped_entries", "total_cash_capped_entries")),
+    g5_pca_wfa_comparison_table_lines(summary_table, c("universe_id", "surface_id", "run_status", "ending_equity", "total_return", "cagr", "sharpe", "max_drawdown", "total_entry_fills", "total_skipped_entries", "total_cash_capped_entries")),
+    "",
+    "## Child Summaries",
+    "",
+    paste0("- Child OOS metrics: `", paths$child_metric_summary_csv, "`"),
+    paste0("- Child state coverage: `", paths$state_coverage_summary_csv, "`"),
+    paste0("- Selected-family summary: `", paths$selected_family_summary_csv, "`"),
+    paste0("- Child metric rows: `", nrow(child_metric_summary), "`"),
+    paste0("- State coverage rows: `", nrow(state_coverage_summary), "`"),
+    paste0("- Selected-family rows: `", nrow(selected_family_summary), "`"),
     "",
     "## Portfolio Packet Index",
     "",
-    g5_pca_wfa_comparison_table_lines(portfolio_index[, c("universe_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv"), drop = FALSE], c("universe_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv")),
+    g5_pca_wfa_comparison_table_lines(portfolio_index[, c("universe_id", "surface_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv"), drop = FALSE], c("universe_id", "surface_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv")),
     "",
     "## Top-Level Outputs",
     "",
@@ -867,6 +997,9 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, portfolio
     paste0("- Summary CSV: `", paths$summary_csv, "`"),
     paste0("- Portfolio packet index: `", paths$portfolio_index_csv, "`"),
     paste0("- Child artifact index: `", paths$child_artifact_index_csv, "`"),
+    paste0("- Child OOS metrics: `", paths$child_metric_summary_csv, "`"),
+    paste0("- Child state coverage: `", paths$state_coverage_summary_csv, "`"),
+    paste0("- Selected-family summary: `", paths$selected_family_summary_csv, "`"),
     paste0("- Metrics overview chart: `", paths$metrics_overview_png, "`"),
     "",
     "## Leakage And Multiple-Comparison Guardrails",
@@ -889,7 +1022,7 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, portfolio
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_write_context_factorial_outputs <- function(universe_defs, output_dir, repo_root, as_of_timestamp, end_date, active_symbols, fold_count, grid_n, state_engine, pca_panel_mode, strategy_grid_preset = "standard", refresh = FALSE, skip_child_runs = FALSE, purpose = g5_context_factorial_default_purpose()) {
+g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, output_dir, repo_root, as_of_timestamp, end_date, active_symbols, fold_count, strategy_grid_preset = "standard", refresh = FALSE, skip_child_runs = FALSE, purpose = g5_context_factorial_default_purpose()) {
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   run_spec <- data.frame(
@@ -903,33 +1036,43 @@ g5_write_context_factorial_outputs <- function(universe_defs, output_dir, repo_r
     tradeable_symbols = paste(active_symbols, collapse = ","),
     active_allocation_symbols = paste(active_symbols, collapse = ","),
     baseline_symbols = "SPY",
-    pca_panel_mode = pca_panel_mode,
-    state_engine = state_engine,
-    state_count = if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n)),
+    surface_count = nrow(surface_defs),
+    surface_ids = paste(surface_defs$surface_id, collapse = ","),
     fold_count = as.integer(fold_count),
     strategy_grid_preset = strategy_grid_preset,
     sizing_policy = "dynamic_equal_slot_cash_capped",
     purpose = purpose,
     stringsAsFactors = FALSE
   )
-  portfolio_index <- g5_context_factorial_portfolio_index(universe_defs, repo_root, as_of_timestamp, active_symbols, fold_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset)
+  portfolio_index <- g5_context_factorial_portfolio_index(universe_defs, surface_defs, repo_root, as_of_timestamp, active_symbols, fold_count, end_date, strategy_grid_preset)
   summary <- g5_context_factorial_summary(portfolio_index)
   child_index <- g5_context_factorial_child_artifact_index(portfolio_index)
+  child_metric_summary <- g5_context_factorial_child_metric_summary(child_index)
+  state_coverage_summary <- g5_context_factorial_state_coverage_summary(child_index)
+  selected_family_summary <- g5_context_factorial_selected_family_summary(child_index)
   paths <- list(
     report_md = file.path(output_dir, "context_universe_factorial_report.md"),
     run_spec_csv = file.path(output_dir, "context_universe_factorial_run_spec.csv"),
     taxonomy_csv = file.path(output_dir, "context_universe_taxonomy.csv"),
+    surface_definitions_csv = file.path(output_dir, "context_universe_factorial_surfaces.csv"),
     summary_csv = file.path(output_dir, "context_universe_factorial_summary.csv"),
     portfolio_index_csv = file.path(output_dir, "context_universe_factorial_portfolio_index.csv"),
     child_artifact_index_csv = file.path(output_dir, "context_universe_factorial_child_artifact_index.csv"),
+    child_metric_summary_csv = file.path(output_dir, "context_universe_factorial_child_oos_metrics.csv"),
+    state_coverage_summary_csv = file.path(output_dir, "context_universe_factorial_state_coverage.csv"),
+    selected_family_summary_csv = file.path(output_dir, "context_universe_factorial_selected_families.csv"),
     metrics_overview_png = file.path(output_dir, "context_universe_factorial_metrics_overview.png")
   )
   utils::write.csv(run_spec, paths$run_spec_csv, row.names = FALSE)
   utils::write.csv(universe_defs, paths$taxonomy_csv, row.names = FALSE)
+  utils::write.csv(surface_defs, paths$surface_definitions_csv, row.names = FALSE)
   utils::write.csv(summary, paths$summary_csv, row.names = FALSE)
   utils::write.csv(portfolio_index, paths$portfolio_index_csv, row.names = FALSE)
   utils::write.csv(child_index, paths$child_artifact_index_csv, row.names = FALSE)
+  utils::write.csv(child_metric_summary, paths$child_metric_summary_csv, row.names = FALSE)
+  utils::write.csv(state_coverage_summary, paths$state_coverage_summary_csv, row.names = FALSE)
+  utils::write.csv(selected_family_summary, paths$selected_family_summary_csv, row.names = FALSE)
   paths$metrics_overview_png <- g5_context_factorial_write_metrics_overview(summary, paths$metrics_overview_png)
-  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, portfolio_index, summary, run_spec, purpose, paths$report_md)
-  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index)
+  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, purpose, paths$report_md)
+  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary)
 }

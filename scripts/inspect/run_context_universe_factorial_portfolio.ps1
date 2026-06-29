@@ -19,10 +19,10 @@ param(
 
   [int]$GridN = 3,
 
-  [ValidateSet("quantile_grid")]
+  [ValidateSet("quantile_grid", "pca_kmeans")]
   [string]$StateEngine = "quantile_grid",
 
-  [ValidateSet("pooled_asset_day")]
+  [ValidateSet("date_aligned_context", "pooled_asset_day")]
   [string]$PcaPanelMode = "pooled_asset_day",
 
   [int]$KmeansNstart = 30,
@@ -48,6 +48,8 @@ param(
 
   [switch]$SkipChildRuns,
 
+  [switch]$MediumGrid,
+
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
 )
 
@@ -66,9 +68,6 @@ function Get-ContextUniverseSymbols {
 
 if ($FoldCount -lt 1) {
   throw "-FoldCount must be a positive integer."
-}
-if ($GridN -ne 3) {
-  throw "This smallest useful factorial wrapper is scoped to quantile_grid 3x3."
 }
 if ($SlotCount -lt 1) {
   throw "-SlotCount must be positive."
@@ -94,11 +93,24 @@ if (-not (Test-Path -LiteralPath $RscriptPath)) {
 }
 
 $universeList = @("active_self_context", "active_plus_risk_context", "ex_active_market_risk_context")
+if ($MediumGrid.IsPresent) {
+  $surfaceList = @(
+    @{ SurfaceId = "contextual_snapshot_quantile_grid"; PcaPanelMode = "date_aligned_context"; StateEngine = "quantile_grid"; GridN = 3 },
+    @{ SurfaceId = "contextual_snapshot_kmeans"; PcaPanelMode = "date_aligned_context"; StateEngine = "pca_kmeans"; GridN = 9 },
+    @{ SurfaceId = "behavioral_pool_quantile_grid"; PcaPanelMode = "pooled_asset_day"; StateEngine = "quantile_grid"; GridN = 3 },
+    @{ SurfaceId = "behavioral_pool_kmeans"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 }
+  )
+} else {
+  $surfaceList = @(
+    @{ SurfaceId = "single_surface"; PcaPanelMode = $PcaPanelMode; StateEngine = $StateEngine; GridN = $GridN }
+  )
+}
 
 Write-Host "Gen5.1 Context-Universe Factorial Portfolio Inspection"
 Write-Host "  Purpose: compare active-self, active-plus-risk, and external-risk context for the same active set."
 Write-Host "  Active Allocation Set: $ActiveSymbols"
-Write-Host "  PCA surface: $PcaPanelMode + $StateEngine ${GridN}x${GridN}"
+Write-Host "  Medium grid: $($MediumGrid.IsPresent)"
+Write-Host "  PCA surfaces: $($surfaceList.Count)"
 Write-Host "  Universe ids: $($universeList -join ', ')"
 Write-Host "  Fold count: $FoldCount"
 Write-Host "  End date: $EndDate"
@@ -106,44 +118,46 @@ Write-Host "  As of: $AsOfTimestamp"
 Write-Host "  Refresh: $($Refresh.IsPresent)"
 Write-Host "  Skip child runs: $($SkipChildRuns.IsPresent)"
 
-foreach ($universeId in $universeList) {
-  $regimeContextSymbols = Get-ContextUniverseSymbols -UniverseId $universeId
-  Write-Host ""
-  Write-Host "Running portfolio packet for '$universeId': $regimeContextSymbols"
-  $runnerParams = @{
-    ActiveSymbols = $ActiveSymbols
-    RegimeContextSymbols = $regimeContextSymbols
-    BaselineSymbol = "SPY"
-    EndDate = $EndDate
-    AsOfTimestamp = $AsOfTimestamp
-    InitialCapital = $InitialCapital
-    SlotCount = $SlotCount
-    TrainQuarters = $TrainQuarters
-    OosQuarters = $OosQuarters
-    FoldCount = $FoldCount
-    GridN = $GridN
-    StateEngine = $StateEngine
-    PcaPanelMode = $PcaPanelMode
-    KmeansNstart = $KmeansNstart
-    MinTrainStateRows = $MinTrainStateRows
-    CandidateFamilies = $CandidateFamilies
-    FastPeriods = $FastPeriods
-    SlowPeriods = $SlowPeriods
-    BbLookbackPeriods = $BbLookbackPeriods
-    BbSdMultipliers = $BbSdMultipliers
-    StrategyGridPreset = $StrategyGridPreset
-    WarmupDays = $WarmupDays
-    RscriptPath = $RscriptPath
-  }
-  if ($Refresh.IsPresent) {
-    $runnerParams.Refresh = $true
-  }
-  if ($SkipChildRuns.IsPresent) {
-    $runnerParams.SkipChildRuns = $true
-  }
-  & $portfolioRunner @runnerParams
-  if ($LASTEXITCODE -ne 0) {
-    throw "run_portfolio_strategy_poc.ps1 failed for context universe '$universeId' with exit code $LASTEXITCODE."
+foreach ($surface in $surfaceList) {
+  foreach ($universeId in $universeList) {
+    $regimeContextSymbols = Get-ContextUniverseSymbols -UniverseId $universeId
+    Write-Host ""
+    Write-Host "Running portfolio packet for '$universeId' / '$($surface.SurfaceId)': $regimeContextSymbols"
+    $runnerParams = @{
+      ActiveSymbols = $ActiveSymbols
+      RegimeContextSymbols = $regimeContextSymbols
+      BaselineSymbol = "SPY"
+      EndDate = $EndDate
+      AsOfTimestamp = $AsOfTimestamp
+      InitialCapital = $InitialCapital
+      SlotCount = $SlotCount
+      TrainQuarters = $TrainQuarters
+      OosQuarters = $OosQuarters
+      FoldCount = $FoldCount
+      GridN = $surface.GridN
+      StateEngine = $surface.StateEngine
+      PcaPanelMode = $surface.PcaPanelMode
+      KmeansNstart = $KmeansNstart
+      MinTrainStateRows = $MinTrainStateRows
+      CandidateFamilies = $CandidateFamilies
+      FastPeriods = $FastPeriods
+      SlowPeriods = $SlowPeriods
+      BbLookbackPeriods = $BbLookbackPeriods
+      BbSdMultipliers = $BbSdMultipliers
+      StrategyGridPreset = $StrategyGridPreset
+      WarmupDays = $WarmupDays
+      RscriptPath = $RscriptPath
+    }
+    if ($Refresh.IsPresent) {
+      $runnerParams.Refresh = $true
+    }
+    if ($SkipChildRuns.IsPresent) {
+      $runnerParams.SkipChildRuns = $true
+    }
+    & $portfolioRunner @runnerParams
+    if ($LASTEXITCODE -ne 0) {
+      throw "run_portfolio_strategy_poc.ps1 failed for context universe '$universeId' / surface '$($surface.SurfaceId)' with exit code $LASTEXITCODE."
+    }
   }
 }
 
@@ -157,6 +171,7 @@ $env:GEN5_CONTEXT_FACTORIAL_PANEL_MODE = $PcaPanelMode
 $env:GEN5_CONTEXT_FACTORIAL_STRATEGY_GRID_PRESET = $StrategyGridPreset
 $env:GEN5_CONTEXT_FACTORIAL_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS = if ($SkipChildRuns.IsPresent) { "true" } else { "false" }
+$env:GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID = if ($MediumGrid.IsPresent) { "true" } else { "false" }
 
 Push-Location $repoRoot
 try {

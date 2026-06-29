@@ -18,7 +18,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
 - PCA context-universe comparison reporting can run the same 2x2 surface for named context universes, then write a top-level universe index/summary with contact-sheet paths while keeping AMD as the only researched/traded/allocated asset.
 - Portfolio strategy accounting POC can run five single-symbol PCA-routed WFA child packets, then combine their stitched OOS trades into a shared-account portfolio replay with dynamic equal-slot, cash-capped entry sizing. The first default Active Allocation Set is `AMD,NVDA,TSLA,COIN,MSTR`; treat this as accounting validation, not accepted allocation research.
-- Context-universe factorial portfolio inspection can now compare three declared Regime Context Universes for the same five-symbol Active Allocation Set on the `behavioral_pool + quantile_grid 3x3` surface. The first packet is under `runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_3u_pool_3x3_20260624_20260624173000/`. Treat it as research/inspection only, not accepted allocation evidence.
+- Context-universe factorial portfolio inspection can now compare three declared Regime Context Universes for the same five-symbol Active Allocation Set. The smallest run uses `behavioral_pool + quantile_grid 3x3`; the medium wrapper mode adds the 2x2 PCA surface of `contextual_snapshot`/`behavioral_pool` by `quantile_grid 3x3`/`kmeans k9`. The first smallest-run packet is under `runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_3u_pool_3x3_20260624_20260624173000/`. Treat it as research/inspection only, not accepted allocation evidence.
 - The emerging stack is now canonized as a Gen5.1 research/inspection engine in `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`. Future experiment wrappers should declare a run spec and call the engine rather than restating the full universe x PCA panel x state map x strategy grid x WFA x portfolio accounting design.
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 
@@ -88,6 +88,15 @@ The top-level packet is:
 `runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_3u_pool_3x3_20260624_20260624173000/`
 
 It includes `context_universe_factorial_report.md`, run spec, taxonomy, summary CSV, portfolio packet index, child artifact index, and metrics overview PNG. The report states the plain-language purpose: test whether regime labels for the same active set look more useful and stable when built from active-self context, active-plus-risk context, or external market-risk context only.
+
+Use `-MediumGrid` to run the declared medium experiment across four PCA surfaces:
+
+- `contextual_snapshot_quantile_grid`: `date_aligned_context + quantile_grid 3x3`
+- `contextual_snapshot_kmeans`: `date_aligned_context + pca_kmeans k9`
+- `behavioral_pool_quantile_grid`: `pooled_asset_day + quantile_grid 3x3`
+- `behavioral_pool_kmeans`: `pooled_asset_day + pca_kmeans k9`
+
+The medium-capable top-level packet also writes surface definitions, child OOS metric summary, child state coverage summary, and selected-family summary CSVs.
 
 ## Context Discipline For New Threads
 

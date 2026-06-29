@@ -50,21 +50,32 @@ pca_panel_mode <- env_or("GEN5_CONTEXT_FACTORIAL_PANEL_MODE", "pooled_asset_day"
 strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_CONTEXT_FACTORIAL_STRATEGY_GRID_PRESET", "standard"))
 refresh <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_REFRESH", "false"), default = FALSE)
 skip_child_runs <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS", "false"), default = FALSE)
+medium_grid <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID", "false"), default = FALSE)
 
 if (is.na(end_date)) g5_stop("GEN5_CONTEXT_FACTORIAL_END_DATE must be a valid date.")
 if (!nzchar(as_of_timestamp)) g5_stop("GEN5_CONTEXT_FACTORIAL_AS_OF_TIMESTAMP is required.")
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_CONTEXT_FACTORIAL_FOLD_COUNT must be a positive integer.")
-if (is.na(grid_n) || grid_n != 3L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N must be 3 for this wrapper.")
-if (!identical(state_engine, "quantile_grid")) g5_stop("GEN5_CONTEXT_FACTORIAL_STATE_ENGINE must be quantile_grid for this wrapper.")
-if (!identical(pca_panel_mode, "pooled_asset_day")) g5_stop("GEN5_CONTEXT_FACTORIAL_PANEL_MODE must be pooled_asset_day for this wrapper.")
+if (is.na(grid_n) || grid_n < 2L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N must be at least 2.")
+state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else state_engine
+if (!state_engine %in% c("quantile_grid", "pca_kmeans")) g5_stop("GEN5_CONTEXT_FACTORIAL_STATE_ENGINE must be quantile_grid or pca_kmeans.")
+pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
+if (identical(state_engine, "quantile_grid") && grid_n > 5L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N is too large for quantile_grid in this inspection wrapper.")
+if (identical(state_engine, "pca_kmeans") && grid_n > 25L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N is too large for pca_kmeans in this inspection wrapper.")
 
 universe_defs <- g5_context_factorial_universe_definitions(active_symbols)
+surface_defs <- g5_context_factorial_surface_definitions(
+  medium_grid = medium_grid,
+  pca_panel_mode = pca_panel_mode,
+  state_engine = state_engine,
+  grid_n = grid_n
+)
 output_dir <- g5_context_factorial_output_dir(
   repo_root = repo_root,
   as_of_timestamp = as_of_timestamp,
   active_symbols = active_symbols,
   fold_count = fold_count,
   universe_count = nrow(universe_defs),
+  surface_count = nrow(surface_defs),
   grid_n = grid_n,
   state_engine = state_engine,
   pca_panel_mode = pca_panel_mode,
@@ -74,15 +85,13 @@ output_dir <- g5_context_factorial_output_dir(
 
 written <- g5_write_context_factorial_outputs(
   universe_defs = universe_defs,
+  surface_defs = surface_defs,
   output_dir = output_dir,
   repo_root = repo_root,
   as_of_timestamp = as_of_timestamp,
   end_date = end_date,
   active_symbols = active_symbols,
   fold_count = fold_count,
-  grid_n = grid_n,
-  state_engine = state_engine,
-  pca_panel_mode = pca_panel_mode,
   strategy_grid_preset = strategy_grid_preset,
   refresh = refresh,
   skip_child_runs = skip_child_runs
@@ -92,20 +101,28 @@ message("Gen5.1 context-universe factorial portfolio inspection")
 message("Repository: ", repo_root)
 message("Purpose: ", g5_context_factorial_default_purpose())
 message("Active symbols: ", paste(active_symbols, collapse = ", "))
-message("Panel/state surface: ", pca_panel_mode, " + ", state_engine, " ", grid_n, "x", grid_n)
+message("Medium grid: ", medium_grid)
+message("Surface count: ", nrow(surface_defs))
 message("End date: ", end_date)
 message("As of: ", as_of_timestamp)
 message("")
+message("PCA surfaces:")
+print(surface_defs[, c("surface_id", "pca_panel_mode", "state_engine", "state_count"), drop = FALSE], row.names = FALSE)
+message("")
 message("Portfolio packet index:")
-print(written$portfolio_index[, c("universe_id", "run_status", "portfolio_dir", "report_md", "chart_png"), drop = FALSE], row.names = FALSE)
+print(written$portfolio_index[, c("universe_id", "surface_id", "run_status", "portfolio_dir", "report_md", "chart_png"), drop = FALSE], row.names = FALSE)
 message("")
 message("Key outputs:")
 message("  Report: ", written$paths$report_md)
 message("  Run spec: ", written$paths$run_spec_csv)
 message("  Taxonomy: ", written$paths$taxonomy_csv)
+message("  Surfaces: ", written$paths$surface_definitions_csv)
 message("  Summary: ", written$paths$summary_csv)
 message("  Portfolio index: ", written$paths$portfolio_index_csv)
 message("  Child artifact index: ", written$paths$child_artifact_index_csv)
+message("  Child OOS metrics: ", written$paths$child_metric_summary_csv)
+message("  State coverage: ", written$paths$state_coverage_summary_csv)
+message("  Selected families: ", written$paths$selected_family_summary_csv)
 message("  Metrics overview: ", written$paths$metrics_overview_png)
 message("")
 message("Wrote context-universe factorial packet: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))

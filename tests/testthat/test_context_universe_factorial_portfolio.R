@@ -59,88 +59,197 @@ test_that("behavioral-pool context can fit on external context and score target 
   expect_true(any(fit$model_contract$key == "fit_row_policy" & grepl("pca_training_role=context", fit$model_contract$value, fixed = TRUE)))
 })
 
+g5_test_write_context_factorial_portfolio_packets <- function(repo_root, active_symbols, defs, surfaces) {
+  packet_no <- 0L
+  for (s in seq_len(nrow(surfaces))) {
+    for (i in seq_len(nrow(defs))) {
+      packet_no <- packet_no + 1L
+      symbols <- strsplit(defs$symbols[[i]], ",", fixed = TRUE)[[1L]]
+      portfolio_dir <- g5_portfolio_poc_packet_dir(
+        repo_root = repo_root,
+        as_of_timestamp = "2026-06-24 17:30:00",
+        active_symbols = active_symbols,
+        fold_count = 5L,
+        grid_n = surfaces$grid_n[[s]],
+        state_engine = surfaces$state_engine[[s]],
+        pca_panel_mode = surfaces$pca_panel_mode[[s]],
+        regime_context_symbols = symbols,
+        end_date = as.Date("2026-06-24"),
+        strategy_grid_preset = "standard"
+      )
+      dir.create(portfolio_dir, recursive = TRUE)
+      utils::write.csv(
+        data.frame(
+          schema_version = g5_portfolio_poc_schema_version(),
+          initial_capital = 100000,
+          ending_equity = 100000 + packet_no * 1000,
+          total_return = packet_no * 0.01,
+          cagr = packet_no * 0.02,
+          sharpe = packet_no * 0.3,
+          max_drawdown = -0.01 * packet_no,
+          session_count = 100L,
+          stringsAsFactors = FALSE
+        ),
+        file.path(portfolio_dir, "portfolio_poc_metrics.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(symbol = active_symbols, entry_fills = packet_no, cash_capped_entries = 0L, skipped_entries = 1L, stringsAsFactors = FALSE),
+        file.path(portfolio_dir, "portfolio_poc_symbol_summary.csv"),
+        row.names = FALSE
+      )
+      child_index <- do.call(rbind, lapply(seq_along(active_symbols), function(j) {
+        run_dir <- file.path(portfolio_dir, active_symbols[[j]])
+        dir.create(run_dir, recursive = TRUE)
+        utils::write.csv(
+          data.frame(
+            schema_version = "test",
+            symbol = active_symbols[[j]],
+            total_return = packet_no * 0.01 + j * 0.001,
+            sharpe = packet_no * 0.1,
+            max_drawdown = -0.02,
+            trade_count = j,
+            closed_trade_count = j - 1L,
+            buy_hold_total_return = packet_no * 0.02,
+            stringsAsFactors = FALSE
+          ),
+          file.path(run_dir, "pcawfa_oos_metrics.csv"),
+          row.names = FALSE
+        )
+        utils::write.csv(
+          data.frame(
+            split = c("TRAIN", "TRAIN", "OOS", "OOS"),
+            state_id = c("S1", "S2", "S1", "S2"),
+            row_count = c(20L, 0L, 5L, 3L),
+            row_fraction = c(1, 0, 0.625, 0.375),
+            stringsAsFactors = FALSE
+          ),
+          file.path(run_dir, "pcawfa_state_coverage.csv"),
+          row.names = FALSE
+        )
+        utils::write.csv(
+          data.frame(
+            fold_id = c("fold_001", "fold_001"),
+            state_id = c("S1", "S2"),
+            strategy_family = c("ema_cross", "no_trade"),
+            stringsAsFactors = FALSE
+          ),
+          file.path(run_dir, "pcawfa_selected_states.csv"),
+          row.names = FALSE
+        )
+        data.frame(
+          symbol = active_symbols[[j]],
+          run_dir = run_dir,
+          oos_metrics_csv = file.path(run_dir, "pcawfa_oos_metrics.csv"),
+          stringsAsFactors = FALSE
+        )
+      }))
+      utils::write.csv(child_index, file.path(portfolio_dir, "portfolio_poc_child_artifact_index.csv"), row.names = FALSE)
+      writeLines("portfolio report", file.path(portfolio_dir, "portfolio_poc_report.md"), useBytes = TRUE)
+      png(file.path(portfolio_dir, "portfolio_poc_equity_curves.png"), width = 500, height = 300)
+      par(mar = c(3, 3, 1, 1))
+      plot(1:3, 1:3)
+      dev.off()
+    }
+  }
+}
+
 test_that("context-universe factorial writer summarizes portfolio packets", {
   repo_root <- tempfile("g5_context_factorial_repo_")
   dir.create(repo_root, recursive = TRUE)
   active_symbols <- c("AMD", "NVDA", "TSLA", "COIN", "MSTR")
   defs <- g5_context_factorial_universe_definitions(active_symbols)
+  surfaces <- g5_context_factorial_surface_definitions(
+    medium_grid = FALSE,
+    pca_panel_mode = "pooled_asset_day",
+    state_engine = "quantile_grid",
+    grid_n = 3L
+  )
 
-  for (i in seq_len(nrow(defs))) {
-    symbols <- strsplit(defs$symbols[[i]], ",", fixed = TRUE)[[1L]]
-    portfolio_dir <- g5_portfolio_poc_packet_dir(
-      repo_root = repo_root,
-      as_of_timestamp = "2026-06-24 17:30:00",
-      active_symbols = active_symbols,
-      fold_count = 5L,
-      grid_n = 3L,
-      state_engine = "quantile_grid",
-      pca_panel_mode = "pooled_asset_day",
-      regime_context_symbols = symbols,
-      end_date = as.Date("2026-06-24"),
-      strategy_grid_preset = "standard"
-    )
-    dir.create(portfolio_dir, recursive = TRUE)
-    utils::write.csv(
-      data.frame(
-        schema_version = g5_portfolio_poc_schema_version(),
-        initial_capital = 100000,
-        ending_equity = 100000 + i * 1000,
-        total_return = i * 0.01,
-        cagr = i * 0.02,
-        sharpe = i * 0.3,
-        max_drawdown = -0.05 * i,
-        session_count = 100L,
-        stringsAsFactors = FALSE
-      ),
-      file.path(portfolio_dir, "portfolio_poc_metrics.csv"),
-      row.names = FALSE
-    )
-    utils::write.csv(
-      data.frame(symbol = active_symbols, entry_fills = i, cash_capped_entries = 0L, skipped_entries = 1L, stringsAsFactors = FALSE),
-      file.path(portfolio_dir, "portfolio_poc_symbol_summary.csv"),
-      row.names = FALSE
-    )
-    utils::write.csv(
-      data.frame(symbol = active_symbols, run_dir = file.path(portfolio_dir, active_symbols), stringsAsFactors = FALSE),
-      file.path(portfolio_dir, "portfolio_poc_child_artifact_index.csv"),
-      row.names = FALSE
-    )
-    writeLines("portfolio report", file.path(portfolio_dir, "portfolio_poc_report.md"), useBytes = TRUE)
-    png(file.path(portfolio_dir, "portfolio_poc_equity_curves.png"), width = 500, height = 300)
-    par(mar = c(3, 3, 1, 1))
-    plot(1:3, 1:3)
-    dev.off()
-  }
+  g5_test_write_context_factorial_portfolio_packets(repo_root, active_symbols, defs, surfaces)
 
   output_dir <- tempfile("g5_context_factorial_packet_")
   written <- g5_write_context_factorial_outputs(
     universe_defs = defs,
+    surface_defs = surfaces,
     output_dir = output_dir,
     repo_root = repo_root,
     as_of_timestamp = "2026-06-24 17:30:00",
     end_date = as.Date("2026-06-24"),
     active_symbols = active_symbols,
     fold_count = 5L,
-    grid_n = 3L,
-    state_engine = "quantile_grid",
-    pca_panel_mode = "pooled_asset_day",
     strategy_grid_preset = "standard"
   )
 
   expect_true(file.exists(written$paths$report_md))
   expect_true(file.exists(written$paths$run_spec_csv))
   expect_true(file.exists(written$paths$taxonomy_csv))
+  expect_true(file.exists(written$paths$surface_definitions_csv))
   expect_true(file.exists(written$paths$summary_csv))
   expect_true(file.exists(written$paths$portfolio_index_csv))
   expect_true(file.exists(written$paths$child_artifact_index_csv))
+  expect_true(file.exists(written$paths$child_metric_summary_csv))
+  expect_true(file.exists(written$paths$state_coverage_summary_csv))
+  expect_true(file.exists(written$paths$selected_family_summary_csv))
   expect_true(file.exists(written$paths$metrics_overview_png))
   expect_equal(nrow(written$portfolio_index), 3L)
   expect_true(all(written$portfolio_index$run_status == "ok"))
   expect_equal(nrow(written$summary), 3L)
   expect_equal(nrow(written$child_artifact_index), 15L)
+  expect_equal(nrow(written$child_metric_summary), 15L)
+  expect_equal(nrow(written$state_coverage_summary), 15L)
+  expect_equal(nrow(written$selected_family_summary), 15L)
 
   report <- readLines(written$paths$report_md, warn = FALSE)
   expect_true(any(grepl("This first test asks whether", report, fixed = TRUE)))
   expect_true(any(grepl("external market-risk context only", report, fixed = TRUE)))
   expect_true(any(grepl("not accepted allocation evidence", report, fixed = TRUE)))
+  expect_true(any(grepl("PCA Surfaces", report, fixed = TRUE)))
+  expect_true(any(grepl("Child Summaries", report, fixed = TRUE)))
+})
+
+test_that("medium context-universe factorial writer indexes all PCA surfaces", {
+  repo_root <- tempfile("g5_context_factorial_medium_repo_")
+  dir.create(repo_root, recursive = TRUE)
+  active_symbols <- c("AMD", "NVDA", "TSLA", "COIN", "MSTR")
+  defs <- g5_context_factorial_universe_definitions(active_symbols)
+  surfaces <- g5_context_factorial_surface_definitions(medium_grid = TRUE)
+
+  expect_equal(nrow(surfaces), 4L)
+  expect_equal(
+    surfaces$surface_id,
+    c(
+      "contextual_snapshot_quantile_grid",
+      "contextual_snapshot_kmeans",
+      "behavioral_pool_quantile_grid",
+      "behavioral_pool_kmeans"
+    )
+  )
+
+  g5_test_write_context_factorial_portfolio_packets(repo_root, active_symbols, defs, surfaces)
+
+  output_dir <- tempfile("g5_context_factorial_medium_packet_")
+  written <- g5_write_context_factorial_outputs(
+    universe_defs = defs,
+    surface_defs = surfaces,
+    output_dir = output_dir,
+    repo_root = repo_root,
+    as_of_timestamp = "2026-06-24 17:30:00",
+    end_date = as.Date("2026-06-24"),
+    active_symbols = active_symbols,
+    fold_count = 5L,
+    strategy_grid_preset = "standard"
+  )
+
+  expect_equal(nrow(written$portfolio_index), 12L)
+  expect_equal(nrow(written$summary), 12L)
+  expect_equal(nrow(written$child_artifact_index), 60L)
+  expect_equal(nrow(written$child_metric_summary), 60L)
+  expect_equal(nrow(written$state_coverage_summary), 60L)
+  expect_equal(nrow(written$selected_family_summary), 60L)
+  expect_equal(unique(written$run_spec$surface_count), 4L)
+  expect_true(all(surfaces$surface_id %in% written$portfolio_index$surface_id))
+  expect_true(all(c("surface_id", "pca_panel_mode", "state_engine", "state_count") %in% names(written$child_artifact_index)))
+  expect_true(file.exists(written$paths$surface_definitions_csv))
+  expect_true(file.exists(written$paths$child_metric_summary_csv))
 })
