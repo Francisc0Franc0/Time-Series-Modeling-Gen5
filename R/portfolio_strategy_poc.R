@@ -909,9 +909,9 @@ g5_context_factorial_selected_family_summary <- function(child_index) {
   if (!length(rows)) data.frame() else do.call(rbind, rows)
 }
 
-g5_context_factorial_write_metrics_overview <- function(summary, path, width = 1700L, height = 1000L) {
+g5_context_factorial_write_metrics_overview <- function(summary, path, width = 3000L, height = 1800L, res = 180L) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
-  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = 135)
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = as.integer(res))
   on.exit(grDevices::dev.off(), add = TRUE)
   old_par <- graphics::par(no.readonly = TRUE)
   on.exit(graphics::par(old_par), add = TRUE)

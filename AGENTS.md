@@ -91,7 +91,7 @@ Codex should not ask the operator to decide routine technical details that can b
 
 ## Research Run Hygiene
 
-For long Gen5.1 research/inspection runs, Codex should minimize chat and context usage by default:
+For long Gen5.1 research/inspection runs, Codex should keep the shared inspection surface concise and useful:
 
 - Do not paste full logs, full CSVs, or large generated reports into chat.
 - Prefer quiet wrapper output that prints only run status, data-health status, and artifact paths when practical.

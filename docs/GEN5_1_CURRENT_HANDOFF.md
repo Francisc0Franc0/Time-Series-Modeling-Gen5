@@ -98,9 +98,9 @@ Use `-MediumGrid` to run the declared medium experiment across four PCA surfaces
 
 The medium-capable top-level packet also writes surface definitions, child OOS metric summary, child state coverage summary, and selected-family summary CSVs.
 
-## Context Discipline For New Threads
+## Inspection Discipline For New Threads
 
-To keep Codex context usage manageable:
+To keep research handoffs and inspection work clear:
 
 - Read `AGENTS.md` and this handoff first; for engine-wrapper work, also read `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`.
 - Use generated report paths under ignored `runs/` as evidence surfaces; do not paste large generated tables into prompts unless necessary.
