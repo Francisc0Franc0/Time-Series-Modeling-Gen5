@@ -192,6 +192,7 @@ test_that("context-universe factorial writer summarizes portfolio packets", {
   expect_true(file.exists(written$paths$state_coverage_summary_csv))
   expect_true(file.exists(written$paths$selected_family_summary_csv))
   expect_true(file.exists(written$paths$metrics_overview_png))
+  expect_true(file.exists(written$paths$visual_audit_index_csv))
   expect_equal(nrow(written$portfolio_index), 3L)
   expect_true(all(written$portfolio_index$run_status == "ok"))
   expect_equal(nrow(written$summary), 3L)
@@ -206,6 +207,7 @@ test_that("context-universe factorial writer summarizes portfolio packets", {
   expect_true(any(grepl("not accepted allocation evidence", report, fixed = TRUE)))
   expect_true(any(grepl("PCA Surfaces", report, fixed = TRUE)))
   expect_true(any(grepl("Child Summaries", report, fixed = TRUE)))
+  expect_true(any(grepl("Visual Audit", report, fixed = TRUE)))
 })
 
 test_that("medium context-universe factorial writer indexes all PCA surfaces", {
@@ -273,4 +275,39 @@ test_that("active-plus-risk state-map triage defines quantile, fixed k, and auto
   expect_equal(surfaces$state_engine, c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"))
   expect_equal(surfaces$grid_n, c(3L, 9L, 9L))
   expect_equal(surfaces$state_count, c("3x3", "k9", "kauto9"))
+})
+
+test_that("active-plus-risk state-map triage writes visual audit contact sheets", {
+  repo_root <- file.path(tempdir(), "g5cfv")
+  unlink(repo_root, recursive = TRUE, force = TRUE)
+  dir.create(repo_root, recursive = TRUE)
+  active_symbols <- c("AMD", "NVDA", "TSLA", "COIN", "MSTR")
+  defs <- g5_context_factorial_universe_definitions(active_symbols)
+  defs <- defs[defs$universe_id == "active_plus_risk_context", , drop = FALSE]
+  surfaces <- g5_context_factorial_surface_definitions(state_map_triage = TRUE)
+
+  g5_test_write_context_factorial_portfolio_packets(repo_root, active_symbols, defs, surfaces)
+
+  output_dir <- tempfile("g5_context_factorial_visual_packet_")
+  written <- g5_write_context_factorial_outputs(
+    universe_defs = defs,
+    surface_defs = surfaces,
+    output_dir = output_dir,
+    repo_root = repo_root,
+    as_of_timestamp = "2026-06-24 17:30:00",
+    end_date = as.Date("2026-06-24"),
+    active_symbols = active_symbols,
+    fold_count = 5L,
+    strategy_grid_preset = "standard",
+    purpose = g5_context_factorial_state_map_triage_purpose()
+  )
+
+  expect_true(file.exists(written$paths$visual_audit_index_csv))
+  expect_equal(nrow(written$visual_audit_index), 12L)
+  expect_true(all(file.exists(written$visual_audit_index$path)))
+  expect_true(all(c("quantile_vs_fixed_k9", "auto_kmeans") %in% written$visual_audit_index$chart_group))
+  expect_true(all(c("pca_scatter", "stitched_oos_states") %in% written$visual_audit_index$chart_type))
+  report <- readLines(written$paths$report_md, warn = FALSE)
+  expect_true(any(grepl("TRAIN-only auto k-means", report, fixed = TRUE)))
+  expect_true(any(grepl("Visual audit index", report, fixed = TRUE)))
 })

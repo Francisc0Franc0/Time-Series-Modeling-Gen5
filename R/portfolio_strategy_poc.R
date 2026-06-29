@@ -955,7 +955,118 @@ g5_context_factorial_write_metrics_overview <- function(summary, path, width = 3
   normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
-g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, purpose, path) {
+g5_context_factorial_visual_item_label <- function(child_row) {
+  paste(child_row$symbol[[1L]], child_row$state_count[[1L]], sep = " / ")
+}
+
+g5_context_factorial_child_visual_items <- function(child_rows) {
+  items <- vector("list", nrow(child_rows))
+  for (i in seq_len(nrow(child_rows))) {
+    paths <- g5_pca_wfa_comparison_artifact_paths(child_rows$run_dir[[i]])
+    items[[i]] <- list(
+      universe_id = child_rows$universe_id[[i]],
+      panel_mode = child_rows$pca_panel_mode[[i]],
+      state_map = paste(child_rows$symbol[[i]], child_rows$state_count[[i]], sep = " / "),
+      state_count = child_rows$state_count[[i]],
+      run_dir = child_rows$run_dir[[i]],
+      folds = g5_pca_wfa_read_csv_if_exists(paths$fold_spec_csv),
+      scores = g5_pca_wfa_read_csv_if_exists(paths$pca_scores_csv),
+      trades = g5_pca_wfa_read_csv_if_exists(paths$oos_trades_csv),
+      equity = g5_pca_wfa_read_csv_if_exists(paths$oos_equity_csv),
+      metrics = g5_pca_wfa_read_csv_if_exists(paths$oos_metrics_csv)
+    )
+  }
+  items
+}
+
+g5_context_factorial_write_visual_sheet <- function(items, path, chart_type = c("pca_scatter", "strategy"), title = NULL, columns = 2L, width = 2600L, height = 1600L, res = 180L) {
+  chart_type <- match.arg(chart_type)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  aesthetic <- g5_chart_aesthetic()
+  columns <- max(1L, as.integer(columns))
+  rows <- max(1L, ceiling(length(items) / columns))
+  grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = as.integer(res))
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(rows, columns), mar = c(5.8, 4.1, 3.1, 1.4), oma = c(0, 0, 3.0, 0), bg = aesthetic$background, fg = aesthetic$axis, col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  for (item in items) {
+    if (identical(chart_type, "pca_scatter")) {
+      g5_pca_wfa_draw_comparison_scatter_panel(item)
+    } else {
+      g5_pca_wfa_draw_comparison_strategy_panel(item)
+    }
+  }
+  blanks <- rows * columns - length(items)
+  if (blanks > 0L) {
+    for (i in seq_len(blanks)) graphics::plot.new()
+  }
+  default_title <- if (identical(chart_type, "pca_scatter")) "PCA State-Space Visual Audit" else "Stitched OOS State-Band Visual Audit"
+  graphics::mtext(if (is.null(title)) default_title else title, side = 3, outer = TRUE, line = 1, col = aesthetic$text, font = 2)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir) {
+  empty_index <- data.frame(
+    chart_group = character(),
+    chart_type = character(),
+    symbol = character(),
+    page_no = integer(),
+    path = character(),
+    stringsAsFactors = FALSE
+  )
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(empty_index)
+  required <- c("surface_id", "symbol", "run_dir", "pca_panel_mode", "state_count", "universe_id")
+  if (!all(required %in% names(child_index))) return(empty_index)
+  visual_dir <- file.path(output_dir, "state_map_visual_audit")
+  dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
+  rows <- list()
+  add_row <- function(chart_group, chart_type, symbol, page_no, path) {
+    rows[[length(rows) + 1L]] <<- data.frame(
+      chart_group = chart_group,
+      chart_type = chart_type,
+      symbol = symbol,
+      page_no = as.integer(page_no),
+      path = normalizePath(path, winslash = "/", mustWork = FALSE),
+      stringsAsFactors = FALSE
+    )
+  }
+  fixed_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9")
+  auto_id <- "behavioral_pool_kmeans_auto_max9"
+  symbols <- sort(unique(as.character(child_index$symbol)))
+  for (symbol in symbols) {
+    fixed_rows <- child_index[child_index$symbol == symbol & child_index$surface_id %in% fixed_ids, , drop = FALSE]
+    fixed_rows <- fixed_rows[match(fixed_ids, fixed_rows$surface_id), , drop = FALSE]
+    fixed_rows <- fixed_rows[!is.na(fixed_rows$surface_id), , drop = FALSE]
+    if (nrow(fixed_rows)) {
+      fixed_items <- g5_context_factorial_child_visual_items(fixed_rows)
+      scatter_path <- file.path(visual_dir, paste0("state_map_fixed_pair_", symbol, "_pca_scatter.png"))
+      strategy_path <- file.path(visual_dir, paste0("state_map_fixed_pair_", symbol, "_stitched_oos_states.png"))
+      g5_context_factorial_write_visual_sheet(fixed_items, scatter_path, chart_type = "pca_scatter", title = paste(symbol, "3x3 Quantile vs Fixed k9 PCA State Space"), columns = 2L)
+      g5_context_factorial_write_visual_sheet(fixed_items, strategy_path, chart_type = "strategy", title = paste(symbol, "3x3 Quantile vs Fixed k9 Stitched OOS States"), columns = 2L)
+      add_row("quantile_vs_fixed_k9", "pca_scatter", symbol, 1L, scatter_path)
+      add_row("quantile_vs_fixed_k9", "stitched_oos_states", symbol, 1L, strategy_path)
+    }
+  }
+  auto_rows <- child_index[child_index$surface_id == auto_id, , drop = FALSE]
+  if (nrow(auto_rows)) {
+    auto_rows <- auto_rows[order(auto_rows$symbol), , drop = FALSE]
+    pages <- split(auto_rows, ceiling(seq_len(nrow(auto_rows)) / 6L))
+    for (page_no in seq_along(pages)) {
+      page <- pages[[page_no]]
+      items <- g5_context_factorial_child_visual_items(page)
+      scatter_path <- file.path(visual_dir, paste0("state_map_auto_k_pca_scatter_", sprintf("%02d", page_no), ".png"))
+      strategy_path <- file.path(visual_dir, paste0("state_map_auto_k_stitched_oos_states_", sprintf("%02d", page_no), ".png"))
+      g5_context_factorial_write_visual_sheet(items, scatter_path, chart_type = "pca_scatter", title = "Auto k-Means PCA State Space by Symbol", columns = 3L, width = 3000L, height = 1800L)
+      g5_context_factorial_write_visual_sheet(items, strategy_path, chart_type = "strategy", title = "Auto k-Means Stitched OOS States by Symbol", columns = 3L, width = 3000L, height = 1800L)
+      add_row("auto_kmeans", "pca_scatter", "ALL", page_no, scatter_path)
+      add_row("auto_kmeans", "stitched_oos_states", "ALL", page_no, strategy_path)
+    }
+  }
+  if (!length(rows)) empty_index else do.call(rbind, rows)
+}
+
+g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, visual_audit_index, purpose, path) {
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
   dol <- function(x) ifelse(is.na(x), "NA", sprintf("$%.2f", as.numeric(x)))
@@ -1008,6 +1119,11 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_d
     paste0("- State coverage rows: `", nrow(state_coverage_summary), "`"),
     paste0("- Selected-family rows: `", nrow(selected_family_summary), "`"),
     "",
+    "## Visual Audit",
+    "",
+    paste0("- Visual audit index: `", paths$visual_audit_index_csv, "`"),
+    g5_pca_wfa_comparison_table_lines(visual_audit_index, c("chart_group", "chart_type", "symbol", "page_no", "path")),
+    "",
     "## Portfolio Packet Index",
     "",
     g5_pca_wfa_comparison_table_lines(portfolio_index[, c("universe_id", "surface_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv"), drop = FALSE], c("universe_id", "surface_id", "run_status", "report_md", "chart_png", "metrics_csv", "child_artifact_index_csv")),
@@ -1023,6 +1139,7 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_d
     paste0("- Child state coverage: `", paths$state_coverage_summary_csv, "`"),
     paste0("- Selected-family summary: `", paths$selected_family_summary_csv, "`"),
     paste0("- Metrics overview chart: `", paths$metrics_overview_png, "`"),
+    paste0("- Visual audit index: `", paths$visual_audit_index_csv, "`"),
     "",
     "## Leakage And Multiple-Comparison Guardrails",
     "",
@@ -1083,8 +1200,10 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
     child_metric_summary_csv = file.path(output_dir, "context_universe_factorial_child_oos_metrics.csv"),
     state_coverage_summary_csv = file.path(output_dir, "context_universe_factorial_state_coverage.csv"),
     selected_family_summary_csv = file.path(output_dir, "context_universe_factorial_selected_families.csv"),
-    metrics_overview_png = file.path(output_dir, "context_universe_factorial_metrics_overview.png")
+    metrics_overview_png = file.path(output_dir, "context_universe_factorial_metrics_overview.png"),
+    visual_audit_index_csv = file.path(output_dir, "context_universe_factorial_visual_audit_index.csv")
   )
+  visual_audit_index <- g5_context_factorial_write_state_map_visuals(child_index, output_dir)
   utils::write.csv(run_spec, paths$run_spec_csv, row.names = FALSE)
   utils::write.csv(universe_defs, paths$taxonomy_csv, row.names = FALSE)
   utils::write.csv(surface_defs, paths$surface_definitions_csv, row.names = FALSE)
@@ -1094,7 +1213,8 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
   utils::write.csv(child_metric_summary, paths$child_metric_summary_csv, row.names = FALSE)
   utils::write.csv(state_coverage_summary, paths$state_coverage_summary_csv, row.names = FALSE)
   utils::write.csv(selected_family_summary, paths$selected_family_summary_csv, row.names = FALSE)
+  utils::write.csv(visual_audit_index, paths$visual_audit_index_csv, row.names = FALSE)
   paths$metrics_overview_png <- g5_context_factorial_write_metrics_overview(summary, paths$metrics_overview_png)
-  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, purpose, paths$report_md)
-  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary)
+  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, visual_audit_index, purpose, paths$report_md)
+  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary, visual_audit_index = visual_audit_index)
 }
