@@ -325,7 +325,10 @@ g5_pca_regime_context_feature_table <- function(
   feature_cols = g5_pca_regime_default_features()
 ) {
   target_symbol <- g5_standardize_symbol(target_symbol)[[1L]]
-  context_symbols <- unique(c(target_symbol, g5_standardize_symbol(context_symbols)))
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  if (!length(context_symbols)) {
+    g5_stop("PCA context feature table requires at least one context symbol.")
+  }
   target <- g5_pca_regime_feature_table(bars, target_symbol, end_date = end_date)
   base_cols <- c("schema_version", "symbol", "session_date", "open", "high", "low", "close", "volume")
   out <- target[, base_cols, drop = FALSE]
@@ -344,6 +347,7 @@ g5_pca_regime_context_feature_table <- function(
   rownames(out) <- NULL
   out$regime_context_symbols <- paste(context_symbols, collapse = ",")
   out$research_candidate_symbol <- target_symbol
+  out$pca_training_role <- "context"
   attr(out, "feature_cols") <- g5_pca_regime_context_feature_cols(context_symbols, feature_cols)
   out
 }
@@ -356,8 +360,12 @@ g5_pca_regime_pooled_feature_table <- function(
   feature_cols = g5_pca_regime_default_features()
 ) {
   target_symbol <- g5_standardize_symbol(target_symbol)[[1L]]
-  context_symbols <- unique(c(target_symbol, g5_standardize_symbol(context_symbols)))
-  parts <- lapply(context_symbols, function(symbol) {
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  if (!length(context_symbols)) {
+    g5_stop("PCA pooled feature table requires at least one context symbol.")
+  }
+  scoring_symbols <- unique(c(context_symbols, target_symbol))
+  parts <- lapply(scoring_symbols, function(symbol) {
     features <- g5_pca_regime_feature_table(bars, symbol, end_date = end_date)
     keep <- c("schema_version", "symbol", "session_date", "open", "high", "low", "close", "volume", feature_cols)
     missing <- setdiff(keep, names(features))
@@ -366,6 +374,7 @@ g5_pca_regime_pooled_feature_table <- function(
     }
     features <- features[, keep, drop = FALSE]
     features$pca_training_symbol <- symbol
+    features$pca_training_role <- if (symbol %in% context_symbols) "context" else "routing_target_only"
     features
   })
   out <- do.call(rbind, parts)
@@ -376,6 +385,14 @@ g5_pca_regime_pooled_feature_table <- function(
   out$pca_panel_mode <- "pooled_asset_day"
   attr(out, "feature_cols") <- feature_cols
   out
+}
+
+g5_pca_regime_training_fit_rows <- function(scored_base) {
+  if ("pca_training_role" %in% names(scored_base)) {
+    scored_base$split == "TRAIN" & scored_base$pca_training_role == "context"
+  } else {
+    scored_base$split == "TRAIN"
+  }
 }
 
 g5_pca_regime_state_palette <- function(state_ids) {
@@ -434,7 +451,8 @@ g5_pca_regime_fit <- function(
   if (!nrow(scored_base)) {
     g5_stop("PCA regime fit has no rows inside TRAIN/OOS windows.")
   }
-  finite_train <- scored_base[scored_base$split == "TRAIN", , drop = FALSE]
+  train_fit_rows <- g5_pca_regime_training_fit_rows(scored_base)
+  finite_train <- scored_base[train_fit_rows, , drop = FALSE]
   finite_train <- finite_train[stats::complete.cases(finite_train[, feature_cols, drop = FALSE]), , drop = FALSE]
   if (nrow(finite_train) < min_train_rows) {
     g5_stop(paste0("PCA regime fit requires at least ", min_train_rows, " fully finite TRAIN rows."))
@@ -459,7 +477,7 @@ g5_pca_regime_fit <- function(
   score <- x_all %*% pca$rotation[, 1:2, drop = FALSE]
   scoring_rows$pc1 <- as.numeric(score[, 1L])
   scoring_rows$pc2 <- as.numeric(score[, 2L])
-  train_scored <- scoring_rows[scoring_rows$split == "TRAIN", , drop = FALSE]
+  train_scored <- scoring_rows[g5_pca_regime_training_fit_rows(scoring_rows), , drop = FALSE]
   pc1_q <- as.numeric(stats::quantile(train_scored$pc1, probs = seq(0, 1, length.out = grid_n + 1L), na.rm = TRUE, names = FALSE))
   pc2_q <- as.numeric(stats::quantile(train_scored$pc2, probs = seq(0, 1, length.out = grid_n + 1L), na.rm = TRUE, names = FALSE))
   if (length(unique(pc1_q)) < grid_n + 1L || length(unique(pc2_q)) < grid_n + 1L) {
@@ -511,8 +529,8 @@ g5_pca_regime_fit <- function(
       break_axis = NA_character_,
       break_index = NA_integer_,
       break_value = NA_real_,
-      key = c("grid_n", "outer_break_policy", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "dropped_features"),
-      value = c(as.character(grid_n), "extend_to_infinity_for_oos_extremes", as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), paste(dropped, collapse = ";")),
+      key = c("grid_n", "outer_break_policy", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "fit_row_policy", "dropped_features"),
+      value = c(as.character(grid_n), "extend_to_infinity_for_oos_extremes", as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), if ("pca_training_role" %in% names(scored_base)) "TRAIN rows with pca_training_role=context" else "all TRAIN rows", paste(dropped, collapse = ";")),
       stringsAsFactors = FALSE
     )
   )
@@ -567,7 +585,8 @@ g5_pca_regime_fit_kmeans <- function(
   if (!nrow(scored_base)) {
     g5_stop("PCA k-means regime fit has no rows inside TRAIN/OOS windows.")
   }
-  finite_train <- scored_base[scored_base$split == "TRAIN", , drop = FALSE]
+  train_fit_rows <- g5_pca_regime_training_fit_rows(scored_base)
+  finite_train <- scored_base[train_fit_rows, , drop = FALSE]
   finite_train <- finite_train[stats::complete.cases(finite_train[, feature_cols, drop = FALSE]), , drop = FALSE]
   if (nrow(finite_train) < min_train_rows) {
     g5_stop(paste0("PCA k-means regime fit requires at least ", min_train_rows, " fully finite TRAIN rows."))
@@ -595,7 +614,7 @@ g5_pca_regime_fit_kmeans <- function(
   score <- x_all %*% pca$rotation[, 1:2, drop = FALSE]
   scoring_rows$pc1 <- as.numeric(score[, 1L])
   scoring_rows$pc2 <- as.numeric(score[, 2L])
-  train_scored <- scoring_rows[scoring_rows$split == "TRAIN", , drop = FALSE]
+  train_scored <- scoring_rows[g5_pca_regime_training_fit_rows(scoring_rows), , drop = FALSE]
   set.seed(5101L)
   km <- stats::kmeans(train_scored[, c("pc1", "pc2"), drop = FALSE], centers = cluster_count, nstart = nstart)
   centers <- as.matrix(km$centers[, c("pc1", "pc2"), drop = FALSE])
@@ -661,8 +680,8 @@ g5_pca_regime_fit_kmeans <- function(
       state_id = NA_character_,
       centroid_pc1 = NA_real_,
       centroid_pc2 = NA_real_,
-      key = c("state_engine", "cluster_count", "nstart", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "dropped_features"),
-      value = c("pca_kmeans", as.character(cluster_count), as.character(nstart), as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), paste(dropped, collapse = ";")),
+      key = c("state_engine", "cluster_count", "nstart", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "fit_row_policy", "dropped_features"),
+      value = c("pca_kmeans", as.character(cluster_count), as.character(nstart), as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), if ("pca_training_role" %in% names(scored_base)) "TRAIN rows with pca_training_role=context" else "all TRAIN rows", paste(dropped, collapse = ";")),
       stringsAsFactors = FALSE
     )
   )

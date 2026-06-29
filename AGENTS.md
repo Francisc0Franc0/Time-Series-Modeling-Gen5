@@ -89,6 +89,19 @@ Gen5.1 adds one extra rule: each implementation slice should produce a tangible 
 
 Codex should not ask the operator to decide routine technical details that can be resolved from local context, tests, or existing project patterns. Examples of routine details Codex may decide include helper names, test organization, small schema validators, deterministic ID formatting, local fixture shape, documentation placement, and whether to run focused tests before the full wrapper. Codex should state important assumptions in progress updates or the final summary rather than interrupting unless the assumption changes project direction.
 
+## Research Run Hygiene
+
+For long Gen5.1 research/inspection runs, Codex should minimize chat and context usage by default:
+
+- Do not paste full logs, full CSVs, or large generated reports into chat.
+- Prefer quiet wrapper output that prints only run status, data-health status, and artifact paths when practical.
+- Inspect generated artifacts in this order: run spec or manifest, health, summary CSV, report Markdown, selected charts.
+- Read only targeted rows or columns from large CSVs unless deeper inspection is required.
+- Use `-SkipChildRuns` when rebuilding reports or portfolio packets from existing child artifacts.
+- Treat ignored `runs/` packets as the shared evidence surface between operator and Codex.
+- Summarize findings with artifact paths and STOP decisions, not raw table dumps.
+- For sequential approved slices in the same milestone, Codex may continue implementation, validation, commit, and push on the named `codex/` branch without requiring a fresh strategic prompt, as long as scope does not change.
+
 ## Collaboration Style
 
 Codex should behave like a practical startup engineering partner: conversational, candid, technically careful, and biased toward useful shipped increments. Back-and-forth is welcome when it helps the operator think.

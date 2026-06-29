@@ -551,7 +551,10 @@ g5_pca_wfa_prepare_panel_for_fold <- function(
 ) {
   mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
   symbol <- g5_standardize_symbol(symbol)[[1L]]
-  regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
+  regime_context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  if (!length(regime_context_symbols)) {
+    g5_stop("regime_context_symbols must contain at least one symbol.")
+  }
   if (identical(mode, "pooled_asset_day")) {
     features <- g5_pca_regime_pooled_feature_table(
       bars,
@@ -604,7 +607,10 @@ g5_pca_wfa_fit_fold_models <- function(
   state_engine <- match.arg(state_engine)
   pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
   symbol <- g5_standardize_symbol(symbol)[[1L]]
-  regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
+  regime_context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  if (!length(regime_context_symbols)) {
+    g5_stop("regime_context_symbols must contain at least one symbol.")
+  }
   fold_models <- list()
   selected_rows <- list()
   perf_rows <- list()
@@ -1021,7 +1027,10 @@ g5_pca_wfa_run_multi <- function(
     assign(nm, preset_values[[nm]])
   }
   symbol <- g5_standardize_symbol(symbol)[[1L]]
-  regime_context_symbols <- unique(c(symbol, g5_standardize_symbol(regime_context_symbols)))
+  regime_context_symbols <- unique(g5_standardize_symbol(regime_context_symbols))
+  if (!length(regime_context_symbols)) {
+    g5_stop("regime_context_symbols must contain at least one symbol.")
+  }
   candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
   folds <- g5_ema_cross_wfa_resolve_folds(
     bars,

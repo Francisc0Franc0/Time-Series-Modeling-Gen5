@@ -57,10 +57,6 @@ cfg <- g5_load_data_layer_config(repo_root)
 active_symbols <- g5_portfolio_poc_symbols(parse_character_list("GEN5_PORTFOLIO_POC_ACTIVE_SYMBOLS", "AMD,NVDA,TSLA,COIN,MSTR"), "GEN5_PORTFOLIO_POC_ACTIVE_SYMBOLS")
 regime_context_symbols <- g5_portfolio_poc_symbols(parse_character_list("GEN5_PORTFOLIO_POC_REGIME_CONTEXT_SYMBOLS", "AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX"), "GEN5_PORTFOLIO_POC_REGIME_CONTEXT_SYMBOLS")
 baseline_symbol <- g5_standardize_symbol(env_or("GEN5_PORTFOLIO_POC_BASELINE_SYMBOL", "SPY"))[[1L]]
-missing_active_context <- setdiff(active_symbols, regime_context_symbols)
-if (length(missing_active_context)) {
-  regime_context_symbols <- unique(c(active_symbols, regime_context_symbols))
-}
 query_symbols <- unique(c(regime_context_symbols, active_symbols, baseline_symbol))
 
 end_date <- as.Date(env_or("GEN5_PORTFOLIO_POC_END_DATE", ""))
