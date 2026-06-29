@@ -24,6 +24,8 @@ The branch keeps:
 
 The branch intentionally does not treat the current WFA POC as final research evidence, live advice, allocation logic, or a deployable strategy.
 
+The current stack is now canonized as a Gen5.1 research/inspection engine in `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`. Future experiment wrappers should be thin run-spec recipes around the shared engine layers: data authority, universe declaration, PCA regime construction, strategy specs, WFA routing, and portfolio accounting/reporting.
+
 ## Core Values
 
 - Make data authority explicit.
@@ -88,7 +90,7 @@ The next task does not have to follow a rigid roadmap. Good current Gen5.1 slice
 
 - Refine the close-based exit-stack POC on top of the multi-signal WFA runner.
 - Improve stitched WFA reporting and audit tables as new model surfaces are added.
-- Build a portfolio construction POC after trade ledgers include stable entry and exit attribution.
+- Build thin experiment wrappers that use the Gen5.1 research engine contract for declared universe, PCA, WFA, and portfolio-accounting surfaces.
 - Explore state/regime filters only after trade generation and portfolio accounting surfaces are stable.
 
 The best next slice is whichever gives the operator the clearest immediate feedback.

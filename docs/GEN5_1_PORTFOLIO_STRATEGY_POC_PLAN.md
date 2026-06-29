@@ -4,6 +4,8 @@ Status date: 2026-06-28
 
 This note defines the first portfolio strategy proof of concept. It is an accounting and inspection slice only. It does not approve production allocation, live advice, broker execution, leverage automation, or final research evidence.
 
+For the broader engine contract that this portfolio POC now plugs into, see `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`.
+
 ## Where This Fits
 
 The current PCA-routed WFA surface can research and simulate one traded symbol at a time while using a larger Regime Context Universe for PCA state assignment. The portfolio POC is the next layer above that: it consumes a small set of single-symbol stitched OOS WFA artifacts and asks whether shared-account portfolio accounting is clear and auditable.

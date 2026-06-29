@@ -18,6 +18,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - PCA router comparison reporting can run or consume the current 2x2 `PanelMode x StateMap` surface and summarize OOS metrics, state coverage, selected families, artifact paths, and 2x2 equity/OOS/PCA visual contact sheets.
 - PCA context-universe comparison reporting can run the same 2x2 surface for named context universes, then write a top-level universe index/summary with contact-sheet paths while keeping AMD as the only researched/traded/allocated asset.
 - Portfolio strategy accounting POC can run five single-symbol PCA-routed WFA child packets, then combine their stitched OOS trades into a shared-account portfolio replay with dynamic equal-slot, cash-capped entry sizing. The first default Active Allocation Set is `AMD,NVDA,TSLA,COIN,MSTR`; treat this as accounting validation, not accepted allocation research.
+- The emerging stack is now canonized as a Gen5.1 research/inspection engine in `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`. Future experiment wrappers should declare a run spec and call the engine rather than restating the full universe x PCA panel x state map x strategy grid x WFA x portfolio accounting design.
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 
 The newest operator surface is:
@@ -76,7 +77,7 @@ Use `-SkipChildRuns` to rebuild the portfolio accounting/report packet from alre
 
 To keep Codex context usage manageable:
 
-- Read `AGENTS.md` and this handoff first; only read deeper docs when the task needs them.
+- Read `AGENTS.md` and this handoff first; for engine-wrapper work, also read `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`.
 - Use generated report paths under ignored `runs/` as evidence surfaces; do not paste large generated tables into prompts unless necessary.
 - Prefer Medium reasoning for scoped implementation, known reruns, doc updates, commits, and pushes.
 - Prefer High reasoning for research gates, leakage-safety design, result interpretation, and new methodology decisions.
@@ -125,6 +126,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 ## Key Docs To Read Next
 
 - `README.md`: operator commands and current POC surfaces.
+- `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`: canonized research/inspection engine layers, run-spec vocabulary, artifact contract, wrapper pattern, and STOP boundaries.
 - `docs/GEN5_REGIME_FILTER_POC_PLAN.md`: regime/PCA theory, vocabulary, policies, and next POC ideas.
 - `docs/GEN5_1_PORTFOLIO_STRATEGY_POC_PLAN.md`: first portfolio accounting POC policy, defaults, STOP guardrails, and output contract.
 - `docs/GEN5_TASK_QUEUE.md`: current status and backlog memory.
@@ -135,7 +137,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please start on branch codex/Gen5.1-regime-universe-scaleout. Read AGENTS.md and docs/GEN5_1_CURRENT_HANDOFF.md first. Then propose and implement a careful next expansion of the Regime Context Universe beyond AMD,NVDA,TSLA while keeping Research Candidate Universe, Tradeable Universe, and Active Allocation Set as AMD only. Produce concrete charts/reports and validate.
+Please start on branch codex/Gen5.1-engine-wrapper-next-experiment. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md first. Use the Gen5.1 research engine contract to create a thin wrapper for the next declared experiment. Keep it research/inspection only, produce concrete charts/reports, validate, commit, and push.
 ```
 
 ```text
