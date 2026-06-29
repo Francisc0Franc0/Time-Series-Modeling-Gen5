@@ -19,7 +19,7 @@ param(
 
   [int]$GridN = 3,
 
-  [ValidateSet("quantile_grid", "pca_kmeans")]
+  [ValidateSet("quantile_grid", "pca_kmeans", "pca_kmeans_auto")]
   [string]$StateEngine = "quantile_grid",
 
   [ValidateSet("date_aligned_context", "pooled_asset_day")]
@@ -49,6 +49,8 @@ param(
   [switch]$SkipChildRuns,
 
   [switch]$MediumGrid,
+
+  [switch]$ActivePlusRiskStateMapTriage,
 
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
 )
@@ -92,8 +94,18 @@ if (-not (Test-Path -LiteralPath $RscriptPath)) {
   $RscriptPath = $cmd.Source
 }
 
-$universeList = @("active_self_context", "active_plus_risk_context", "ex_active_market_risk_context")
-if ($MediumGrid.IsPresent) {
+if ($ActivePlusRiskStateMapTriage.IsPresent) {
+  $universeList = @("active_plus_risk_context")
+} else {
+  $universeList = @("active_self_context", "active_plus_risk_context", "ex_active_market_risk_context")
+}
+if ($ActivePlusRiskStateMapTriage.IsPresent) {
+  $surfaceList = @(
+    @{ SurfaceId = "behavioral_pool_quantile_grid_3x3"; PcaPanelMode = "pooled_asset_day"; StateEngine = "quantile_grid"; GridN = 3 },
+    @{ SurfaceId = "behavioral_pool_kmeans_k9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 },
+    @{ SurfaceId = "behavioral_pool_kmeans_auto_max9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans_auto"; GridN = 9 }
+  )
+} elseif ($MediumGrid.IsPresent) {
   $surfaceList = @(
     @{ SurfaceId = "contextual_snapshot_quantile_grid"; PcaPanelMode = "date_aligned_context"; StateEngine = "quantile_grid"; GridN = 3 },
     @{ SurfaceId = "contextual_snapshot_kmeans"; PcaPanelMode = "date_aligned_context"; StateEngine = "pca_kmeans"; GridN = 9 },
@@ -107,9 +119,14 @@ if ($MediumGrid.IsPresent) {
 }
 
 Write-Host "Gen5.1 Context-Universe Factorial Portfolio Inspection"
-Write-Host "  Purpose: compare active-self, active-plus-risk, and external-risk context for the same active set."
+if ($ActivePlusRiskStateMapTriage.IsPresent) {
+  Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and auto k-means max9 state maps."
+} else {
+  Write-Host "  Purpose: compare active-self, active-plus-risk, and external-risk context for the same active set."
+}
 Write-Host "  Active Allocation Set: $ActiveSymbols"
 Write-Host "  Medium grid: $($MediumGrid.IsPresent)"
+Write-Host "  Active-plus-risk state-map triage: $($ActivePlusRiskStateMapTriage.IsPresent)"
 Write-Host "  PCA surfaces: $($surfaceList.Count)"
 Write-Host "  Universe ids: $($universeList -join ', ')"
 Write-Host "  Fold count: $FoldCount"
@@ -172,6 +189,8 @@ $env:GEN5_CONTEXT_FACTORIAL_STRATEGY_GRID_PRESET = $StrategyGridPreset
 $env:GEN5_CONTEXT_FACTORIAL_REFRESH = if ($Refresh.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS = if ($SkipChildRuns.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID = if ($MediumGrid.IsPresent) { "true" } else { "false" }
+$env:GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE = if ($ActivePlusRiskStateMapTriage.IsPresent) { "true" } else { "false" }
+$env:GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS = if ($ActivePlusRiskStateMapTriage.IsPresent) { "active_plus_risk_context" } else { "" }
 
 Push-Location $repoRoot
 try {

@@ -597,6 +597,14 @@ g5_context_factorial_default_purpose <- function() {
   )
 }
 
+g5_context_factorial_state_map_triage_purpose <- function() {
+  paste(
+    "This narrow state-map triage asks whether active-plus-risk behavioral-pool PCA looks more useful",
+    "when states are assigned by a 3x3 quantile grid, fixed k-means with k=9, or TRAIN-only auto k-means",
+    "selecting k from 2..9 by the Calinski-Harabasz criterion."
+  )
+}
+
 g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", "NVDA", "TSLA", "COIN", "MSTR")) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   make_row <- function(universe_id, universe_label, symbols, diversity_class, similarity_class, rationale) {
@@ -644,7 +652,21 @@ g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", 
   ))
 }
 
-g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L) {
+g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE) {
+  if (isTRUE(state_map_triage)) {
+    return(data.frame(
+      surface_id = c(
+        "behavioral_pool_quantile_grid_3x3",
+        "behavioral_pool_kmeans_k9",
+        "behavioral_pool_kmeans_auto_max9"
+      ),
+      pca_panel_mode = rep("pooled_asset_day", 3L),
+      state_engine = c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"),
+      grid_n = c(3L, 9L, 9L),
+      state_count = c("3x3", "k9", "kauto9"),
+      stringsAsFactors = FALSE
+    ))
+  }
   if (isTRUE(medium_grid)) {
     return(data.frame(
       surface_id = c(
@@ -661,13 +683,13 @@ g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_pa
     ))
   }
   pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
-  state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else as.character(state_engine)
+  state_engine <- g5_pca_wfa_state_engine(if (identical(state_engine, "kmeans")) "pca_kmeans" else as.character(state_engine))
   data.frame(
     surface_id = "single_surface",
     pca_panel_mode = pca_panel_mode,
     state_engine = state_engine,
     grid_n = as.integer(grid_n),
-    state_count = if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n)),
+    state_count = g5_pca_wfa_engine_label(state_engine, grid_n),
     stringsAsFactors = FALSE
   )
 }
@@ -677,7 +699,7 @@ g5_context_factorial_prefix <- function(as_of_timestamp, active_symbols, fold_co
   end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(end_date)))
   active_label <- paste0("A", length(g5_standardize_symbol(active_symbols)))
   panel_label <- if (identical(g5_pca_wfa_panel_label(pca_panel_mode), "pooled")) "pool" else "align"
-  engine_label <- if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n))
+  engine_label <- g5_pca_wfa_engine_label(state_engine, grid_n)
   grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
   surface_label <- if (as.integer(surface_count) > 1L) paste0(as.integer(surface_count), "s") else paste(panel_label, engine_label, sep = "_")
   parts <- c("ctxfac", active_label, paste0(fold_count, "f"), paste0(universe_count, "u"), surface_label)
@@ -699,7 +721,7 @@ g5_portfolio_poc_packet_dir <- function(repo_root, as_of_timestamp, active_symbo
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(end_date)))
   panel_label <- g5_pca_wfa_panel_label(pca_panel_mode)
-  engine_label <- if (identical(state_engine, "pca_kmeans")) paste0("k", as.integer(grid_n)) else paste0(as.integer(grid_n), "x", as.integer(grid_n))
+  engine_label <- g5_pca_wfa_engine_label(state_engine, grid_n)
   grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
   packet_name <- paste(c(
     "portfolio_poc",

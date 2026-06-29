@@ -79,7 +79,7 @@ refresh <- g5_parse_bool_env(env_or("GEN5_PORTFOLIO_POC_REFRESH", "false"), defa
 skip_child_runs <- g5_parse_bool_env(env_or("GEN5_PORTFOLIO_POC_SKIP_CHILD_RUNS", "false"), default = FALSE)
 
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_PORTFOLIO_POC_FOLD_COUNT must be a positive integer.")
-if (!state_engine %in% c("quantile_grid", "pca_kmeans")) g5_stop("GEN5_PORTFOLIO_POC_STATE_ENGINE must be quantile_grid or pca_kmeans.")
+state_engine <- g5_pca_wfa_state_engine(state_engine)
 if (!pca_panel_mode %in% c("date_aligned_context", "pooled_asset_day")) g5_stop("GEN5_PORTFOLIO_POC_PANEL_MODE must be date_aligned_context or pooled_asset_day.")
 if (is.na(kmeans_nstart) || kmeans_nstart < 1L) g5_stop("GEN5_PORTFOLIO_POC_KMEANS_NSTART must be a positive integer.")
 if (is.na(slot_count) || slot_count < length(active_symbols)) g5_stop("GEN5_PORTFOLIO_POC_SLOT_COUNT must be at least the number of active symbols.")
@@ -258,7 +258,7 @@ child_artifact_index <- do.call(rbind, child_index)
 stamp <- gsub("[^0-9A-Za-z]+", "", as.character(result$resolved_session$as_of_timestamp))
 end_label <- gsub("[^0-9A-Za-z]+", "", as.character(end_date))
 panel_label <- g5_pca_wfa_panel_label(pca_panel_mode)
-engine_label <- if (identical(state_engine, "pca_kmeans")) paste0("k", grid_n) else paste0(grid_n, "x", grid_n)
+engine_label <- g5_pca_wfa_engine_label(state_engine, grid_n)
 grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
 packet_name <- paste(c(
   "portfolio_poc",

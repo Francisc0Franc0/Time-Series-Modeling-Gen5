@@ -23,7 +23,7 @@ param(
 
   [int]$GridN = 3,
 
-  [ValidateSet("quantile_grid", "pca_kmeans")]
+  [ValidateSet("quantile_grid", "pca_kmeans", "pca_kmeans_auto")]
   [string]$StateEngine = "quantile_grid",
 
   [ValidateSet("date_aligned_context", "pooled_asset_day")]
@@ -75,8 +75,8 @@ if ($FoldCount -lt 1) {
 if ($StateEngine -eq "quantile_grid" -and ($GridN -lt 2 -or $GridN -gt 5)) {
   throw "-GridN must be between 2 and 5 for quantile grids."
 }
-if ($StateEngine -eq "pca_kmeans" -and ($GridN -lt 2 -or $GridN -gt 25)) {
-  throw "For -StateEngine pca_kmeans, -GridN is interpreted as cluster count and must be between 2 and 25."
+if ($StateEngine -in @("pca_kmeans", "pca_kmeans_auto") -and ($GridN -lt 2 -or $GridN -gt 25)) {
+  throw "For -StateEngine pca_kmeans or pca_kmeans_auto, -GridN is interpreted as cluster count or max cluster count and must be between 2 and 25."
 }
 if ($KmeansNstart -lt 1) {
   throw "-KmeansNstart must be positive."

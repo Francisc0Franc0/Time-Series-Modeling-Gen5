@@ -51,23 +51,28 @@ strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_CONTEXT_FACTORI
 refresh <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_REFRESH", "false"), default = FALSE)
 skip_child_runs <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS", "false"), default = FALSE)
 medium_grid <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID", "false"), default = FALSE)
+state_map_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE", "false"), default = FALSE)
 
 if (is.na(end_date)) g5_stop("GEN5_CONTEXT_FACTORIAL_END_DATE must be a valid date.")
 if (!nzchar(as_of_timestamp)) g5_stop("GEN5_CONTEXT_FACTORIAL_AS_OF_TIMESTAMP is required.")
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_CONTEXT_FACTORIAL_FOLD_COUNT must be a positive integer.")
 if (is.na(grid_n) || grid_n < 2L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N must be at least 2.")
 state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else state_engine
-if (!state_engine %in% c("quantile_grid", "pca_kmeans")) g5_stop("GEN5_CONTEXT_FACTORIAL_STATE_ENGINE must be quantile_grid or pca_kmeans.")
+state_engine <- g5_pca_wfa_state_engine(state_engine)
 pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
 if (identical(state_engine, "quantile_grid") && grid_n > 5L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N is too large for quantile_grid in this inspection wrapper.")
-if (identical(state_engine, "pca_kmeans") && grid_n > 25L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N is too large for pca_kmeans in this inspection wrapper.")
+if (state_engine %in% c("pca_kmeans", "pca_kmeans_auto") && grid_n > 25L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N is too large for k-means in this inspection wrapper.")
 
 universe_defs <- g5_context_factorial_universe_definitions(active_symbols)
+universe_ids <- parse_character_list("GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS", paste(universe_defs$universe_id, collapse = ","))
+universe_defs <- universe_defs[universe_defs$universe_id %in% universe_ids, , drop = FALSE]
+if (!nrow(universe_defs)) g5_stop("GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS did not match any known context universes.")
 surface_defs <- g5_context_factorial_surface_definitions(
   medium_grid = medium_grid,
   pca_panel_mode = pca_panel_mode,
   state_engine = state_engine,
-  grid_n = grid_n
+  grid_n = grid_n,
+  state_map_triage = state_map_triage
 )
 output_dir <- g5_context_factorial_output_dir(
   repo_root = repo_root,
@@ -94,14 +99,16 @@ written <- g5_write_context_factorial_outputs(
   fold_count = fold_count,
   strategy_grid_preset = strategy_grid_preset,
   refresh = refresh,
-  skip_child_runs = skip_child_runs
+  skip_child_runs = skip_child_runs,
+  purpose = if (isTRUE(state_map_triage)) g5_context_factorial_state_map_triage_purpose() else g5_context_factorial_default_purpose()
 )
 
 message("Gen5.1 context-universe factorial portfolio inspection")
 message("Repository: ", repo_root)
-message("Purpose: ", g5_context_factorial_default_purpose())
+message("Purpose: ", if (isTRUE(state_map_triage)) g5_context_factorial_state_map_triage_purpose() else g5_context_factorial_default_purpose())
 message("Active symbols: ", paste(active_symbols, collapse = ", "))
 message("Medium grid: ", medium_grid)
+message("State-map triage: ", state_map_triage)
 message("Surface count: ", nrow(surface_defs))
 message("End date: ", end_date)
 message("As of: ", as_of_timestamp)

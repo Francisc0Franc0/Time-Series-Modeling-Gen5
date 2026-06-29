@@ -149,6 +149,38 @@ test_that("PCA k-means-routed multi-fold WFA reuses the same downstream router c
   expect_true(all(wfa$selected_states$ownership_policy == "entry_state_owns_trade_until_exit"))
 })
 
+test_that("PCA auto k-means-routed WFA records train-only selected cluster counts", {
+  bars <- g5_test_pca_wfa_bars(n = 760L)
+  wfa <- g5_pca_wfa_run_multi(
+    bars,
+    symbol = "AMD",
+    wfa_start_date = min(bars$session_date),
+    wfa_end_date = max(bars$session_date),
+    fast_periods = c(3L, 5L),
+    slow_periods = c(12L, 20L),
+    bb_lookback_periods = 10L,
+    bb_sd_multipliers = 1.5,
+    candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+    train_quarters = g5_test_pca_wfa_quarters_for_days(380),
+    oos_quarters = g5_test_pca_wfa_quarters_for_days(60),
+    fold_count = 3L,
+    grid_n = 6L,
+    state_engine = "pca_kmeans_auto",
+    kmeans_nstart = 3L,
+    min_train_state_rows = 5L
+  )
+  meta <- wfa$pca_model_contract[wfa$pca_model_contract$record_type == "meta", , drop = FALSE]
+
+  expect_equal(wfa$settings$state_engine, "pca_kmeans_auto")
+  expect_true(all(c("cluster_raw", "cluster_distance", "state_id", "split") %in% names(wfa$pca_scores)))
+  expect_true(any(meta$key == "cluster_count_mode" & meta$value == "auto"))
+  expect_true(any(meta$key == "auto_selection_criterion" & meta$value == "calinski_harabasz_train_pc1_pc2"))
+  selected_k <- as.integer(meta$value[meta$key == "cluster_count"])
+  expect_true(all(selected_k >= 2L & selected_k <= 6L))
+  expect_equal(min(wfa$oos_equity_curve$session_date), min(wfa$folds$oos_start_date))
+  expect_equal(max(wfa$oos_equity_curve$session_date), max(wfa$folds$oos_end_date))
+})
+
 test_that("PCA-routed WFA can use a multi-asset regime context while trading one symbol", {
   bars <- g5_test_pca_wfa_context_bars()
   wfa <- g5_pca_wfa_run_multi(

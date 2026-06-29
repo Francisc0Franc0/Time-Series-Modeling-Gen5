@@ -416,6 +416,83 @@ g5_pca_regime_kmeans_states <- function(cluster_count) {
   sprintf("K%02d", seq_len(as.integer(cluster_count)))
 }
 
+g5_pca_regime_kmeans_engine <- function(state_engine) {
+  engine <- as.character(state_engine)[[1L]]
+  if (identical(engine, "kmeans")) engine <- "pca_kmeans"
+  allowed <- c("pca_kmeans", "pca_kmeans_auto")
+  if (!engine %in% allowed) {
+    g5_stop(paste0("K-means state engine must be one of: ", paste(allowed, collapse = ", ")))
+  }
+  engine
+}
+
+g5_pca_regime_kmeans_engine_label <- function(state_engine, cluster_count) {
+  engine <- as.character(state_engine)[[1L]]
+  if (identical(engine, "pca_kmeans_auto")) {
+    paste0("kauto", as.integer(cluster_count))
+  } else {
+    paste0("k", as.integer(cluster_count))
+  }
+}
+
+g5_pca_regime_kmeans_ch_index <- function(kmeans_fit) {
+  k <- nrow(kmeans_fit$centers)
+  n <- length(kmeans_fit$cluster)
+  if (k < 2L || n <= k) return(NA_real_)
+  within_ss <- sum(kmeans_fit$withinss)
+  between_ss <- kmeans_fit$betweenss
+  if (!is.finite(within_ss) || !is.finite(between_ss) || within_ss <= 0) return(NA_real_)
+  (between_ss / (k - 1L)) / (within_ss / (n - k))
+}
+
+g5_pca_regime_select_kmeans_k <- function(pc_scores, min_clusters = 2L, max_clusters = 9L, nstart = 30L, seed = 5101L) {
+  if (!is.data.frame(pc_scores) || !all(c("pc1", "pc2") %in% names(pc_scores))) {
+    g5_stop("Auto k-means selection requires a data frame with pc1 and pc2.")
+  }
+  x <- pc_scores[, c("pc1", "pc2"), drop = FALSE]
+  x <- x[stats::complete.cases(x), , drop = FALSE]
+  n <- nrow(x)
+  min_clusters <- as.integer(min_clusters)
+  max_clusters <- as.integer(max_clusters)
+  nstart <- as.integer(nstart)
+  if (is.na(min_clusters) || min_clusters < 2L) g5_stop("min_clusters must be at least 2.")
+  if (is.na(max_clusters) || max_clusters < min_clusters || max_clusters > 25L) g5_stop("max_clusters must be between min_clusters and 25.")
+  if (is.na(nstart) || nstart < 1L) g5_stop("nstart must be a positive integer.")
+  max_allowed <- min(max_clusters, n - 1L)
+  if (max_allowed < min_clusters) {
+    g5_stop("Auto k-means selection requires more TRAIN rows than the minimum candidate cluster count.")
+  }
+  candidate_k <- seq.int(min_clusters, max_allowed)
+  fits <- vector("list", length(candidate_k))
+  diagnostics <- vector("list", length(candidate_k))
+  for (i in seq_along(candidate_k)) {
+    k <- candidate_k[[i]]
+    set.seed(as.integer(seed) + k)
+    fit <- stats::kmeans(x, centers = k, nstart = nstart)
+    fits[[i]] <- fit
+    diagnostics[[i]] <- data.frame(
+      candidate_cluster_count = k,
+      train_row_count = n,
+      tot_withinss = fit$tot.withinss,
+      betweenss = fit$betweenss,
+      ch_index = g5_pca_regime_kmeans_ch_index(fit),
+      stringsAsFactors = FALSE
+    )
+  }
+  diagnostics <- do.call(rbind, diagnostics)
+  if (!any(is.finite(diagnostics$ch_index))) {
+    g5_stop("Auto k-means selection could not compute a finite Calinski-Harabasz score.")
+  }
+  best_index <- which(diagnostics$ch_index == max(diagnostics$ch_index, na.rm = TRUE))[[1L]]
+  diagnostics$selected <- seq_len(nrow(diagnostics)) == best_index
+  list(
+    cluster_count = diagnostics$candidate_cluster_count[[best_index]],
+    criterion = "calinski_harabasz_train_pc1_pc2",
+    diagnostics = diagnostics,
+    fit = fits[[best_index]]
+  )
+}
+
 g5_pca_regime_assign_split <- function(features, train_start_date, train_end_date, oos_start_date, oos_end_date) {
   dates <- as.Date(features$session_date)
   split <- rep(NA_character_, nrow(features))
@@ -562,7 +639,10 @@ g5_pca_regime_fit_kmeans <- function(
   feature_cols = g5_pca_regime_default_features(),
   cluster_count = 9L,
   min_train_rows = 120L,
-  nstart = 30L
+  nstart = 30L,
+  state_engine = "pca_kmeans",
+  auto_min_clusters = 2L,
+  auto_max_clusters = cluster_count
 ) {
   if (!is.data.frame(features) || nrow(features) == 0L) {
     g5_stop("PCA k-means regime fit requires non-empty features.")
@@ -570,6 +650,18 @@ g5_pca_regime_fit_kmeans <- function(
   cluster_count <- as.integer(cluster_count)
   if (is.na(cluster_count) || cluster_count < 2L || cluster_count > 25L) {
     g5_stop("cluster_count must be an integer from 2 to 25.")
+  }
+  state_engine <- g5_pca_regime_kmeans_engine(state_engine)
+  auto_min_clusters <- as.integer(auto_min_clusters)
+  auto_max_clusters <- as.integer(auto_max_clusters)
+  if (identical(state_engine, "pca_kmeans_auto")) {
+    if (is.na(auto_min_clusters) || auto_min_clusters < 2L) g5_stop("auto_min_clusters must be at least 2.")
+    if (is.na(auto_max_clusters) || auto_max_clusters < auto_min_clusters || auto_max_clusters > 25L) {
+      g5_stop("auto_max_clusters must be between auto_min_clusters and 25.")
+    }
+    if (auto_max_clusters > cluster_count) {
+      g5_stop("For pca_kmeans_auto, auto_max_clusters must be less than or equal to cluster_count.")
+    }
   }
   nstart <- as.integer(nstart)
   if (is.na(nstart) || nstart < 1L) {
@@ -615,8 +707,20 @@ g5_pca_regime_fit_kmeans <- function(
   scoring_rows$pc1 <- as.numeric(score[, 1L])
   scoring_rows$pc2 <- as.numeric(score[, 2L])
   train_scored <- scoring_rows[g5_pca_regime_training_fit_rows(scoring_rows), , drop = FALSE]
-  set.seed(5101L)
-  km <- stats::kmeans(train_scored[, c("pc1", "pc2"), drop = FALSE], centers = cluster_count, nstart = nstart)
+  k_selection <- NULL
+  if (identical(state_engine, "pca_kmeans_auto")) {
+    k_selection <- g5_pca_regime_select_kmeans_k(
+      train_scored[, c("pc1", "pc2"), drop = FALSE],
+      min_clusters = auto_min_clusters,
+      max_clusters = auto_max_clusters,
+      nstart = nstart
+    )
+    cluster_count <- as.integer(k_selection$cluster_count)
+    km <- k_selection$fit
+  } else {
+    set.seed(5101L)
+    km <- stats::kmeans(train_scored[, c("pc1", "pc2"), drop = FALSE], centers = cluster_count, nstart = nstart)
+  }
   centers <- as.matrix(km$centers[, c("pc1", "pc2"), drop = FALSE])
   center_order <- order(centers[, 1L], centers[, 2L])
   raw_to_state <- stats::setNames(g5_pca_regime_kmeans_states(cluster_count), as.character(center_order))
@@ -680,8 +784,22 @@ g5_pca_regime_fit_kmeans <- function(
       state_id = NA_character_,
       centroid_pc1 = NA_real_,
       centroid_pc2 = NA_real_,
-      key = c("state_engine", "cluster_count", "nstart", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "fit_row_policy", "dropped_features"),
-      value = c("pca_kmeans", as.character(cluster_count), as.character(nstart), as.character(as.Date(train_start_date)), as.character(as.Date(train_end_date)), as.character(as.Date(oos_start_date)), as.character(as.Date(oos_end_date)), if ("pca_training_role" %in% names(scored_base)) "TRAIN rows with pca_training_role=context" else "all TRAIN rows", paste(dropped, collapse = ";")),
+      key = c("state_engine", "cluster_count", "cluster_count_mode", "nstart", "auto_min_clusters", "auto_max_clusters", "auto_selection_criterion", "train_start_date", "train_end_date", "oos_start_date", "oos_end_date", "fit_row_policy", "dropped_features"),
+      value = c(
+        state_engine,
+        as.character(cluster_count),
+        if (identical(state_engine, "pca_kmeans_auto")) "auto" else "fixed",
+        as.character(nstart),
+        if (identical(state_engine, "pca_kmeans_auto")) as.character(auto_min_clusters) else NA_character_,
+        if (identical(state_engine, "pca_kmeans_auto")) as.character(auto_max_clusters) else NA_character_,
+        if (identical(state_engine, "pca_kmeans_auto")) k_selection$criterion else NA_character_,
+        as.character(as.Date(train_start_date)),
+        as.character(as.Date(train_end_date)),
+        as.character(as.Date(oos_start_date)),
+        as.character(as.Date(oos_end_date)),
+        if ("pca_training_role" %in% names(scored_base)) "TRAIN rows with pca_training_role=context" else "all TRAIN rows",
+        paste(dropped, collapse = ";")
+      ),
       stringsAsFactors = FALSE
     )
   )
@@ -697,6 +815,22 @@ g5_pca_regime_fit_kmeans <- function(
   )
   cluster_diagnostics <- do.call(data.frame, cluster_diagnostics)
   names(cluster_diagnostics) <- c("split", "state_id", "row_count", "mean_distance", "max_distance")
+  if (!is.null(k_selection)) {
+    auto_diag <- k_selection$diagnostics
+    auto_diag$split <- "TRAIN"
+    auto_diag$state_id <- NA_character_
+    auto_diag$row_count <- NA_integer_
+    auto_diag$mean_distance <- NA_real_
+    auto_diag$max_distance <- NA_real_
+    auto_diag <- auto_diag[, c("split", "state_id", "row_count", "mean_distance", "max_distance", "candidate_cluster_count", "train_row_count", "tot_withinss", "betweenss", "ch_index", "selected"), drop = FALSE]
+    cluster_diagnostics$candidate_cluster_count <- NA_integer_
+    cluster_diagnostics$train_row_count <- NA_integer_
+    cluster_diagnostics$tot_withinss <- NA_real_
+    cluster_diagnostics$betweenss <- NA_real_
+    cluster_diagnostics$ch_index <- NA_real_
+    cluster_diagnostics$selected <- NA
+    cluster_diagnostics <- rbind(cluster_diagnostics, auto_diag)
+  }
   list(
     scores = scoring_rows,
     model_contract = contract,
@@ -704,10 +838,12 @@ g5_pca_regime_fit_kmeans <- function(
     cluster_diagnostics = cluster_diagnostics,
     kept_features = keep,
     dropped_features = dropped,
-    state_engine = "pca_kmeans",
+    state_engine = state_engine,
     state_ids = g5_pca_regime_kmeans_states(cluster_count),
     grid_n = cluster_count,
     cluster_count = cluster_count,
+    cluster_count_mode = if (identical(state_engine, "pca_kmeans_auto")) "auto" else "fixed",
+    auto_k_diagnostics = if (is.null(k_selection)) NULL else k_selection$diagnostics,
     kmeans_nstart = nstart,
     kmeans_centers = centroid_rows[, c("state_id", "cluster_raw", "centroid_pc1", "centroid_pc2"), drop = FALSE],
     pc1_breaks = numeric(),
@@ -990,9 +1126,17 @@ g5_write_pca_regime_outputs <- function(pca_result, output_dir, prefix, symbol, 
   train_end <- max(pca_result$scores$session_date[pca_result$scores$split == "TRAIN"])
   oos_start <- min(pca_result$scores$session_date[pca_result$scores$split == "OOS"])
   centroids <- if ("kmeans_centers" %in% names(pca_result)) pca_result$kmeans_centers else NULL
-  title_suffix <- if (identical(pca_result$state_engine, "pca_kmeans")) "PCA K-Means State Space" else "PCA 3x3 State Space"
+  title_suffix <- if (identical(pca_result$state_engine, "pca_kmeans_auto")) {
+    "PCA Auto K-Means State Space"
+  } else if (identical(pca_result$state_engine, "pca_kmeans")) {
+    "PCA K-Means State Space"
+  } else {
+    "PCA 3x3 State Space"
+  }
   paths$pca_scatter_png <- g5_write_pca_regime_scatter_png(pca_result$scores, pca_result$pc1_breaks, pca_result$pc2_breaks, paths$pca_scatter_png, title = paste(g5_standardize_symbol(symbol)[[1L]], title_suffix), centroids = centroids)
-  price_title <- if (identical(pca_result$state_engine, "pca_kmeans")) {
+  price_title <- if (identical(pca_result$state_engine, "pca_kmeans_auto")) {
+    paste(g5_standardize_symbol(symbol)[[1L]], "PCA Auto K-Means Regime Diagnostic")
+  } else if (identical(pca_result$state_engine, "pca_kmeans")) {
     paste(g5_standardize_symbol(symbol)[[1L]], "PCA K-Means Regime Diagnostic")
   } else {
     paste(g5_standardize_symbol(symbol)[[1L]], "PCA 3x3 Regime Diagnostic")

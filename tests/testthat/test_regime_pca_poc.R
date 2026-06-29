@@ -127,6 +127,34 @@ test_that("PCA k-means regime POC fits TRAIN clusters and scores OOS by frozen c
   expect_true(all(is.finite(fit$scores$cluster_distance)))
 })
 
+test_that("PCA auto k-means selects cluster count from TRAIN scores only", {
+  bars <- g5_test_pca_bars()
+  fit <- g5_pca_regime_fit_kmeans(
+    g5_pca_regime_feature_table(bars, "AMD"),
+    train_start_date = as.Date("2025-07-20"),
+    train_end_date = as.Date("2025-11-30"),
+    oos_start_date = as.Date("2025-12-01"),
+    oos_end_date = as.Date("2025-12-26"),
+    cluster_count = 6L,
+    min_train_rows = 60L,
+    nstart = 3L,
+    state_engine = "pca_kmeans_auto",
+    auto_min_clusters = 2L,
+    auto_max_clusters = 6L
+  )
+  meta <- fit$model_contract[fit$model_contract$record_type == "meta", , drop = FALSE]
+
+  expect_equal(fit$state_engine, "pca_kmeans_auto")
+  expect_equal(fit$cluster_count_mode, "auto")
+  expect_true(fit$cluster_count >= 2L && fit$cluster_count <= 6L)
+  expect_equal(nrow(fit$auto_k_diagnostics), 5L)
+  expect_equal(sum(fit$auto_k_diagnostics$selected), 1L)
+  expect_true(all(c("candidate_cluster_count", "ch_index", "selected") %in% names(fit$cluster_diagnostics)))
+  expect_true(any(meta$key == "cluster_count_mode" & meta$value == "auto"))
+  expect_true(any(meta$key == "auto_selection_criterion" & meta$value == "calinski_harabasz_train_pc1_pc2"))
+  expect_true(all(g5_pca_regime_kmeans_states(fit$cluster_count) %in% fit$state_ids))
+})
+
 test_that("PCA regime diagnostic PNGs render", {
   bars <- g5_test_pca_bars()
   fit <- g5_pca_regime_fit(

@@ -253,3 +253,24 @@ test_that("medium context-universe factorial writer indexes all PCA surfaces", {
   expect_true(file.exists(written$paths$surface_definitions_csv))
   expect_true(file.exists(written$paths$child_metric_summary_csv))
 })
+
+test_that("active-plus-risk state-map triage defines quantile, fixed k, and auto k surfaces", {
+  active_symbols <- c("AMD", "NVDA", "TSLA", "COIN", "MSTR")
+  defs <- g5_context_factorial_universe_definitions(active_symbols)
+  defs <- defs[defs$universe_id == "active_plus_risk_context", , drop = FALSE]
+  surfaces <- g5_context_factorial_surface_definitions(state_map_triage = TRUE)
+
+  expect_equal(nrow(defs), 1L)
+  expect_equal(nrow(surfaces), 3L)
+  expect_equal(
+    surfaces$surface_id,
+    c(
+      "behavioral_pool_quantile_grid_3x3",
+      "behavioral_pool_kmeans_k9",
+      "behavioral_pool_kmeans_auto_max9"
+    )
+  )
+  expect_equal(surfaces$state_engine, c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"))
+  expect_equal(surfaces$grid_n, c(3L, 9L, 9L))
+  expect_equal(surfaces$state_count, c("3x3", "k9", "kauto9"))
+})

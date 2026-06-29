@@ -12,7 +12,7 @@ param(
   [ValidateSet("contextual_snapshot", "behavioral_pool")]
   [string]$PanelMode = "contextual_snapshot",
 
-  [ValidateSet("quantile_grid", "kmeans")]
+  [ValidateSet("quantile_grid", "kmeans", "kmeans_auto")]
   [string]$StateMap = "quantile_grid",
 
   [double]$TrainQuarters = 8,
@@ -56,13 +56,14 @@ $pcaPanelMode = switch ($PanelMode) {
 $stateEngine = switch ($StateMap) {
   "quantile_grid" { "quantile_grid" }
   "kmeans" { "pca_kmeans" }
+  "kmeans_auto" { "pca_kmeans_auto" }
 }
 
 if ($StateMap -eq "quantile_grid" -and ($StateCount -lt 2 -or $StateCount -gt 5)) {
   throw "-StateCount must be between 2 and 5 for -StateMap quantile_grid."
 }
-if ($StateMap -eq "kmeans" -and ($StateCount -lt 2 -or $StateCount -gt 25)) {
-  throw "-StateCount must be between 2 and 25 for -StateMap kmeans."
+if ($StateMap -in @("kmeans", "kmeans_auto") -and ($StateCount -lt 2 -or $StateCount -gt 25)) {
+  throw "-StateCount must be between 2 and 25 for -StateMap kmeans or kmeans_auto."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
