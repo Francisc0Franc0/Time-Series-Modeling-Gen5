@@ -605,6 +605,14 @@ g5_context_factorial_state_map_triage_purpose <- function() {
   )
 }
 
+g5_context_factorial_fixed_k_scale_triage_purpose <- function() {
+  paste(
+    "This fixed-k state-map scale triage asks whether active-plus-risk behavioral-pool PCA looks more useful",
+    "when states are assigned by a 3x3 quantile grid, fixed k-means with k=9, or fixed k-means with k=15.",
+    "It is a visual and accounting inspection slice only, not accepted allocation evidence."
+  )
+}
+
 g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", "NVDA", "TSLA", "COIN", "MSTR")) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   make_row <- function(universe_id, universe_label, symbols, diversity_class, similarity_class, rationale) {
@@ -652,7 +660,10 @@ g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", 
   ))
 }
 
-g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE) {
+g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE, fixed_k_scale_triage = FALSE) {
+  if (isTRUE(state_map_triage) && isTRUE(fixed_k_scale_triage)) {
+    g5_stop("Choose either state_map_triage or fixed_k_scale_triage, not both.")
+  }
   if (isTRUE(state_map_triage)) {
     return(data.frame(
       surface_id = c(
@@ -664,6 +675,20 @@ g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_pa
       state_engine = c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"),
       grid_n = c(3L, 9L, 9L),
       state_count = c("3x3", "k9", "kauto9"),
+      stringsAsFactors = FALSE
+    ))
+  }
+  if (isTRUE(fixed_k_scale_triage)) {
+    return(data.frame(
+      surface_id = c(
+        "behavioral_pool_quantile_grid_3x3",
+        "behavioral_pool_kmeans_k9",
+        "behavioral_pool_kmeans_k15"
+      ),
+      pca_panel_mode = rep("pooled_asset_day", 3L),
+      state_engine = c("quantile_grid", "pca_kmeans", "pca_kmeans"),
+      grid_n = c(3L, 9L, 15L),
+      state_count = c("3x3", "k9", "k15"),
       stringsAsFactors = FALSE
     ))
   }
@@ -694,26 +719,31 @@ g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_pa
   )
 }
 
-g5_context_factorial_prefix <- function(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard") {
+g5_context_factorial_prefix <- function(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset = "standard", surface_preset = "") {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   end_label <- gsub("[^0-9A-Za-z]+", "", as.character(as.Date(end_date)))
   active_label <- paste0("A", length(g5_standardize_symbol(active_symbols)))
   panel_label <- if (identical(g5_pca_wfa_panel_label(pca_panel_mode), "pooled")) "pool" else "align"
   engine_label <- g5_pca_wfa_engine_label(state_engine, grid_n)
   grid_label <- g5_pca_wfa_strategy_grid_label(strategy_grid_preset)
-  surface_label <- if (as.integer(surface_count) > 1L) paste0(as.integer(surface_count), "s") else paste(panel_label, engine_label, sep = "_")
+  preset_label <- gsub("[^0-9A-Za-z]+", "", as.character(surface_preset))
+  surface_label <- if (as.integer(surface_count) > 1L) {
+    if (nzchar(preset_label)) paste0(as.integer(surface_count), "s_", preset_label) else paste0(as.integer(surface_count), "s")
+  } else {
+    paste(panel_label, engine_label, sep = "_")
+  }
   parts <- c("ctxfac", active_label, paste0(fold_count, "f"), paste0(universe_count, "u"), surface_label)
   if (nzchar(grid_label)) parts <- c(parts, grid_label)
   paste(c(parts, end_label, stamp), collapse = "_")
 }
 
-g5_context_factorial_output_dir <- function(repo_root, as_of_timestamp, active_symbols, fold_count, universe_count, surface_count = 1L, grid_n = 3L, state_engine = "quantile_grid", pca_panel_mode = "pooled_asset_day", end_date, strategy_grid_preset = "standard") {
+g5_context_factorial_output_dir <- function(repo_root, as_of_timestamp, active_symbols, fold_count, universe_count, surface_count = 1L, grid_n = 3L, state_engine = "quantile_grid", pca_panel_mode = "pooled_asset_day", end_date, strategy_grid_preset = "standard", surface_preset = "") {
   file.path(
     repo_root,
     "runs",
     "research_workbench",
     "context_universe_factorials",
-    g5_context_factorial_prefix(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset)
+    g5_context_factorial_prefix(as_of_timestamp, active_symbols, fold_count, universe_count, surface_count, grid_n, state_engine, pca_panel_mode, end_date, strategy_grid_preset, surface_preset)
   )
 }
 
@@ -1018,7 +1048,7 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
   if (!is.data.frame(child_index) || !nrow(child_index)) return(empty_index)
   required <- c("surface_id", "symbol", "run_dir", "pca_panel_mode", "state_count", "universe_id")
   if (!all(required %in% names(child_index))) return(empty_index)
-  visual_dir <- file.path(output_dir, "state_map_visual_audit")
+  visual_dir <- file.path(output_dir, "state_visuals")
   dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
   rows <- list()
   add_row <- function(chart_group, chart_type, symbol, page_no, path) {
@@ -1032,6 +1062,7 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
     )
   }
   fixed_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9")
+  fixed_scale_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9", "behavioral_pool_kmeans_k15")
   auto_id <- "behavioral_pool_kmeans_auto_max9"
   symbols <- sort(unique(as.character(child_index$symbol)))
   for (symbol in symbols) {
@@ -1040,12 +1071,24 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
     fixed_rows <- fixed_rows[!is.na(fixed_rows$surface_id), , drop = FALSE]
     if (nrow(fixed_rows)) {
       fixed_items <- g5_context_factorial_child_visual_items(fixed_rows)
-      scatter_path <- file.path(visual_dir, paste0("state_map_fixed_pair_", symbol, "_pca_scatter.png"))
-      strategy_path <- file.path(visual_dir, paste0("state_map_fixed_pair_", symbol, "_stitched_oos_states.png"))
+      scatter_path <- file.path(visual_dir, paste0("pair_", symbol, "_scatter.png"))
+      strategy_path <- file.path(visual_dir, paste0("pair_", symbol, "_states.png"))
       g5_context_factorial_write_visual_sheet(fixed_items, scatter_path, chart_type = "pca_scatter", title = paste(symbol, "3x3 Quantile vs Fixed k9 PCA State Space"), columns = 2L)
       g5_context_factorial_write_visual_sheet(fixed_items, strategy_path, chart_type = "strategy", title = paste(symbol, "3x3 Quantile vs Fixed k9 Stitched OOS States"), columns = 2L)
       add_row("quantile_vs_fixed_k9", "pca_scatter", symbol, 1L, scatter_path)
       add_row("quantile_vs_fixed_k9", "stitched_oos_states", symbol, 1L, strategy_path)
+    }
+    fixed_scale_rows <- child_index[child_index$symbol == symbol & child_index$surface_id %in% fixed_scale_ids, , drop = FALSE]
+    fixed_scale_rows <- fixed_scale_rows[match(fixed_scale_ids, fixed_scale_rows$surface_id), , drop = FALSE]
+    fixed_scale_rows <- fixed_scale_rows[!is.na(fixed_scale_rows$surface_id), , drop = FALSE]
+    if (nrow(fixed_scale_rows) == length(fixed_scale_ids)) {
+      fixed_scale_items <- g5_context_factorial_child_visual_items(fixed_scale_rows)
+      scatter_path <- file.path(visual_dir, paste0("kscale_", symbol, "_scatter.png"))
+      strategy_path <- file.path(visual_dir, paste0("kscale_", symbol, "_states.png"))
+      g5_context_factorial_write_visual_sheet(fixed_scale_items, scatter_path, chart_type = "pca_scatter", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Fixed k15 PCA State Space"), columns = 3L, width = 3600L, height = 1500L)
+      g5_context_factorial_write_visual_sheet(fixed_scale_items, strategy_path, chart_type = "strategy", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Fixed k15 Stitched OOS States"), columns = 3L, width = 3600L, height = 1500L)
+      add_row("fixed_k_scale", "pca_scatter", symbol, 1L, scatter_path)
+      add_row("fixed_k_scale", "stitched_oos_states", symbol, 1L, strategy_path)
     }
   }
   auto_rows <- child_index[child_index$surface_id == auto_id, , drop = FALSE]
@@ -1055,8 +1098,8 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
     for (page_no in seq_along(pages)) {
       page <- pages[[page_no]]
       items <- g5_context_factorial_child_visual_items(page)
-      scatter_path <- file.path(visual_dir, paste0("state_map_auto_k_pca_scatter_", sprintf("%02d", page_no), ".png"))
-      strategy_path <- file.path(visual_dir, paste0("state_map_auto_k_stitched_oos_states_", sprintf("%02d", page_no), ".png"))
+      scatter_path <- file.path(visual_dir, paste0("auto_scatter_", sprintf("%02d", page_no), ".png"))
+      strategy_path <- file.path(visual_dir, paste0("auto_states_", sprintf("%02d", page_no), ".png"))
       g5_context_factorial_write_visual_sheet(items, scatter_path, chart_type = "pca_scatter", title = "Auto k-Means PCA State Space by Symbol", columns = 3L, width = 3000L, height = 1800L)
       g5_context_factorial_write_visual_sheet(items, strategy_path, chart_type = "strategy", title = "Auto k-Means Stitched OOS States by Symbol", columns = 3L, width = 3000L, height = 1800L)
       add_row("auto_kmeans", "pca_scatter", "ALL", page_no, scatter_path)
