@@ -605,10 +605,11 @@ g5_context_factorial_state_map_triage_purpose <- function() {
   )
 }
 
-g5_context_factorial_fixed_k_scale_triage_purpose <- function() {
+g5_context_factorial_auto_max15_triage_purpose <- function() {
   paste(
-    "This fixed-k state-map scale triage asks whether active-plus-risk behavioral-pool PCA looks more useful",
-    "when states are assigned by a 3x3 quantile grid, fixed k-means with k=9, or fixed k-means with k=15.",
+    "This wide auto-k state-map triage asks whether active-plus-risk behavioral-pool PCA looks more useful",
+    "when states are assigned by a 3x3 quantile grid, fixed k-means with k=9, or TRAIN-only auto k-means",
+    "selecting k from 2..15 by the Calinski-Harabasz criterion.",
     "It is a visual and accounting inspection slice only, not accepted allocation evidence."
   )
 }
@@ -660,9 +661,9 @@ g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", 
   ))
 }
 
-g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE, fixed_k_scale_triage = FALSE) {
-  if (isTRUE(state_map_triage) && isTRUE(fixed_k_scale_triage)) {
-    g5_stop("Choose either state_map_triage or fixed_k_scale_triage, not both.")
+g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE, auto_max15_triage = FALSE) {
+  if (isTRUE(state_map_triage) && isTRUE(auto_max15_triage)) {
+    g5_stop("Choose either state_map_triage or auto_max15_triage, not both.")
   }
   if (isTRUE(state_map_triage)) {
     return(data.frame(
@@ -678,17 +679,17 @@ g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_pa
       stringsAsFactors = FALSE
     ))
   }
-  if (isTRUE(fixed_k_scale_triage)) {
+  if (isTRUE(auto_max15_triage)) {
     return(data.frame(
       surface_id = c(
         "behavioral_pool_quantile_grid_3x3",
         "behavioral_pool_kmeans_k9",
-        "behavioral_pool_kmeans_k15"
+        "behavioral_pool_kmeans_auto_max15"
       ),
       pca_panel_mode = rep("pooled_asset_day", 3L),
-      state_engine = c("quantile_grid", "pca_kmeans", "pca_kmeans"),
+      state_engine = c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"),
       grid_n = c(3L, 9L, 15L),
-      state_count = c("3x3", "k9", "k15"),
+      state_count = c("3x3", "k9", "kauto15"),
       stringsAsFactors = FALSE
     ))
   }
@@ -961,6 +962,56 @@ g5_context_factorial_selected_family_summary <- function(child_index) {
   if (!length(rows)) data.frame() else do.call(rbind, rows)
 }
 
+g5_context_factorial_auto_cluster_summary <- function(child_index) {
+  empty <- data.frame(
+    universe_id = character(),
+    surface_id = character(),
+    symbol = character(),
+    fold_id = character(),
+    fold_no = integer(),
+    cluster_count_mode = character(),
+    auto_min_clusters = integer(),
+    auto_max_clusters = integer(),
+    selected_cluster_count = integer(),
+    selection_criterion = character(),
+    stringsAsFactors = FALSE
+  )
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(empty)
+  required <- c("universe_id", "surface_id", "state_engine", "symbol", "run_dir")
+  if (!all(required %in% names(child_index))) return(empty)
+  auto_rows <- child_index[child_index$state_engine == "pca_kmeans_auto", , drop = FALSE]
+  if (!nrow(auto_rows)) return(empty)
+  rows <- list()
+  for (i in seq_len(nrow(auto_rows))) {
+    contract_path <- file.path(auto_rows$run_dir[[i]], "pcawfa_pca_model_contract.csv")
+    contract <- g5_read_csv_if_exists(contract_path)
+    if (!nrow(contract) || !all(c("record_type", "key", "value", "fold_id", "fold_no") %in% names(contract))) next
+    meta <- contract[contract$record_type == "meta" & nzchar(contract$key), , drop = FALSE]
+    if (!nrow(meta)) next
+    for (fold_id in unique(meta$fold_id)) {
+      fold_meta <- meta[meta$fold_id == fold_id, , drop = FALSE]
+      value_for <- function(key) {
+        value <- fold_meta$value[fold_meta$key == key]
+        if (length(value)) value[[1L]] else NA_character_
+      }
+      rows[[length(rows) + 1L]] <- data.frame(
+        universe_id = auto_rows$universe_id[[i]],
+        surface_id = auto_rows$surface_id[[i]],
+        symbol = auto_rows$symbol[[i]],
+        fold_id = fold_id,
+        fold_no = suppressWarnings(as.integer(fold_meta$fold_no[[1L]])),
+        cluster_count_mode = value_for("cluster_count_mode"),
+        auto_min_clusters = suppressWarnings(as.integer(value_for("auto_min_clusters"))),
+        auto_max_clusters = suppressWarnings(as.integer(value_for("auto_max_clusters"))),
+        selected_cluster_count = suppressWarnings(as.integer(value_for("cluster_count"))),
+        selection_criterion = value_for("auto_selection_criterion"),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  if (!length(rows)) empty else do.call(rbind, rows)
+}
+
 g5_context_factorial_write_metrics_overview <- function(summary, path, width = 3000L, height = 1800L, res = 180L) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   grDevices::png(filename = path, width = as.integer(width), height = as.integer(height), res = as.integer(res))
@@ -1062,8 +1113,8 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
     )
   }
   fixed_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9")
-  fixed_scale_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9", "behavioral_pool_kmeans_k15")
-  auto_id <- "behavioral_pool_kmeans_auto_max9"
+  auto_max15_triage_ids <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9", "behavioral_pool_kmeans_auto_max15")
+  auto_ids <- c("behavioral_pool_kmeans_auto_max9", "behavioral_pool_kmeans_auto_max15")
   symbols <- sort(unique(as.character(child_index$symbol)))
   for (symbol in symbols) {
     fixed_rows <- child_index[child_index$symbol == symbol & child_index$surface_id %in% fixed_ids, , drop = FALSE]
@@ -1078,22 +1129,22 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
       add_row("quantile_vs_fixed_k9", "pca_scatter", symbol, 1L, scatter_path)
       add_row("quantile_vs_fixed_k9", "stitched_oos_states", symbol, 1L, strategy_path)
     }
-    fixed_scale_rows <- child_index[child_index$symbol == symbol & child_index$surface_id %in% fixed_scale_ids, , drop = FALSE]
-    fixed_scale_rows <- fixed_scale_rows[match(fixed_scale_ids, fixed_scale_rows$surface_id), , drop = FALSE]
-    fixed_scale_rows <- fixed_scale_rows[!is.na(fixed_scale_rows$surface_id), , drop = FALSE]
-    if (nrow(fixed_scale_rows) == length(fixed_scale_ids)) {
-      fixed_scale_items <- g5_context_factorial_child_visual_items(fixed_scale_rows)
-      scatter_path <- file.path(visual_dir, paste0("kscale_", symbol, "_scatter.png"))
-      strategy_path <- file.path(visual_dir, paste0("kscale_", symbol, "_states.png"))
-      g5_context_factorial_write_visual_sheet(fixed_scale_items, scatter_path, chart_type = "pca_scatter", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Fixed k15 PCA State Space"), columns = 3L, width = 3600L, height = 1500L)
-      g5_context_factorial_write_visual_sheet(fixed_scale_items, strategy_path, chart_type = "strategy", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Fixed k15 Stitched OOS States"), columns = 3L, width = 3600L, height = 1500L)
-      add_row("fixed_k_scale", "pca_scatter", symbol, 1L, scatter_path)
-      add_row("fixed_k_scale", "stitched_oos_states", symbol, 1L, strategy_path)
+    auto_max15_triage_rows <- child_index[child_index$symbol == symbol & child_index$surface_id %in% auto_max15_triage_ids, , drop = FALSE]
+    auto_max15_triage_rows <- auto_max15_triage_rows[match(auto_max15_triage_ids, auto_max15_triage_rows$surface_id), , drop = FALSE]
+    auto_max15_triage_rows <- auto_max15_triage_rows[!is.na(auto_max15_triage_rows$surface_id), , drop = FALSE]
+    if (nrow(auto_max15_triage_rows) == length(auto_max15_triage_ids)) {
+      auto_max15_triage_items <- g5_context_factorial_child_visual_items(auto_max15_triage_rows)
+      scatter_path <- file.path(visual_dir, paste0("amax15_", symbol, "_scatter.png"))
+      strategy_path <- file.path(visual_dir, paste0("amax15_", symbol, "_states.png"))
+      g5_context_factorial_write_visual_sheet(auto_max15_triage_items, scatter_path, chart_type = "pca_scatter", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Auto k15 PCA State Space"), columns = 3L, width = 3600L, height = 1500L)
+      g5_context_factorial_write_visual_sheet(auto_max15_triage_items, strategy_path, chart_type = "strategy", title = paste(symbol, "3x3 Quantile vs Fixed k9 vs Auto k15 Stitched OOS States"), columns = 3L, width = 3600L, height = 1500L)
+      add_row("auto_max15_triage", "pca_scatter", symbol, 1L, scatter_path)
+      add_row("auto_max15_triage", "stitched_oos_states", symbol, 1L, strategy_path)
     }
   }
-  auto_rows <- child_index[child_index$surface_id == auto_id, , drop = FALSE]
+  auto_rows <- child_index[child_index$surface_id %in% auto_ids, , drop = FALSE]
   if (nrow(auto_rows)) {
-    auto_rows <- auto_rows[order(auto_rows$symbol), , drop = FALSE]
+    auto_rows <- auto_rows[order(auto_rows$surface_id, auto_rows$symbol), , drop = FALSE]
     pages <- split(auto_rows, ceiling(seq_len(nrow(auto_rows)) / 6L))
     for (page_no in seq_along(pages)) {
       page <- pages[[page_no]]
@@ -1109,7 +1160,7 @@ g5_context_factorial_write_state_map_visuals <- function(child_index, output_dir
   if (!length(rows)) empty_index else do.call(rbind, rows)
 }
 
-g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, visual_audit_index, purpose, path) {
+g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, auto_cluster_summary, visual_audit_index, purpose, path) {
   pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f%%", 100 * as.numeric(x)))
   num <- function(x) ifelse(is.na(x), "NA", sprintf("%.3f", as.numeric(x)))
   dol <- function(x) ifelse(is.na(x), "NA", sprintf("$%.2f", as.numeric(x)))
@@ -1158,9 +1209,12 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_d
     paste0("- Child OOS metrics: `", paths$child_metric_summary_csv, "`"),
     paste0("- Child state coverage: `", paths$state_coverage_summary_csv, "`"),
     paste0("- Selected-family summary: `", paths$selected_family_summary_csv, "`"),
+    paste0("- Auto cluster summary: `", paths$auto_cluster_summary_csv, "`"),
     paste0("- Child metric rows: `", nrow(child_metric_summary), "`"),
     paste0("- State coverage rows: `", nrow(state_coverage_summary), "`"),
     paste0("- Selected-family rows: `", nrow(selected_family_summary), "`"),
+    paste0("- Auto cluster rows: `", nrow(auto_cluster_summary), "`"),
+    g5_pca_wfa_comparison_table_lines(auto_cluster_summary, c("surface_id", "symbol", "fold_id", "auto_min_clusters", "auto_max_clusters", "selected_cluster_count", "selection_criterion")),
     "",
     "## Visual Audit",
     "",
@@ -1181,6 +1235,7 @@ g5_context_factorial_markdown_report <- function(paths, universe_defs, surface_d
     paste0("- Child OOS metrics: `", paths$child_metric_summary_csv, "`"),
     paste0("- Child state coverage: `", paths$state_coverage_summary_csv, "`"),
     paste0("- Selected-family summary: `", paths$selected_family_summary_csv, "`"),
+    paste0("- Auto cluster summary: `", paths$auto_cluster_summary_csv, "`"),
     paste0("- Metrics overview chart: `", paths$metrics_overview_png, "`"),
     paste0("- Visual audit index: `", paths$visual_audit_index_csv, "`"),
     "",
@@ -1232,6 +1287,7 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
   child_metric_summary <- g5_context_factorial_child_metric_summary(child_index)
   state_coverage_summary <- g5_context_factorial_state_coverage_summary(child_index)
   selected_family_summary <- g5_context_factorial_selected_family_summary(child_index)
+  auto_cluster_summary <- g5_context_factorial_auto_cluster_summary(child_index)
   paths <- list(
     report_md = file.path(output_dir, "context_universe_factorial_report.md"),
     run_spec_csv = file.path(output_dir, "context_universe_factorial_run_spec.csv"),
@@ -1243,6 +1299,7 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
     child_metric_summary_csv = file.path(output_dir, "context_universe_factorial_child_oos_metrics.csv"),
     state_coverage_summary_csv = file.path(output_dir, "context_universe_factorial_state_coverage.csv"),
     selected_family_summary_csv = file.path(output_dir, "context_universe_factorial_selected_families.csv"),
+    auto_cluster_summary_csv = file.path(output_dir, "context_universe_factorial_auto_clusters.csv"),
     metrics_overview_png = file.path(output_dir, "context_universe_factorial_metrics_overview.png"),
     visual_audit_index_csv = file.path(output_dir, "context_universe_factorial_visual_audit_index.csv")
   )
@@ -1256,8 +1313,9 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
   utils::write.csv(child_metric_summary, paths$child_metric_summary_csv, row.names = FALSE)
   utils::write.csv(state_coverage_summary, paths$state_coverage_summary_csv, row.names = FALSE)
   utils::write.csv(selected_family_summary, paths$selected_family_summary_csv, row.names = FALSE)
+  utils::write.csv(auto_cluster_summary, paths$auto_cluster_summary_csv, row.names = FALSE)
   utils::write.csv(visual_audit_index, paths$visual_audit_index_csv, row.names = FALSE)
   paths$metrics_overview_png <- g5_context_factorial_write_metrics_overview(summary, paths$metrics_overview_png)
-  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, visual_audit_index, purpose, paths$report_md)
-  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary, visual_audit_index = visual_audit_index)
+  paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, auto_cluster_summary, visual_audit_index, purpose, paths$report_md)
+  list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary, auto_cluster_summary = auto_cluster_summary, visual_audit_index = visual_audit_index)
 }

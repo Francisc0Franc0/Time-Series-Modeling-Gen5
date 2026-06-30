@@ -277,8 +277,8 @@ test_that("active-plus-risk state-map triage defines quantile, fixed k, and auto
   expect_equal(surfaces$state_count, c("3x3", "k9", "kauto9"))
 })
 
-test_that("active-plus-risk fixed-k scale triage defines 3x3, k9, and k15 surfaces", {
-  surfaces <- g5_context_factorial_surface_definitions(fixed_k_scale_triage = TRUE)
+test_that("active-plus-risk auto max15 triage defines 3x3, k9, and auto max15 surfaces", {
+  surfaces <- g5_context_factorial_surface_definitions(auto_max15_triage = TRUE)
 
   expect_equal(nrow(surfaces), 3L)
   expect_equal(
@@ -286,12 +286,12 @@ test_that("active-plus-risk fixed-k scale triage defines 3x3, k9, and k15 surfac
     c(
       "behavioral_pool_quantile_grid_3x3",
       "behavioral_pool_kmeans_k9",
-      "behavioral_pool_kmeans_k15"
+      "behavioral_pool_kmeans_auto_max15"
     )
   )
-  expect_equal(surfaces$state_engine, c("quantile_grid", "pca_kmeans", "pca_kmeans"))
+  expect_equal(surfaces$state_engine, c("quantile_grid", "pca_kmeans", "pca_kmeans_auto"))
   expect_equal(surfaces$grid_n, c(3L, 9L, 15L))
-  expect_equal(surfaces$state_count, c("3x3", "k9", "k15"))
+  expect_equal(surfaces$state_count, c("3x3", "k9", "kauto15"))
 })
 
 test_that("active-plus-risk state-map triage writes visual audit contact sheets", {
@@ -329,14 +329,14 @@ test_that("active-plus-risk state-map triage writes visual audit contact sheets"
   expect_true(any(grepl("Visual audit index", report, fixed = TRUE)))
 })
 
-test_that("active-plus-risk fixed-k scale triage writes three-panel visual audit contact sheets", {
+test_that("active-plus-risk auto max15 triage writes visual audit contact sheets", {
   repo_root <- file.path(tempdir(), "g5cff")
   unlink(repo_root, recursive = TRUE, force = TRUE)
   dir.create(repo_root, recursive = TRUE)
   active_symbols <- c("AMD", "NVDA", "TSLA", "COIN", "MSTR")
   defs <- g5_context_factorial_universe_definitions(active_symbols)
   defs <- defs[defs$universe_id == "active_plus_risk_context", , drop = FALSE]
-  surfaces <- g5_context_factorial_surface_definitions(fixed_k_scale_triage = TRUE)
+  surfaces <- g5_context_factorial_surface_definitions(auto_max15_triage = TRUE)
 
   g5_test_write_context_factorial_portfolio_packets(repo_root, active_symbols, defs, surfaces)
 
@@ -351,15 +351,19 @@ test_that("active-plus-risk fixed-k scale triage writes three-panel visual audit
     active_symbols = active_symbols,
     fold_count = 5L,
     strategy_grid_preset = "standard",
-    purpose = g5_context_factorial_fixed_k_scale_triage_purpose()
+    purpose = g5_context_factorial_auto_max15_triage_purpose()
   )
 
   expect_true(file.exists(written$paths$visual_audit_index_csv))
   expect_true(all(file.exists(written$visual_audit_index$path)))
-  expect_true("fixed_k_scale" %in% written$visual_audit_index$chart_group)
-  fixed_scale_index <- written$visual_audit_index[written$visual_audit_index$chart_group == "fixed_k_scale", , drop = FALSE]
-  expect_equal(nrow(fixed_scale_index), 10L)
-  expect_true(all(c("pca_scatter", "stitched_oos_states") %in% fixed_scale_index$chart_type))
+  expect_true("auto_max15_triage" %in% written$visual_audit_index$chart_group)
+  expect_true("auto_kmeans" %in% written$visual_audit_index$chart_group)
+  triage_index <- written$visual_audit_index[written$visual_audit_index$chart_group == "auto_max15_triage", , drop = FALSE]
+  expect_equal(nrow(triage_index), 10L)
+  expect_true(all(c("pca_scatter", "stitched_oos_states") %in% triage_index$chart_type))
+  auto_index <- written$visual_audit_index[written$visual_audit_index$chart_group == "auto_kmeans", , drop = FALSE]
+  expect_equal(nrow(auto_index), 2L)
+  expect_true(all(c("pca_scatter", "stitched_oos_states") %in% auto_index$chart_type))
   report <- readLines(written$paths$report_md, warn = FALSE)
-  expect_true(any(grepl("fixed k-means with k=15", report, fixed = TRUE)))
+  expect_true(any(grepl("selecting k from 2..15", report, fixed = TRUE)))
 })

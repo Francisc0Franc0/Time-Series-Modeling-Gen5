@@ -52,7 +52,7 @@ param(
 
   [switch]$ActivePlusRiskStateMapTriage,
 
-  [switch]$ActivePlusRiskFixedKScaleTriage,
+  [switch]$ActivePlusRiskAutoMax15Triage,
 
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
 )
@@ -76,8 +76,8 @@ if ($FoldCount -lt 1) {
 if ($SlotCount -lt 1) {
   throw "-SlotCount must be positive."
 }
-if ($ActivePlusRiskStateMapTriage.IsPresent -and $ActivePlusRiskFixedKScaleTriage.IsPresent) {
-  throw "Choose either -ActivePlusRiskStateMapTriage or -ActivePlusRiskFixedKScaleTriage, not both."
+if ($ActivePlusRiskStateMapTriage.IsPresent -and $ActivePlusRiskAutoMax15Triage.IsPresent) {
+  throw "Choose either -ActivePlusRiskStateMapTriage or -ActivePlusRiskAutoMax15Triage, not both."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -99,7 +99,7 @@ if (-not (Test-Path -LiteralPath $RscriptPath)) {
   $RscriptPath = $cmd.Source
 }
 
-if ($ActivePlusRiskStateMapTriage.IsPresent -or $ActivePlusRiskFixedKScaleTriage.IsPresent) {
+if ($ActivePlusRiskStateMapTriage.IsPresent -or $ActivePlusRiskAutoMax15Triage.IsPresent) {
   $universeList = @("active_plus_risk_context")
 } else {
   $universeList = @("active_self_context", "active_plus_risk_context", "ex_active_market_risk_context")
@@ -110,11 +110,11 @@ if ($ActivePlusRiskStateMapTriage.IsPresent) {
     @{ SurfaceId = "behavioral_pool_kmeans_k9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 },
     @{ SurfaceId = "behavioral_pool_kmeans_auto_max9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans_auto"; GridN = 9 }
   )
-} elseif ($ActivePlusRiskFixedKScaleTriage.IsPresent) {
+} elseif ($ActivePlusRiskAutoMax15Triage.IsPresent) {
   $surfaceList = @(
     @{ SurfaceId = "behavioral_pool_quantile_grid_3x3"; PcaPanelMode = "pooled_asset_day"; StateEngine = "quantile_grid"; GridN = 3 },
     @{ SurfaceId = "behavioral_pool_kmeans_k9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 },
-    @{ SurfaceId = "behavioral_pool_kmeans_k15"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 15 }
+    @{ SurfaceId = "behavioral_pool_kmeans_auto_max15"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans_auto"; GridN = 15 }
   )
 } elseif ($MediumGrid.IsPresent) {
   $surfaceList = @(
@@ -132,15 +132,15 @@ if ($ActivePlusRiskStateMapTriage.IsPresent) {
 Write-Host "Gen5.1 Context-Universe Factorial Portfolio Inspection"
 if ($ActivePlusRiskStateMapTriage.IsPresent) {
   Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and auto k-means max9 state maps."
-} elseif ($ActivePlusRiskFixedKScaleTriage.IsPresent) {
-  Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and fixed k15 state maps."
+} elseif ($ActivePlusRiskAutoMax15Triage.IsPresent) {
+  Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and auto k-means max15 state maps."
 } else {
   Write-Host "  Purpose: compare active-self, active-plus-risk, and external-risk context for the same active set."
 }
 Write-Host "  Active Allocation Set: $ActiveSymbols"
 Write-Host "  Medium grid: $($MediumGrid.IsPresent)"
 Write-Host "  Active-plus-risk state-map triage: $($ActivePlusRiskStateMapTriage.IsPresent)"
-Write-Host "  Active-plus-risk fixed-k scale triage: $($ActivePlusRiskFixedKScaleTriage.IsPresent)"
+Write-Host "  Active-plus-risk auto-k max15 triage: $($ActivePlusRiskAutoMax15Triage.IsPresent)"
 Write-Host "  PCA surfaces: $($surfaceList.Count)"
 Write-Host "  Universe ids: $($universeList -join ', ')"
 Write-Host "  Fold count: $FoldCount"
@@ -204,8 +204,8 @@ $env:GEN5_CONTEXT_FACTORIAL_REFRESH = if ($Refresh.IsPresent) { "true" } else { 
 $env:GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS = if ($SkipChildRuns.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID = if ($MediumGrid.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE = if ($ActivePlusRiskStateMapTriage.IsPresent) { "true" } else { "false" }
-$env:GEN5_CONTEXT_FACTORIAL_FIXED_K_SCALE_TRIAGE = if ($ActivePlusRiskFixedKScaleTriage.IsPresent) { "true" } else { "false" }
-$env:GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS = if ($ActivePlusRiskStateMapTriage.IsPresent -or $ActivePlusRiskFixedKScaleTriage.IsPresent) { "active_plus_risk_context" } else { "" }
+$env:GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE = if ($ActivePlusRiskAutoMax15Triage.IsPresent) { "true" } else { "false" }
+$env:GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS = if ($ActivePlusRiskStateMapTriage.IsPresent -or $ActivePlusRiskAutoMax15Triage.IsPresent) { "active_plus_risk_context" } else { "" }
 
 Push-Location $repoRoot
 try {

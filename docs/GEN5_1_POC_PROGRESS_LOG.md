@@ -48,7 +48,7 @@ At the conclusion of each future POC or research-inspection slice, add or update
 | 18. Medium Context Factorial Grid | `PROMISING` | How do context universe, PCA panel mode, and state map interact across a broader but still bounded grid? | [medium context factorial packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_3u_4s_20260624_20260624173000), commit `617eeca` | Compared contextual snapshot vs behavioral pool and quantile vs k-means across three context universes. Reinforced active-plus-risk as the context to keep exploring. |
 | 19. Auto k-Means State-Map Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, should k-means use fixed k=9 or select k TRAIN-only from 2..9? | [state-map triage packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000), commit `be42f67` | Added `pca_kmeans_auto` using TRAIN-only Calinski-Harabasz selection. Auto-k selected fold sequence `5,4,5,8,4` and looked promising in inspection versus 3x3 and fixed k9. |
 | 20. State-Map Visual Audit Sheets | `ACCEPTED_DIRECTION` | Can the binning choices be audited visually at the top level instead of hunting through child folders? | [visual audit index](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000/context_universe_factorial_visual_audit_index.csv), [visual audit folder](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000/state_map_visual_audit), commit `4c294a5` | Added per-symbol 3x3-vs-k9 PCA scatter/state-band sheets and auto-k multi-panel sheets. This is now the visual audit pattern for state-map triage runs. |
-| 21. Fixed-k State-Map Scale Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, does forcing more k-means clusters improve the state map versus 3x3 and fixed k9? | [June fixed-k scale packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_fixedkscale_20260624_20260624173000), [March fixed-k scale packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_fixedkscale_20260331_20260331173000) | June ranked fixed k9 ahead of 3x3 and k15 on inspection metrics; k15 was weaker and operationally heavier with k-means warnings. March also ranked k9 best, but every symbol had partial-history WARNs, so March is caveated and should not be treated as clean confirmation without refresh/audit. |
+| 21. Auto-k Max15 State-Map Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, does TRAIN-only auto-k naturally choose more than 9 clusters when allowed to search k=2..15? | [auto-k max15 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000), [selected-k CSV](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000/context_universe_factorial_auto_clusters.csv) | Corrected the intended wide-auto-k test after removing the mistaken fixed-k15 generated artifacts. Auto-k max15 selected fold sequence `5,4,13,14,14`, so the prior max9 cap was binding in later folds. Inspection accounting landed between fixed k9 and 3x3; keep auto-max15 as promising but not accepted. |
 
 ## Current Research Posture
 
@@ -56,14 +56,14 @@ The current most useful branch of the POC pathway is:
 
 1. Keep Active Allocation / Research Candidate / Tradeable Universe at `AMD,NVDA,TSLA,COIN,MSTR` unless explicitly revised.
 2. Keep active-plus-risk context as the leading context universe candidate for the next narrow tests.
-3. Keep behavioral-pool PCA and k-means variants in contention, with fixed k15 deprioritized unless visual review reveals a compelling niche.
-4. Treat fixed k9 and `pca_kmeans_auto` as the main state-map contenders, but not accepted, until they survive clean confirmation runs.
+3. Keep behavioral-pool PCA and k-means variants in contention while using auto-k diagnostics to determine whether higher cluster counts naturally earn their keep.
+4. Treat fixed k9 and `pca_kmeans_auto` max15 as the main state-map contenders, but not accepted, until they survive clean confirmation runs.
 5. Continue using portfolio accounting only as a downstream inspection layer.
 
 ## Next Candidate Tests
 
+- Interpret the active-plus-risk behavioral-pool auto-k max15 packet and compare selected-k behavior against the prior auto-k max9 packet.
 - Refresh or audit the March 31, 2026 shifted-window cache before using that window as confirmation evidence.
-- Compare active-plus-risk behavioral-pool fixed k9 against `pca_kmeans_auto` on a clean shifted end date or adjacent data window.
 - Compare auto-k against fixed k9 under a modestly expanded strategy grid after the clean-window check.
 - Inspect whether contextual snapshot retains any useful niche despite active-plus-risk behavioral-pool looking stronger.
 - Decide whether to codify a smaller default state-map surface for future research runs.

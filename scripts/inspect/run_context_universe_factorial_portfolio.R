@@ -52,12 +52,12 @@ refresh <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_REFRESH", "false"), default
 skip_child_runs <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS", "false"), default = FALSE)
 medium_grid <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID", "false"), default = FALSE)
 state_map_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE", "false"), default = FALSE)
-fixed_k_scale_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_FIXED_K_SCALE_TRIAGE", "false"), default = FALSE)
+auto_max15_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE", "false"), default = FALSE)
 
 if (is.na(end_date)) g5_stop("GEN5_CONTEXT_FACTORIAL_END_DATE must be a valid date.")
 if (!nzchar(as_of_timestamp)) g5_stop("GEN5_CONTEXT_FACTORIAL_AS_OF_TIMESTAMP is required.")
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_CONTEXT_FACTORIAL_FOLD_COUNT must be a positive integer.")
-if (isTRUE(state_map_triage) && isTRUE(fixed_k_scale_triage)) g5_stop("Choose either GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE or GEN5_CONTEXT_FACTORIAL_FIXED_K_SCALE_TRIAGE, not both.")
+if (isTRUE(state_map_triage) && isTRUE(auto_max15_triage)) g5_stop("Choose either GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE or GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE, not both.")
 if (is.na(grid_n) || grid_n < 2L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N must be at least 2.")
 state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else state_engine
 state_engine <- g5_pca_wfa_state_engine(state_engine)
@@ -75,7 +75,7 @@ surface_defs <- g5_context_factorial_surface_definitions(
   state_engine = state_engine,
   grid_n = grid_n,
   state_map_triage = state_map_triage,
-  fixed_k_scale_triage = fixed_k_scale_triage
+  auto_max15_triage = auto_max15_triage
 )
 output_dir <- g5_context_factorial_output_dir(
   repo_root = repo_root,
@@ -89,11 +89,11 @@ output_dir <- g5_context_factorial_output_dir(
   pca_panel_mode = pca_panel_mode,
   end_date = end_date,
   strategy_grid_preset = strategy_grid_preset,
-  surface_preset = if (isTRUE(fixed_k_scale_triage)) "fixedkscale" else ""
+  surface_preset = if (isTRUE(auto_max15_triage)) "automax15" else ""
 )
 
-purpose <- if (isTRUE(fixed_k_scale_triage)) {
-  g5_context_factorial_fixed_k_scale_triage_purpose()
+purpose <- if (isTRUE(auto_max15_triage)) {
+  g5_context_factorial_auto_max15_triage_purpose()
 } else if (isTRUE(state_map_triage)) {
   g5_context_factorial_state_map_triage_purpose()
 } else {
@@ -121,7 +121,7 @@ message("Purpose: ", purpose)
 message("Active symbols: ", paste(active_symbols, collapse = ", "))
 message("Medium grid: ", medium_grid)
 message("State-map triage: ", state_map_triage)
-message("Fixed-k scale triage: ", fixed_k_scale_triage)
+message("Auto-k max15 triage: ", auto_max15_triage)
 message("Surface count: ", nrow(surface_defs))
 message("End date: ", end_date)
 message("As of: ", as_of_timestamp)
@@ -143,6 +143,7 @@ message("  Child artifact index: ", written$paths$child_artifact_index_csv)
 message("  Child OOS metrics: ", written$paths$child_metric_summary_csv)
 message("  State coverage: ", written$paths$state_coverage_summary_csv)
 message("  Selected families: ", written$paths$selected_family_summary_csv)
+message("  Auto clusters: ", written$paths$auto_cluster_summary_csv)
 message("  Metrics overview: ", written$paths$metrics_overview_png)
 message("  Visual audit index: ", written$paths$visual_audit_index_csv)
 message("")
