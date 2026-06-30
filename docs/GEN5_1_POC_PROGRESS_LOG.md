@@ -49,6 +49,7 @@ At the conclusion of each future POC or research-inspection slice, add or update
 | 19. Auto k-Means State-Map Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, should k-means use fixed k=9 or select k TRAIN-only from 2..9? | [state-map triage packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000), commit `be42f67` | Added `pca_kmeans_auto` using TRAIN-only Calinski-Harabasz selection. Auto-k selected fold sequence `5,4,5,8,4` and looked promising in inspection versus 3x3 and fixed k9. |
 | 20. State-Map Visual Audit Sheets | `ACCEPTED_DIRECTION` | Can the binning choices be audited visually at the top level instead of hunting through child folders? | [visual audit index](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000/context_universe_factorial_visual_audit_index.csv), [visual audit folder](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260624_20260624173000/state_map_visual_audit), commit `4c294a5` | Added per-symbol 3x3-vs-k9 PCA scatter/state-band sheets and auto-k multi-panel sheets. This is now the visual audit pattern for state-map triage runs. |
 | 21. Auto-k Max15 State-Map Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, does TRAIN-only auto-k naturally choose more than 9 clusters when allowed to search k=2..15? | [auto-k max15 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000), [selected-k CSV](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000/context_universe_factorial_auto_clusters.csv) | Corrected the intended wide-auto-k test after removing the mistaken fixed-k15 generated artifacts. Auto-k max15 selected fold sequence `5,4,13,14,14`, so the prior max9 cap was binding in later folds. Inspection accounting landed between fixed k9 and 3x3; keep auto-max15 as promising but not accepted. |
+| 22. Refreshed Shifted-Window State-Map Confirmation | `PROMISING` | After repairing the March 31, 2026 partial-history cache issue, do 3x3, fixed k9, auto max9, and auto max15 tell the same story on a shifted window? | [March max9 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260331_20260331173000), [March max15 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260331_20260331173000), [refresh audit](../runs/data_refresh/alpaca_daily_audit_20260331.csv) | Cache refresh restored requested-range coverage for the shifted window. Fixed k9 was the only positive state map in this window (`+2.8%`, Sharpe `0.23`), while 3x3 was slightly negative (`-2.1%`) and auto max9/max15 lagged (`-7.1%` / `-9.5%`). Auto max9 selected `5,5,4,5,8`; auto max15 selected `5,5,4,13,14`, confirming the cap can bind but not that more clusters are better. |
 
 ## Current Research Posture
 
@@ -57,14 +58,13 @@ The current most useful branch of the POC pathway is:
 1. Keep Active Allocation / Research Candidate / Tradeable Universe at `AMD,NVDA,TSLA,COIN,MSTR` unless explicitly revised.
 2. Keep active-plus-risk context as the leading context universe candidate for the next narrow tests.
 3. Keep behavioral-pool PCA and k-means variants in contention while using auto-k diagnostics to determine whether higher cluster counts naturally earn their keep.
-4. Treat fixed k9 and `pca_kmeans_auto` max15 as the main state-map contenders, but not accepted, until they survive clean confirmation runs.
+4. Treat fixed k9 as the steadier state-map contender so far, with `pca_kmeans_auto` max9/max15 retained as diagnostics and secondary contenders rather than defaults.
 5. Continue using portfolio accounting only as a downstream inspection layer.
 
 ## Next Candidate Tests
 
-- Interpret the active-plus-risk behavioral-pool auto-k max15 packet and compare selected-k behavior against the prior auto-k max9 packet.
-- Refresh or audit the March 31, 2026 shifted-window cache before using that window as confirmation evidence.
-- Compare auto-k against fixed k9 under a modestly expanded strategy grid after the clean-window check.
+- Compare fixed k9 against auto-k under a modestly expanded strategy grid after the cleaned shifted-window check.
+- Inspect whether auto-k underperformance in the March shifted window comes from state fragmentation, strategy selection instability, or allocation timing.
 - Inspect whether contextual snapshot retains any useful niche despite active-plus-risk behavioral-pool looking stronger.
 - Decide whether to codify a smaller default state-map surface for future research runs.
 

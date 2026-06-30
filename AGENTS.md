@@ -100,6 +100,7 @@ For long Gen5.1 research/inspection runs, Codex should keep the shared inspectio
 - Use `-SkipChildRuns` when rebuilding reports or portfolio packets from existing child artifacts.
 - Treat ignored `runs/` packets as the shared evidence surface between operator and Codex.
 - Summarize findings with artifact paths and STOP decisions, not raw table dumps.
+- If a requested research/inspection packet reports `refresh_needed`, `partial_history`, stale cache, or similar cache-coverage WARNs that affect the requested window, Codex should send a brief transparency note, refresh the affected cache range when the opened scope permits it, and rerun the affected packet before treating the artifacts as usable confirmation evidence. If refresh is blocked, stop with the exact WARNs and artifact paths.
 - At the conclusion of each POC or research-inspection slice, update `docs/GEN5_1_POC_PROGRESS_LOG.md` with the question, scope, key artifacts, readout, and next decision or STOP state.
 - For sequential approved slices in the same milestone, Codex may continue implementation, validation, commit, and push on the named `codex/` branch without requiring a fresh strategic prompt, as long as scope does not change.
 
