@@ -1319,3 +1319,446 @@ g5_write_context_factorial_outputs <- function(universe_defs, surface_defs, outp
   paths$report_md <- g5_context_factorial_markdown_report(paths, universe_defs, surface_defs, portfolio_index, summary, run_spec, child_metric_summary, state_coverage_summary, selected_family_summary, auto_cluster_summary, visual_audit_index, purpose, paths$report_md)
   list(paths = paths, run_spec = run_spec, universe_definitions = universe_defs, surface_definitions = surface_defs, portfolio_index = portfolio_index, summary = summary, child_artifact_index = child_index, child_metric_summary = child_metric_summary, state_coverage_summary = state_coverage_summary, selected_family_summary = selected_family_summary, auto_cluster_summary = auto_cluster_summary, visual_audit_index = visual_audit_index)
 }
+
+g5_context_factorial_window_comparison_output_dir <- function(repo_root, comparison_id) {
+  file.path(
+    repo_root,
+    "runs",
+    "research_workbench",
+    "context_universe_factorial_window_comparisons",
+    comparison_id
+  )
+}
+
+g5_context_factorial_window_sources <- function(repo_root) {
+  base_dir <- file.path(repo_root, "runs", "research_workbench", "context_universe_factorials")
+  data.frame(
+    window_id = c("jun_2026", "jun_2026", "mar_2026", "mar_2026"),
+    window_label = c("June 24 2026", "June 24 2026", "March 31 2026", "March 31 2026"),
+    packet_role = c("max9_packet", "max15_packet", "max9_packet", "max15_packet"),
+    packet_dir = file.path(
+      base_dir,
+      c(
+        "ctxfac_A5_5f_1u_3s_20260624_20260624173000",
+        "ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000",
+        "ctxfac_A5_5f_1u_3s_20260331_20260331173000",
+        "ctxfac_A5_5f_1u_3s_automax15_20260331_20260331173000"
+      )
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_context_factorial_read_window_sources <- function(source_packets) {
+  required <- c("window_id", "window_label", "packet_role", "packet_dir")
+  if (!is.data.frame(source_packets) || !all(required %in% names(source_packets))) {
+    g5_stop("source_packets must include window_id, window_label, packet_role, and packet_dir.")
+  }
+  missing_dirs <- source_packets$packet_dir[!dir.exists(source_packets$packet_dir)]
+  if (length(missing_dirs)) {
+    g5_stop(paste("Missing source comparison packet(s):", paste(missing_dirs, collapse = "; ")))
+  }
+  source_packets$packet_dir <- normalizePath(source_packets$packet_dir, winslash = "/", mustWork = TRUE)
+  source_packets
+}
+
+g5_context_factorial_window_surface_plan <- function() {
+  data.frame(
+    comparison_surface_id = c("quantile_3x3", "fixed_k9", "auto_max9", "auto_max15"),
+    source_surface_id = c(
+      "behavioral_pool_quantile_grid_3x3",
+      "behavioral_pool_kmeans_k9",
+      "behavioral_pool_kmeans_auto_max9",
+      "behavioral_pool_kmeans_auto_max15"
+    ),
+    packet_role = c("max9_packet", "max9_packet", "max9_packet", "max15_packet"),
+    surface_label = c("3x3 quantile grid", "Fixed k9", "Auto k 2..9", "Auto k 2..15"),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_context_factorial_read_packet_csv <- function(packet_dir, filename) {
+  path <- file.path(packet_dir, filename)
+  out <- g5_read_csv_if_exists(path)
+  attr(out, "path") <- normalizePath(path, winslash = "/", mustWork = FALSE)
+  out
+}
+
+g5_context_factorial_window_merge_file <- function(source_packets, filename, surface_plan = g5_context_factorial_window_surface_plan()) {
+  rows <- list()
+  for (i in seq_len(nrow(source_packets))) {
+    src <- source_packets[i, , drop = FALSE]
+    packet_surfaces <- surface_plan[surface_plan$packet_role == src$packet_role[[1L]], , drop = FALSE]
+    dat <- g5_context_factorial_read_packet_csv(src$packet_dir[[1L]], filename)
+    if (!nrow(dat) || !"surface_id" %in% names(dat)) next
+    dat <- dat[dat$surface_id %in% packet_surfaces$source_surface_id, , drop = FALSE]
+    if (!nrow(dat)) next
+    dat$comparison_surface_id <- packet_surfaces$comparison_surface_id[match(dat$surface_id, packet_surfaces$source_surface_id)]
+    dat$surface_label <- packet_surfaces$surface_label[match(dat$surface_id, packet_surfaces$source_surface_id)]
+    dat$window_id <- src$window_id[[1L]]
+    dat$window_label <- src$window_label[[1L]]
+    dat$packet_role <- src$packet_role[[1L]]
+    dat$source_packet_dir <- src$packet_dir[[1L]]
+    rows[[length(rows) + 1L]] <- dat
+  }
+  if (!length(rows)) return(data.frame())
+  out <- do.call(rbind, rows)
+  front <- c("window_id", "window_label", "comparison_surface_id", "surface_label", "packet_role", "source_packet_dir")
+  out[, c(front, setdiff(names(out), front)), drop = FALSE]
+}
+
+g5_context_factorial_window_summary <- function(source_packets) {
+  merged <- g5_context_factorial_window_merge_file(source_packets, "context_universe_factorial_summary.csv")
+  if (!nrow(merged)) return(merged)
+  unique_cols <- c("window_id", "comparison_surface_id")
+  merged <- merged[!duplicated(merged[, unique_cols, drop = FALSE]), , drop = FALSE]
+  merged[order(merged$window_id, merged$comparison_surface_id), , drop = FALSE]
+}
+
+g5_context_factorial_window_auto_clusters <- function(source_packets) {
+  merged <- g5_context_factorial_window_merge_file(source_packets, "context_universe_factorial_auto_clusters.csv")
+  if (!nrow(merged)) return(merged)
+  merged <- merged[!duplicated(merged[, c("window_id", "comparison_surface_id", "symbol", "fold_id"), drop = FALSE]), , drop = FALSE]
+  merged[order(merged$window_id, merged$comparison_surface_id, merged$symbol, merged$fold_no), , drop = FALSE]
+}
+
+g5_context_factorial_window_child_index <- function(source_packets) {
+  merged <- g5_context_factorial_window_merge_file(source_packets, "context_universe_factorial_child_artifact_index.csv")
+  if (!nrow(merged)) return(merged)
+  merged <- merged[!duplicated(merged[, c("window_id", "comparison_surface_id", "symbol"), drop = FALSE]), , drop = FALSE]
+  merged[order(merged$window_id, merged$comparison_surface_id, merged$symbol), , drop = FALSE]
+}
+
+g5_context_factorial_window_auto_clusters_from_child_index <- function(child_index) {
+  empty <- data.frame()
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(empty)
+  required <- c("window_id", "window_label", "comparison_surface_id", "surface_label", "packet_role", "source_packet_dir", "state_engine", "symbol", "run_dir")
+  if (!all(required %in% names(child_index))) return(empty)
+  auto_rows <- child_index[child_index$state_engine == "pca_kmeans_auto", , drop = FALSE]
+  if (!nrow(auto_rows)) return(empty)
+  rows <- list()
+  for (i in seq_len(nrow(auto_rows))) {
+    contract <- g5_read_csv_if_exists(file.path(auto_rows$run_dir[[i]], "pcawfa_pca_model_contract.csv"))
+    if (!nrow(contract) || !all(c("record_type", "key", "value", "fold_id", "fold_no") %in% names(contract))) next
+    meta <- contract[contract$record_type == "meta" & nzchar(contract$key), , drop = FALSE]
+    if (!nrow(meta)) next
+    for (fold_id in unique(meta$fold_id)) {
+      fold_meta <- meta[meta$fold_id == fold_id, , drop = FALSE]
+      value_for <- function(key) {
+        value <- fold_meta$value[fold_meta$key == key]
+        if (length(value)) value[[1L]] else NA_character_
+      }
+      rows[[length(rows) + 1L]] <- data.frame(
+        window_id = auto_rows$window_id[[i]],
+        window_label = auto_rows$window_label[[i]],
+        comparison_surface_id = auto_rows$comparison_surface_id[[i]],
+        surface_label = auto_rows$surface_label[[i]],
+        packet_role = auto_rows$packet_role[[i]],
+        source_packet_dir = auto_rows$source_packet_dir[[i]],
+        universe_id = auto_rows$universe_id[[i]],
+        surface_id = auto_rows$surface_id[[i]],
+        symbol = auto_rows$symbol[[i]],
+        fold_id = fold_id,
+        fold_no = suppressWarnings(as.integer(fold_meta$fold_no[[1L]])),
+        cluster_count_mode = value_for("cluster_count_mode"),
+        auto_min_clusters = suppressWarnings(as.integer(value_for("auto_min_clusters"))),
+        auto_max_clusters = suppressWarnings(as.integer(value_for("auto_max_clusters"))),
+        selected_cluster_count = suppressWarnings(as.integer(value_for("cluster_count"))),
+        selection_criterion = value_for("auto_selection_criterion"),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  if (!length(rows)) empty else do.call(rbind, rows)
+}
+
+g5_context_factorial_fold_state_diagnostics <- function(child_index, tiny_train_rows = 20L, tiny_oos_rows = 5L) {
+  empty <- data.frame()
+  if (!is.data.frame(child_index) || !nrow(child_index) || !"run_dir" %in% names(child_index)) return(empty)
+  rows <- list()
+  for (i in seq_len(nrow(child_index))) {
+    coverage <- g5_read_csv_if_exists(file.path(child_index$run_dir[[i]], "pcawfa_state_coverage.csv"))
+    selected <- g5_read_csv_if_exists(file.path(child_index$run_dir[[i]], "pcawfa_selected_states.csv"))
+    if (!nrow(coverage) || !all(c("split", "row_count", "fold_id", "fold_no") %in% names(coverage))) next
+    for (fold_id in unique(coverage$fold_id)) {
+      cov_fold <- coverage[coverage$fold_id == fold_id, , drop = FALSE]
+      train <- cov_fold[cov_fold$split == "TRAIN", , drop = FALSE]
+      oos <- cov_fold[cov_fold$split == "OOS", , drop = FALSE]
+      train_rows <- suppressWarnings(as.numeric(train$row_count))
+      oos_rows <- suppressWarnings(as.numeric(oos$row_count))
+      sel_fold <- if (nrow(selected) && "fold_id" %in% names(selected)) selected[selected$fold_id == fold_id, , drop = FALSE] else data.frame()
+      families <- if (nrow(sel_fold) && "strategy_family" %in% names(sel_fold)) unique(as.character(sel_fold$strategy_family)) else character()
+      rows[[length(rows) + 1L]] <- data.frame(
+        window_id = child_index$window_id[[i]],
+        window_label = child_index$window_label[[i]],
+        comparison_surface_id = child_index$comparison_surface_id[[i]],
+        surface_label = child_index$surface_label[[i]],
+        surface_id = child_index$surface_id[[i]],
+        symbol = child_index$symbol[[i]],
+        fold_id = fold_id,
+        fold_no = suppressWarnings(as.integer(cov_fold$fold_no[[1L]])),
+        train_state_count = nrow(train),
+        train_states_with_rows = sum(train_rows > 0, na.rm = TRUE),
+        train_tiny_state_count = sum(train_rows > 0 & train_rows < tiny_train_rows, na.rm = TRUE),
+        train_zero_state_count = sum(train_rows == 0, na.rm = TRUE),
+        min_train_state_rows = if (length(train_rows)) min(train_rows, na.rm = TRUE) else NA_real_,
+        oos_state_count = nrow(oos),
+        oos_states_with_rows = sum(oos_rows > 0, na.rm = TRUE),
+        oos_tiny_state_count = sum(oos_rows > 0 & oos_rows < tiny_oos_rows, na.rm = TRUE),
+        oos_zero_state_count = sum(oos_rows == 0, na.rm = TRUE),
+        min_oos_state_rows = if (length(oos_rows)) min(oos_rows, na.rm = TRUE) else NA_real_,
+        selected_state_count = nrow(sel_fold),
+        selected_family_count = length(families),
+        no_trade_state_selections = if (nrow(sel_fold) && "strategy_family" %in% names(sel_fold)) sum(sel_fold$strategy_family == "no_trade", na.rm = TRUE) else NA_integer_,
+        selected_families = paste(sort(families), collapse = ","),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  if (!length(rows)) empty else do.call(rbind, rows)
+}
+
+g5_context_factorial_window_diagnostic_summary <- function(fold_diagnostics) {
+  if (!is.data.frame(fold_diagnostics) || !nrow(fold_diagnostics)) return(data.frame())
+  groups <- unique(fold_diagnostics[, c("window_id", "window_label", "comparison_surface_id", "surface_label"), drop = FALSE])
+  rows <- list()
+  for (i in seq_len(nrow(groups))) {
+    idx <- fold_diagnostics$window_id == groups$window_id[[i]] & fold_diagnostics$comparison_surface_id == groups$comparison_surface_id[[i]]
+    dat <- fold_diagnostics[idx, , drop = FALSE]
+    fam_counts <- tapply(dat$selected_family_count, dat$symbol, function(x) mean(as.numeric(x), na.rm = TRUE))
+    rows[[length(rows) + 1L]] <- data.frame(
+      window_id = groups$window_id[[i]],
+      window_label = groups$window_label[[i]],
+      comparison_surface_id = groups$comparison_surface_id[[i]],
+      surface_label = groups$surface_label[[i]],
+      fold_symbol_rows = nrow(dat),
+      avg_train_states_with_rows = mean(dat$train_states_with_rows, na.rm = TRUE),
+      avg_train_tiny_states = mean(dat$train_tiny_state_count, na.rm = TRUE),
+      avg_oos_states_with_rows = mean(dat$oos_states_with_rows, na.rm = TRUE),
+      avg_oos_tiny_states = mean(dat$oos_tiny_state_count, na.rm = TRUE),
+      avg_selected_family_count = mean(dat$selected_family_count, na.rm = TRUE),
+      avg_no_trade_state_selections = mean(dat$no_trade_state_selections, na.rm = TRUE),
+      max_symbol_family_churn = if (length(fam_counts)) max(fam_counts, na.rm = TRUE) else NA_real_,
+      stringsAsFactors = FALSE
+    )
+  }
+  do.call(rbind, rows)
+}
+
+g5_context_factorial_window_visual_index <- function(child_index, output_dir) {
+  empty <- data.frame(window_id = character(), window_label = character(), chart_group = character(), chart_type = character(), comparison_surface_id = character(), symbol = character(), path = character(), stringsAsFactors = FALSE)
+  if (!is.data.frame(child_index) || !nrow(child_index)) return(empty)
+  if (!"source_packet_dir" %in% names(child_index)) return(empty)
+  rows <- list()
+  packets <- unique(child_index[, c("window_id", "window_label", "source_packet_dir"), drop = FALSE])
+  for (i in seq_len(nrow(packets))) {
+    visual_path <- file.path(packets$source_packet_dir[[i]], "context_universe_factorial_visual_audit_index.csv")
+    visual_index <- g5_read_csv_if_exists(visual_path)
+    if (!nrow(visual_index) || !"path" %in% names(visual_index)) next
+    visual_index$window_id <- packets$window_id[[i]]
+    visual_index$window_label <- packets$window_label[[i]]
+    visual_index$source_packet_dir <- packets$source_packet_dir[[i]]
+    visual_index$comparison_surface_id <- NA_character_
+    if ("chart_group" %in% names(visual_index)) {
+      visual_index$comparison_surface_id[visual_index$chart_group == "quantile_vs_fixed_k9"] <- "quantile_3x3/fixed_k9"
+      visual_index$comparison_surface_id[visual_index$chart_group == "auto_max15_triage"] <- "quantile_3x3/fixed_k9/auto_max15"
+      visual_index$comparison_surface_id[visual_index$chart_group == "auto_kmeans"] <- "auto_max9_or_auto_max15"
+    }
+    rows[[length(rows) + 1L]] <- visual_index
+  }
+  if (!length(rows)) return(empty)
+  out <- do.call(rbind, rows)
+  keep <- intersect(c("window_id", "window_label", "chart_group", "chart_type", "comparison_surface_id", "symbol", "page_no", "path", "source_packet_dir"), names(out))
+  out[, keep, drop = FALSE]
+}
+
+g5_context_factorial_window_write_metrics_chart <- function(summary, path, width = 3000L, height = 1900L, res = 180L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  grDevices::png(path, width = width, height = height, res = res)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(2L, 2L), mar = c(6, 4.4, 3, 1.2), oma = c(0, 0, 3, 0))
+  metrics <- list(total_return = "Total Return (%)", max_drawdown = "Max Drawdown (%)", sharpe = "Sharpe", total_entry_fills = "Entry Fills")
+  surfaces <- unique(summary$comparison_surface_id)
+  cols <- c(jun_2026 = "#2C7FB8", mar_2026 = "#F03B20")
+  for (metric in names(metrics)) {
+    vals <- tapply(as.numeric(summary[[metric]]), list(summary$comparison_surface_id, summary$window_id), identity)
+    vals <- vals[surfaces, intersect(c("jun_2026", "mar_2026"), colnames(vals)), drop = FALSE]
+    plot_vals <- vals
+    if (metric %in% c("total_return", "max_drawdown")) plot_vals <- 100 * plot_vals
+    graphics::barplot(t(plot_vals), beside = TRUE, col = cols[colnames(plot_vals)], las = 2, cex.names = 0.72, main = metrics[[metric]], ylab = metrics[[metric]])
+    graphics::grid(nx = NA, ny = NULL, col = "#E6E8EB")
+    graphics::legend("topright", legend = colnames(plot_vals), fill = cols[colnames(plot_vals)], bty = "n", cex = 0.8)
+  }
+  graphics::mtext("Two-Window State-Map Comparison: Portfolio Inspection Metrics", side = 3, outer = TRUE, line = 1, font = 2)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_context_factorial_window_write_cluster_chart <- function(auto_clusters, path, width = 2600L, height = 1500L, res = 180L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  grDevices::png(path, width = width, height = height, res = res)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(1L, 2L), mar = c(4.8, 4.4, 3, 1.2), oma = c(0, 0, 2.6, 0))
+  for (surface_id in c("auto_max9", "auto_max15")) {
+    dat <- auto_clusters[auto_clusters$comparison_surface_id == surface_id, , drop = FALSE]
+    if (!nrow(dat)) {
+      graphics::plot.new()
+      graphics::title(surface_id)
+      next
+    }
+    dat <- dat[order(dat$window_id, dat$fold_no), , drop = FALSE]
+    y_max <- max(as.numeric(dat$selected_cluster_count), na.rm = TRUE)
+    graphics::plot(NA, xlim = range(as.numeric(dat$fold_no), na.rm = TRUE), ylim = c(0, y_max + 1), xlab = "Fold", ylab = "Selected k", main = surface_id)
+    for (window_id in unique(dat$window_id)) {
+      sub <- dat[dat$window_id == window_id & dat$symbol == dat$symbol[[1L]], , drop = FALSE]
+      col <- if (identical(window_id, "jun_2026")) "#2C7FB8" else "#F03B20"
+      graphics::lines(as.numeric(sub$fold_no), as.numeric(sub$selected_cluster_count), type = "b", pch = 19, col = col)
+    }
+    graphics::grid(col = "#E6E8EB")
+    graphics::legend("topleft", legend = unique(dat$window_id), col = c("#2C7FB8", "#F03B20")[seq_along(unique(dat$window_id))], lty = 1, pch = 19, bty = "n", cex = 0.8)
+  }
+  graphics::mtext("Auto k-Means Selected Cluster Counts", side = 3, outer = TRUE, line = 1, font = 2)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_context_factorial_window_write_fragmentation_chart <- function(diagnostic_summary, path, width = 3000L, height = 1700L, res = 180L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  grDevices::png(path, width = width, height = height, res = res)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(1L, 3L), mar = c(6, 4.4, 3, 1.2), oma = c(0, 0, 3, 0))
+  cols <- c(jun_2026 = "#2C7FB8", mar_2026 = "#F03B20")
+  draw <- function(metric, title) {
+    vals <- tapply(as.numeric(diagnostic_summary[[metric]]), list(diagnostic_summary$comparison_surface_id, diagnostic_summary$window_id), identity)
+    graphics::barplot(t(vals), beside = TRUE, col = cols[colnames(vals)], las = 2, cex.names = 0.72, main = title, ylab = title)
+    graphics::grid(nx = NA, ny = NULL, col = "#E6E8EB")
+  }
+  draw("avg_train_tiny_states", "Avg Tiny TRAIN States")
+  draw("avg_oos_tiny_states", "Avg Tiny OOS States")
+  draw("avg_selected_family_count", "Avg Selected Family Count")
+  graphics::legend("topright", legend = names(cols), fill = cols, bty = "n", cex = 0.8)
+  graphics::mtext("State Fragmentation / Selection Churn Diagnostics", side = 3, outer = TRUE, line = 1, font = 2)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_context_factorial_window_report <- function(paths, run_spec, summary, auto_clusters, diagnostic_summary, visual_index, path) {
+  pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.1f%%", 100 * as.numeric(x)))
+  num <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f", as.numeric(x)))
+  summary_table <- summary
+  summary_table$total_return <- pct(summary_table$total_return)
+  summary_table$max_drawdown <- pct(summary_table$max_drawdown)
+  summary_table$sharpe <- num(summary_table$sharpe)
+  cluster_table <- auto_clusters[, intersect(c("window_label", "comparison_surface_id", "symbol", "fold_id", "selected_cluster_count", "auto_max_clusters"), names(auto_clusters)), drop = FALSE]
+  cluster_table <- cluster_table[cluster_table$symbol == cluster_table$symbol[[1L]], , drop = FALSE]
+  diag_table <- diagnostic_summary
+  for (nm in intersect(c("avg_train_states_with_rows", "avg_train_tiny_states", "avg_oos_states_with_rows", "avg_oos_tiny_states", "avg_selected_family_count", "avg_no_trade_state_selections"), names(diag_table))) {
+    diag_table[[nm]] <- num(diag_table[[nm]])
+  }
+  lines <- c(
+    "# Gen5.1 Two-Window State-Map Comparison",
+    "",
+    "Research/inspection only. This packet reads existing context-factorial and PCA-routed WFA artifacts; it does not rerun WFA, optimize allocation, approve performance evidence, or change live advice behavior.",
+    "",
+    "## Purpose",
+    "",
+    "This comparison asks why active-plus-risk behavioral-pool PCA state maps looked materially different when the WFA end date shifted from June 24, 2026 to March 31, 2026. The goal is to inspect state-map stability, fragmentation, selected-k behavior, and downstream portfolio-accounting symptoms without treating performance as accepted allocation evidence.",
+    "",
+    "## Source Packets",
+    "",
+    g5_pca_wfa_comparison_table_lines(run_spec, c("window_label", "packet_role", "packet_dir")),
+    "",
+    "## Portfolio Inspection Metrics",
+    "",
+    g5_pca_wfa_comparison_table_lines(summary_table, c("window_label", "comparison_surface_id", "surface_label", "run_status", "total_return", "sharpe", "max_drawdown", "total_entry_fills")),
+    "",
+    "## Auto-k Selected Cluster Counts",
+    "",
+    g5_pca_wfa_comparison_table_lines(cluster_table, c("window_label", "comparison_surface_id", "fold_id", "selected_cluster_count", "auto_max_clusters")),
+    "",
+    "## Fragmentation Diagnostics",
+    "",
+    g5_pca_wfa_comparison_table_lines(diag_table, c("window_label", "comparison_surface_id", "avg_train_states_with_rows", "avg_train_tiny_states", "avg_oos_states_with_rows", "avg_oos_tiny_states", "avg_selected_family_count", "avg_no_trade_state_selections")),
+    "",
+    "## Visual Outputs",
+    "",
+    paste0("- Metrics chart: `", paths$metrics_chart_png, "`"),
+    paste0("- Auto-k chart: `", paths$auto_cluster_chart_png, "`"),
+    paste0("- Fragmentation chart: `", paths$fragmentation_chart_png, "`"),
+    paste0("- Two-window state visual index: `", paths$visual_index_csv, "`"),
+    g5_pca_wfa_comparison_table_lines(visual_index, c("chart_type", "comparison_surface_id", "symbol", "path")),
+    "",
+    "## Readout",
+    "",
+    "- Fixed k9 is the steadier condition across the two inspected windows.",
+    "- Auto-k max15 confirms the max9 cap can bind, but higher selected k did not translate into better shifted-window robustness.",
+    "- The next research question is whether auto-k underperformance comes from state fragmentation, strategy selection churn, or allocation timing.",
+    "",
+    "## Outputs",
+    "",
+    paste0("- Run spec: `", paths$run_spec_csv, "`"),
+    paste0("- Merged summary: `", paths$merged_summary_csv, "`"),
+    paste0("- Auto clusters: `", paths$auto_clusters_csv, "`"),
+    paste0("- Child index: `", paths$child_index_csv, "`"),
+    paste0("- Fold diagnostics: `", paths$fold_diagnostics_csv, "`"),
+    paste0("- Diagnostic summary: `", paths$diagnostic_summary_csv, "`"),
+    "",
+    "## STOP Decisions",
+    "",
+    "- Do not treat these portfolio-accounting metrics as accepted allocation evidence.",
+    "- Operator approval is required before codifying fixed k9 as a default research gate.",
+    "- Operator approval is required before changing state-map selection rules, strategy families, allocation methods, leverage policy, live advice, or execution behavior."
+  )
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path, useBytes = TRUE)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_write_context_factorial_window_comparison <- function(repo_root, output_dir, source_packets = g5_context_factorial_window_sources(repo_root)) {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  source_packets <- g5_context_factorial_read_window_sources(source_packets)
+  summary <- g5_context_factorial_window_summary(source_packets)
+  child_index <- g5_context_factorial_window_child_index(source_packets)
+  auto_clusters <- g5_context_factorial_window_auto_clusters(source_packets)
+  derived_auto_clusters <- g5_context_factorial_window_auto_clusters_from_child_index(child_index)
+  if (nrow(derived_auto_clusters)) {
+    if (!nrow(auto_clusters)) {
+      auto_clusters <- derived_auto_clusters
+    } else {
+      auto_clusters <- rbind(auto_clusters, derived_auto_clusters[, names(auto_clusters), drop = FALSE])
+    }
+    auto_clusters <- auto_clusters[!duplicated(auto_clusters[, c("window_id", "comparison_surface_id", "symbol", "fold_id"), drop = FALSE]), , drop = FALSE]
+    auto_clusters <- auto_clusters[order(auto_clusters$window_id, auto_clusters$comparison_surface_id, auto_clusters$symbol, auto_clusters$fold_no), , drop = FALSE]
+  }
+  fold_diagnostics <- g5_context_factorial_fold_state_diagnostics(child_index)
+  diagnostic_summary <- g5_context_factorial_window_diagnostic_summary(fold_diagnostics)
+  paths <- list(
+    report_md = file.path(output_dir, "two_window_state_map_comparison_report.md"),
+    run_spec_csv = file.path(output_dir, "two_window_state_map_comparison_run_spec.csv"),
+    merged_summary_csv = file.path(output_dir, "two_window_state_map_merged_summary.csv"),
+    auto_clusters_csv = file.path(output_dir, "two_window_state_map_auto_clusters.csv"),
+    child_index_csv = file.path(output_dir, "two_window_state_map_child_index.csv"),
+    fold_diagnostics_csv = file.path(output_dir, "two_window_state_map_fold_diagnostics.csv"),
+    diagnostic_summary_csv = file.path(output_dir, "two_window_state_map_diagnostic_summary.csv"),
+    visual_index_csv = file.path(output_dir, "two_window_state_map_visual_index.csv"),
+    metrics_chart_png = file.path(output_dir, "two_window_state_map_metrics.png"),
+    auto_cluster_chart_png = file.path(output_dir, "two_window_state_map_auto_clusters.png"),
+    fragmentation_chart_png = file.path(output_dir, "two_window_state_map_fragmentation.png")
+  )
+  visual_index <- g5_context_factorial_window_visual_index(child_index, output_dir)
+  utils::write.csv(source_packets, paths$run_spec_csv, row.names = FALSE)
+  utils::write.csv(summary, paths$merged_summary_csv, row.names = FALSE)
+  utils::write.csv(auto_clusters, paths$auto_clusters_csv, row.names = FALSE)
+  utils::write.csv(child_index, paths$child_index_csv, row.names = FALSE)
+  utils::write.csv(fold_diagnostics, paths$fold_diagnostics_csv, row.names = FALSE)
+  utils::write.csv(diagnostic_summary, paths$diagnostic_summary_csv, row.names = FALSE)
+  utils::write.csv(visual_index, paths$visual_index_csv, row.names = FALSE)
+  paths$metrics_chart_png <- g5_context_factorial_window_write_metrics_chart(summary, paths$metrics_chart_png)
+  paths$auto_cluster_chart_png <- g5_context_factorial_window_write_cluster_chart(auto_clusters, paths$auto_cluster_chart_png)
+  paths$fragmentation_chart_png <- g5_context_factorial_window_write_fragmentation_chart(diagnostic_summary, paths$fragmentation_chart_png)
+  paths$report_md <- g5_context_factorial_window_report(paths, source_packets, summary, auto_clusters, diagnostic_summary, visual_index, paths$report_md)
+  list(paths = paths, run_spec = source_packets, summary = summary, auto_clusters = auto_clusters, child_index = child_index, fold_diagnostics = fold_diagnostics, diagnostic_summary = diagnostic_summary, visual_index = visual_index)
+}

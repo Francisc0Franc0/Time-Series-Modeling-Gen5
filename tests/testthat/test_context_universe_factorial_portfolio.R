@@ -367,3 +367,130 @@ test_that("active-plus-risk auto max15 triage writes visual audit contact sheets
   report <- readLines(written$paths$report_md, warn = FALSE)
   expect_true(any(grepl("selecting k from 2..15", report, fixed = TRUE)))
 })
+
+g5_test_write_window_compare_packet <- function(packet_dir, surfaces, total_return_offset = 0) {
+  dir.create(packet_dir, recursive = TRUE)
+  utils::write.csv(
+    data.frame(
+      universe_id = "active_plus_risk_context",
+      surface_id = surfaces,
+      run_status = "ok",
+      ending_equity = 100000 + seq_along(surfaces) * 1000,
+      total_return = total_return_offset + seq_along(surfaces) * 0.01,
+      cagr = total_return_offset + seq_along(surfaces) * 0.01,
+      sharpe = seq_along(surfaces) * 0.2,
+      max_drawdown = -seq_along(surfaces) * 0.03,
+      total_entry_fills = seq_along(surfaces) * 10L,
+      total_skipped_entries = 0L,
+      total_cash_capped_entries = 0L,
+      stringsAsFactors = FALSE
+    ),
+    file.path(packet_dir, "context_universe_factorial_summary.csv"),
+    row.names = FALSE
+  )
+  child_rows <- list()
+  for (surface in surfaces) {
+    for (symbol in c("AMD", "NVDA")) {
+      run_dir <- file.path(packet_dir, paste(surface, symbol, sep = "_"))
+      dir.create(run_dir, recursive = TRUE)
+      utils::write.csv(
+        data.frame(
+          split = rep(c("TRAIN", "OOS"), each = 2),
+          state_id = rep(c("S1", "S2"), 2),
+          row_count = c(30L, 4L, 6L, 1L),
+          row_fraction = c(0.88, 0.12, 0.86, 0.14),
+          fold_id = "fold_001",
+          fold_no = 1L,
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_dir, "pcawfa_state_coverage.csv"),
+        row.names = FALSE
+      )
+      utils::write.csv(
+        data.frame(
+          fold_id = "fold_001",
+          fold_no = 1L,
+          state_id = c("S1", "S2"),
+          strategy_family = c("ema_cross", "no_trade"),
+          stringsAsFactors = FALSE
+        ),
+        file.path(run_dir, "pcawfa_selected_states.csv"),
+        row.names = FALSE
+      )
+      child_rows[[length(child_rows) + 1L]] <- data.frame(
+        universe_id = "active_plus_risk_context",
+        surface_id = surface,
+        pca_panel_mode = "pooled_asset_day",
+        state_engine = if (grepl("auto", surface)) "pca_kmeans_auto" else if (grepl("kmeans", surface)) "pca_kmeans" else "quantile_grid",
+        state_count = if (grepl("max15", surface)) "kauto15" else if (grepl("auto", surface)) "kauto9" else if (grepl("k9", surface)) "k9" else "3x3",
+        symbol = symbol,
+        run_dir = run_dir,
+        oos_metrics_csv = file.path(run_dir, "pcawfa_oos_metrics.csv"),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  utils::write.csv(do.call(rbind, child_rows), file.path(packet_dir, "context_universe_factorial_child_artifact_index.csv"), row.names = FALSE)
+  auto_surfaces <- surfaces[grepl("auto", surfaces)]
+  if (length(auto_surfaces)) {
+    utils::write.csv(
+      do.call(rbind, lapply(auto_surfaces, function(surface) {
+        data.frame(
+          universe_id = "active_plus_risk_context",
+          surface_id = surface,
+          symbol = "AMD",
+          fold_id = "fold_001",
+          fold_no = 1L,
+          cluster_count_mode = "auto",
+          auto_min_clusters = 2L,
+          auto_max_clusters = if (grepl("max15", surface)) 15L else 9L,
+          selected_cluster_count = if (grepl("max15", surface)) 13L else 5L,
+          selection_criterion = "calinski_harabasz_train_pc1_pc2",
+          stringsAsFactors = FALSE
+        )
+      })),
+      file.path(packet_dir, "context_universe_factorial_auto_clusters.csv"),
+      row.names = FALSE
+    )
+  } else {
+    utils::write.csv(data.frame(), file.path(packet_dir, "context_universe_factorial_auto_clusters.csv"), row.names = FALSE)
+  }
+}
+
+test_that("two-window comparison reads existing packets and writes diagnostics", {
+  repo_root <- tempfile("g5_context_window_repo_")
+  dir.create(repo_root, recursive = TRUE)
+  packet_root <- file.path(repo_root, "packets")
+  max9_surfaces <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9", "behavioral_pool_kmeans_auto_max9")
+  max15_surfaces <- c("behavioral_pool_kmeans_auto_max15")
+  source_packets <- data.frame(
+    window_id = c("jun_2026", "jun_2026", "mar_2026", "mar_2026"),
+    window_label = c("June", "June", "March", "March"),
+    packet_role = c("max9_packet", "max15_packet", "max9_packet", "max15_packet"),
+    packet_dir = file.path(packet_root, c("jun_max9", "jun_max15", "mar_max9", "mar_max15")),
+    stringsAsFactors = FALSE
+  )
+  g5_test_write_window_compare_packet(source_packets$packet_dir[[1L]], max9_surfaces, 0.10)
+  g5_test_write_window_compare_packet(source_packets$packet_dir[[2L]], max15_surfaces, 0.10)
+  g5_test_write_window_compare_packet(source_packets$packet_dir[[3L]], max9_surfaces, -0.05)
+  g5_test_write_window_compare_packet(source_packets$packet_dir[[4L]], max15_surfaces, -0.05)
+
+  output_dir <- file.path(repo_root, "comparison")
+  written <- g5_write_context_factorial_window_comparison(repo_root, output_dir, source_packets)
+
+  expect_true(file.exists(written$paths$report_md))
+  expect_true(file.exists(written$paths$merged_summary_csv))
+  expect_true(file.exists(written$paths$auto_clusters_csv))
+  expect_true(file.exists(written$paths$fold_diagnostics_csv))
+  expect_true(file.exists(written$paths$diagnostic_summary_csv))
+  expect_true(file.exists(written$paths$metrics_chart_png))
+  expect_true(file.exists(written$paths$auto_cluster_chart_png))
+  expect_true(file.exists(written$paths$fragmentation_chart_png))
+  expect_equal(nrow(written$summary), 8L)
+  expect_true(all(c("quantile_3x3", "fixed_k9", "auto_max9", "auto_max15") %in% written$summary$comparison_surface_id))
+  expect_gt(nrow(written$fold_diagnostics), 0L)
+  expect_gt(nrow(written$diagnostic_summary), 0L)
+  report <- readLines(written$paths$report_md, warn = FALSE)
+  expect_true(any(grepl("Two-Window State-Map Comparison", report, fixed = TRUE)))
+  expect_true(any(grepl("Fragmentation Diagnostics", report, fixed = TRUE)))
+})
