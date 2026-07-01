@@ -205,7 +205,7 @@ g5_load_data_layer_config <- function(
   cfg$cache$root <- g5_resolve_repo_path(cfg$cache$root, repo_root)
   cfg$calendar$timezone <- g5_env_value("GEN5_MARKET_TIMEZONE", cfg$calendar$timezone)
   cfg$calendar$market_close_time <- g5_env_value("GEN5_MARKET_CLOSE_TIME", cfg$calendar$market_close_time)
-  cfg$feed <- g5_env_value("ALPACA_DATA_FEED", cfg$feed %g5||% "iex")
+  cfg$feed <- g5_env_value("ALPACA_DATA_FEED", cfg$feed %g5||% "sip")
   cfg$symbols <- g5_env_symbols(Sys.getenv("GEN5_SYMBOLS", unset = ""), cfg$symbols)
   cfg$config_source_files <- source_files
 

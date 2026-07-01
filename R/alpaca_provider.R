@@ -23,7 +23,7 @@ g5_alpaca_config_from_env <- function() {
   key_id <- .g5_alpaca_value_from_object_or_env("ALPACA_KEY", c("ALPACA_KEY", "ALPACA_KEY_ID"))
   secret_key <- .g5_alpaca_value_from_object_or_env("ALPACA_SECRET", c("ALPACA_SECRET", "ALPACA_SECRET_KEY"))
   base_url <- Sys.getenv("ALPACA_DATA_BASE_URL", unset = "https://data.alpaca.markets")
-  feed <- Sys.getenv("ALPACA_DATA_FEED", unset = "iex")
+  feed <- Sys.getenv("ALPACA_DATA_FEED", unset = "sip")
 
   list(
     key_id = key_id,
@@ -117,7 +117,7 @@ g5_alpaca_daily_adjusted_request <- function(
   end_date,
   as_of_timestamp,
   latest_completed_session = end_date,
-  feed = Sys.getenv("ALPACA_DATA_FEED", unset = "iex")
+  feed = Sys.getenv("ALPACA_DATA_FEED", unset = "sip")
 ) {
   symbols <- g5_standardize_symbol(symbols)
   if (missing(as_of_timestamp) || is.null(as_of_timestamp)) {

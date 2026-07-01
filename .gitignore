@@ -8,6 +8,7 @@
 # Local data and generated outputs
 data_cache/
 runs/
+outputs/
 artifacts/
 logs/
 Rplots.pdf
