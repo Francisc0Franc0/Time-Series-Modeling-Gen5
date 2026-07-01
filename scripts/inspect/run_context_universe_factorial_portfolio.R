@@ -53,11 +53,14 @@ skip_child_runs <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS", "
 medium_grid <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID", "false"), default = FALSE)
 state_map_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE", "false"), default = FALSE)
 auto_max15_triage <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE", "false"), default = FALSE)
+temporal_context_replication <- parse_bool(env_or("GEN5_CONTEXT_FACTORIAL_TEMPORAL_CONTEXT_REPLICATION", "false"), default = FALSE)
 
 if (is.na(end_date)) g5_stop("GEN5_CONTEXT_FACTORIAL_END_DATE must be a valid date.")
 if (!nzchar(as_of_timestamp)) g5_stop("GEN5_CONTEXT_FACTORIAL_AS_OF_TIMESTAMP is required.")
 if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_CONTEXT_FACTORIAL_FOLD_COUNT must be a positive integer.")
-if (isTRUE(state_map_triage) && isTRUE(auto_max15_triage)) g5_stop("Choose either GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE or GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE, not both.")
+if (sum(c(isTRUE(medium_grid), isTRUE(state_map_triage), isTRUE(auto_max15_triage), isTRUE(temporal_context_replication))) > 1L) {
+  g5_stop("Choose only one multi-surface context-factorial preset.")
+}
 if (is.na(grid_n) || grid_n < 2L) g5_stop("GEN5_CONTEXT_FACTORIAL_GRID_N must be at least 2.")
 state_engine <- if (identical(state_engine, "kmeans")) "pca_kmeans" else state_engine
 state_engine <- g5_pca_wfa_state_engine(state_engine)
@@ -75,7 +78,8 @@ surface_defs <- g5_context_factorial_surface_definitions(
   state_engine = state_engine,
   grid_n = grid_n,
   state_map_triage = state_map_triage,
-  auto_max15_triage = auto_max15_triage
+  auto_max15_triage = auto_max15_triage,
+  temporal_context_replication = temporal_context_replication
 )
 output_dir <- g5_context_factorial_output_dir(
   repo_root = repo_root,
@@ -89,13 +93,15 @@ output_dir <- g5_context_factorial_output_dir(
   pca_panel_mode = pca_panel_mode,
   end_date = end_date,
   strategy_grid_preset = strategy_grid_preset,
-  surface_preset = if (isTRUE(auto_max15_triage)) "automax15" else ""
+  surface_preset = if (isTRUE(auto_max15_triage)) "automax15" else if (isTRUE(temporal_context_replication)) "temporalctx" else ""
 )
 
 purpose <- if (isTRUE(auto_max15_triage)) {
   g5_context_factorial_auto_max15_triage_purpose()
 } else if (isTRUE(state_map_triage)) {
   g5_context_factorial_state_map_triage_purpose()
+} else if (isTRUE(temporal_context_replication)) {
+  g5_context_factorial_temporal_replication_purpose()
 } else {
   g5_context_factorial_default_purpose()
 }

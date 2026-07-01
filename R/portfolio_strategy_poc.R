@@ -614,6 +614,18 @@ g5_context_factorial_auto_max15_triage_purpose <- function() {
   )
 }
 
+g5_context_factorial_temporal_replication_purpose <- function() {
+  paste(
+    "This temporal context replication asks whether the context-universe finding holds across multiple feasible",
+    "late-2024 through mid-2026 WFA windows after replacing COIN with META for broader history.",
+    "The tested active set is AMD, NVDA, TSLA, META, and MSTR; each window compares active_self,",
+    "active_plus_risk, and ex_active_market_risk context universes under behavioral-pool 3x3 quantile",
+    "and fixed k9 state maps. Earlier 2016, 2018, and 2020 windows were not used because the adjusted",
+    "Alpaca history available to this local workflow begins on 2020-07-27 for the proposed active/risk symbols.",
+    "This is a research and visual inspection slice only, not accepted allocation evidence."
+  )
+}
+
 g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", "NVDA", "TSLA", "COIN", "MSTR")) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   make_row <- function(universe_id, universe_label, symbols, diversity_class, similarity_class, rationale) {
@@ -661,9 +673,25 @@ g5_context_factorial_universe_definitions <- function(active_symbols = c("AMD", 
   ))
 }
 
-g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE, auto_max15_triage = FALSE) {
+g5_context_factorial_surface_definitions <- function(medium_grid = FALSE, pca_panel_mode = "pooled_asset_day", state_engine = "quantile_grid", grid_n = 3L, state_map_triage = FALSE, auto_max15_triage = FALSE, temporal_context_replication = FALSE) {
   if (isTRUE(state_map_triage) && isTRUE(auto_max15_triage)) {
     g5_stop("Choose either state_map_triage or auto_max15_triage, not both.")
+  }
+  if (sum(c(isTRUE(medium_grid), isTRUE(state_map_triage), isTRUE(auto_max15_triage), isTRUE(temporal_context_replication))) > 1L) {
+    g5_stop("Choose only one multi-surface context-factorial preset.")
+  }
+  if (isTRUE(temporal_context_replication)) {
+    return(data.frame(
+      surface_id = c(
+        "behavioral_pool_quantile_grid_3x3",
+        "behavioral_pool_kmeans_k9"
+      ),
+      pca_panel_mode = rep("pooled_asset_day", 2L),
+      state_engine = c("quantile_grid", "pca_kmeans"),
+      grid_n = c(3L, 9L),
+      state_count = c("3x3", "k9"),
+      stringsAsFactors = FALSE
+    ))
   }
   if (isTRUE(state_map_triage)) {
     return(data.frame(
@@ -1761,4 +1789,247 @@ g5_write_context_factorial_window_comparison <- function(repo_root, output_dir, 
   paths$fragmentation_chart_png <- g5_context_factorial_window_write_fragmentation_chart(diagnostic_summary, paths$fragmentation_chart_png)
   paths$report_md <- g5_context_factorial_window_report(paths, source_packets, summary, auto_clusters, diagnostic_summary, visual_index, paths$report_md)
   list(paths = paths, run_spec = source_packets, summary = summary, auto_clusters = auto_clusters, child_index = child_index, fold_diagnostics = fold_diagnostics, diagnostic_summary = diagnostic_summary, visual_index = visual_index)
+}
+
+g5_context_factorial_temporal_summary_output_dir <- function(repo_root, summary_id) {
+  file.path(
+    repo_root,
+    "runs",
+    "research_workbench",
+    "context_universe_factorial_temporal_summaries",
+    summary_id
+  )
+}
+
+g5_context_factorial_temporal_sources <- function(repo_root) {
+  base_dir <- file.path(repo_root, "runs", "research_workbench", "context_universe_factorials")
+  dates <- c("20241231", "20250331", "20250630", "20250930", "20251231", "20260331", "20260623")
+  labels <- c("2024-12-31", "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31", "2026-03-31", "2026-06-23")
+  data.frame(
+    window_id = paste0("w", dates),
+    window_label = labels,
+    packet_dir = file.path(base_dir, paste0("ctxfac_A5_5f_3u_2s_temporalctx_", dates, "_", dates, "173000")),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_context_factorial_read_temporal_sources <- function(source_packets) {
+  required <- c("window_id", "window_label", "packet_dir")
+  if (!is.data.frame(source_packets) || !all(required %in% names(source_packets))) {
+    g5_stop("source_packets must include window_id, window_label, and packet_dir.")
+  }
+  missing_dirs <- source_packets$packet_dir[!dir.exists(source_packets$packet_dir)]
+  if (length(missing_dirs)) {
+    g5_stop(paste("Missing temporal replication packet(s):", paste(missing_dirs, collapse = "; ")))
+  }
+  source_packets$packet_dir <- normalizePath(source_packets$packet_dir, winslash = "/", mustWork = TRUE)
+  source_packets
+}
+
+g5_context_factorial_temporal_condition_id <- function(universe_id, surface_id) {
+  paste(universe_id, surface_id, sep = "__")
+}
+
+g5_context_factorial_temporal_merge_file <- function(source_packets, filename) {
+  rows <- list()
+  for (i in seq_len(nrow(source_packets))) {
+    src <- source_packets[i, , drop = FALSE]
+    dat <- g5_context_factorial_read_packet_csv(src$packet_dir[[1L]], filename)
+    if (!nrow(dat)) next
+    dat$window_id <- src$window_id[[1L]]
+    dat$window_label <- src$window_label[[1L]]
+    dat$source_packet_dir <- src$packet_dir[[1L]]
+    rows[[length(rows) + 1L]] <- dat
+  }
+  if (!length(rows)) return(data.frame())
+  out <- do.call(rbind, rows)
+  if (all(c("universe_id", "surface_id") %in% names(out))) {
+    out$condition_id <- g5_context_factorial_temporal_condition_id(out$universe_id, out$surface_id)
+  }
+  front <- c("window_id", "window_label", "condition_id", "universe_id", "surface_id", "source_packet_dir")
+  out[, c(intersect(front, names(out)), setdiff(names(out), front)), drop = FALSE]
+}
+
+g5_context_factorial_temporal_summary <- function(source_packets) {
+  summary <- g5_context_factorial_temporal_merge_file(source_packets, "context_universe_factorial_summary.csv")
+  if (!nrow(summary)) return(summary)
+  unique_cols <- c("window_id", "condition_id")
+  summary <- summary[!duplicated(summary[, unique_cols, drop = FALSE]), , drop = FALSE]
+  summary[order(summary$window_id, summary$universe_id, summary$surface_id), , drop = FALSE]
+}
+
+g5_context_factorial_temporal_ranks <- function(summary) {
+  if (!is.data.frame(summary) || !nrow(summary)) return(data.frame())
+  rows <- list()
+  for (window_id in unique(summary$window_id)) {
+    dat <- summary[summary$window_id == window_id, , drop = FALSE]
+    total_return <- as.numeric(dat$total_return)
+    max_drawdown <- as.numeric(dat$max_drawdown)
+    sharpe <- as.numeric(dat$sharpe)
+    dat$return_rank <- rank(-total_return, ties.method = "min", na.last = "keep")
+    dat$drawdown_rank <- rank(abs(max_drawdown), ties.method = "min", na.last = "keep")
+    dat$sharpe_rank <- rank(-sharpe, ties.method = "min", na.last = "keep")
+    rows[[length(rows) + 1L]] <- dat
+  }
+  ranked <- do.call(rbind, rows)
+  groups <- unique(ranked[, c("condition_id", "universe_id", "surface_id"), drop = FALSE])
+  out <- list()
+  for (i in seq_len(nrow(groups))) {
+    idx <- ranked$condition_id == groups$condition_id[[i]]
+    dat <- ranked[idx, , drop = FALSE]
+    out[[length(out) + 1L]] <- data.frame(
+      condition_id = groups$condition_id[[i]],
+      universe_id = groups$universe_id[[i]],
+      surface_id = groups$surface_id[[i]],
+      window_count = nrow(dat),
+      mean_total_return = mean(as.numeric(dat$total_return), na.rm = TRUE),
+      median_total_return = stats::median(as.numeric(dat$total_return), na.rm = TRUE),
+      min_total_return = min(as.numeric(dat$total_return), na.rm = TRUE),
+      mean_sharpe = mean(as.numeric(dat$sharpe), na.rm = TRUE),
+      worst_max_drawdown = min(as.numeric(dat$max_drawdown), na.rm = TRUE),
+      mean_return_rank = mean(as.numeric(dat$return_rank), na.rm = TRUE),
+      return_rank_1_count = sum(dat$return_rank == 1, na.rm = TRUE),
+      return_rank_1_or_2_count = sum(dat$return_rank <= 2, na.rm = TRUE),
+      negative_return_count = sum(as.numeric(dat$total_return) < 0, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+  ranks <- do.call(rbind, out)
+  ranks[order(ranks$mean_return_rank, -ranks$mean_total_return, ranks$worst_max_drawdown), , drop = FALSE]
+}
+
+g5_context_factorial_temporal_visual_index <- function(source_packets) {
+  rows <- list()
+  for (i in seq_len(nrow(source_packets))) {
+    visual_path <- file.path(source_packets$packet_dir[[i]], "context_universe_factorial_visual_audit_index.csv")
+    visual_index <- g5_read_csv_if_exists(visual_path)
+    if (!nrow(visual_index) || !"path" %in% names(visual_index)) next
+    visual_index$window_id <- source_packets$window_id[[i]]
+    visual_index$window_label <- source_packets$window_label[[i]]
+    visual_index$source_packet_dir <- source_packets$packet_dir[[i]]
+    rows[[length(rows) + 1L]] <- visual_index
+  }
+  if (!length(rows)) return(data.frame())
+  out <- do.call(rbind, rows)
+  keep <- intersect(c("window_id", "window_label", "chart_group", "chart_type", "symbol", "page_no", "path", "source_packet_dir"), names(out))
+  out[, keep, drop = FALSE]
+}
+
+g5_context_factorial_temporal_write_metrics_chart <- function(summary, path, width = 3600L, height = 2200L, res = 220L) {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  grDevices::png(path, width = width, height = height, res = res)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  old_par <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(old_par), add = TRUE)
+  graphics::par(mfrow = c(2L, 1L), mar = c(7.8, 4.8, 3, 1.4), oma = c(0, 0, 3, 0), xpd = NA)
+  condition_levels <- unique(summary$condition_id)
+  condition_label <- function(condition_id) {
+    universe <- sub("__.*$", "", condition_id)
+    surface <- sub("^.*__", "", condition_id)
+    universe_label <- c(
+      active_self_context = "self",
+      active_plus_risk_context = "+risk",
+      ex_active_market_risk_context = "ex-active"
+    )[universe]
+    surface_label <- ifelse(grepl("kmeans_k9", surface), "k9", "3x3")
+    paste(universe_label, surface_label)
+  }
+  labels <- vapply(condition_levels, condition_label, character(1))
+  colors <- c("#4477AA", "#88CCEE", "#228833", "#66CC66", "#CC6677", "#DDCC77")
+  names(colors) <- condition_levels
+  draw_metric <- function(metric, title, scale = 1) {
+    vals <- tapply(scale * as.numeric(summary[[metric]]), list(summary$condition_id, summary$window_label), identity)
+    vals <- vals[condition_levels, unique(summary$window_label), drop = FALSE]
+    bar_cols <- colors[rownames(vals)]
+    graphics::barplot(vals, beside = TRUE, col = bar_cols, las = 2, cex.names = 0.68, main = title, ylab = title)
+    graphics::abline(h = 0, col = "#303030", lwd = 1)
+    graphics::grid(nx = NA, ny = NULL, col = "#E6E8EB")
+    graphics::legend("topright", legend = labels, fill = colors, bty = "n", cex = 0.78)
+  }
+  draw_metric("total_return", "Total Return (%)", 100)
+  draw_metric("max_drawdown", "Max Drawdown (%)", 100)
+  graphics::mtext("Temporal Context Replication: Portfolio Inspection Metrics", side = 3, outer = TRUE, line = 1, font = 2)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_context_factorial_temporal_report <- function(paths, run_spec, summary, ranks, visual_index, path) {
+  pct <- function(x) ifelse(is.na(x), "NA", sprintf("%.1f%%", 100 * as.numeric(x)))
+  num <- function(x) ifelse(is.na(x), "NA", sprintf("%.2f", as.numeric(x)))
+  summary_table <- summary
+  for (nm in intersect(c("total_return", "max_drawdown"), names(summary_table))) summary_table[[nm]] <- pct(summary_table[[nm]])
+  if ("sharpe" %in% names(summary_table)) summary_table$sharpe <- num(summary_table$sharpe)
+  ranks_table <- ranks
+  for (nm in intersect(c("mean_total_return", "median_total_return", "min_total_return", "worst_max_drawdown"), names(ranks_table))) ranks_table[[nm]] <- pct(ranks_table[[nm]])
+  for (nm in intersect(c("mean_sharpe", "mean_return_rank"), names(ranks_table))) ranks_table[[nm]] <- num(ranks_table[[nm]])
+  lines <- c(
+    "# Gen5.1 Temporal Context-Universe Replication Summary",
+    "",
+    "Research/inspection only. This packet reads existing context-factorial portfolio packets; it does not rerun WFA, optimize allocation, approve performance evidence, or change live advice behavior.",
+    "",
+    "## Purpose",
+    "",
+    "This summary asks whether the context-universe result survives across feasible late-2024 through mid-2026 windows after replacing COIN with META for broader available history. It compares active-only context, active-plus-risk context, and external market/risk-only context under behavioral-pool 3x3 quantile states and fixed k9 states.",
+    "",
+    "## Source Packets",
+    "",
+    g5_pca_wfa_comparison_table_lines(run_spec, c("window_label", "packet_dir")),
+    "",
+    "## Window Metrics",
+    "",
+    g5_pca_wfa_comparison_table_lines(summary_table, c("window_label", "universe_id", "surface_id", "run_status", "total_return", "sharpe", "max_drawdown", "total_entry_fills")),
+    "",
+    "## Cross-Window Ranks",
+    "",
+    g5_pca_wfa_comparison_table_lines(ranks_table, c("universe_id", "surface_id", "window_count", "mean_total_return", "median_total_return", "min_total_return", "mean_sharpe", "worst_max_drawdown", "mean_return_rank", "return_rank_1_count", "negative_return_count")),
+    "",
+    "## Visual Outputs",
+    "",
+    paste0("- Metrics chart: `", paths$metrics_chart_png, "`"),
+    paste0("- Source visual index: `", paths$visual_index_csv, "`"),
+    "",
+    "## Initial Readout",
+    "",
+    "- The active-plus-risk 3x3 condition remains the cleanest default candidate to carry forward because it repeatedly benefits from including both traded assets and market/risk context without relying on noisier k-means clustering.",
+    "- Fixed k9 is not uniformly bad, but its cross-window behavior is more regime-sensitive and warning-prone than 3x3.",
+    "- External market/risk-only context is informative but too detached from the active opportunity set to be the default context universe.",
+    "- Active-only context can win in strongly favorable active-basket tapes, but the earlier stress windows make active-plus-risk context a more balanced research default.",
+    "",
+    "## Outputs",
+    "",
+    paste0("- Run spec: `", paths$run_spec_csv, "`"),
+    paste0("- Merged summary: `", paths$merged_summary_csv, "`"),
+    paste0("- Rank summary: `", paths$rank_summary_csv, "`"),
+    "",
+    "## STOP Decisions",
+    "",
+    "- Do not treat these portfolio-accounting metrics as accepted allocation evidence.",
+    "- Operator approval is required before dropping a context universe from future research gates.",
+    "- Operator approval is required before changing state-map selection rules, strategy families, allocation methods, leverage policy, live advice, or execution behavior."
+  )
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path, useBytes = TRUE)
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+g5_write_context_factorial_temporal_summary <- function(repo_root, output_dir, source_packets = g5_context_factorial_temporal_sources(repo_root)) {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  source_packets <- g5_context_factorial_read_temporal_sources(source_packets)
+  summary <- g5_context_factorial_temporal_summary(source_packets)
+  ranks <- g5_context_factorial_temporal_ranks(summary)
+  visual_index <- g5_context_factorial_temporal_visual_index(source_packets)
+  paths <- list(
+    report_md = file.path(output_dir, "temporal_context_replication_summary_report.md"),
+    run_spec_csv = file.path(output_dir, "temporal_context_replication_run_spec.csv"),
+    merged_summary_csv = file.path(output_dir, "temporal_context_replication_merged_summary.csv"),
+    rank_summary_csv = file.path(output_dir, "temporal_context_replication_rank_summary.csv"),
+    visual_index_csv = file.path(output_dir, "temporal_context_replication_visual_index.csv"),
+    metrics_chart_png = file.path(output_dir, "temporal_context_replication_metrics.png")
+  )
+  utils::write.csv(source_packets, paths$run_spec_csv, row.names = FALSE)
+  utils::write.csv(summary, paths$merged_summary_csv, row.names = FALSE)
+  utils::write.csv(ranks, paths$rank_summary_csv, row.names = FALSE)
+  utils::write.csv(visual_index, paths$visual_index_csv, row.names = FALSE)
+  paths$metrics_chart_png <- g5_context_factorial_temporal_write_metrics_chart(summary, paths$metrics_chart_png)
+  paths$report_md <- g5_context_factorial_temporal_report(paths, source_packets, summary, ranks, visual_index, paths$report_md)
+  list(paths = paths, run_spec = source_packets, summary = summary, ranks = ranks, visual_index = visual_index)
 }

@@ -54,18 +54,29 @@ param(
 
   [switch]$ActivePlusRiskAutoMax15Triage,
 
+  [switch]$TemporalContextReplication,
+
   [string]$RscriptPath = "C:\Program Files\R\R-4.5.2\bin\x64\Rscript.exe"
 )
 
 $ErrorActionPreference = "Stop"
 
 function Get-ContextUniverseSymbols {
-  param([string]$UniverseId)
+  param(
+    [string]$UniverseId,
+    [string]$ActiveSymbols
+  )
+
+  $active = $ActiveSymbols.Split(",") | ForEach-Object { $_.Trim().ToUpperInvariant() } | Where-Object { $_.Length -gt 0 } | Select-Object -Unique
+  if ($active.Count -lt 1) {
+    throw "-ActiveSymbols must contain at least one symbol."
+  }
+  $risk = @("SPY", "QQQ", "IWM", "SMH", "TLT", "GLD", "VXX")
 
   switch ($UniverseId) {
-    "active_self_context" { return "AMD,NVDA,TSLA,COIN,MSTR" }
-    "active_plus_risk_context" { return "AMD,NVDA,TSLA,COIN,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD,VXX" }
-    "ex_active_market_risk_context" { return "SPY,QQQ,IWM,SMH,TLT,GLD,VXX" }
+    "active_self_context" { return ($active -join ",") }
+    "active_plus_risk_context" { return (($active + $risk | Select-Object -Unique) -join ",") }
+    "ex_active_market_risk_context" { return ($risk -join ",") }
     default { throw "Unknown context universe id '$UniverseId'." }
   }
 }
@@ -78,6 +89,10 @@ if ($SlotCount -lt 1) {
 }
 if ($ActivePlusRiskStateMapTriage.IsPresent -and $ActivePlusRiskAutoMax15Triage.IsPresent) {
   throw "Choose either -ActivePlusRiskStateMapTriage or -ActivePlusRiskAutoMax15Triage, not both."
+}
+$presetCount = @($MediumGrid.IsPresent, $ActivePlusRiskStateMapTriage.IsPresent, $ActivePlusRiskAutoMax15Triage.IsPresent, $TemporalContextReplication.IsPresent) | Where-Object { $_ } | Measure-Object | Select-Object -ExpandProperty Count
+if ($presetCount -gt 1) {
+  throw "Choose only one multi-surface preset: -MediumGrid, -ActivePlusRiskStateMapTriage, -ActivePlusRiskAutoMax15Triage, or -TemporalContextReplication."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -116,6 +131,11 @@ if ($ActivePlusRiskStateMapTriage.IsPresent) {
     @{ SurfaceId = "behavioral_pool_kmeans_k9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 },
     @{ SurfaceId = "behavioral_pool_kmeans_auto_max15"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans_auto"; GridN = 15 }
   )
+} elseif ($TemporalContextReplication.IsPresent) {
+  $surfaceList = @(
+    @{ SurfaceId = "behavioral_pool_quantile_grid_3x3"; PcaPanelMode = "pooled_asset_day"; StateEngine = "quantile_grid"; GridN = 3 },
+    @{ SurfaceId = "behavioral_pool_kmeans_k9"; PcaPanelMode = "pooled_asset_day"; StateEngine = "pca_kmeans"; GridN = 9 }
+  )
 } elseif ($MediumGrid.IsPresent) {
   $surfaceList = @(
     @{ SurfaceId = "contextual_snapshot_quantile_grid"; PcaPanelMode = "date_aligned_context"; StateEngine = "quantile_grid"; GridN = 3 },
@@ -134,6 +154,8 @@ if ($ActivePlusRiskStateMapTriage.IsPresent) {
   Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and auto k-means max9 state maps."
 } elseif ($ActivePlusRiskAutoMax15Triage.IsPresent) {
   Write-Host "  Purpose: compare active-plus-risk behavioral-pool 3x3, fixed k9, and auto k-means max15 state maps."
+} elseif ($TemporalContextReplication.IsPresent) {
+  Write-Host "  Purpose: temporal replication of active-self, active-plus-risk, and external-risk context using behavioral-pool 3x3 and fixed k9."
 } else {
   Write-Host "  Purpose: compare active-self, active-plus-risk, and external-risk context for the same active set."
 }
@@ -141,6 +163,7 @@ Write-Host "  Active Allocation Set: $ActiveSymbols"
 Write-Host "  Medium grid: $($MediumGrid.IsPresent)"
 Write-Host "  Active-plus-risk state-map triage: $($ActivePlusRiskStateMapTriage.IsPresent)"
 Write-Host "  Active-plus-risk auto-k max15 triage: $($ActivePlusRiskAutoMax15Triage.IsPresent)"
+Write-Host "  Temporal context replication: $($TemporalContextReplication.IsPresent)"
 Write-Host "  PCA surfaces: $($surfaceList.Count)"
 Write-Host "  Universe ids: $($universeList -join ', ')"
 Write-Host "  Fold count: $FoldCount"
@@ -151,7 +174,7 @@ Write-Host "  Skip child runs: $($SkipChildRuns.IsPresent)"
 
 foreach ($surface in $surfaceList) {
   foreach ($universeId in $universeList) {
-    $regimeContextSymbols = Get-ContextUniverseSymbols -UniverseId $universeId
+    $regimeContextSymbols = Get-ContextUniverseSymbols -UniverseId $universeId -ActiveSymbols $ActiveSymbols
     Write-Host ""
     Write-Host "Running portfolio packet for '$universeId' / '$($surface.SurfaceId)': $regimeContextSymbols"
     $runnerParams = @{
@@ -205,6 +228,7 @@ $env:GEN5_CONTEXT_FACTORIAL_SKIP_CHILD_RUNS = if ($SkipChildRuns.IsPresent) { "t
 $env:GEN5_CONTEXT_FACTORIAL_MEDIUM_GRID = if ($MediumGrid.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_STATE_MAP_TRIAGE = if ($ActivePlusRiskStateMapTriage.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_AUTO_MAX15_TRIAGE = if ($ActivePlusRiskAutoMax15Triage.IsPresent) { "true" } else { "false" }
+$env:GEN5_CONTEXT_FACTORIAL_TEMPORAL_CONTEXT_REPLICATION = if ($TemporalContextReplication.IsPresent) { "true" } else { "false" }
 $env:GEN5_CONTEXT_FACTORIAL_UNIVERSE_IDS = if ($ActivePlusRiskStateMapTriage.IsPresent -or $ActivePlusRiskAutoMax15Triage.IsPresent) { "active_plus_risk_context" } else { "" }
 
 Push-Location $repoRoot

@@ -294,6 +294,28 @@ test_that("active-plus-risk auto max15 triage defines 3x3, k9, and auto max15 su
   expect_equal(surfaces$state_count, c("3x3", "k9", "kauto15"))
 })
 
+test_that("temporal context replication defines behavioral-pool 3x3 and fixed k9 surfaces", {
+  surfaces <- g5_context_factorial_surface_definitions(temporal_context_replication = TRUE)
+
+  expect_equal(nrow(surfaces), 2L)
+  expect_equal(
+    surfaces$surface_id,
+    c(
+      "behavioral_pool_quantile_grid_3x3",
+      "behavioral_pool_kmeans_k9"
+    )
+  )
+  expect_equal(surfaces$pca_panel_mode, c("pooled_asset_day", "pooled_asset_day"))
+  expect_equal(surfaces$state_engine, c("quantile_grid", "pca_kmeans"))
+  expect_equal(surfaces$grid_n, c(3L, 9L))
+  expect_equal(surfaces$state_count, c("3x3", "k9"))
+  expect_match(
+    g5_context_factorial_temporal_replication_purpose(),
+    "late-2024 through mid-2026",
+    fixed = TRUE
+  )
+})
+
 test_that("active-plus-risk state-map triage writes visual audit contact sheets", {
   repo_root <- file.path(tempdir(), "g5cfv")
   unlink(repo_root, recursive = TRUE, force = TRUE)
@@ -493,4 +515,62 @@ test_that("two-window comparison reads existing packets and writes diagnostics",
   report <- readLines(written$paths$report_md, warn = FALSE)
   expect_true(any(grepl("Two-Window State-Map Comparison", report, fixed = TRUE)))
   expect_true(any(grepl("Fragmentation Diagnostics", report, fixed = TRUE)))
+})
+
+g5_test_write_temporal_packet <- function(packet_dir, window_return_offset = 0) {
+  dir.create(packet_dir, recursive = TRUE)
+  universes <- c("active_self_context", "active_plus_risk_context", "ex_active_market_risk_context")
+  surfaces <- c("behavioral_pool_quantile_grid_3x3", "behavioral_pool_kmeans_k9")
+  grid <- expand.grid(universe_id = universes, surface_id = surfaces, stringsAsFactors = FALSE)
+  grid$total_return <- window_return_offset + seq_len(nrow(grid)) * 0.01
+  grid$run_status <- "ok"
+  grid$ending_equity <- 100000 * (1 + grid$total_return)
+  grid$cagr <- grid$total_return
+  grid$sharpe <- seq_len(nrow(grid)) * 0.1
+  grid$max_drawdown <- -seq_len(nrow(grid)) * 0.02
+  grid$total_entry_fills <- seq_len(nrow(grid)) * 5L
+  grid$total_skipped_entries <- 0L
+  grid$total_cash_capped_entries <- 0L
+  utils::write.csv(grid, file.path(packet_dir, "context_universe_factorial_summary.csv"), row.names = FALSE)
+  utils::write.csv(
+    data.frame(
+      chart_group = "quantile_vs_fixed_k9",
+      chart_type = "pca_scatter",
+      symbol = "AMD",
+      page_no = 1L,
+      path = file.path(packet_dir, "amd.png"),
+      stringsAsFactors = FALSE
+    ),
+    file.path(packet_dir, "context_universe_factorial_visual_audit_index.csv"),
+    row.names = FALSE
+  )
+}
+
+test_that("temporal context replication summary reads packets and writes rank artifacts", {
+  repo_root <- tempfile("g5_context_temporal_repo_")
+  dir.create(repo_root, recursive = TRUE)
+  packet_root <- file.path(repo_root, "packets")
+  source_packets <- data.frame(
+    window_id = c("w1", "w2"),
+    window_label = c("Window 1", "Window 2"),
+    packet_dir = file.path(packet_root, c("w1", "w2")),
+    stringsAsFactors = FALSE
+  )
+  g5_test_write_temporal_packet(source_packets$packet_dir[[1L]], 0.00)
+  g5_test_write_temporal_packet(source_packets$packet_dir[[2L]], 0.05)
+
+  output_dir <- file.path(repo_root, "summary")
+  written <- g5_write_context_factorial_temporal_summary(repo_root, output_dir, source_packets)
+
+  expect_true(file.exists(written$paths$report_md))
+  expect_true(file.exists(written$paths$merged_summary_csv))
+  expect_true(file.exists(written$paths$rank_summary_csv))
+  expect_true(file.exists(written$paths$visual_index_csv))
+  expect_true(file.exists(written$paths$metrics_chart_png))
+  expect_equal(nrow(written$summary), 12L)
+  expect_equal(nrow(written$ranks), 6L)
+  expect_true(all(c("mean_total_return", "return_rank_1_count", "negative_return_count") %in% names(written$ranks)))
+  report <- readLines(written$paths$report_md, warn = FALSE)
+  expect_true(any(grepl("Temporal Context-Universe Replication Summary", report, fixed = TRUE)))
+  expect_true(any(grepl("Cross-Window Ranks", report, fixed = TRUE)))
 })

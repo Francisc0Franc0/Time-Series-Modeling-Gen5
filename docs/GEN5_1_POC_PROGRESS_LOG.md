@@ -51,23 +51,24 @@ At the conclusion of each future POC or research-inspection slice, add or update
 | 21. Auto-k Max15 State-Map Triage | `PROMISING` | Within active-plus-risk behavioral-pool PCA, does TRAIN-only auto-k naturally choose more than 9 clusters when allowed to search k=2..15? | [auto-k max15 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000), [selected-k CSV](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000/context_universe_factorial_auto_clusters.csv) | Corrected the intended wide-auto-k test after removing the mistaken fixed-k15 generated artifacts. Auto-k max15 selected fold sequence `5,4,13,14,14`, so the prior max9 cap was binding in later folds. Inspection accounting landed between fixed k9 and 3x3; keep auto-max15 as promising but not accepted. |
 | 22. Refreshed Shifted-Window State-Map Confirmation | `PROMISING` | After repairing the March 31, 2026 partial-history cache issue, do 3x3, fixed k9, auto max9, and auto max15 tell the same story on a shifted window? | [March max9 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_20260331_20260331173000), [March max15 packet](../runs/research_workbench/context_universe_factorials/ctxfac_A5_5f_1u_3s_automax15_20260331_20260331173000), [refresh audit](../runs/data_refresh/alpaca_daily_audit_20260331.csv) | Cache refresh restored requested-range coverage for the shifted window. Fixed k9 was the only positive state map in this window (`+2.8%`, Sharpe `0.23`), while 3x3 was slightly negative (`-2.1%`) and auto max9/max15 lagged (`-7.1%` / `-9.5%`). Auto max9 selected `5,5,4,5,8`; auto max15 selected `5,5,4,13,14`, confirming the cap can bind but not that more clusters are better. |
 | 23. Two-Window State-Map Comparison Packet | `ACCEPTED_DIRECTION` | Can the June and March active-plus-risk behavioral-pool state-map runs be inspected from one comparison surface? | [two-window comparison packet](../runs/research_workbench/context_universe_factorial_window_comparisons/ctxfac_two_window_state_map_20260331_20260624), [comparison report](../runs/research_workbench/context_universe_factorial_window_comparisons/ctxfac_two_window_state_map_20260331_20260624/two_window_state_map_comparison_report.md) | Added an artifact-only comparison wrapper that reads existing packets, merges metrics, derives missing auto-k rows from child model contracts, writes fragmentation diagnostics, and indexes existing state scatter/state-band visuals. The packet reinforces fixed k9 as steadier and frames the next question as state fragmentation / selection churn / allocation timing, not raw performance chasing. |
+| 24. Temporal Context-Universe Replication | `PROMISING` | Does the active-plus-risk context finding survive across several feasible late-2024 through mid-2026 WFA windows after replacing COIN with META for broader local history? | [temporal packets](../runs/research_workbench/context_universe_factorials), [temporal summary packet](../runs/research_workbench/context_universe_factorial_temporal_summaries/ctxfac_temporal_context_replication_20241231_20260623), [summary report](../runs/research_workbench/context_universe_factorial_temporal_summaries/ctxfac_temporal_context_replication_20241231_20260623/temporal_context_replication_summary_report.md) | Ran seven end dates (`2024-12-31` through `2026-06-23`) over `AMD,NVDA,TSLA,META,MSTR`, comparing active-self, active-plus-risk, and ex-active market-risk context under behavioral-pool 3x3 and fixed k9. Active-plus-risk k9 had the highest mean return but two negative windows and the worst drawdown; active-plus-risk 3x3 had zero negative windows and a tighter worst drawdown. Keep active-plus-risk as the lead context universe and treat 3x3 as the cleaner default state map for the next replication slice. |
 
 ## Current Research Posture
 
 The current most useful branch of the POC pathway is:
 
-1. Keep Active Allocation / Research Candidate / Tradeable Universe at `AMD,NVDA,TSLA,COIN,MSTR` unless explicitly revised.
+1. For broader temporal replication, use `AMD,NVDA,TSLA,META,MSTR` as the active/research/tradeable set unless the operator explicitly revises it.
 2. Keep active-plus-risk context as the leading context universe candidate for the next narrow tests.
-3. Keep behavioral-pool PCA and k-means variants in contention while using auto-k diagnostics to determine whether higher cluster counts naturally earn their keep.
-4. Treat fixed k9 as the steadier state-map contender so far, with `pca_kmeans_auto` max9/max15 retained as diagnostics and secondary contenders rather than defaults.
+3. Keep behavioral-pool PCA as the leading PCA panel mode unless a future contextual-snapshot replication slice earns a niche.
+4. Treat 3x3 quantile grid as the cleaner default state map for the next replication slice; keep fixed k9 and auto-k max9/max15 as diagnostics and secondary contenders rather than defaults.
 5. Continue using portfolio accounting only as a downstream inspection layer.
 
 ## Next Candidate Tests
 
-- Inspect whether auto-k underperformance in the March shifted window comes from state fragmentation, strategy selection instability, or allocation timing.
-- Compare fixed k9 against auto-k under a modestly expanded strategy grid only after the diagnostic readout suggests the state-map behavior is understandable enough to justify another run.
-- Inspect whether contextual snapshot retains any useful niche despite active-plus-risk behavioral-pool looking stronger.
-- Decide whether to codify a smaller default state-map surface for future research runs.
+- Replicate the active-plus-risk behavioral-pool 3x3 default on a small, different active basket or ETF-heavy basket to test whether the finding is asset-set specific.
+- Revisit contextual snapshot as a narrow challenger only after the behavioral-pool 3x3 context result is stable enough to justify another panel-mode comparison.
+- Inspect k-means warning/convergence behavior before treating any fixed-k or auto-k outperformance as actionable research evidence.
+- Decide whether to retire ex-active market-risk context from default grids while keeping it as an occasional diagnostic/control.
 
 ## STOP States
 
