@@ -22,7 +22,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - The emerging stack is now canonized as a Gen5.1 research/inspection engine in `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`. Future experiment wrappers should declare a run spec and call the engine rather than restating the full universe x PCA panel x state map x strategy grid x WFA x portfolio accounting design.
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 - The Alpaca adjusted-daily research feed now defaults to SIP, while still honoring `ALPACA_DATA_FEED` overrides. A live SIP refresh on 2026-07-01 confirmed `AMD,NVDA,TSLA,AAPL,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD` can be pulled from `2016-01-04`; `VXX` begins on `2018-01-18`, so pre-2018 context tests need an operator decision to replace, omit, or accept that limitation.
-- The refreshed PowerPoint summary is `outputs/gen5_temporal_context_replication_summary_sip_refresh.pptx`. It summarizes the completed seven-window temporal context replication, the SIP coverage correction, and the next overnight-batch decision.
+- The current PowerPoint summary is `presentations/gen5_recent_pca_context_screening_batch.pptx`. It summarizes the recent Gen5.1 PCA/context screening batch: context universes, PCA panel modes, state-map variants, temporal windows, and the SIP coverage correction.
 
 The newest operator surface is:
 

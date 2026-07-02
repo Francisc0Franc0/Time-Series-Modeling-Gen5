@@ -9,6 +9,7 @@
 data_cache/
 runs/
 outputs/
+presentations/
 artifacts/
 logs/
 Rplots.pdf

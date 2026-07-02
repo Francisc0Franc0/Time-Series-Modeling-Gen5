@@ -8,21 +8,65 @@ const defaultArtifactModule =
 const artifactModule = process.env.ARTIFACT_TOOL_MODULE || defaultArtifactModule;
 const { Presentation, PresentationFile } = await import(pathToFileURL(artifactModule).href);
 
-const outDir = path.join(repoRoot, "outputs");
-const recentSummaryDir = path.join(
+const presentationDir = path.join(repoRoot, "presentations");
+const finalPptx = path.join(presentationDir, "gen5_recent_pca_context_screening_batch.pptx");
+const inspectPath = path.join(presentationDir, "gen5_recent_pca_context_screening_batch.pptx.inspect.ndjson");
+const montagePath = path.join(presentationDir, "gen5_recent_pca_context_screening_batch_montage.webp");
+const slidePreviewDir = path.join(presentationDir, "gen5_recent_pca_context_screening_batch_slides");
+
+const mediumSummaryCsv = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "context_universe_factorials",
+  "ctxfac_A5_5f_3u_4s_20260624_20260624173000",
+  "context_universe_factorial_summary.csv"
+);
+const max9SummaryCsv = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "context_universe_factorials",
+  "ctxfac_A5_5f_1u_3s_20260624_20260624173000",
+  "context_universe_factorial_summary.csv"
+);
+const max15SummaryCsv = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "context_universe_factorials",
+  "ctxfac_A5_5f_1u_3s_automax15_20260624_20260624173000",
+  "context_universe_factorial_summary.csv"
+);
+const temporalSummaryDir = path.join(
   repoRoot,
   "runs",
   "research_workbench",
   "context_universe_factorial_temporal_summaries",
   "ctxfac_temporal_context_replication_20241231_20260623"
 );
-const recentRankCsv = path.join(recentSummaryDir, "temporal_context_replication_rank_summary.csv");
-const recentMetricsPng = path.join(recentSummaryDir, "temporal_context_replication_metrics.png");
+const temporalRankCsv = path.join(temporalSummaryDir, "temporal_context_replication_rank_summary.csv");
+const temporalMetricsPng = path.join(temporalSummaryDir, "temporal_context_replication_metrics.png");
+const twoWindowSummaryCsv = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "context_universe_factorial_window_comparisons",
+  "ctxfac_two_window_state_map_20260331_20260624",
+  "two_window_state_map_merged_summary.csv"
+);
+const twoWindowMetricsPng = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "context_universe_factorial_window_comparisons",
+  "ctxfac_two_window_state_map_20260331_20260624",
+  "two_window_state_map_metrics.png"
+);
 const coverageCsv = path.join(repoRoot, "runs", "data_refresh", "alpaca_daily_symbol_coverage_20260623.csv");
-const completedWindows = [
+const completedOlderWindows = [
   {
     label: "2021-03-31",
-    asOf: "2021-03-31 17:30",
     dir: path.join(
       repoRoot,
       "runs",
@@ -34,7 +78,6 @@ const completedWindows = [
   },
   {
     label: "2021-06-30",
-    asOf: "2021-06-30 17:30",
     dir: path.join(
       repoRoot,
       "runs",
@@ -45,11 +88,6 @@ const completedWindows = [
     vxxRows: "869 / 1054",
   },
 ];
-
-const finalPptx = path.join(outDir, "gen5_temporal_context_replication_summary_sip_refresh.pptx");
-const inspectPath = path.join(outDir, "gen5_temporal_context_replication_summary_sip_refresh.pptx.inspect.ndjson");
-const montagePath = path.join(outDir, "gen5_temporal_context_replication_summary_sip_refresh_montage.webp");
-const slidePreviewDir = path.join(outDir, "gen5_temporal_context_replication_summary_sip_refresh_slides");
 
 function parseCsv(text) {
   const rows = [];
@@ -97,7 +135,7 @@ async function readCsv(filePath) {
   return parseCsv(await fs.readFile(filePath, "utf8"));
 }
 
-function pct(value, digits = 0) {
+function pct(value, digits = 1) {
   const n = Number(value);
   if (!Number.isFinite(n)) return "";
   return `${(n * 100).toFixed(digits)}%`;
@@ -110,9 +148,11 @@ function num(value, digits = 2) {
 }
 
 function surfaceLabel(surfaceId) {
-  if (surfaceId.includes("quantile_grid_3x3")) return "3x3 quantile";
-  if (surfaceId.includes("kmeans_k9")) return "k-means k9";
-  return surfaceId.replace("behavioral_pool_", "").replaceAll("_", " ");
+  if (surfaceId.includes("auto_max15")) return "auto k 2..15";
+  if (surfaceId.includes("auto_max9")) return "auto k 2..9";
+  if (surfaceId.includes("quantile_grid_3x3") || surfaceId.includes("quantile_grid")) return "3x3 quantile";
+  if (surfaceId.includes("kmeans_k9") || surfaceId.includes("contextual_snapshot_kmeans") || surfaceId.includes("behavioral_pool_kmeans")) return "fixed k9";
+  return surfaceId.replace("behavioral_pool_", "").replace("contextual_snapshot_", "").replaceAll("_", " ");
 }
 
 function universeLabel(universeId) {
@@ -123,8 +163,14 @@ function universeLabel(universeId) {
     .replace("ex_active_market_risk", "ex-active risk");
 }
 
+function panelLabel(panelMode) {
+  if (panelMode === "pooled_asset_day") return "behavioral pool";
+  if (panelMode === "date_aligned_context") return "contextual snapshot";
+  return panelMode;
+}
+
 function conditionLabel(row) {
-  return `${universeLabel(row.universe_id)} / ${surfaceLabel(row.surface_id)}`;
+  return `${universeLabel(row.universe_id)} / ${panelLabel(row.pca_panel_mode)} / ${surfaceLabel(row.surface_id)}`;
 }
 
 function addText(slide, text, left, top, width, height, style = {}) {
@@ -146,12 +192,12 @@ function addText(slide, text, left, top, width, height, style = {}) {
 }
 
 function addTitle(slide, title, kicker = "Gen5.1 research inspection") {
-  addText(slide, kicker.toUpperCase(), 72, 44, 780, 28, {
+  addText(slide, kicker.toUpperCase(), 72, 44, 800, 28, {
     fontSize: 14,
     color: "slate-500",
     bold: true,
   });
-  addText(slide, title, 72, 80, 1040, 90, {
+  addText(slide, title, 72, 80, 1090, 92, {
     fontSize: 37,
     color: "slate-950",
     bold: true,
@@ -173,7 +219,7 @@ function addBodyLine(slide, text, left, top, width, fontSize = 19, color = "slat
     color: "teal-700",
     bold: true,
   });
-  addText(slide, text, left + 28, top, width - 28, 44, {
+  addText(slide, text, left + 28, top, width - 28, 50, {
     fontSize,
     color,
   });
@@ -196,7 +242,7 @@ function addNarrativeColumn(slide, label, items, left, top, width, accent = "tea
     bold: true,
   });
   items.forEach((item, idx) => {
-    addText(slide, item, left + 4, top + 54 + idx * 64, width - 8, 52, {
+    addText(slide, item, left + 4, top + 54 + idx * 66, width - 8, 58, {
       fontSize: 17,
       color: "slate-800",
     });
@@ -217,12 +263,12 @@ function addMetricCard(slide, label, value, note, left, top, width, height = 118
     bold: true,
   });
   addText(slide, value, left + 20, top + 42, width - 40, 36, {
-    fontSize: 28,
+    fontSize: 27,
     color: "slate-950",
     bold: true,
   });
-  addText(slide, note, left + 20, top + 82, width - 40, height - 88, {
-    fontSize: 15,
+  addText(slide, note, left + 20, top + 80, width - 40, height - 84, {
+    fontSize: 14,
     color: "slate-600",
   });
 }
@@ -254,7 +300,7 @@ function addSimpleTable(slide, columns, rows, left, top, widths, rowHeight = 38,
     });
     x = left;
     row.forEach((cell, cidx) => {
-      addText(slide, String(cell), x + 8, y + 9, widths[cidx] - 16, 20, {
+      addText(slide, String(cell), x + 8, y + 9, widths[cidx] - 16, 22, {
         fontSize,
         color: "slate-800",
       });
@@ -274,7 +320,7 @@ async function addImage(slide, imagePath, left, top, width, height, alt, fit = "
   });
 }
 
-async function loadWindowSummary(windowDef) {
+async function loadOlderWindowSummary(windowDef) {
   const csv = path.join(windowDef.dir, "context_universe_factorial_summary.csv");
   const rows = await readCsv(csv);
   return rows
@@ -282,49 +328,66 @@ async function loadWindowSummary(windowDef) {
     .sort((a, b) => Number(b.total_return) - Number(a.total_return));
 }
 
-const recentRanks = await readCsv(recentRankCsv);
+function summaryRow(row) {
+  return [
+    conditionLabel(row),
+    pct(row.total_return),
+    num(row.sharpe),
+    pct(row.max_drawdown),
+    row.total_entry_fills,
+  ];
+}
+
+const mediumRows = await readCsv(mediumSummaryCsv);
+const max9Rows = await readCsv(max9SummaryCsv);
+const max15Rows = await readCsv(max15SummaryCsv);
+const temporalRanks = await readCsv(temporalRankCsv);
+const twoWindowRows = await readCsv(twoWindowSummaryCsv);
 const coverage = await readCsv(coverageCsv);
-const byRank = [...recentRanks].sort((a, b) => Number(a.mean_return_rank) - Number(b.mean_return_rank));
-const recentQuantile = recentRanks.find(
+const olderRows = await Promise.all(completedOlderWindows.map(loadOlderWindowSummary));
+const activeCoverage = coverage.filter((r) => ["AMD", "NVDA", "TSLA", "AAPL", "MSTR"].includes(r.symbol));
+const topMedium = [...mediumRows].sort((a, b) => Number(b.total_return) - Number(a.total_return)).slice(0, 6);
+const activePlusMedium = mediumRows.filter((r) => r.universe_id === "active_plus_risk_context");
+const max9Auto = max9Rows.find((r) => r.surface_id === "behavioral_pool_kmeans_auto_max9");
+const max9Fixed = max9Rows.find((r) => r.surface_id === "behavioral_pool_kmeans_k9");
+const max9Quantile = max9Rows.find((r) => r.surface_id === "behavioral_pool_quantile_grid_3x3");
+const max15Auto = max15Rows.find((r) => r.surface_id === "behavioral_pool_kmeans_auto_max15");
+const recentQuantile = temporalRanks.find(
   (r) => r.universe_id === "active_plus_risk_context" && r.surface_id === "behavioral_pool_quantile_grid_3x3"
 );
-const recentK9 = recentRanks.find(
+const recentK9 = temporalRanks.find(
   (r) => r.universe_id === "active_plus_risk_context" && r.surface_id === "behavioral_pool_kmeans_k9"
 );
-const activeCoverage = coverage.filter((r) => ["AMD", "NVDA", "TSLA", "AAPL", "MSTR"].includes(r.symbol));
-const windowRows = await Promise.all(completedWindows.map(loadWindowSummary));
-const marchRows = windowRows[0];
-const juneRows = windowRows[1];
 
-await fs.mkdir(outDir, { recursive: true });
+await fs.mkdir(presentationDir, { recursive: true });
 await fs.mkdir(slidePreviewDir, { recursive: true });
 const presentation = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 
 {
   const slide = presentation.slides.add();
   slide.background.fill = "slate-50";
-  addText(slide, "Gen5.1 Temporal Context Replication", 72, 84, 1040, 62, {
-    fontSize: 44,
+  addText(slide, "Gen5.1 Recent PCA / Context Screening Batch", 72, 82, 1080, 64, {
+    fontSize: 43,
     color: "slate-950",
     bold: true,
   });
-  addText(slide, "SIP refresh plus two completed 2021 context-universe windows", 72, 156, 960, 52, {
-    fontSize: 27,
+  addText(slide, "Context universes, PCA panel modes, state-map choices, time windows, and the SIP data repair", 72, 156, 1050, 48, {
+    fontSize: 25,
     color: "slate-700",
   });
   addText(
     slide,
-    "This deck is meant to preserve the reasoning trail: what we knew, what was still unknown, why the next test was shaped this way, and what the new evidence did or did not answer.",
+    "Purpose: preserve the reasoning trail for the recent screen sequence, including why each test was run, what it answered, and what still belongs to operator judgment.",
     72,
-    238,
-    960,
-    86,
+    236,
+    980,
+    80,
     { fontSize: 23, color: "slate-700" }
   );
-  addMetricCard(slide, "Recent packet", "7 windows", "Late 2024 through mid 2026", 72, 398, 300);
-  addMetricCard(slide, "New packet", "2 windows", "March and June 2021 completed", 406, 398, 320);
-  addMetricCard(slide, "Boundary", "Inspection only", "No allocation evidence accepted here", 760, 398, 360);
-  addText(slide, "Active set: AMD, NVDA, TSLA, AAPL, MSTR", 72, 582, 880, 28, {
+  addMetricCard(slide, "Screen family", "PCA context", "Universe composition and panel/state map choices", 72, 394, 320);
+  addMetricCard(slide, "Time coverage", "2021-2026", "Recent packet plus older-window stress checks", 426, 394, 320);
+  addMetricCard(slide, "Boundary", "Inspection only", "No allocation evidence accepted here", 780, 394, 340);
+  addText(slide, "Active sets used: AMD,NVDA,TSLA,COIN/META/AAPL,MSTR depending on history requirements.", 72, 582, 980, 30, {
     fontSize: 18,
     color: "slate-500",
   });
@@ -333,86 +396,131 @@ const presentation = Presentation.create({ slideSize: { width: 1280, height: 720
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "Before SIP, the question was too narrow");
+  addTitle(slide, "Why this batch existed");
   addRule(slide);
   addNarrativeColumn(slide, "What we knew", [
-    "The late-2024 to mid-2026 temporal packet favored active-plus-risk context.",
-    "The 3x3 quantile state map looked cleaner than k9, even when k9 sometimes showed higher return.",
+    "PCA-routed WFA could assign TRAIN-fit states and route OOS decisions without leakage.",
+    "Portfolio accounting could replay child packet trades as a downstream inspection layer.",
   ], 78, 226, 350, "teal-700");
   addNarrativeColumn(slide, "What we did not know", [
-    "Whether the result was a recent-market-regime artifact.",
-    "Whether older windows could be tested without changing the research wrapper.",
+    "Which context universe should define regime state for a volatile active basket.",
+    "Whether 3x3 quantiles, fixed k-means, or auto-k created the cleaner state map.",
   ], 466, 226, 350, "amber-700");
-  addNarrativeColumn(slide, "Why ask next", [
-    "A robust context-universe choice should survive a move away from the most recent tape.",
-    "The first blocker to older tests was data provenance, not model design.",
+  addNarrativeColumn(slide, "Why these screens", [
+    "Each slice changed one research axis while keeping the downstream accounting surface familiar.",
+    "The goal was to find robust contenders, not crown a performance winner.",
   ], 854, 226, 350, "indigo-700");
 }
 
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "The data repair changed what we could test");
+  addTitle(slide, "The recent screen map");
   addRule(slide);
-  addBulletList(
-    slide,
-    [
-      "Gen4 had selected SIP when the entitlement check passed; Gen5 had been falling back to IEX unless explicitly overridden.",
-      "Gen5 now defaults the Alpaca daily research feed to SIP while preserving the override path.",
-      "AAPL replaced COIN for older-history tests because COIN cannot support a 2016-era training window.",
-      "VXX still begins on 2018-01-18, so early context windows carry a real partial-history warning.",
-    ],
-    84,
-    228,
-    1040,
-    21,
-    66
-  );
   addSimpleTable(
     slide,
-    ["Symbol", "Rows", "First session", "Latest session"],
-    activeCoverage.map((r) => [r.symbol, r.row_count, r.observed_first_session, r.observed_latest_session]),
-    84,
-    500,
-    [120, 120, 190, 190],
-    30,
-    12
+    ["Slice", "Question", "Scope", "Immediate readout"],
+    [
+      ["Context factorial", "Which context universe?", "3 contexts x panel/state surfaces", "Active + risk became the lead hypothesis."],
+      ["Panel mode", "Wide vs long PCA?", "contextual snapshot vs behavioral pool", "Behavioral pool emerged as the main lane."],
+      ["State map triage", "How many states?", "3x3, fixed k9, auto max9, auto max15", "More flexible k helped in one window but was unstable."],
+      ["Window comparison", "Does this survive time shifts?", "March vs June 2026", "Window sensitivity was large and informative."],
+      ["Temporal replication", "Is the context story recent-only?", "late 2024-mid 2026 plus 2021 retry", "3x3 looked cleaner; context winner not final."],
+    ],
+    64,
+    220,
+    [170, 270, 290, 360],
+    54,
+    13
   );
 }
 
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "The retry was bounded on purpose");
+  addTitle(slide, "Context universe: the first useful simplification");
   addRule(slide);
-  addNarrativeColumn(slide, "Test shape", [
-    "Same active set and candidate set: AMD, NVDA, TSLA, AAPL, MSTR.",
-    "Three context universes: active self, active plus risk, and ex-active risk.",
-  ], 78, 222, 350, "teal-700");
-  addNarrativeColumn(slide, "State surface", [
-    "Behavioral-pool PCA only.",
-    "Two state maps: 3x3 quantile grid and fixed k-means k9.",
-  ], 466, 222, 350, "indigo-700");
-  addNarrativeColumn(slide, "Stop rule", [
-    "Complete two adjacent 2021 windows, then pause before a long 2022 batch.",
-    "Treat partial 2022 child artifacts as non-evidence until their top-level packet completes.",
-  ], 854, 222, 350, "amber-700");
-  addText(slide, "Why: this was the smallest useful check of whether the recent-window story survives older adjacent OOS windows.", 84, 620, 1050, 38, {
-    fontSize: 20,
+  addSimpleTable(
+    slide,
+    ["Top medium-grid condition", "Return", "Sharpe", "Max DD", "Entries"],
+    topMedium.map(summaryRow),
+    58,
+    214,
+    [560, 100, 90, 100, 80],
+    42,
+    13
+  );
+  addText(slide, "Why this mattered: the system should not only look at the traded assets, and it should not only look away from them. Active-plus-risk became the intuitive lead because it mixes the active basket with broad market/risk context.", 78, 540, 1060, 62, {
+    fontSize: 19,
     color: "slate-700",
     bold: true,
+  });
+  addText(slide, "Caution: ex-active and active-self variants still produced credible pockets, so the context universe remains a research choice, not an accepted allocation rule.", 78, 622, 1060, 34, {
+    fontSize: 16,
+    color: "slate-500",
   });
 }
 
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "The recent-window result still matters, but it was not enough");
+  addTitle(slide, "PCA panel mode: behavioral pool became the main lane");
   addRule(slide);
-  await addImage(slide, recentMetricsPng, 36, 190, 1208, 404, "Recent temporal context replication metrics chart", "cover");
-  addMetricCard(slide, "Active-plus-risk 3x3", pct(recentQuantile.mean_total_return, 1), `Mean Sharpe ${num(recentQuantile.mean_sharpe)}; zero negative windows`, 78, 600, 350, 92);
-  addMetricCard(slide, "Active-plus-risk k9", pct(recentK9.mean_total_return, 1), `Mean Sharpe ${num(recentK9.mean_sharpe)}; two negative windows`, 466, 600, 350, 92);
-  addText(slide, "This is why the next question was temporal generalization, not another recent-window refinement.", 854, 614, 330, 54, {
+  addSimpleTable(
+    slide,
+    ["Active-plus-risk surface", "Panel", "State map", "Return", "Sharpe", "Max DD"],
+    activePlusMedium.map((r) => [
+      surfaceLabel(r.surface_id),
+      panelLabel(r.pca_panel_mode),
+      r.state_count,
+      pct(r.total_return),
+      num(r.sharpe),
+      pct(r.max_drawdown),
+    ]),
+    78,
+    218,
+    [250, 185, 120, 100, 90, 100],
+    44,
+    13
+  );
+  addBulletList(
+    slide,
+    [
+      "Behavioral pool lets each asset-day contribute to the PCA state surface, which matched the multi-asset active basket use case.",
+      "Contextual snapshot is not discarded; it remains a diagnostic because some ex-active/contextual combinations performed well.",
+      "The default next lane is behavioral-pool PCA unless a future slice gives contextual snapshots a specific job.",
+    ],
+    88,
+    440,
+    1020,
+    19,
+    58
+  );
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "State-map triage: flexibility helped, then warned us");
+  addRule(slide);
+  addSimpleTable(
+    slide,
+    ["June 2026 active-plus-risk state map", "Return", "Sharpe", "Max DD", "Entries"],
+    [
+      [surfaceLabel(max9Quantile.surface_id), pct(max9Quantile.total_return), num(max9Quantile.sharpe), pct(max9Quantile.max_drawdown), max9Quantile.total_entry_fills],
+      [surfaceLabel(max9Fixed.surface_id), pct(max9Fixed.total_return), num(max9Fixed.sharpe), pct(max9Fixed.max_drawdown), max9Fixed.total_entry_fills],
+      [surfaceLabel(max9Auto.surface_id), pct(max9Auto.total_return), num(max9Auto.sharpe), pct(max9Auto.max_drawdown), max9Auto.total_entry_fills],
+      [surfaceLabel(max15Auto.surface_id), pct(max15Auto.total_return), num(max15Auto.sharpe), pct(max15Auto.max_drawdown), max15Auto.total_entry_fills],
+    ],
+    84,
+    220,
+    [390, 110, 100, 110, 90],
+    44,
+    14
+  );
+  addMetricCard(slide, "Auto max9 selected", "5,4,5,8,4", "TRAIN-only Calinski-Harabasz fold sequence", 84, 478, 330);
+  addMetricCard(slide, "Auto max15 selected", "5,4,13,14,14", "The max9 cap was binding in later folds", 474, 478, 330);
+  addText(slide, "Interpretation: auto-k was statistically meaningful, but higher k did not automatically improve the downstream inspection result.", 852, 496, 310, 70, {
     fontSize: 17,
     color: "slate-700",
     bold: true,
@@ -422,25 +530,104 @@ const presentation = Presentation.create({ slideSize: { width: 1280, height: 720
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "March 2021: active-plus-risk survived, with 3x3 on top");
+  addTitle(slide, "Two adjacent 2026 windows told different stories");
   addRule(slide);
+  await addImage(slide, twoWindowMetricsPng, 48, 190, 1184, 348, "Two-window state-map comparison metrics", "cover");
   addSimpleTable(
     slide,
-    ["Condition", "Return", "Sharpe", "Max DD", "Entries"],
-    marchRows.map((r) => [conditionLabel(r), pct(r.total_return, 1), num(r.sharpe, 2), pct(r.max_drawdown, 1), r.total_entry_fills]),
-    72,
-    218,
-    [475, 110, 100, 110, 90],
-    44,
-    14
+    ["Window", "Best return", "Best surface", "Worst return", "Readout"],
+    [
+      ["2026-06-24", "57.9%", "auto k 2..9", "37.4%", "Many hypotheses worked."],
+      ["2026-03-31", "2.8%", "fixed k9", "-9.5%", "Same design, very different tape."],
+    ],
+    84,
+    558,
+    [140, 130, 180, 130, 360],
+    40,
+    13
   );
-  addText(slide, "What this answered: the active-plus-risk intuition was not purely a 2025-2026 artifact. But k9 did not improve the top result, and ex-active risk still looked competitive.", 72, 560, 1080, 56, {
-    fontSize: 20,
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Temporal replication broadened the time question");
+  addRule(slide);
+  await addImage(slide, temporalMetricsPng, 36, 190, 1208, 404, "Temporal context replication metrics chart", "cover");
+  addMetricCard(slide, "Active-plus-risk 3x3", pct(recentQuantile.mean_total_return), `Mean Sharpe ${num(recentQuantile.mean_sharpe)}; zero negative windows`, 78, 600, 350, 92);
+  addMetricCard(slide, "Active-plus-risk k9", pct(recentK9.mean_total_return), `Mean Sharpe ${num(recentK9.mean_sharpe)}; two negative windows`, 466, 600, 350, 92);
+  addText(slide, "The late-2024 to mid-2026 packet kept active-plus-risk alive, but also made 3x3 look cleaner than fixed k9.", 854, 612, 330, 56, {
+    fontSize: 17,
     color: "slate-700",
     bold: true,
   });
-  addText(slide, `VXX context coverage warning: ${completedWindows[0].vxxRows} rows versus the full window panel.`, 72, 636, 880, 30, {
-    fontSize: 16,
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "The data note: SIP fixed the older-history blocker");
+  addRule(slide);
+  addBulletList(
+    slide,
+    [
+      "The earlier apparent history limit came from Gen5 using IEX by default, while Gen4 had auto-selected SIP when entitled.",
+      "Gen5 now defaults daily research pulls to SIP while preserving explicit ALPACA_DATA_FEED overrides.",
+      "AAPL replaced COIN for older-history tests; COIN cannot support 2016-era training windows.",
+      "VXX starts on 2018-01-18, so pre-2018 context tests still require a policy decision.",
+    ],
+    84,
+    222,
+    1040,
+    20,
+    62
+  );
+  addSimpleTable(
+    slide,
+    ["Symbol", "Rows", "First session", "Latest session"],
+    activeCoverage.map((r) => [r.symbol, r.row_count, r.observed_first_session, r.observed_latest_session]),
+    84,
+    508,
+    [120, 120, 190, 190],
+    30,
+    12
+  );
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "The first older-window retry complicated the context story");
+  addRule(slide);
+  const marchRows = olderRows[0];
+  const juneRows = olderRows[1];
+  addSimpleTable(
+    slide,
+    ["2021-03-31 top rows", "Return", "Sharpe", "Max DD"],
+    marchRows.slice(0, 3).map((r) => [conditionLabel(r), pct(r.total_return), num(r.sharpe), pct(r.max_drawdown)]),
+    54,
+    218,
+    [460, 90, 80, 90],
+    42,
+    12
+  );
+  addSimpleTable(
+    slide,
+    ["2021-06-30 top rows", "Return", "Sharpe", "Max DD"],
+    juneRows.slice(0, 3).map((r) => [conditionLabel(r), pct(r.total_return), num(r.sharpe), pct(r.max_drawdown)]),
+    54,
+    398,
+    [460, 90, 80, 90],
+    42,
+    12
+  );
+  addText(slide, "Readout: March 2021 supported active-plus-risk 3x3; June 2021 put ex-active 3x3 first and all 3x3 variants above k9. That is exactly why the context decision stays open.", 790, 250, 350, 130, {
+    fontSize: 18,
+    color: "slate-700",
+    bold: true,
+  });
+  addText(slide, `VXX warnings: ${completedOlderWindows[0].label} had ${completedOlderWindows[0].vxxRows} rows; ${completedOlderWindows[1].label} had ${completedOlderWindows[1].vxxRows} rows.`, 790, 428, 350, 60, {
+    fontSize: 15,
     color: "slate-500",
   });
 }
@@ -448,60 +635,34 @@ const presentation = Presentation.create({ slideSize: { width: 1280, height: 720
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "June 2021: the simple context story broke in a useful way");
+  addTitle(slide, "What the batch changed in our beliefs");
   addRule(slide);
-  addSimpleTable(
-    slide,
-    ["Condition", "Return", "Sharpe", "Max DD", "Entries"],
-    juneRows.map((r) => [conditionLabel(r), pct(r.total_return, 1), num(r.sharpe, 2), pct(r.max_drawdown, 1), r.total_entry_fills]),
-    72,
-    218,
-    [475, 110, 100, 110, 90],
-    44,
-    14
-  );
-  addText(slide, "What this answered: active-plus-risk is not a universal winner. The three 3x3 conditions occupied the top three rows, while ex-active risk led this adjacent window.", 72, 560, 1080, 56, {
-    fontSize: 20,
-    color: "slate-700",
-    bold: true,
-  });
-  addText(slide, `VXX context coverage warning: ${completedWindows[1].vxxRows} rows versus the full window panel.`, 72, 636, 880, 30, {
-    fontSize: 16,
-    color: "slate-500",
-  });
-}
-
-{
-  const slide = presentation.slides.add();
-  slide.background.fill = "white";
-  addTitle(slide, "The new evidence changed the decision surface");
-  addRule(slide);
-  addNarrativeColumn(slide, "Answered", [
-    "SIP plus the AAPL basket can reach the older history needed for broader temporal tests.",
-    "Across both completed 2021 windows, 3x3 beat fixed k9 on total return.",
+  addNarrativeColumn(slide, "More confident", [
+    "Behavioral-pool PCA is the main lane for the next context/state-map screens.",
+    "Active-plus-risk is still the lead context hypothesis, not because it always wins, but because it keeps surviving retests.",
   ], 78, 226, 350, "teal-700");
-  addNarrativeColumn(slide, "Not answered", [
-    "Which context universe is globally best.",
-    "Whether the 2022 window behaves like 2021 or like the recent 2024-2026 packet.",
+  addNarrativeColumn(slide, "Less confident", [
+    "No single context universe can be accepted from one market regime.",
+    "More k-means clusters are not inherently better, even when auto-k wants to use them.",
   ], 466, 226, 350, "amber-700");
-  addNarrativeColumn(slide, "Implication", [
-    "3x3 is the cleaner default for the next batch.",
-    "Context-universe selection should stay open until more time windows are complete.",
+  addNarrativeColumn(slide, "Kept open", [
+    "3x3 versus fixed k9 as the operational default for the next replication batch.",
+    "Whether VXX should be replaced, omitted, or allowed to constrain older context windows.",
   ], 854, 226, 350, "indigo-700");
 }
 
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
-  addTitle(slide, "Warnings are part of the result, not bookkeeping");
+  addTitle(slide, "Guardrails that kept the screen useful");
   addRule(slide);
   addBulletList(
     slide,
     [
-      "VXX partial history is real: it can influence any context universe that includes VXX before its 2018 start.",
-      "Fixed k9 continued to show k-means convergence / Quick-TRANSfer warnings, so it remains diagnostic rather than a clean default.",
-      "The run entered 2022 before being stopped; only completed top-level 2021 packets are included in this deck.",
-      "The portfolio accounting layer is used as downstream inspection only. Performance does not approve an allocation.",
+      "Every PCA/state assignment remains TRAIN-fit and OOS-applied; no OOS bars select states, clusters, parameters, or context rules.",
+      "Portfolio accounting is the common downstream inspection surface, not allocation approval.",
+      "WARNs are evidence: VXX partial history and k-means convergence messages must stay attached to interpretations.",
+      "Multiple-comparison discipline matters: treat promising conditions as hypotheses for the next slice, not final winners.",
     ],
     84,
     228,
@@ -516,15 +677,15 @@ const presentation = Presentation.create({ slideSize: { width: 1280, height: 720
   slide.background.fill = "white";
   addTitle(slide, "Recommended next move");
   addRule(slide);
-  addMetricCard(slide, "Default state map", "3x3", "Use as the clean baseline for the next batch", 78, 230, 330);
-  addMetricCard(slide, "Open design choice", "VXX policy", "Replace, omit, or accept 2018+ comparability", 470, 230, 330);
-  addMetricCard(slide, "Next evidence", "2022 windows", "Run after the VXX choice or with the warning accepted", 862, 230, 330);
+  addMetricCard(slide, "Default next lane", "behavioral pool", "Keep contextual snapshots as diagnostic", 72, 230, 330);
+  addMetricCard(slide, "Lead context", "active + risk", "Retest, do not accept yet", 466, 230, 330);
+  addMetricCard(slide, "State baseline", "3x3", "Cleaner comparison anchor; k9/auto remain diagnostics", 860, 230, 330);
   addBulletList(
     slide,
     [
-      "Do not declare a winning context universe from the current evidence.",
-      "Use the next batch to separate context composition from temporal regime sensitivity.",
-      "Keep updating this deck and the POC log at each completed research checkpoint.",
+      "Resolve VXX policy for older context universes.",
+      "Then run the planned 2022 adjacent-window batch, and optionally rerun 2021 with the chosen VXX policy.",
+      "Update this deck and the POC log as the durable research memory after each completed screen.",
     ],
     96,
     430,
@@ -541,7 +702,7 @@ for (const [index, slide] of presentation.slides.items.entries()) {
   const slidePath = path.join(slidePreviewDir, `slide-${String(index + 1).padStart(2, "0")}.png`);
   await fs.writeFile(slidePath, new Uint8Array(await preview.arrayBuffer()));
 }
-const inspect = await presentation.inspect({ kind: "slide,textbox,shape,image,chart,table,layout", maxChars: 36000 });
+const inspect = await presentation.inspect({ kind: "slide,textbox,shape,image,chart,table,layout", maxChars: 42000 });
 await fs.writeFile(inspectPath, inspect.ndjson);
 const pptx = await PresentationFile.exportPptx(presentation);
 await pptx.save(finalPptx);
