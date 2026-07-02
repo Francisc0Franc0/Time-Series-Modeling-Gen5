@@ -163,6 +163,34 @@ Recommended operational path:
 3. Run `B_hist` as a second standalone job only if the live-basket evidence still leaves the policy decision ambiguous.
 4. If the broad wrapper remains too slow, add lower-level checkpointing inside per-symbol authority fitting before expanding more windows.
 
+## Screen A Live-Basket Robustness Result
+
+`A_live` completed after adding per-symbol authority checkpoints:
+
+- Screen packet: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/A_live/`
+- Top-level robustness packet: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/`
+- Visual summary: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/A_live/visual_summary/`
+- Replay windows: `2025Q4_asof_20251231`, `2026Q1_asof_20260331`, `2026Q2_asof_20260630`, and `2026Q3_asof_20260701`
+- Authority maps: `2025Q3`, `2025Q4`, `2026Q1`, `2026Q2`, and `2026Q3`
+
+Selection-map agreement stayed high:
+
+- Overall: `537 / 625` asset-state rows matched, or `85.92%`.
+- By quarter: `86.4%`, `86.4%`, `85.6%`, `84.0%`, and `87.2%`.
+
+Replay inspection:
+
+- Direct selection had the higher compact mean symbol trace return in `2025Q4`, `2026Q1`, and `2026Q2`.
+- Pooled-family selection had the higher compact mean symbol trace return in `2026Q3`.
+- The `2026Q3` pooled-family advantage was dominated by AMD: pooled minus direct was `+124.6%` for AMD, while NVDA and TSLA favored direct in that same window.
+- Direct had the higher win rate and trade-return Sharpe proxy in all four windows, including `2026Q3`.
+
+Interpretation:
+
+The live-basket evidence does not currently justify switching the bridge default to pooled-family selection. It makes pooled-family worth preserving as a first-class research contender because of the large AMD/Q3 behavior, but the broader live-basket readout looks more like "direct is steadier, pooled has an interesting outlier" than "pooled is generally more robust."
+
+`B_hist` remains useful only if the operator wants substitute-basket older-regime evidence before making the selection-policy decision. It should not be merged into the `A_live` readout as a single leaderboard.
+
 ## Outputs To Produce
 
 The comparison wrapper should write:

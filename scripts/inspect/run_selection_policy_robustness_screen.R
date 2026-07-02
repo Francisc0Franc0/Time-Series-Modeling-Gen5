@@ -161,6 +161,115 @@ write_authority_packet <- function(authority, output_dir) {
   paths
 }
 
+symbol_fit_path <- function(authority_dir, symbol) {
+  file.path(authority_dir, "symbol_models", paste0(g5_standardize_symbol(symbol)[[1L]], "_fit.rds"))
+}
+
+read_symbol_fit <- function(path) {
+  fit <- readRDS(path)
+  required <- c("fold", "selected_states", "train_state_performance", "state_coverage", "pca_scores", "pca_model_contract", "fold_model")
+  missing <- setdiff(required, names(fit))
+  if (length(missing)) {
+    g5_stop(paste0("Cached symbol authority fit is missing fields: ", paste(missing, collapse = ",")))
+  }
+  fit
+}
+
+build_symbol_fit_checkpoint <- function(bars, symbol, contract, model_grid, context_symbols, authority_dir) {
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  path <- symbol_fit_path(authority_dir, symbol)
+  if (file.exists(path)) {
+    message("Reuse cached symbol fit: ", contract$quarter_id[[1L]], " / ", symbol)
+    return(read_symbol_fit(path))
+  }
+  message("Fit symbol authority: ", contract$quarter_id[[1L]], " / ", symbol)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  fold <- g5_bridge_authority_fold(symbol, contract)
+  fitted <- g5_pca_wfa_fit_fold_models(
+    bars,
+    symbol = symbol,
+    folds = fold,
+    model_grid = model_grid,
+    grid_n = 5L,
+    state_engine = "quantile_grid",
+    regime_context_symbols = context_symbols,
+    pca_panel_mode = "pooled_asset_day",
+    min_train_state_rows = min_train_state_rows
+  )
+  fitted$selected_states$symbol <- symbol
+  fitted$selected_states$quarter_id <- contract$quarter_id[[1L]]
+  fitted$train_state_performance$symbol <- symbol
+  fitted$train_state_performance$quarter_id <- contract$quarter_id[[1L]]
+  fitted$state_coverage$symbol <- symbol
+  fitted$state_coverage$quarter_id <- contract$quarter_id[[1L]]
+  fitted$pca_scores$symbol <- symbol
+  fitted$pca_scores$quarter_id <- contract$quarter_id[[1L]]
+  fitted$pca_model_contract$symbol <- symbol
+  fitted$pca_model_contract$quarter_id <- contract$quarter_id[[1L]]
+  fold$quarter_id <- contract$quarter_id[[1L]]
+  fit <- list(
+    fold = fold,
+    selected_states = fitted$selected_states,
+    train_state_performance = fitted$train_state_performance,
+    state_coverage = fitted$state_coverage,
+    pca_scores = fitted$pca_scores,
+    pca_model_contract = fitted$pca_model_contract,
+    fold_model = fitted$fold_models[[fold$fold_id[[1L]]]]
+  )
+  saveRDS(fit, path)
+  fit
+}
+
+build_authority_with_symbol_checkpoints <- function(
+  bars,
+  symbols,
+  context_symbols,
+  quarter_id,
+  as_of_timestamp,
+  authority_dir
+) {
+  symbols <- g5_standardize_symbol(symbols)
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  g5_bridge_assert_symbols_available(bars, unique(c(symbols, context_symbols)))
+  contract <- g5_bridge_contract_frame(
+    quarter_id,
+    symbols,
+    context_symbols,
+    as_of_timestamp,
+    refresh,
+    g5_git_sha_or_na(repo_root),
+    cfg$feed,
+    g5_bridge_default_candidate_families(),
+    "gen4_daily_default"
+  )
+  model_grid <- g5_bridge_model_grid(
+    candidate_families = g5_bridge_default_candidate_families(),
+    strategy_grid_preset = "gen4_daily_default"
+  )
+  fits <- lapply(symbols, function(symbol) {
+    build_symbol_fit_checkpoint(
+      bars = bars,
+      symbol = symbol,
+      contract = contract,
+      model_grid = model_grid,
+      context_symbols = context_symbols,
+      authority_dir = authority_dir
+    )
+  })
+  names(fits) <- symbols
+  list(
+    contract = contract,
+    folds = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$fold)),
+    selected_states = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$selected_states)),
+    train_state_performance = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$train_state_performance)),
+    state_coverage = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$state_coverage)),
+    pca_scores = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$pca_scores)),
+    pca_model_contract = g5_wfa_bind_rows_fill(lapply(fits, function(x) x$pca_model_contract)),
+    model_grid = model_grid,
+    fold_models = stats::setNames(lapply(fits, function(x) x$fold_model), symbols)
+  )
+}
+
 read_full_authority_packet <- function(authority_dir) {
   authority <- g5_bridge_read_authority(authority_dir)
   perf_path <- file.path(authority_dir, "bridge_train_state_performance.csv")
@@ -204,18 +313,13 @@ get_or_build_authority <- function(spec, bars, screen_dir, quarter_id) {
   dates <- g5_bridge_authority_contract_dates(quarter_id, train_quarters = 8L)
   authority_as_of <- paste0(dates$train_end_date, " 17:30:00")
   message("Build authority: ", spec$screen_id, " / ", quarter_id)
-  authority <- g5_bridge_build_authority_from_bars(
+  authority <- build_authority_with_symbol_checkpoints(
     bars,
     symbols = spec$symbols,
     context_symbols = spec$context_symbols,
     quarter_id = quarter_id,
     as_of_timestamp = authority_as_of,
-    refresh = refresh,
-    git_sha = g5_git_sha_or_na(repo_root),
-    market_data_feed = cfg$feed,
-    candidate_families = g5_bridge_default_candidate_families(),
-    strategy_grid_preset = "gen4_daily_default",
-    min_train_state_rows = min_train_state_rows
+    authority_dir = authority_dir
   )
   write_authority_packet(authority, authority_dir)
   authority
@@ -413,6 +517,7 @@ run_screen <- function(spec) {
   g5_wfa_write_csv(trade_summary, paths$trade_summary_csv)
   g5_wfa_write_csv(portfolio_proxy, paths$portfolio_proxy_csv)
   visual_paths <- g5_selection_policy_write_visual_summary(screen_dir)
+  visual_paths$output_dir <- normalizePath(file.path(screen_dir, "visual_summary"), winslash = "/", mustWork = FALSE)
 
   report <- c(
     paste0("# Gen5.1 Selection-Policy Robustness Screen: ", spec$screen_label),
@@ -451,11 +556,11 @@ run_screen <- function(spec) {
     "## Graphics",
     "",
     paste0("- Visual summary folder: `", visual_paths$output_dir, "`"),
-    paste0("- Metric dashboard: `", visual_paths$metric_dashboard_png, "`"),
-    paste0("- Symbol return delta heatmap: `", visual_paths$return_heatmap_png, "`"),
-    paste0("- Return scatter: `", visual_paths$return_scatter_png, "`"),
-    paste0("- State churn map: `", visual_paths$churn_map_png, "`"),
-    paste0("- Equity proxy overlay: `", visual_paths$equity_proxy_png, "`"),
+    paste0("- Metric dashboard: `", visual_paths$paths$metric_dashboard_png, "`"),
+    paste0("- Symbol return delta heatmap: `", visual_paths$paths$return_heatmap_png, "`"),
+    paste0("- Return scatter: `", visual_paths$paths$return_scatter_png, "`"),
+    paste0("- State churn map: `", visual_paths$paths$churn_map_png, "`"),
+    paste0("- Equity proxy overlay: `", visual_paths$paths$equity_proxy_png, "`"),
     "",
     "## Leakage Guardrails",
     "",

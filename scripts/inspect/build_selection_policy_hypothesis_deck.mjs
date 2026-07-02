@@ -9,6 +9,9 @@ const repoRoot = path.resolve(process.env.GEN5_REPO_ROOT ?? process.cwd());
 const outPath = path.join(repoRoot, "presentations", "gen5_selection_policy_hypothesis.pptx");
 const previewDir = path.join(repoRoot, "runs", "presentation_build_tmp", "selection_policy_hypothesis_preview");
 const montagePath = path.join(repoRoot, "presentations", "gen5_selection_policy_hypothesis_montage.webp");
+const aLiveVisualDir = path.join(repoRoot, "runs", "research_workbench", "selection_policy_screens", "selpol_robust_20260702", "A_live", "visual_summary");
+const aLiveHeatmapPath = path.join(aLiveVisualDir, "selection_policy_symbol_return_delta_heatmap.png");
+const aLiveMetricPath = path.join(aLiveVisualDir, "selection_policy_metric_delta_dashboard.png");
 
 const W = 1280;
 const H = 720;
@@ -72,6 +75,17 @@ function addPanel(slide, left, top, width, height, fill = C.panel) {
   });
 }
 
+async function addImage(slide, imagePath, left, top, width, height, alt, fit = "contain") {
+  const bytes = await fs.readFile(imagePath);
+  slide.images.add({
+    blob: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+    contentType: "image/png",
+    alt,
+    fit,
+    position: { left, top, width, height },
+  });
+}
+
 function addFooter(slide, n) {
   addRule(slide, 42, 666, 1196);
   addText(slide, "Gen5.1 selection-policy hypothesis", { left: 42, top: 680, width: 460, height: 24 }, {
@@ -108,7 +122,7 @@ function addPolicyBox(slide, left, title, label, bullets, color) {
   });
 }
 
-function createDeck() {
+async function createDeck() {
   const p = Presentation.create({ slideSize: { width: W, height: H } });
 
   let slide = p.slides.add();
@@ -335,33 +349,78 @@ function createDeck() {
 
   slide = p.slides.add();
   slide.background.fill = C.canvas;
-  addLabel(slide, "PRACTICAL LIMIT", 42, 42);
-  addText(slide, "The broader run needs resumable authority builds", { left: 42, top: 88, width: 1060, height: 64 }, {
-    fontSize: 40,
+  addLabel(slide, "A-LIVE RESULT", 42, 42);
+  addText(slide, "The live-basket lane favors direct selection, with one AMD-heavy exception", { left: 42, top: 88, width: 1060, height: 96 }, {
+    fontSize: 36,
     bold: true,
   });
-  addText(slide, "A new five-symbol Gen4-like authority evaluates 172 candidate specs per asset before state routing. The first new A-live authority stayed compute-bound in an interactive run, so the wrapper now records the right job shape but the evidence packet is not complete yet.", { left: 42, top: 168, width: 1060, height: 104 }, {
+  addText(slide, "The completed A-live packet spans 2025Q4 through 2026Q3 on AMD,NVDA,PLTR,TSLA,SOFI with the Gen4 RESEARCH_ASSETS context. It is still inspection evidence, not allocation acceptance.", { left: 42, top: 204, width: 1060, height: 82 }, {
     fontSize: 23,
     color: "#222222",
   });
-  addText(slide, "Run order", { left: 96, top: 324, width: 240, height: 34 }, { fontSize: 25, bold: true });
+  addPanel(slide, 82, 322, 250, 140, "#F4F4F4");
+  addText(slide, "85.92%", { left: 110, top: 342, width: 190, height: 56 }, { fontSize: 43, bold: true, color: C.accent });
+  addText(slide, "asset-state map agreement", { left: 110, top: 410, width: 190, height: 34 }, { fontSize: 19 });
+  addPanel(slide, 390, 322, 250, 140, "#F4F4F4");
+  addText(slide, "3 of 4", { left: 418, top: 342, width: 190, height: 56 }, { fontSize: 43, bold: true, color: C.blue });
+  addText(slide, "windows favored direct on mean trace return", { left: 418, top: 410, width: 190, height: 46 }, { fontSize: 18 });
+  addPanel(slide, 698, 322, 250, 140, "#F4F4F4");
+  addText(slide, "4 of 4", { left: 726, top: 342, width: 190, height: 56 }, { fontSize: 43, bold: true, color: C.blue });
+  addText(slide, "windows favored direct on win rate and Sharpe proxy", { left: 726, top: 410, width: 190, height: 46 }, { fontSize: 18 });
+  addPanel(slide, 1006, 322, 170, 140, "#F4F4F4");
+  addText(slide, "AMD", { left: 1032, top: 350, width: 120, height: 48 }, { fontSize: 36, bold: true, color: C.green });
+  addText(slide, "drove pooled Q3", { left: 1032, top: 410, width: 116, height: 34 }, { fontSize: 18 });
+  addText(slide, "Meaning", { left: 96, top: 512, width: 240, height: 34 }, { fontSize: 25, bold: true });
+  addText(slide, "The live-basket screen does not justify switching the bridge default to pooled-family. It does justify keeping pooled-family as a research contender because the AMD/Q3 behavior is too interesting to discard.", { left: 96, top: 554, width: 980, height: 56 }, { fontSize: 21 });
+  addFooter(slide, 9);
+
+  slide = p.slides.add();
+  slide.background.fill = C.canvas;
+  addLabel(slide, "NEXT GATE", 42, 42);
+  addText(slide, "The next decision is whether more history is worth changing the basket", { left: 42, top: 88, width: 1060, height: 96 }, {
+    fontSize: 36,
+    bold: true,
+  });
+  addText(slide, "B_hist would swap SOFI and PLTR for AAPL and MSTR to reach older regimes. That is useful robustness evidence, but it is no longer a literal live-basket test.", { left: 42, top: 204, width: 1060, height: 72 }, {
+    fontSize: 23,
+    color: "#222222",
+  });
+  addText(slide, "Reason to run B_hist", { left: 96, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
   addText(slide, bulletText([
-    "Run A_live as a standalone resumable job.",
-    "Inspect its report and visuals before starting B_hist.",
-    "Add per-symbol checkpoints if authority fitting remains too slow.",
-  ]), { left: 96, top: 376, width: 520, height: 128 }, { fontSize: 22 });
-  addText(slide, "Decision boundary", { left: 700, top: 324, width: 300, height: 34 }, { fontSize: 25, bold: true });
+    "Test whether pooled-family behaves better in older market regimes.",
+    "Decide whether selection policy belongs in future factorial screens.",
+    "Build collaborator-facing evidence beyond the recent live basket.",
+  ]), { left: 96, top: 370, width: 500, height: 132 }, { fontSize: 21 });
+  addText(slide, "Reason to pause", { left: 700, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
   addText(slide, bulletText([
-    "No live bridge policy change yet.",
-    "No merged Screen A plus B winner table.",
-    "No performance acceptance from these inspection packets.",
-  ]), { left: 700, top: 376, width: 460, height: 128 }, { fontSize: 22 });
+    "A_live already favors keeping direct as the bridge default.",
+    "B_hist is compute-heavy and changes the traded basket.",
+    "It should not be merged into one winner table with A_live.",
+  ]), { left: 700, top: 370, width: 500, height: 132 }, { fontSize: 21 });
   addPanel(slide, 92, 552, 1096, 54, C.softAccent);
-  addText(slide, "The right next step is operational, not methodological: finish the authority packets without changing the experiment.", { left: 120, top: 568, width: 1030, height: 26 }, {
+  addText(slide, "Recommended posture: keep direct as default, preserve pooled-family as an optional research factor, and run B_hist only if older-regime robustness is the next decision.", { left: 120, top: 568, width: 1030, height: 26 }, {
     fontSize: 20,
     bold: true,
   });
-  addFooter(slide, 9);
+  addFooter(slide, 10);
+
+  const hasALiveVisuals = await fs.access(aLiveHeatmapPath).then(() => true).catch(() => false);
+  if (hasALiveVisuals) {
+    slide = p.slides.add();
+    slide.background.fill = C.canvas;
+    addLabel(slide, "VISUAL EVIDENCE", 42, 42);
+    addText(slide, "The A-live charts show steady direct advantage plus one pooled AMD outlier", { left: 42, top: 88, width: 1060, height: 96 }, {
+      fontSize: 34,
+      bold: true,
+    });
+    addText(slide, "Green cells favor pooled-family; red cells favor direct. The metric dashboard shows direct leading win rate and Sharpe proxy across all four windows.", { left: 42, top: 204, width: 1060, height: 46 }, {
+      fontSize: 21,
+      color: "#222222",
+    });
+    await addImage(slide, aLiveHeatmapPath, 70, 270, 540, 315, "A-live pooled-minus-direct symbol return delta heatmap");
+    await addImage(slide, aLiveMetricPath, 670, 270, 500, 315, "A-live selection policy metric dashboard");
+    addFooter(slide, 11);
+  }
 
   return p;
 }
@@ -369,7 +428,7 @@ function createDeck() {
 async function main() {
   await fs.mkdir(previewDir, { recursive: true });
   await fs.mkdir(path.dirname(outPath), { recursive: true });
-  const presentation = createDeck();
+  const presentation = await createDeck();
 
   for (const [index, slide] of presentation.slides.items.entries()) {
     const stem = `slide-${String(index + 1).padStart(2, "0")}`;
