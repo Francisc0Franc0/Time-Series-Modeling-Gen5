@@ -70,6 +70,11 @@ authority_dir <- arg_or_env("authority_dir", "GEN5_BRIDGE_AUTHORITY_DIR", g5_bri
 authority <- g5_bridge_read_authority(authority_dir)
 contract <- authority$contract[1L, , drop = FALSE]
 symbols <- g5_standardize_symbol(strsplit(contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+context_symbols <- if ("context_symbols" %in% names(contract) && nzchar(as.character(contract$context_symbols[[1L]]))) {
+  unique(g5_standardize_symbol(strsplit(contract$context_symbols[[1L]], ",", fixed = TRUE)[[1L]]))
+} else {
+  symbols
+}
 default_feed <- if ("market_data_feed" %in% names(contract) && nzchar(as.character(contract$market_data_feed[[1L]]))) as.character(contract$market_data_feed[[1L]]) else as.character(cfg$feed)
 feed <- arg_or_env("feed", "GEN5_BRIDGE_FEED", default_feed)
 if (nzchar(feed)) cfg$feed <- feed
@@ -88,6 +93,7 @@ message("Repository: ", repo_root)
 message("Quarter: ", quarter_id)
 message("Authority: ", authority_dir)
 message("Symbols: ", paste(symbols, collapse = ", "))
+message("Context symbols: ", paste(context_symbols, collapse = ", "))
 message("As of: ", as_of_timestamp)
 message("Feed: ", cfg$feed)
 message("Query: ", query_start_date, " through ", query_end_date)
@@ -99,13 +105,13 @@ result <- g5_workbench_query_adjusted_daily_bars(
   start_date = query_start_date,
   end_date = query_end_date,
   as_of_timestamp = as_of_timestamp,
-  symbols = symbols,
+  symbols = unique(c(symbols, context_symbols)),
   universe_name = paste0("live_bridge_daily_", quarter_id),
   universe_roles = "bridge_context_universe",
   refresh = refresh,
   repo_root = repo_root
 )
-for (symbol in symbols) {
+for (symbol in unique(c(symbols, context_symbols))) {
   g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
 }
 

@@ -9,6 +9,7 @@ It is not accepted allocation evidence, not automation, and not an order-entry s
 ## Current Q3 2026 Bridge
 
 - Basket: `AMD,NVDA,PLTR,TSLA,SOFI`
+- Regime Context Universe: Gen4 `RESEARCH_ASSETS` equivalent: `SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY`
 - Authority quarter: `2026Q3`
 - TRAIN window: `2024-07-01` through `2026-06-30`
 - Live authority window: `2026-07-01` through `2026-09-30`
@@ -27,6 +28,7 @@ powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_a
   -AsOf "2026-06-30 17:30:00" `
   -Quarter 2026Q3 `
   -Symbols "AMD,NVDA,PLTR,TSLA,SOFI" `
+  -ContextSymbols "SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY" `
   -Feed iex `
   -Refresh
 ```
@@ -62,6 +64,7 @@ Key artifacts:
 - `bridge_book_summary.csv`
 - `bridge_replay.csv`
 - `bridge_executions.csv`
+- `bridge_trades.csv`
 - `bridge_contact_sheet.png`
 - `bridge_daily_report.md`
 
@@ -70,5 +73,5 @@ Key artifacts:
 1. Read `bridge_book_summary.csv`.
 2. Read `bridge_pending_actions.csv`.
 3. Inspect `bridge_contact_sheet.png`.
-4. If needed, inspect the per-asset `bridge_chart_*.png` files.
+4. If needed, inspect the per-asset candlestick `bridge_chart_*.png` files.
 5. Treat any manual trading decision as an operator decision, not as automatic execution.

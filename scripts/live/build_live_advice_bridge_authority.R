@@ -64,6 +64,7 @@ if (is.na(as_of_date)) {
 default_quarter <- g5_bridge_next_quarter_id(g5_bridge_quarter_id(as_of_date))
 quarter_id <- toupper(arg_or_env("quarter", "GEN5_BRIDGE_QUARTER_ID", default_quarter))
 symbols <- g5_standardize_symbol(strsplit(arg_or_env("symbols", "GEN5_BRIDGE_SYMBOLS", paste(g5_bridge_default_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]])
+context_symbols <- unique(g5_standardize_symbol(strsplit(arg_or_env("context_symbols", "GEN5_BRIDGE_CONTEXT_SYMBOLS", paste(g5_bridge_default_context_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]]))
 feed <- arg_or_env("feed", "GEN5_BRIDGE_FEED", as.character(cfg$feed))
 if (nzchar(feed)) cfg$feed <- feed
 refresh <- g5_parse_bool_env(arg_or_env("refresh", "GEN5_BRIDGE_REFRESH", "false"), default = FALSE)
@@ -81,6 +82,7 @@ message("Gen5.1 live-advice bridge authority builder")
 message("Repository: ", repo_root)
 message("Quarter: ", quarter_id)
 message("Symbols: ", paste(symbols, collapse = ", "))
+message("Context symbols: ", paste(context_symbols, collapse = ", "))
 message("TRAIN: ", dates$train_start_date, " through ", dates$train_end_date)
 message("Live authority: ", dates$live_start_date, " through ", dates$live_end_date)
 message("PCA: pooled_asset_day / 5x5 quantile_grid")
@@ -94,7 +96,7 @@ result <- g5_workbench_query_adjusted_daily_bars(
   start_date = query_start_date,
   end_date = query_end_date,
   as_of_timestamp = as_of_timestamp,
-  symbols = symbols,
+  symbols = unique(c(symbols, context_symbols)),
   universe_name = paste0("live_bridge_authority_", quarter_id),
   universe_roles = "bridge_context_universe",
   refresh = refresh,
@@ -107,6 +109,7 @@ for (symbol in symbols) {
 authority <- g5_bridge_build_authority_from_bars(
   result$bars,
   symbols = symbols,
+  context_symbols = context_symbols,
   quarter_id = quarter_id,
   as_of_timestamp = result$resolved_session$as_of_timestamp,
   refresh = refresh,

@@ -6,6 +6,21 @@ g5_bridge_default_symbols <- function() {
   c("AMD", "NVDA", "PLTR", "TSLA", "SOFI")
 }
 
+g5_bridge_default_context_symbols <- function() {
+  c(
+    "SPY", "QQQ", "IWM", "DIA",
+    "NVDA", "TSLA", "AMD", "PLTR", "SOFI", "META", "AAPL",
+    "KO", "PEP", "WMT", "COST",
+    "XLF", "JPM", "BAC",
+    "XLE", "CVX", "XOM",
+    "TLT", "IEF",
+    "GLD", "SLV",
+    "VNQ",
+    "EFA", "EEM",
+    "UVXY"
+  )
+}
+
 g5_bridge_parse_quarter_id <- function(quarter_id) {
   q <- toupper(trimws(as.character(quarter_id)[[1L]]))
   if (!grepl("^[0-9]{4}Q[1-4]$", q)) {
@@ -105,14 +120,17 @@ g5_bridge_model_grid <- function(
   do.call(g5_wfa_candidate_model_grid, args)
 }
 
-g5_bridge_contract_frame <- function(quarter_id, symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_) {
+g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_) {
   dates <- g5_bridge_authority_contract_dates(quarter_id, train_quarters = 8L)
+  symbols <- g5_standardize_symbol(symbols)
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
   data.frame(
     schema_version = g5_live_bridge_schema_version(),
     quarter_id = dates$quarter_id,
     authority_status = "TEMPORARY_BRIDGE_ADVICE_ONLY",
     research_note = "Temporary bridge: Gen5.1 long/pooled PCA plus 5x5 quantile states, mimicking the Gen4 operating style while Gen5.1 production mechanics are still under construction.",
-    symbols = paste(g5_standardize_symbol(symbols), collapse = ","),
+    symbols = paste(symbols, collapse = ","),
+    context_symbols = paste(context_symbols, collapse = ","),
     train_start_date = dates$train_start_date,
     train_end_date = dates$train_end_date,
     live_start_date = dates$live_start_date,
@@ -162,6 +180,7 @@ g5_bridge_assert_symbols_available <- function(bars, symbols) {
 g5_bridge_build_authority_from_bars <- function(
   bars,
   symbols = g5_bridge_default_symbols(),
+  context_symbols = symbols,
   quarter_id,
   as_of_timestamp,
   refresh = FALSE,
@@ -170,8 +189,9 @@ g5_bridge_build_authority_from_bars <- function(
   min_train_state_rows = 20L
 ) {
   symbols <- g5_standardize_symbol(symbols)
-  g5_bridge_assert_symbols_available(bars, symbols)
-  contract <- g5_bridge_contract_frame(quarter_id, symbols, as_of_timestamp, refresh, git_sha, market_data_feed)
+  context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  g5_bridge_assert_symbols_available(bars, unique(c(symbols, context_symbols)))
+  contract <- g5_bridge_contract_frame(quarter_id, symbols, context_symbols, as_of_timestamp, refresh, git_sha, market_data_feed)
   model_grid <- g5_bridge_model_grid()
   fold_rows <- list()
   selected_rows <- list()
@@ -189,7 +209,7 @@ g5_bridge_build_authority_from_bars <- function(
       model_grid = model_grid,
       grid_n = 5L,
       state_engine = "quantile_grid",
-      regime_context_symbols = symbols,
+      regime_context_symbols = context_symbols,
       pca_panel_mode = "pooled_asset_day",
       min_train_state_rows = min_train_state_rows
     )
@@ -456,6 +476,9 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
         schema_version = g5_live_bridge_schema_version(),
         symbol = symbol,
         session_date = current_date,
+        open = as.numeric(all_bars$open[[idx]]),
+        high = as.numeric(all_bars$high[[idx]]),
+        low = as.numeric(all_bars$low[[idx]]),
         close = as.numeric(all_bars$close[[idx]]),
         state_id = current_state,
         selected_strategy_family = selected_family,
@@ -472,20 +495,26 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
   replay <- if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
   pending <- if (length(pending_actions)) g5_wfa_bind_rows_fill(pending_actions) else data.frame()
   executions <- if (length(executions)) g5_wfa_bind_rows_fill(executions) else data.frame()
+  trades <- g5_bridge_trades_from_replay(replay, executions, as.Date(contract$live_end_date[[1L]]))
   latest <- if (nrow(replay)) replay[nrow(replay), , drop = FALSE] else data.frame()
-  list(replay = replay, pending_actions = pending, executions = executions, latest = latest)
+  list(replay = replay, pending_actions = pending, executions = executions, trades = trades, latest = latest)
 }
 
 g5_bridge_run_daily_from_bars <- function(bars, authority, as_of_timestamp) {
   contract <- authority$contract[1L, , drop = FALSE]
   symbols <- g5_standardize_symbol(strsplit(contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  context_symbols <- if ("context_symbols" %in% names(contract) && nzchar(as.character(contract$context_symbols[[1L]]))) {
+    unique(g5_standardize_symbol(strsplit(contract$context_symbols[[1L]], ",", fixed = TRUE)[[1L]]))
+  } else {
+    symbols
+  }
   as_of_date <- as.Date(max(as.Date(bars$session_date), na.rm = TRUE))
   results <- list()
   for (symbol in symbols) {
     features <- g5_pca_regime_pooled_feature_table(
       bars,
       target_symbol = symbol,
-      context_symbols = symbols,
+      context_symbols = context_symbols,
       end_date = as_of_date
     )
     scored <- g5_bridge_score_frozen_quantile(features, authority$pca_model_contract, symbol)
@@ -495,6 +524,7 @@ g5_bridge_run_daily_from_bars <- function(bars, authority, as_of_timestamp) {
   replay <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$replay))
   pending <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$pending_actions))
   executions <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$executions))
+  trades <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$trades))
   latest <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$latest))
   book <- latest[, c("symbol", "session_date", "close", "state_id", "selected_strategy_family", "model_position_after_replay", "signal_status", "execution_status", "open_trade_strategy_spec_id", "open_trade_entry_execution_date"), drop = FALSE]
   names(book)[names(book) == "session_date"] <- "as_of_date"
@@ -507,6 +537,7 @@ g5_bridge_run_daily_from_bars <- function(bars, authority, as_of_timestamp) {
     replay = replay,
     pending_actions = pending,
     executions = executions,
+    trades = trades,
     operator_packet = latest,
     book_summary = book
   )
@@ -544,6 +575,7 @@ g5_bridge_write_authority_outputs <- function(authority, output_dir) {
     "## Frozen Authority",
     "",
     paste0("- Symbols: `", contract$symbols[[1L]], "`"),
+    paste0("- Regime Context Universe: `", if ("context_symbols" %in% names(contract)) contract$context_symbols[[1L]] else contract$symbols[[1L]], "`"),
     paste0("- TRAIN window: `", contract$train_start_date[[1L]], "` through `", contract$train_end_date[[1L]], "`"),
     paste0("- Live authority window: `", contract$live_start_date[[1L]], "` through `", contract$live_end_date[[1L]], "`"),
     "- PCA surface: long/pooled asset-day PCA (`pooled_asset_day`)",
@@ -580,40 +612,100 @@ g5_bridge_read_authority <- function(authority_dir) {
   )
 }
 
-g5_bridge_plot_panel <- function(replay, executions, pending, main = "") {
+g5_bridge_trades_from_replay <- function(replay, executions, authority_end_date) {
+  if (!is.data.frame(executions) || !nrow(executions)) {
+    return(data.frame())
+  }
+  executions <- executions[order(as.Date(executions$execution_date)), , drop = FALSE]
+  replay_dates <- if (is.data.frame(replay) && nrow(replay)) as.Date(replay$session_date) else as.Date(character())
+  rows <- list()
+  open_exec <- NULL
+  for (i in seq_len(nrow(executions))) {
+    row <- executions[i, , drop = FALSE]
+    if (identical(as.character(row$execution_type[[1L]]), "ENTER_LONG")) {
+      open_exec <- row
+    } else if (identical(as.character(row$execution_type[[1L]]), "EXIT_LONG") && !is.null(open_exec)) {
+      trace_return <- as.numeric(row$execution_price[[1L]]) / as.numeric(open_exec$execution_price[[1L]]) - 1
+      rows[[length(rows) + 1L]] <- data.frame(
+        symbol = as.character(row$symbol[[1L]]),
+        trade_status = "closed",
+        entry_execution_date = as.Date(open_exec$execution_date[[1L]]),
+        entry_execution_price = as.numeric(open_exec$execution_price[[1L]]),
+        exit_execution_date = as.Date(row$execution_date[[1L]]),
+        exit_execution_price = as.numeric(row$execution_price[[1L]]),
+        trace_end_date = as.Date(row$execution_date[[1L]]),
+        trace_end_price = as.numeric(row$execution_price[[1L]]),
+        trade_outcome = if (trace_return > 0) "win" else if (trace_return < 0) "loss" else "flat",
+        strategy_spec_id = as.character(open_exec$strategy_spec_id[[1L]]),
+        stringsAsFactors = FALSE
+      )
+      open_exec <- NULL
+    }
+  }
+  if (!is.null(open_exec) && length(replay_dates)) {
+    latest <- replay[nrow(replay), , drop = FALSE]
+    trace_return <- as.numeric(latest$close[[1L]]) / as.numeric(open_exec$execution_price[[1L]]) - 1
+    rows[[length(rows) + 1L]] <- data.frame(
+      symbol = as.character(open_exec$symbol[[1L]]),
+      trade_status = "open",
+      entry_execution_date = as.Date(open_exec$execution_date[[1L]]),
+      entry_execution_price = as.numeric(open_exec$execution_price[[1L]]),
+      exit_execution_date = as.Date(NA),
+      exit_execution_price = NA_real_,
+      trace_end_date = as.Date(latest$session_date[[1L]]),
+      trace_end_price = as.numeric(latest$close[[1L]]),
+      trade_outcome = if (trace_return > 0) "win" else if (trace_return < 0) "loss" else "flat",
+      strategy_spec_id = as.character(open_exec$strategy_spec_id[[1L]]),
+      stringsAsFactors = FALSE
+    )
+  }
+  if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
+}
+
+g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.frame(), main = "") {
   if (!is.data.frame(replay) || !nrow(replay)) {
     graphics::plot.new()
     graphics::title(main)
     graphics::text(0.5, 0.5, "No replay rows")
     return(invisible(NULL))
   }
+  aesthetic <- g5_chart_aesthetic()
   dates <- as.Date(replay$session_date)
   x <- seq_along(dates)
+  open <- as.numeric(replay$open)
+  high <- as.numeric(replay$high)
+  low <- as.numeric(replay$low)
   close <- as.numeric(replay$close)
-  yrange <- range(close, na.rm = TRUE)
+  yrange <- range(c(low, high, close), na.rm = TRUE)
   pad <- diff(yrange) * 0.08
   if (!is.finite(pad) || pad == 0) pad <- max(1, yrange[[1L]] * 0.02)
-  graphics::plot(x, close, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted close", main = main, ylim = yrange + c(-pad, pad), xaxs = "i")
+  graphics::plot(x, close, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted price", main = main, ylim = yrange + c(-pad, pad), xaxs = "i", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
   states <- as.factor(replay$state_id)
   palette <- grDevices::hcl.colors(max(3L, length(levels(states))), "Set 3")
   for (i in seq_along(x)) {
     col <- grDevices::adjustcolor(palette[as.integer(states[[i]])], alpha.f = 0.22)
     graphics::rect(i - 0.5, par("usr")[[3L]], i + 0.5, par("usr")[[4L]], col = col, border = NA)
   }
-  graphics::lines(x, close, col = "#1f2937", lwd = 1.4)
-  graphics::points(x, close, pch = 16, col = "#111827", cex = 0.7)
+  graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
+  body_colors <- ifelse(close > open, aesthetic$up_candle, ifelse(close < open, aesthetic$down_candle, aesthetic$flat_candle))
+  graphics::segments(x0 = x, y0 = low, x1 = x, y1 = high, col = body_colors, lwd = 0.85)
+  graphics::segments(x0 = x, y0 = open, x1 = x, y1 = close, col = body_colors, lwd = 2.2)
+  if (is.data.frame(trades) && nrow(trades)) {
+    line_cols <- ifelse(trades$trade_outcome == "win", aesthetic$trade_win_line, ifelse(trades$trade_outcome == "loss", aesthetic$trade_loss_line, aesthetic$flat_candle))
+    graphics::segments(match(as.Date(trades$entry_execution_date), dates), trades$entry_execution_price, match(as.Date(trades$trace_end_date), dates), trades$trace_end_price, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 1.05)
+  }
   at <- unique(round(seq(1, length(x), length.out = min(6L, length(x)))))
   graphics::axis(1, at = at, labels = format(dates[at], "%m-%d"), las = 2, cex.axis = 0.75)
   entry_sig <- which(replay$signal_status == "ENTER_LONG_NEXT_OPEN")
   exit_sig <- which(replay$signal_status == "EXIT_LONG_NEXT_OPEN")
-  if (length(entry_sig)) graphics::points(entry_sig, close[entry_sig], pch = 24, bg = "#16a34a", col = "#14532d", cex = 1.1)
-  if (length(exit_sig)) graphics::points(exit_sig, close[exit_sig], pch = 25, bg = "#dc2626", col = "#7f1d1d", cex = 1.1)
+  if (length(entry_sig)) graphics::points(entry_sig, close[entry_sig], pch = aesthetic$entry_signal_pch, bg = aesthetic$entry_signal_color, col = aesthetic$entry_signal_color, cex = 1.0)
+  if (length(exit_sig)) graphics::points(exit_sig, close[exit_sig], pch = aesthetic$exit_signal_pch, bg = aesthetic$exit_signal_color, col = aesthetic$exit_signal_color, cex = 1.0)
   if (is.data.frame(executions) && nrow(executions)) {
     exec_x <- match(as.Date(executions$execution_date), dates)
     entry_exec <- executions$execution_type == "ENTER_LONG"
     exit_exec <- executions$execution_type == "EXIT_LONG"
-    if (any(entry_exec, na.rm = TRUE)) graphics::points(exec_x[entry_exec], as.numeric(executions$execution_price[entry_exec]), pch = 21, bg = "#22c55e", col = "#14532d", cex = 1.2)
-    if (any(exit_exec, na.rm = TRUE)) graphics::points(exec_x[exit_exec], as.numeric(executions$execution_price[exit_exec]), pch = 21, bg = "#ef4444", col = "#7f1d1d", cex = 1.2)
+    if (any(entry_exec, na.rm = TRUE)) graphics::points(exec_x[entry_exec], as.numeric(executions$execution_price[entry_exec]), pch = aesthetic$native_entry_pch, col = aesthetic$native_entry_color, bg = aesthetic$native_entry_color, cex = 0.95)
+    if (any(exit_exec, na.rm = TRUE)) graphics::points(exec_x[exit_exec], as.numeric(executions$execution_price[exit_exec]), pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 0.95)
   }
   if (is.data.frame(pending) && nrow(pending)) {
     graphics::mtext(paste("PENDING:", paste(pending$action, collapse = "; ")), side = 3, line = -1.2, adj = 1, cex = 0.75, col = "#7c2d12")
@@ -636,6 +728,9 @@ g5_bridge_chart_replay <- function(symbol_result, min_rows = 80L) {
     symbol = as.character(scores$symbol[keep]),
     session_date = as.Date(scores$session_date[keep]),
     close = as.numeric(scores$close[keep]),
+    open = as.numeric(scores$open[keep]),
+    high = as.numeric(scores$high[keep]),
+    low = as.numeric(scores$low[keep]),
     state_id = as.character(scores$state_id[keep]),
     selected_strategy_family = NA_character_,
     selected_strategy_spec_id = NA_character_,
@@ -667,6 +762,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     book_summary_csv = file.path(output_dir, "bridge_book_summary.csv"),
     replay_csv = file.path(output_dir, "bridge_replay.csv"),
     executions_csv = file.path(output_dir, "bridge_executions.csv"),
+    trades_csv = file.path(output_dir, "bridge_trades.csv"),
     report_md = file.path(output_dir, "bridge_daily_report.md"),
     contact_sheet_png = file.path(output_dir, "bridge_contact_sheet.png")
   )
@@ -675,6 +771,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
   g5_wfa_write_csv(daily$book_summary, paths$book_summary_csv)
   g5_wfa_write_csv(daily$replay, paths$replay_csv)
   g5_wfa_write_csv(daily$executions, paths$executions_csv)
+  g5_wfa_write_csv(daily$trades, paths$trades_csv)
   symbols <- names(daily$symbol_results)
   chart_paths <- character()
   for (symbol in symbols) {
@@ -685,6 +782,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
       chart_replay,
       daily$symbol_results[[symbol]]$executions,
       daily$symbol_results[[symbol]]$pending_actions,
+      daily$symbol_results[[symbol]]$trades,
       main = paste0(symbol, " bridge replay")
     )
     grDevices::dev.off()
@@ -700,6 +798,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
       chart_replay,
       daily$symbol_results[[symbol]]$executions,
       daily$symbol_results[[symbol]]$pending_actions,
+      daily$symbol_results[[symbol]]$trades,
       main = paste0(symbol, " bridge replay")
     )
   }
@@ -723,6 +822,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     "- `bridge_book_summary.csv`",
     "- `bridge_replay.csv`",
     "- `bridge_executions.csv`",
+    "- `bridge_trades.csv`",
     "- `bridge_contact_sheet.png`",
     "",
     "## Operator Guardrail",

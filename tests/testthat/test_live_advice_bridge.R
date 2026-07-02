@@ -18,6 +18,21 @@ test_that("bridge authority dates use traditional quarter boundaries", {
   expect_equal(g5_bridge_next_quarter_id("2026Q4"), "2027Q1")
 })
 
+test_that("bridge contract separates live symbols from context symbols", {
+  contract <- g5_bridge_contract_frame(
+    quarter_id = "2026Q3",
+    symbols = c("AMD", "NVDA"),
+    context_symbols = c("SPY", "QQQ", "AMD", "NVDA"),
+    as_of_timestamp = "2026-06-30 17:30:00",
+    refresh = FALSE,
+    market_data_feed = "iex"
+  )
+
+  expect_equal(contract$symbols[[1L]], "AMD,NVDA")
+  expect_equal(contract$context_symbols[[1L]], "SPY,QQQ,AMD,NVDA")
+  expect_equal(contract$market_data_feed[[1L]], "iex")
+})
+
 test_that("frozen quantile scoring uses contract centers, loadings, and break rows", {
   features <- data.frame(
     schema_version = "fixture",
