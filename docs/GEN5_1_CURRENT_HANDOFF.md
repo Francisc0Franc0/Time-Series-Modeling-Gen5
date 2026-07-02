@@ -23,6 +23,29 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 - The Alpaca adjusted-daily research feed now defaults to SIP, while still honoring `ALPACA_DATA_FEED` overrides. A live SIP refresh on 2026-07-01 confirmed `AMD,NVDA,TSLA,AAPL,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD` can be pulled from `2016-01-04`; `VXX` begins on `2018-01-18`, so pre-2018 context tests need an operator decision to replace, omit, or accept that limitation.
 - The current PowerPoint summary is `presentations/gen5_recent_pca_context_screening_batch.pptx`. It summarizes the recent Gen5.1 PCA/context screening batch: context universes, PCA panel modes, state-map variants, temporal windows, and the SIP coverage correction.
+- A temporary Gen5.1 live-advice bridge now exists for Q3 2026 manual advice continuity. It uses the Gen4 basket `AMD,NVDA,PLTR,TSLA,SOFI`, freezes TRAIN authority from `2024-07-01` through `2026-06-30`, uses long/pooled PCA plus `5x5` quantile states, infers position by one-bar-delayed model replay, and writes advice-only daily packets under ignored `runs/live_advice_bridge/`. See `docs/GEN5_1_LIVE_ADVICE_BRIDGE.md`. The current frozen bridge uses Alpaca `iex` because recent SIP daily pulls returned a subscription error for July 1 live advice.
+
+The newest live-advice bridge surfaces are:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_authority.ps1 `
+  -AsOf "2026-06-30 17:30:00" `
+  -Quarter 2026Q3 `
+  -Symbols "AMD,NVDA,PLTR,TSLA,SOFI" `
+  -Feed iex `
+  -Refresh
+
+powershell -ExecutionPolicy Bypass -File scripts/live/run_live_advice_bridge.ps1 `
+  -AsOf "2026-07-01 17:30:00" `
+  -Quarter 2026Q3 `
+  -Feed iex
+```
+
+Current bridge artifacts:
+
+- Authority: `runs/live_advice_bridge/authority/2026Q3/`
+- Daily packet: `runs/live_advice_bridge/daily/2026Q3/20260701173000/`
+- Daily result as of `2026-07-01 17:30:00`: all five assets replay to `FLAT`; no pending next-open actions.
 
 The newest operator surface is:
 
