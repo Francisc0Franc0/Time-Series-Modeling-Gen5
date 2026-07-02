@@ -135,6 +135,34 @@ Start with:
 - Medium run: add several adjacent quarters from the recent history that the current cache supports cleanly
 - Full research rerun only if the paired screen shows a meaningful stability or robustness difference
 
+## Broader Robustness Wrapper
+
+A resumable broader-screen wrapper now exists:
+
+- Script: `scripts/inspect/run_selection_policy_robustness_screen.R`
+- Default output root: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/`
+- Optional screen filter: set `GEN5_SELECTION_POLICY_ONLY=A_live` or `GEN5_SELECTION_POLICY_ONLY=B_hist`
+
+It declares two evidence lanes:
+
+1. `A_live`: current live basket `AMD,NVDA,PLTR,TSLA,SOFI` with the Gen4 `RESEARCH_ASSETS` context universe. This is the true live-basket comparison, limited by SOFI/PLTR and newer context-symbol history.
+2. `B_hist`: historical substitute basket `AMD,NVDA,TSLA,AAPL,MSTR` with a long-history active-plus-risk context. This is robustness evidence only; it is not a literal live-basket replication.
+
+The wrapper reuses completed authority packets when present and can reuse matching 2026 live-bridge authorities for Screen A. It writes each screen's run spec, taxonomy, authority index, selected-state maps, agreement summary, replay packet index, trade summaries, visual summary graphics, and report.
+
+Interactive compute note:
+
+- A new five-symbol Gen4-like bridge authority evaluates `172` candidate specs per asset before state routing.
+- The first new `A_live` authority (`2025Q3`) remained compute-bound for an interactive chat run and was stopped before completion.
+- Treat the wrapper as implemented scaffolding, but do not treat the broader robustness result as completed until the authority packets finish and the reports/visual summaries exist.
+
+Recommended operational path:
+
+1. Run `A_live` as a standalone resumable job, preferably when the machine can run for a while.
+2. Inspect the completed `A_live` report before starting `B_hist`.
+3. Run `B_hist` as a second standalone job only if the live-basket evidence still leaves the policy decision ambiguous.
+4. If the broad wrapper remains too slow, add lower-level checkpointing inside per-symbol authority fitting before expanding more windows.
+
 ## Outputs To Produce
 
 The comparison wrapper should write:

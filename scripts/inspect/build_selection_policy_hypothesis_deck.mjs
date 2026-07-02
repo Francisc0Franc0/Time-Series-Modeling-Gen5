@@ -276,6 +276,93 @@ function createDeck() {
   });
   addFooter(slide, 6);
 
+  slide = p.slides.add();
+  slide.background.fill = C.canvas;
+  addLabel(slide, "FIRST READOUT", 42, 42);
+  addText(slide, "The policies were closer than the Gen4 file comparison implied", { left: 42, top: 88, width: 1060, height: 92 }, {
+    fontSize: 37,
+    bold: true,
+  });
+  addText(slide, "Inside the Gen5.1 bridge surface, direct and pooled-family authority maps matched on 321 of 375 asset-state rows across Q1-Q3 2026. Replay still diverged because a few state/spec changes can alter entries, exits, and quarter handoff.", { left: 42, top: 194, width: 1060, height: 92 }, {
+    fontSize: 23,
+    color: "#222222",
+  });
+  addPanel(slide, 88, 330, 306, 150, "#F4F4F4");
+  addText(slide, "85.6%", { left: 114, top: 348, width: 220, height: 64 }, { fontSize: 54, bold: true, color: C.accent });
+  addText(slide, "selected map agreement", { left: 114, top: 424, width: 230, height: 34 }, { fontSize: 21 });
+  addPanel(slide, 486, 330, 306, 150, "#F4F4F4");
+  addText(slide, "AMD", { left: 512, top: 348, width: 220, height: 64 }, { fontSize: 54, bold: true, color: C.green });
+  addText(slide, "drove much of the Q3 pooled advantage", { left: 512, top: 424, width: 230, height: 48 }, { fontSize: 20 });
+  addPanel(slide, 884, 330, 306, 150, "#F4F4F4");
+  addText(slide, "NVDA + TSLA", { left: 910, top: 360, width: 250, height: 46 }, { fontSize: 35, bold: true, color: C.blue });
+  addText(slide, "favored direct in both tested windows", { left: 910, top: 424, width: 230, height: 48 }, { fontSize: 20 });
+  addText(slide, "Meaning: do not convert the bridge just for fidelity, but do not dismiss the pooled-family hypothesis either.", { left: 108, top: 552, width: 990, height: 44 }, {
+    fontSize: 24,
+    bold: true,
+  });
+  addFooter(slide, 7);
+
+  slide = p.slides.add();
+  slide.background.fill = C.canvas;
+  addLabel(slide, "BROADER TEST", 42, 42);
+  addText(slide, "The next comparison needs two clearly labeled evidence lanes", { left: 42, top: 88, width: 1060, height: 64 }, {
+    fontSize: 40,
+    bold: true,
+  });
+  addPanel(slide, 72, 190, 520, 320, "#F4F4F4");
+  addText(slide, "Screen A", { left: 104, top: 216, width: 200, height: 42 }, { fontSize: 30, bold: true, color: C.blue });
+  addText(slide, "Current live basket", { left: 104, top: 268, width: 420, height: 36 }, { fontSize: 24, bold: true });
+  addText(slide, bulletText([
+    "AMD,NVDA,PLTR,TSLA,SOFI",
+    "Gen4 RESEARCH_ASSETS context",
+    "Best evidence for live bridge policy",
+    "History limited by newer symbols",
+  ]), { left: 104, top: 326, width: 430, height: 142 }, { fontSize: 20, color: "#222222" });
+  addPanel(slide, 688, 190, 520, 320, "#F4F4F4");
+  addText(slide, "Screen B", { left: 720, top: 216, width: 200, height: 42 }, { fontSize: 30, bold: true, color: C.green });
+  addText(slide, "Historical substitute basket", { left: 720, top: 268, width: 420, height: 36 }, { fontSize: 24, bold: true });
+  addText(slide, bulletText([
+    "AMD,NVDA,TSLA,AAPL,MSTR",
+    "Long-history active-plus-risk context",
+    "Older-regime robustness evidence",
+    "Not a literal live-basket replication",
+  ]), { left: 720, top: 326, width: 430, height: 142 }, { fontSize: 20, color: "#222222" });
+  addText(slide, "The results should be read side by side, not collapsed into one leaderboard.", { left: 132, top: 558, width: 1010, height: 40 }, {
+    fontSize: 24,
+    bold: true,
+  });
+  addFooter(slide, 8);
+
+  slide = p.slides.add();
+  slide.background.fill = C.canvas;
+  addLabel(slide, "PRACTICAL LIMIT", 42, 42);
+  addText(slide, "The broader run needs resumable authority builds", { left: 42, top: 88, width: 1060, height: 64 }, {
+    fontSize: 40,
+    bold: true,
+  });
+  addText(slide, "A new five-symbol Gen4-like authority evaluates 172 candidate specs per asset before state routing. The first new A-live authority stayed compute-bound in an interactive run, so the wrapper now records the right job shape but the evidence packet is not complete yet.", { left: 42, top: 168, width: 1060, height: 104 }, {
+    fontSize: 23,
+    color: "#222222",
+  });
+  addText(slide, "Run order", { left: 96, top: 324, width: 240, height: 34 }, { fontSize: 25, bold: true });
+  addText(slide, bulletText([
+    "Run A_live as a standalone resumable job.",
+    "Inspect its report and visuals before starting B_hist.",
+    "Add per-symbol checkpoints if authority fitting remains too slow.",
+  ]), { left: 96, top: 376, width: 520, height: 128 }, { fontSize: 22 });
+  addText(slide, "Decision boundary", { left: 700, top: 324, width: 300, height: 34 }, { fontSize: 25, bold: true });
+  addText(slide, bulletText([
+    "No live bridge policy change yet.",
+    "No merged Screen A plus B winner table.",
+    "No performance acceptance from these inspection packets.",
+  ]), { left: 700, top: 376, width: 460, height: 128 }, { fontSize: 22 });
+  addPanel(slide, 92, 552, 1096, 54, C.softAccent);
+  addText(slide, "The right next step is operational, not methodological: finish the authority packets without changing the experiment.", { left: 120, top: 568, width: 1030, height: 26 }, {
+    fontSize: 20,
+    bold: true,
+  });
+  addFooter(slide, 9);
+
   return p;
 }
 
