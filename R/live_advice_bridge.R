@@ -708,11 +708,25 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
   }
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
   body_colors <- ifelse(close > open, aesthetic$up_candle, ifelse(close < open, aesthetic$down_candle, aesthetic$flat_candle))
+  candle_half_width <- 0.18
   graphics::segments(x0 = x, y0 = low, x1 = x, y1 = high, col = body_colors, lwd = 0.85)
-  graphics::segments(x0 = x, y0 = open, x1 = x, y1 = close, col = body_colors, lwd = 2.2)
+  for (i in seq_along(x)) {
+    body_low <- min(open[[i]], close[[i]], na.rm = TRUE)
+    body_high <- max(open[[i]], close[[i]], na.rm = TRUE)
+    if (!is.finite(body_low) || !is.finite(body_high)) next
+    if (identical(body_low, body_high)) {
+      graphics::segments(x[[i]] - candle_half_width, body_low, x[[i]] + candle_half_width, body_high, col = body_colors[[i]], lwd = 1.2)
+    } else {
+      graphics::rect(x[[i]] - candle_half_width, body_low, x[[i]] + candle_half_width, body_high, col = body_colors[[i]], border = body_colors[[i]])
+    }
+  }
   if (is.data.frame(trades) && nrow(trades)) {
     line_cols <- ifelse(trades$trade_outcome == "win", aesthetic$trade_win_line, ifelse(trades$trade_outcome == "loss", aesthetic$trade_loss_line, aesthetic$flat_candle))
-    graphics::segments(match(as.Date(trades$entry_execution_date), dates), trades$entry_execution_price, match(as.Date(trades$trace_end_date), dates), trades$trace_end_price, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 1.05)
+    trade_x0 <- match(as.Date(trades$entry_execution_date), dates)
+    trade_x1 <- match(as.Date(trades$trace_end_date), dates)
+    same_bar <- is.finite(trade_x0) & is.finite(trade_x1) & trade_x0 == trade_x1
+    trade_x1[same_bar] <- trade_x1[same_bar] + 0.45
+    graphics::segments(trade_x0, trades$entry_execution_price, trade_x1, trades$trace_end_price, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 1.15)
   }
   at <- unique(round(seq(1, length(x), length.out = min(6L, length(x)))))
   graphics::axis(1, at = at, labels = format(dates[at], "%m-%d"), las = 2, cex.axis = 0.75)
@@ -724,8 +738,8 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
     exec_x <- match(as.Date(executions$execution_date), dates)
     entry_exec <- executions$execution_type == "ENTER_LONG"
     exit_exec <- executions$execution_type == "EXIT_LONG"
-    if (any(entry_exec, na.rm = TRUE)) graphics::points(exec_x[entry_exec], as.numeric(executions$execution_price[entry_exec]), pch = aesthetic$native_entry_pch, col = aesthetic$native_entry_color, bg = aesthetic$native_entry_color, cex = 0.95)
-    if (any(exit_exec, na.rm = TRUE)) graphics::points(exec_x[exit_exec], as.numeric(executions$execution_price[exit_exec]), pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 0.95)
+    if (any(entry_exec, na.rm = TRUE)) graphics::points(exec_x[entry_exec], as.numeric(executions$execution_price[entry_exec]), pch = aesthetic$native_entry_pch, col = aesthetic$native_entry_color, bg = aesthetic$native_entry_color, cex = 1.15)
+    if (any(exit_exec, na.rm = TRUE)) graphics::points(exec_x[exit_exec], as.numeric(executions$execution_price[exit_exec]), pch = aesthetic$native_exit_pch, col = aesthetic$native_exit_color, bg = aesthetic$native_exit_color, cex = 1.15)
   }
   if (is.data.frame(pending) && nrow(pending)) {
     graphics::mtext(paste("PENDING:", paste(pending$action, collapse = "; ")), side = 3, line = -1.2, adj = 1, cex = 0.75, col = "#7c2d12")
