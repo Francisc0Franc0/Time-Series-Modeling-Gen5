@@ -32,10 +32,10 @@ test_that("bridge contract separates live symbols from context symbols", {
   expect_equal(contract$context_symbols[[1L]], "SPY,QQQ,AMD,NVDA")
   expect_equal(contract$market_data_feed[[1L]], "iex")
   expect_equal(contract$candidate_families[[1L]], paste(g5_bridge_default_candidate_families(), collapse = ","))
-  expect_equal(contract$strategy_grid_preset[[1L]], "standard")
+  expect_equal(contract$strategy_grid_preset[[1L]], "gen4_daily_default")
 })
 
-test_that("bridge model grid defaults to the full Gen5.1 candidate suite", {
+test_that("bridge model grid defaults to the Gen4 daily_default implemented subset", {
   grid <- g5_bridge_model_grid()
   families <- sort(unique(grid$strategy_family))
 
@@ -43,7 +43,14 @@ test_that("bridge model grid defaults to the full Gen5.1 candidate suite", {
     families,
     sort(g5_bridge_default_candidate_families())
   )
-  expect_gt(nrow(grid), 20L)
+  expect_false(any(c("bollinger_mid_reversion", "vol_expansion_breakout", "donchian_breakout_vol_expand") %in% families))
+  expect_true("ema_cross_fast1_slow10" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast20_slow50" %in% grid$model_instance_id)
+  expect_true("bollinger_touch_n14_sd1p5" %in% grid$model_instance_id)
+  expect_true("rsi_mr_n21_lo35_hi75" %in% grid$model_instance_id)
+  expect_true("zret_mr_n40_ent2p5_ex1" %in% grid$model_instance_id)
+  expect_true("breakout_lb30_buf0" %in% grid$model_instance_id)
+  expect_true("pullback_up_f15_s75_lo40_hi65" %in% grid$model_instance_id)
 })
 
 test_that("trade trace segments clip off-chart entries into the visible panel", {

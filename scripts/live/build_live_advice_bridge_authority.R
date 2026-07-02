@@ -66,7 +66,7 @@ quarter_id <- toupper(arg_or_env("quarter", "GEN5_BRIDGE_QUARTER_ID", default_qu
 symbols <- g5_standardize_symbol(strsplit(arg_or_env("symbols", "GEN5_BRIDGE_SYMBOLS", paste(g5_bridge_default_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]])
 context_symbols <- unique(g5_standardize_symbol(strsplit(arg_or_env("context_symbols", "GEN5_BRIDGE_CONTEXT_SYMBOLS", paste(g5_bridge_default_context_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]]))
 candidate_families <- g5_wfa_candidate_families(strsplit(arg_or_env("candidate_families", "GEN5_BRIDGE_CANDIDATE_FAMILIES", paste(g5_bridge_default_candidate_families(), collapse = ",")), ",", fixed = TRUE)[[1L]])
-strategy_grid_preset <- g5_wfa_strategy_grid_preset(arg_or_env("strategy_grid_preset", "GEN5_BRIDGE_STRATEGY_GRID_PRESET", "standard"))
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(arg_or_env("strategy_grid_preset", "GEN5_BRIDGE_STRATEGY_GRID_PRESET", "gen4_daily_default"))
 feed <- arg_or_env("feed", "GEN5_BRIDGE_FEED", as.character(cfg$feed))
 if (nzchar(feed)) cfg$feed <- feed
 refresh <- g5_parse_bool_env(arg_or_env("refresh", "GEN5_BRIDGE_REFRESH", "false"), default = FALSE)

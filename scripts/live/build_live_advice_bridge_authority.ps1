@@ -3,8 +3,8 @@ param(
   [string]$Quarter = "2026Q3",
   [string]$Symbols = "AMD,NVDA,PLTR,TSLA,SOFI",
   [string]$ContextSymbols = "SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY",
-  [string]$CandidateFamilies = "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade",
-  [string]$StrategyGridPreset = "standard",
+  [string]$CandidateFamilies = "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade",
+  [string]$StrategyGridPreset = "gen4_daily_default",
   [string]$Feed = "",
   [switch]$Refresh
 )

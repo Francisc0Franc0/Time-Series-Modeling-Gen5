@@ -23,7 +23,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 - The Alpaca adjusted-daily research feed now defaults to SIP, while still honoring `ALPACA_DATA_FEED` overrides. A live SIP refresh on 2026-07-01 confirmed `AMD,NVDA,TSLA,AAPL,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD` can be pulled from `2016-01-04`; `VXX` begins on `2018-01-18`, so pre-2018 context tests need an operator decision to replace, omit, or accept that limitation.
 - The current PowerPoint summary is `presentations/gen5_recent_pca_context_screening_batch.pptx`. It summarizes the recent Gen5.1 PCA/context screening batch: context universes, PCA panel modes, state-map variants, temporal windows, and the SIP coverage correction.
-- A temporary Gen5.1 live-advice bridge now exists for Q3 2026 manual advice continuity. It uses the Gen4 live basket `AMD,NVDA,PLTR,TSLA,SOFI` as the research/tradeable set, the broader Gen4 `RESEARCH_ASSETS` list as the Regime Context Universe, and the full Gen5.1 candidate strategy suite. It freezes TRAIN authority from `2024-07-01` through `2026-06-30`, uses long/pooled PCA plus `5x5` quantile states, infers position by one-bar-delayed model replay, and writes advice-only daily packets under ignored `runs/live_advice_bridge/`. See `docs/GEN5_1_LIVE_ADVICE_BRIDGE.md`. The current frozen bridge uses Alpaca `iex` because recent SIP daily pulls returned a subscription error for July 1 live advice.
+- A temporary Gen5.1 live-advice bridge now exists for Q3 2026 manual advice continuity. It uses the Gen4 live basket `AMD,NVDA,PLTR,TSLA,SOFI` as the research/tradeable set, the broader Gen4 `RESEARCH_ASSETS` list as the Regime Context Universe, and the Gen4 `daily_default` implemented strategy subset/grid. It freezes TRAIN authority from `2024-07-01` through `2026-06-30`, uses long/pooled PCA plus `5x5` quantile states, infers position by one-bar-delayed model replay, and writes advice-only daily packets under ignored `runs/live_advice_bridge/`. See `docs/GEN5_1_LIVE_ADVICE_BRIDGE.md`. The current frozen bridge uses Alpaca `iex` because recent SIP daily pulls returned a subscription error for July 1 live advice.
 
 The newest live-advice bridge surfaces are:
 
@@ -33,8 +33,8 @@ powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_a
   -Quarter 2026Q3 `
   -Symbols "AMD,NVDA,PLTR,TSLA,SOFI" `
   -ContextSymbols "SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY" `
-  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
-  -StrategyGridPreset standard `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade" `
+  -StrategyGridPreset gen4_daily_default `
   -Feed iex `
   -Refresh
 
@@ -48,7 +48,7 @@ Current bridge artifacts:
 
 - Authority: `runs/live_advice_bridge/authority/2026Q3/`
 - Daily packet: `runs/live_advice_bridge/daily/2026Q3/20260701173000/`
-- Daily result as of `2026-07-01 17:30:00`: `NVDA` is `LONG` after an `ENTER_LONG` execution at the July 1 open, `TSLA` has `ENTER_LONG_NEXT_OPEN` pending, and `AMD`, `PLTR`, `SOFI` have no pending next-open action.
+- Daily result as of `2026-07-01 17:30:00`: `TSLA` has `ENTER_LONG_NEXT_OPEN` pending from `ema_trend_fast5_slow50__native_only`; `AMD`, `NVDA`, `PLTR`, and `SOFI` have no pending next-open action and no open trade model lock.
 
 The newest operator surface is:
 

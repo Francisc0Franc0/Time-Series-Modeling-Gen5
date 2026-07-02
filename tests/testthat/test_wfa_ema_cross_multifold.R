@@ -288,6 +288,28 @@ test_that("modest expanded WFA strategy grid preset adds local flexibility", {
   expect_error(g5_wfa_strategy_grid_preset("wide_open"), "strategy_grid_preset")
 })
 
+test_that("Gen4 daily default WFA strategy grid preset mirrors implemented daily_default surfaces", {
+  families <- c("ema_cross", "ema_trend", "bollinger_touch", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "no_trade")
+  grid <- do.call(
+    g5_wfa_candidate_model_grid,
+    c(
+      list(candidate_families = families),
+      g5_wfa_strategy_grid_preset_values("gen4_daily_default")
+    )
+  )
+
+  expect_equal(g5_wfa_strategy_grid_preset("gen4_daily_default"), "gen4_daily_default")
+  expect_setequal(sort(unique(grid$strategy_family)), sort(families))
+  expect_true("ema_cross_fast1_slow10" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast20_slow50" %in% grid$model_instance_id)
+  expect_true("bollinger_touch_n14_sd1p5" %in% grid$model_instance_id)
+  expect_true("rsi_mr_n21_lo35_hi75" %in% grid$model_instance_id)
+  expect_true("zret_mr_n40_ent2p5_ex1" %in% grid$model_instance_id)
+  expect_true("breakout_lb30_buf0" %in% grid$model_instance_id)
+  expect_true("pullback_up_f15_s75_lo40_hi65" %in% grid$model_instance_id)
+  expect_false(any(c("bollinger_mid_reversion", "vol_expansion_breakout", "donchian_breakout_vol_expand") %in% grid$strategy_family))
+})
+
 test_that("WFA numeric ID labels preserve integer zeros", {
   expect_equal(g5_wfa_num_id_label(30), "30")
   expect_equal(g5_wfa_num_id_label(60), "60")

@@ -26,13 +26,10 @@ g5_bridge_default_candidate_families <- function() {
     "ema_cross",
     "ema_trend",
     "bollinger_touch",
-    "bollinger_mid_reversion",
     "rsi_mr",
     "zret_mr",
     "breakout",
     "pullback_in_uptrend",
-    "vol_expansion_breakout",
-    "donchian_breakout_vol_expand",
     "no_trade"
   )
 }
@@ -119,24 +116,24 @@ g5_bridge_daily_dir <- function(repo_root, quarter_id, as_of_timestamp) {
 
 g5_bridge_model_grid <- function(
   candidate_families = g5_bridge_default_candidate_families(),
-  strategy_grid_preset = "standard"
+  strategy_grid_preset = "gen4_daily_default"
 ) {
   strategy_grid_preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
   candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
-  args <- c(
+  args <- utils::modifyList(
     list(
       fast_periods = c(8L, 12L),
       slow_periods = c(30L, 50L),
       bb_lookback_periods = c(10L, 20L),
-      bb_sd_multipliers = c(1.5, 2),
-      candidate_families = candidate_families
+      bb_sd_multipliers = c(1.5, 2)
     ),
     g5_wfa_strategy_grid_preset_values(strategy_grid_preset)
   )
+  args$candidate_families <- candidate_families
   do.call(g5_wfa_candidate_model_grid, args)
 }
 
-g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_, candidate_families = g5_bridge_default_candidate_families(), strategy_grid_preset = "standard") {
+g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_, candidate_families = g5_bridge_default_candidate_families(), strategy_grid_preset = "gen4_daily_default") {
   dates <- g5_bridge_authority_contract_dates(quarter_id, train_quarters = 8L)
   symbols <- g5_standardize_symbol(symbols)
   context_symbols <- unique(g5_standardize_symbol(context_symbols))
@@ -205,7 +202,7 @@ g5_bridge_build_authority_from_bars <- function(
   git_sha = NA_character_,
   market_data_feed = NA_character_,
   candidate_families = g5_bridge_default_candidate_families(),
-  strategy_grid_preset = "standard",
+  strategy_grid_preset = "gen4_daily_default",
   min_train_state_rows = 20L
 ) {
   symbols <- g5_standardize_symbol(symbols)
