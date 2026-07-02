@@ -7,6 +7,7 @@ source(test_path("..", "..", "R", "wfa_ema_cross_multifold.R"))
 source(test_path("..", "..", "R", "regime_pca_poc.R"))
 source(test_path("..", "..", "R", "regime_pca_wfa_poc.R"))
 source(test_path("..", "..", "R", "live_advice_bridge.R"))
+source(test_path("..", "..", "R", "selection_policy_screen.R"))
 
 test_that("bridge authority dates use traditional quarter boundaries", {
   dates <- g5_bridge_authority_contract_dates("2026Q3", train_quarters = 8L)
@@ -185,4 +186,59 @@ test_that("frozen quantile scoring uses contract centers, loadings, and break ro
 
   expect_equal(nrow(scored), 2L)
   expect_equal(scored$state_id, c("S1_1", "S2_1"))
+})
+
+test_that("pooled family policy selects family first and asset params second", {
+  perf <- data.frame(
+    symbol = rep(c("AAA", "BBB"), each = 4L),
+    quarter_id = "2026Q2",
+    state_id = "S1_1",
+    strategy_family = rep(c("no_trade", "trend", "trend", "mean_reversion"), times = 2L),
+    model_instance_id = c(
+      "no_trade", "trend_fast", "trend_slow", "mean_rev",
+      "no_trade", "trend_fast", "trend_slow", "mean_rev"
+    ),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c(
+      "no_trade__no_exit", "aaa_trend_fast", "aaa_trend_slow", "aaa_mean_rev",
+      "no_trade__no_exit", "bbb_trend_fast", "bbb_trend_slow", "bbb_mean_rev"
+    ),
+    sharpe = c(0, 2.0, 1.2, 0.4, 0, 0.1, -0.1, 1.0),
+    total_return = c(0, 0.20, 0.10, 0.04, 0, 0.01, -0.01, 0.10),
+    train_state_row_count = 50L,
+    train_state_trade_count = c(0, 5, 4, 2, 0, 1, 1, 3),
+    stringsAsFactors = FALSE
+  )
+
+  selected <- g5_selection_policy_pooled_family_asset_variant(perf, min_train_state_rows = 20L)
+
+  expect_equal(nrow(selected), 2L)
+  expect_true(all(selected$pooled_selected_family == "trend"))
+  expect_equal(
+    selected$strategy_spec_id[match(c("AAA", "BBB"), selected$symbol)],
+    c("aaa_trend_fast", "bbb_trend_fast")
+  )
+})
+
+test_that("pooled family policy forces sparse asset states to no trade", {
+  perf <- data.frame(
+    symbol = c("AAA", "AAA", "BBB", "BBB"),
+    quarter_id = "2026Q2",
+    state_id = "S1_1",
+    strategy_family = c("no_trade", "trend", "no_trade", "trend"),
+    model_instance_id = c("no_trade", "trend", "no_trade", "trend"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("aaa_no_trade", "aaa_trend", "bbb_no_trade", "bbb_trend"),
+    sharpe = c(0, 2, 0, 3),
+    total_return = c(0, 0.2, 0, 0.3),
+    train_state_row_count = c(50L, 50L, 5L, 5L),
+    train_state_trade_count = c(0, 3, 0, 4),
+    stringsAsFactors = FALSE
+  )
+
+  selected <- g5_selection_policy_pooled_family_asset_variant(perf, min_train_state_rows = 20L)
+  bbb <- selected[selected$symbol == "BBB", , drop = FALSE]
+
+  expect_equal(bbb$strategy_family[[1L]], "no_trade")
+  expect_match(bbb$selection_reason[[1L]], "forced_no_trade_sparse_state")
 })

@@ -86,11 +86,16 @@ Across the five live symbols and 25 states each:
 
 This difference is enough to explain divergent live signals without implying either architecture is wrong.
 
-## Recommended Paired Screen
+## First Paired Screen Result
 
-Run a deliberately narrow paired screen before changing the live bridge or rerunning large research batches.
+Implemented and ran the smallest paired screen:
 
-Hold constant:
+- Screen packet: `runs/research_workbench/selection_policy_screens/selection_policy_screen_A5_Q2Q3_20260702/`
+- Script: `scripts/inspect/run_selection_policy_screen.R`
+- Replayed windows: `2026Q2_asof_20260630` and `2026Q3_asof_20260701`
+- Required authority packets: `2026Q1`, `2026Q2`, and `2026Q3`
+
+Held constant:
 
 - Basket: `AMD,NVDA,PLTR,TSLA,SOFI`
 - Context universe: Gen4 `RESEARCH_ASSETS`
@@ -98,17 +103,32 @@ Hold constant:
 - State map: `5x5` quantile grid
 - Strategy grid: Gen4 `daily_default` implemented subset
 - Exit policy: current native-only bridge-compatible exits
-- Replay policy: entry-state owns trade until exit
-- Portfolio accounting: inspection layer only
+- Trade ownership: entry-state owns trade until exit
+- Replay policy: adjacent-quarter continuity, where previous-quarter authority owns any open prior-quarter trade until flat
+- Accounting surface: compact replay/trade inspection only; not allocation evidence
 
 Vary only:
 
 - `asset_state_direct_spec`
 - `pooled_family_asset_variant`
 
+Readout:
+
+- Across `2026Q1`, `2026Q2`, and `2026Q3` authority maps, direct and pooled-family policies matched on `321 / 375` asset-state rows, or `85.6%`.
+- Match rates by quarter were `85.6%`, `84.0%`, and `87.2%`.
+- Even with high map agreement, replay behavior still diverged in visible places because a small number of state-policy changes can alter entries, exits, and quarter-continuity handoff.
+- The compact trace-return proxy favored direct selection in the Q2-as-of replay and pooled-family selection in the Q3-as-of replay, with Q3 pooled heavily influenced by AMD's replayed path. Treat this as a follow-up prompt, not a verdict.
+
+Updated interpretation:
+
+The paired screen reduced the fear that the two policies are radically different under identical Gen5.1 bridge conditions, but it did not eliminate the policy question. The next useful step is a broader paired screen over more quarters/windows, using a fuller portfolio-accounting packet per policy if the operator wants to decide whether `pooled_family_asset_variant` should become a first-class Gen5.1 contender.
+
+## Recommended Next Screen
+
+Run a medium paired screen before changing the live bridge or rerunning large context/state-map batches.
+
 Start with:
 
-- Smallest useful run: `2026Q2` and `2026Q3`
 - Medium run: add several adjacent quarters from the recent history that the current cache supports cleanly
 - Full research rerun only if the paired screen shows a meaningful stability or robustness difference
 
@@ -149,4 +169,3 @@ The operator should decide:
 - Whether `pooled_family_asset_variant` should become a first-class Gen5.1 selection policy if it is more stable.
 - Whether the temporary live bridge should prioritize Gen4 fidelity or current Gen5.1 research architecture.
 - Whether any prior context-universe/state-map results need rerunning under a different selection policy.
-
