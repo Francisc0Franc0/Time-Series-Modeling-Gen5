@@ -63,6 +63,17 @@ g5_bridge_next_quarter_id <- function(quarter_id) {
   paste0(year, "Q", quarter)
 }
 
+g5_bridge_previous_quarter_id <- function(quarter_id) {
+  parsed <- g5_bridge_parse_quarter_id(quarter_id)
+  year <- parsed$year
+  quarter <- parsed$quarter - 1L
+  if (quarter < 1L) {
+    quarter <- 4L
+    year <- year - 1L
+  }
+  paste0(year, "Q", quarter)
+}
+
 g5_bridge_quarter_bounds <- function(quarter_id) {
   parsed <- g5_bridge_parse_quarter_id(quarter_id)
   start_month <- (parsed$quarter - 1L) * 3L + 1L
@@ -342,7 +353,19 @@ g5_bridge_model_param_summary <- function(row) {
   if (length(pieces)) paste(pieces, collapse = ";") else NA_character_
 }
 
-g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contract) {
+g5_bridge_replay_symbol <- function(
+  bars,
+  symbol,
+  scored,
+  selected_states,
+  contract,
+  allow_as_of_after_live_end = FALSE,
+  replay_start_date = NULL,
+  entry_signal_start_date = NULL,
+  entry_signal_end_date = NULL,
+  honor_pending_entry_execution_until = NULL,
+  authority_role = "current"
+) {
   symbol <- g5_standardize_symbol(symbol)[[1L]]
   train_end_date <- as.Date(contract$train_end_date[[1L]])
   live_start_date <- as.Date(contract$live_start_date[[1L]])
@@ -351,9 +374,13 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
   if (as_of_date < live_start_date) {
     g5_stop("Daily bridge as_of date is before authority live_start_date.")
   }
-  if (as_of_date > live_end_date) {
+  if (as_of_date > live_end_date && !isTRUE(allow_as_of_after_live_end)) {
     g5_stop("Daily bridge authority is expired for this as_of date.")
   }
+  replay_start_date <- if (is.null(replay_start_date)) train_end_date else as.Date(replay_start_date)
+  entry_signal_start_date <- if (is.null(entry_signal_start_date)) train_end_date else as.Date(entry_signal_start_date)
+  entry_signal_end_date <- if (is.null(entry_signal_end_date)) as_of_date else as.Date(entry_signal_end_date)
+  honor_pending_entry_execution_until <- if (is.null(honor_pending_entry_execution_until)) as_of_date else as.Date(honor_pending_entry_execution_until)
   all_bars <- g5_ema_cross_prepare_bars(bars, symbol = symbol, end_date = as_of_date)
   session_dates <- as.Date(all_bars$session_date)
   state_lookup <- stats::setNames(as.character(scored$state_id), as.character(as.Date(scored$session_date)))
@@ -378,7 +405,7 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
     }
   }
 
-  signal_indices <- which(session_dates >= train_end_date & session_dates <= as_of_date)
+  signal_indices <- which(session_dates >= replay_start_date & session_dates <= as_of_date)
   rows <- list()
   executions <- list()
   pending_actions <- list()
@@ -398,7 +425,7 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
     selected_spec <- if (nrow(selected)) as.character(selected$strategy_spec_id[[1L]]) else NA_character_
     selected_params <- g5_bridge_model_param_summary(selected)
 
-    if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position && current_date >= live_start_date) {
+    if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position && current_date >= live_start_date && current_date <= honor_pending_entry_execution_until) {
       open_trade <- c(
         pending_entry,
         list(
@@ -417,6 +444,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
         execution_price = as.numeric(all_bars$open[[idx]]),
         strategy_spec_id = open_trade$strategy_spec_id,
         state_id = current_state,
+        authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+        authority_role = as.character(authority_role),
         stringsAsFactors = FALSE
       )
       pending_entry <- NULL
@@ -431,6 +460,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
         execution_price = as.numeric(all_bars$open[[idx]]),
         strategy_spec_id = open_trade$strategy_spec_id,
         state_id = current_state,
+        authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+        authority_role = as.character(authority_role),
         stringsAsFactors = FALSE
       )
       in_position <- FALSE
@@ -442,7 +473,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
     has_next_session_in_data <- next_idx <= nrow(all_bars)
     next_session <- if (has_next_session_in_data) session_dates[[next_idx]] else as.Date(NA)
 
-    if (!in_position && is.null(pending_entry) && nrow(selected) && !identical(selected_family, "no_trade")) {
+    can_emit_entry_signal <- current_date >= entry_signal_start_date && current_date <= entry_signal_end_date
+    if (!in_position && is.null(pending_entry) && can_emit_entry_signal && nrow(selected) && !identical(selected_family, "no_trade")) {
       ind <- indicator_cache[[selected_spec]]
       if (isTRUE(ind$entry_signal[[idx]])) {
         pending_entry <- list(
@@ -477,6 +509,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
             execution_date = as.Date(NA),
             execution_timing = "next_open_after_as_of_close",
             signal_rule = ind$entry_signal_rule[[idx]],
+            authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+            authority_role = as.character(authority_role),
             stringsAsFactors = FALSE
           )
         }
@@ -514,6 +548,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
             execution_date = as.Date(NA),
             execution_timing = "next_open_after_as_of_close",
             signal_rule = pending_exit$exit_signal_rule,
+            authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+            authority_role = as.character(authority_role),
             stringsAsFactors = FALSE
           )
         }
@@ -539,6 +575,8 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
       open_trade_strategy_spec_id = if (in_position && !is.null(open_trade)) open_trade$strategy_spec_id else NA_character_,
       open_trade_signal_params = if (in_position && !is.null(open_trade)) open_trade$signal_model_params else NA_character_,
       open_trade_entry_execution_date = if (in_position && !is.null(open_trade)) open_trade$entry_execution_date else as.Date(NA),
+      authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+      authority_role = as.character(authority_role),
       stringsAsFactors = FALSE
     )
   }
@@ -548,6 +586,156 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
   trades <- g5_bridge_trades_from_replay(replay, executions, as.Date(contract$live_end_date[[1L]]))
   latest <- if (nrow(replay)) replay[nrow(replay), , drop = FALSE] else data.frame()
   list(replay = replay, pending_actions = pending, executions = executions, trades = trades, latest = latest)
+}
+
+g5_bridge_score_authority_symbol <- function(bars, authority, symbol, as_of_date) {
+  contract <- authority$contract[1L, , drop = FALSE]
+  symbols <- g5_standardize_symbol(strsplit(contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  context_symbols <- if ("context_symbols" %in% names(contract) && nzchar(as.character(contract$context_symbols[[1L]]))) {
+    unique(g5_standardize_symbol(strsplit(contract$context_symbols[[1L]], ",", fixed = TRUE)[[1L]]))
+  } else {
+    symbols
+  }
+  features <- g5_pca_regime_pooled_feature_table(
+    bars,
+    target_symbol = symbol,
+    context_symbols = context_symbols,
+    end_date = as_of_date
+  )
+  g5_bridge_score_frozen_quantile(features, authority$pca_model_contract, symbol)
+}
+
+g5_bridge_first_flat_date_from_prior <- function(prior_replay, current_live_start_date) {
+  if (!is.data.frame(prior_replay) || !nrow(prior_replay)) return(as.Date(current_live_start_date))
+  prior_replay <- prior_replay[order(as.Date(prior_replay$session_date)), , drop = FALSE]
+  current_live_start_date <- as.Date(current_live_start_date)
+  after_start <- prior_replay[as.Date(prior_replay$session_date) >= current_live_start_date, , drop = FALSE]
+  if (nrow(after_start) && identical(as.Date(after_start$session_date[[1L]]), current_live_start_date) && identical(as.character(after_start$model_position_after_replay[[1L]]), "LONG")) {
+    flat_rows <- after_start[as.character(after_start$model_position_after_replay) == "FLAT", , drop = FALSE]
+    if (!nrow(flat_rows)) return(as.Date(NA))
+    return(as.Date(flat_rows$session_date[[1L]]))
+  }
+  pre_current <- prior_replay[as.Date(prior_replay$session_date) < current_live_start_date, , drop = FALSE]
+  if (!nrow(pre_current)) return(as.Date(current_live_start_date))
+  latest_pre_current <- pre_current[nrow(pre_current), , drop = FALSE]
+  if (!identical(as.character(latest_pre_current$model_position_after_replay[[1L]]), "LONG")) {
+    return(as.Date(current_live_start_date))
+  }
+  flat_rows <- after_start[as.character(after_start$model_position_after_replay) == "FLAT", , drop = FALSE]
+  if (!nrow(flat_rows)) return(as.Date(NA))
+  as.Date(flat_rows$session_date[[1L]])
+}
+
+g5_bridge_run_daily_continuity_from_bars <- function(bars, current_authority, previous_authority, as_of_timestamp) {
+  current_contract <- current_authority$contract[1L, , drop = FALSE]
+  previous_contract <- previous_authority$contract[1L, , drop = FALSE]
+  symbols <- g5_standardize_symbol(strsplit(current_contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  previous_symbols <- g5_standardize_symbol(strsplit(previous_contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  if (!identical(symbols, previous_symbols)) {
+    g5_stop("Continuity replay requires previous and current bridge authorities to use the same live symbol set.")
+  }
+  current_live_start <- as.Date(current_contract$live_start_date[[1L]])
+  current_as_of_date <- as.Date(max(as.Date(bars$session_date), na.rm = TRUE))
+  previous_live_end <- as.Date(previous_contract$live_end_date[[1L]])
+  if (previous_live_end + 1L < current_live_start) {
+    g5_stop("Continuity replay expected adjacent previous/current authority windows.")
+  }
+
+  results <- list()
+  continuity_rows <- list()
+  for (symbol in symbols) {
+    previous_scored <- g5_bridge_score_authority_symbol(bars, previous_authority, symbol, current_as_of_date)
+    previous_result <- g5_bridge_replay_symbol(
+      bars,
+      symbol,
+      previous_scored,
+      previous_authority$selected_states,
+      previous_contract,
+      allow_as_of_after_live_end = TRUE,
+      replay_start_date = as.Date(previous_contract$train_end_date[[1L]]),
+      entry_signal_start_date = as.Date(previous_contract$train_end_date[[1L]]),
+      entry_signal_end_date = previous_live_end,
+      honor_pending_entry_execution_until = current_live_start,
+      authority_role = "previous_continuity"
+    )
+
+    current_start <- g5_bridge_first_flat_date_from_prior(previous_result$replay, current_live_start)
+    if (is.na(current_start)) {
+      chosen_replay <- previous_result$replay
+      chosen_executions <- previous_result$executions
+      chosen_pending <- previous_result$pending_actions
+      chosen_scores <- previous_scored
+      continuity_mode <- "previous_authority_open_trade_carry"
+    } else {
+      current_scored <- g5_bridge_score_authority_symbol(bars, current_authority, symbol, current_as_of_date)
+      current_result <- g5_bridge_replay_symbol(
+        bars,
+        symbol,
+        current_scored,
+        current_authority$selected_states,
+        current_contract,
+        replay_start_date = current_start,
+        entry_signal_start_date = current_start,
+        entry_signal_end_date = current_as_of_date,
+        honor_pending_entry_execution_until = current_as_of_date,
+        authority_role = "current"
+      )
+      prior_keep <- previous_result$replay[as.Date(previous_result$replay$session_date) < current_start, , drop = FALSE]
+      prior_exec_keep <- if (is.data.frame(previous_result$executions) && nrow(previous_result$executions)) {
+        previous_result$executions[as.Date(previous_result$executions$execution_date) < current_start, , drop = FALSE]
+      } else {
+        data.frame()
+      }
+      chosen_replay <- g5_wfa_bind_rows_fill(list(prior_keep, current_result$replay))
+      chosen_executions <- g5_wfa_bind_rows_fill(list(prior_exec_keep, current_result$executions))
+      chosen_pending <- current_result$pending_actions
+      chosen_scores <- current_scored
+      continuity_mode <- if (current_start > current_live_start) "previous_authority_until_flat_then_current" else "current_authority_from_quarter_start"
+    }
+    chosen_trades <- g5_bridge_trades_from_replay(chosen_replay, chosen_executions, as.Date(current_contract$live_end_date[[1L]]))
+    latest <- if (nrow(chosen_replay)) chosen_replay[nrow(chosen_replay), , drop = FALSE] else data.frame()
+    results[[symbol]] <- list(
+      replay = chosen_replay,
+      pending_actions = chosen_pending,
+      executions = chosen_executions,
+      trades = chosen_trades,
+      latest = latest,
+      scores = chosen_scores,
+      previous_replay = previous_result$replay,
+      continuity_mode = continuity_mode,
+      current_authority_start_date = current_start
+    )
+    continuity_rows[[length(continuity_rows) + 1L]] <- data.frame(
+      symbol = symbol,
+      previous_quarter_id = as.character(previous_contract$quarter_id[[1L]]),
+      current_quarter_id = as.character(current_contract$quarter_id[[1L]]),
+      continuity_mode = continuity_mode,
+      current_authority_start_date = current_start,
+      stringsAsFactors = FALSE
+    )
+  }
+  replay <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$replay))
+  pending <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$pending_actions))
+  executions <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$executions))
+  trades <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$trades))
+  latest <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$latest))
+  book <- latest[, c("symbol", "session_date", "close", "state_id", "selected_strategy_family", "selected_strategy_spec_id", "selected_signal_params", "model_position_after_replay", "signal_status", "execution_status", "open_trade_strategy_spec_id", "open_trade_signal_params", "open_trade_entry_execution_date", "authority_quarter_id", "authority_role"), drop = FALSE]
+  names(book)[names(book) == "session_date"] <- "as_of_date"
+  names(book)[names(book) == "model_position_after_replay"] <- "current_model_position"
+  list(
+    contract = current_contract,
+    previous_contract = previous_contract,
+    as_of_timestamp = as_of_timestamp,
+    as_of_date = current_as_of_date,
+    continuity = g5_wfa_bind_rows_fill(continuity_rows),
+    symbol_results = results,
+    replay = replay,
+    pending_actions = pending,
+    executions = executions,
+    trades = trades,
+    operator_packet = latest,
+    book_summary = book
+  )
 }
 
 g5_bridge_run_daily_from_bars <- function(bars, authority, as_of_timestamp) {
@@ -863,16 +1051,29 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
   invisible(NULL)
 }
 
-g5_bridge_chart_replay <- function(symbol_result, min_rows = 80L) {
+g5_bridge_chart_replay <- function(symbol_result, min_rows = 80L, chart_start_date = NULL, chart_end_date = NULL) {
   replay <- symbol_result$replay
   scores <- symbol_result$scores
+  if (!is.null(chart_start_date) && is.data.frame(replay) && nrow(replay)) {
+    chart_start_date <- as.Date(chart_start_date)
+    chart_end_date <- if (is.null(chart_end_date)) max(as.Date(replay$session_date), na.rm = TRUE) else as.Date(chart_end_date)
+    replay <- replay[as.Date(replay$session_date) >= chart_start_date & as.Date(replay$session_date) <= chart_end_date, , drop = FALSE]
+    if (nrow(replay)) return(replay)
+  }
   if (!is.data.frame(scores) || !nrow(scores)) {
     return(replay)
   }
   if (is.data.frame(replay) && nrow(replay) >= min_rows) {
     return(replay)
   }
-  keep <- tail(seq_len(nrow(scores)), min_rows)
+  if (!is.null(chart_start_date)) {
+    chart_start_date <- as.Date(chart_start_date)
+    chart_end_date <- if (is.null(chart_end_date)) max(as.Date(scores$session_date), na.rm = TRUE) else as.Date(chart_end_date)
+    keep <- which(as.Date(scores$session_date) >= chart_start_date & as.Date(scores$session_date) <= chart_end_date)
+    if (!length(keep)) keep <- tail(seq_len(nrow(scores)), min_rows)
+  } else {
+    keep <- tail(seq_len(nrow(scores)), min_rows)
+  }
   chart <- data.frame(
     schema_version = g5_live_bridge_schema_version(),
     symbol = as.character(scores$symbol[keep]),
@@ -907,7 +1108,7 @@ g5_bridge_chart_replay <- function(symbol_result, min_rows = 80L) {
   chart
 }
 
-g5_bridge_write_daily_outputs <- function(daily, output_dir) {
+g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days = 90L) {
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   paths <- list(
     operator_packet_csv = file.path(output_dir, "bridge_operator_packet.csv"),
@@ -916,6 +1117,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     replay_csv = file.path(output_dir, "bridge_replay.csv"),
     executions_csv = file.path(output_dir, "bridge_executions.csv"),
     trades_csv = file.path(output_dir, "bridge_trades.csv"),
+    continuity_csv = file.path(output_dir, "bridge_continuity.csv"),
     report_md = file.path(output_dir, "bridge_daily_report.md"),
     contact_sheet_png = file.path(output_dir, "bridge_contact_sheet.png")
   )
@@ -925,11 +1127,15 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
   g5_wfa_write_csv(daily$replay, paths$replay_csv)
   g5_wfa_write_csv(daily$executions, paths$executions_csv)
   g5_wfa_write_csv(daily$trades, paths$trades_csv)
+  if (!is.null(daily$continuity)) g5_wfa_write_csv(daily$continuity, paths$continuity_csv)
   symbols <- names(daily$symbol_results)
   chart_paths <- character()
+  chart_lookback_days <- as.integer(chart_lookback_days)
+  if (is.na(chart_lookback_days) || chart_lookback_days < 1L) chart_lookback_days <- 90L
+  chart_start_date <- as.Date(daily$as_of_date) - chart_lookback_days
   for (symbol in symbols) {
     chart_path <- file.path(output_dir, paste0("bridge_chart_", symbol, ".png"))
-    chart_replay <- g5_bridge_chart_replay(daily$symbol_results[[symbol]])
+    chart_replay <- g5_bridge_chart_replay(daily$symbol_results[[symbol]], chart_start_date = chart_start_date, chart_end_date = daily$as_of_date)
     grDevices::png(chart_path, width = 2200, height = 1200, res = 180)
     g5_bridge_plot_panel(
       chart_replay,
@@ -946,7 +1152,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
   on.exit(graphics::par(oldpar), add = TRUE)
   graphics::par(mfrow = c(ceiling(length(symbols) / 2), 2), mar = c(4, 4, 3, 1))
   for (symbol in symbols) {
-    chart_replay <- g5_bridge_chart_replay(daily$symbol_results[[symbol]])
+    chart_replay <- g5_bridge_chart_replay(daily$symbol_results[[symbol]], chart_start_date = chart_start_date, chart_end_date = daily$as_of_date)
     g5_bridge_plot_panel(
       chart_replay,
       daily$symbol_results[[symbol]]$executions,
@@ -957,6 +1163,25 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
   }
   grDevices::dev.off()
   pending_count <- if (is.data.frame(daily$pending_actions)) nrow(daily$pending_actions) else 0L
+  continuity_lines <- character()
+  if (!is.null(daily$continuity) && is.data.frame(daily$continuity) && nrow(daily$continuity)) {
+    continuity_lines <- c(
+      "",
+      "## Quarter Continuity",
+      "",
+      paste0("- Previous authority: `", daily$previous_contract$quarter_id[[1L]], "`"),
+      paste0("- Current authority: `", daily$contract$quarter_id[[1L]], "`"),
+      paste0("- Chart window: `", chart_start_date, "` through `", daily$as_of_date, "`"),
+      "",
+      unlist(lapply(seq_len(nrow(daily$continuity)), function(i) {
+        row <- daily$continuity[i, , drop = FALSE]
+        paste0(
+          "- `", row$symbol[[1L]], "`: `", row$continuity_mode[[1L]], "`; current authority starts `",
+          row$current_authority_start_date[[1L]], "`"
+        )
+      }))
+    )
+  }
   model_lines <- character()
   book <- daily$book_summary
   if (is.data.frame(book) && nrow(book)) {
@@ -992,6 +1217,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     "## Current Model Readout",
     "",
     model_lines,
+    continuity_lines,
     "",
     "## Artifacts",
     "",
@@ -1001,6 +1227,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     "- `bridge_replay.csv`",
     "- `bridge_executions.csv`",
     "- `bridge_trades.csv`",
+    "- `bridge_continuity.csv`",
     "- `bridge_contact_sheet.png`",
     "",
     "## Operator Guardrail",

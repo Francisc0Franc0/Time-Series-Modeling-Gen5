@@ -2,7 +2,9 @@
 
 Status date: 2026-07-01
 
-This bridge keeps daily advice-first operation available while the final Gen5.1 production layer is still under construction. It freezes one quarter of authority from completed prior-quarter data, then replays the frozen model daily to infer current position and next-open advice.
+This bridge keeps daily advice-first operation available while the final Gen5.1 production layer is still under construction. It freezes quarter-specific authority from completed prior-quarter data, then replays the frozen model daily to infer current position and next-open advice.
+
+Daily replay now supports quarter continuity: when the immediately previous authority packet is present, the bridge replays the previous quarter first, carries any open prior-quarter trade until its frozen exit rule closes it, and only switches to current-quarter authority once the symbol is flat. A signal generated on the last session of the previous quarter may execute on the first session of the new quarter because the signal decision was made while that authority was still valid.
 
 It is not accepted allocation evidence, not automation, and not an order-entry system.
 
@@ -11,6 +13,7 @@ It is not accepted allocation evidence, not automation, and not an order-entry s
 - Basket: `AMD,NVDA,PLTR,TSLA,SOFI`
 - Regime Context Universe: Gen4 `RESEARCH_ASSETS` equivalent: `SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY`
 - Authority quarter: `2026Q3`
+- Previous continuity authority: `2026Q2`
 - TRAIN window: `2024-07-01` through `2026-06-30`
 - Live authority window: `2026-07-01` through `2026-09-30`
 - PCA mode: long/pooled asset-day PCA (`pooled_asset_day`)
@@ -19,6 +22,7 @@ It is not accepted allocation evidence, not automation, and not an order-entry s
 - Strategy grid preset: `gen4_daily_default`
 - Resolved model grid: 172 model instances: EMA cross 14, EMA trend 11, Bollinger touch 9, RSI mean reversion 36, return-z mean reversion 18, breakout 2, pullback-in-uptrend 81, no-trade 1
 - Position source: model replay with one-bar delayed next-open execution
+- Continuity source: adjacent previous-quarter replay before current-quarter replay
 - Alpaca feed used for the bridge: `iex`
 
 The bridge uses `iex` because the July 1, 2026 daily live pull returned an Alpaca subscription error for recent `sip` data. The feed is recorded in the authority and daily query manifests.
@@ -26,6 +30,16 @@ The bridge uses `iex` because the July 1, 2026 daily live pull returned an Alpac
 ## Build Frozen Authority
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_authority.ps1 `
+  -AsOf "2026-03-31 17:30:00" `
+  -Quarter 2026Q2 `
+  -Symbols "AMD,NVDA,PLTR,TSLA,SOFI" `
+  -ContextSymbols "SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY" `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade" `
+  -StrategyGridPreset gen4_daily_default `
+  -Feed iex `
+  -NoRefresh
+
 powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_authority.ps1 `
   -AsOf "2026-06-30 17:30:00" `
   -Quarter 2026Q3 `
@@ -40,6 +54,10 @@ powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_a
 Current authority folder:
 
 `runs/live_advice_bridge/authority/2026Q3/`
+
+Previous continuity authority folder:
+
+`runs/live_advice_bridge/authority/2026Q2/`
 
 Key artifacts:
 
@@ -69,13 +87,18 @@ Key artifacts:
 - `bridge_replay.csv`
 - `bridge_executions.csv`
 - `bridge_trades.csv`
+- `bridge_continuity.csv`
 - `bridge_contact_sheet.png`
 - `bridge_daily_report.md`
 
-Current July 1 readout after rebuilding with the Gen4-compatible implemented daily grid:
+Current July 1 readout after rebuilding with previous-quarter continuity:
 
-- `TSLA`: `FLAT`, with `ENTER_LONG_NEXT_OPEN` pending from `ema_trend_fast5_slow50__native_only`.
-- `AMD`, `NVDA`, `PLTR`, `SOFI`: no pending next-open action and no open trade model lock.
+- `AMD`: `FLAT`, current `2026Q3` authority from quarter start, no pending action.
+- `NVDA`: `LONG`, open trade carried from `2026Q2` authority, locked to `rsi_mr_n7_lo30_hi75__native_only`.
+- `PLTR`: `FLAT`, current `2026Q3` authority from quarter start, no pending action.
+- `TSLA`: `LONG`, open trade carried from `2026Q2` authority, locked to `rsi_mr_n7_lo25_hi65__native_only`.
+- `SOFI`: `LONG`, open trade carried from `2026Q2` authority, locked to `ema_trend_fast15_slow50__native_only`.
+- Pending next-open actions: `0`.
 
 ## Operator Reading Order
 

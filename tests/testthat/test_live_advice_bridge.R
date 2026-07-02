@@ -16,6 +16,7 @@ test_that("bridge authority dates use traditional quarter boundaries", {
   expect_equal(dates$live_start_date, as.Date("2026-07-01"))
   expect_equal(dates$live_end_date, as.Date("2026-09-30"))
   expect_equal(g5_bridge_next_quarter_id("2026Q4"), "2027Q1")
+  expect_equal(g5_bridge_previous_quarter_id("2026Q1"), "2025Q4")
 })
 
 test_that("bridge contract separates live symbols from context symbols", {
@@ -76,6 +77,42 @@ test_that("trade trace segments clip off-chart entries into the visible panel", 
   expect_equal(segments$x1[[1L]], 5)
   expect_equal(segments$y0[[1L]], 104)
   expect_equal(segments$y1[[1L]], 112)
+})
+
+test_that("continuity detector carries prior authority when first current-quarter bar is long", {
+  prior_replay <- data.frame(
+    session_date = as.Date(c("2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03")),
+    model_position_after_replay = c("FLAT", "LONG", "LONG", "FLAT"),
+    stringsAsFactors = FALSE
+  )
+
+  expect_equal(
+    g5_bridge_first_flat_date_from_prior(prior_replay, as.Date("2026-07-01")),
+    as.Date("2026-07-03")
+  )
+})
+
+test_that("chart replay can use a 90 calendar-day window", {
+  replay <- data.frame(
+    session_date = as.Date("2026-03-01") + 0:140,
+    symbol = "AMD",
+    open = 1:141,
+    high = 1:141,
+    low = 1:141,
+    close = 1:141,
+    state_id = "S1_1",
+    stringsAsFactors = FALSE
+  )
+  symbol_result <- list(replay = replay, scores = replay)
+
+  chart <- g5_bridge_chart_replay(
+    symbol_result,
+    chart_start_date = as.Date("2026-07-01") - 90,
+    chart_end_date = as.Date("2026-07-01")
+  )
+
+  expect_true(min(as.Date(chart$session_date)) >= as.Date("2026-04-02"))
+  expect_true(max(as.Date(chart$session_date)) <= as.Date("2026-07-01"))
 })
 
 test_that("frozen quantile scoring uses contract centers, loadings, and break rows", {

@@ -63,6 +63,7 @@ if (is.na(as_of_date)) {
 }
 quarter_id <- toupper(arg_or_env("quarter", "GEN5_BRIDGE_QUARTER_ID", g5_bridge_quarter_id(as_of_date)))
 refresh <- g5_parse_bool_env(arg_or_env("refresh", "GEN5_BRIDGE_REFRESH", "true"), default = TRUE)
+continuity <- g5_parse_bool_env(arg_or_env("continuity", "GEN5_BRIDGE_CONTINUITY", "true"), default = TRUE)
 warmup_days <- as.integer(arg_or_env("warmup_days", "GEN5_BRIDGE_WARMUP_DAYS", "420"))
 if (is.na(warmup_days) || warmup_days < 60L) g5_stop("warmup_days must be an integer >= 60.")
 
@@ -84,7 +85,17 @@ if (!identical(contract$quarter_id[[1L]], quarter_id)) {
 if (as_of_date > as.Date(contract$live_end_date[[1L]])) {
   g5_stop("Frozen bridge authority is expired for this as-of date.")
 }
+previous_authority <- NULL
+previous_authority_dir <- ""
+if (continuity) {
+  previous_quarter_id <- g5_bridge_previous_quarter_id(quarter_id)
+  previous_authority_dir <- arg_or_env("previous_authority_dir", "GEN5_BRIDGE_PREVIOUS_AUTHORITY_DIR", g5_bridge_authority_dir(repo_root, previous_quarter_id))
+  previous_authority <- g5_bridge_read_authority(previous_authority_dir)
+}
 query_start_date <- as.Date(contract$train_start_date[[1L]]) - warmup_days
+if (!is.null(previous_authority)) {
+  query_start_date <- min(query_start_date, as.Date(previous_authority$contract$train_start_date[[1L]]) - warmup_days)
+}
 query_end_date <- as_of_date
 output_dir <- g5_bridge_daily_dir(repo_root, quarter_id, as_of_timestamp)
 
@@ -92,12 +103,14 @@ message("Gen5.1 live-advice bridge daily runner")
 message("Repository: ", repo_root)
 message("Quarter: ", quarter_id)
 message("Authority: ", authority_dir)
+if (continuity) message("Previous authority: ", previous_authority_dir)
 message("Symbols: ", paste(symbols, collapse = ", "))
 message("Context symbols: ", paste(context_symbols, collapse = ", "))
 message("As of: ", as_of_timestamp)
 message("Feed: ", cfg$feed)
 message("Query: ", query_start_date, " through ", query_end_date)
 message("Refresh: ", refresh)
+message("Continuity replay: ", continuity)
 message("Output: ", output_dir)
 
 result <- g5_workbench_query_adjusted_daily_bars(
@@ -115,11 +128,20 @@ for (symbol in unique(c(symbols, context_symbols))) {
   g5_require_chartable_symbol(result, symbol = symbol, refresh = refresh)
 }
 
-daily <- g5_bridge_run_daily_from_bars(
-  result$bars,
-  authority = authority,
-  as_of_timestamp = result$resolved_session$as_of_timestamp
-)
+daily <- if (continuity) {
+  g5_bridge_run_daily_continuity_from_bars(
+    result$bars,
+    current_authority = authority,
+    previous_authority = previous_authority,
+    as_of_timestamp = result$resolved_session$as_of_timestamp
+  )
+} else {
+  g5_bridge_run_daily_from_bars(
+    result$bars,
+    authority = authority,
+    as_of_timestamp = result$resolved_session$as_of_timestamp
+  )
+}
 
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 query_paths <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = "bridge_daily_query")
