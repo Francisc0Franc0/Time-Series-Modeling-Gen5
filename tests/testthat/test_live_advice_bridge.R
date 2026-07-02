@@ -46,6 +46,31 @@ test_that("bridge model grid defaults to the full Gen5.1 candidate suite", {
   expect_gt(nrow(grid), 20L)
 })
 
+test_that("trade trace segments clip off-chart entries into the visible panel", {
+  dates <- as.Date("2026-07-01") + 0:4
+  trades <- data.frame(
+    symbol = "AMD",
+    trade_status = "open",
+    entry_execution_date = as.Date("2026-06-29"),
+    entry_execution_price = 100,
+    exit_execution_date = as.Date(NA),
+    exit_execution_price = NA_real_,
+    trace_end_date = as.Date("2026-07-05"),
+    trace_end_price = 112,
+    trade_outcome = "win",
+    strategy_spec_id = "fixture",
+    stringsAsFactors = FALSE
+  )
+
+  segments <- g5_bridge_visible_trade_segments(trades, dates)
+
+  expect_equal(nrow(segments), 1L)
+  expect_equal(segments$x0[[1L]], 1)
+  expect_equal(segments$x1[[1L]], 5)
+  expect_equal(segments$y0[[1L]], 104)
+  expect_equal(segments$y1[[1L]], 112)
+})
+
 test_that("frozen quantile scoring uses contract centers, loadings, and break rows", {
   features <- data.frame(
     schema_version = "fixture",

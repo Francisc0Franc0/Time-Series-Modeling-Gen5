@@ -491,26 +491,24 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
       }
     }
 
-    if (current_date >= live_start_date) {
-      rows[[length(rows) + 1L]] <- data.frame(
-        schema_version = g5_live_bridge_schema_version(),
-        symbol = symbol,
-        session_date = current_date,
-        open = as.numeric(all_bars$open[[idx]]),
-        high = as.numeric(all_bars$high[[idx]]),
-        low = as.numeric(all_bars$low[[idx]]),
-        close = as.numeric(all_bars$close[[idx]]),
-        state_id = current_state,
-        selected_strategy_family = selected_family,
-        selected_strategy_spec_id = selected_spec,
-        model_position_after_replay = if (in_position) "LONG" else "FLAT",
-        execution_status = execution_today,
-        signal_status = action_today,
-        open_trade_strategy_spec_id = if (in_position && !is.null(open_trade)) open_trade$strategy_spec_id else NA_character_,
-        open_trade_entry_execution_date = if (in_position && !is.null(open_trade)) open_trade$entry_execution_date else as.Date(NA),
-        stringsAsFactors = FALSE
-      )
-    }
+    rows[[length(rows) + 1L]] <- data.frame(
+      schema_version = g5_live_bridge_schema_version(),
+      symbol = symbol,
+      session_date = current_date,
+      open = as.numeric(all_bars$open[[idx]]),
+      high = as.numeric(all_bars$high[[idx]]),
+      low = as.numeric(all_bars$low[[idx]]),
+      close = as.numeric(all_bars$close[[idx]]),
+      state_id = current_state,
+      selected_strategy_family = selected_family,
+      selected_strategy_spec_id = selected_spec,
+      model_position_after_replay = if (in_position) "LONG" else "FLAT",
+      execution_status = execution_today,
+      signal_status = action_today,
+      open_trade_strategy_spec_id = if (in_position && !is.null(open_trade)) open_trade$strategy_spec_id else NA_character_,
+      open_trade_entry_execution_date = if (in_position && !is.null(open_trade)) open_trade$entry_execution_date else as.Date(NA),
+      stringsAsFactors = FALSE
+    )
   }
   replay <- if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
   pending <- if (length(pending_actions)) g5_wfa_bind_rows_fill(pending_actions) else data.frame()
@@ -682,6 +680,65 @@ g5_bridge_trades_from_replay <- function(replay, executions, authority_end_date)
   if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
 }
 
+g5_bridge_date_to_visible_x <- function(date, dates) {
+  date <- as.Date(date)
+  dates <- as.Date(dates)
+  matched <- match(date, dates)
+  if (!is.na(matched)) return(as.numeric(matched))
+  if (date < dates[[1L]]) return(1 - as.numeric(dates[[1L]] - date))
+  if (date > dates[[length(dates)]]) return(length(dates) + as.numeric(date - dates[[length(dates)]]))
+  before <- max(which(dates < date))
+  after <- min(which(dates > date))
+  before + as.numeric(date - dates[[before]]) / as.numeric(dates[[after]] - dates[[before]])
+}
+
+g5_bridge_interpolate_trace_price <- function(target_date, start_date, start_price, end_date, end_price) {
+  target_date <- as.Date(target_date)
+  start_date <- as.Date(start_date)
+  end_date <- as.Date(end_date)
+  start_price <- as.numeric(start_price)
+  end_price <- as.numeric(end_price)
+  if (!is.finite(start_price) || !is.finite(end_price)) return(NA_real_)
+  span <- as.numeric(end_date - start_date)
+  if (!is.finite(span) || span == 0) return(end_price)
+  start_price + (end_price - start_price) * (as.numeric(target_date - start_date) / span)
+}
+
+g5_bridge_visible_trade_segments <- function(trades, dates) {
+  if (!is.data.frame(trades) || !nrow(trades) || !length(dates)) return(data.frame())
+  dates <- as.Date(dates)
+  visible_start <- dates[[1L]]
+  visible_end <- dates[[length(dates)]]
+  rows <- list()
+  for (i in seq_len(nrow(trades))) {
+    trade <- trades[i, , drop = FALSE]
+    entry_date <- as.Date(trade$entry_execution_date[[1L]])
+    end_date <- as.Date(trade$trace_end_date[[1L]])
+    entry_price <- as.numeric(trade$entry_execution_price[[1L]])
+    end_price <- as.numeric(trade$trace_end_price[[1L]])
+    if (is.na(entry_date) || is.na(end_date) || !is.finite(entry_price) || !is.finite(end_price)) next
+    if (end_date < visible_start || entry_date > visible_end) next
+    clipped_start <- max(entry_date, visible_start)
+    clipped_end <- min(end_date, visible_end)
+    y0 <- g5_bridge_interpolate_trace_price(clipped_start, entry_date, entry_price, end_date, end_price)
+    y1 <- g5_bridge_interpolate_trace_price(clipped_end, entry_date, entry_price, end_date, end_price)
+    x0 <- g5_bridge_date_to_visible_x(clipped_start, dates)
+    x1 <- g5_bridge_date_to_visible_x(clipped_end, dates)
+    if (!is.finite(x0) || !is.finite(x1) || !is.finite(y0) || !is.finite(y1)) next
+    if (identical(x0, x1)) x1 <- min(length(dates) + 0.45, x1 + 0.45)
+    rows[[length(rows) + 1L]] <- data.frame(
+      x0 = x0,
+      y0 = y0,
+      x1 = x1,
+      y1 = y1,
+      trade_status = as.character(trade$trade_status[[1L]]),
+      trade_outcome = as.character(trade$trade_outcome[[1L]]),
+      stringsAsFactors = FALSE
+    )
+  }
+  if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
+}
+
 g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.frame(), main = "") {
   if (!is.data.frame(replay) || !nrow(replay)) {
     graphics::plot.new()
@@ -721,12 +778,11 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
     }
   }
   if (is.data.frame(trades) && nrow(trades)) {
-    line_cols <- ifelse(trades$trade_outcome == "win", aesthetic$trade_win_line, ifelse(trades$trade_outcome == "loss", aesthetic$trade_loss_line, aesthetic$flat_candle))
-    trade_x0 <- match(as.Date(trades$entry_execution_date), dates)
-    trade_x1 <- match(as.Date(trades$trace_end_date), dates)
-    same_bar <- is.finite(trade_x0) & is.finite(trade_x1) & trade_x0 == trade_x1
-    trade_x1[same_bar] <- trade_x1[same_bar] + 0.45
-    graphics::segments(trade_x0, trades$entry_execution_price, trade_x1, trades$trace_end_price, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 1.15)
+    trace_segments <- g5_bridge_visible_trade_segments(trades, dates)
+    if (nrow(trace_segments)) {
+      line_cols <- ifelse(trace_segments$trade_outcome == "win", aesthetic$trade_win_line, ifelse(trace_segments$trade_outcome == "loss", aesthetic$trade_loss_line, aesthetic$flat_candle))
+      graphics::segments(trace_segments$x0, trace_segments$y0, trace_segments$x1, trace_segments$y1, col = line_cols, lty = aesthetic$trade_line_lty, lwd = 1.15)
+    }
   }
   at <- unique(round(seq(1, length(x), length.out = min(6L, length(x)))))
   graphics::axis(1, at = at, labels = format(dates[at], "%m-%d"), las = 2, cex.axis = 0.75)
