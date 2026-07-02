@@ -321,3 +321,416 @@ g5_selection_policy_run_daily_continuity_fast <- function(bars, current_authorit
     book_summary = book
   )
 }
+
+g5_selection_policy_visual_safe_read_csv <- function(path, required = TRUE) {
+  if (!file.exists(path)) {
+    if (isTRUE(required)) g5_stop(paste0("Missing required selection-policy visual input: ", path))
+    return(data.frame())
+  }
+  utils::read.csv(path, stringsAsFactors = FALSE)
+}
+
+g5_selection_policy_visual_paths <- function(output_dir) {
+  list(
+    visual_index_csv = file.path(output_dir, "selection_policy_visual_index.csv"),
+    metric_dashboard_png = file.path(output_dir, "selection_policy_metric_delta_dashboard.png"),
+    return_heatmap_png = file.path(output_dir, "selection_policy_symbol_return_delta_heatmap.png"),
+    return_scatter_png = file.path(output_dir, "selection_policy_return_scatter.png"),
+    churn_map_png = file.path(output_dir, "selection_policy_state_churn_map.png"),
+    equity_proxy_png = file.path(output_dir, "selection_policy_equity_proxy_overlay.png"),
+    report_md = file.path(output_dir, "selection_policy_visual_summary_report.md")
+  )
+}
+
+g5_selection_policy_metric_label <- function(x, digits = 1, pct = FALSE) {
+  x <- suppressWarnings(as.numeric(x))
+  ifelse(is.na(x) | !is.finite(x), "NA", if (isTRUE(pct)) sprintf(paste0("%.", digits, "f%%"), x * 100) else sprintf(paste0("%.", digits, "f"), x))
+}
+
+g5_selection_policy_window_label <- function(window_id, multiline = FALSE) {
+  x <- as.character(window_id)
+  out <- sub("_asof_", if (isTRUE(multiline)) "\n" else " ", x, fixed = TRUE)
+  out <- sub("([0-9]{4})([0-9]{2})([0-9]{2})$", "\\1-\\2-\\3", out)
+  out
+}
+
+g5_selection_policy_trade_return_sharpe_proxy <- function(returns) {
+  returns <- suppressWarnings(as.numeric(returns))
+  returns <- returns[is.finite(returns)]
+  if (length(returns) < 2L || stats::sd(returns) == 0) return(NA_real_)
+  mean(returns) / stats::sd(returns) * sqrt(length(returns))
+}
+
+g5_selection_policy_prepare_metric_summary <- function(trade_summary, trade_ledger = data.frame()) {
+  if (!is.data.frame(trade_summary) || !nrow(trade_summary)) {
+    g5_stop("selection_policy_trade_summary.csv must contain rows for visual summary.")
+  }
+  grouped <- split(trade_summary, paste(trade_summary$window_id, trade_summary$selection_policy, sep = "::"))
+  rows <- lapply(grouped, function(x) {
+    returns <- suppressWarnings(as.numeric(x$compound_trace_return))
+    trade_returns <- numeric()
+    if (is.data.frame(trade_ledger) && nrow(trade_ledger)) {
+      y <- trade_ledger[
+        as.character(trade_ledger$window_id) == as.character(x$window_id[[1L]]) &
+          as.character(trade_ledger$selection_policy) == as.character(x$selection_policy[[1L]]),
+        ,
+        drop = FALSE
+      ]
+      trade_returns <- g5_selection_policy_trace_return(y)
+    }
+    data.frame(
+      window_id = as.character(x$window_id[[1L]]),
+      selection_policy = as.character(x$selection_policy[[1L]]),
+      symbol_count = length(unique(as.character(x$symbol))),
+      equal_symbol_mean_compound_trace_return = mean(returns, na.rm = TRUE),
+      worst_symbol_compound_trace_return = min(returns, na.rm = TRUE),
+      best_symbol_compound_trace_return = max(returns, na.rm = TRUE),
+      trade_count = sum(suppressWarnings(as.numeric(x$trade_count)), na.rm = TRUE),
+      open_trade_count = sum(suppressWarnings(as.numeric(x$open_trade_count)), na.rm = TRUE),
+      closed_trade_count = sum(suppressWarnings(as.numeric(x$closed_trade_count)), na.rm = TRUE),
+      win_count = sum(suppressWarnings(as.numeric(x$win_count)), na.rm = TRUE),
+      loss_count = sum(suppressWarnings(as.numeric(x$loss_count)), na.rm = TRUE),
+      win_rate = {
+        wins <- sum(suppressWarnings(as.numeric(x$win_count)), na.rm = TRUE)
+        losses <- sum(suppressWarnings(as.numeric(x$loss_count)), na.rm = TRUE)
+        if ((wins + losses) > 0) wins / (wins + losses) else NA_real_
+      },
+      trade_return_sharpe_proxy = g5_selection_policy_trade_return_sharpe_proxy(trade_returns),
+      stringsAsFactors = FALSE
+    )
+  })
+  out <- g5_wfa_bind_rows_fill(rows)
+  rownames(out) <- NULL
+  out
+}
+
+g5_selection_policy_prepare_symbol_delta <- function(trade_summary) {
+  direct <- trade_summary[as.character(trade_summary$selection_policy) == "asset_state_direct_spec", , drop = FALSE]
+  pooled <- trade_summary[as.character(trade_summary$selection_policy) == "pooled_family_asset_variant", , drop = FALSE]
+  keys <- c("window_id", "symbol")
+  merged <- merge(
+    direct[, c(keys, "compound_trace_return", "trade_count", "win_count", "loss_count", "current_model_position", "latest_selected_strategy_family"), drop = FALSE],
+    pooled[, c(keys, "compound_trace_return", "trade_count", "win_count", "loss_count", "current_model_position", "latest_selected_strategy_family"), drop = FALSE],
+    by = keys,
+    all = TRUE,
+    suffixes = c("_direct", "_pooled")
+  )
+  merged$return_delta_pooled_minus_direct <- suppressWarnings(as.numeric(merged$compound_trace_return_pooled)) - suppressWarnings(as.numeric(merged$compound_trace_return_direct))
+  merged$trade_count_delta_pooled_minus_direct <- suppressWarnings(as.numeric(merged$trade_count_pooled)) - suppressWarnings(as.numeric(merged$trade_count_direct))
+  merged$position_match <- as.character(merged$current_model_position_direct) == as.character(merged$current_model_position_pooled)
+  merged$latest_family_match <- as.character(merged$latest_selected_strategy_family_direct) == as.character(merged$latest_selected_strategy_family_pooled)
+  merged
+}
+
+g5_selection_policy_order_states <- function(states) {
+  states <- unique(as.character(states))
+  parsed <- do.call(rbind, lapply(states, function(state) {
+    parts <- regmatches(state, regexec("^S([0-9]+)_([0-9]+)$", state))[[1L]]
+    if (length(parts) == 3L) {
+      c(state = state, pc1 = as.integer(parts[[2L]]), pc2 = as.integer(parts[[3L]]))
+    } else {
+      c(state = state, pc1 = Inf, pc2 = Inf)
+    }
+  }))
+  parsed <- as.data.frame(parsed, stringsAsFactors = FALSE)
+  parsed$pc1 <- suppressWarnings(as.numeric(parsed$pc1))
+  parsed$pc2 <- suppressWarnings(as.numeric(parsed$pc2))
+  parsed$state[order(parsed$pc1, parsed$pc2, parsed$state)]
+}
+
+g5_selection_policy_write_metric_dashboard <- function(metric_summary, path, width = 2400L, height = 1500L, res = 180L) {
+  aesthetic <- g5_chart_aesthetic()
+  grDevices::png(path, width = width, height = height, res = res)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(2, 3), mar = c(6, 4, 3, 1), oma = c(0, 0, 3, 0))
+  metrics <- list(
+    list(col = "equal_symbol_mean_compound_trace_return", title = "Mean Symbol Trace Return", pct = TRUE),
+    list(col = "win_rate", title = "Win Rate", pct = TRUE),
+    list(col = "trade_return_sharpe_proxy", title = "Trade-Return Sharpe Proxy", pct = FALSE),
+    list(col = "trade_count", title = "Trade Count", pct = FALSE),
+    list(col = "open_trade_count", title = "Open Trade Count", pct = FALSE),
+    list(col = "worst_symbol_compound_trace_return", title = "Worst Symbol Trace Return", pct = TRUE)
+  )
+  windows <- unique(as.character(metric_summary$window_id))
+  colors <- c(asset_state_direct_spec = "#2E86AB", pooled_family_asset_variant = "#9B5DE5")
+  for (metric in metrics) {
+    values <- matrix(NA_real_, nrow = length(colors), ncol = length(windows), dimnames = list(names(colors), windows))
+    for (i in seq_len(nrow(metric_summary))) {
+      row <- match(as.character(metric_summary$selection_policy[[i]]), rownames(values))
+      col <- match(as.character(metric_summary$window_id[[i]]), colnames(values))
+      if (!is.na(row) && !is.na(col)) values[row, col] <- as.numeric(metric_summary[[metric$col]][[i]])
+    }
+    plot_values <- values
+    if (isTRUE(metric$pct)) plot_values <- plot_values * 100
+    ylim <- range(c(plot_values, 0), na.rm = TRUE)
+    if (!all(is.finite(ylim)) || diff(ylim) == 0) ylim <- ylim + c(-1, 1)
+    colnames(plot_values) <- g5_selection_policy_window_label(colnames(plot_values), multiline = TRUE)
+    bars <- graphics::barplot(plot_values, beside = TRUE, col = colors, border = NA, ylim = ylim * c(ifelse(ylim[[1L]] < 0, 1.15, 0), 1.15), las = 1, cex.names = 0.72, main = metric$title, ylab = if (isTRUE(metric$pct)) "Percent" else "Value", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+    graphics::abline(h = 0, col = aesthetic$axis, lwd = 0.8)
+    graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
+    graphics::legend("topleft", legend = c("Direct", "Pooled family"), fill = colors, bty = "n", cex = 0.75)
+    for (r in seq_len(nrow(plot_values))) {
+      for (c in seq_len(ncol(plot_values))) {
+        value <- plot_values[r, c]
+        if (!is.finite(value)) next
+        graphics::text(bars[r, c], value, labels = if (isTRUE(metric$pct)) sprintf("%.1f", value) else sprintf("%.2f", value), pos = if (value >= 0) 3 else 1, cex = 0.58, col = aesthetic$text)
+      }
+    }
+  }
+  graphics::mtext("Selection Policy Metric Dashboard", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
+g5_selection_policy_delta_color <- function(values, positive = "#00A88F", negative = "#F15A5A", neutral = "#FFFDF8") {
+  values <- suppressWarnings(as.numeric(values))
+  max_abs <- max(abs(values), na.rm = TRUE)
+  if (!is.finite(max_abs) || max_abs == 0) max_abs <- 1
+  vapply(values, function(value) {
+    if (!is.finite(value) || value == 0) return(neutral)
+    target <- if (value > 0) positive else negative
+    grDevices::adjustcolor(target, alpha.f = min(0.95, 0.22 + 0.73 * abs(value) / max_abs))
+  }, character(1L))
+}
+
+g5_selection_policy_write_return_heatmap <- function(symbol_delta, path, width = 1800L, height = 1100L, res = 180L) {
+  aesthetic <- g5_chart_aesthetic()
+  symbols <- sort(unique(as.character(symbol_delta$symbol)))
+  windows <- unique(as.character(symbol_delta$window_id))
+  values <- matrix(NA_real_, nrow = length(symbols), ncol = length(windows), dimnames = list(symbols, windows))
+  for (i in seq_len(nrow(symbol_delta))) {
+    values[as.character(symbol_delta$symbol[[i]]), as.character(symbol_delta$window_id[[i]])] <- as.numeric(symbol_delta$return_delta_pooled_minus_direct[[i]])
+  }
+  grDevices::png(path, width = width, height = height, res = res)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mar = c(7, 7, 4, 2))
+  graphics::plot(NA, xlim = c(0.5, ncol(values) + 0.5), ylim = c(0.5, nrow(values) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "Pooled Minus Direct: Symbol Trace Return Delta", col.main = aesthetic$text, fg = aesthetic$axis)
+  graphics::rect(0.5, 0.5, ncol(values) + 0.5, nrow(values) + 0.5, col = aesthetic$panel_background, border = NA)
+  cols <- g5_selection_policy_delta_color(as.vector(values))
+  dim(cols) <- dim(values)
+  for (r in seq_len(nrow(values))) {
+    for (c in seq_len(ncol(values))) {
+      graphics::rect(c - 0.5, nrow(values) - r + 0.5, c + 0.5, nrow(values) - r + 1.5, col = cols[r, c], border = aesthetic$grid)
+      graphics::text(c, nrow(values) - r + 1, labels = g5_selection_policy_metric_label(values[r, c], digits = 1, pct = TRUE), cex = 0.85, col = aesthetic$text)
+    }
+  }
+  graphics::axis(1, at = seq_along(windows), labels = g5_selection_policy_window_label(windows, multiline = TRUE), las = 1, cex.axis = 0.75, col.axis = aesthetic$axis)
+  graphics::axis(2, at = rev(seq_along(symbols)), labels = symbols, las = 1, cex.axis = 0.85, col.axis = aesthetic$axis)
+  graphics::mtext("Green favors pooled-family; red favors direct. Trace-return proxy only.", side = 1, line = 5.2, cex = 0.72, col = aesthetic$text)
+  invisible(path)
+}
+
+g5_selection_policy_write_return_scatter <- function(symbol_delta, path, width = 1800L, height = 1200L, res = 180L) {
+  aesthetic <- g5_chart_aesthetic()
+  x <- suppressWarnings(as.numeric(symbol_delta$compound_trace_return_direct))
+  y <- suppressWarnings(as.numeric(symbol_delta$compound_trace_return_pooled))
+  lim <- range(c(x, y, 0), na.rm = TRUE)
+  pad <- diff(lim) * 0.08
+  if (!is.finite(pad) || pad == 0) pad <- 0.05
+  lim <- lim + c(-pad, pad)
+  windows <- unique(as.character(symbol_delta$window_id))
+  pch <- stats::setNames(c(21L, 24L, 22L, 25L)[seq_along(windows)], windows)
+  fill <- stats::setNames(c("#2E86AB", "#9B5DE5", "#00A88F", "#FF9F1C")[seq_along(windows)], windows)
+  grDevices::png(path, width = width, height = height, res = res)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mar = c(5, 5, 4, 2))
+  graphics::plot(x, y, type = "n", xlim = lim, ylim = lim, xlab = "Direct compound trace return", ylab = "Pooled-family compound trace return", main = "Direct vs Pooled-Family Symbol Outcomes", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
+  graphics::rect(lim[[1L]], lim[[1L]], lim[[2L]], lim[[2L]], col = aesthetic$panel_background, border = NA)
+  graphics::grid(col = aesthetic$grid)
+  graphics::abline(0, 1, col = aesthetic$axis, lty = 2)
+  for (i in seq_len(nrow(symbol_delta))) {
+    window <- as.character(symbol_delta$window_id[[i]])
+    graphics::points(x[[i]], y[[i]], pch = pch[[window]], bg = fill[[window]], col = aesthetic$axis, cex = 1.4)
+    graphics::text(x[[i]], y[[i]], labels = as.character(symbol_delta$symbol[[i]]), pos = 3, cex = 0.62, col = aesthetic$text)
+  }
+  graphics::legend("topleft", legend = windows, pt.bg = fill[windows], pch = pch[windows], bty = "n", cex = 0.8)
+  invisible(path)
+}
+
+g5_selection_policy_write_churn_map <- function(selected_comparison, path, width = 2400L, height = 1500L, res = 180L) {
+  aesthetic <- g5_chart_aesthetic()
+  quarters <- unique(as.character(selected_comparison$quarter_id))
+  symbols <- sort(unique(as.character(selected_comparison$symbol)))
+  states <- g5_selection_policy_order_states(selected_comparison$state_id)
+  status_color <- c(same_spec = "#00A88F", same_family = "#F6C85F", different_family = "#F15A5A", missing = "#6E6878")
+  grDevices::png(path, width = width, height = height, res = res)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(length(quarters), 1), mar = c(4, 6, 3, 1), oma = c(2, 0, 3, 0))
+  for (quarter in quarters) {
+    q <- selected_comparison[as.character(selected_comparison$quarter_id) == quarter, , drop = FALSE]
+    graphics::plot(NA, xlim = c(0.5, length(states) + 0.5), ylim = c(0.5, length(symbols) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = paste("Selected-State Agreement", quarter), col.main = aesthetic$text, fg = aesthetic$axis)
+    graphics::rect(0.5, 0.5, length(states) + 0.5, length(symbols) + 0.5, col = aesthetic$panel_background, border = NA)
+    for (i in seq_len(nrow(q))) {
+      x <- match(as.character(q$state_id[[i]]), states)
+      y <- match(as.character(q$symbol[[i]]), symbols)
+      status <- if (isTRUE(q$spec_match[[i]])) "same_spec" else if (isTRUE(q$family_match[[i]])) "same_family" else "different_family"
+      if (is.na(x) || is.na(y)) status <- "missing"
+      graphics::rect(x - 0.5, y - 0.5, x + 0.5, y + 0.5, col = status_color[[status]], border = aesthetic$grid)
+    }
+    graphics::axis(1, at = seq_along(states), labels = states, las = 2, cex.axis = 0.55, col.axis = aesthetic$axis)
+    graphics::axis(2, at = seq_along(symbols), labels = symbols, las = 1, cex.axis = 0.75, col.axis = aesthetic$axis)
+    graphics::legend("topright", legend = c("Same spec", "Same family", "Different family"), fill = status_color[c("same_spec", "same_family", "different_family")], bty = "n", cex = 0.72)
+  }
+  graphics::mtext("Direct vs Pooled-Family Selection Churn", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
+g5_selection_policy_equity_proxy_from_replay <- function(replay) {
+  if (!is.data.frame(replay) || !nrow(replay)) return(data.frame())
+  pieces <- split(replay, as.character(replay$symbol))
+  rows <- lapply(pieces, function(x) {
+    x <- x[order(as.Date(x$session_date)), , drop = FALSE]
+    close <- suppressWarnings(as.numeric(x$close))
+    ret <- c(0, close[-1L] / close[-length(close)] - 1)
+    pos <- as.character(x$model_position_after_replay) == "LONG"
+    pos_lag <- c(FALSE, pos[-length(pos)])
+    equity <- cumprod(1 + ifelse(pos_lag, ret, 0))
+    data.frame(symbol = as.character(x$symbol), session_date = as.Date(x$session_date), equity_proxy = equity, stringsAsFactors = FALSE)
+  })
+  symbol_equity <- g5_wfa_bind_rows_fill(rows)
+  daily <- stats::aggregate(equity_proxy ~ session_date, data = symbol_equity, FUN = mean)
+  names(daily)[names(daily) == "equity_proxy"] <- "equal_symbol_equity_proxy"
+  daily
+}
+
+g5_selection_policy_prepare_equity_proxy <- function(packet_index) {
+  rows <- list()
+  for (i in seq_len(nrow(packet_index))) {
+    replay <- g5_selection_policy_visual_safe_read_csv(packet_index$replay_csv[[i]])
+    if (!nrow(replay)) next
+    eq <- g5_selection_policy_equity_proxy_from_replay(replay)
+    if (!nrow(eq)) next
+    eq$window_id <- as.character(packet_index$window_id[[i]])
+    eq$selection_policy <- as.character(packet_index$selection_policy[[i]])
+    rows[[length(rows) + 1L]] <- eq
+  }
+  if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
+}
+
+g5_selection_policy_write_equity_proxy_overlay <- function(equity_proxy, path, width = 2200L, height = 1300L, res = 180L) {
+  aesthetic <- g5_chart_aesthetic()
+  windows <- unique(as.character(equity_proxy$window_id))
+  colors <- c(asset_state_direct_spec = "#2E86AB", pooled_family_asset_variant = "#9B5DE5")
+  grDevices::png(path, width = width, height = height, res = res)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(length(windows), 1), mar = c(4.5, 5, 3, 2), oma = c(1, 0, 3, 0))
+  for (window in windows) {
+    x <- equity_proxy[as.character(equity_proxy$window_id) == window, , drop = FALSE]
+    y_range <- range(x$equal_symbol_equity_proxy, na.rm = TRUE)
+    pad <- diff(y_range) * 0.08
+    if (!is.finite(pad) || pad == 0) pad <- 0.02
+    date_range <- range(as.Date(x$session_date))
+    graphics::plot(date_range, y_range, type = "n", xaxt = "n", ylim = y_range + c(-pad, pad), xlab = "", ylab = "Equity proxy", main = g5_selection_policy_window_label(window), col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
+    graphics::rect(par("usr")[[1L]], par("usr")[[3L]], par("usr")[[2L]], par("usr")[[4L]], col = aesthetic$panel_background, border = NA)
+    graphics::grid(col = aesthetic$grid)
+    graphics::axis.Date(1, at = pretty(date_range, n = 6), format = "%Y-%m-%d", las = 2, cex.axis = 0.72, col.axis = aesthetic$axis)
+    for (policy in names(colors)) {
+      p <- x[as.character(x$selection_policy) == policy, , drop = FALSE]
+      if (nrow(p)) graphics::lines(as.Date(p$session_date), as.numeric(p$equal_symbol_equity_proxy), col = colors[[policy]], lwd = 2.2)
+    }
+    graphics::abline(h = 1, col = aesthetic$axis, lty = 2)
+    graphics::legend("topleft", legend = c("Direct", "Pooled family"), col = colors, lwd = 2.2, bty = "n", cex = 0.78)
+  }
+  graphics::mtext("Equal-Symbol Replay Equity Proxy", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
+g5_selection_policy_md_table <- function(df, cols, n = Inf) {
+  if (!is.data.frame(df) || !nrow(df)) return("_No rows._")
+  df <- df[seq_len(min(nrow(df), n)), cols, drop = FALSE]
+  df[] <- lapply(df, as.character)
+  c(
+    paste0("| ", paste(cols, collapse = " | "), " |"),
+    paste0("| ", paste(rep("---", length(cols)), collapse = " | "), " |"),
+    apply(df, 1L, function(row) paste0("| ", paste(row, collapse = " | "), " |"))
+  )
+}
+
+g5_selection_policy_write_visual_summary <- function(screen_dir, output_dir = file.path(screen_dir, "visual_summary")) {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  paths <- g5_selection_policy_visual_paths(output_dir)
+  trade_summary <- g5_selection_policy_visual_safe_read_csv(file.path(screen_dir, "selection_policy_trade_summary.csv"))
+  trade_ledger <- g5_selection_policy_visual_safe_read_csv(file.path(screen_dir, "selection_policy_trade_ledger.csv"), required = FALSE)
+  selected_comparison <- g5_selection_policy_visual_safe_read_csv(file.path(screen_dir, "selection_policy_selected_state_comparison.csv"))
+  packet_index <- g5_selection_policy_visual_safe_read_csv(file.path(screen_dir, "selection_policy_packet_index.csv"))
+
+  metric_summary <- g5_selection_policy_prepare_metric_summary(trade_summary, trade_ledger)
+  symbol_delta <- g5_selection_policy_prepare_symbol_delta(trade_summary)
+  equity_proxy <- g5_selection_policy_prepare_equity_proxy(packet_index)
+
+  g5_selection_policy_write_metric_dashboard(metric_summary, paths$metric_dashboard_png)
+  g5_selection_policy_write_return_heatmap(symbol_delta, paths$return_heatmap_png)
+  g5_selection_policy_write_return_scatter(symbol_delta, paths$return_scatter_png)
+  g5_selection_policy_write_churn_map(selected_comparison, paths$churn_map_png)
+  if (nrow(equity_proxy)) g5_selection_policy_write_equity_proxy_overlay(equity_proxy, paths$equity_proxy_png)
+
+  visual_index <- data.frame(
+    schema_version = g5_selection_policy_screen_schema_version(),
+    chart_id = c("metric_delta_dashboard", "symbol_return_delta_heatmap", "return_scatter", "state_churn_map", "equity_proxy_overlay"),
+    chart_type = c("dashboard", "heatmap", "scatter", "tile_map", "time_series"),
+    path = normalizePath(c(paths$metric_dashboard_png, paths$return_heatmap_png, paths$return_scatter_png, paths$churn_map_png, paths$equity_proxy_png), winslash = "/", mustWork = FALSE),
+    interpretation_note = c(
+      "Side-by-side policy metrics by replay window; Sharpe is a trade-return proxy.",
+      "Pooled-family minus direct return by symbol/window; highlights concentration of effect.",
+      "Each point is one symbol/window; points above diagonal favor pooled-family.",
+      "Shows whether selected state rows match by exact spec, family only, or different family.",
+      "Equal-symbol replay equity proxy from model position and close-to-close movement."
+    ),
+    stringsAsFactors = FALSE
+  )
+  g5_wfa_write_csv(visual_index, paths$visual_index_csv)
+
+  key_deltas <- symbol_delta[order(abs(symbol_delta$return_delta_pooled_minus_direct), decreasing = TRUE), , drop = FALSE]
+  key_deltas$return_delta_pct <- sprintf("%.1f%%", 100 * as.numeric(key_deltas$return_delta_pooled_minus_direct))
+  key_deltas$direct_return_pct <- sprintf("%.1f%%", 100 * as.numeric(key_deltas$compound_trace_return_direct))
+  key_deltas$pooled_return_pct <- sprintf("%.1f%%", 100 * as.numeric(key_deltas$compound_trace_return_pooled))
+  metric_print <- metric_summary
+  metric_print$mean_trace_return_pct <- sprintf("%.1f%%", 100 * as.numeric(metric_print$equal_symbol_mean_compound_trace_return))
+  metric_print$win_rate_pct <- sprintf("%.1f%%", 100 * as.numeric(metric_print$win_rate))
+  metric_print$trade_return_sharpe_proxy <- sprintf("%.2f", as.numeric(metric_print$trade_return_sharpe_proxy))
+
+  report <- c(
+    "# Selection-Policy Visual Summary",
+    "",
+    "## Purpose",
+    "",
+    "This artifact-only visual summary makes the direct asset/state selection policy and pooled-family selection policy easier to compare. It reads the paired screen packet and does not rerun data pulls, PCA fitting, authority selection, or live advice.",
+    "",
+    "These charts are inspection aids only. Return, win-rate, and trade-return Sharpe proxy are not accepted allocation evidence.",
+    "",
+    "## Visuals",
+    "",
+    paste0("- Metric dashboard: `", paths$metric_dashboard_png, "`"),
+    paste0("- Symbol return delta heatmap: `", paths$return_heatmap_png, "`"),
+    paste0("- Return scatter: `", paths$return_scatter_png, "`"),
+    paste0("- Selected-state churn map: `", paths$churn_map_png, "`"),
+    paste0("- Equity proxy overlay: `", paths$equity_proxy_png, "`"),
+    "",
+    "## Metric Summary",
+    "",
+    g5_selection_policy_md_table(metric_print, c("window_id", "selection_policy", "mean_trace_return_pct", "win_rate_pct", "trade_return_sharpe_proxy", "trade_count", "open_trade_count")),
+    "",
+    "## Largest Symbol/Window Return Deltas",
+    "",
+    g5_selection_policy_md_table(key_deltas, c("window_id", "symbol", "direct_return_pct", "pooled_return_pct", "return_delta_pct", "position_match", "latest_family_match"), n = 10L),
+    "",
+    "## Guardrails",
+    "",
+    "- The visual summary consumes already-generated paired-screen CSVs.",
+    "- The equity overlay is an equal-symbol replay proxy, not the full portfolio accounting surface.",
+    "- The trade-return Sharpe proxy is computed from small replay trade samples and should be treated as a rough behavioral diagnostic."
+  )
+  writeLines(unlist(report), paths$report_md, useBytes = TRUE)
+
+  list(
+    paths = paths,
+    visual_index = visual_index,
+    metric_summary = metric_summary,
+    symbol_delta = symbol_delta,
+    equity_proxy = equity_proxy
+  )
+}

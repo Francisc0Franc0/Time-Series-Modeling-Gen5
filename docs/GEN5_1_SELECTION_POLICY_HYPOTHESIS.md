@@ -92,6 +92,8 @@ Implemented and ran the smallest paired screen:
 
 - Screen packet: `runs/research_workbench/selection_policy_screens/selection_policy_screen_A5_Q2Q3_20260702/`
 - Script: `scripts/inspect/run_selection_policy_screen.R`
+- Visual summary script: `scripts/inspect/run_selection_policy_visual_summary.R`
+- Visual summary packet: `runs/research_workbench/selection_policy_screens/selection_policy_screen_A5_Q2Q3_20260702/visual_summary/`
 - Replayed windows: `2026Q2_asof_20260630` and `2026Q3_asof_20260701`
 - Required authority packets: `2026Q1`, `2026Q2`, and `2026Q3`
 
@@ -118,6 +120,7 @@ Readout:
 - Match rates by quarter were `85.6%`, `84.0%`, and `87.2%`.
 - Even with high map agreement, replay behavior still diverged in visible places because a small number of state-policy changes can alter entries, exits, and quarter-continuity handoff.
 - The compact trace-return proxy favored direct selection in the Q2-as-of replay and pooled-family selection in the Q3-as-of replay, with Q3 pooled heavily influenced by AMD's replayed path. Treat this as a follow-up prompt, not a verdict.
+- The visual summary makes that concentration visible: Q3 pooled-family's advantage is dominated by AMD, while NVDA and TSLA favored direct in both windows and PLTR was unchanged in this paired screen.
 
 Updated interpretation:
 

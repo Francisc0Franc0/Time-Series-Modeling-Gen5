@@ -242,3 +242,96 @@ test_that("pooled family policy forces sparse asset states to no trade", {
   expect_equal(bbb$strategy_family[[1L]], "no_trade")
   expect_match(bbb$selection_reason[[1L]], "forced_no_trade_sparse_state")
 })
+
+test_that("selection policy visual summary reads a packet and writes charts", {
+  screen_dir <- tempfile("g5_selection_policy_visual_packet_")
+  dir.create(screen_dir, recursive = TRUE)
+  replay_dir <- file.path(screen_dir, "replays")
+  dir.create(replay_dir, recursive = TRUE)
+
+  trade_summary <- data.frame(
+    selection_policy = rep(c("asset_state_direct_spec", "pooled_family_asset_variant"), each = 2L),
+    window_id = "W1",
+    quarter_id = "2026Q2",
+    as_of_date = as.Date("2026-06-30"),
+    symbol = rep(c("AAA", "BBB"), times = 2L),
+    trade_count = c(1, 1, 1, 1),
+    closed_trade_count = c(1, 1, 1, 1),
+    open_trade_count = c(0, 0, 0, 0),
+    win_count = c(1, 0, 1, 1),
+    loss_count = c(0, 1, 0, 0),
+    compound_trace_return = c(0.10, -0.03, 0.05, 0.02),
+    mean_trace_return = c(0.10, -0.03, 0.05, 0.02),
+    worst_trace_return = c(0.10, -0.03, 0.05, 0.02),
+    best_trace_return = c(0.10, -0.03, 0.05, 0.02),
+    current_model_position = "FLAT",
+    latest_state_id = "S1_1",
+    latest_selected_strategy_family = c("trend", "mean", "trend", "trend"),
+    latest_selected_strategy_spec_id = c("d1", "d2", "p1", "p2"),
+    stringsAsFactors = FALSE
+  )
+  trade_ledger <- data.frame(
+    window_id = "W1",
+    selection_policy = rep(c("asset_state_direct_spec", "pooled_family_asset_variant"), each = 2L),
+    symbol = rep(c("AAA", "BBB"), times = 2L),
+    entry_execution_date = as.Date("2026-06-01"),
+    entry_execution_price = 100,
+    trace_end_date = as.Date("2026-06-10"),
+    trace_end_price = c(110, 97, 105, 102),
+    trade_status = "closed",
+    trade_outcome = c("win", "loss", "win", "win"),
+    strategy_spec_id = "fixture",
+    stringsAsFactors = FALSE
+  )
+  selected_comparison <- expand.grid(
+    quarter_id = "2026Q2",
+    symbol = c("AAA", "BBB"),
+    state_id = c("S1_1", "S1_2"),
+    stringsAsFactors = FALSE
+  )
+  selected_comparison$strategy_family_direct <- c("trend", "trend", "mean", "mean")
+  selected_comparison$strategy_family_pooled <- c("trend", "mean", "mean", "trend")
+  selected_comparison$strategy_spec_id_direct <- paste0("d", seq_len(nrow(selected_comparison)))
+  selected_comparison$strategy_spec_id_pooled <- c(selected_comparison$strategy_spec_id_direct[[1L]], "p2", selected_comparison$strategy_spec_id_direct[[3L]], "p4")
+  selected_comparison$family_match <- selected_comparison$strategy_family_direct == selected_comparison$strategy_family_pooled
+  selected_comparison$spec_match <- selected_comparison$strategy_spec_id_direct == selected_comparison$strategy_spec_id_pooled
+
+  replay_paths <- character()
+  for (policy in unique(trade_summary$selection_policy)) {
+    replay <- data.frame(
+      symbol = rep(c("AAA", "BBB"), each = 4L),
+      session_date = rep(as.Date("2026-06-01") + 0:3, times = 2L),
+      close = c(100, 102, 101, 104, 50, 49, 51, 52),
+      model_position_after_replay = c("FLAT", "LONG", "LONG", "FLAT", "FLAT", "LONG", "LONG", "FLAT"),
+      stringsAsFactors = FALSE
+    )
+    path <- file.path(replay_dir, paste0(policy, ".csv"))
+    utils::write.csv(replay, path, row.names = FALSE)
+    replay_paths <- c(replay_paths, path)
+  }
+  packet_index <- data.frame(
+    window_id = "W1",
+    quarter_id = "2026Q2",
+    previous_quarter_id = "2026Q1",
+    as_of_timestamp = "2026-06-30 17:30:00",
+    selection_policy = unique(trade_summary$selection_policy),
+    replay_csv = replay_paths,
+    stringsAsFactors = FALSE
+  )
+
+  utils::write.csv(trade_summary, file.path(screen_dir, "selection_policy_trade_summary.csv"), row.names = FALSE)
+  utils::write.csv(trade_ledger, file.path(screen_dir, "selection_policy_trade_ledger.csv"), row.names = FALSE)
+  utils::write.csv(selected_comparison, file.path(screen_dir, "selection_policy_selected_state_comparison.csv"), row.names = FALSE)
+  utils::write.csv(packet_index, file.path(screen_dir, "selection_policy_packet_index.csv"), row.names = FALSE)
+
+  written <- g5_selection_policy_write_visual_summary(screen_dir)
+
+  expect_true(file.exists(written$paths$visual_index_csv))
+  expect_true(file.exists(written$paths$metric_dashboard_png))
+  expect_true(file.exists(written$paths$return_heatmap_png))
+  expect_true(file.exists(written$paths$return_scatter_png))
+  expect_true(file.exists(written$paths$churn_map_png))
+  expect_true(file.exists(written$paths$equity_proxy_png))
+  expect_equal(nrow(written$visual_index), 5L)
+  expect_equal(nrow(written$symbol_delta), 2L)
+})
