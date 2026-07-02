@@ -65,6 +65,8 @@ default_quarter <- g5_bridge_next_quarter_id(g5_bridge_quarter_id(as_of_date))
 quarter_id <- toupper(arg_or_env("quarter", "GEN5_BRIDGE_QUARTER_ID", default_quarter))
 symbols <- g5_standardize_symbol(strsplit(arg_or_env("symbols", "GEN5_BRIDGE_SYMBOLS", paste(g5_bridge_default_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]])
 context_symbols <- unique(g5_standardize_symbol(strsplit(arg_or_env("context_symbols", "GEN5_BRIDGE_CONTEXT_SYMBOLS", paste(g5_bridge_default_context_symbols(), collapse = ",")), ",", fixed = TRUE)[[1L]]))
+candidate_families <- g5_wfa_candidate_families(strsplit(arg_or_env("candidate_families", "GEN5_BRIDGE_CANDIDATE_FAMILIES", paste(g5_bridge_default_candidate_families(), collapse = ",")), ",", fixed = TRUE)[[1L]])
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(arg_or_env("strategy_grid_preset", "GEN5_BRIDGE_STRATEGY_GRID_PRESET", "standard"))
 feed <- arg_or_env("feed", "GEN5_BRIDGE_FEED", as.character(cfg$feed))
 if (nzchar(feed)) cfg$feed <- feed
 refresh <- g5_parse_bool_env(arg_or_env("refresh", "GEN5_BRIDGE_REFRESH", "false"), default = FALSE)
@@ -86,6 +88,8 @@ message("Context symbols: ", paste(context_symbols, collapse = ", "))
 message("TRAIN: ", dates$train_start_date, " through ", dates$train_end_date)
 message("Live authority: ", dates$live_start_date, " through ", dates$live_end_date)
 message("PCA: pooled_asset_day / 5x5 quantile_grid")
+message("Candidate families: ", paste(candidate_families, collapse = ", "))
+message("Strategy grid preset: ", strategy_grid_preset)
 message("As of: ", as_of_timestamp)
 message("Feed: ", cfg$feed)
 message("Refresh: ", refresh)
@@ -115,6 +119,8 @@ authority <- g5_bridge_build_authority_from_bars(
   refresh = refresh,
   git_sha = g5_git_sha_or_na(repo_root),
   market_data_feed = cfg$feed,
+  candidate_families = candidate_families,
+  strategy_grid_preset = strategy_grid_preset,
   min_train_state_rows = min_train_state_rows
 )
 

@@ -31,6 +31,19 @@ test_that("bridge contract separates live symbols from context symbols", {
   expect_equal(contract$symbols[[1L]], "AMD,NVDA")
   expect_equal(contract$context_symbols[[1L]], "SPY,QQQ,AMD,NVDA")
   expect_equal(contract$market_data_feed[[1L]], "iex")
+  expect_equal(contract$candidate_families[[1L]], paste(g5_bridge_default_candidate_families(), collapse = ","))
+  expect_equal(contract$strategy_grid_preset[[1L]], "standard")
+})
+
+test_that("bridge model grid defaults to the full Gen5.1 candidate suite", {
+  grid <- g5_bridge_model_grid()
+  families <- sort(unique(grid$strategy_family))
+
+  expect_setequal(
+    families,
+    sort(g5_bridge_default_candidate_families())
+  )
+  expect_gt(nrow(grid), 20L)
 })
 
 test_that("frozen quantile scoring uses contract centers, loadings, and break rows", {

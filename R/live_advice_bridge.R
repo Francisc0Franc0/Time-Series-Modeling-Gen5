@@ -21,6 +21,22 @@ g5_bridge_default_context_symbols <- function() {
   )
 }
 
+g5_bridge_default_candidate_families <- function() {
+  c(
+    "ema_cross",
+    "ema_trend",
+    "bollinger_touch",
+    "bollinger_mid_reversion",
+    "rsi_mr",
+    "zret_mr",
+    "breakout",
+    "pullback_in_uptrend",
+    "vol_expansion_breakout",
+    "donchian_breakout_vol_expand",
+    "no_trade"
+  )
+}
+
 g5_bridge_parse_quarter_id <- function(quarter_id) {
   q <- toupper(trimws(as.character(quarter_id)[[1L]]))
   if (!grepl("^[0-9]{4}Q[1-4]$", q)) {
@@ -102,7 +118,7 @@ g5_bridge_daily_dir <- function(repo_root, quarter_id, as_of_timestamp) {
 }
 
 g5_bridge_model_grid <- function(
-  candidate_families = c("ema_cross", "bollinger_touch", "no_trade"),
+  candidate_families = g5_bridge_default_candidate_families(),
   strategy_grid_preset = "standard"
 ) {
   strategy_grid_preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
@@ -120,10 +136,12 @@ g5_bridge_model_grid <- function(
   do.call(g5_wfa_candidate_model_grid, args)
 }
 
-g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_) {
+g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symbols, as_of_timestamp, refresh, git_sha = NA_character_, market_data_feed = NA_character_, candidate_families = g5_bridge_default_candidate_families(), strategy_grid_preset = "standard") {
   dates <- g5_bridge_authority_contract_dates(quarter_id, train_quarters = 8L)
   symbols <- g5_standardize_symbol(symbols)
   context_symbols <- unique(g5_standardize_symbol(context_symbols))
+  candidate_families <- unique(c(g5_wfa_candidate_families(candidate_families), "no_trade"))
+  strategy_grid_preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
   data.frame(
     schema_version = g5_live_bridge_schema_version(),
     quarter_id = dates$quarter_id,
@@ -141,8 +159,8 @@ g5_bridge_contract_frame <- function(quarter_id, symbols, context_symbols = symb
     pca_panel_label = "long_pca_behavioral_pool",
     state_engine = "quantile_grid",
     grid_n = 5L,
-    strategy_grid_preset = "standard",
-    candidate_families = "ema_cross,bollinger_touch,no_trade",
+    strategy_grid_preset = strategy_grid_preset,
+    candidate_families = paste(candidate_families, collapse = ","),
     position_source = "model_replay_one_bar_delay",
     advice_mode = "after_close_signal_for_next_open_manual_order",
     market_data_feed = as.character(market_data_feed),
@@ -186,13 +204,15 @@ g5_bridge_build_authority_from_bars <- function(
   refresh = FALSE,
   git_sha = NA_character_,
   market_data_feed = NA_character_,
+  candidate_families = g5_bridge_default_candidate_families(),
+  strategy_grid_preset = "standard",
   min_train_state_rows = 20L
 ) {
   symbols <- g5_standardize_symbol(symbols)
   context_symbols <- unique(g5_standardize_symbol(context_symbols))
   g5_bridge_assert_symbols_available(bars, unique(c(symbols, context_symbols)))
-  contract <- g5_bridge_contract_frame(quarter_id, symbols, context_symbols, as_of_timestamp, refresh, git_sha, market_data_feed)
-  model_grid <- g5_bridge_model_grid()
+  contract <- g5_bridge_contract_frame(quarter_id, symbols, context_symbols, as_of_timestamp, refresh, git_sha, market_data_feed, candidate_families, strategy_grid_preset)
+  model_grid <- g5_bridge_model_grid(candidate_families = candidate_families, strategy_grid_preset = strategy_grid_preset)
   fold_rows <- list()
   selected_rows <- list()
   perf_rows <- list()
@@ -580,7 +600,7 @@ g5_bridge_write_authority_outputs <- function(authority, output_dir) {
     paste0("- Live authority window: `", contract$live_start_date[[1L]], "` through `", contract$live_end_date[[1L]], "`"),
     "- PCA surface: long/pooled asset-day PCA (`pooled_asset_day`)",
     "- State map: `5x5` quantile grid",
-    "- Candidate families: `ema_cross`, `bollinger_touch`, `no_trade`",
+    paste0("- Candidate families: `", contract$candidate_families[[1L]], "`"),
     "- Position source: model replay with one-bar delayed next-open execution",
     "",
     "## Guardrails",
@@ -679,7 +699,7 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
   yrange <- range(c(low, high, close), na.rm = TRUE)
   pad <- diff(yrange) * 0.08
   if (!is.finite(pad) || pad == 0) pad <- max(1, yrange[[1L]] * 0.02)
-  graphics::plot(x, close, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted price", main = main, ylim = yrange + c(-pad, pad), xaxs = "i", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
+  graphics::plot(x, close, type = "n", xaxt = "n", xlab = "", ylab = "Adjusted price", main = main, ylim = yrange + c(-pad, pad), xlim = c(0.5, length(x) + 0.9), xaxs = "i", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text, fg = aesthetic$axis)
   states <- as.factor(replay$state_id)
   palette <- grDevices::hcl.colors(max(3L, length(levels(states))), "Set 3")
   for (i in seq_along(x)) {
@@ -709,6 +729,21 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
   }
   if (is.data.frame(pending) && nrow(pending)) {
     graphics::mtext(paste("PENDING:", paste(pending$action, collapse = "; ")), side = 3, line = -1.2, adj = 1, cex = 0.75, col = "#7c2d12")
+  }
+  present_states <- levels(states)
+  present_cols <- grDevices::adjustcolor(palette[seq_along(present_states)], alpha.f = 0.45)
+  if (length(present_states)) {
+    graphics::legend(
+      "topleft",
+      legend = present_states,
+      fill = present_cols,
+      border = NA,
+      title = "State",
+      bty = "n",
+      cex = if (length(present_states) > 8L) 0.48 else 0.58,
+      ncol = if (length(present_states) > 8L) 2L else 1L,
+      text.col = aesthetic$text
+    )
   }
   invisible(NULL)
 }

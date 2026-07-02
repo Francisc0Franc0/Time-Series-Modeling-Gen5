@@ -15,7 +15,7 @@ It is not accepted allocation evidence, not automation, and not an order-entry s
 - Live authority window: `2026-07-01` through `2026-09-30`
 - PCA mode: long/pooled asset-day PCA (`pooled_asset_day`)
 - State map: `5x5` quantile grid
-- Candidate families: `ema_cross`, `bollinger_touch`, `no_trade`
+- Candidate families: full Gen5.1 suite: `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, `donchian_breakout_vol_expand`, `no_trade`
 - Position source: model replay with one-bar delayed next-open execution
 - Alpaca feed used for the bridge: `iex`
 
@@ -29,6 +29,8 @@ powershell -ExecutionPolicy Bypass -File scripts/live/build_live_advice_bridge_a
   -Quarter 2026Q3 `
   -Symbols "AMD,NVDA,PLTR,TSLA,SOFI" `
   -ContextSymbols "SPY,QQQ,IWM,DIA,NVDA,TSLA,AMD,PLTR,SOFI,META,AAPL,KO,PEP,WMT,COST,XLF,JPM,BAC,XLE,CVX,XOM,TLT,IEF,GLD,SLV,VNQ,EFA,EEM,UVXY" `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -StrategyGridPreset standard `
   -Feed iex `
   -Refresh
 ```
@@ -67,6 +69,12 @@ Key artifacts:
 - `bridge_trades.csv`
 - `bridge_contact_sheet.png`
 - `bridge_daily_report.md`
+
+Current July 1 readout after rebuilding with the full Gen5.1 suite:
+
+- `NVDA`: `LONG`, with `ENTER_LONG` executed at the July 1 open by `rsi_mr_n7_lo30_hi70__native_only`.
+- `TSLA`: `FLAT`, with `ENTER_LONG_NEXT_OPEN` pending from `ema_trend_fast5_slow50__native_only`.
+- `AMD`, `PLTR`, `SOFI`: no pending next-open action.
 
 ## Operator Reading Order
 
