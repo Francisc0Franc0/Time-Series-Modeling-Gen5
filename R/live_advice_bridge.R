@@ -315,6 +315,36 @@ g5_bridge_latest_selected <- function(selected_by_state, state) {
   selected_by_state[[1L]][0L, , drop = FALSE]
 }
 
+g5_bridge_model_param_summary <- function(row) {
+  if (!is.data.frame(row) || !nrow(row)) return(NA_character_)
+  param_cols <- c(
+    "fast_period",
+    "slow_period",
+    "lookback_period",
+    "sd_multiplier",
+    "rsi_period",
+    "rsi_lower",
+    "rsi_upper",
+    "zret_window",
+    "zret_entry_z",
+    "zret_exit_z",
+    "breakout_lookback",
+    "breakout_buffer",
+    "vol_expand_threshold",
+    "include_native_exit",
+    "max_hold_sessions",
+    "stop_loss_pct",
+    "take_profit_pct"
+  )
+  pieces <- character()
+  for (col in intersect(param_cols, names(row))) {
+    value <- row[[col]][[1L]]
+    if (length(value) == 0L || is.na(value)) next
+    pieces <- c(pieces, paste0(col, "=", as.character(value)))
+  }
+  if (length(pieces)) paste(pieces, collapse = ";") else NA_character_
+}
+
 g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contract) {
   symbol <- g5_standardize_symbol(symbol)[[1L]]
   train_end_date <- as.Date(contract$train_end_date[[1L]])
@@ -369,6 +399,7 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
     selected <- g5_bridge_latest_selected(selected_by_state, current_state)
     selected_family <- if (nrow(selected)) as.character(selected$strategy_family[[1L]]) else NA_character_
     selected_spec <- if (nrow(selected)) as.character(selected$strategy_spec_id[[1L]]) else NA_character_
+    selected_params <- g5_bridge_model_param_summary(selected)
 
     if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position && current_date >= live_start_date) {
       open_trade <- c(
@@ -423,6 +454,7 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
           model_instance_id = selected$model_instance_id[[1L]],
           exit_stack_id = selected$exit_stack_id[[1L]],
           strategy_spec_id = selected_spec,
+          signal_model_params = selected_params,
           fast_period = g5_wfa_model_value(selected, "fast_period", NA_integer_),
           slow_period = g5_wfa_model_value(selected, "slow_period", NA_integer_),
           lookback_period = g5_wfa_model_value(selected, "lookback_period", NA_integer_),
@@ -502,10 +534,13 @@ g5_bridge_replay_symbol <- function(bars, symbol, scored, selected_states, contr
       state_id = current_state,
       selected_strategy_family = selected_family,
       selected_strategy_spec_id = selected_spec,
+      selected_signal_model = selected_spec,
+      selected_signal_params = selected_params,
       model_position_after_replay = if (in_position) "LONG" else "FLAT",
       execution_status = execution_today,
       signal_status = action_today,
       open_trade_strategy_spec_id = if (in_position && !is.null(open_trade)) open_trade$strategy_spec_id else NA_character_,
+      open_trade_signal_params = if (in_position && !is.null(open_trade)) open_trade$signal_model_params else NA_character_,
       open_trade_entry_execution_date = if (in_position && !is.null(open_trade)) open_trade$entry_execution_date else as.Date(NA),
       stringsAsFactors = FALSE
     )
@@ -544,7 +579,7 @@ g5_bridge_run_daily_from_bars <- function(bars, authority, as_of_timestamp) {
   executions <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$executions))
   trades <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$trades))
   latest <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$latest))
-  book <- latest[, c("symbol", "session_date", "close", "state_id", "selected_strategy_family", "model_position_after_replay", "signal_status", "execution_status", "open_trade_strategy_spec_id", "open_trade_entry_execution_date"), drop = FALSE]
+  book <- latest[, c("symbol", "session_date", "close", "state_id", "selected_strategy_family", "selected_strategy_spec_id", "selected_signal_params", "model_position_after_replay", "signal_status", "execution_status", "open_trade_strategy_spec_id", "open_trade_signal_params", "open_trade_entry_execution_date"), drop = FALSE]
   names(book)[names(book) == "session_date"] <- "as_of_date"
   names(book)[names(book) == "model_position_after_replay"] <- "current_model_position"
   list(
@@ -765,17 +800,30 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
   }
   graphics::grid(nx = NA, ny = NULL, col = aesthetic$grid)
   body_colors <- ifelse(close > open, aesthetic$up_candle, ifelse(close < open, aesthetic$down_candle, aesthetic$flat_candle))
-  candle_half_width <- 0.18
-  graphics::segments(x0 = x, y0 = low, x1 = x, y1 = high, col = body_colors, lwd = 0.85)
-  for (i in seq_along(x)) {
-    body_low <- min(open[[i]], close[[i]], na.rm = TRUE)
-    body_high <- max(open[[i]], close[[i]], na.rm = TRUE)
-    if (!is.finite(body_low) || !is.finite(body_high)) next
-    if (identical(body_low, body_high)) {
-      graphics::segments(x[[i]] - candle_half_width, body_low, x[[i]] + candle_half_width, body_high, col = body_colors[[i]], lwd = 1.2)
-    } else {
-      graphics::rect(x[[i]] - candle_half_width, body_low, x[[i]] + candle_half_width, body_high, col = body_colors[[i]], border = body_colors[[i]])
-    }
+  candle_width <- 0.62
+  graphics::segments(x0 = x, y0 = low, x1 = x, y1 = high, col = body_colors, lwd = 1.2)
+  body_bottom <- pmin(open, close)
+  body_top <- pmax(open, close)
+  flat_body <- body_bottom == body_top
+  if (any(!flat_body)) {
+    graphics::rect(
+      xleft = x[!flat_body] - candle_width / 2,
+      ybottom = body_bottom[!flat_body],
+      xright = x[!flat_body] + candle_width / 2,
+      ytop = body_top[!flat_body],
+      col = body_colors[!flat_body],
+      border = body_colors[!flat_body]
+    )
+  }
+  if (any(flat_body)) {
+    graphics::segments(
+      x0 = x[flat_body] - candle_width / 2,
+      y0 = close[flat_body],
+      x1 = x[flat_body] + candle_width / 2,
+      y1 = close[flat_body],
+      col = body_colors[flat_body],
+      lwd = 2
+    )
   }
   if (is.data.frame(trades) && nrow(trades)) {
     trace_segments <- g5_bridge_visible_trade_segments(trades, dates)
@@ -839,10 +887,13 @@ g5_bridge_chart_replay <- function(symbol_result, min_rows = 80L) {
     state_id = as.character(scores$state_id[keep]),
     selected_strategy_family = NA_character_,
     selected_strategy_spec_id = NA_character_,
+    selected_signal_model = NA_character_,
+    selected_signal_params = NA_character_,
     model_position_after_replay = NA_character_,
     execution_status = "NONE",
     signal_status = "NONE",
     open_trade_strategy_spec_id = NA_character_,
+    open_trade_signal_params = NA_character_,
     open_trade_entry_execution_date = as.Date(NA),
     stringsAsFactors = FALSE
   )
@@ -909,6 +960,27 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
   }
   grDevices::dev.off()
   pending_count <- if (is.data.frame(daily$pending_actions)) nrow(daily$pending_actions) else 0L
+  model_lines <- character()
+  book <- daily$book_summary
+  if (is.data.frame(book) && nrow(book)) {
+    model_lines <- unlist(lapply(seq_len(nrow(book)), function(i) {
+      row <- book[i, , drop = FALSE]
+      state_model <- paste0(
+        "- `", row$symbol[[1L]], "` state `", row$state_id[[1L]], "` selects `",
+        row$selected_strategy_spec_id[[1L]], "`",
+        if (!is.na(row$selected_signal_params[[1L]]) && nzchar(row$selected_signal_params[[1L]])) paste0(" (", row$selected_signal_params[[1L]], ")") else ""
+      )
+      trade_model <- if (!is.na(row$open_trade_strategy_spec_id[[1L]]) && nzchar(row$open_trade_strategy_spec_id[[1L]])) {
+        paste0(
+          "  Open trade locked to `", row$open_trade_strategy_spec_id[[1L]], "`",
+          if (!is.na(row$open_trade_signal_params[[1L]]) && nzchar(row$open_trade_signal_params[[1L]])) paste0(" (", row$open_trade_signal_params[[1L]], ")") else ""
+        )
+      } else {
+        "  No open trade model lock."
+      }
+      c(state_model, trade_model)
+    }))
+  }
   lines <- c(
     paste0("# Gen5.1 Live Advice Bridge Daily Packet: ", daily$contract$quarter_id[[1L]]),
     "",
@@ -919,6 +991,10 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir) {
     paste0("- As of timestamp: `", daily$as_of_timestamp, "`"),
     paste0("- Latest replay date: `", daily$as_of_date, "`"),
     paste0("- Pending next-open actions: `", pending_count, "`"),
+    "",
+    "## Current Model Readout",
+    "",
+    model_lines,
     "",
     "## Artifacts",
     "",
