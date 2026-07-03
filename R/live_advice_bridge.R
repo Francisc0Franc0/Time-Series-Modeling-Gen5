@@ -832,22 +832,29 @@ g5_bridge_write_authority_outputs <- function(authority, output_dir) {
   paths
 }
 
-g5_bridge_read_authority <- function(authority_dir) {
+g5_bridge_read_authority <- function(authority_dir, include_train_state_performance = FALSE) {
   paths <- list(
     contract = file.path(authority_dir, "bridge_authority_contract.csv"),
     selected_states = file.path(authority_dir, "bridge_selected_states.csv"),
     pca_model_contract = file.path(authority_dir, "bridge_pca_model_contract.csv")
   )
+  if (isTRUE(include_train_state_performance)) {
+    paths$train_state_performance <- file.path(authority_dir, "bridge_train_state_performance.csv")
+  }
   missing <- names(paths)[!file.exists(unlist(paths))]
   if (length(missing)) {
     g5_stop(paste0("Missing bridge authority artifact(s): ", paste(missing, collapse = ",")))
   }
-  list(
+  out <- list(
     authority_dir = normalizePath(authority_dir, winslash = "/", mustWork = FALSE),
     contract = utils::read.csv(paths$contract, stringsAsFactors = FALSE),
     selected_states = utils::read.csv(paths$selected_states, stringsAsFactors = FALSE),
     pca_model_contract = utils::read.csv(paths$pca_model_contract, stringsAsFactors = FALSE)
   )
+  if (isTRUE(include_train_state_performance)) {
+    out$train_state_performance <- utils::read.csv(paths$train_state_performance, stringsAsFactors = FALSE)
+  }
+  out
 }
 
 g5_bridge_trades_from_replay <- function(replay, executions, authority_end_date) {
@@ -1130,6 +1137,11 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
   if (!is.null(daily$continuity)) g5_wfa_write_csv(daily$continuity, paths$continuity_csv)
   symbols <- names(daily$symbol_results)
   chart_paths <- character()
+  packet_label <- if (!is.null(daily$selection_policy_label) && nzchar(as.character(daily$selection_policy_label))) {
+    as.character(daily$selection_policy_label)
+  } else {
+    "Gen5.1 live advice bridge"
+  }
   chart_lookback_days <- as.integer(chart_lookback_days)
   if (is.na(chart_lookback_days) || chart_lookback_days < 1L) chart_lookback_days <- 90L
   chart_start_date <- as.Date(daily$as_of_date) - chart_lookback_days
@@ -1142,7 +1154,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
       daily$symbol_results[[symbol]]$executions,
       daily$symbol_results[[symbol]]$pending_actions,
       daily$symbol_results[[symbol]]$trades,
-      main = paste0(symbol, " bridge replay")
+      main = paste0(symbol, " - ", packet_label)
     )
     grDevices::dev.off()
     chart_paths <- c(chart_paths, chart_path)
@@ -1158,7 +1170,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
       daily$symbol_results[[symbol]]$executions,
       daily$symbol_results[[symbol]]$pending_actions,
       daily$symbol_results[[symbol]]$trades,
-      main = paste0(symbol, " bridge replay")
+      main = paste0(symbol, " - ", packet_label)
     )
   }
   grDevices::dev.off()
@@ -1204,7 +1216,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
     }))
   }
   lines <- c(
-    paste0("# Gen5.1 Live Advice Bridge Daily Packet: ", daily$contract$quarter_id[[1L]]),
+    paste0("# Gen5.1 Live Advice Bridge Daily Packet: ", daily$contract$quarter_id[[1L]], " - ", packet_label),
     "",
     "## Purpose",
     "",

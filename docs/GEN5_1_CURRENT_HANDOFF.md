@@ -23,7 +23,7 @@ Gen5.1 has a working R-first research POC stack on top of the completed Alpaca a
 - The current PCA feature set includes Gen4-inspired `chop_14` and `ret_skew_20` in addition to trend, stretch, volatility, efficiency-ratio, and z-score descriptors.
 - The Alpaca adjusted-daily research feed now defaults to SIP, while still honoring `ALPACA_DATA_FEED` overrides. A live SIP refresh on 2026-07-01 confirmed `AMD,NVDA,TSLA,AAPL,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD` can be pulled from `2016-01-04`; `VXX` begins on `2018-01-18`, so pre-2018 context tests need an operator decision to replace, omit, or accept that limitation.
 - The current PowerPoint summary is `presentations/gen5_recent_pca_context_screening_batch.pptx`. It summarizes the recent Gen5.1 PCA/context screening batch: context universes, PCA panel modes, state-map variants, temporal windows, and the SIP coverage correction.
-- A temporary Gen5.1 live-advice bridge now exists for Q3 2026 manual advice continuity. It uses the Gen4 live basket `AMD,NVDA,PLTR,TSLA,SOFI` as the research/tradeable set, the broader Gen4 `RESEARCH_ASSETS` list as the Regime Context Universe, and the Gen4 `daily_default` implemented strategy subset/grid. It freezes quarter-specific authority, uses long/pooled PCA plus `5x5` quantile states, infers position by one-bar-delayed model replay, and writes advice-only daily packets under ignored `runs/live_advice_bridge/`. Daily replay now supports adjacent-quarter continuity: previous-quarter authority is replayed first, open prior-quarter trades remain locked to their entry authority until exit, and current-quarter authority takes over only once the symbol is flat. See `docs/GEN5_1_LIVE_ADVICE_BRIDGE.md`. The current frozen bridge uses Alpaca `iex` because recent SIP daily pulls returned a subscription error for July 1 live advice.
+- A temporary Gen5.1 live-advice bridge now exists for Q3 2026 manual advice continuity. It uses the Gen4 live basket `AMD,NVDA,PLTR,TSLA,SOFI` as the research/tradeable set, the broader Gen4 `RESEARCH_ASSETS` list as the Regime Context Universe, and the Gen4 `daily_default` implemented strategy subset/grid. It freezes quarter-specific authority, uses long/pooled PCA plus `5x5` quantile states, infers position by one-bar-delayed model replay, and writes advice-only daily packets under ignored `runs/live_advice_bridge/`. Daily replay now supports adjacent-quarter continuity: previous-quarter authority is replayed first, open prior-quarter trades remain locked to their entry authority until exit, and current-quarter authority takes over only once the symbol is flat. A dual-policy daily wrapper now writes side-by-side Gen4-style pooled-family and Gen5.1 direct-spec advice under `runs/live_advice_bridge/daily_dual/`; the temporary operator-declared reading rule is AMD under Gen4-style pooled-family and NVDA/PLTR/TSLA/SOFI under Gen5.1 direct-spec. See `docs/GEN5_1_LIVE_ADVICE_BRIDGE.md`. The current frozen bridge uses Alpaca `iex` because recent SIP daily pulls returned a subscription error for July 1 live advice.
 - A Gen4-vs-Gen5.1 selection-policy fork is now documented in `docs/GEN5_1_SELECTION_POLICY_HYPOTHESIS.md`. Gen4 Phase50 appears to use `pooled_family_asset_variant`: choose a state-level family from pooled evidence, then choose asset-specific parameters. Current Gen5.1 uses `asset_state_direct_spec`: choose the best full asset/state strategy spec directly. The first paired screen is under `runs/research_workbench/selection_policy_screens/selection_policy_screen_A5_Q2Q3_20260702/`, with visual summaries under `runs/research_workbench/selection_policy_screens/selection_policy_screen_A5_Q2Q3_20260702/visual_summary/`. The broader two-lane robustness packet is complete under `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/`. `A_live` covers `AMD,NVDA,PLTR,TSLA,SOFI` over `2025Q4`-`2026Q3`: direct and pooled-family maps matched on `537 / 625` asset-state rows (`85.92%`), direct led the compact replay proxy in three of four windows and had higher win-rate / trade-return Sharpe proxy in all four, while pooled-family's Q3 advantage was dominated by AMD. `B_hist` covers substitute basket `AMD,NVDA,TSLA,AAPL,MSTR` over `2019Q1`, `2020Q3`, `2022Q1`, `2022Q4`, and `2025Q1`: direct led mean trace return in three of five windows and captured more upside in `2020Q3`, `2022Q1`, and `2025Q1`; pooled-family looked more defensive in weak windows (`2019Q1`, `2022Q4`). Keep direct full-spec selection as the temporary live-bridge default unless the operator explicitly decides otherwise; keep pooled-family as a first-class research factor candidate. Do not merge A-live and B-hist into one leaderboard.
 
 The newest live-advice bridge surfaces are:
@@ -53,6 +53,11 @@ powershell -ExecutionPolicy Bypass -File scripts/live/run_live_advice_bridge.ps1
   -AsOf "2026-07-01 17:30:00" `
   -Quarter 2026Q3 `
   -Feed iex
+
+powershell -ExecutionPolicy Bypass -File scripts/live/run_dual_live_advice_bridge.ps1 `
+  -AsOf "2026-07-01 17:30:00" `
+  -Quarter 2026Q3 `
+  -Feed iex
 ```
 
 Current bridge artifacts:
@@ -60,7 +65,9 @@ Current bridge artifacts:
 - Previous authority: `runs/live_advice_bridge/authority/2026Q2/`
 - Authority: `runs/live_advice_bridge/authority/2026Q3/`
 - Daily packet: `runs/live_advice_bridge/daily/2026Q3/20260701173000/`
+- Dual-policy daily packet: `runs/live_advice_bridge/daily_dual/2026Q3/20260701173000/`
 - Daily result as of `2026-07-01 17:30:00`: pending next-open actions `0`; `AMD` and `PLTR` are flat under current `2026Q3` authority; `NVDA`, `TSLA`, and `SOFI` are long from `2026Q2` continuity carry and remain locked to their prior-quarter entry models until exit.
+- Dual-policy smoke result as of `2026-07-01 17:30:00`: pending next-open actions `0` in both lanes. Operator-declared use rows are `AMD` under Gen4-style pooled-family, and `NVDA`, `PLTR`, `TSLA`, `SOFI` under Gen5.1 direct-spec. `SOFI` diverged by policy: flat under Gen4-style pooled-family and long under Gen5.1 direct-spec.
 
 The newest operator surface is:
 

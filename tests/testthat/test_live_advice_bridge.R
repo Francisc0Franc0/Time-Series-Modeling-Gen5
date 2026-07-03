@@ -37,6 +37,53 @@ test_that("bridge contract separates live symbols from context symbols", {
   expect_equal(contract$strategy_grid_preset[[1L]], "gen4_daily_default")
 })
 
+test_that("bridge authority reader can include TRAIN state performance", {
+  authority_dir <- tempfile("g5_bridge_authority_")
+  dir.create(authority_dir, recursive = TRUE)
+  utils::write.csv(
+    g5_bridge_contract_frame(
+      quarter_id = "2026Q3",
+      symbols = c("AMD", "NVDA"),
+      context_symbols = c("AMD", "NVDA", "SPY"),
+      as_of_timestamp = "2026-06-30 17:30:00",
+      refresh = FALSE,
+      market_data_feed = "iex"
+    ),
+    file.path(authority_dir, "bridge_authority_contract.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(symbol = "AMD", state_id = "S1_1", strategy_spec_id = "no_trade", stringsAsFactors = FALSE),
+    file.path(authority_dir, "bridge_selected_states.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(record_type = "meta", key = "grid_n", value = "5", stringsAsFactors = FALSE),
+    file.path(authority_dir, "bridge_pca_model_contract.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(
+      symbol = "AMD",
+      quarter_id = "2026Q3",
+      state_id = "S1_1",
+      strategy_family = "no_trade",
+      strategy_spec_id = "no_trade",
+      sharpe = 0,
+      total_return = 0,
+      train_state_row_count = 50L,
+      stringsAsFactors = FALSE
+    ),
+    file.path(authority_dir, "bridge_train_state_performance.csv"),
+    row.names = FALSE
+  )
+
+  authority <- g5_bridge_read_authority(authority_dir, include_train_state_performance = TRUE)
+
+  expect_true(is.data.frame(authority$train_state_performance))
+  expect_equal(authority$train_state_performance$quarter_id[[1L]], "2026Q3")
+})
+
 test_that("bridge model grid defaults to the Gen4 daily_default implemented subset", {
   grid <- g5_bridge_model_grid()
   families <- sort(unique(grid$strategy_family))
