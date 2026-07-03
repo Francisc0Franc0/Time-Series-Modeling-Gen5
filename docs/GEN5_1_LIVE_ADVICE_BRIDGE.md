@@ -128,6 +128,17 @@ Key artifacts:
 - `gen4_pooled_family/`: full single-policy packet and per-symbol charts for the Gen4-style lane.
 - `gen5_1_direct_spec/`: full single-policy packet and per-symbol charts for the Gen5.1 lane.
 
+Stable latest surface:
+
+`runs/live_advice_bridge/latest/`
+
+This folder is overwritten by each successful dual-policy run and is the fastest daily reading surface. The timestamped packet remains the audit trail.
+
+- `dual_bridge_latest_advice.csv`
+- `dual_bridge_latest_advice.md`
+- `dual_bridge_latest_contact_sheet.png`
+- `dual_bridge_latest_manifest.csv`
+
 Temporary operator-declared reading rule:
 
 - Read `AMD` primarily under the Gen4-style pooled-family lane.
@@ -152,7 +163,8 @@ If a refresh produces `refresh_needed`, `partial_history`, stale-cache, subscrip
 
 For the dual-policy packet, read:
 
-1. `dual_bridge_advice_summary.csv`
-2. `dual_bridge_operator_policy_preference.csv`
-3. `dual_bridge_contact_sheet.png`
-4. The policy-specific folders only if the combined packet needs a closer chart audit.
+1. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.md`
+2. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.csv`
+3. `runs/live_advice_bridge/latest/dual_bridge_latest_contact_sheet.png`
+4. `runs/live_advice_bridge/latest/dual_bridge_latest_manifest.csv` to find the source timestamped packet.
+5. The policy-specific folders only if the combined packet needs a closer chart audit.

@@ -183,6 +183,55 @@ g5_bridge_write_dual_contact_sheet <- function(policy_results, path, chart_lookb
   invisible(path)
 }
 
+g5_bridge_write_latest_surface <- function(paths, output_dir, repo_root, quarter_id, as_of_timestamp) {
+  latest_dir <- file.path(repo_root, "runs", "live_advice_bridge", "latest")
+  dir.create(latest_dir, recursive = TRUE, showWarnings = FALSE)
+  copy_map <- c(
+    latest_advice_csv = "dual_bridge_latest_advice.csv",
+    latest_book_csv = "dual_bridge_latest_book_summary.csv",
+    latest_pending_csv = "dual_bridge_latest_pending_actions.csv",
+    latest_policy_preference_csv = "dual_bridge_latest_operator_policy_preference.csv",
+    latest_policy_taxonomy_csv = "dual_bridge_latest_policy_taxonomy.csv",
+    latest_report_md = "dual_bridge_latest_advice.md",
+    latest_contact_sheet_png = "dual_bridge_latest_contact_sheet.png"
+  )
+  source_map <- c(
+    latest_advice_csv = paths$advice_summary_csv,
+    latest_book_csv = paths$book_summary_csv,
+    latest_pending_csv = paths$pending_actions_csv,
+    latest_policy_preference_csv = paths$operator_policy_preference_csv,
+    latest_policy_taxonomy_csv = paths$policy_taxonomy_csv,
+    latest_report_md = paths$report_md,
+    latest_contact_sheet_png = paths$contact_sheet_png
+  )
+  latest_paths <- list()
+  for (name in names(copy_map)) {
+    src <- unname(source_map[[name]])
+    dest <- file.path(latest_dir, unname(copy_map[[name]]))
+    if (file.exists(src)) {
+      ok <- file.copy(src, dest, overwrite = TRUE)
+      if (!isTRUE(ok)) g5_stop(paste0("Failed to write latest live-advice artifact: ", dest))
+    }
+    latest_paths[[name]] <- normalizePath(dest, winslash = "/", mustWork = FALSE)
+  }
+  manifest <- data.frame(
+    schema_version = g5_live_bridge_schema_version(),
+    quarter_id = as.character(quarter_id),
+    as_of_timestamp = as.character(as_of_timestamp),
+    source_packet_dir = normalizePath(output_dir, winslash = "/", mustWork = FALSE),
+    latest_dir = normalizePath(latest_dir, winslash = "/", mustWork = FALSE),
+    latest_advice_csv = latest_paths$latest_advice_csv,
+    latest_report_md = latest_paths$latest_report_md,
+    latest_contact_sheet_png = latest_paths$latest_contact_sheet_png,
+    stringsAsFactors = FALSE
+  )
+  manifest_path <- file.path(latest_dir, "dual_bridge_latest_manifest.csv")
+  g5_wfa_write_csv(manifest, manifest_path)
+  latest_paths$latest_manifest_csv <- normalizePath(manifest_path, winslash = "/", mustWork = FALSE)
+  latest_paths$latest_dir <- normalizePath(latest_dir, winslash = "/", mustWork = FALSE)
+  latest_paths
+}
+
 g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 
@@ -382,6 +431,7 @@ report <- c(
   "- Manual trade decisions remain operator decisions."
 )
 writeLines(report, paths$report_md, useBytes = TRUE)
+latest_paths <- g5_bridge_write_latest_surface(paths, output_dir, repo_root, quarter_id, as_of_timestamp)
 
 message("")
 message("Dual-policy advice summary:")
@@ -389,6 +439,9 @@ print(advice[, intersect(c("selection_policy_label", "symbol", "operator_declare
 message("")
 message("Dual daily artifacts written:")
 print(as.data.frame(paths), row.names = FALSE)
+message("")
+message("Latest advice surface written:")
+print(as.data.frame(latest_paths), row.names = FALSE)
 message("")
 message("Query artifacts written:")
 print(as.data.frame(query_paths), row.names = FALSE)
