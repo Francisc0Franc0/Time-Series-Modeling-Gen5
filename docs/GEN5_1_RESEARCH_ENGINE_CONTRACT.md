@@ -314,7 +314,7 @@ Use the Gen5.1 research engine contract. Create a wrapper for <experiment>, with
 - Tradeable Universe: <symbols>
 - Active Allocation Set: <symbols>
 - PCA panel/state surface: <panel modes and state maps>
-- Strategy grid preset: <standard/modest_expanded>
+- Strategy grid preset: <gen4_daily_default/standard/modest_expanded>
 - End date/as-of timestamp: <date/timestamp>
 
 Keep this as research/inspection only. Produce concrete reports/charts, validate, commit, and push.

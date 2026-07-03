@@ -35,7 +35,7 @@ symbol <- g5_standardize_symbol(env_or("GEN5_PCA_UNIVERSE_COMPARISON_SYMBOL", "A
 end_date <- as.Date(env_or("GEN5_PCA_UNIVERSE_COMPARISON_END_DATE", ""))
 as_of_timestamp <- env_or("GEN5_PCA_UNIVERSE_COMPARISON_AS_OF_TIMESTAMP", env_or("GEN5_AS_OF_TIMESTAMP", ""))
 fold_count <- as.integer(env_or("GEN5_PCA_UNIVERSE_COMPARISON_FOLD_COUNT", "5"))
-strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_UNIVERSE_COMPARISON_STRATEGY_GRID_PRESET", "standard"))
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_UNIVERSE_COMPARISON_STRATEGY_GRID_PRESET", "gen4_daily_default"))
 universe_ids <- parse_character_list(
   "GEN5_PCA_UNIVERSE_COMPARISON_UNIVERSE_IDS",
   "baseline_context,similar_high_beta_tech_semis,diverse_market_risk_context"

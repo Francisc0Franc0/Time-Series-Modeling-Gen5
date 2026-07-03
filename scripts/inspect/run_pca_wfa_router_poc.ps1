@@ -27,7 +27,7 @@ param(
 
   [int]$MinTrainStateRows = 20,
 
-  [string]$CandidateFamilies = "ema_cross,bollinger_touch,no_trade",
+  [string]$CandidateFamilies = "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade",
 
   [string]$FastPeriods = "8,12",
 
@@ -37,8 +37,8 @@ param(
 
   [string]$BbSdMultipliers = "1.5,2",
 
-  [ValidateSet("standard", "modest_expanded")]
-  [string]$StrategyGridPreset = "standard",
+  [ValidateSet("standard", "modest_expanded", "gen4_daily_default")]
+  [string]$StrategyGridPreset = "gen4_daily_default",
 
   [int]$WarmupDays = 340,
 

@@ -67,9 +67,10 @@ The current most useful branch of the POC pathway is:
 2. Keep active-plus-risk context as the leading context universe candidate for the next narrow tests.
 3. Keep behavioral-pool PCA as the leading PCA panel mode unless a future contextual-snapshot replication slice earns a niche.
 4. Treat 3x3 quantile grid as the cleaner default state map for the next replication slice; keep fixed k9 and auto-k max9/max15 as diagnostics and secondary contenders rather than defaults.
-5. Continue using portfolio accounting only as a downstream inspection layer.
-6. Keep direct full-spec selection as the live-bridge default unless the operator explicitly decides otherwise; preserve pooled-family as a research contender and likely explicit factor in future selection-policy screens.
-7. During the temporary bridge period, inspect both live selection-policy lanes daily; the operator-declared practical reading rule is AMD under Gen4-style pooled-family and the remaining live basket under Gen5.1 direct-spec.
+5. Use the Gen4 `daily_default` implemented strategy subset/grid for the next selection-policy and context/state replication screens unless the operator explicitly opens a different strategy-grid comparison.
+6. Continue using portfolio accounting only as a downstream inspection layer.
+7. Keep direct full-spec selection as the live-bridge default unless the operator explicitly decides otherwise; preserve pooled-family as a research contender and likely explicit factor in future selection-policy screens.
+8. During the temporary bridge period, inspect both live selection-policy lanes daily; the operator-declared practical reading rule is AMD under Gen4-style pooled-family and the remaining live basket under Gen5.1 direct-spec.
 
 ## Next Candidate Tests
 
