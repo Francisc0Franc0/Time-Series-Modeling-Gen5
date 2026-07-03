@@ -52,7 +52,7 @@ if (is.na(fold_count) || fold_count < 1L) g5_stop("GEN5_PCA_COMPARISON_FOLD_COUN
 if (is.na(quantile_state_count) || quantile_state_count < 2L || quantile_state_count > 5L) g5_stop("GEN5_PCA_COMPARISON_QUANTILE_STATE_COUNT must be between 2 and 5.")
 if (is.na(kmeans_state_count) || kmeans_state_count < 2L || kmeans_state_count > 25L) g5_stop("GEN5_PCA_COMPARISON_KMEANS_STATE_COUNT must be between 2 and 25.")
 
-candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PCA_COMPARISON_CANDIDATE_FAMILIES", "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade"))
+candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PCA_COMPARISON_CANDIDATE_FAMILIES", "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade"))
 candidate_families <- unique(c(candidate_families, "no_trade"))
 strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PCA_COMPARISON_STRATEGY_GRID_PRESET", "gen4_daily_default"))
 

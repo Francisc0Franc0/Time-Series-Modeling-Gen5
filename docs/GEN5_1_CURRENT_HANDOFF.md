@@ -113,7 +113,7 @@ powershell -ExecutionPolicy Bypass -File scripts/inspect/run_portfolio_strategy_
   -Refresh
 ```
 
-Default active symbols are `AMD,NVDA,TSLA,COIN,MSTR`; default context symbols are `AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX`; default surface is `behavioral_pool + quantile_grid 3x3`, five folds, the Gen4 `daily_default` implemented strategy subset/grid, `$100,000` initial capital, five slots, and SPY as the passive market baseline. The first completed packet is:
+Default active symbols are `AMD,NVDA,TSLA,COIN,MSTR`; default context symbols are `AMD,NVDA,TSLA,COIN,MSTR,SMH,QQQ,SPY,IWM,TLT,GLD,VXX`; default surface is `behavioral_pool + quantile_grid 3x3`, five folds, the broader Gen5.1 research candidate families using the Gen4 `daily_default` parameter-grid breadth where applicable, `$100,000` initial capital, five slots, and SPY as the passive market baseline. The first completed packet is:
 
 `runs/research_workbench/portfolio_strategy_pocs/portfolio_poc_AMD-NVDA-TSLA-COIN-MSTR_5f_3x3_pooled12ctx_20260624_20260624173000/`
 

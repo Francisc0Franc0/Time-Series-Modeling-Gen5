@@ -29,7 +29,7 @@ param(
 
   [int]$MinTrainStateRows = 20,
 
-  [string]$CandidateFamilies = "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade",
+  [string]$CandidateFamilies = "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade",
 
   [string]$FastPeriods = "8,12",
 

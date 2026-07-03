@@ -89,7 +89,7 @@ slow_periods <- parse_int_list("GEN5_PORTFOLIO_POC_SLOW_PERIODS", "30,50")
 bb_lookback_periods <- parse_int_list("GEN5_PORTFOLIO_POC_BB_LOOKBACK_PERIODS", "10,20")
 bb_sd_multipliers <- parse_num_list("GEN5_PORTFOLIO_POC_BB_SD_MULTIPLIERS", "1.5,2")
 strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_PORTFOLIO_POC_STRATEGY_GRID_PRESET", "gen4_daily_default"))
-candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PORTFOLIO_POC_CANDIDATE_FAMILIES", "ema_cross,ema_trend,bollinger_touch,rsi_mr,zret_mr,breakout,pullback_in_uptrend,no_trade"))
+candidate_families <- g5_wfa_candidate_families(parse_character_list("GEN5_PORTFOLIO_POC_CANDIDATE_FAMILIES", "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade"))
 candidate_families <- unique(c(candidate_families, "no_trade"))
 
 train_days <- g5_ema_cross_wfa_quarters_to_days(train_quarters)
