@@ -12,6 +12,10 @@ const montagePath = path.join(repoRoot, "presentations", "gen5_selection_policy_
 const aLiveVisualDir = path.join(repoRoot, "runs", "research_workbench", "selection_policy_screens", "selpol_robust_20260702", "A_live", "visual_summary");
 const aLiveHeatmapPath = path.join(aLiveVisualDir, "selection_policy_symbol_return_delta_heatmap.png");
 const aLiveMetricPath = path.join(aLiveVisualDir, "selection_policy_metric_delta_dashboard.png");
+const bHistVisualDir = path.join(repoRoot, "runs", "research_workbench", "selection_policy_screens", "selpol_robust_20260702", "B_hist", "visual_summary");
+const bHistHeatmapPath = path.join(bHistVisualDir, "selection_policy_symbol_return_delta_heatmap.png");
+const bHistMetricPath = path.join(bHistVisualDir, "selection_policy_metric_delta_dashboard.png");
+const bHistEquityPath = path.join(bHistVisualDir, "selection_policy_equity_proxy_overlay.png");
 
 const W = 1280;
 const H = 720;
@@ -376,33 +380,60 @@ async function createDeck() {
 
   slide = p.slides.add();
   slide.background.fill = C.canvas;
-  addLabel(slide, "NEXT GATE", 42, 42);
-  addText(slide, "The next decision is whether more history is worth changing the basket", { left: 42, top: 88, width: 1060, height: 96 }, {
+  addLabel(slide, "B-HIST RESULT", 42, 42);
+  addText(slide, "Older substitute history turns the question into a tradeoff", { left: 42, top: 88, width: 1060, height: 96 }, {
     fontSize: 36,
     bold: true,
   });
-  addText(slide, "B_hist would swap SOFI and PLTR for AAPL and MSTR to reach older regimes. That is useful robustness evidence, but it is no longer a literal live-basket test.", { left: 42, top: 204, width: 1060, height: 72 }, {
+  addText(slide, "B_hist swapped SOFI and PLTR for AAPL and MSTR to reach 2019, 2020, 2022, and 2025 windows. This is robustness evidence, not a literal live-basket replication.", { left: 42, top: 204, width: 1060, height: 72 }, {
     fontSize: 23,
     color: "#222222",
   });
-  addText(slide, "Reason to run B_hist", { left: 96, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
+  addPanel(slide, 82, 314, 250, 134, "#F4F4F4");
+  addText(slide, "81.84%", { left: 110, top: 332, width: 190, height: 54 }, { fontSize: 42, bold: true, color: C.accent });
+  addText(slide, "exact map agreement across 10 authority quarters", { left: 110, top: 398, width: 190, height: 38 }, { fontSize: 18 });
+  addPanel(slide, 390, 314, 250, 134, "#F4F4F4");
+  addText(slide, "3 of 5", { left: 418, top: 332, width: 190, height: 54 }, { fontSize: 42, bold: true, color: C.blue });
+  addText(slide, "windows favored direct on mean trace return", { left: 418, top: 398, width: 190, height: 38 }, { fontSize: 18 });
+  addPanel(slide, 698, 314, 250, 134, "#F4F4F4");
+  addText(slide, "2 of 5", { left: 726, top: 332, width: 190, height: 54 }, { fontSize: 42, bold: true, color: C.green });
+  addText(slide, "weak windows favored pooled defensiveness", { left: 726, top: 398, width: 190, height: 38 }, { fontSize: 18 });
+  addPanel(slide, 1006, 314, 170, 134, "#F4F4F4");
+  addText(slide, "MSTR", { left: 1030, top: 342, width: 120, height: 44 }, { fontSize: 34, bold: true, color: C.blue });
+  addText(slide, "drove direct 2025Q1 upside", { left: 1030, top: 398, width: 120, height: 38 }, { fontSize: 17 });
+  addText(slide, "Meaning", { left: 96, top: 500, width: 240, height: 34 }, { fontSize: 25, bold: true });
+  addText(slide, "B_hist does not overturn A_live. It says pooled-family is not merely a Gen4 compatibility artifact: it may be a constrained, sometimes defensive research policy worth testing explicitly.", { left: 96, top: 542, width: 980, height: 62 }, { fontSize: 21 });
+  addFooter(slide, 10);
+
+  slide = p.slides.add();
+  slide.background.fill = C.canvas;
+  addLabel(slide, "DECISION POSTURE", 42, 42);
+  addText(slide, "Do not crown a winner; declare selection policy as a research factor", { left: 42, top: 88, width: 1060, height: 96 }, {
+    fontSize: 36,
+    bold: true,
+  });
+  addText(slide, "The two lanes answer different questions. A_live is the bridge-relevance lane; B_hist is the older-regime robustness lane. They should be read side by side, not collapsed into one leaderboard.", { left: 42, top: 204, width: 1060, height: 72 }, {
+    fontSize: 23,
+    color: "#222222",
+  });
+  addText(slide, "Keep now", { left: 96, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
   addText(slide, bulletText([
-    "Test whether pooled-family behaves better in older market regimes.",
-    "Decide whether selection policy belongs in future factorial screens.",
-    "Build collaborator-facing evidence beyond the recent live basket.",
+    "Direct full-spec selection as the temporary bridge default.",
+    "Pooled-family selection as a first-class research contender.",
+    "A/B lane labels whenever live and substitute evidence are mixed.",
   ]), { left: 96, top: 370, width: 500, height: 132 }, { fontSize: 21 });
-  addText(slide, "Reason to pause", { left: 700, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
+  addText(slide, "Stop before", { left: 700, top: 318, width: 330, height: 34 }, { fontSize: 25, bold: true });
   addText(slide, bulletText([
-    "A_live already favors keeping direct as the bridge default.",
-    "B_hist is compute-heavy and changes the traded basket.",
-    "It should not be merged into one winner table with A_live.",
+    "Changing live bridge behavior for Gen4 fidelity alone.",
+    "Rerunning major context/state screens under a hidden policy swap.",
+    "Treating these compact proxies as allocation evidence.",
   ]), { left: 700, top: 370, width: 500, height: 132 }, { fontSize: 21 });
-  addPanel(slide, 92, 552, 1096, 54, C.softAccent);
-  addText(slide, "Recommended posture: keep direct as default, preserve pooled-family as an optional research factor, and run B_hist only if older-regime robustness is the next decision.", { left: 120, top: 568, width: 1030, height: 26 }, {
+  addPanel(slide, 92, 536, 1096, 76, C.softAccent);
+  addText(slide, "Recommended next slice: compare selection policy only inside a small, declared research grid using the strongest current context/state-map settings.", { left: 120, top: 556, width: 1030, height: 44 }, {
     fontSize: 20,
     bold: true,
   });
-  addFooter(slide, 10);
+  addFooter(slide, 11);
 
   const hasALiveVisuals = await fs.access(aLiveHeatmapPath).then(() => true).catch(() => false);
   if (hasALiveVisuals) {
@@ -419,7 +450,26 @@ async function createDeck() {
     });
     await addImage(slide, aLiveHeatmapPath, 70, 270, 540, 315, "A-live pooled-minus-direct symbol return delta heatmap");
     await addImage(slide, aLiveMetricPath, 670, 270, 500, 315, "A-live selection policy metric dashboard");
-    addFooter(slide, 11);
+    addFooter(slide, 12);
+  }
+
+  const hasBHistVisuals = await fs.access(bHistHeatmapPath).then(() => true).catch(() => false);
+  if (hasBHistVisuals) {
+    slide = p.slides.add();
+    slide.background.fill = C.canvas;
+    addLabel(slide, "VISUAL EVIDENCE", 42, 42);
+    addText(slide, "The B-hist charts show defensive pooled windows and direct upside windows", { left: 42, top: 88, width: 1060, height: 96 }, {
+      fontSize: 34,
+      bold: true,
+    });
+    addText(slide, "Green cells favor pooled-family; red cells favor direct. The equity overlay makes the path behavior visible across weak and strong historical windows.", { left: 42, top: 204, width: 1060, height: 46 }, {
+      fontSize: 21,
+      color: "#222222",
+    });
+    await addImage(slide, bHistHeatmapPath, 70, 270, 540, 315, "B-hist pooled-minus-direct symbol return delta heatmap");
+    await addImage(slide, bHistMetricPath, 670, 270, 500, 145, "B-hist selection policy metric dashboard");
+    await addImage(slide, bHistEquityPath, 670, 438, 500, 147, "B-hist equal-symbol replay equity proxy overlay");
+    addFooter(slide, 13);
   }
 
   return p;

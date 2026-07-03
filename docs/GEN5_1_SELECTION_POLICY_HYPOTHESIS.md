@@ -191,6 +191,37 @@ The live-basket evidence does not currently justify switching the bridge default
 
 `B_hist` remains useful only if the operator wants substitute-basket older-regime evidence before making the selection-policy decision. It should not be merged into the `A_live` readout as a single leaderboard.
 
+## Screen B Historical Substitute-Basket Result
+
+`B_hist` completed as the older-regime robustness lane:
+
+- Screen packet: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/B_hist/`
+- Visual summary: `runs/research_workbench/selection_policy_screens/selpol_robust_20260702/B_hist/visual_summary/`
+- Replay windows: `2019Q1_asof_20190329`, `2020Q3_asof_20200930`, `2022Q1_asof_20220331`, `2022Q4_asof_20221230`, and `2025Q1_asof_20250331`
+- Authority maps: `2018Q4`, `2019Q1`, `2020Q2`, `2020Q3`, `2021Q4`, `2022Q1`, `2022Q3`, `2022Q4`, `2024Q4`, and `2025Q1`
+- Substitute basket: `AMD,NVDA,TSLA,AAPL,MSTR`
+- Context universe: `AMD,NVDA,TSLA,AAPL,MSTR,SPY,QQQ,IWM,SMH,TLT,GLD`
+
+Selection-map agreement was lower than `A_live` but still high:
+
+- Overall: `1023 / 1250` exact asset-state spec rows matched, or `81.84%`.
+- Family match rate was `82.24%`.
+- Exact match rates by authority quarter ranged from `76.0%` to `86.4%`.
+
+Replay inspection:
+
+- Direct selection had the higher compact mean symbol trace return in `2020Q3`, `2022Q1`, and `2025Q1`.
+- Pooled-family selection had the higher compact mean symbol trace return in `2019Q1` and `2022Q4`.
+- Pooled-family often looked more defensive in weak windows, improving the mean trace-return proxy in `2019Q1` and reducing the loss in `2022Q4`.
+- Direct captured more upside in strong or rebound windows, especially `2022Q1` and `2025Q1`.
+- The largest B-hist direct advantage was `MSTR` in `2025Q1`: pooled minus direct was `-102.8%`.
+- The largest B-hist pooled advantage was `TSLA` in `2025Q1`: pooled minus direct was `+56.8%`.
+- Unlike the `A_live` Q3 readout, B-hist did not reduce to a single AMD-driven pooled outlier. TSLA broadly favored pooled in this substitute lane, while AMD/MSTR/NVDA had important direct-favoring windows.
+
+Interpretation:
+
+The combined A/B robustness screen argues against a simple winner-take-all selection-policy decision. `A_live` still supports keeping `asset_state_direct_spec` as the temporary live-bridge default. `B_hist` supports keeping `pooled_family_asset_variant` as a first-class research factor because it may act as a more constrained, sometimes more defensive policy in weaker historical windows. The next methodology decision is whether future context/state-map screens should include selection policy as an explicit factor rather than silently assuming one policy.
+
 ## Outputs To Produce
 
 The comparison wrapper should write:

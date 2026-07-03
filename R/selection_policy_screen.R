@@ -555,10 +555,12 @@ g5_selection_policy_write_churn_map <- function(selected_comparison, path, width
   symbols <- sort(unique(as.character(selected_comparison$symbol)))
   states <- g5_selection_policy_order_states(selected_comparison$state_id)
   status_color <- c(same_spec = "#00A88F", same_family = "#F6C85F", different_family = "#F15A5A", missing = "#6E6878")
-  grDevices::png(path, width = width, height = height, res = res)
+  panel_height <- 360L
+  dynamic_height <- max(height, as.integer(length(quarters) * panel_height + 360L))
+  grDevices::png(path, width = width, height = dynamic_height, res = res)
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
-  graphics::par(bg = aesthetic$background, mfrow = c(length(quarters), 1), mar = c(4, 6, 3, 1), oma = c(2, 0, 3, 0))
+  graphics::par(bg = aesthetic$background, mfrow = c(length(quarters), 1), mar = c(2.8, 5, 2.3, 1), oma = c(2, 0, 3, 0))
   for (quarter in quarters) {
     q <- selected_comparison[as.character(selected_comparison$quarter_id) == quarter, , drop = FALSE]
     graphics::plot(NA, xlim = c(0.5, length(states) + 0.5), ylim = c(0.5, length(symbols) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = paste("Selected-State Agreement", quarter), col.main = aesthetic$text, fg = aesthetic$axis)
