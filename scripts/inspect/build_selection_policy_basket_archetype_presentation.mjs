@@ -83,6 +83,21 @@ function screenLabel(id) {
   }[id] || id;
 }
 
+function basketRoleLabel(id) {
+  return {
+    A_live_like: "Live-like stocks",
+    B_high_beta_long_history: "High-beta stocks",
+    C_etf_sector: "ETF/sector proxies",
+  }[id] || id;
+}
+
+function riskContextLabel(row) {
+  const symbols = row.context_symbols.split(",");
+  const basket = row.symbols.split(",");
+  const addOns = symbols.filter((s) => !basket.includes(s));
+  return addOns.join(",");
+}
+
 function addText(slide, text, left, top, width, height, style = {}) {
   const shape = slide.shapes.add({
     geometry: "textbox",
@@ -228,14 +243,38 @@ const presentation = Presentation.create({ slideSize: { width: 1280, height: 720
   addBullet(slide, "Design choice: keep context/PCA/state/grid fixed, then vary only basket archetype and selection policy.", 84, 386, 1040);
   addSimpleTable(
     slide,
-    ["Screen", "Basket", "Windows", "Context"],
-    runSpec.map((r) => [screenLabel(r.screen_id), r.symbols, r.replay_windows.split(",").length, r.context_history_policy]),
+    ["Screen", "Traded/research basket", "Regime context construction", "Windows"],
+    runSpec.map((r) => [
+      screenLabel(r.screen_id),
+      r.symbols,
+      `Basket plus ${riskContextLabel(r)}`,
+      r.replay_windows.split(",").length,
+    ]),
     82,
     500,
-    [150, 340, 90, 520],
+    [140, 320, 520, 90],
     38,
     12
   );
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Each Basket Had Its Own Matching Context Universe");
+  addText(slide, "This was not one context universe reused across all tests. Each screen traded and researched one basket, then built PCA regimes from that same basket plus market/risk context symbols.", 86, 214, 1040, 56, { fontSize: 21, color: "slate-700", bold: true });
+  addSimpleTable(
+    slide,
+    ["Screen", "Basket role", "Research / tradeable basket", "Added risk context"],
+    runSpec.map((r) => [screenLabel(r.screen_id), basketRoleLabel(r.screen_id), r.symbols, riskContextLabel(r)]),
+    70,
+    318,
+    [140, 190, 330, 420],
+    44,
+    12
+  );
+  addBullet(slide, "Recent live-like screen includes VXX in the risk add-on because the date range is recent enough.", 92, 548, 1040, 18);
+  addBullet(slide, "Older-history high-beta and ETF/sector screens omit VXX so the 2019-forward tests are not distorted by VXX’s later start date.", 92, 610, 1040, 18);
 }
 
 {
