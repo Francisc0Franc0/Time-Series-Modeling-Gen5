@@ -70,6 +70,41 @@ Current bridge artifacts:
 - Daily result as of `2026-07-01 17:30:00`: pending next-open actions `0`; `AMD` and `PLTR` are flat under current `2026Q3` authority; `NVDA`, `TSLA`, and `SOFI` are long from `2026Q2` continuity carry and remain locked to their prior-quarter entry models until exit.
 - Dual-policy smoke result as of `2026-07-01 17:30:00`: pending next-open actions `0` in both lanes. Operator-declared use rows are `AMD` under Gen4-style pooled-family, and `NVDA`, `PLTR`, `TSLA`, `SOFI` under Gen5.1 direct-spec. `SOFI` diverged by policy: flat under Gen4-style pooled-family and long under Gen5.1 direct-spec.
 
+## Newest Selection-Policy / Context Screen
+
+The newest research-inspection packet is:
+
+`runs/research_workbench/selpol_context/selpol_context_20260703/`
+
+It asks whether the Gen5.1 `asset_state_direct_spec` versus Gen4-style `pooled_family_asset_variant` policy fork depends on context-universe construction and basket archetype. It supersedes the earlier basket-archetype pilot as the cleaner evidence surface, while keeping that prior packet as useful history rather than deleting it.
+
+Design:
+
+- PCA/state surface: `behavioral_pool` plus `3x3` quantile states.
+- Selection policies: `asset_state_direct_spec` and `pooled_family_asset_variant`.
+- High-beta basket: `AMD,NVDA,TSLA,AAPL,MSTR`.
+- ETF/sector basket: `QQQ,SMH,XLK,XLE,XLF`.
+- Context recipes: broad risk, archetype matched, large diverse, and size-matched diverse.
+- Historical replay windows: `2019Q3`, `2020Q3`, `2022Q1`, `2022Q4`, `2025Q1`, and `2026Q2`.
+- Guardrails: no `VXX` in behavioral-pool context; no SOFI/PLTR recent-history lane; partial/discontinued `SQ` context replaced with `LRCX`.
+
+Key artifacts:
+
+- Report: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_report.md`
+- Run spec: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_run_spec.csv`
+- Portfolio proxy summary: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_portfolio_proxy_summary.csv`
+- Agreement summary: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_agreement_summary.csv`
+- Slide deck: `presentations/gen5_selection_policy_context_philosophy_screen.pptx`
+- Deck builder: `scripts/inspect/build_selection_policy_context_philosophy_presentation.mjs`
+
+Initial readout, still inspection only:
+
+- High-beta broad-risk favored direct on mean trace return (`6.9%` direct versus `4.9%` pooled).
+- High-beta matched, large-diverse, and size-matched-diverse favored pooled-family (`9.0%`, `8.5%`, `5.3%` pooled versus `2.6%`, `-1.8%`, `-2.6%` direct).
+- ETF/sector broad-risk modestly favored pooled (`7.7%` versus `6.6%`), while ETF matched, large-diverse, and size-matched-diverse favored direct or were near direct (`6.5%` vs `6.0%`, `5.3%` vs `2.7%`, `4.3%` vs `4.1%`).
+- Selection maps are related but not interchangeable. Across all frozen state/asset rows, family-match rates were `57.0%`-`64.6%` for high-beta contexts and `54.3%`-`59.1%` for ETF contexts.
+- Do not crown a final policy or context. The main finding is that selection policy, basket archetype, and context philosophy interact enough to keep all three explicit in the next research gate.
+
 The newest operator surface is:
 
 ```powershell
