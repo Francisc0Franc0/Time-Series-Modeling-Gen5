@@ -310,6 +310,41 @@ test_that("Gen4 daily default WFA strategy grid preset mirrors implemented daily
   expect_false(any(c("bollinger_mid_reversion", "vol_expansion_breakout", "donchian_breakout_vol_expand") %in% grid$strategy_family))
 })
 
+test_that("EMA trend participation probe adds carry variants without changing default IDs", {
+  families <- c("ema_trend", "no_trade")
+  grid <- do.call(
+    g5_wfa_candidate_model_grid,
+    c(
+      list(candidate_families = families),
+      g5_wfa_strategy_grid_preset_values("ema_trend_participation_probe")
+    )
+  )
+
+  expect_equal(g5_wfa_strategy_grid_preset("ema_trend_participation_probe"), "ema_trend_participation_probe")
+  expect_true("ema_trend_fast20_slow50" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast3_slow10_sl1_entslope_positive_exitcross_below" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast3_slow10_sl1_entabove_slow_exitcross_below" %in% grid$model_instance_id)
+  expect_true(all(c("ema_trend_slope_lookback", "ema_trend_entry_mode", "ema_trend_exit_mode") %in% names(grid)))
+  expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
+})
+
+test_that("EMA trend compact participation preset uses explicit targeted variants", {
+  grid <- do.call(
+    g5_wfa_candidate_model_grid,
+    c(
+      list(candidate_families = c("ema_trend", "no_trade")),
+      g5_wfa_strategy_grid_preset_values("ema_trend_participation_compact")
+    )
+  )
+
+  expect_equal(g5_wfa_strategy_grid_preset("ema_trend_participation_compact"), "ema_trend_participation_compact")
+  expect_true("ema_trend_fast20_slow50" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast3_slow10_sl1_entabove_slow_exitcross_below" %in% grid$model_instance_id)
+  expect_true("ema_trend_fast10_slow30_sl1_entslope_positive_exitcross_below" %in% grid$model_instance_id)
+  expect_equal(nrow(grid), length(unique(grid$model_instance_id)))
+  expect_lt(nrow(grid), 25L)
+})
+
 test_that("WFA numeric ID labels preserve integer zeros", {
   expect_equal(g5_wfa_num_id_label(30), "30")
   expect_equal(g5_wfa_num_id_label(60), "60")
@@ -328,6 +363,25 @@ test_that("Gen4-inspired WFA indicators emit close-based signals", {
   )
   expect_true(any(ema_trend$entry_signal, na.rm = TRUE))
   expect_equal(unique(ema_trend$entry_signal_rule), "fast_ema_above_slow_with_positive_fast_slope_turns_on")
+
+  ema_trend_carry <- g5_wfa_model_indicators(
+    bars,
+    "AMD",
+    data.frame(
+      strategy_family = "ema_trend",
+      model_instance_id = "ema_trend_fast2_slow4_sl1_entabove_slow_exitcross_below",
+      fast_period = 2L,
+      slow_period = 4L,
+      ema_trend_slope_lookback = 1L,
+      ema_trend_entry_mode = "above_slow",
+      ema_trend_exit_mode = "cross_below",
+      stringsAsFactors = FALSE
+    )
+  )
+  expect_true(any(ema_trend_carry$entry_signal, na.rm = TRUE))
+  expect_equal(unique(ema_trend_carry$entry_signal_rule), "fast_ema_above_slow_turns_on")
+  expect_equal(unique(ema_trend_carry$exit_signal_rule), "fast_ema_cross_below_slow_turns_off")
+  expect_gte(sum(ema_trend_carry$signal_state == "trend_on"), sum(ema_trend$signal_state == "trend_on"))
 
   breakout <- g5_wfa_model_indicators(
     bars,

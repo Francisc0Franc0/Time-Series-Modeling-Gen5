@@ -47,6 +47,7 @@ selection_policies <- c("asset_state_direct_spec", "pooled_family_asset_variant"
 min_train_state_rows <- 20L
 warmup_days <- 420L
 grid_n <- 3L
+strategy_grid_preset <- g5_wfa_strategy_grid_preset(env_or("GEN5_SELECTION_POLICY_CONTEXT_STRATEGY_GRID_PRESET", "gen4_daily_default"))
 
 research_candidate_families <- c(
   "ema_cross",
@@ -61,6 +62,10 @@ research_candidate_families <- c(
   "donchian_breakout_vol_expand",
   "no_trade"
 )
+candidate_family_override <- env_or("GEN5_SELECTION_POLICY_CONTEXT_CANDIDATE_FAMILIES", "")
+if (nzchar(candidate_family_override)) {
+  research_candidate_families <- g5_wfa_candidate_families(strsplit(candidate_family_override, ",", fixed = TRUE)[[1L]])
+}
 
 authority_quarters <- c("2019Q2", "2019Q3", "2020Q2", "2020Q3", "2021Q4", "2022Q1", "2022Q3", "2022Q4", "2024Q4", "2025Q1", "2026Q1", "2026Q2")
 replay_windows <- data.frame(
@@ -320,15 +325,15 @@ build_authority_with_symbol_checkpoints <- function(
     g5_git_sha_or_na(repo_root),
     cfg$feed,
     research_candidate_families,
-    "gen4_daily_default"
+    strategy_grid_preset
   )
   contract$authority_status <- "RESEARCH_INSPECTION_ONLY"
-  contract$research_note <- "Selection-policy x context-philosophy screen: behavioral-pool PCA, 3x3 quantile states, no VXX behavioral-peer context, broad Gen5.1 research candidate families with Gen4 daily parameter breadth."
+  contract$research_note <- paste0("Selection-policy x context-philosophy screen: behavioral-pool PCA, 3x3 quantile states, no VXX behavioral-peer context, broad Gen5.1 research candidate families with strategy grid preset ", strategy_grid_preset, ".")
   contract$grid_n <- grid_n
   contract$selection_policy <- "base_direct_authority"
   model_grid <- g5_bridge_model_grid(
     candidate_families = research_candidate_families,
-    strategy_grid_preset = "gen4_daily_default"
+    strategy_grid_preset = strategy_grid_preset
   )
   fits <- lapply(symbols, function(symbol) {
     build_symbol_fit_checkpoint(
@@ -364,11 +369,12 @@ read_full_authority_packet <- function(authority_dir) {
   authority
 }
 
-contract_symbols_match <- function(contract, symbols, context_symbols) {
+contract_symbols_match <- function(contract, symbols, context_symbols, strategy_grid_preset = NULL) {
   if (!is.data.frame(contract) || !nrow(contract)) return(FALSE)
   same_symbols <- identical(g5_standardize_symbol(strsplit(as.character(contract$symbols[[1L]]), ",", fixed = TRUE)[[1L]]), g5_standardize_symbol(symbols))
   same_context <- identical(g5_standardize_symbol(strsplit(as.character(contract$context_symbols[[1L]]), ",", fixed = TRUE)[[1L]]), g5_standardize_symbol(context_symbols))
-  same_symbols && same_context
+  same_grid <- is.null(strategy_grid_preset) || !("strategy_grid_preset" %in% names(contract)) || identical(as.character(contract$strategy_grid_preset[[1L]]), as.character(strategy_grid_preset)[[1L]])
+  same_symbols && same_context && same_grid
 }
 
 maybe_reuse_live_authority <- function(spec, quarter_id) {
@@ -376,7 +382,7 @@ maybe_reuse_live_authority <- function(spec, quarter_id) {
   if (!dir.exists(live_dir)) return(NULL)
   authority <- tryCatch(read_full_authority_packet(live_dir), error = function(e) NULL)
   if (is.null(authority)) return(NULL)
-  if (!contract_symbols_match(authority$contract, spec$symbols, spec$context_symbols)) return(NULL)
+  if (!contract_symbols_match(authority$contract, spec$symbols, spec$context_symbols, strategy_grid_preset)) return(NULL)
   authority
 }
 
@@ -595,7 +601,7 @@ run_screen <- function(spec) {
     pca_panel_label = "long_pca_behavioral_pool",
     state_engine = "quantile_grid",
     grid_n = grid_n,
-    strategy_grid_preset = "gen4_daily_default",
+    strategy_grid_preset = strategy_grid_preset,
     candidate_family_count = length(unique(c(research_candidate_families, "no_trade"))),
     candidate_families = paste(unique(c(research_candidate_families, "no_trade")), collapse = ","),
     context_template = spec$context_philosophy,
@@ -659,7 +665,7 @@ run_screen <- function(spec) {
     "- Context history policy: `no_vxx_behavioral_pool_context`",
     "- PCA surface: long/pooled asset-day PCA (`pooled_asset_day`)",
     "- State map: `3x3` quantile grid",
-    "- Strategy grid: broad Gen5.1 research families with Gen4 `daily_default` parameter breadth",
+    paste0("- Strategy grid preset: `", strategy_grid_preset, "`"),
     paste0("- Replay windows: `", paste(spec$replay_windows$window_id, collapse = ","), "`"),
     "",
     "## Selection-Map Agreement",
@@ -707,6 +713,8 @@ message("Gen5.1 selection-policy x context-philosophy screen")
 message("Output root: ", root_output_dir)
 message("Feed: ", cfg$feed)
 message("Refresh: ", refresh)
+message("Strategy grid preset: ", strategy_grid_preset)
+message("Candidate families: ", paste(unique(c(research_candidate_families, "no_trade")), collapse = ","))
 
 screen_results <- lapply(screen_specs, run_screen)
 names(screen_results) <- vapply(screen_specs, function(x) x$screen_id, character(1L))

@@ -178,7 +178,7 @@ g5_wfa_candidate_families <- function(candidate_families) {
 
 g5_wfa_strategy_grid_preset <- function(strategy_grid_preset = "standard") {
   preset <- as.character(strategy_grid_preset)[[1L]]
-  allowed <- c("standard", "modest_expanded", "gen4_daily_default")
+  allowed <- c("standard", "modest_expanded", "gen4_daily_default", "ema_trend_participation_probe", "ema_trend_participation_compact")
   if (!preset %in% allowed) {
     g5_stop(paste0("strategy_grid_preset must be one of: ", paste(allowed, collapse = ", ")))
   }
@@ -195,6 +195,9 @@ g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard"
       bb_sd_multipliers = c(1.5, 2.0, 2.5),
       ema_trend_fast_periods = c(5L, 10L, 15L, 20L),
       ema_trend_slow_periods = c(20L, 50L, 75L),
+      ema_trend_slope_lookbacks = 3L,
+      ema_trend_entry_modes = "slope_positive",
+      ema_trend_exit_modes = "trend_off",
       rsi_periods = c(7L, 10L, 14L, 21L),
       rsi_lower_thresholds = c(25, 30, 35),
       rsi_upper_thresholds = c(65, 70, 75),
@@ -210,6 +213,37 @@ g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard"
       pullback_rsi_upper_thresholds = c(55, 60, 65)
     ))
   }
+  if (identical(preset, "ema_trend_participation_probe")) {
+    values <- g5_wfa_strategy_grid_preset_values("gen4_daily_default")
+    values$ema_trend_fast_periods <- c(3L, 5L, 8L, 10L, 15L, 20L)
+    values$ema_trend_slow_periods <- c(10L, 20L, 30L, 50L, 75L)
+    values$ema_trend_slope_lookbacks <- c(1L, 3L)
+    values$ema_trend_entry_modes <- c("slope_positive", "above_slow")
+    values$ema_trend_exit_modes <- c("trend_off", "cross_below")
+    return(values)
+  }
+  if (identical(preset, "ema_trend_participation_compact")) {
+    values <- g5_wfa_strategy_grid_preset_values("gen4_daily_default")
+    default_pairs <- expand.grid(
+      fast_period = values$ema_trend_fast_periods,
+      slow_period = values$ema_trend_slow_periods,
+      stringsAsFactors = FALSE
+    )
+    default_pairs <- default_pairs[default_pairs$fast_period < default_pairs$slow_period, , drop = FALSE]
+    default_pairs$ema_trend_slope_lookback <- 3L
+    default_pairs$ema_trend_entry_mode <- "slope_positive"
+    default_pairs$ema_trend_exit_mode <- "trend_off"
+    targeted_pairs <- data.frame(
+      fast_period = c(3L, 3L, 5L, 5L, 8L, 8L, 10L, 10L),
+      slow_period = c(10L, 10L, 20L, 20L, 20L, 20L, 30L, 30L),
+      ema_trend_slope_lookback = 1L,
+      ema_trend_entry_mode = rep(c("above_slow", "slope_positive"), 4L),
+      ema_trend_exit_mode = "cross_below",
+      stringsAsFactors = FALSE
+    )
+    values$ema_trend_explicit_specs <- unique(rbind(default_pairs, targeted_pairs))
+    return(values)
+  }
   if (identical(preset, "modest_expanded")) {
     return(list(
       fast_periods = c(8L, 12L, 16L),
@@ -218,6 +252,9 @@ g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard"
       bb_sd_multipliers = c(1.5, 2, 2.5),
       ema_trend_fast_periods = c(5L, 10L, 15L, 20L),
       ema_trend_slow_periods = c(25L, 50L, 75L),
+      ema_trend_slope_lookbacks = 3L,
+      ema_trend_entry_modes = "slope_positive",
+      ema_trend_exit_modes = "trend_off",
       rsi_periods = c(7L, 14L),
       rsi_lower_thresholds = c(25, 30, 35),
       rsi_upper_thresholds = c(60, 70, 75),
@@ -262,7 +299,10 @@ g5_wfa_model_parameter_label <- function(model) {
     return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]]))
   }
   if (identical(family, "ema_trend")) {
-    return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", slope_lookback=3"))
+    slope_lookback <- g5_wfa_model_value(model, "ema_trend_slope_lookback", 3L)
+    entry_mode <- g5_wfa_model_value(model, "ema_trend_entry_mode", "slope_positive")
+    exit_mode <- g5_wfa_model_value(model, "ema_trend_exit_mode", "trend_off")
+    return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", slope_lookback=", slope_lookback, ", entry=", entry_mode, ", exit=", exit_mode))
   }
   if (identical(family, "bollinger_touch")) {
     return(paste0("lookback=", model$lookback_period[[1L]], ", sd=", model$sd_multiplier[[1L]], ", exit=upper_band"))
@@ -292,6 +332,31 @@ g5_wfa_model_parameter_label <- function(model) {
     return("cash/no-position benchmark")
   }
   ""
+}
+
+g5_wfa_ema_trend_id <- function(fast_period, slow_period, slope_lookback = 3L, entry_mode = "slope_positive", exit_mode = "trend_off") {
+  fast_period <- as.integer(fast_period)
+  slow_period <- as.integer(slow_period)
+  slope_lookback <- as.integer(slope_lookback)
+  entry_mode <- as.character(entry_mode)[[1L]]
+  exit_mode <- as.character(exit_mode)[[1L]]
+  if (is.na(fast_period) || is.na(slow_period) || fast_period < 1L || slow_period < 2L || fast_period >= slow_period) {
+    g5_stop("EMA trend requires positive periods with fast_period < slow_period.")
+  }
+  if (is.na(slope_lookback) || slope_lookback < 1L) {
+    g5_stop("EMA trend slope_lookback must be a positive integer.")
+  }
+  if (!entry_mode %in% c("slope_positive", "above_slow")) {
+    g5_stop("EMA trend entry_mode must be slope_positive or above_slow.")
+  }
+  if (!exit_mode %in% c("trend_off", "cross_below")) {
+    g5_stop("EMA trend exit_mode must be trend_off or cross_below.")
+  }
+  base <- paste0("ema_trend_fast", fast_period, "_slow", slow_period)
+  if (identical(slope_lookback, 3L) && identical(entry_mode, "slope_positive") && identical(exit_mode, "trend_off")) {
+    return(base)
+  }
+  paste0(base, "_sl", slope_lookback, "_ent", entry_mode, "_exit", exit_mode)
 }
 
 g5_wfa_pct_id_label <- function(x) {
@@ -655,23 +720,71 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
   if (identical(family, "ema_trend")) {
     fast_period <- as.integer(model$fast_period[[1L]])
     slow_period <- as.integer(model$slow_period[[1L]])
+    slope_lookback <- as.integer(g5_wfa_model_value(model, "ema_trend_slope_lookback", 3L))
+    entry_mode <- as.character(g5_wfa_model_value(model, "ema_trend_entry_mode", "slope_positive"))[[1L]]
+    exit_mode <- as.character(g5_wfa_model_value(model, "ema_trend_exit_mode", "trend_off"))[[1L]]
     ind <- g5_ema_cross_indicators(
       bars,
       symbol = symbol,
       fast_period = fast_period,
       slow_period = slow_period
     )
-    slope <- ind$fast_ema / c(rep(NA_real_, 3L), head(ind$fast_ema, -3L)) - 1
-    trend_on <- is.finite(ind$fast_ema) & is.finite(ind$slow_ema) & is.finite(slope) & ind$fast_ema > ind$slow_ema & slope > 0
+    if (is.na(slope_lookback) || slope_lookback < 1L) {
+      g5_stop("EMA trend slope_lookback must be a positive integer.")
+    }
+    if (!entry_mode %in% c("slope_positive", "above_slow")) {
+      g5_stop("EMA trend entry_mode must be slope_positive or above_slow.")
+    }
+    if (!exit_mode %in% c("trend_off", "cross_below")) {
+      g5_stop("EMA trend exit_mode must be trend_off or cross_below.")
+    }
+    slope <- ind$fast_ema / c(rep(NA_real_, slope_lookback), head(ind$fast_ema, -slope_lookback)) - 1
+    above_slow <- is.finite(ind$fast_ema) & is.finite(ind$slow_ema) & ind$fast_ema > ind$slow_ema
+    slope_positive <- is.finite(slope) & slope > 0
+    entry_ready <- if (identical(entry_mode, "above_slow")) {
+      above_slow
+    } else {
+      above_slow & slope_positive
+    }
+    entry_ready[is.na(entry_ready)] <- FALSE
+    trend_on <- if (identical(exit_mode, "cross_below")) {
+      desired <- rep(FALSE, nrow(ind))
+      in_position <- FALSE
+      for (i in seq_len(nrow(ind))) {
+        if (isTRUE(in_position) && !isTRUE(above_slow[[i]])) {
+          in_position <- FALSE
+        }
+        if (!isTRUE(in_position) && isTRUE(entry_ready[[i]])) {
+          in_position <- TRUE
+        }
+        desired[[i]] <- isTRUE(in_position)
+      }
+      desired
+    } else {
+      entry_ready
+    }
     trend_on[is.na(trend_on)] <- FALSE
     state <- g5_wfa_signal_state_from_position(as.numeric(trend_on))
     ind$strategy_family <- "ema_trend"
-    ind$strategy_id <- paste0("ema_trend_fast", fast_period, "_slow", slow_period)
+    ind$strategy_id <- g5_wfa_ema_trend_id(fast_period, slow_period, slope_lookback, entry_mode, exit_mode)
     ind$model_instance_id <- ind$strategy_id
+    ind$ema_trend_slope_lookback <- slope_lookback
+    ind$ema_trend_entry_mode <- entry_mode
+    ind$ema_trend_exit_mode <- exit_mode
     ind$entry_signal <- state$entry
     ind$exit_signal <- state$exit
-    ind$entry_signal_rule <- "fast_ema_above_slow_with_positive_fast_slope_turns_on"
-    ind$exit_signal_rule <- "ema_trend_condition_turns_off"
+    ind$entry_signal_rule <- if (identical(entry_mode, "above_slow")) {
+      "fast_ema_above_slow_turns_on"
+    } else if (identical(slope_lookback, 3L)) {
+      "fast_ema_above_slow_with_positive_fast_slope_turns_on"
+    } else {
+      paste0("fast_ema_above_slow_with_positive_fast_slope", slope_lookback, "_turns_on")
+    }
+    ind$exit_signal_rule <- if (identical(exit_mode, "cross_below")) {
+      "fast_ema_cross_below_slow_turns_off"
+    } else {
+      "ema_trend_condition_turns_off"
+    }
     ind$signal_state <- ifelse(trend_on, "trend_on", "trend_off")
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
@@ -810,6 +923,10 @@ g5_wfa_candidate_model_grid <- function(
   bb_sd_multipliers = c(1.5, 2, 2.5),
   ema_trend_fast_periods = c(5L, 10L, 15L),
   ema_trend_slow_periods = c(25L, 50L, 75L),
+  ema_trend_slope_lookbacks = 3L,
+  ema_trend_entry_modes = "slope_positive",
+  ema_trend_exit_modes = "trend_off",
+  ema_trend_explicit_specs = NULL,
   rsi_periods = c(7L, 14L),
   rsi_lower_thresholds = c(30, 35),
   rsi_upper_thresholds = c(60, 70),
@@ -827,7 +944,7 @@ g5_wfa_candidate_model_grid <- function(
 ) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
   rows <- list()
-  add_model <- function(strategy_family, model_instance_id, fast_period = NA_integer_, slow_period = NA_integer_, lookback_period = NA_integer_, sd_multiplier = NA_real_, rsi_period = NA_integer_, rsi_lower = NA_real_, rsi_upper = NA_real_, zret_window = NA_integer_, zret_entry_z = NA_real_, zret_exit_z = NA_real_, breakout_lookback = NA_integer_, breakout_buffer = NA_real_, vol_expand_threshold = NA_real_) {
+  add_model <- function(strategy_family, model_instance_id, fast_period = NA_integer_, slow_period = NA_integer_, lookback_period = NA_integer_, sd_multiplier = NA_real_, rsi_period = NA_integer_, rsi_lower = NA_real_, rsi_upper = NA_real_, zret_window = NA_integer_, zret_entry_z = NA_real_, zret_exit_z = NA_real_, breakout_lookback = NA_integer_, breakout_buffer = NA_real_, vol_expand_threshold = NA_real_, ema_trend_slope_lookback = NA_integer_, ema_trend_entry_mode = NA_character_, ema_trend_exit_mode = NA_character_) {
     rows[[length(rows) + 1L]] <<- data.frame(
       strategy_family = strategy_family,
       model_instance_id = model_instance_id,
@@ -844,6 +961,9 @@ g5_wfa_candidate_model_grid <- function(
       breakout_lookback = breakout_lookback,
       breakout_buffer = breakout_buffer,
       vol_expand_threshold = vol_expand_threshold,
+      ema_trend_slope_lookback = ema_trend_slope_lookback,
+      ema_trend_entry_mode = ema_trend_entry_mode,
+      ema_trend_exit_mode = ema_trend_exit_mode,
       stringsAsFactors = FALSE
     )
   }
@@ -863,14 +983,59 @@ g5_wfa_candidate_model_grid <- function(
     }
   }
   if ("ema_trend" %in% candidate_families) {
-    ema_trend_fast_periods <- sort(unique(as.integer(ema_trend_fast_periods)))
-    ema_trend_slow_periods <- sort(unique(as.integer(ema_trend_slow_periods)))
-    for (fast in ema_trend_fast_periods) {
-      for (slow in ema_trend_slow_periods) {
-        if (is.na(fast) || is.na(slow) || fast >= slow) {
-          next
+    if (!is.null(ema_trend_explicit_specs)) {
+      specs <- as.data.frame(ema_trend_explicit_specs, stringsAsFactors = FALSE)
+      required <- c("fast_period", "slow_period", "ema_trend_slope_lookback", "ema_trend_entry_mode", "ema_trend_exit_mode")
+      if (any(!required %in% names(specs))) {
+        g5_stop(paste0("ema_trend_explicit_specs must include: ", paste(required, collapse = ", ")))
+      }
+      specs <- unique(specs[, required, drop = FALSE])
+      for (i in seq_len(nrow(specs))) {
+        fast <- as.integer(specs$fast_period[[i]])
+        slow <- as.integer(specs$slow_period[[i]])
+        slope_lookback <- as.integer(specs$ema_trend_slope_lookback[[i]])
+        entry_mode <- as.character(specs$ema_trend_entry_mode[[i]])
+        exit_mode <- as.character(specs$ema_trend_exit_mode[[i]])
+        add_model(
+          "ema_trend",
+          g5_wfa_ema_trend_id(fast, slow, slope_lookback, entry_mode, exit_mode),
+          fast_period = fast,
+          slow_period = slow,
+          ema_trend_slope_lookback = slope_lookback,
+          ema_trend_entry_mode = entry_mode,
+          ema_trend_exit_mode = exit_mode
+        )
+      }
+    } else {
+      ema_trend_fast_periods <- sort(unique(as.integer(ema_trend_fast_periods)))
+      ema_trend_slow_periods <- sort(unique(as.integer(ema_trend_slow_periods)))
+      ema_trend_slope_lookbacks <- sort(unique(as.integer(ema_trend_slope_lookbacks)))
+      ema_trend_slope_lookbacks <- ema_trend_slope_lookbacks[!is.na(ema_trend_slope_lookbacks) & ema_trend_slope_lookbacks > 0L]
+      ema_trend_entry_modes <- unique(trimws(as.character(ema_trend_entry_modes)))
+      ema_trend_entry_modes <- ema_trend_entry_modes[nzchar(ema_trend_entry_modes)]
+      ema_trend_exit_modes <- unique(trimws(as.character(ema_trend_exit_modes)))
+      ema_trend_exit_modes <- ema_trend_exit_modes[nzchar(ema_trend_exit_modes)]
+      for (fast in ema_trend_fast_periods) {
+        for (slow in ema_trend_slow_periods) {
+          if (is.na(fast) || is.na(slow) || fast >= slow) {
+            next
+          }
+          for (slope_lookback in ema_trend_slope_lookbacks) {
+            for (entry_mode in ema_trend_entry_modes) {
+              for (exit_mode in ema_trend_exit_modes) {
+                add_model(
+                  "ema_trend",
+                  g5_wfa_ema_trend_id(fast, slow, slope_lookback, entry_mode, exit_mode),
+                  fast_period = fast,
+                  slow_period = slow,
+                  ema_trend_slope_lookback = slope_lookback,
+                  ema_trend_entry_mode = entry_mode,
+                  ema_trend_exit_mode = exit_mode
+                )
+              }
+            }
+          }
         }
-        add_model("ema_trend", paste0("ema_trend_fast", fast, "_slow", slow), fast_period = fast, slow_period = slow)
       }
     }
   }
@@ -1031,6 +1196,9 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
     breakout_lookback = g5_wfa_model_value(model, "breakout_lookback", NA_integer_),
     breakout_buffer = g5_wfa_model_value(model, "breakout_buffer", NA_real_),
     vol_expand_threshold = g5_wfa_model_value(model, "vol_expand_threshold", NA_real_),
+    ema_trend_slope_lookback = g5_wfa_model_value(model, "ema_trend_slope_lookback", NA_integer_),
+    ema_trend_entry_mode = g5_wfa_model_value(model, "ema_trend_entry_mode", NA_character_),
+    ema_trend_exit_mode = g5_wfa_model_value(model, "ema_trend_exit_mode", NA_character_),
     leverage = leverage,
     trade_count = if (is.data.frame(trades)) nrow(trades) else 0L,
     closed_trade_count = nrow(closed),
