@@ -107,6 +107,7 @@ for (i in seq_len(nrow(packet_index))) {
 replay_all <- add_daily_returns(g5_wfa_bind_rows_fill(replay_rows))
 trades_all <- if (length(trade_rows)) g5_wfa_bind_rows_fill(trade_rows) else data.frame()
 executions_all <- if (length(execution_rows)) g5_wfa_bind_rows_fill(execution_rows) else data.frame()
+selected_states_all <- read_csv_if_exists(file.path(screen_dir, "selection_policy_selected_states_all.csv"))
 
 exposure_summary <- do.call(rbind, lapply(split(replay_all, paste(replay_all$selection_policy, replay_all$window_id, replay_all$symbol, sep = "::")), function(x) {
   pos <- as.logical(x$model_long_lag)
@@ -174,16 +175,153 @@ state_accountability <- do.call(rbind, lapply(split(replay_all, paste(replay_all
   )
 }))
 
+family_abbrev <- function(x) {
+  labels <- c(
+    no_trade = "NT",
+    ema_cross = "EMA-x",
+    ema_trend = "EMA-t",
+    bollinger_touch = "BB-t",
+    bollinger_mid_reversion = "BB-m",
+    rsi_mr = "RSI",
+    zret_mr = "ZRet",
+    breakout = "BO",
+    pullback_in_uptrend = "PB",
+    vol_expansion_breakout = "VolBO",
+    donchian_breakout_vol_expand = "Donch"
+  )
+  out <- unname(labels[as.character(x)])
+  ifelse(is.na(out), as.character(x), out)
+}
+
+family_palette <- function(family) {
+  colors <- c(
+    no_trade = "#B9C0C9",
+    ema_cross = "#2E86AB",
+    ema_trend = "#00A88F",
+    bollinger_touch = "#F4A261",
+    bollinger_mid_reversion = "#E76F51",
+    rsi_mr = "#9B5DE5",
+    zret_mr = "#F15BB5",
+    breakout = "#277DA1",
+    pullback_in_uptrend = "#43AA8B",
+    vol_expansion_breakout = "#F8961E",
+    donchian_breakout_vol_expand = "#577590"
+  )
+  out <- unname(colors[as.character(family)])
+  ifelse(is.na(out), "#D8DEE9", out)
+}
+
+param_value <- function(row, name) {
+  if (!name %in% names(row)) return(NA_real_)
+  value <- suppressWarnings(as.numeric(row[[name]][[1L]]))
+  if (!is.finite(value)) NA_real_ else value
+}
+
+param_label <- function(row) {
+  family <- as.character(row$strategy_family[[1L]])
+  fmt_int <- function(x) if (is.na(x)) "NA" else sprintf("%.0f", x)
+  fmt_num <- function(x) if (is.na(x)) "NA" else sub("\\.?0+$", "", sprintf("%.3f", x))
+  label <- switch(
+    family,
+    no_trade = "no trade",
+    ema_cross = paste0("f", fmt_int(param_value(row, "fast_period")), "/s", fmt_int(param_value(row, "slow_period"))),
+    ema_trend = paste0("f", fmt_int(param_value(row, "fast_period")), "/s", fmt_int(param_value(row, "slow_period"))),
+    pullback_in_uptrend = paste0("f", fmt_int(param_value(row, "fast_period")), "/s", fmt_int(param_value(row, "slow_period"))),
+    bollinger_touch = paste0("lb", fmt_int(param_value(row, "lookback_period")), "/sd", fmt_num(param_value(row, "sd_multiplier"))),
+    bollinger_mid_reversion = paste0("lb", fmt_int(param_value(row, "lookback_period")), "/sd", fmt_num(param_value(row, "sd_multiplier"))),
+    rsi_mr = paste0("p", fmt_int(param_value(row, "rsi_period")), "/", fmt_int(param_value(row, "rsi_lower")), "-", fmt_int(param_value(row, "rsi_upper"))),
+    zret_mr = paste0("w", fmt_int(param_value(row, "zret_window")), "/e", fmt_num(param_value(row, "zret_entry_z")), "/x", fmt_num(param_value(row, "zret_exit_z"))),
+    breakout = paste0("lb", fmt_int(param_value(row, "breakout_lookback")), "/b", fmt_num(param_value(row, "breakout_buffer"))),
+    vol_expansion_breakout = paste0("lb", fmt_int(param_value(row, "breakout_lookback")), "/b", fmt_num(param_value(row, "breakout_buffer")), "/v", fmt_num(param_value(row, "vol_expand_threshold"))),
+    donchian_breakout_vol_expand = paste0("lb", fmt_int(param_value(row, "breakout_lookback")), "/b", fmt_num(param_value(row, "breakout_buffer")), "/v", fmt_num(param_value(row, "vol_expand_threshold"))),
+    as.character(row$model_instance_id[[1L]])
+  )
+  exit_stack <- if ("exit_stack_id" %in% names(row)) as.character(row$exit_stack_id[[1L]]) else ""
+  if (nzchar(exit_stack) && !identical(exit_stack, "no_exit")) {
+    label <- paste0(label, "\n", exit_stack)
+  }
+  label
+}
+
+dominant_row <- function(x, field) {
+  values <- as.character(x[[field]])
+  values <- values[!is.na(values) & nzchar(values)]
+  if (!length(values)) return(x[1L, , drop = FALSE])
+  tab <- sort(table(values), decreasing = TRUE)
+  keep <- names(tab)[[1L]]
+  x[as.character(x[[field]]) == keep, , drop = FALSE][1L, , drop = FALSE]
+}
+
+selected_state_asset <- data.frame()
+selected_family_state_mix <- data.frame()
+selected_parameter_profile <- data.frame()
+if (nrow(selected_states_all)) {
+  selected_states_all$strategy_family <- as.character(selected_states_all$strategy_family)
+  selected_states_all$selection_policy <- as.character(selected_states_all$selection_policy)
+  selected_states_all$symbol <- as.character(selected_states_all$symbol)
+  selected_states_all$state_id <- as.character(selected_states_all$state_id)
+  selected_states_all$quarter_id <- as.character(selected_states_all$quarter_id)
+  selected_state_asset <- do.call(rbind, lapply(split(selected_states_all, paste(selected_states_all$selection_policy, selected_states_all$symbol, selected_states_all$state_id, sep = "::")), function(x) {
+    fam <- sort(table(x$strategy_family), decreasing = TRUE)
+    dominant_family <- names(fam)[[1L]]
+    row <- dominant_row(x[x$strategy_family == dominant_family, , drop = FALSE], "strategy_spec_id")
+    data.frame(
+      selection_policy = as.character(x$selection_policy[[1L]]),
+      policy_label = policy_label(x$selection_policy[[1L]]),
+      symbol = as.character(x$symbol[[1L]]),
+      state_id = as.character(x$state_id[[1L]]),
+      selected_rows = nrow(x),
+      dominant_family = dominant_family,
+      dominant_family_label = family_abbrev(dominant_family),
+      dominant_family_count = as.integer(fam[[1L]]),
+      dominant_family_share = as.integer(fam[[1L]]) / nrow(x),
+      unique_family_count = length(fam),
+      dominant_strategy_spec_id = as.character(row$strategy_spec_id[[1L]]),
+      dominant_parameter_label = param_label(row),
+      stringsAsFactors = FALSE
+    )
+  }))
+  selected_family_state_mix <- as.data.frame(table(
+    selection_policy = selected_states_all$selection_policy,
+    state_id = selected_states_all$state_id,
+    strategy_family = selected_states_all$strategy_family
+  ), stringsAsFactors = FALSE)
+  names(selected_family_state_mix)[names(selected_family_state_mix) == "Freq"] <- "selected_count"
+  selected_family_state_mix$policy_label <- policy_label(selected_family_state_mix$selection_policy)
+  selected_parameter_profile <- do.call(rbind, lapply(split(selected_states_all, paste(selected_states_all$selection_policy, selected_states_all$symbol, selected_states_all$strategy_family, sep = "::")), function(x) {
+    row <- dominant_row(x, "strategy_spec_id")
+    specs <- unique(as.character(x$strategy_spec_id))
+    data.frame(
+      selection_policy = as.character(x$selection_policy[[1L]]),
+      policy_label = policy_label(x$selection_policy[[1L]]),
+      symbol = as.character(x$symbol[[1L]]),
+      strategy_family = as.character(x$strategy_family[[1L]]),
+      strategy_family_label = family_abbrev(x$strategy_family[[1L]]),
+      selected_count = nrow(x),
+      unique_spec_count = length(specs[!is.na(specs) & nzchar(specs)]),
+      dominant_strategy_spec_id = as.character(row$strategy_spec_id[[1L]]),
+      dominant_parameter_label = param_label(row),
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+
 paths <- list(
   exposure_summary_csv = file.path(output_dir, "performance_audit_exposure_participation.csv"),
   trade_shape_csv = file.path(output_dir, "performance_audit_trade_shape.csv"),
   trades_enriched_csv = file.path(output_dir, "performance_audit_trades_enriched.csv"),
   state_accountability_csv = file.path(output_dir, "performance_audit_state_accountability.csv"),
+  selected_state_asset_csv = file.path(output_dir, "performance_audit_selected_state_asset.csv"),
+  selected_family_state_mix_csv = file.path(output_dir, "performance_audit_selected_family_state_mix.csv"),
+  selected_parameter_profile_csv = file.path(output_dir, "performance_audit_selected_parameter_profile.csv"),
   direct_tape_png = file.path(output_dir, "performance_audit_tape_2020Q3_direct.png"),
   pooled_tape_png = file.path(output_dir, "performance_audit_tape_2020Q3_pooled.png"),
   missed_flat_heatmap_png = file.path(output_dir, "performance_audit_missed_flat_heatmap.png"),
   trade_duration_scatter_png = file.path(output_dir, "performance_audit_trade_duration_scatter.png"),
   state_accountability_png = file.path(output_dir, "performance_audit_state_accountability.png"),
+  selection_state_asset_heatmap_png = file.path(output_dir, "performance_audit_selection_state_asset_heatmap.png"),
+  selection_family_state_mix_png = file.path(output_dir, "performance_audit_selection_family_state_mix.png"),
+  selection_parameter_profile_png = file.path(output_dir, "performance_audit_selection_parameter_profile.png"),
   report_md = file.path(output_dir, "performance_audit_report.md")
 )
 
@@ -191,6 +329,9 @@ g5_wfa_write_csv(exposure_summary, paths$exposure_summary_csv)
 g5_wfa_write_csv(trade_shape_summary, paths$trade_shape_csv)
 g5_wfa_write_csv(trades_all, paths$trades_enriched_csv)
 g5_wfa_write_csv(state_accountability, paths$state_accountability_csv)
+g5_wfa_write_csv(selected_state_asset, paths$selected_state_asset_csv)
+g5_wfa_write_csv(selected_family_state_mix, paths$selected_family_state_mix_csv)
+g5_wfa_write_csv(selected_parameter_profile, paths$selected_parameter_profile_csv)
 
 write_policy_tape <- function(selection_policy, path) {
   row <- packet_index[packet_index$window_id == audit_window_id & packet_index$selection_policy == selection_policy, , drop = FALSE]
@@ -337,11 +478,129 @@ write_state_accountability <- function(path) {
   invisible(path)
 }
 
+write_selection_state_asset_heatmap <- function(path) {
+  if (!nrow(selected_state_asset)) return(invisible(NULL))
+  aesthetic <- g5_chart_aesthetic()
+  policies <- c("asset_state_direct_spec", "pooled_family_asset_variant")
+  symbols <- c("AMD", "NVDA", "TSLA", "AAPL", "MSTR")
+  symbols <- symbols[symbols %in% unique(selected_state_asset$symbol)]
+  states <- sort(unique(as.character(selected_state_asset$state_id)))
+  grDevices::png(path, width = 3000L, height = 1500L, res = 180L)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(1, 2), mar = c(6, 6.5, 4, 1), oma = c(0, 0, 3, 0))
+  for (policy in policies) {
+    x <- selected_state_asset[selected_state_asset$selection_policy == policy, , drop = FALSE]
+    graphics::plot(NA, xlim = c(0.5, length(states) + 0.5), ylim = c(0.5, length(symbols) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = paste(policy_label(policy), "policy"), col.main = aesthetic$text, fg = aesthetic$axis)
+    graphics::rect(0.5, 0.5, length(states) + 0.5, length(symbols) + 0.5, col = aesthetic$panel_background, border = NA)
+    for (r in seq_along(symbols)) {
+      for (c in seq_along(states)) {
+        cell <- x[x$symbol == symbols[[r]] & x$state_id == states[[c]], , drop = FALSE]
+        y <- length(symbols) - r + 1
+        fill <- if (nrow(cell)) family_palette(cell$dominant_family[[1L]]) else "#F5F7FA"
+        graphics::rect(c - 0.5, y - 0.5, c + 0.5, y + 0.5, col = fill, border = aesthetic$grid)
+        if (nrow(cell)) {
+          lab <- paste0(cell$dominant_family_label[[1L]], "\n", cell$dominant_family_count[[1L]], "/", cell$selected_rows[[1L]])
+          graphics::text(c, y, labels = lab, cex = 0.58, col = if (identical(cell$dominant_family[[1L]], "no_trade")) aesthetic$text else "white", font = 2)
+        }
+      }
+    }
+    graphics::axis(1, at = seq_along(states), labels = states, las = 2, cex.axis = 0.72, col.axis = aesthetic$axis)
+    graphics::axis(2, at = rev(seq_along(symbols)), labels = symbols, las = 1, cex.axis = 0.85, col.axis = aesthetic$axis)
+  }
+  graphics::mtext("Dominant selected strategy family by asset/state across frozen authority quarters. Labels show family and count/quarters.", side = 3, outer = TRUE, line = 0.8, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
+write_selection_family_state_mix <- function(path) {
+  if (!nrow(selected_family_state_mix)) return(invisible(NULL))
+  aesthetic <- g5_chart_aesthetic()
+  policies <- c("asset_state_direct_spec", "pooled_family_asset_variant")
+  states <- sort(unique(as.character(selected_family_state_mix$state_id)))
+  families <- c(
+    "no_trade", "ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion",
+    "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout",
+    "donchian_breakout_vol_expand"
+  )
+  families <- families[families %in% unique(as.character(selected_family_state_mix$strategy_family))]
+  max_count <- max(selected_family_state_mix$selected_count, na.rm = TRUE)
+  if (!is.finite(max_count) || max_count <= 0) max_count <- 1
+  grDevices::png(path, width = 3000L, height = 1800L, res = 180L)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(1, 2), mar = c(6, 10, 4, 1), oma = c(0, 0, 3, 0))
+  for (policy in policies) {
+    x <- selected_family_state_mix[selected_family_state_mix$selection_policy == policy, , drop = FALSE]
+    graphics::plot(NA, xlim = c(0.5, length(states) + 0.5), ylim = c(0.5, length(families) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = paste(policy_label(policy), "policy"), col.main = aesthetic$text, fg = aesthetic$axis)
+    graphics::rect(0.5, 0.5, length(states) + 0.5, length(families) + 0.5, col = aesthetic$panel_background, border = NA)
+    for (r in seq_along(families)) {
+      for (c in seq_along(states)) {
+        cell <- x[x$strategy_family == families[[r]] & x$state_id == states[[c]], , drop = FALSE]
+        count <- if (nrow(cell)) as.numeric(cell$selected_count[[1L]]) else 0
+        alpha <- if (count > 0) 0.18 + 0.78 * count / max_count else 0.04
+        y <- length(families) - r + 1
+        graphics::rect(c - 0.5, y - 0.5, c + 0.5, y + 0.5, col = grDevices::adjustcolor(family_palette(families[[r]]), alpha.f = alpha), border = aesthetic$grid)
+        if (count > 0) graphics::text(c, y, labels = count, cex = 0.64, col = aesthetic$text, font = 2)
+      }
+    }
+    graphics::axis(1, at = seq_along(states), labels = states, las = 2, cex.axis = 0.72, col.axis = aesthetic$axis)
+    graphics::axis(2, at = rev(seq_along(families)), labels = family_abbrev(families), las = 1, cex.axis = 0.78, col.axis = aesthetic$axis)
+  }
+  graphics::mtext("Selected-family count by state. This shows whether states consistently prefer no-trade, trend, breakout, or mean-reversion families.", side = 3, outer = TRUE, line = 0.8, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
+write_selection_parameter_profile <- function(path) {
+  if (!nrow(selected_parameter_profile)) return(invisible(NULL))
+  aesthetic <- g5_chart_aesthetic()
+  policies <- c("asset_state_direct_spec", "pooled_family_asset_variant")
+  symbols <- c("AMD", "NVDA", "TSLA", "AAPL", "MSTR")
+  symbols <- symbols[symbols %in% unique(selected_parameter_profile$symbol)]
+  families <- unique(as.character(selected_parameter_profile$strategy_family))
+  families <- setdiff(families, "no_trade")
+  family_order <- c("ema_cross", "ema_trend", "bollinger_touch", "bollinger_mid_reversion", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "donchian_breakout_vol_expand")
+  families <- family_order[family_order %in% families]
+  max_count <- max(selected_parameter_profile$selected_count, na.rm = TRUE)
+  if (!is.finite(max_count) || max_count <= 0) max_count <- 1
+  grDevices::png(path, width = 3000L, height = 1900L, res = 180L)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(bg = aesthetic$background, mfrow = c(1, 2), mar = c(6, 9.5, 4, 1), oma = c(0, 0, 3, 0))
+  for (policy in policies) {
+    x <- selected_parameter_profile[selected_parameter_profile$selection_policy == policy, , drop = FALSE]
+    graphics::plot(NA, xlim = c(0.5, length(symbols) + 0.5), ylim = c(0.5, length(families) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = paste(policy_label(policy), "policy"), col.main = aesthetic$text, fg = aesthetic$axis)
+    graphics::rect(0.5, 0.5, length(symbols) + 0.5, length(families) + 0.5, col = aesthetic$panel_background, border = NA)
+    for (r in seq_along(families)) {
+      for (c in seq_along(symbols)) {
+        cell <- x[x$strategy_family == families[[r]] & x$symbol == symbols[[c]], , drop = FALSE]
+        y <- length(families) - r + 1
+        if (nrow(cell)) {
+          alpha <- 0.16 + 0.80 * as.numeric(cell$selected_count[[1L]]) / max_count
+          fill <- grDevices::adjustcolor(family_palette(families[[r]]), alpha.f = alpha)
+          lab <- paste0(cell$dominant_parameter_label[[1L]], "\n", cell$selected_count[[1L]], " picks")
+        } else {
+          fill <- "#F5F7FA"
+          lab <- ""
+        }
+        graphics::rect(c - 0.5, y - 0.5, c + 0.5, y + 0.5, col = fill, border = aesthetic$grid)
+        if (nzchar(lab)) graphics::text(c, y, labels = lab, cex = 0.44, col = aesthetic$text)
+      }
+    }
+    graphics::axis(1, at = seq_along(symbols), labels = symbols, las = 1, cex.axis = 0.82, col.axis = aesthetic$axis)
+    graphics::axis(2, at = rev(seq_along(families)), labels = family_abbrev(families), las = 1, cex.axis = 0.78, col.axis = aesthetic$axis)
+  }
+  graphics::mtext("Dominant selected parameter profile by asset/family across frozen authority quarters. Labels are compact parameter digests plus pick counts.", side = 3, outer = TRUE, line = 0.8, font = 2, col = aesthetic$text)
+  invisible(path)
+}
+
 write_policy_tape("asset_state_direct_spec", paths$direct_tape_png)
 write_policy_tape("pooled_family_asset_variant", paths$pooled_tape_png)
 write_missed_flat_heatmap(paths$missed_flat_heatmap_png)
 write_trade_duration_scatter(paths$trade_duration_scatter_png)
 write_state_accountability(paths$state_accountability_png)
+write_selection_state_asset_heatmap(paths$selection_state_asset_heatmap_png)
+write_selection_family_state_mix(paths$selection_family_state_mix_png)
+write_selection_parameter_profile(paths$selection_parameter_profile_png)
 
 direct_2020 <- exposure_summary[exposure_summary$window_id == audit_window_id & exposure_summary$selection_policy == "asset_state_direct_spec", , drop = FALSE]
 pooled_2020 <- exposure_summary[exposure_summary$window_id == audit_window_id & exposure_summary$selection_policy == "pooled_family_asset_variant", , drop = FALSE]
@@ -372,11 +631,17 @@ lines <- c(
   paste0("- Exposure/participation CSV: `", paths$exposure_summary_csv, "`"),
   paste0("- Trade shape CSV: `", paths$trade_shape_csv, "`"),
   paste0("- State accountability CSV: `", paths$state_accountability_csv, "`"),
+  paste0("- Selection state/asset CSV: `", paths$selected_state_asset_csv, "`"),
+  paste0("- Selection family/state mix CSV: `", paths$selected_family_state_mix_csv, "`"),
+  paste0("- Selection parameter profile CSV: `", paths$selected_parameter_profile_csv, "`"),
   paste0("- Direct tape PNG: `", paths$direct_tape_png, "`"),
   paste0("- Pooled tape PNG: `", paths$pooled_tape_png, "`"),
   paste0("- Missed-flat heatmap: `", paths$missed_flat_heatmap_png, "`"),
   paste0("- Trade duration scatter: `", paths$trade_duration_scatter_png, "`"),
-  paste0("- State accountability heatmap: `", paths$state_accountability_png, "`")
+  paste0("- State accountability heatmap: `", paths$state_accountability_png, "`"),
+  paste0("- Selection state/asset heatmap: `", paths$selection_state_asset_heatmap_png, "`"),
+  paste0("- Selection family/state mix heatmap: `", paths$selection_family_state_mix_png, "`"),
+  paste0("- Selection parameter profile heatmap: `", paths$selection_parameter_profile_png, "`")
 )
 writeLines(lines, paths$report_md, useBytes = TRUE)
 

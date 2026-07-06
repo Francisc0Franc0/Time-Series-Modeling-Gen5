@@ -97,6 +97,7 @@ Key artifacts:
 - Benchmark visuals: `runs/research_workbench/selpol_context/selpol_context_20260703/benchmark_visuals/`
 - Performance audit: `runs/research_workbench/selpol_context/selpol_context_20260703/performance_audit/HB_broad_risk_no_vxx/`
 - Slide deck: `presentations/gen5_selection_policy_context_philosophy_screen.pptx`
+- Updated audit-copy deck, written while the canonical PPTX was locked: `presentations/gen5_selection_policy_context_philosophy_screen_audit_update.pptx`
 - Deck builder: `scripts/inspect/build_selection_policy_context_philosophy_presentation.mjs`
 - Benchmark builder: `scripts/inspect/build_selection_policy_context_benchmark_visuals.R`
 - Performance audit builder: `scripts/inspect/build_selection_policy_context_performance_audit.R`
@@ -109,6 +110,7 @@ Initial readout, still inspection only:
 - Selection maps are related but not interchangeable. Across all frozen state/asset rows, family-match rates were `57.0%`-`64.6%` for high-beta contexts and `54.3%`-`59.1%` for ETF contexts.
 - A local benchmark pass now compares each strategy replay proxy against equal-weight buy-and-hold of the same live basket over the same replay dates. This is a useful alpha lens, not accepted allocation evidence. It showed every lane with negative mean excess return versus basket hold. Best mean excess was still negative for high beta (`HB / matched / pooled`, `-13.7 pp`, `1/6` beat windows) and ETF/sector (`ETF / broad risk / pooled`, `-6.4 pp`, `2/6` beat windows).
 - A focused performance audit of `HB_broad_risk_no_vxx` adds trade tapes, exposure/participation heatmaps, trade-duration scatter, and state-accountability visuals. In the 2020Q3 high-upside stress window, direct had `13` wins / `3` losses and pooled had `15` wins / `2` losses, but mean exposure was only `35.5%` direct and `48.3%` pooled. This suggests the main failure mode was under-participation in strong basket upside, not simply catastrophic trade picking.
+- The audit now also includes selected-authority heatmaps for `HB_broad_risk_no_vxx`: dominant strategy family by asset/state, selected-family count by state, and dominant parameter profile by asset/family. The main sanity-check readout is that no-trade remains a dominant authority in many state/asset cells, pooled-family compresses the menu toward pullback/RSI/EMA families, and direct-spec keeps more idiosyncratic candidate families alive. This supports the idea that the two policies are behaviorally different, not just cosmetically different.
 - Do not crown a final policy or context. The main finding is that selection policy, basket archetype, context philosophy, and benchmark-relative participation interact enough to keep all four explicit in the next research gate. Recommended narrow next slice: add alpha diagnostics before expanding the factorial again. Separate exposure, upside participation, downside avoidance, state accountability, and selection-policy effects.
 
 The newest operator surface is:

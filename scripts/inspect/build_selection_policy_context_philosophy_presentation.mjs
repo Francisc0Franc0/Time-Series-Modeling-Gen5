@@ -10,7 +10,9 @@ const { Presentation, PresentationFile } = await import(pathToFileURL(artifactMo
 
 const runRoot = path.join(repoRoot, "runs", "research_workbench", "selpol_context", "selpol_context_20260703");
 const presentationDir = path.join(repoRoot, "presentations");
-const finalPptx = path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen.pptx");
+const finalPptx =
+  process.env.GEN5_CONTEXT_PHILOSOPHY_PPTX_OUT ||
+  path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen.pptx");
 const inspectPath = path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen.pptx.inspect.ndjson");
 const montagePath = path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen_montage.webp");
 const slidePreviewDir = path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen_slides");
@@ -250,6 +252,9 @@ const auditPaths = {
   missedFlatHeatmap: path.join(auditDir, "performance_audit_missed_flat_heatmap.png"),
   tradeDurationScatter: path.join(auditDir, "performance_audit_trade_duration_scatter.png"),
   stateAccountability: path.join(auditDir, "performance_audit_state_accountability.png"),
+  selectionStateAsset: path.join(auditDir, "performance_audit_selection_state_asset_heatmap.png"),
+  selectionFamilyStateMix: path.join(auditDir, "performance_audit_selection_family_state_mix.png"),
+  selectionParameterProfile: path.join(auditDir, "performance_audit_selection_parameter_profile.png"),
 };
 const auditExposure = await readCsv(path.join(auditDir, "performance_audit_exposure_participation.csv"));
 const auditTradeShape = await readCsv(path.join(auditDir, "performance_audit_trade_shape.csv"));
@@ -551,6 +556,30 @@ for (const screenId of screenIds) {
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
+  addTitle(slide, "Selection Maps Show Where Authority Concentrated");
+  await addImage(slide, auditPaths.selectionStateAsset, 52, 194, 1176, 410, "Dominant selected strategy family by state and asset", "contain");
+  addText(slide, "Each cell shows the dominant selected family for one asset/state across frozen authority quarters. The gray no-trade cells are not noise: they show that many regimes still selected cash often enough to become the dominant authority. Pooled-family looks more coherent around pullback, RSI, and EMA choices; direct-spec uses a more idiosyncratic mix.", 76, 626, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Pooled-Family Narrows The Family Menu");
+  await addImage(slide, auditPaths.selectionFamilyStateMix, 52, 194, 1176, 410, "Selected family counts by state", "contain");
+  addText(slide, "The state/family mix makes the architectural fork visible. Direct-spec keeps more candidate families alive inside the same state space, including z-return and Bollinger-mid variants. Pooled-family compresses the menu after the state-level family vote, which may improve coherence but can also remove useful asset-specific exceptions.", 76, 626, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Parameter Choices Remain Asset-Specific");
+  await addImage(slide, auditPaths.selectionParameterProfile, 52, 194, 1176, 410, "Dominant selected parameter profile by asset and family", "contain");
+  addText(slide, "This is a sanity check on the second selection layer. The system is not simply applying one universal parameter set everywhere: dominant parameters differ by asset and family, even when pooled-family first chooses the state-level family. That supports the design intent, while still leaving the alpha question open.", 76, 626, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
   addTitle(slide, "Guardrails And Next Decision");
   addBullet(slide, "All authority selection remains TRAIN-only; OOS replay consumes frozen maps.", 90, 226, 1040);
   addBullet(slide, "All context recipes omit VXX because this is long behavioral-pool PCA, not wide sensor PCA.", 90, 296, 1040);
@@ -568,9 +597,19 @@ for (const [index, slide] of presentation.slides.items.entries()) {
 const inspect = await presentation.inspect({ kind: "slide,textbox,shape,image,chart,table,layout", maxChars: 42000 });
 await fs.writeFile(inspectPath, inspect.ndjson);
 const pptx = await PresentationFile.exportPptx(presentation);
-await pptx.save(finalPptx);
+let savedPptx = finalPptx;
+try {
+  await pptx.save(finalPptx);
+} catch (error) {
+  if (error && error.code === "EBUSY") {
+    savedPptx = path.join(presentationDir, "gen5_selection_policy_context_philosophy_screen_audit_update.pptx");
+    await pptx.save(savedPptx);
+  } else {
+    throw error;
+  }
+}
 
-console.log(`Wrote ${finalPptx}`);
+console.log(`Wrote ${savedPptx}`);
 console.log(`Wrote ${inspectPath}`);
 console.log(`Wrote ${montagePath}`);
 console.log(`Wrote slide previews to ${slidePreviewDir}`);
