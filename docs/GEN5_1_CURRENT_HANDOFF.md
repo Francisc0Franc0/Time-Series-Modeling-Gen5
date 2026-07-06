@@ -94,8 +94,10 @@ Key artifacts:
 - Run spec: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_run_spec.csv`
 - Portfolio proxy summary: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_portfolio_proxy_summary.csv`
 - Agreement summary: `runs/research_workbench/selpol_context/selpol_context_20260703/selection_policy_context_philosophy_agreement_summary.csv`
+- Benchmark visuals: `runs/research_workbench/selpol_context/selpol_context_20260703/benchmark_visuals/`
 - Slide deck: `presentations/gen5_selection_policy_context_philosophy_screen.pptx`
 - Deck builder: `scripts/inspect/build_selection_policy_context_philosophy_presentation.mjs`
+- Benchmark builder: `scripts/inspect/build_selection_policy_context_benchmark_visuals.R`
 
 Initial readout, still inspection only:
 
@@ -103,7 +105,8 @@ Initial readout, still inspection only:
 - High-beta matched, large-diverse, and size-matched-diverse favored pooled-family (`9.0%`, `8.5%`, `5.3%` pooled versus `2.6%`, `-1.8%`, `-2.6%` direct).
 - ETF/sector broad-risk modestly favored pooled (`7.7%` versus `6.6%`), while ETF matched, large-diverse, and size-matched-diverse favored direct or were near direct (`6.5%` vs `6.0%`, `5.3%` vs `2.7%`, `4.3%` vs `4.1%`).
 - Selection maps are related but not interchangeable. Across all frozen state/asset rows, family-match rates were `57.0%`-`64.6%` for high-beta contexts and `54.3%`-`59.1%` for ETF contexts.
-- Do not crown a final policy or context. The main finding is that selection policy, basket archetype, and context philosophy interact enough to keep all three explicit in the next research gate.
+- A local benchmark pass now compares each strategy replay proxy against equal-weight buy-and-hold of the same live basket over the same replay dates. This is a useful alpha lens, not accepted allocation evidence. It showed every lane with negative mean excess return versus basket hold. Best mean excess was still negative for high beta (`HB / matched / pooled`, `-13.7 pp`, `1/6` beat windows) and ETF/sector (`ETF / broad risk / pooled`, `-6.4 pp`, `2/6` beat windows).
+- Do not crown a final policy or context. The main finding is that selection policy, basket archetype, context philosophy, and benchmark-relative participation interact enough to keep all four explicit in the next research gate. Recommended narrow next slice: add alpha diagnostics before expanding the factorial again. Separate cash drag, upside participation, downside avoidance, and selection-policy effects.
 
 The newest operator surface is:
 

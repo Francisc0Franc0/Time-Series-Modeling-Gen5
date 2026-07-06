@@ -67,6 +67,12 @@ function pct(value, digits = 1) {
   return `${(n * 100).toFixed(digits)}%`;
 }
 
+function pp(value, digits = 1) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "";
+  return `${(n * 100).toFixed(digits)} pp`;
+}
+
 function screenLabel(id) {
   return {
     HB_broad_risk_no_vxx: "HB / broad risk",
@@ -93,6 +99,13 @@ function contextLabel(id) {
     archetype_matched_no_vxx: "Archetype matched",
     diverse_behavior_no_vxx: "Large diverse",
     size_matched_diverse_no_vxx: "Size-matched diverse",
+  }[id] || id;
+}
+
+function policyLabel(id) {
+  return {
+    asset_state_direct_spec: "Direct",
+    pooled_family_asset_variant: "Pooled",
   }[id] || id;
 }
 
@@ -224,6 +237,12 @@ function summarizeScreen(rows, screenId) {
 const runSpec = await readCsv(path.join(runRoot, "selection_policy_context_philosophy_run_spec.csv"));
 const portfolio = await readCsv(path.join(runRoot, "selection_policy_context_philosophy_portfolio_proxy_summary.csv"));
 const agreement = await readCsv(path.join(runRoot, "selection_policy_context_philosophy_agreement_summary.csv"));
+const benchmarkScorecard = await readCsv(path.join(runRoot, "benchmark_visuals", "selection_policy_context_benchmark_scorecard.csv"));
+const benchmarkPaths = {
+  highBetaHeatmap: path.join(runRoot, "benchmark_visuals", "selection_policy_context_alpha_heatmap_high_beta.png"),
+  etfHeatmap: path.join(runRoot, "benchmark_visuals", "selection_policy_context_alpha_heatmap_etf.png"),
+  scorecard: path.join(runRoot, "benchmark_visuals", "selection_policy_context_alpha_scorecard.png"),
+};
 const screenIds = [
   "HB_broad_risk_no_vxx",
   "HB_archetype_matched_no_vxx",
@@ -235,6 +254,19 @@ const screenIds = [
   "ETF_size_matched_diverse_no_vxx",
 ];
 const screenSummaries = Object.fromEntries(screenIds.map((id) => [id, summarizeScreen(portfolio, id)]));
+const benchmarkBestRows = ["long_history_high_beta_growth", "etf_sector_tradeable_proxy"].map((basketId) => {
+  const rows = benchmarkScorecard
+    .filter((r) => r.basket_archetype === basketId)
+    .sort((a, b) => Number(b.mean_excess_return) - Number(a.mean_excess_return));
+  const best = rows[0] || {};
+  return [
+    basketId === "long_history_high_beta_growth" ? "High-beta" : "ETF/sector",
+    screenLabel(best.screen_id),
+    policyLabel(best.selection_policy),
+    pp(best.mean_excess_return),
+    `${best.beat_windows || ""}/${best.windows || ""}`,
+  ];
+});
 
 await fs.mkdir(presentationDir, { recursive: true });
 await fs.mkdir(slidePreviewDir, { recursive: true });
@@ -402,11 +434,56 @@ for (const screenId of screenIds) {
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
+  addTitle(slide, "Benchmark Reframes This As Alpha");
+  addBullet(slide, "The raw replay proxy asks whether a policy made money. The benchmark lens asks the harder question: did it beat simply holding the same live basket?", 84, 218, 1040);
+  addBullet(slide, "Benchmark definition: equal capital into the same basket symbols, buy-and-hold from the first replay date to the last replay date in each policy packet.", 84, 300, 1040);
+  addBullet(slide, "This uses existing bridge replay artifacts only. No new data pull, no authority rerun, and no OOS information is fed back into TRAIN selection.", 84, 382, 1040);
+  addBullet(slide, "Readout: positive strategy returns are not automatically alpha. Strong upside windows can make the basket hold benchmark difficult to beat.", 84, 464, 1040);
+  addSimpleTable(
+    slide,
+    ["Basket", "Best lane by mean excess", "Policy", "Mean excess", "Beat windows"],
+    benchmarkBestRows,
+    92,
+    560,
+    [140, 330, 120, 150, 150],
+    38,
+    12
+  );
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "High-Beta Alpha Was Mostly Negative");
+  await addImage(slide, benchmarkPaths.highBetaHeatmap, 60, 196, 1160, 410, "High-beta benchmark excess heatmap", "contain");
+  addText(slide, "Each cell is strategy replay proxy minus equal-weight buy-and-hold of AMD,NVDA,TSLA,AAPL,MSTR over the same replay interval. Green beat the basket hold; red lagged it.", 86, 632, 1080, 38, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "ETF Alpha Was Cleaner But Still Uneven");
+  await addImage(slide, benchmarkPaths.etfHeatmap, 60, 196, 1160, 410, "ETF benchmark excess heatmap", "contain");
+  addText(slide, "The ETF/sector basket had smaller benchmark gaps than high beta, but the alpha evidence is still inconsistent. Several lanes made money while still failing to beat equal-weight hold.", 86, 632, 1080, 38, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Scorecard: Participation Is The Problem");
+  await addImage(slide, benchmarkPaths.scorecard, 36, 196, 1210, 414, "Benchmark alpha scorecard", "contain");
+  addText(slide, "Across this screen, every lane had negative mean excess return versus equal-weight basket hold. The next narrow slice should diagnose whether the strategy is too often flat during bull regimes, selecting weak specs, or avoiding enough downside to justify the cash drag.", 76, 628, 1120, 48, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
   addTitle(slide, "Guardrails And Next Decision");
   addBullet(slide, "All authority selection remains TRAIN-only; OOS replay consumes frozen maps.", 90, 226, 1040);
   addBullet(slide, "All context recipes omit VXX because this is long behavioral-pool PCA, not wide sensor PCA.", 90, 296, 1040);
   addBullet(slide, "This deck compares inspection proxies, not accepted allocation evidence or live trading authority.", 90, 366, 1040);
-  addBullet(slide, "Next decision: decide whether broad risk, archetype-matched, large diverse, or size-matched diverse context deserves the next narrower portfolio-accounting inspection.", 90, 456, 1040);
+  addBullet(slide, "Benchmark lens: equal-weight basket hold is a local alpha benchmark, not an allocation approval threshold or final objective function.", 90, 436, 1040);
+  addBullet(slide, "Next decision: run a narrow alpha-diagnostic slice before adding more factorial breadth. Separate cash drag, upside participation, downside avoidance, and selection-policy effects.", 90, 526, 1040);
 }
 
 const montage = await presentation.export({ format: "webp", montage: true, scale: 1 });
