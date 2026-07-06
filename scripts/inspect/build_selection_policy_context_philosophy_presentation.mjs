@@ -243,6 +243,16 @@ const benchmarkPaths = {
   etfHeatmap: path.join(runRoot, "benchmark_visuals", "selection_policy_context_alpha_heatmap_etf.png"),
   scorecard: path.join(runRoot, "benchmark_visuals", "selection_policy_context_alpha_scorecard.png"),
 };
+const auditDir = path.join(runRoot, "performance_audit", "HB_broad_risk_no_vxx");
+const auditPaths = {
+  directTape: path.join(auditDir, "performance_audit_tape_2020Q3_direct.png"),
+  pooledTape: path.join(auditDir, "performance_audit_tape_2020Q3_pooled.png"),
+  missedFlatHeatmap: path.join(auditDir, "performance_audit_missed_flat_heatmap.png"),
+  tradeDurationScatter: path.join(auditDir, "performance_audit_trade_duration_scatter.png"),
+  stateAccountability: path.join(auditDir, "performance_audit_state_accountability.png"),
+};
+const auditExposure = await readCsv(path.join(auditDir, "performance_audit_exposure_participation.csv"));
+const auditTradeShape = await readCsv(path.join(auditDir, "performance_audit_trade_shape.csv"));
 const screenIds = [
   "HB_broad_risk_no_vxx",
   "HB_archetype_matched_no_vxx",
@@ -254,6 +264,11 @@ const screenIds = [
   "ETF_size_matched_diverse_no_vxx",
 ];
 const screenSummaries = Object.fromEntries(screenIds.map((id) => [id, summarizeScreen(portfolio, id)]));
+function meanNumber(rows, field) {
+  const vals = rows.map((r) => Number(r[field])).filter(Number.isFinite);
+  if (!vals.length) return NaN;
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
+}
 const benchmarkBestRows = ["long_history_high_beta_growth", "etf_sector_tradeable_proxy"].map((basketId) => {
   const rows = benchmarkScorecard
     .filter((r) => r.basket_archetype === basketId)
@@ -267,6 +282,9 @@ const benchmarkBestRows = ["long_history_high_beta_growth", "etf_sector_tradeabl
     `${best.beat_windows || ""}/${best.windows || ""}`,
   ];
 });
+const audit2020Direct = auditExposure.filter((r) => r.window_id === "2020Q3_asof_20200930" && r.selection_policy === "asset_state_direct_spec");
+const audit2020Pooled = auditExposure.filter((r) => r.window_id === "2020Q3_asof_20200930" && r.selection_policy === "pooled_family_asset_variant");
+const audit2020TradeRows = auditTradeShape.filter((r) => r.window_id === "2020Q3_asof_20200930");
 
 await fs.mkdir(presentationDir, { recursive: true });
 await fs.mkdir(slidePreviewDir, { recursive: true });
@@ -478,12 +496,67 @@ for (const screenId of screenIds) {
 {
   const slide = presentation.slides.add();
   slide.background.fill = "white";
+  addTitle(slide, "Performance Audit Looks Inside One Lane");
+  addBullet(slide, "The benchmark view says the strategy lagged the local hold benchmark. The audit asks what the model was actually doing while that happened.", 84, 212, 1040);
+  addBullet(slide, "Focus lane: high-beta basket with broad risk context, because it is closest in spirit to the temporary live bridge's high-beta plus market-risk setup.", 84, 292, 1040);
+  addBullet(slide, "Scope: both direct-spec and pooled-family policies, all six windows, with the 2020Q3 tape highlighted because the basket itself rallied hard.", 84, 372, 1040);
+  addBullet(slide, "This is artifact-only inspection. It reads existing replay, trade, execution, and state files; it does not rerun PCA, authority selection, or WFA replay.", 84, 452, 1040);
+  addMetricCard(slide, "Direct exposure in 2020Q3", pct(meanNumber(audit2020Direct, "exposure_ratio")), `Missed-flat mean ${pp(meanNumber(audit2020Direct, "missed_flat_return"))}`, 116, 548, 300, 112);
+  addMetricCard(slide, "Pooled exposure in 2020Q3", pct(meanNumber(audit2020Pooled, "exposure_ratio")), `Missed-flat mean ${pp(meanNumber(audit2020Pooled, "missed_flat_return"))}`, 490, 548, 300, 112);
+  addMetricCard(slide, "Tape window", "2020Q3", "High-upside stress case", 864, 548, 300, 112);
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Direct Caught Pieces But Missed The Full Surge");
+  await addImage(slide, auditPaths.directTape, 270, 194, 740, 430, "Direct policy 2020Q3 trade tape", "contain");
+  const directTrade = audit2020TradeRows.find((r) => r.selection_policy === "asset_state_direct_spec") || {};
+  addText(slide, `Direct had ${directTrade.win_count || ""} wins and ${directTrade.loss_count || ""} losses in 2020Q3, so the problem was not a total trade failure. The tape shows partial participation: AMD and NVDA caught useful stretches, but AAPL was almost entirely flat and TSLA captured only part of a much larger basket move.`, 76, 632, 1120, 44, { fontSize: 16, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Pooled Found A Bigger TSLA Hold But Still Lagged");
+  await addImage(slide, auditPaths.pooledTape, 270, 194, 740, 430, "Pooled policy 2020Q3 trade tape", "contain");
+  const pooledTrade = audit2020TradeRows.find((r) => r.selection_policy === "pooled_family_asset_variant") || {};
+  addText(slide, `Pooled had ${pooledTrade.win_count || ""} wins and ${pooledTrade.loss_count || ""} losses in 2020Q3 and caught a long TSLA run. But it still lagged the basket hold because AMD/NVDA/AAPL participation was incomplete and MSTR added noisy, small-ticket behavior.`, 76, 632, 1120, 44, { fontSize: 16, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Flat Time Explains Much Of The Gap");
+  await addImage(slide, auditPaths.missedFlatHeatmap, 42, 196, 1196, 410, "Missed flat return heatmap", "contain");
+  addText(slide, "Cells show return that happened while the model was flat, plus the long-day exposure. Red is missed upside. The biggest red cells cluster in high-upside windows, especially 2020Q3, which means benchmark underperformance was often an exposure problem before it was a trade-quality problem.", 76, 626, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Trade Shape Was Mixed, Not Catastrophic");
+  await addImage(slide, auditPaths.tradeDurationScatter, 64, 198, 1150, 400, "Trade duration and return scatter", "contain");
+  addText(slide, "Most trades were short and clustered near zero, with a few long-duration outliers driving much of the story. That suggests the next alpha slice should measure whether the system needs a participation floor or trend-carry behavior, not merely a smaller loss filter.", 76, 624, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
+  addTitle(slide, "Only A Few States Added Value");
+  await addImage(slide, auditPaths.stateAccountability, 100, 198, 1080, 400, "State accountability heatmap", "contain");
+  addText(slide, "The state accountability view is narrow but useful: most states show negative mean daily excess versus holding, while S2_1 is positive in both policies. This points the next investigation toward state-level participation and family selection, rather than treating all states as equally useful.", 76, 624, 1120, 54, { fontSize: 17, color: "slate-700", bold: true });
+}
+
+{
+  const slide = presentation.slides.add();
+  slide.background.fill = "white";
   addTitle(slide, "Guardrails And Next Decision");
   addBullet(slide, "All authority selection remains TRAIN-only; OOS replay consumes frozen maps.", 90, 226, 1040);
   addBullet(slide, "All context recipes omit VXX because this is long behavioral-pool PCA, not wide sensor PCA.", 90, 296, 1040);
   addBullet(slide, "This deck compares inspection proxies, not accepted allocation evidence or live trading authority.", 90, 366, 1040);
   addBullet(slide, "Benchmark lens: equal-weight basket hold is a local alpha benchmark, not an allocation approval threshold or final objective function.", 90, 436, 1040);
-  addBullet(slide, "Next decision: run a narrow alpha-diagnostic slice before adding more factorial breadth. Separate cash drag, upside participation, downside avoidance, and selection-policy effects.", 90, 526, 1040);
+  addBullet(slide, "Next decision: run a narrow alpha-diagnostic slice before adding more factorial breadth. Separate exposure, upside participation, downside avoidance, state accountability, and selection-policy effects.", 90, 526, 1040);
 }
 
 const montage = await presentation.export({ format: "webp", montage: true, scale: 1 });
