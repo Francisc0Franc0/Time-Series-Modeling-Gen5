@@ -20,7 +20,8 @@ It is not accepted allocation evidence, not automation, and not an order-entry s
 - State map: `5x5` quantile grid
 - Candidate families: Gen4 `daily_default` implemented subset: `ema_cross`, `ema_trend`, `bollinger_touch`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `no_trade`
 - Strategy grid preset: `gen4_daily_default`
-- Resolved model grid: 172 model instances: EMA cross 14, EMA trend 11, Bollinger touch 9, RSI mean reversion 36, return-z mean reversion 18, breakout 2, pullback-in-uptrend 81, no-trade 1
+- Resolved model grid: 191 model instances: EMA cross 14, EMA trend 11, Bollinger touch 12, RSI mean reversion 36, return-z mean reversion 27, breakout 9, pullback-in-uptrend 81, no-trade 1
+- Gen4 containment note: the preset contains the active, implemented non-SMA parameter values exported by Gen4 artifact `FM-002-024-R3_med_16_bins/active_param_grid_daily_default.csv`, including Bollinger lookback 10, return-z entry 1.5, breakout lookback 10, and nonzero breakout buffers. Gen4 SMA families remain excluded here because they were inactive in the daily-default surface used for this bridge.
 - Position source: model replay with one-bar delayed next-open execution
 - Continuity source: adjacent previous-quarter replay before current-quarter replay
 - Alpaca feed used for the bridge: `iex`

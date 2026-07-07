@@ -95,11 +95,16 @@ test_that("bridge model grid defaults to the Gen4 daily_default implemented subs
   expect_false(any(c("bollinger_mid_reversion", "vol_expansion_breakout", "donchian_breakout_vol_expand") %in% families))
   expect_true("ema_cross_fast1_slow10" %in% grid$model_instance_id)
   expect_true("ema_trend_fast20_slow50" %in% grid$model_instance_id)
+  expect_true("bollinger_touch_n10_sd1p5" %in% grid$model_instance_id)
   expect_true("bollinger_touch_n14_sd1p5" %in% grid$model_instance_id)
   expect_true("rsi_mr_n21_lo35_hi75" %in% grid$model_instance_id)
+  expect_true("zret_mr_n10_ent1p5_ex0" %in% grid$model_instance_id)
   expect_true("zret_mr_n40_ent2p5_ex1" %in% grid$model_instance_id)
+  expect_true("breakout_lb10_buf0p0013" %in% grid$model_instance_id)
   expect_true("breakout_lb30_buf0" %in% grid$model_instance_id)
+  expect_true("breakout_lb30_buf0p0025" %in% grid$model_instance_id)
   expect_true("pullback_up_f15_s75_lo40_hi65" %in% grid$model_instance_id)
+  expect_equal(nrow(grid), 191L)
 })
 
 test_that("trade trace segments clip off-chart entries into the visible panel", {

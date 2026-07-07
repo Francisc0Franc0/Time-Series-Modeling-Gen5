@@ -188,10 +188,12 @@ g5_wfa_strategy_grid_preset <- function(strategy_grid_preset = "standard") {
 g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard") {
   preset <- g5_wfa_strategy_grid_preset(strategy_grid_preset)
   if (identical(preset, "gen4_daily_default")) {
+    # Contains the active, implemented non-SMA Gen4 daily_default grid exported in
+    # FM-002-024-R3_med_16_bins/active_param_grid_daily_default.csv.
     return(list(
       fast_periods = c(1L, 5L, 10L, 15L),
       slow_periods = c(10L, 20L, 30L, 50L),
-      bb_lookback_periods = c(14L, 20L, 30L),
+      bb_lookback_periods = c(10L, 14L, 20L, 30L),
       bb_sd_multipliers = c(1.5, 2.0, 2.5),
       ema_trend_fast_periods = c(5L, 10L, 15L, 20L),
       ema_trend_slow_periods = c(20L, 50L, 75L),
@@ -202,10 +204,10 @@ g5_wfa_strategy_grid_preset_values <- function(strategy_grid_preset = "standard"
       rsi_lower_thresholds = c(25, 30, 35),
       rsi_upper_thresholds = c(65, 70, 75),
       zret_windows = c(10L, 20L, 40L),
-      zret_entry_z = c(2.0, 2.5),
+      zret_entry_z = c(1.5, 2.0, 2.5),
       zret_exit_z = c(0.0, 0.5, 1.0),
-      breakout_lookbacks = c(20L, 30L),
-      breakout_buffers = c(0.0),
+      breakout_lookbacks = c(10L, 20L, 30L),
+      breakout_buffers = c(0.0, 0.0013, 0.0025),
       vol_expand_thresholds = c(0.0, 0.10, 0.20),
       pullback_fast_periods = c(5L, 10L, 15L),
       pullback_slow_periods = c(25L, 50L, 75L),
