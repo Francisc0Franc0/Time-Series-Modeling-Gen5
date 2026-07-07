@@ -225,24 +225,30 @@ async function main() {
     readCsv(files.health),
   ]);
   const runSpec = runSpecRows[0];
-  const gen5Rows = comparison.filter((r) => r.source === "Gen5.1 replay" && r.group_id === "cluster_3");
+  const symbolCount = (runSpec.symbols || "").split(",").filter(Boolean).length;
+  const quarterCount = (runSpec.replay_quarters || "").split(",").filter(Boolean).length;
+  const isFullSymbol = symbolCount >= 16;
+  const headlineGroup = comparison.some((r) => r.source === "Gen5.1 replay" && r.group_id === "live_all") ? "live_all" : "cluster_3";
+  const deckTitle = isFullSymbol ? "Gen4 Equivalence Full 16-Symbol Screen" : "Gen4 Equivalence Stage 1";
+  const headlineScope = isFullSymbol ? "Full Gen4 live/reporting universe" : "High-beta stage-1 slice";
+  const gen5Rows = comparison.filter((r) => r.source === "Gen5.1 replay" && r.group_id === headlineGroup);
   const direct = gen5Rows.find((r) => r.selection_policy === "asset_state_direct_spec");
   const pooled = gen5Rows.find((r) => r.selection_policy === "pooled_family_asset_variant");
   const gen4Cluster3 = comparison.find((r) => r.source === "Gen4 artifact" && r.group_id === "cluster_3");
   const gen4Cluster1 = comparison.find((r) => r.source === "Gen4 artifact" && r.group_id === "cluster_1");
   const warnRows = health.filter((r) => r.severity === "WARN");
-  const quarterRows = quarter.filter((r) => r.group_id === "cluster_3");
+  const quarterRows = quarter.filter((r) => r.group_id === headlineGroup);
   const directQuarter = quarterRows.filter((r) => r.selection_policy === "asset_state_direct_spec");
   const pooledQuarter = quarterRows.filter((r) => r.selection_policy === "pooled_family_asset_variant");
 
-  const presentation = await Presentation.create({ title: "Gen5.1 Gen4 Equivalence Stage 1" });
+  const presentation = await Presentation.create({ title: `Gen5.1 ${deckTitle}` });
   presentation.layout = "LAYOUT_WIDE";
 
   {
     const slide = presentation.slides.add();
     slide.background.fill = "white";
     addText(slide, "GEN5.1", 72, 54, 200, 28, { fontSize: 16, color: "teal-700", bold: true });
-    addText(slide, "Gen4 Equivalence Stage 1", 72, 108, 1000, 74, {
+    addText(slide, deckTitle, 72, 108, 1000, 74, {
       fontSize: 44,
       color: "slate-950",
       bold: true,
@@ -256,10 +262,12 @@ async function main() {
       78,
       { fontSize: 24, color: "slate-700" },
     );
-    addMetricCard(slide, "Symbols", runSpec.symbols, "High-beta stage-1 slice", 72, 332, 320);
-    addMetricCard(slide, "Windows", runSpec.replay_quarters, "Three representative OOS quarters", 424, 332, 360);
+    addMetricCard(slide, "Symbols", `${symbolCount} symbols`, headlineScope, 72, 332, 320);
+    addMetricCard(slide, "Windows", runSpec.replay_quarters, `${quarterCount} OOS quarters`, 424, 332, 360);
     addMetricCard(slide, "Grid", `${runSpec.model_grid_rows} rows`, "Gen4-picked supported specs", 816, 332, 320);
-    addText(slide, "The full Gen4 artifact remains the reference, but this deck reports a deliberately staged Gen5.1 replay, not the exhaustive all-symbol/all-quarter run.", 72, 500, 1030, 60, {
+    addText(slide, isFullSymbol
+      ? "This deck reports the full 16-symbol Gen5.1 replay for quarters where every live/reporting symbol can support the expanding TRAIN setup."
+      : "The full Gen4 artifact remains the reference, but this deck reports a deliberately staged Gen5.1 replay, not the exhaustive all-symbol/all-quarter run.", 72, 500, 1030, 60, {
       fontSize: 20,
       color: "slate-700",
     });
@@ -273,23 +281,25 @@ async function main() {
     addBullet(slide, "Recent Gen5.1 screens often produced positive tactical returns but still lagged equal-weight hold.", 92, 216, 1040);
     addBullet(slide, "Your memory of Gen4 was that an analogous long-PCA, pooled-family design beat benchmarks more decisively.", 92, 292, 1040);
     addBullet(slide, "The question became: was Gen4 genuinely doing something better, or were we comparing unlike windows, universes, grids, and reporting surfaces?", 92, 368, 1040);
-    addBullet(slide, "This stage recreates the closest implemented Gen5.1 analogue first, then names remaining gaps before spending compute on a larger screen.", 92, 466, 1040);
+    addBullet(slide, isFullSymbol
+      ? "This screen expands the staged replay to the full Gen4 live/reporting symbol breadth while keeping the same leakage-safe mechanics."
+      : "This stage recreates the closest implemented Gen5.1 analogue first, then names remaining gaps before spending compute on a larger screen.", 92, 466, 1040);
     addFooter(slide, 2);
   }
 
   {
     const slide = presentation.slides.add();
     slide.background.fill = "white";
-    addTitle(slide, "What this stage matched, and what it did not");
+    addTitle(slide, "What this screen matched, and what it did not");
     addSimpleTable(
       slide,
-      ["Dimension", "Stage-1 choice", "Why it matters"],
+      ["Dimension", "Screen choice", "Why it matters"],
       [
         ["Context", "Gen4 RESEARCH_ASSETS analogue", "Tests the broad Gen4-like PCA context."],
         ["PCA/state", "Long pooled PCA + 4x4 quantile grid", "Matches the conceptual Gen4 surface."],
         ["Selection", "Direct-spec and pooled-family", "Compares current Gen5.1 against Gen4-style selection."],
-        ["Grid", "80 Gen4-picked supported specs", "Avoids full unused-grid compute while preserving picked RSI/z-ret specs."],
-        ["Scope", "AMD, NVDA, TSLA; 2020Q4, 2022Q2, 2024Q4", "A staged high-beta slice, not the whole Gen4 packet."],
+        ["Grid", `${runSpec.model_grid_rows} Gen4-picked supported specs`, "Avoids full unused-grid compute while preserving picked RSI/z-ret specs."],
+        ["Scope", `${symbolCount} symbols; ${runSpec.replay_quarters}`, isFullSymbol ? "Full symbol breadth, later feasible windows." : "A staged high-beta slice, not the whole Gen4 packet."],
       ],
       72,
       210,
@@ -307,12 +317,14 @@ async function main() {
   {
     const slide = presentation.slides.add();
     slide.background.fill = "white";
-    addTitle(slide, "Stage 1 beat its internal benchmark, especially direct-spec");
+    addTitle(slide, isFullSymbol ? "Full-symbol replay beat benchmark most clearly under direct-spec" : "Stage 1 beat its internal benchmark, especially direct-spec");
     addMetricCard(slide, "Direct-spec return", pct(direct.strategy_return), `${pp(direct.alpha_vs_benchmark)} vs benchmark`, 74, 210, 310);
     addMetricCard(slide, "Pooled-family return", pct(pooled.strategy_return), `${pp(pooled.alpha_vs_benchmark)} vs benchmark`, 414, 210, 310);
-    addMetricCard(slide, "Equal-weight hold", pct(direct.benchmark_return), "Same three symbols/windows", 754, 210, 310);
+    addMetricCard(slide, "Equal-weight hold", pct(direct.benchmark_return), `Same ${headlineGroup} slice`, 754, 210, 310);
     await addImage(slide, files.alphaScorecard, 80, 360, 1040, 250, "Benchmark-relative alpha scorecard");
-    addText(slide, "Interpretation: the staged Gen5.1 lane is not failing catastrophically. But direct-spec was stronger than pooled-family in this slice, which keeps the selection-policy question alive.", 86, 624, 1040, 44, {
+    addText(slide, isFullSymbol
+      ? "Interpretation: expanding to the full feasible symbol set did not erase the tactical edge versus local hold. Direct-spec remained the stronger Gen5.1 policy in this packet."
+      : "Interpretation: the staged Gen5.1 lane is not failing catastrophically. But direct-spec was stronger than pooled-family in this slice, which keeps the selection-policy question alive.", 86, 624, 1040, 44, {
       fontSize: 17,
       color: "slate-700",
     });
@@ -337,7 +349,9 @@ async function main() {
       36,
       12,
     );
-    addText(slide, "The important pattern is not just total return. The stage included a bullish quarter, a drawdown quarter, and a recent high-beta quarter, and the policies behaved differently across them.", 690, 526, 450, 100, {
+    addText(slide, isFullSymbol
+      ? "The important pattern is not just total return. In 2022Q2 both policies protected capital versus local hold; in 2024Q4 both lagged the upside move."
+      : "The important pattern is not just total return. The stage included a bullish quarter, a drawdown quarter, and a recent high-beta quarter, and the policies behaved differently across them.", 690, 526, 450, 100, {
       fontSize: 17,
       color: "slate-700",
     });
@@ -362,7 +376,7 @@ async function main() {
       38,
       12,
     );
-    addText(slide, "Because stage 1 reconstructs picked Gen4 specs but lets Gen5.1 reselect by state and asset, family mix is evidence about selection behavior, not just parameter availability.", 864, 504, 310, 88, {
+    addText(slide, "Because this screen reconstructs picked Gen4 specs but lets Gen5.1 reselect by state and asset, family mix is evidence about selection behavior, not just parameter availability.", 864, 504, 310, 88, {
       fontSize: 17,
       color: "slate-700",
     });
@@ -372,12 +386,14 @@ async function main() {
   {
     const slide = presentation.slides.add();
     slide.background.fill = "white";
-    addTitle(slide, "Do not overcompare the staged run to the full Gen4 artifact");
+    addTitle(slide, isFullSymbol ? "Do not overcompare this feasible slice to the full Gen4 artifact" : "Do not overcompare the staged run to the full Gen4 artifact");
     addMetricCard(slide, "Gen4 cluster 3", pct(gen4Cluster3.strategy_return), `${pp(gen4Cluster3.alpha_vs_benchmark)} vs its benchmark`, 76, 216, 330);
     addMetricCard(slide, "Gen4 cluster 1", pct(gen4Cluster1.strategy_return), `${pp(gen4Cluster1.alpha_vs_benchmark)} vs its benchmark`, 442, 216, 330);
-    addMetricCard(slide, "Stage-1 direct", pct(direct.strategy_return), `${pp(direct.alpha_vs_benchmark)} in staged slice`, 808, 216, 330);
+    addMetricCard(slide, isFullSymbol ? "Full-symbol direct" : "Stage-1 direct", pct(direct.strategy_return), `${pp(direct.alpha_vs_benchmark)} in this Gen5.1 slice`, 808, 216, 330);
     await addImage(slide, files.equityOverlay, 86, 370, 1010, 230, "Gen4 artifact versus Gen5 equity overlay");
-    addText(slide, "The Gen4 artifact spans a fuller universe and more quarters. Stage 1 says the Gen5.1 reconstruction can produce benchmark-relative alpha in selected high-beta windows; it does not yet explain the full Gen4 advantage.", 92, 624, 1040, 44, {
+    addText(slide, isFullSymbol
+      ? "The Gen4 artifact still spans more historical quarters and includes SMA/volatility semantics that Gen5.1 does not fully implement. This full-symbol slice narrows the setup gap, but it does not reproduce the entire Gen4 packet."
+      : "The Gen4 artifact spans a fuller universe and more quarters. Stage 1 says the Gen5.1 reconstruction can produce benchmark-relative alpha in selected high-beta windows; it does not yet explain the full Gen4 advantage.", 92, 624, 1040, 44, {
       fontSize: 17,
       color: "slate-700",
     });
@@ -388,9 +404,15 @@ async function main() {
     const slide = presentation.slides.add();
     slide.background.fill = "white";
     addTitle(slide, "Recommended next decision");
-    addBullet(slide, "Keep this as a staged positive signal, not a final answer: direct-spec was stronger here, but the Gen4-style pooled-family hypothesis is not dead.", 92, 220, 1040);
-    addBullet(slide, "Next narrow slice: expand this exact corrected grid to all Gen4 high-beta cluster symbols across a larger annual-quarter ladder before touching SMA or full 16-symbol breadth.", 92, 318, 1040);
-    addBullet(slide, "Only after that should we decide whether SMA families or exact Gen4 volatility-breakout semantics are worth implementing as true equivalence gaps.", 92, 416, 1040);
+    addBullet(slide, isFullSymbol
+      ? "Keep this as stronger forensic evidence, not a final equivalence answer: direct-spec beat local hold on the full feasible symbol set, while pooled-family was weaker but still positive versus local hold overall."
+      : "Keep this as a staged positive signal, not a final answer: direct-spec was stronger here, but the Gen4-style pooled-family hypothesis is not dead.", 92, 220, 1040);
+    addBullet(slide, isFullSymbol
+      ? "Next decision: either run more later full-symbol quarters, or implement the remaining Gen4 semantic gaps only if the operator wants a stricter one-to-one reproduction."
+      : "Next narrow slice: expand this exact corrected grid to all Gen4 high-beta cluster symbols across a larger annual-quarter ladder before touching SMA or full 16-symbol breadth.", 92, 318, 1040);
+    addBullet(slide, isFullSymbol
+      ? "The key unresolved question is no longer symbol breadth; it is whether the remaining Gen4-only semantics explain the residual gap to the full artifact."
+      : "Only after that should we decide whether SMA families or exact Gen4 volatility-breakout semantics are worth implementing as true equivalence gaps.", 92, 416, 1040);
     addBullet(slide, `Data note: query health includes ${warnRows.length} WARN rows for PLTR/SOFI partial history in the broad context universe; that is expected listing-history behavior and should remain visible in reports.`, 92, 514, 1040);
     addFooter(slide, 8);
   }

@@ -210,6 +210,28 @@ read_full_authority_packet <- function(authority_dir) {
   authority
 }
 
+cached_authority_matches_settings <- function(authority_dir, settings) {
+  contract_path <- file.path(authority_dir, "bridge_authority_contract.csv")
+  selected_path <- file.path(authority_dir, "bridge_selected_states.csv")
+  perf_path <- file.path(authority_dir, "bridge_train_state_performance.csv")
+  if (!file.exists(contract_path) || !file.exists(selected_path) || !file.exists(perf_path)) {
+    return(FALSE)
+  }
+  contract <- utils::read.csv(contract_path, stringsAsFactors = FALSE)
+  if (!nrow(contract)) return(FALSE)
+  cached_symbols <- g5_standardize_symbol(strsplit(as.character(contract$symbols[[1L]]), ",", fixed = TRUE)[[1L]])
+  requested_symbols <- g5_standardize_symbol(settings$symbols)
+  cached_context <- g5_standardize_symbol(strsplit(as.character(contract$context_symbols[[1L]]), ",", fixed = TRUE)[[1L]])
+  requested_context <- g5_standardize_symbol(settings$context_symbols)
+  cached_families <- sort(unique(strsplit(as.character(contract$candidate_families[[1L]]), ",", fixed = TRUE)[[1L]]))
+  requested_families <- sort(unique(c(settings$candidate_families, "no_trade")))
+  identical(sort(cached_symbols), sort(requested_symbols)) &&
+    identical(sort(cached_context), sort(requested_context)) &&
+    identical(cached_families, requested_families) &&
+    identical(as.character(contract$strategy_grid_preset[[1L]]), as.character(settings$strategy_grid_preset)) &&
+    identical(as.integer(contract$grid_n[[1L]]), as.integer(settings$grid_n))
+}
+
 numeric_match <- function(lhs, rhs, tolerance = 1e-9) {
   lhs <- suppressWarnings(as.numeric(lhs))
   rhs <- suppressWarnings(as.numeric(rhs))
@@ -336,10 +358,7 @@ model_grid_from_gen4_picked_specs <- function(model_grid, picked_params_csv) {
 }
 
 build_authority <- function(bars, quarter_id, authority_dir, settings) {
-  if (!isTRUE(settings$refresh) &&
-      file.exists(file.path(authority_dir, "bridge_authority_contract.csv")) &&
-      file.exists(file.path(authority_dir, "bridge_selected_states.csv")) &&
-      file.exists(file.path(authority_dir, "bridge_train_state_performance.csv"))) {
+  if (!isTRUE(settings$refresh) && cached_authority_matches_settings(authority_dir, settings)) {
     message("Reuse cached authority: ", quarter_id)
     return(read_full_authority_packet(authority_dir))
   }
@@ -567,6 +586,7 @@ cfg <- g5_load_data_layer_config(repo_root)
 feed <- env_or("GEN5_GEN4_EQ_FEED", as.character(cfg$feed))
 if (nzchar(feed)) cfg$feed <- feed
 refresh <- parse_bool(env_or("GEN5_GEN4_EQ_REFRESH", "false"), default = FALSE)
+checkpoint_only <- parse_bool(env_or("GEN5_GEN4_EQ_CHECKPOINT_ONLY", "false"), default = FALSE)
 stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN4_EQ_STAMP", "20260706"))
 root_output_dir <- file.path(repo_root, "runs", "research_workbench", "gen4_equivalence", paste0("gen4_equivalence_", stamp))
 dir.create(root_output_dir, recursive = TRUE, showWarnings = FALSE)
@@ -612,6 +632,7 @@ if (is.null(unmatched_gen4_specs)) unmatched_gen4_specs <- character()
 settings <- list(
   feed = cfg$feed,
   refresh = refresh,
+  checkpoint_only = checkpoint_only,
   symbols = g5_standardize_symbol(live_symbols),
   context_symbols = unique(g5_standardize_symbol(research_symbols)),
   candidate_families = candidate_families,
@@ -630,6 +651,7 @@ message("Output root: ", root_output_dir)
 message("Gen4 artifact root: ", gen4_root)
 message("Feed: ", cfg$feed)
 message("Refresh: ", refresh)
+message("Checkpoint only: ", checkpoint_only)
 message("Live symbols: ", paste(settings$symbols, collapse = ","))
 message("Context symbols: ", paste(settings$context_symbols, collapse = ","))
 message("Quarters: ", paste(quarters, collapse = ","))
@@ -652,8 +674,47 @@ query <- g5_workbench_query_adjusted_daily_bars(
   repo_root = repo_root
 )
 query_dir <- file.path(root_output_dir, "query")
-query_paths <- g5_write_workbench_query_artifacts(query, output_dir = query_dir, prefix = "gen4_equivalence_query")
+query_paths <- if (isTRUE(checkpoint_only)) {
+  NULL
+} else {
+  g5_write_workbench_query_artifacts(query, output_dir = query_dir, prefix = "gen4_equivalence_query")
+}
 bars <- query$bars
+
+if (isTRUE(checkpoint_only)) {
+  for (quarter_id in quarters) {
+    authority_dir <- file.path(root_output_dir, "auth", quarter_id)
+    dates <- g5_bridge_quarter_bounds(quarter_id)
+    contract <- custom_contract_frame(
+      quarter_id = quarter_id,
+      symbols = settings$symbols,
+      context_symbols = settings$context_symbols,
+      as_of_timestamp = paste0(dates$live_start_date - 1L, " 17:30:00"),
+      refresh = settings$refresh,
+      git_sha = g5_git_sha_or_na(repo_root),
+      market_data_feed = settings$feed,
+      candidate_families = settings$candidate_families,
+      strategy_grid_preset = settings$strategy_grid_preset,
+      grid_n = settings$grid_n,
+      research_note = settings$research_note
+    )
+    for (symbol in settings$symbols) {
+      invisible(build_symbol_fit_checkpoint(
+        bars = bars,
+        symbol = symbol,
+        contract = contract,
+        model_grid = settings$model_grid,
+        context_symbols = settings$context_symbols,
+        authority_dir = authority_dir,
+        grid_n = settings$grid_n,
+        min_train_state_rows = settings$min_train_state_rows,
+        refresh = settings$refresh
+      ))
+    }
+  }
+  message("Checkpoint-only Gen4-equivalence run complete: ", root_output_dir)
+  quit(save = "no", status = 0L)
+}
 
 authority_rows <- list()
 base_authorities <- list()
@@ -879,9 +940,9 @@ report <- c(
   "",
   "- Gen4 artifact: `FM-002-024-R3_med_16_bins`.",
   "- Gen5.1 context universe: Gen4 `RESEARCH_ASSETS` analogue, 29 symbols.",
-  "- Gen5.1 trade/report universe: Gen4 live/reporting universe, 16 symbols.",
+  paste0("- Gen5.1 trade/report universe: ", length(settings$symbols), " symbols: `", paste(settings$symbols, collapse = ","), "`."),
   "- PCA/state surface: long/pooled asset-day PCA plus `4x4` quantile grid.",
-  "- TRAIN/OOS schedule: expanding TRAIN from `2016Q4` through the prior quarter; OOS quarters `2020Q4` through `2024Q4`.",
+  paste0("- TRAIN/OOS schedule: expanding TRAIN from `2016Q4` through the prior quarter; OOS quarters `", paste(quarters, collapse = ","), "`."),
   "- Selection policies: current Gen5.1 direct-spec and Gen4-style pooled-family.",
   paste0("- Strategy grid: `", strategy_grid_preset, "` for implemented Gen5.1 families, with grid filter `", settings$grid_filter, "` (`", settings$model_grid_rows, "` model rows)."),
   "",
