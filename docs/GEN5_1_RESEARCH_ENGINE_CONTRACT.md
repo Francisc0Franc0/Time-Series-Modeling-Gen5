@@ -93,6 +93,7 @@ Adding a new strategy family or materially changing the candidate grid is a STOP
 Current policy:
 
 - `entry_state_owns_trade_until_exit`.
+- Gen5.2 exception: an explicit current-state `force_exit_next_open` override may flatten an open trade on the next session open. This represents the Gen4 `no_trade_exit_immediate` concept without making ordinary `no_trade` an exit rule.
 
 Responsibilities:
 

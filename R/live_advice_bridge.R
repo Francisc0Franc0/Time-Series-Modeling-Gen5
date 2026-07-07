@@ -518,6 +518,39 @@ g5_bridge_replay_symbol <- function(
     }
 
     if (in_position && is.null(pending_exit)) {
+      if (g5_wfa_is_force_exit_override(selected)) {
+        pending_exit <- list(
+          primary_exit_reason = "state_exit_override",
+          triggered_exit_rules = "force_exit_next_open",
+          exit_attribution = "current_state_exit_override",
+          exit_signal_rule = "state_exit_override_force_exit_next_open",
+          exit_signal_state_id = current_state,
+          exit_signal_date = current_date,
+          exit_signal_idx = idx,
+          exit_signal_price = as.numeric(all_bars$close[[idx]]),
+          execution_date = next_session
+        )
+        action_today <- "EXIT_LONG_NEXT_OPEN"
+        if (!has_next_session_in_data) {
+          pending_actions[[length(pending_actions) + 1L]] <- data.frame(
+            symbol = symbol,
+            as_of_date = current_date,
+            action = "EXIT_LONG_NEXT_OPEN",
+            current_position = "LONG",
+            desired_position_after_execution = "FLAT",
+            state_id = current_state,
+            strategy_family = open_trade$strategy_family,
+            strategy_spec_id = open_trade$strategy_spec_id,
+            signal_price = as.numeric(all_bars$close[[idx]]),
+            execution_date = as.Date(NA),
+            execution_timing = "next_open_after_as_of_close",
+            signal_rule = pending_exit$exit_signal_rule,
+            authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+            authority_role = as.character(authority_role),
+            stringsAsFactors = FALSE
+          )
+        }
+      } else {
       owner <- selected_states[selected_states$strategy_spec_id == open_trade$strategy_spec_id & selected_states$state_id == open_trade$entry_state_id, , drop = FALSE]
       if (!nrow(owner)) owner <- selected_states[selected_states$strategy_spec_id == open_trade$strategy_spec_id, , drop = FALSE][1L, , drop = FALSE]
       ind <- indicator_cache[[open_trade$strategy_spec_id]]
@@ -553,6 +586,7 @@ g5_bridge_replay_symbol <- function(
             stringsAsFactors = FALSE
           )
         }
+      }
       }
     }
 

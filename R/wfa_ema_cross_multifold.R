@@ -454,6 +454,37 @@ g5_wfa_no_trade_exit_stack <- function() {
   )
 }
 
+g5_wfa_state_exit_override_action <- function(selected_state) {
+  if (!is.data.frame(selected_state) || !nrow(selected_state)) {
+    return(NA_character_)
+  }
+  family <- if ("strategy_family" %in% names(selected_state)) as.character(selected_state$strategy_family[[1L]]) else NA_character_
+  spec <- if ("strategy_spec_id" %in% names(selected_state)) as.character(selected_state$strategy_spec_id[[1L]]) else NA_character_
+  model <- if ("model_instance_id" %in% names(selected_state)) as.character(selected_state$model_instance_id[[1L]]) else NA_character_
+  explicit_action <- if ("state_exit_override_action" %in% names(selected_state)) as.character(selected_state$state_exit_override_action[[1L]]) else NA_character_
+  explicit_flag <- if ("state_exit_override" %in% names(selected_state)) {
+    isTRUE(as.logical(selected_state$state_exit_override[[1L]]))
+  } else {
+    FALSE
+  }
+  if (!is.na(explicit_action) && nzchar(explicit_action)) {
+    return(explicit_action)
+  }
+  if (explicit_flag) {
+    return("force_exit_next_open")
+  }
+  ids <- c(family, spec, model)
+  ids <- ids[!is.na(ids)]
+  if (any(ids == "no_trade_exit_immediate")) {
+    return("force_exit_next_open")
+  }
+  NA_character_
+}
+
+g5_wfa_is_force_exit_override <- function(selected_state) {
+  identical(g5_wfa_state_exit_override_action(selected_state), "force_exit_next_open")
+}
+
 g5_wfa_exit_stacks_for_candidates <- function(exit_stacks, candidate_families) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
   if (!"no_trade" %in% candidate_families) {

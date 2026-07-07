@@ -443,6 +443,21 @@ g5_pca_wfa_simulate_oos <- function(bars, symbol, fold, pca_result, selected_sta
     }
 
     if (in_position && is.null(pending_exit)) {
+      current_selected <- get_selected(current_state)
+      if (g5_wfa_is_force_exit_override(current_selected)) {
+        pending_exit <- list(
+          primary_exit_reason = "state_exit_override",
+          triggered_exit_rules = "force_exit_next_open",
+          exit_attribution = "current_state_exit_override",
+          exit_signal_rule = "state_exit_override_force_exit_next_open",
+          exit_signal_state_id = current_state,
+          exit_signal_date = current_date,
+          exit_signal_idx = idx,
+          exit_signal_price = as.numeric(all_bars$close[[idx]]),
+          execution_date = session_dates[[next_idx]]
+        )
+        next
+      }
       owner <- selected_states[selected_states$strategy_spec_id == open_trade$strategy_spec_id & selected_states$state_id == open_trade$entry_state_id, , drop = FALSE]
       if (nrow(owner) == 0L) {
         owner <- selected_states[selected_states$strategy_spec_id == open_trade$strategy_spec_id, , drop = FALSE][1L, , drop = FALSE]
@@ -894,6 +909,22 @@ g5_pca_wfa_simulate_stitched_oos <- function(bars, symbol, folds, fold_models, s
     }
 
     if (in_position && is.null(pending_exit)) {
+      current_selected <- get_selected(signal_fold_no, current_state)
+      if (g5_wfa_is_force_exit_override(current_selected)) {
+        pending_exit <- list(
+          primary_exit_reason = "state_exit_override",
+          triggered_exit_rules = "force_exit_next_open",
+          exit_attribution = "current_state_exit_override",
+          exit_signal_rule = "state_exit_override_force_exit_next_open",
+          exit_signal_fold_id = signal_fold_id,
+          exit_signal_state_id = current_state,
+          exit_signal_date = current_date,
+          exit_signal_idx = idx,
+          exit_signal_price = as.numeric(all_bars$close[[idx]]),
+          execution_date = session_dates[[next_idx]]
+        )
+        next
+      }
       owner <- selected_states[
         selected_states$fold_id == open_trade$entry_signal_fold_id &
           selected_states$state_id == open_trade$entry_state_id &

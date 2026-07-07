@@ -258,7 +258,7 @@ test_that("pooled family policy selects family first and asset params second", {
     sharpe = c(0, 2.0, 1.2, 0.4, 0, 0.1, -0.1, 1.0),
     total_return = c(0, 0.20, 0.10, 0.04, 0, 0.01, -0.01, 0.10),
     train_state_row_count = 50L,
-    train_state_trade_count = c(0, 5, 4, 2, 0, 1, 1, 3),
+    train_state_trade_count = c(0, 5, 4, 2, 0, 5, 1, 3),
     stringsAsFactors = FALSE
   )
 
@@ -270,6 +270,42 @@ test_that("pooled family policy selects family first and asset params second", {
     selected$strategy_spec_id[match(c("AAA", "BBB"), selected$symbol)],
     c("aaa_trend_fast", "bbb_trend_fast")
   )
+  expect_true(all(selected$selection_policy_recipe == "gen4_phase40_pooled_family_asset_variant"))
+})
+
+test_that("Gen4-faithful pooled family policy filters low-trade active variants", {
+  perf <- data.frame(
+    symbol = rep(c("AAA", "BBB"), each = 3L),
+    quarter_id = "2026Q2",
+    state_id = "S1_1",
+    strategy_family = rep(c("no_trade", "trend", "mean_reversion"), times = 2L),
+    model_instance_id = c("no_trade", "trend", "mean_rev", "no_trade", "trend", "mean_rev"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("aaa_no_trade", "aaa_trend", "aaa_mean", "bbb_no_trade", "bbb_trend", "bbb_mean"),
+    sharpe = c(0, 2.0, 0.5, 0, 1.5, 1.0),
+    total_return = c(0, 0.20, 0.05, 0, 0.15, 0.10),
+    train_state_row_count = 50L,
+    train_state_trade_count = c(0, 5, 5, 0, 1, 1),
+    stringsAsFactors = FALSE
+  )
+
+  selected <- g5_selection_policy_pooled_family_asset_variant(perf, min_train_state_rows = 20L)
+  bbb <- selected[selected$symbol == "BBB", , drop = FALSE]
+
+  expect_equal(bbb$strategy_family[[1L]], "no_trade")
+  expect_match(bbb$selection_reason[[1L]], "no_asset_variant_for_family_trend")
+})
+
+test_that("Gen4 no-trade exit-immediate rows become explicit state exit overrides", {
+  row <- data.frame(
+    strategy_family = "no_trade_exit_immediate",
+    strategy_spec_id = "no_trade_exit_immediate",
+    model_instance_id = "no_trade_exit_immediate",
+    stringsAsFactors = FALSE
+  )
+
+  expect_true(g5_wfa_is_force_exit_override(row))
+  expect_equal(g5_wfa_state_exit_override_action(row), "force_exit_next_open")
 })
 
 test_that("pooled family policy forces sparse asset states to no trade", {
