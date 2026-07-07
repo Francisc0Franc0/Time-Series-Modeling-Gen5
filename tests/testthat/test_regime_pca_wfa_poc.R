@@ -53,6 +53,35 @@ g5_test_pca_wfa_context_bars <- function(n = 760L) {
   rbind(amd, nvda, tsla)
 }
 
+test_that("Gen5.2 direct selector uses shared trade-count eligibility and score ranking", {
+  rows <- data.frame(
+    symbol = "AMD",
+    fold_id = "F1",
+    fold_no = 1L,
+    state_id = "S1_1",
+    strategy_family = c("no_trade", "ema_trend", "ema_trend"),
+    model_instance_id = c("no_trade", "fast_sparse", "steady"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("no_trade", "fast_sparse", "steady"),
+    sharpe = c(NA, 9.0, 1.0),
+    total_return = c(0, 0.90, 0.10),
+    train_state_row_count = 50L,
+    train_state_trade_count = c(0L, 1L, 5L),
+    stringsAsFactors = FALSE
+  )
+
+  winner <- g5_pca_wfa_choose_direct_state_winner(
+    rows,
+    no_trade_row = rows[rows$strategy_family == "no_trade", , drop = FALSE],
+    min_train_state_rows = 20L,
+    min_train_trades = 5L
+  )
+
+  expect_equal(winner$strategy_spec_id[[1L]], "steady")
+  expect_equal(winner$selection_policy_recipe[[1L]], "gen52_direct_spec_min_trades_score_then_return")
+  expect_match(winner$selection_reason[[1L]], "gen52_direct_spec_ranked_by_score_then_return_min_trades_5")
+})
+
 test_that("PCA-routed one-fold WFA selects one spec per state with entry-state ownership", {
   bars <- g5_test_pca_wfa_bars()
   wfa <- g5_pca_wfa_run_one_fold(

@@ -16,18 +16,21 @@ The recent forensic screen showed that matching universe, behavioral-pool PCA, q
 
 Gen5.2 therefore separates **compatibility mechanics** from **assessment mechanics**.
 
-## Canonical Gen5.2 Selection Policy
+## Canonical Gen5.2 Candidate Eligibility
 
-The public `pooled_family_asset_variant` policy now uses a Gen4 Phase40-style recipe:
+Both Gen5.2 selection modes now share the same candidate eligibility and winner-score substrate:
 
 1. Use TRAIN evidence only.
 2. Keep active candidate rows only when `train_state_trade_count >= 5`; keep no-trade families as valid abstention rows.
 3. Score candidates with the Gen4-style winner score: Sharpe-like metric, with missing no-trade score treated as `0` and missing active scores treated as unusable.
-4. Choose the state-level family by mean score, then mean return, then number of variants.
-5. Within that selected family, choose each asset's parameter variant by score, then return.
-6. Force sparse asset/state rows to ordinary `no_trade`.
+4. Force sparse asset/state rows to ordinary `no_trade`.
 
-The direct full-spec policy, `asset_state_direct_spec`, remains available as a research comparator. It is no longer the assumed Gen5 default when the goal is Gen4-faithful lineage.
+That shared substrate keeps the research comparison clean:
+
+- `asset_state_direct_spec` still chooses the best full asset/state spec directly by score, then return.
+- `pooled_family_asset_variant` chooses the state-level family by mean score, then mean return, then number of variants; within that family it chooses each asset's parameter variant by score, then return.
+
+The selection-policy factor is therefore about architecture, not a hidden difference in row filters or score handling.
 
 ## State Exit Override
 
@@ -60,10 +63,11 @@ Current implemented portfolio POC support is the no-margin `leverage = 1` form, 
 
 Implemented in this slice:
 
-- `pooled_family_asset_variant` now calls the Gen4-faithful scoring recipe.
+- `asset_state_direct_spec` and `pooled_family_asset_variant` now share Gen5.2 candidate eligibility and winner-score handling.
+- `pooled_family_asset_variant` calls the Gen4-faithful family-first recipe after that shared candidate filter.
 - Gen4 no-trade exit-immediate compatibility is represented by explicit state exit override helpers.
 - PCA-routed replay and live-advice replay can honor a current-state `force_exit_next_open` override while preserving entry-state ownership otherwise.
-- Focused tests cover Gen4-style active-candidate trade-count filtering, selection-policy recipe labeling, and no-trade exit-immediate override detection.
+- Focused tests cover direct-lane and pooled-family active-candidate trade-count filtering, selection-policy recipe labeling, and no-trade exit-immediate override detection.
 
 Not implemented in this slice:
 

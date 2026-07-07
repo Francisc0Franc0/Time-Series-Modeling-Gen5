@@ -454,6 +454,52 @@ g5_wfa_no_trade_exit_stack <- function() {
   )
 }
 
+g5_wfa_gen52_no_trade_families <- function() {
+  c("no_trade", "no_trade_exit_immediate")
+}
+
+g5_wfa_gen52_trade_count <- function(rows) {
+  if ("train_state_trade_count" %in% names(rows)) {
+    out <- suppressWarnings(as.numeric(rows$train_state_trade_count))
+  } else if ("trade_count" %in% names(rows)) {
+    out <- suppressWarnings(as.numeric(rows$trade_count))
+  } else {
+    out <- rep(0, nrow(rows))
+  }
+  out[is.na(out) | !is.finite(out)] <- 0
+  out
+}
+
+g5_wfa_gen52_winner_score <- function(metric, family) {
+  metric <- suppressWarnings(as.numeric(metric))
+  family <- as.character(family)
+  no_trade_family <- family %in% g5_wfa_gen52_no_trade_families()
+  ifelse(is.na(metric) & no_trade_family, 0, ifelse(is.na(metric) | !is.finite(metric), -Inf, metric))
+}
+
+g5_wfa_gen52_metric_score <- function(x) {
+  x <- suppressWarnings(as.numeric(x))
+  x[is.na(x) | !is.finite(x)] <- -Inf
+  x
+}
+
+g5_wfa_gen52_eligible_rows <- function(rows, min_train_state_rows = 20L, min_train_trades = 5L) {
+  if (!is.data.frame(rows) || !nrow(rows)) return(rows)
+  row_count <- suppressWarnings(as.numeric(rows$train_state_row_count))
+  row_count[is.na(row_count) | !is.finite(row_count)] <- 0
+  trade_count <- g5_wfa_gen52_trade_count(rows)
+  family <- as.character(rows$strategy_family)
+  rows[row_count >= min_train_state_rows & (trade_count >= min_train_trades | family %in% g5_wfa_gen52_no_trade_families()), , drop = FALSE]
+}
+
+g5_wfa_gen52_rank_rows <- function(rows) {
+  if (!is.data.frame(rows) || !nrow(rows)) return(rows)
+  score <- g5_wfa_gen52_winner_score(rows$sharpe, rows$strategy_family)
+  total_return <- g5_wfa_gen52_metric_score(rows$total_return)
+  spec_id <- if ("strategy_spec_id" %in% names(rows)) as.character(rows$strategy_spec_id) else rep("", nrow(rows))
+  rows[order(-score, -total_return, spec_id), , drop = FALSE]
+}
+
 g5_wfa_state_exit_override_action <- function(selected_state) {
   if (!is.data.frame(selected_state) || !nrow(selected_state)) {
     return(NA_character_)

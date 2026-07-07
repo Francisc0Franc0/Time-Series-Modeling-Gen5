@@ -199,6 +199,35 @@ g5_pca_wfa_add_entry_states <- function(trades, state_lookup) {
   trades
 }
 
+g5_pca_wfa_direct_state_row_count <- function(state_rows) {
+  if (!"train_state_row_count" %in% names(state_rows) || !nrow(state_rows)) return(0L)
+  value <- suppressWarnings(max(as.numeric(state_rows$train_state_row_count), na.rm = TRUE))
+  if (!is.finite(value)) 0L else as.integer(value)
+}
+
+g5_pca_wfa_choose_direct_state_winner <- function(state_rows, no_trade_row, min_train_state_rows = 20L, min_train_trades = 5L) {
+  if (!is.data.frame(no_trade_row) || !nrow(no_trade_row)) {
+    g5_stop("PCA WFA direct selector expected a no_trade candidate row for every state.")
+  }
+  row_count <- g5_pca_wfa_direct_state_row_count(state_rows)
+  if (is.na(row_count) || row_count < min_train_state_rows) {
+    winner <- no_trade_row
+    winner$selection_reason <- paste0("forced_no_trade_sparse_state_min_rows_", min_train_state_rows)
+  } else {
+    eligible <- g5_wfa_gen52_eligible_rows(state_rows, min_train_state_rows = min_train_state_rows, min_train_trades = min_train_trades)
+    if (!nrow(eligible)) {
+      winner <- no_trade_row
+      winner$selection_reason <- paste0("direct_policy_forced_no_trade_no_eligible_candidate_min_trades_", min_train_trades)
+    } else {
+      ranked <- g5_wfa_gen52_rank_rows(eligible)
+      winner <- ranked[1L, , drop = FALSE]
+      winner$selection_reason <- paste0("gen52_direct_spec_ranked_by_score_then_return_min_trades_", min_train_trades)
+    }
+  }
+  winner$selection_policy_recipe <- "gen52_direct_spec_min_trades_score_then_return"
+  winner
+}
+
 g5_pca_wfa_select_state_specs <- function(
   bars,
   symbol,
@@ -266,19 +295,12 @@ g5_pca_wfa_select_state_specs <- function(
   selected <- list()
   for (state in states) {
     state_rows <- train_performance[train_performance$state_id == state, , drop = FALSE]
-    row_count <- if (state %in% names(train_rows_by_state)) unname(train_rows_by_state[[state]]) else 0L
-    if (is.na(row_count) || row_count < min_train_state_rows) {
-      winner <- no_trade_rows[[state]]
-      winner$selection_reason <- paste0("forced_no_trade_sparse_state_min_rows_", min_train_state_rows)
-    } else {
-      ranked <- state_rows[order(
-        ifelse(is.na(state_rows$sharpe), -Inf, state_rows$sharpe),
-        ifelse(is.na(state_rows$total_return), -Inf, state_rows$total_return),
-        decreasing = TRUE
-      ), , drop = FALSE]
-      winner <- ranked[1L, , drop = FALSE]
-      winner$selection_reason <- "ranked_by_train_state_sharpe_then_return"
-    }
+    winner <- g5_pca_wfa_choose_direct_state_winner(
+      state_rows,
+      no_trade_row = no_trade_rows[[state]],
+      min_train_state_rows = min_train_state_rows,
+      min_train_trades = 5L
+    )
     selected[[length(selected) + 1L]] <- winner
   }
   selected_states <- g5_wfa_bind_rows_fill(selected)

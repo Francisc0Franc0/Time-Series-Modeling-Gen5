@@ -39,43 +39,23 @@ g5_selection_policy_state_row_count <- function(rows) {
 }
 
 g5_selection_policy_trade_count <- function(rows) {
-  if ("train_state_trade_count" %in% names(rows)) {
-    out <- suppressWarnings(as.numeric(rows$train_state_trade_count))
-  } else if ("trade_count" %in% names(rows)) {
-    out <- suppressWarnings(as.numeric(rows$trade_count))
-  } else {
-    out <- rep(0, nrow(rows))
-  }
-  out[is.na(out) | !is.finite(out)] <- 0
-  out
+  g5_wfa_gen52_trade_count(rows)
 }
 
 g5_selection_policy_gen4_no_trade_families <- function() {
-  c("no_trade", "no_trade_exit_immediate")
+  g5_wfa_gen52_no_trade_families()
 }
 
 g5_selection_policy_gen4_winner_score <- function(metric, family) {
-  metric <- suppressWarnings(as.numeric(metric))
-  family <- as.character(family)
-  no_trade_family <- family %in% g5_selection_policy_gen4_no_trade_families()
-  ifelse(is.na(metric) & no_trade_family, 0, ifelse(is.na(metric) | !is.finite(metric), -Inf, metric))
+  g5_wfa_gen52_winner_score(metric, family)
 }
 
 g5_selection_policy_gen4_eligible_rows <- function(rows, min_train_state_rows = 20L, min_train_trades = 5L) {
-  if (!is.data.frame(rows) || !nrow(rows)) return(rows)
-  row_count <- suppressWarnings(as.numeric(rows$train_state_row_count))
-  row_count[is.na(row_count) | !is.finite(row_count)] <- 0
-  trade_count <- g5_selection_policy_trade_count(rows)
-  family <- as.character(rows$strategy_family)
-  rows[row_count >= min_train_state_rows & (trade_count >= min_train_trades | family %in% g5_selection_policy_gen4_no_trade_families()), , drop = FALSE]
+  g5_wfa_gen52_eligible_rows(rows, min_train_state_rows = min_train_state_rows, min_train_trades = min_train_trades)
 }
 
 g5_selection_policy_gen4_rank_rows <- function(rows) {
-  if (!is.data.frame(rows) || !nrow(rows)) return(rows)
-  score <- g5_selection_policy_gen4_winner_score(rows$sharpe, rows$strategy_family)
-  total_return <- g5_selection_policy_metric_score(rows$total_return)
-  spec_id <- if ("strategy_spec_id" %in% names(rows)) as.character(rows$strategy_spec_id) else rep("", nrow(rows))
-  rows[order(-score, -total_return, spec_id), , drop = FALSE]
+  g5_wfa_gen52_rank_rows(rows)
 }
 
 g5_selection_policy_choose_gen4_pooled_family <- function(state_rows, min_train_state_rows = 20L, min_train_trades = 5L) {
@@ -233,11 +213,13 @@ g5_selection_policy_pooled_family_asset_variant <- function(train_state_performa
 
 g5_selection_policy_add_direct_label <- function(selected_states) {
   selected_states$selection_policy <- "asset_state_direct_spec"
+  selected_states$selection_policy_recipe <- "gen52_direct_spec_min_trades_score_then_return"
   selected_states$pooled_selected_family <- NA_character_
   selected_states$pooled_family_mean_sharpe <- NA_real_
   selected_states$pooled_family_mean_total_return <- NA_real_
   selected_states$pooled_family_asset_count <- NA_integer_
   selected_states$pooled_family_trade_count <- NA_integer_
+  selected_states$pooled_family_n_variants <- NA_integer_
   selected_states
 }
 
