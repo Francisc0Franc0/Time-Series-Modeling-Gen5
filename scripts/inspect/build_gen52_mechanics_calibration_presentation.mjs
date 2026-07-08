@@ -489,6 +489,30 @@ const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
+  addTitle(slide, "The Gen4 gap is now a sharper set of questions");
+  addPanel(slide, { left: 42, top: 214, width: 545, height: 352 });
+  addPanel(slide, { left: 650, top: 214, width: 545, height: 352 });
+  addText(slide, "Answered so far", { left: 72, top: 246, width: 360, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "The live basket matched; cluster labels were reporting lenses, not trade inputs." },
+    { text: "Gen4 used pooled-family selection, sparse-state fallback, and no-trade exit behavior that Gen5.2 can now represent." },
+    { text: "Fallback changed authority but did not reproduce Gen4's SOFI win by itself." },
+    { text: "State-switch continuation is coherent and sometimes helpful, but not consistently enough to become default." },
+  ], 72, 306, 445, 17, 55);
+  addText(slide, "Still open", { left: 680, top: 246, width: 360, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "Does continuation create alpha under true live-capital accounting, or mostly add exposure?" },
+    { text: "Which selection/replay combination is robust across assets that do not all look like high-beta growth?" },
+    { text: "Which exact Gen4 signal semantics remain unmatched after fallback and continuation?" },
+    { text: "Can the system make money by adapting to regimes, not merely by holding more beta in strong windows?" },
+  ], 680, 306, 445, 17, 55);
+  addText(slide, "The next test should stress generalizability before trying to match Gen4 more tightly on one memorable path.", { left: 42, top: 610, width: 1000, height: 34 }, { fontSize: 20, bold: true, color: colors.accent });
+  addFooter(slide, 17);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
   addTitle(slide, "Updated next move");
   addPanel(slide, { left: 42, top: 214, width: 545, height: 330 });
   addPanel(slide, { left: 650, top: 214, width: 545, height: 330 });
@@ -505,7 +529,7 @@ const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
     { text: "Probe exact Gen4 strategy signal semantics where Gen4 artifacts still diverge after continuation." },
     { text: "Only promote a behavior after it improves alpha consistency without simply increasing market exposure." },
   ], 680, 310, 440, 18, 54);
-  addFooter(slide, 17);
+  addFooter(slide, 18);
 }
 
 await fs.mkdir(path.dirname(outputPptx), { recursive: true });
