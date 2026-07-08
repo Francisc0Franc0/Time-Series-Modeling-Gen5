@@ -63,7 +63,7 @@ make_policy_authority <- function(authority, selection_policy) {
   out <- authority
   out$contract$selection_policy <- selection_policy
   if (identical(selection_policy, "asset_state_direct_spec")) {
-    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states)
+    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states, out$train_state_performance, min_train_state_rows = 20L)
   } else if (identical(selection_policy, "pooled_family_asset_variant")) {
     out$selected_states <- g5_selection_policy_pooled_family_asset_variant(out$train_state_performance, min_train_state_rows = 20L)
   } else {

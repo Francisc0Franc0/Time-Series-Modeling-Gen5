@@ -211,7 +211,38 @@ g5_selection_policy_pooled_family_asset_variant <- function(train_state_performa
   )
 }
 
-g5_selection_policy_add_direct_label <- function(selected_states) {
+g5_selection_policy_direct_asset_state_spec <- function(train_state_performance, min_train_state_rows = 20L) {
+  required <- c("symbol", "state_id", "strategy_family", "strategy_spec_id", "sharpe", "total_return", "train_state_row_count")
+  missing <- setdiff(required, names(train_state_performance))
+  if (length(missing)) {
+    g5_stop(paste0("train_state_performance is missing required columns for direct selection: ", paste(missing, collapse = ", ")))
+  }
+  perf <- train_state_performance
+  group_cols <- intersect(c("quarter_id", "symbol", "fold_id", "fold_no", "state_id"), names(perf))
+  keys <- do.call(paste, c(perf[, group_cols, drop = FALSE], sep = "::"))
+  pieces <- split(perf, keys)
+  winners <- lapply(pieces, function(state_rows) {
+    no_trade <- state_rows[as.character(state_rows$strategy_family) %in% g5_wfa_gen52_no_trade_families(), , drop = FALSE]
+    if (!nrow(no_trade)) {
+      g5_stop("Direct selection expected a no_trade candidate row for every symbol/state.")
+    }
+    no_trade <- g5_wfa_gen52_rank_rows(no_trade)[1L, , drop = FALSE]
+    g5_pca_wfa_choose_direct_state_winner(
+      state_rows,
+      no_trade_row = no_trade,
+      min_train_state_rows = min_train_state_rows,
+      min_train_trades = 5L
+    )
+  })
+  selected <- g5_wfa_bind_rows_fill(winners)
+  rownames(selected) <- NULL
+  g5_selection_policy_add_direct_label(selected)
+}
+
+g5_selection_policy_add_direct_label <- function(selected_states, train_state_performance = NULL, min_train_state_rows = 20L) {
+  if (!is.null(train_state_performance)) {
+    return(g5_selection_policy_direct_asset_state_spec(train_state_performance, min_train_state_rows = min_train_state_rows))
+  }
   selected_states$selection_policy <- "asset_state_direct_spec"
   selected_states$selection_policy_recipe <- "gen52_direct_spec_min_trades_score_then_return"
   selected_states$pooled_selected_family <- NA_character_

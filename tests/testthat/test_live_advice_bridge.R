@@ -296,6 +296,30 @@ test_that("Gen4-faithful pooled family policy filters low-trade active variants"
   expect_match(bbb$selection_reason[[1L]], "no_asset_variant_for_family_trend")
 })
 
+test_that("Gen5.2 direct policy rebuilds selected states from TRAIN performance", {
+  perf <- data.frame(
+    symbol = "AAA",
+    quarter_id = "2026Q2",
+    state_id = "S1_1",
+    strategy_family = c("no_trade", "trend", "trend"),
+    model_instance_id = c("no_trade", "sparse_fast", "steady"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("aaa_no_trade", "aaa_sparse_fast", "aaa_steady"),
+    sharpe = c(NA, 5.0, 1.0),
+    total_return = c(0, 0.50, 0.10),
+    train_state_row_count = 50L,
+    train_state_trade_count = c(0L, 1L, 5L),
+    stringsAsFactors = FALSE
+  )
+
+  selected <- g5_selection_policy_direct_asset_state_spec(perf, min_train_state_rows = 20L)
+
+  expect_equal(nrow(selected), 1L)
+  expect_equal(selected$strategy_spec_id[[1L]], "aaa_steady")
+  expect_equal(selected$selection_policy[[1L]], "asset_state_direct_spec")
+  expect_equal(selected$selection_policy_recipe[[1L]], "gen52_direct_spec_min_trades_score_then_return")
+})
+
 test_that("Gen4 no-trade exit-immediate rows become explicit state exit overrides", {
   row <- data.frame(
     strategy_family = "no_trade_exit_immediate",

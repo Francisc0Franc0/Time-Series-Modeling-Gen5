@@ -68,7 +68,7 @@ g5_bridge_apply_selection_policy <- function(authority, selection_policy, min_tr
   out <- authority
   out$contract$selection_policy <- selection_policy
   if (identical(selection_policy, "asset_state_direct_spec")) {
-    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states)
+    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states, out$train_state_performance, min_train_state_rows = min_train_state_rows)
   } else if (identical(selection_policy, "pooled_family_asset_variant")) {
     if (!is.data.frame(out$train_state_performance) || !nrow(out$train_state_performance)) {
       g5_stop("Pooled-family live advice requires bridge_train_state_performance.csv in the authority packet.")

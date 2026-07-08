@@ -1,4 +1,4 @@
-# Gen4-equivalence inspection screen for Gen5.1.
+# Gen4-equivalence inspection screen for Gen5.2.
 
 script_path <- tryCatch(normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE), error = function(e) NULL)
 repo_root <- if (!is.null(script_path) && nzchar(script_path)) {
@@ -410,7 +410,7 @@ make_policy_authority <- function(authority, selection_policy, min_train_state_r
   out <- authority
   out$contract$selection_policy <- selection_policy
   if (identical(selection_policy, "asset_state_direct_spec")) {
-    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states)
+    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states, out$train_state_performance, min_train_state_rows = min_train_state_rows)
   } else if (identical(selection_policy, "pooled_family_asset_variant")) {
     out$selected_states <- g5_selection_policy_pooled_family_asset_variant(out$train_state_performance, min_train_state_rows = min_train_state_rows)
   } else {
@@ -505,7 +505,7 @@ write_equity_overlay <- function(equity, gen4_equity, path) {
     }
     graphics::legend("topleft", legend = c("Gen4 artifact", "Gen4 benchmark", "Gen5 direct", "Gen5 pooled"), col = colors[c("gen4", "benchmark", "gen5_direct", "gen5_pooled")], lwd = c(2.6, 2, 2.1, 2.1), lty = c(1, 2, 1, 1), bty = "n", cex = 0.75)
   }
-  graphics::mtext("Gen4 Artifact vs Gen5.1 Phase40-Style Replay", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
+  graphics::mtext("Gen4 Artifact vs Gen5.2 Phase40-Style Replay", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
   invisible(path)
 }
 
@@ -546,7 +546,7 @@ write_quarter_heatmap <- function(quarter_summary, path) {
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
   graphics::par(bg = aesthetic$background, mar = c(7, 10, 4, 2))
-  graphics::plot(NA, xlim = c(0.5, ncol(values) + 0.5), ylim = c(0.5, nrow(values) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "Gen5.1 Quarterly Alpha vs Equal-Weight Hold", col.main = aesthetic$text, fg = aesthetic$axis)
+  graphics::plot(NA, xlim = c(0.5, ncol(values) + 0.5), ylim = c(0.5, nrow(values) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "Gen5.2 Quarterly Alpha vs Equal-Weight Hold", col.main = aesthetic$text, fg = aesthetic$axis)
   graphics::rect(0.5, 0.5, ncol(values) + 0.5, nrow(values) + 0.5, col = aesthetic$panel_background, border = NA)
   for (r in seq_len(nrow(values))) {
     for (c in seq_len(ncol(values))) {
@@ -588,6 +588,7 @@ if (nzchar(feed)) cfg$feed <- feed
 refresh <- parse_bool(env_or("GEN5_GEN4_EQ_REFRESH", "false"), default = FALSE)
 checkpoint_only <- parse_bool(env_or("GEN5_GEN4_EQ_CHECKPOINT_ONLY", "false"), default = FALSE)
 stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN4_EQ_STAMP", "20260706"))
+gen4_summary_scope <- env_or("GEN5_GEN4_EQ_GEN4_SUMMARY_SCOPE", "artifact_full")
 root_output_dir <- file.path(repo_root, "runs", "research_workbench", "gen4_equivalence", paste0("gen4_equivalence_", stamp))
 dir.create(root_output_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -615,7 +616,7 @@ grid_filter <- env_or("GEN5_GEN4_EQ_GRID_FILTER", "gen4_picked_specs")
 grid_n <- 4L
 min_train_state_rows <- 20L
 strategy_grid_preset <- "gen4_daily_default"
-research_note <- "Gen4-equivalence screen: Gen4 research universe as PCA context, Gen4 live/reporting universe as traded symbols, long/pooled PCA, 4x4 quantile states, expanding TRAIN from 2016Q4, and Gen4 daily parameter breadth for implemented Gen5.1 strategy families."
+research_note <- "Gen4-equivalence screen: Gen4 research universe as PCA context, Gen4 live/reporting universe as traded symbols, long/pooled PCA, 4x4 quantile states, expanding TRAIN from 2016Q4, and Gen4 daily parameter breadth for implemented Gen5.2 strategy families."
 
 base_model_grid <- g5_bridge_model_grid(candidate_families, strategy_grid_preset)
 model_grid <- if (identical(grid_filter, "gen4_picked_specs")) {
@@ -646,7 +647,7 @@ settings <- list(
   research_note = research_note
 )
 
-message("Gen5.1 Gen4-equivalence screen")
+message("Gen5.2 Gen4-equivalence screen")
 message("Output root: ", root_output_dir)
 message("Gen4 artifact root: ", gen4_root)
 message("Feed: ", cfg$feed)
@@ -656,6 +657,7 @@ message("Live symbols: ", paste(settings$symbols, collapse = ","))
 message("Context symbols: ", paste(settings$context_symbols, collapse = ","))
 message("Quarters: ", paste(quarters, collapse = ","))
 message("Grid filter: ", settings$grid_filter, " (", settings$model_grid_rows, " model rows)")
+message("Gen4 summary scope: ", gen4_summary_scope)
 if (length(settings$unmatched_gen4_specs)) {
   message("Unmatched Gen4 specs ignored: ", paste(head(settings$unmatched_gen4_specs, 10L), collapse = ", "), if (length(settings$unmatched_gen4_specs) > 10L) " ..." else "")
 }
@@ -828,7 +830,7 @@ gen5_summary <- do.call(rbind, lapply(split(equity_all, paste(equity_all$selecti
   x <- x[order(as.Date(x$session_date)), , drop = FALSE]
   tail_row <- x[nrow(x), , drop = FALSE]
   data.frame(
-    source = "Gen5.1 replay",
+    source = "Gen5.2 replay",
     selection_policy = as.character(x$selection_policy[[1L]]),
     group_id = as.character(x$group_id[[1L]]),
     strategy_return = as.numeric(tail_row$strategy_equity[[1L]]) - 1,
@@ -838,20 +840,49 @@ gen5_summary <- do.call(rbind, lapply(split(equity_all, paste(equity_all$selecti
   )
 }))
 
-gen4_summary_raw <- utils::read.csv(file.path(gen4_phase40, "phase40_live_summary_metrics.csv"), stringsAsFactors = FALSE)
-gen4_summary <- data.frame(
-  source = "Gen4 artifact",
-  selection_policy = "pooled_family_asset_variant",
-  group_id = as.character(gen4_summary_raw$portfolio_id),
-  strategy_return = as.numeric(gen4_summary_raw$portfolio_oos_total_return),
-  benchmark_return = as.numeric(gen4_summary_raw$portfolio_benchmark_total_return),
-  alpha_vs_benchmark = as.numeric(gen4_summary_raw$portfolio_oos_total_return) - as.numeric(gen4_summary_raw$portfolio_benchmark_total_return),
-  stringsAsFactors = FALSE
-)
-comparison_summary <- rbind(gen4_summary, gen5_summary)
-
 gen4_equity <- utils::read.csv(file.path(gen4_phase40, "phase40_live_portfolio_cluster_oos_equity.csv"), stringsAsFactors = FALSE)
 gen4_equity$datetime <- as.Date(gen4_equity$datetime)
+
+quarter_bounds <- lapply(quarters, g5_bridge_quarter_bounds)
+comparison_start <- min(as.Date(vapply(quarter_bounds, function(x) as.character(x$live_start_date), character(1L))))
+comparison_end <- max(as.Date(vapply(quarter_bounds, function(x) as.character(x$live_end_date), character(1L))))
+
+if (identical(gen4_summary_scope, "selected_quarters")) {
+  gen4_equity_for_summary <- gen4_equity[as.Date(gen4_equity$datetime) >= comparison_start & as.Date(gen4_equity$datetime) <= comparison_end, , drop = FALSE]
+  gen4_summary <- do.call(rbind, lapply(split(gen4_equity_for_summary, as.character(gen4_equity_for_summary$portfolio_id)), function(x) {
+    x <- x[order(as.Date(x$datetime)), , drop = FALSE]
+    data.frame(
+      source = "Gen4 artifact",
+      selection_policy = "pooled_family_asset_variant",
+      group_id = as.character(x$portfolio_id[[1L]]),
+      strategy_return = as.numeric(x$port_eq_oos[[nrow(x)]]) / as.numeric(x$port_eq_oos[[1L]]) - 1,
+      benchmark_return = as.numeric(x$port_eq_benchmark[[nrow(x)]]) / as.numeric(x$port_eq_benchmark[[1L]]) - 1,
+      alpha_vs_benchmark = (as.numeric(x$port_eq_oos[[nrow(x)]]) / as.numeric(x$port_eq_oos[[1L]]) - 1) - (as.numeric(x$port_eq_benchmark[[nrow(x)]]) / as.numeric(x$port_eq_benchmark[[1L]]) - 1),
+      stringsAsFactors = FALSE
+    )
+  }))
+  gen4_equity_plot <- do.call(rbind, lapply(split(gen4_equity_for_summary, as.character(gen4_equity_for_summary$portfolio_id)), function(x) {
+    x <- x[order(as.Date(x$datetime)), , drop = FALSE]
+    x$port_eq_oos <- as.numeric(x$port_eq_oos) / as.numeric(x$port_eq_oos[[1L]])
+    x$port_eq_benchmark <- as.numeric(x$port_eq_benchmark) / as.numeric(x$port_eq_benchmark[[1L]])
+    x
+  }))
+} else if (identical(gen4_summary_scope, "artifact_full")) {
+  gen4_summary_raw <- utils::read.csv(file.path(gen4_phase40, "phase40_live_summary_metrics.csv"), stringsAsFactors = FALSE)
+  gen4_summary <- data.frame(
+    source = "Gen4 artifact",
+    selection_policy = "pooled_family_asset_variant",
+    group_id = as.character(gen4_summary_raw$portfolio_id),
+    strategy_return = as.numeric(gen4_summary_raw$portfolio_oos_total_return),
+    benchmark_return = as.numeric(gen4_summary_raw$portfolio_benchmark_total_return),
+    alpha_vs_benchmark = as.numeric(gen4_summary_raw$portfolio_oos_total_return) - as.numeric(gen4_summary_raw$portfolio_benchmark_total_return),
+    stringsAsFactors = FALSE
+  )
+  gen4_equity_plot <- gen4_equity
+} else {
+  g5_stop(paste0("Unsupported GEN5_GEN4_EQ_GEN4_SUMMARY_SCOPE: ", gen4_summary_scope))
+}
+comparison_summary <- rbind(gen4_summary, gen5_summary)
 
 gen4_family_raw <- utils::read.csv(file.path(gen4_phase40, "phase40_picked_params_by_fold_asset.csv"), stringsAsFactors = FALSE)
 gen4_family <- as.data.frame(table(family = as.character(gen4_family_raw$family)), stringsAsFactors = FALSE)
@@ -888,6 +919,9 @@ run_spec <- data.frame(
   screen_id = paste0("gen4_equivalence_", stamp),
   evidence_role = "gen4_artifact_forensic_reproduction_lane",
   gen4_artifact_root = normalizePath(gen4_root, winslash = "/", mustWork = FALSE),
+  gen4_summary_scope = gen4_summary_scope,
+  comparison_start_date = comparison_start,
+  comparison_end_date = comparison_end,
   symbols = paste(settings$symbols, collapse = ","),
   context_symbols = paste(settings$context_symbols, collapse = ","),
   pca_panel_mode = "pooled_asset_day",
@@ -901,7 +935,7 @@ run_spec <- data.frame(
   model_grid_rows = settings$model_grid_rows,
   unmatched_gen4_spec_count = length(settings$unmatched_gen4_specs),
   candidate_families = paste(settings$candidate_families, collapse = ","),
-  known_remaining_gap = "Gen4 artifact included SMA trend/cross candidates and exact Gen4 volatility-breakout semantics; Gen5.1 does not implement SMA families. Default grid_filter=gen4_picked_specs limits Gen5.1 to specs actually selected by the Gen4 artifact; GEN5_GEN4_EQ_GRID_FILTER=full restores the full implemented Gen5.1 grid.",
+  known_remaining_gap = "Gen4 artifact included SMA trend/cross candidates and exact Gen4 volatility-breakout semantics; Gen5.2 does not implement SMA families. Default grid_filter=gen4_picked_specs limits Gen5.2 to specs actually selected by the Gen4 artifact; GEN5_GEN4_EQ_GRID_FILTER=full restores the full implemented Gen5.2 grid.",
   research_only = TRUE,
   stringsAsFactors = FALSE
 )
@@ -917,7 +951,7 @@ g5_wfa_write_csv(comparison_summary, paths$comparison_summary_csv)
 g5_wfa_write_csv(gen5_family, paths$gen5_family_csv)
 g5_wfa_write_csv(gen4_family, paths$gen4_family_csv)
 
-write_equity_overlay(equity_all, gen4_equity, paths$equity_overlay_png)
+write_equity_overlay(equity_all, gen4_equity_plot, paths$equity_overlay_png)
 write_alpha_scorecard(comparison_summary[comparison_summary$group_id %in% c("cluster_1", "cluster_3"), , drop = FALSE], paths$alpha_scorecard_png)
 write_quarter_heatmap(quarter_summary[quarter_summary$group_id %in% c("cluster_1", "cluster_3"), , drop = FALSE], paths$quarter_heatmap_png)
 write_family_comparison(gen4_family, gen5_family, paths$family_mix_png)
@@ -928,23 +962,24 @@ comparison_print$benchmark_return <- pct_label(comparison_print$benchmark_return
 comparison_print$alpha_vs_benchmark <- pp_label(comparison_print$alpha_vs_benchmark)
 
 report <- c(
-  "# Gen5.1 Gen4-Equivalence Screen",
+  "# Gen5.2 Gen4-Equivalence Screen",
   "",
   "## Plain-Language Purpose",
   "",
-  "This screen asks whether the apparent gap between recent Gen5.1 tactical replays and their equal-weight benchmarks is explained by a setup mismatch. It recreates the closest implemented Gen5.1 analogue of the Gen4 experiment packet `FM-002-024-R3_med_16_bins`, then compares it to the Gen4 artifact rather than relying on memory.",
+  "This screen asks whether the apparent gap between recent Gen5.2 tactical replays and their equal-weight benchmarks is explained by a setup mismatch. It recreates the closest implemented Gen5.2 analogue of the Gen4 experiment packet `FM-002-024-R3_med_16_bins`, then compares it to the Gen4 artifact rather than relying on memory.",
   "",
   "The goal is not to crown a live allocation. It is to identify which remaining differences are methodological and which are simply benchmark/reporting differences.",
   "",
   "## Scope",
   "",
   "- Gen4 artifact: `FM-002-024-R3_med_16_bins`.",
-  "- Gen5.1 context universe: Gen4 `RESEARCH_ASSETS` analogue, 29 symbols.",
-  paste0("- Gen5.1 trade/report universe: ", length(settings$symbols), " symbols: `", paste(settings$symbols, collapse = ","), "`."),
+  "- Gen5.2 context universe: Gen4 `RESEARCH_ASSETS` analogue, 29 symbols.",
+  paste0("- Gen5.2 trade/report universe: ", length(settings$symbols), " symbols: `", paste(settings$symbols, collapse = ","), "`."),
   "- PCA/state surface: long/pooled asset-day PCA plus `4x4` quantile grid.",
   paste0("- TRAIN/OOS schedule: expanding TRAIN from `2016Q4` through the prior quarter; OOS quarters `", paste(quarters, collapse = ","), "`."),
-  "- Selection policies: current Gen5.1 direct-spec and Gen4-style pooled-family.",
-  paste0("- Strategy grid: `", strategy_grid_preset, "` for implemented Gen5.1 families, with grid filter `", settings$grid_filter, "` (`", settings$model_grid_rows, "` model rows)."),
+  paste0("- Gen4 artifact summary scope: `", gen4_summary_scope, "` over `", comparison_start, "` to `", comparison_end, "`."),
+  "- Selection policies: Gen5.2 direct-spec and Gen5.2 pooled-family using shared eligibility/scoring.",
+  paste0("- Strategy grid: `", strategy_grid_preset, "` for implemented Gen5.2 families, with grid filter `", settings$grid_filter, "` (`", settings$model_grid_rows, "` model rows)."),
   "",
   "## Main Comparison",
   "",
@@ -963,11 +998,12 @@ report <- c(
   "",
   "## Known Remaining Gaps",
   "",
-  "- Gen4 included SMA trend/cross parameter families in its grid; Gen5.1 does not implement SMA strategy families.",
-  "- The default run filters the Gen5.1 grid to the strategy specs actually picked in the Gen4 artifact; this is a forensic equivalence slice, not a full unused-grid search.",
-  "- Gen4's exact `state_gated_volatility_expansion_breakout` semantics may not be identical to Gen5.1 `vol_expansion_breakout`.",
+  "- Gen4 included SMA trend/cross parameter families in its grid; Gen5.2 does not implement SMA strategy families.",
+  "- The default run filters the Gen5.2 grid to the strategy specs actually picked in the Gen4 artifact; this is a forensic equivalence slice, not a full unused-grid search.",
+  "- Gen4's exact `state_gated_volatility_expansion_breakout` semantics may not be identical to Gen5.2 `vol_expansion_breakout`.",
   "- This wrapper uses a Phase40-style quarterly replay proxy, not the live-advice bridge's adjacent-quarter continuity behavior.",
-  "- The Gen5.1 benchmark curve is an equal-symbol close-to-close proxy built from replay positions; it is intended for inspection, not accepted allocation evidence.",
+  "- This wrapper does not yet write the true live-capital portfolio-accounting surface; it is a Gen4 artifact/replay calibration layer.",
+  "- The Gen5.2 benchmark curve is an equal-symbol close-to-close proxy built from replay positions; it is intended for inspection, not accepted allocation evidence.",
   "",
   "## Leakage Guardrails",
   "",
