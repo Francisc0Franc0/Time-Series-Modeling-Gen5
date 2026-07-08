@@ -233,21 +233,25 @@ That means the state active on the entry signal date selects the complete `strat
 
 ## Latest Gen5.2 Calibration Finding
 
-The newest Gen5.2-vs-Gen4 calibration packet remains:
+The newest Gen5.2-vs-Gen4 calibration packet is:
 
-`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52calfull162024q420260707/`
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52fallbackfull162024q420260708/`
 
 The updated mechanics deck is:
 
 `presentations/gen5_2_mechanics_and_gen4_calibration.pptx`
 
-The SOFI/PLTR authority audit now lives under:
+The SOFI/PLTR trade-tape audit lives under:
 
-`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52calfull162024q420260707/trade_tape_audit/`
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52fallbackfull162024q420260708/trade_tape_audit/`
 
-Key audit files include `sofi_pltr_authority_ledger.csv`, `sofi_pltr_state_path_summary.csv`, `sofi_pltr_oos_authority_heatmap.png`, `sofi_pltr_no_trade_diagnostic.png`, and `sofi_pltr_state_position_timeline.png`.
+The SOFI timing probe lives under:
 
-Readout: the remaining high-beta/cluster-3 gap is not caused by a live-basket mismatch or by Gen4 cluster labels feeding the simulation. SOFI is the cleanest clue. In 2024Q4, SOFI spent `53 / 64` OOS days in state `S1_4`; both Gen5.2 lanes selected no-trade there because state-local eligibility found `0` active eligible SOFI variants. Gen4's Phase40 picked-params artifact, however, selected `ema_cross_f1_s10` at fold/asset granularity and generated three Q4 SOFI trades, including a `+98.7%` first trade. The highest-impact next probe is therefore authority granularity: add a narrowly scoped third calibration lane that keeps TRAIN-only state/family routing but chooses asset/family parameters at fold scope, then compare that lane against direct-spec and pooled-family on the same 2024Q4 calibration before reopening larger context/PCA/basket factorials.
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52fallbackfull162024q420260708/sofi_ema_cross_semantics_probe/`
+
+Key audit files include `cluster3_trade_tape.png`, `cluster3_symbol_participation_summary.csv`, `sofi_pltr_oos_authority_heatmap.png`, `sofi_pltr_no_trade_diagnostic.png`, `sofi_ema_cross_summary.csv`, `sofi_ema_cross_event_index.csv`, and `sofi_ema_cross_signal_timeline.png`.
+
+Readout: the remaining high-beta/cluster-3 gap is not caused by a live-basket mismatch or by Gen4 cluster labels feeding the simulation. SOFI is the cleanest clue. Gen4 entered SOFI `ema_cross_f1_s10` on `2024-10-04` after a `2024-10-03` cross-above signal and rode that trade to a large gain. The Gen5.2 fallback lane did implement the Gen4-style sparse asset/state fallback and did route SOFI to the same `ema_cross_f1_s10` spec, but not until `2024-10-09`, after the entry signal was stale. Because Gen5.2 replay currently enters only on a fresh signal while flat, it waited for the next fresh cross and first entered SOFI on `2024-12-12`, producing only the late losing trades. The highest-impact next probe is therefore not broader context/PCA/basket work; it is an A/B replay-semantics lane that keeps authority fixed and compares current fresh-cross entry against a state-switch trend-continuation entry rule for trend-following families.
 
 ## What Is Not Implemented Yet
 

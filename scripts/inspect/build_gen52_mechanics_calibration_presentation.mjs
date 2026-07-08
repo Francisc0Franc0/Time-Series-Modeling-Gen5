@@ -28,28 +28,30 @@ if (!artifactEntrypoint) {
 
 const { Presentation, PresentationFile } = await import(pathToFileURL(artifactEntrypoint).href);
 
-const calibrationDir = path.join(
+const packetDir = path.join(
   repoRoot,
   "runs",
   "research_workbench",
   "gen4_equivalence",
-  "gen4_equivalence_gen52calfull162024q420260707",
+  "gen4_equivalence_gen52fallbackfull162024q420260708",
 );
-const auditDir = path.join(calibrationDir, "trade_tape_audit");
+const auditDir = path.join(packetDir, "trade_tape_audit");
+const probeDir = path.join(packetDir, "sofi_ema_cross_semantics_probe");
 const outputPptx = path.join(repoRoot, "presentations", "gen5_2_mechanics_and_gen4_calibration.pptx");
-const previewDir = path.join(auditDir, "mechanics_deck_preview");
+const previewDir = path.join(auditDir, "mechanics_deck_preview_final");
 
 const colors = {
-  ink: "#111111",
-  muted: "#555555",
-  rule: "#B8BCC4",
-  panel: "#EDEDED",
+  ink: "#101216",
+  muted: "#59606A",
+  rule: "#C8CDD4",
+  panel: "#F0F2F4",
   canvas: "#FFFFFF",
   direct: "#2E86AB",
   pooled: "#9B5DE5",
+  fallback: "#D1495B",
   gen4: "#111111",
   hold: "#AEB4BE",
-  highlight: "#FF6B35",
+  accent: "#FF6B35",
 };
 
 async function writeBlob(filePath, blob) {
@@ -127,8 +129,8 @@ function addText(slide, text, position, style = {}) {
 }
 
 function addTitle(slide, title, kicker = "Gen5.2 mechanics and Gen4 calibration") {
-  addText(slide, kicker, { left: 42, top: 34, width: 620, height: 28 }, { fontSize: 16, bold: true, color: colors.muted });
-  addText(slide, title, { left: 42, top: 74, width: 1130, height: 92 }, { fontSize: 41, bold: true });
+  addText(slide, kicker, { left: 42, top: 34, width: 660, height: 28 }, { fontSize: 16, bold: true, color: colors.muted });
+  addText(slide, title, { left: 42, top: 74, width: 1130, height: 88 }, { fontSize: 39, bold: true });
   slide.shapes.add({
     geometry: "rect",
     position: { left: 42, top: 170, width: 1196, height: 1 },
@@ -162,243 +164,271 @@ async function addImage(slide, imagePath, position, alt) {
 }
 
 function addMetric(slide, label, value, position, color = colors.ink) {
-  addText(slide, value, { left: position.left, top: position.top, width: position.width, height: 54 }, { fontSize: 40, bold: true, color });
-  addText(slide, label, { left: position.left, top: position.top + 58, width: position.width, height: 44 }, { fontSize: 15, color: colors.muted });
+  addText(slide, value, { left: position.left, top: position.top, width: position.width, height: 54 }, { fontSize: 38, bold: true, color });
+  addText(slide, label, { left: position.left, top: position.top + 58, width: position.width, height: 42 }, { fontSize: 15, color: colors.muted });
 }
 
-function addBullets(slide, bullets, left, top, width, fontSize = 20, gap = 48) {
+function addBullets(slide, bullets, left, top, width, fontSize = 20, gap = 52) {
   bullets.forEach((bullet, index) => {
-    addText(slide, "■", { left, top: top + index * gap + 4, width: 20, height: 24 }, { fontSize: 11, color: bullet.color ?? colors.ink });
+    addText(slide, "-", { left, top: top + index * gap, width: 20, height: 28 }, { fontSize, bold: true, color: bullet.color ?? colors.ink });
     addText(slide, bullet.text, { left: left + 28, top: top + index * gap, width, height: gap }, { fontSize, color: bullet.textColor ?? colors.muted });
   });
 }
 
-function laneRow(rows, lane) {
+function findComparison(rows, source, selectionPolicy, groupId) {
+  return rows.find((row) => row.source === source && row.selection_policy === selectionPolicy && row.group_id === groupId);
+}
+
+function findLane(rows, lane) {
   return rows.find((row) => row.lane === lane);
 }
 
-const runSpec = (await readCsv(path.join(calibrationDir, "gen4_equivalence_run_spec.csv")))[0];
+function findSymbol(rows, lane, symbol) {
+  return rows.find((row) => row.lane === lane && row.symbol === symbol);
+}
+
+const runSpec = (await readCsv(path.join(packetDir, "gen4_equivalence_run_spec.csv")))[0];
+const comparisonSummary = await readCsv(path.join(packetDir, "gen4_equivalence_comparison_summary.csv"));
 const laneSummary = await readCsv(path.join(auditDir, "cluster3_lane_summary.csv"));
-const comparisonSummary = await readCsv(path.join(calibrationDir, "gen4_equivalence_comparison_summary.csv"));
+const symbolSummary = await readCsv(path.join(auditDir, "cluster3_symbol_participation_summary.csv"));
 const authorityLedger = await readCsv(path.join(auditDir, "sofi_pltr_authority_ledger.csv"));
-const gen4FocusTrades = await readCsv(path.join(auditDir, "sofi_pltr_gen4_trade_tape.csv"));
-const clusterMap = await readCsv(path.join(
-  "C:",
-  "Users",
-  "Franc",
-  "OneDrive",
-  "Documents",
-  "Francis",
-  "Peltata Project",
-  "Time-Series-Modeling",
-  "Experiments",
-  "FM-002-024-R3_med_16_bins",
-  "asset_cluster_map.csv",
-));
+const semanticsSummary = (await readCsv(path.join(probeDir, "sofi_ema_cross_summary.csv")))[0];
+const eventIndex = await readCsv(path.join(probeDir, "sofi_ema_cross_event_index.csv"));
 
 const liveSymbols = runSpec.symbols.split(",").map((x) => x.trim()).filter(Boolean).sort();
-const cluster1 = clusterMap.filter((row) => row.cluster_id === "1" && liveSymbols.includes(row.asset)).map((row) => row.asset).sort();
-const cluster3 = clusterMap.filter((row) => row.cluster_id === "3" && liveSymbols.includes(row.asset)).map((row) => row.asset).sort();
-const cluster2 = clusterMap.filter((row) => row.cluster_id === "2" && liveSymbols.includes(row.asset)).map((row) => row.asset).sort();
+const cluster3Symbols = "AMD,NVDA,PLTR,SOFI,TSLA";
 
-const gen4Cluster3 = comparisonSummary.find((row) => row.source === "Gen4 artifact" && row.group_id === "cluster_3");
-const directCluster3 = comparisonSummary.find((row) => row.selection_policy === "asset_state_direct_spec" && row.group_id === "cluster_3");
-const pooledCluster3 = comparisonSummary.find((row) => row.selection_policy === "pooled_family_asset_variant" && row.group_id === "cluster_3");
-const sofiDirectS14 = authorityLedger.find((row) => row.lane === "Gen5.2 direct" && row.symbol === "SOFI" && row.state_id === "S1_4");
-const sofiPooledS14 = authorityLedger.find((row) => row.lane === "Gen5.2 pooled" && row.symbol === "SOFI" && row.state_id === "S1_4");
-const sofiDirectS24 = authorityLedger.find((row) => row.lane === "Gen5.2 direct" && row.symbol === "SOFI" && row.state_id === "S2_4");
-const sofiFirstGen4Trade = gen4FocusTrades.find((row) => row.symbol === "SOFI");
+const gen4Cluster3 = findComparison(comparisonSummary, "Gen4 artifact", "pooled_family_asset_variant", "cluster_3");
+const directCluster3 = findComparison(comparisonSummary, "Gen5.2 replay", "asset_state_direct_spec", "cluster_3");
+const pooledCluster3 = findComparison(comparisonSummary, "Gen5.2 replay", "pooled_family_asset_variant", "cluster_3");
+const fallbackCluster3 = findComparison(comparisonSummary, "Gen5.2 replay", "pooled_family_asset_variant_state_fallback", "cluster_3");
+const gen4Lane = findLane(laneSummary, "Gen4 artifact");
+const directLane = findLane(laneSummary, "Gen5.2 direct");
+const pooledLane = findLane(laneSummary, "Gen5.2 pooled");
+const fallbackLane = findLane(laneSummary, "Gen5.2 fallback");
+const sofiFallback = findSymbol(symbolSummary, "Gen5.2 fallback", "SOFI");
+const sofiGen4 = findSymbol(symbolSummary, "Gen4 artifact", "SOFI");
+const sofiS14Fallback = authorityLedger.find((row) => row.lane === "Gen5.2 fallback" && row.symbol === "SOFI" && row.state_id === "S1_4");
+
+const event = (type) => eventIndex.find((row) => row.event_type === type)?.event_date ?? "NA";
 
 const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addText(slide, "Gen5.2 mechanics and calibration", { left: 42, top: 50, width: 520, height: 50 }, { fontSize: 22, bold: true, color: colors.muted });
-  addText(slide, "Making the Gen4 comparison fair enough to learn from", { left: 42, top: 175, width: 1020, height: 205 }, { fontSize: 62, bold: true });
+  addText(slide, "Gen5.2 mechanics and calibration", { left: 42, top: 52, width: 560, height: 44 }, { fontSize: 22, bold: true, color: colors.muted });
+  addText(slide, "Why the Gen4 gap is now a state-gated timing question", { left: 42, top: 172, width: 1050, height: 190 }, { fontSize: 56, bold: true });
   addText(
     slide,
-    "This deck summarizes why Gen5.2 was opened, what Gen4 mechanics were cloned into both Gen5.2 selection lanes, and what the latest trade-tape audit says about the remaining gap.",
-    { left: 42, top: 430, width: 870, height: 94 },
+    "This update folds in the Gen4-style fallback lane, trade-tape audit, and SOFI EMA timing probe from the 2024Q4 calibration packet.",
+    { left: 42, top: 430, width: 900, height: 82 },
     { fontSize: 24, color: colors.muted },
   );
-  addText(slide, "2024Q4 Gen4-equivalence calibration", { left: 42, top: 620, width: 420, height: 28 }, { fontSize: 16, bold: true });
+  addText(slide, "Live basket held constant across Gen4 and Gen5.2", { left: 42, top: 620, width: 560, height: 28 }, { fontSize: 16, bold: true });
   addFooter(slide, 1);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Gen5.2 exists because selection mechanics were a real fork");
-  addPanel(slide, { left: 42, top: 218, width: 525, height: 300 });
-  addPanel(slide, { left: 610, top: 218, width: 628, height: 300 });
-  addText(slide, "The problem", { left: 72, top: 250, width: 400, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, "Earlier Gen5.1 screens compared direct-spec selection against Gen4-style pooled-family selection, but the lanes were not yet sharing all Gen4-faithful eligibility and no-trade mechanics.", { left: 72, top: 312, width: 430, height: 150 }, { fontSize: 21, color: colors.muted });
-  addText(slide, "The Gen5.2 response", { left: 642, top: 250, width: 430, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, "Keep both selection philosophies alive, but make their underlying candidate scoring, trade-count eligibility, sparse-state handling, and no-trade behavior consistent before interpreting results.", { left: 642, top: 312, width: 520, height: 150 }, { fontSize: 21, color: colors.muted });
+  addTitle(slide, "The question we were trying to make fair");
+  addPanel(slide, { left: 42, top: 218, width: 360, height: 310 });
+  addPanel(slide, { left: 460, top: 218, width: 360, height: 310 });
+  addPanel(slide, { left: 878, top: 218, width: 360, height: 310 });
+  addText(slide, "What we knew", { left: 72, top: 250, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "Gen4 had strong 2024Q4 alpha in the high-beta reporting subset, especially through SOFI. Gen5.1/5.2 was not reproducing it.", { left: 72, top: 310, width: 285, height: 142 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "What was suspect", { left: 490, top: 250, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "Gen4 pooled strategy families by state, then selected asset-specific params. Gen5 direct picked the full spec per asset/state.", { left: 490, top: 310, width: 285, height: 142 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "What Gen5.2 did", { left: 908, top: 250, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "It kept direct and pooled lanes, then added Gen4-faithful eligibility, no-trade behavior, and a fallback lane that borrows the pooled state winner when an asset/state cell is sparse.", { left: 908, top: 310, width: 285, height: 172 }, { fontSize: 20, color: colors.muted });
   addFooter(slide, 2);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Both Gen5.2 lanes now share the same Gen4-faithful primitives");
-  const items = [
-    ["TRAIN-only scoring", "No OOS rows influence state assignment, candidate eligibility, strategy choice, or replay authority."],
-    ["Active candidates need trades", "Active rows must clear the shared minimum trade-count gate; no-trade remains allowed as an abstention competitor."],
-    ["No-trade can force an exit", "Gen4's no_trade_exit_immediate concept is represented as an explicit force_exit_next_open state override."],
-    ["Direct and pooled differ only at selection philosophy", "Direct chooses the best full asset/state spec; pooled chooses a state-level family, then asset-specific params inside it."],
-  ];
-  items.forEach((item, index) => {
-    const left = index % 2 === 0 ? 42 : 650;
-    const top = index < 2 ? 218 : 436;
-    addPanel(slide, { left, top, width: 545, height: 150 });
-    addText(slide, item[0], { left: left + 24, top: top + 22, width: 470, height: 30 }, { fontSize: 25, bold: true });
-    addText(slide, item[1], { left: left + 24, top: top + 66, width: 485, height: 64 }, { fontSize: 18, color: colors.muted });
-  });
+  addTitle(slide, "The live basket and reporting scope are controlled");
+  addPanel(slide, { left: 42, top: 214, width: 500, height: 320 });
+  addPanel(slide, { left: 610, top: 214, width: 628, height: 320 });
+  addText(slide, "Exact live basket", { left: 72, top: 246, width: 360, height: 34 }, { fontSize: 27, bold: true });
+  addText(slide, liveSymbols.join(", "), { left: 72, top: 306, width: 405, height: 164 }, { fontSize: 21, color: colors.ink });
+  addText(slide, "Reporting subset under audit", { left: 642, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  addText(slide, cluster3Symbols, { left: 642, top: 306, width: 500, height: 48 }, { fontSize: 24, bold: true, color: colors.accent });
+  addBullets(slide, [
+    { text: "Cluster labels are reporting lenses inherited from Gen4 artifact summaries." },
+    { text: "They do not feed the PCA state fit, strategy selection, replay trades, or portfolio accounting." },
+    { text: "This lets us isolate mechanics before reopening basket design." },
+  ], 642, 386, 510, 18, 52);
   addFooter(slide, 3);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The calibration holds the live basket identical");
-  addPanel(slide, { left: 42, top: 210, width: 550, height: 330 });
-  addPanel(slide, { left: 636, top: 210, width: 602, height: 330 });
-  addText(slide, "Exact live/reporting basket", { left: 72, top: 242, width: 430, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, liveSymbols.join(", "), { left: 72, top: 302, width: 450, height: 180 }, { fontSize: 23, color: colors.ink });
-  addText(slide, "Confirmed parity", { left: 668, top: 242, width: 430, height: 34 }, { fontSize: 28, bold: true });
-  addBullets(slide, [
-    { text: "Gen4 exported live scope contains the same 16 symbols." },
-    { text: "Gen5.2 replay uses the same 16 symbols from the run spec." },
-    { text: "The broader 29-symbol research/context universe is used for regime context, not as the live basket." },
-  ], 668, 304, 500, 20, 56);
+  addTitle(slide, "What 'no asset plus state winner' means mechanically");
+  addPanel(slide, { left: 42, top: 216, width: 365, height: 330 });
+  addPanel(slide, { left: 458, top: 216, width: 365, height: 330 });
+  addPanel(slide, { left: 874, top: 216, width: 365, height: 330 });
+  addText(slide, "State family winner", { left: 72, top: 248, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The pooled lane can decide that a state wants a family such as ema_cross, based on the pooled TRAIN evidence for that state.", { left: 72, top: 306, width: 290, height: 138 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Asset params still matter", { left: 488, top: 248, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "For each asset in that same state, Gen5.2 still needs a qualifying variant inside the chosen family, such as f1/s10.", { left: 488, top: 306, width: 290, height: 138 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "How it can be empty", { left: 904, top: 248, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The asset/state slice may be sparse, may not generate enough trades, or may have only no-trade eligible rows. Strict pooled abstains; fallback borrows the pooled state leader.", { left: 904, top: 306, width: 290, height: 166 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "In the latest SOFI case, fallback solved the empty-cell problem, but not the timing problem.", { left: 42, top: 594, width: 930, height: 38 }, { fontSize: 21, bold: true, color: colors.accent });
   addFooter(slide, 4);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Cluster 1 and Cluster 3 are reporting lenses, not trade inputs");
-  addPanel(slide, { left: 42, top: 218, width: 360, height: 320 });
-  addPanel(slide, { left: 460, top: 218, width: 360, height: 320 });
-  addPanel(slide, { left: 878, top: 218, width: 360, height: 320 });
-  addText(slide, "Cluster 1", { left: 72, top: 250, width: 240, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, cluster1.join(", "), { left: 72, top: 310, width: 285, height: 140 }, { fontSize: 22, color: colors.muted });
-  addText(slide, "Cluster 3", { left: 490, top: 250, width: 240, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, cluster3.join(", "), { left: 490, top: 310, width: 285, height: 140 }, { fontSize: 22, color: colors.muted });
-  addText(slide, "What this means", { left: 908, top: 250, width: 250, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, "The asset clusters come from a separate Gen4 asset-level PCA/clustering map. They are applied after symbol-level replay to aggregate and visualize equity curves.", { left: 908, top: 310, width: 270, height: 136 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "They do not contaminate PCA state fitting, strategy selection, simulated trades, or live basket construction.", { left: 908, top: 472, width: 270, height: 64 }, { fontSize: 19, bold: true, color: colors.highlight });
+  addTitle(slide, "The fallback lane fired, but it did not close the alpha gap");
+  await addImage(slide, path.join(packetDir, "gen4_equivalence_alpha_scorecard.png"), { left: 42, top: 202, width: 760, height: 430 }, "Gen4 and Gen5.2 alpha scorecard");
+  addMetric(slide, "Gen4 cluster 3 alpha", pp(gen4Cluster3.alpha_vs_benchmark), { left: 850, top: 214, width: 330 }, colors.gen4);
+  addMetric(slide, "Gen5.2 direct alpha", pp(directCluster3.alpha_vs_benchmark), { left: 850, top: 326, width: 330 }, colors.direct);
+  addMetric(slide, "Gen5.2 strict pooled alpha", pp(pooledCluster3.alpha_vs_benchmark), { left: 850, top: 438, width: 330 }, colors.pooled);
+  addMetric(slide, "Gen5.2 fallback alpha", pp(fallbackCluster3.alpha_vs_benchmark), { left: 850, top: 550, width: 330 }, colors.fallback);
   addFooter(slide, 5);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The comparison is now scoped to the same quarter");
-  addPanel(slide, { left: 42, top: 210, width: 350, height: 330 });
-  addPanel(slide, { left: 465, top: 210, width: 350, height: 330 });
-  addPanel(slide, { left: 888, top: 210, width: 350, height: 330 });
-  addText(slide, "What changed", { left: 70, top: 238, width: 260, height: 30 }, { fontSize: 24, bold: true });
-  addText(slide, "Gen4 artifact equity is normalized over 2024-10-01 to 2024-12-31, matching the Gen5.2 replay window.", { left: 70, top: 294, width: 280, height: 116 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "Why it matters", { left: 493, top: 238, width: 260, height: 30 }, { fontSize: 24, bold: true });
-  addText(slide, "The earlier full-history artifact comparison could exaggerate differences. This slice asks a cleaner behavioral question.", { left: 493, top: 294, width: 280, height: 116 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "What remains", { left: 916, top: 238, width: 260, height: 30 }, { fontSize: 24, bold: true });
-  addText(slide, "Cluster 1 is close. Cluster 3 still diverges, so the next audit inspected trade timing, exposure, and selected authority.", { left: 916, top: 294, width: 280, height: 140 }, { fontSize: 20, color: colors.muted });
+  addTitle(slide, "The equity overlay shows the gap is concentrated, not universal");
+  await addImage(slide, path.join(packetDir, "gen4_equivalence_equity_overlay.png"), { left: 42, top: 202, width: 800, height: 420 }, "Gen4 and Gen5.2 equity overlay");
+  addText(slide, "Interpretation", { left: 888, top: 216, width: 290, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "Cluster 1 remains close enough that the system is not globally broken." },
+    { text: "Cluster 3 diverges during a high-beta upside window." },
+    { text: "The useful audit question is which assets and trades drove that divergence." },
+  ], 888, 282, 305, 20, 74);
   addFooter(slide, 6);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Cluster 3 remains the informative gap after normalization");
-  await addImage(slide, path.join(calibrationDir, "gen4_equivalence_equity_overlay.png"), { left: 42, top: 202, width: 760, height: 405 }, "Gen4 and Gen5.2 equity overlay");
-  addMetric(slide, "Gen4 artifact alpha, cluster 3", pp(n(gen4Cluster3.alpha_vs_benchmark)), { left: 860, top: 220, width: 310 }, colors.gen4);
-  addMetric(slide, "Gen5.2 direct alpha, cluster 3", pp(n(directCluster3.alpha_vs_benchmark)), { left: 860, top: 340, width: 310 }, colors.direct);
-  addMetric(slide, "Gen5.2 pooled alpha, cluster 3", pp(n(pooledCluster3.alpha_vs_benchmark)), { left: 860, top: 460, width: 310 }, colors.pooled);
-  addText(slide, "Interpretation: this is not a universal mismatch. It is concentrated where the high-beta subset was rising sharply.", { left: 42, top: 620, width: 930, height: 40 }, { fontSize: 18, color: colors.muted });
+  addTitle(slide, "Trade tapes show the SOFI miss clearly");
+  await addImage(slide, path.join(auditDir, "cluster3_trade_tape.png"), { left: 42, top: 190, width: 820, height: 470 }, "Cluster 3 trade tape");
+  addText(slide, "Readout", { left: 900, top: 214, width: 280, height: 34 }, { fontSize: 27, bold: true });
+  addText(
+    slide,
+    `Gen4 held SOFI for ${pct(sofiGen4.exposure)} of the quarter and captured a large early move. Fallback held SOFI for only ${pct(sofiFallback.exposure)} and only generated the two late losing round trips.`,
+    { left: 900, top: 280, width: 305, height: 170 },
+    { fontSize: 21, color: colors.muted },
+  );
+  addText(
+    slide,
+    "That says fallback changed selected authority, but did not reproduce Gen4's practical entry timing.",
+    { left: 900, top: 488, width: 305, height: 92 },
+    { fontSize: 21, bold: true, color: colors.accent },
+  );
   addFooter(slide, 7);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The audit asked whether the gap is exposure, timing, or asset selection");
-  const boxes = [
-    ["Exposure", "How often each lane was long by symbol."],
-    ["Participation", "Whether strategy returns captured each symbol's hold move."],
-    ["Trade tape", "When entries and exits occurred, and whether trades lingered."],
-    ["Family mix", "Whether the systems leaned on different strategy families."],
-  ];
-  boxes.forEach((box, i) => {
-    const left = 42 + i * 300;
-    addPanel(slide, { left, top: 230, width: 260, height: 250 });
-    addText(slide, box[0], { left: left + 22, top: 258, width: 216, height: 36 }, { fontSize: 25, bold: true });
-    addText(slide, box[1], { left: left + 22, top: 320, width: 208, height: 110 }, { fontSize: 20, color: colors.muted });
-  });
-  addText(slide, "Audit scope: shared Cluster 3 live symbols in the calibration universe, `AMD,NVDA,PLTR,SOFI,TSLA`, over 2024Q4.", { left: 42, top: 570, width: 1050, height: 38 }, { fontSize: 20, color: colors.muted });
+  addTitle(slide, "Exposure and participation confirm SOFI is the sharpest failure mode");
+  await addImage(slide, path.join(auditDir, "cluster3_exposure_heatmap.png"), { left: 42, top: 202, width: 570, height: 410 }, "Cluster 3 exposure heatmap");
+  await addImage(slide, path.join(auditDir, "cluster3_symbol_participation.png"), { left: 646, top: 202, width: 592, height: 410 }, "Cluster 3 symbol participation chart");
+  addText(slide, "SOFI went from a major Gen4 contributor to flat or late-losing in Gen5.2. PLTR and TSLA differences matter too, but SOFI gives the cleanest forensic path because the fallback lane eventually selected the same `ema_cross_f1_s10` spec.", { left: 54, top: 628, width: 1080, height: 36 }, { fontSize: 17, color: colors.muted });
   addFooter(slide, 8);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Exposure diverges by asset, not just by overall caution");
-  await addImage(slide, path.join(auditDir, "cluster3_exposure_heatmap.png"), { left: 42, top: 202, width: 760, height: 430 }, "Cluster 3 exposure heatmap");
-  addText(slide, "Most important read", { left: 845, top: 218, width: 310, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, "Gen4 is long SOFI for 89% of the quarter. Both Gen5.2 lanes are 0% long SOFI. Gen5.2 redirects active time toward PLTR and TSLA instead.", { left: 845, top: 272, width: 335, height: 170 }, { fontSize: 22, color: colors.muted });
-  addText(slide, "That makes the gap look like symbol-specific authority divergence inside the same live basket, not merely too little trading everywhere.", { left: 845, top: 470, width: 335, height: 110 }, { fontSize: 20, color: colors.muted });
+  addTitle(slide, "Authority heatmaps show fallback solved one problem");
+  await addImage(slide, path.join(auditDir, "sofi_pltr_oos_authority_heatmap.png"), { left: 42, top: 192, width: 800, height: 455 }, "SOFI and PLTR OOS authority heatmap");
+  addText(slide, "Key distinction", { left: 890, top: 212, width: 280, height: 34 }, { fontSize: 27, bold: true });
+  addText(
+    slide,
+    `Strict pooled had no active SOFI winner in S1_4. Fallback borrowed the pooled state leader, giving SOFI ${sofiS14Fallback?.strategy_family ?? "ema_cross"} / ${sofiS14Fallback?.strategy_spec_id ?? "f1/s10"} on ${sofiS14Fallback?.oos_days ?? "53"} OOS days.`,
+    { left: 890, top: 272, width: 310, height: 168 },
+    { fontSize: 20, color: colors.muted },
+  );
+  addText(
+    slide,
+    "So the remaining gap is downstream of authority availability: when was that authority active relative to the signal event?",
+    { left: 890, top: 494, width: 310, height: 98 },
+    { fontSize: 20, bold: true, color: colors.accent },
+  );
   addFooter(slide, 9);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The trade tape shows different routes through the same quarter");
-  await addImage(slide, path.join(auditDir, "cluster3_trade_tape.png"), { left: 42, top: 190, width: 810, height: 470 }, "Cluster 3 trade tape");
-  addText(slide, "What stands out", { left: 895, top: 210, width: 290, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, "Gen4 carries SOFI almost continuously. Direct gets a strong TSLA outcome and a partial PLTR outcome. Pooled is active in PLTR but undercaptures the move and also misses SOFI.", { left: 895, top: 268, width: 310, height: 178 }, { fontSize: 21, color: colors.muted });
-  addText(slide, "The next forensic layer should inspect selected state/spec rows for SOFI and PLTR, especially no-trade eligibility and family scoring.", { left: 895, top: 488, width: 310, height: 112 }, { fontSize: 20, color: colors.muted });
+  addTitle(slide, "SOFI timing probe: the right signal arrived before the right state");
+  await addImage(slide, path.join(probeDir, "sofi_ema_cross_signal_timeline.png"), { left: 42, top: 192, width: 790, height: 440 }, "SOFI EMA cross signal timing versus Gen5.2 state routing");
+  addMetric(slide, "First f1/s10 cross above", semanticsSummary.first_q4_cross_above_signal, { left: 875, top: 214, width: 310 }, colors.direct);
+  addMetric(slide, "Gen4 entry execution", semanticsSummary.gen4_first_entry_execution, { left: 875, top: 326, width: 310 }, colors.gen4);
+  addMetric(slide, "Fallback first ema_cross state", semanticsSummary.gen52_fallback_first_ema_cross_state_date, { left: 875, top: 438, width: 310 }, colors.pooled);
+  addMetric(slide, "Fallback first entry execution", semanticsSummary.gen52_fallback_first_entry_execution, { left: 875, top: 550, width: 310 }, colors.fallback);
   addFooter(slide, 10);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "SOFI narrows the gap to selected authority, not basket mismatch");
-  await addImage(slide, path.join(auditDir, "sofi_pltr_oos_authority_heatmap.png"), { left: 42, top: 192, width: 800, height: 455 }, "SOFI and PLTR OOS-selected authority heatmap");
-  addText(slide, "SOFI state path", { left: 890, top: 212, width: 280, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, `SOFI spent ${sofiDirectS14?.oos_days ?? "53"} OOS days in S1_4. Both Gen5.2 lanes selected no-trade there because the current state-local gate found ${sofiDirectS14?.active_eligible_count ?? "0"} active eligible SOFI variants.`, { left: 890, top: 270, width: 310, height: 170 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "Gen4 contrast", { left: 890, top: 470, width: 280, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, `Gen4's fold-17 SOFI picked params are asset-level: ema_cross_f1_s10. The first Q4 trade returned ${pct(n(sofiFirstGen4Trade?.ret), 1)} over ${sofiFirstGen4Trade?.bars_held ?? "47"} bars.`, { left: 890, top: 528, width: 310, height: 104 }, { fontSize: 20, color: colors.muted });
+  addTitle(slide, "The practical difference is stale-signal handling");
+  addPanel(slide, { left: 42, top: 218, width: 530, height: 300 });
+  addPanel(slide, { left: 650, top: 218, width: 530, height: 300 });
+  addText(slide, "Gen4 behavior observed", { left: 72, top: 250, width: 390, height: 34 }, { fontSize: 27, bold: true });
+  addText(
+    slide,
+    `The asset-level Gen4 SOFI authority was already ` +
+      `ema_cross_f1_s10 when the ${event("ema_cross_signal")} signal fired, so it entered on ${event("gen4_entry")} and rode the trend until ${event("ema_cross_exit_signal")}.`,
+    { left: 72, top: 310, width: 430, height: 142 },
+    { fontSize: 20, color: colors.muted },
+  );
+  addText(slide, "Gen5.2 fallback behavior observed", { left: 680, top: 250, width: 420, height: 34 }, { fontSize: 27, bold: true });
+  addText(
+    slide,
+    `State routing did not switch SOFI to ema_cross until ${event("gen5_state_switch")}. Because Gen5.2 only enters on a fresh cross while flat, it ignored the already-active trend and waited until ${event("gen5_entry_signal")}.`,
+    { left: 680, top: 310, width: 430, height: 142 },
+    { fontSize: 20, color: colors.muted },
+  );
+  addText(slide, "This is a mechanistic explanation, not a verdict that Gen4 is better. It identifies the next thing to A/B test.", { left: 42, top: 590, width: 980, height: 42 }, { fontSize: 21, bold: true, color: colors.accent });
   addFooter(slide, 11);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The flat SOFI path has two distinct causes");
-  await addImage(slide, path.join(auditDir, "sofi_pltr_no_trade_diagnostic.png"), { left: 42, top: 198, width: 570, height: 395 }, "SOFI and PLTR no-trade diagnostic");
-  await addImage(slide, path.join(auditDir, "sofi_pltr_state_position_timeline.png"), { left: 660, top: 198, width: 578, height: 395 }, "SOFI and PLTR state and position timeline");
-  addText(slide, `In S1_4, the dominant SOFI state, Gen5.2 has no active eligible SOFI candidate. In S2_4, Gen5.2 does select an active pullback spec with ${sofiDirectS24?.train_state_trade_count ?? "9"} TRAIN trades, but the eight OOS days in that state still never trigger a long replay position.`, { left: 58, top: 618, width: 1040, height: 42 }, { fontSize: 18, color: colors.muted });
+  addTitle(slide, "What the fallback iteration answered");
+  addPanel(slide, { left: 42, top: 214, width: 360, height: 320 });
+  addPanel(slide, { left: 460, top: 214, width: 360, height: 320 });
+  addPanel(slide, { left: 878, top: 214, width: 360, height: 320 });
+  addText(slide, "Selection hierarchy", { left: 72, top: 246, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The Gen4-style fallback can be represented in Gen5.2. It changes authority rows and produces SOFI trades.", { left: 72, top: 306, width: 290, height: 130 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Alpha gap", { left: 490, top: 246, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The fallback lane did not converge to Gen4 performance in 2024Q4. In Cluster 3 it remained behind both Gen4 and direct-spec.", { left: 490, top: 306, width: 290, height: 150 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Next issue", { left: 908, top: 246, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The most concrete residual gap is how state-gated replay handles a strategy that becomes selected after its entry signal already fired.", { left: 908, top: 306, width: 290, height: 150 }, { fontSize: 20, color: colors.muted });
   addFooter(slide, 12);
 }
 
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Highest-impact next probe: authority granularity");
-  addPanel(slide, { left: 42, top: 216, width: 360, height: 330 });
-  addPanel(slide, { left: 460, top: 216, width: 360, height: 330 });
-  addPanel(slide, { left: 878, top: 216, width: 360, height: 330 });
-  addText(slide, "Current Gen5.2", { left: 72, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, "Selects a full spec inside each asset/state cell. Active candidates need enough TRAIN trades in that specific state, so a sparse-but-important state can abstain.", { left: 72, top: 306, width: 285, height: 150 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "Gen4 artifact clue", { left: 490, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, "The picked-params artifact is keyed by fold and asset, not by state. SOFI's selected ema_cross variant can therefore behave like broader fold/asset authority.", { left: 490, top: 306, width: 285, height: 150 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "Recommended test", { left: 908, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
-  addText(slide, "Add a third audit lane that keeps TRAIN-only state family routing but chooses asset/family params at fold scope. Compare it against direct-spec and pooled-family on the same 2024Q4 calibration first.", { left: 908, top: 306, width: 285, height: 170 }, { fontSize: 20, color: colors.muted });
-  addText(slide, "This is the smallest probe likely to explain the remaining alpha gap without reopening context universes, PCA mode, or basket composition.", { left: 42, top: 590, width: 980, height: 42 }, { fontSize: 20, bold: true, color: colors.highlight });
+  addTitle(slide, "Recommended next narrow probe");
+  addPanel(slide, { left: 42, top: 214, width: 545, height: 330 });
+  addPanel(slide, { left: 650, top: 214, width: 545, height: 330 });
+  addText(slide, "A/B stale-signal entry semantics", { left: 72, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "Baseline: current Gen5.2 enters only on a fresh signal while flat." },
+    { text: "Probe: when a state switches into a trend-following family, allow entry if the family is already in an active long condition." },
+    { text: "Keep TRAIN, selected specs, context universe, PCA, basket, and portfolio accounting fixed." },
+  ], 72, 310, 440, 19, 58);
+  addText(slide, "Why this is narrow enough", { left: 680, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "It directly targets the SOFI October miss without reopening all research design choices." },
+    { text: "It can be run as an additional replay lane using existing authority artifacts." },
+    { text: "Success would mean convergence in trade timing; failure would point us back to Gen4 signal semantics or portfolio accounting." },
+  ], 680, 310, 440, 19, 58);
   addFooter(slide, 13);
 }
 
@@ -411,9 +441,6 @@ for (const [index, slide] of deck.slides.items.entries()) {
   const layout = await slide.export({ format: "layout" });
   await fs.writeFile(path.join(previewDir, `slide-${String(index + 1).padStart(2, "0")}.layout.json`), await layout.text(), "utf8");
 }
-
-const montage = await deck.export({ format: "webp", montage: true, scale: 1 });
-await writeBlob(path.join(previewDir, "deck_montage.webp"), montage);
 
 const pptx = await PresentationFile.exportPptx(deck);
 await pptx.save(outputPptx);
