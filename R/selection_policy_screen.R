@@ -160,6 +160,86 @@ g5_selection_policy_gen4_pooled_family_asset_variant <- function(train_state_per
   selected
 }
 
+g5_selection_policy_gen4_pooled_family_asset_variant_state_fallback <- function(train_state_performance, min_train_state_rows = 20L, min_train_trades = 5L) {
+  required <- c("symbol", "quarter_id", "state_id", "strategy_family", "strategy_spec_id", "sharpe", "total_return", "train_state_row_count")
+  missing <- setdiff(required, names(train_state_performance))
+  if (length(missing)) {
+    g5_stop(paste0("train_state_performance is missing required columns: ", paste(missing, collapse = ", ")))
+  }
+  perf <- train_state_performance
+  perf$selection_policy <- "pooled_family_asset_variant_state_fallback"
+  quarters <- sort(unique(as.character(perf$quarter_id)))
+  out <- list()
+  for (quarter_id in quarters) {
+    q_rows <- perf[as.character(perf$quarter_id) == quarter_id, , drop = FALSE]
+    states <- sort(unique(as.character(q_rows$state_id)))
+    symbols <- sort(unique(as.character(q_rows$symbol)))
+    for (state_id in states) {
+      state_rows <- q_rows[as.character(q_rows$state_id) == state_id, , drop = FALSE]
+      family_pick <- g5_selection_policy_choose_gen4_pooled_family(state_rows, min_train_state_rows = min_train_state_rows, min_train_trades = min_train_trades)
+      selected_family <- as.character(family_pick$pooled_selected_family[[1L]])
+      state_family_rows <- state_rows[as.character(state_rows$strategy_family) == selected_family, , drop = FALSE]
+      state_family_eligible <- g5_selection_policy_gen4_eligible_rows(
+        state_family_rows,
+        min_train_state_rows = min_train_state_rows,
+        min_train_trades = min_train_trades
+      )
+      state_leader <- if (nrow(state_family_eligible)) {
+        g5_selection_policy_gen4_rank_rows(state_family_eligible)[1L, , drop = FALSE]
+      } else {
+        state_family_eligible
+      }
+      for (symbol in symbols) {
+        symbol_rows <- state_rows[as.character(state_rows$symbol) == symbol, , drop = FALSE]
+        if (!nrow(symbol_rows)) next
+        candidates <- symbol_rows[as.character(symbol_rows$strategy_family) == selected_family, , drop = FALSE]
+        candidates <- g5_selection_policy_gen4_eligible_rows(
+          candidates,
+          min_train_state_rows = min_train_state_rows,
+          min_train_trades = min_train_trades
+        )
+        fallback_used <- FALSE
+        fallback_source_symbol <- NA_character_
+        fallback_source_strategy_spec_id <- NA_character_
+        fallback_source_family <- NA_character_
+        if (nrow(candidates)) {
+          winner <- g5_selection_policy_gen4_rank_rows(candidates)[1L, , drop = FALSE]
+          winner$selection_reason <- paste0("gen4_pooled_family_asset_variant_family_", selected_family, "_asset_params_ranked_by_score_then_return")
+        } else if (nrow(state_leader)) {
+          winner <- state_leader
+          fallback_used <- TRUE
+          fallback_source_symbol <- as.character(winner$symbol[[1L]])
+          fallback_source_strategy_spec_id <- as.character(winner$strategy_spec_id[[1L]])
+          fallback_source_family <- as.character(winner$strategy_family[[1L]])
+          winner$symbol <- symbol
+          winner$selection_reason <- paste0("gen4_state_leader_fallback_no_asset_variant_for_family_", selected_family)
+        } else {
+          winner <- g5_selection_policy_no_trade_row(symbol_rows)
+          winner$selection_reason <- paste0("gen4_state_leader_fallback_unavailable_for_family_", selected_family, "_forced_no_trade")
+        }
+        winner$selection_policy <- "pooled_family_asset_variant_state_fallback"
+        winner$selection_policy_recipe <- "gen4_phase40_pooled_family_asset_variant_state_leader_fallback"
+        winner$pooled_selected_family <- selected_family
+        winner$pooled_family_mean_sharpe <- as.numeric(family_pick$pooled_family_mean_sharpe[[1L]])
+        winner$pooled_family_mean_total_return <- as.numeric(family_pick$pooled_family_mean_total_return[[1L]])
+        winner$pooled_family_asset_count <- as.integer(family_pick$pooled_family_asset_count[[1L]])
+        winner$pooled_family_trade_count <- as.integer(family_pick$pooled_family_trade_count[[1L]])
+        winner$pooled_family_n_variants <- as.integer(family_pick$pooled_family_n_variants[[1L]])
+        winner$fallback_used <- fallback_used
+        winner$fallback_source_symbol <- fallback_source_symbol
+        winner$fallback_source_state_id <- if (fallback_used) state_id else NA_character_
+        winner$fallback_source_strategy_spec_id <- fallback_source_strategy_spec_id
+        winner$fallback_source_family <- fallback_source_family
+        winner <- cbind(winner, g5_selection_policy_gen4_state_exit_override_fields(winner))
+        out[[length(out) + 1L]] <- winner
+      }
+    }
+  }
+  selected <- if (length(out)) g5_wfa_bind_rows_fill(out) else perf[0L, , drop = FALSE]
+  rownames(selected) <- NULL
+  selected
+}
+
 g5_selection_policy_best_asset_family_rows <- function(state_rows) {
   if (!is.data.frame(state_rows) || !nrow(state_rows)) return(data.frame())
   keys <- paste(as.character(state_rows$symbol), as.character(state_rows$strategy_family), sep = "::")
@@ -205,6 +285,14 @@ g5_selection_policy_choose_pooled_family <- function(state_rows, min_train_state
 
 g5_selection_policy_pooled_family_asset_variant <- function(train_state_performance, min_train_state_rows = 20L) {
   g5_selection_policy_gen4_pooled_family_asset_variant(
+    train_state_performance,
+    min_train_state_rows = min_train_state_rows,
+    min_train_trades = 5L
+  )
+}
+
+g5_selection_policy_pooled_family_asset_variant_state_fallback <- function(train_state_performance, min_train_state_rows = 20L) {
+  g5_selection_policy_gen4_pooled_family_asset_variant_state_fallback(
     train_state_performance,
     min_train_state_rows = min_train_state_rows,
     min_train_trades = 5L

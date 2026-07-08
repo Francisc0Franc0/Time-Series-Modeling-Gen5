@@ -55,6 +55,24 @@ pp_label <- function(x, digits = 1L) {
   ifelse(is.na(x) | !is.finite(x), "NA", sprintf(paste0("%.", digits, "f pp"), 100 * x))
 }
 
+policy_label <- function(x) {
+  x <- as.character(x)
+  out <- x
+  out[x == "asset_state_direct_spec"] <- "Direct"
+  out[x == "pooled_family_asset_variant"] <- "Pooled Strict"
+  out[x == "pooled_family_asset_variant_state_fallback"] <- "Pooled Fallback"
+  out
+}
+
+policy_color <- function(x) {
+  palette <- c(
+    asset_state_direct_spec = "#2E86AB",
+    pooled_family_asset_variant = "#9B5DE5",
+    pooled_family_asset_variant_state_fallback = "#FF6B35"
+  )
+  unname(palette[as.character(x)])
+}
+
 md_table <- function(df, cols, n = Inf) {
   if (!is.data.frame(df) || !nrow(df)) return("_No rows._")
   df <- df[seq_len(min(nrow(df), n)), cols, drop = FALSE]
@@ -362,6 +380,15 @@ build_authority <- function(bars, quarter_id, authority_dir, settings) {
     message("Reuse cached authority: ", quarter_id)
     return(read_full_authority_packet(authority_dir))
   }
+  if (!isTRUE(settings$refresh) && nzchar(settings$reuse_authority_root)) {
+    reuse_dir <- file.path(settings$reuse_authority_root, "auth", quarter_id)
+    if (cached_authority_matches_settings(reuse_dir, settings)) {
+      message("Reuse authority from external root: ", quarter_id, " -> ", reuse_dir)
+      authority <- read_full_authority_packet(reuse_dir)
+      write_authority_packet(authority, authority_dir)
+      return(authority)
+    }
+  }
   dates <- g5_bridge_quarter_bounds(quarter_id)
   contract <- custom_contract_frame(
     quarter_id = quarter_id,
@@ -413,6 +440,8 @@ make_policy_authority <- function(authority, selection_policy, min_train_state_r
     out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states, out$train_state_performance, min_train_state_rows = min_train_state_rows)
   } else if (identical(selection_policy, "pooled_family_asset_variant")) {
     out$selected_states <- g5_selection_policy_pooled_family_asset_variant(out$train_state_performance, min_train_state_rows = min_train_state_rows)
+  } else if (identical(selection_policy, "pooled_family_asset_variant_state_fallback")) {
+    out$selected_states <- g5_selection_policy_pooled_family_asset_variant_state_fallback(out$train_state_performance, min_train_state_rows = min_train_state_rows)
   } else {
     g5_stop(paste0("Unsupported selection policy: ", selection_policy))
   }
@@ -485,7 +514,7 @@ write_equity_overlay <- function(equity, gen4_equity, path) {
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
   groups <- c("cluster_3", "cluster_1")
   graphics::par(bg = aesthetic$background, mfrow = c(2, 1), mar = c(4.5, 5, 3, 2), oma = c(0, 0, 3, 0))
-  colors <- c(gen4 = "#000000", gen5_direct = "#2E86AB", gen5_pooled = "#9B5DE5", benchmark = "#B8BCC4")
+  colors <- c(gen4 = "#000000", benchmark = "#B8BCC4")
   for (group in groups) {
     x <- equity[as.character(equity$group_id) == group, , drop = FALSE]
     g4 <- gen4_equity[as.character(gen4_equity$portfolio_id) == group, , drop = FALSE]
@@ -499,11 +528,19 @@ write_equity_overlay <- function(equity, gen4_equity, path) {
       graphics::lines(as.Date(g4$datetime), as.numeric(g4$port_eq_oos), col = colors[["gen4"]], lwd = 2.6)
       graphics::lines(as.Date(g4$datetime), as.numeric(g4$port_eq_benchmark), col = colors[["benchmark"]], lwd = 2.0, lty = 2)
     }
-    for (policy in c("asset_state_direct_spec", "pooled_family_asset_variant")) {
+    for (policy in selection_policies) {
       p <- x[as.character(x$selection_policy) == policy, , drop = FALSE]
-      if (nrow(p)) graphics::lines(as.Date(p$session_date), as.numeric(p$strategy_equity), col = if (policy == "asset_state_direct_spec") colors[["gen5_direct"]] else colors[["gen5_pooled"]], lwd = 2.1)
+      if (nrow(p)) graphics::lines(as.Date(p$session_date), as.numeric(p$strategy_equity), col = policy_color(policy), lwd = 2.1)
     }
-    graphics::legend("topleft", legend = c("Gen4 artifact", "Gen4 benchmark", "Gen5 direct", "Gen5 pooled"), col = colors[c("gen4", "benchmark", "gen5_direct", "gen5_pooled")], lwd = c(2.6, 2, 2.1, 2.1), lty = c(1, 2, 1, 1), bty = "n", cex = 0.75)
+    graphics::legend(
+      "topleft",
+      legend = c("Gen4 artifact", "Gen4 benchmark", paste("Gen5.2", policy_label(selection_policies))),
+      col = c(colors[["gen4"]], colors[["benchmark"]], policy_color(selection_policies)),
+      lwd = c(2.6, 2, rep(2.1, length(selection_policies))),
+      lty = c(1, 2, rep(1, length(selection_policies))),
+      bty = "n",
+      cex = 0.72
+    )
   }
   graphics::mtext("Gen4 Artifact vs Gen5.2 Phase40-Style Replay", side = 3, outer = TRUE, line = 1, font = 2, col = aesthetic$text)
   invisible(path)
@@ -515,9 +552,9 @@ write_alpha_scorecard <- function(summary, path) {
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
   x <- summary[order(as.character(summary$source), as.character(summary$group_id), as.character(summary$selection_policy)), , drop = FALSE]
-  x$lane <- ifelse(x$source == "Gen4 artifact", paste("Gen4", x$group_id), paste("Gen5", ifelse(x$selection_policy == "asset_state_direct_spec", "direct", "pooled"), x$group_id))
+  x$lane <- ifelse(x$source == "Gen4 artifact", paste("Gen4", x$group_id), paste("Gen5", policy_label(x$selection_policy), x$group_id))
   values <- as.numeric(x$alpha_vs_benchmark) * 100
-  cols <- ifelse(x$source == "Gen4 artifact", "#000000", ifelse(x$selection_policy == "asset_state_direct_spec", "#2E86AB", "#9B5DE5"))
+  cols <- ifelse(x$source == "Gen4 artifact", "#000000", policy_color(x$selection_policy))
   graphics::par(bg = aesthetic$background, mar = c(7, 13, 4, 2))
   bp <- graphics::barplot(values, names.arg = x$lane, horiz = TRUE, las = 1, cex.names = 0.72, col = cols, border = NA, xlab = "Alpha vs internal benchmark, percentage points", main = "Benchmark-Relative Scorecard", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
   graphics::abline(v = 0, col = aesthetic$axis, lty = 2)
@@ -529,11 +566,11 @@ write_alpha_scorecard <- function(summary, path) {
 write_quarter_heatmap <- function(quarter_summary, path) {
   aesthetic <- g5_chart_aesthetic()
   x <- quarter_summary
-  lanes <- unique(paste(ifelse(x$selection_policy == "asset_state_direct_spec", "Direct", "Pooled"), x$group_id, sep = " / "))
+  lanes <- unique(paste(policy_label(x$selection_policy), x$group_id, sep = " / "))
   quarters <- unique(as.character(x$quarter_id))
   values <- matrix(NA_real_, nrow = length(lanes), ncol = length(quarters), dimnames = list(lanes, quarters))
   for (i in seq_len(nrow(x))) {
-    row <- paste(ifelse(x$selection_policy[[i]] == "asset_state_direct_spec", "Direct", "Pooled"), x$group_id[[i]], sep = " / ")
+    row <- paste(policy_label(x$selection_policy[[i]]), x$group_id[[i]], sep = " / ")
     values[row, as.character(x$quarter_id[[i]])] <- as.numeric(x$alpha_vs_benchmark[[i]])
   }
   max_abs <- max(abs(values), na.rm = TRUE)
@@ -562,12 +599,12 @@ write_quarter_heatmap <- function(quarter_summary, path) {
 write_family_comparison <- function(gen4_family, gen5_family, path) {
   aesthetic <- g5_chart_aesthetic()
   families <- sort(unique(c(as.character(gen4_family$family), as.character(gen5_family$strategy_family))))
-  sources <- c("Gen4 artifact", "Gen5 direct", "Gen5 pooled")
+  sources <- c("Gen4 artifact", paste("Gen5", policy_label(selection_policies)))
   values <- matrix(0, nrow = length(families), ncol = length(sources), dimnames = list(families, sources))
   g4_counts <- aggregate(count ~ family, gen4_family, sum)
   for (i in seq_len(nrow(g4_counts))) values[as.character(g4_counts$family[[i]]), "Gen4 artifact"] <- as.numeric(g4_counts$count[[i]])
   for (i in seq_len(nrow(gen5_family))) {
-    col <- if (gen5_family$selection_policy[[i]] == "asset_state_direct_spec") "Gen5 direct" else "Gen5 pooled"
+    col <- paste("Gen5", policy_label(gen5_family$selection_policy[[i]]))
     values[as.character(gen5_family$strategy_family[[i]]), col] <- as.numeric(gen5_family$count[[i]])
   }
   values <- sweep(values, 2, pmax(colSums(values), 1), "/") * 100
@@ -575,9 +612,10 @@ write_family_comparison <- function(gen4_family, gen5_family, path) {
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
   graphics::par(bg = aesthetic$background, mar = c(7, 10, 4, 2))
-  bp <- graphics::barplot(t(values), beside = TRUE, horiz = TRUE, las = 1, col = c("#000000", "#2E86AB", "#9B5DE5"), border = NA, xlab = "Share of selected rows / picks (%)", main = "Selected Strategy-Family Mix", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
+  source_cols <- c("#000000", policy_color(selection_policies))
+  bp <- graphics::barplot(t(values), beside = TRUE, horiz = TRUE, las = 1, col = source_cols, border = NA, xlab = "Share of selected rows / picks (%)", main = "Selected Strategy-Family Mix", col.axis = aesthetic$axis, col.lab = aesthetic$text, col.main = aesthetic$text)
   graphics::grid(nx = NULL, ny = NA, col = aesthetic$grid)
-  graphics::legend("bottomright", legend = sources, fill = c("#000000", "#2E86AB", "#9B5DE5"), bty = "n", cex = 0.8)
+  graphics::legend("bottomright", legend = sources, fill = source_cols, bty = "n", cex = 0.8)
   invisible(path)
 }
 
@@ -591,6 +629,9 @@ stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN4_EQ_STAMP", "20260706"))
 gen4_summary_scope <- env_or("GEN5_GEN4_EQ_GEN4_SUMMARY_SCOPE", "artifact_full")
 root_output_dir <- file.path(repo_root, "runs", "research_workbench", "gen4_equivalence", paste0("gen4_equivalence_", stamp))
 dir.create(root_output_dir, recursive = TRUE, showWarnings = FALSE)
+reuse_authority_root_raw <- env_or("GEN5_GEN4_EQ_REUSE_AUTH_ROOT", "")
+reuse_authority_root <- if (nzchar(reuse_authority_root_raw)) normalizePath(reuse_authority_root_raw, winslash = "/", mustWork = FALSE) else ""
+if (nzchar(reuse_authority_root) && !dir.exists(reuse_authority_root)) reuse_authority_root <- ""
 
 gen4_root <- env_or("GEN5_GEN4_EQ_ARTIFACT_ROOT", "C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling/Experiments/FM-002-024-R3_med_16_bins")
 gen4_phase40 <- file.path(gen4_root, "Phase40_WFA_Quarterly_Validation")
@@ -610,7 +651,7 @@ research_symbols <- c(
 )
 live_symbols <- parse_csv_env("GEN5_GEN4_EQ_SYMBOLS", c("SPY", "QQQ", "IWM", "NVDA", "TSLA", "AMD", "PLTR", "SOFI", "KO", "PEP", "WMT", "TLT", "XLF", "XLE", "GLD", "EFA"))
 candidate_families <- parse_csv_env("GEN5_GEN4_EQ_CANDIDATE_FAMILIES", c("ema_cross", "ema_trend", "bollinger_touch", "rsi_mr", "zret_mr", "breakout", "pullback_in_uptrend", "vol_expansion_breakout", "no_trade"))
-selection_policies <- c("asset_state_direct_spec", "pooled_family_asset_variant")
+selection_policies <- c("asset_state_direct_spec", "pooled_family_asset_variant", "pooled_family_asset_variant_state_fallback")
 quarters <- parse_csv_env("GEN5_GEN4_EQ_QUARTERS", quarter_sequence("2020Q4", "2024Q4"))
 grid_filter <- env_or("GEN5_GEN4_EQ_GRID_FILTER", "gen4_picked_specs")
 grid_n <- 4L
@@ -644,6 +685,7 @@ settings <- list(
   unmatched_gen4_specs = unmatched_gen4_specs,
   grid_n = grid_n,
   min_train_state_rows = min_train_state_rows,
+  reuse_authority_root = reuse_authority_root,
   research_note = research_note
 )
 
@@ -658,6 +700,7 @@ message("Context symbols: ", paste(settings$context_symbols, collapse = ","))
 message("Quarters: ", paste(quarters, collapse = ","))
 message("Grid filter: ", settings$grid_filter, " (", settings$model_grid_rows, " model rows)")
 message("Gen4 summary scope: ", gen4_summary_scope)
+if (nzchar(settings$reuse_authority_root)) message("Reuse authority root: ", settings$reuse_authority_root)
 if (length(settings$unmatched_gen4_specs)) {
   message("Unmatched Gen4 specs ignored: ", paste(head(settings$unmatched_gen4_specs, 10L), collapse = ", "), if (length(settings$unmatched_gen4_specs) > 10L) " ..." else "")
 }
@@ -890,7 +933,8 @@ names(gen4_family) <- c("family", "count")
 
 selected_all <- g5_wfa_bind_rows_fill(list(
   g5_wfa_bind_rows_fill(lapply(policy_authorities$asset_state_direct_spec, function(x) x$selected_states)),
-  g5_wfa_bind_rows_fill(lapply(policy_authorities$pooled_family_asset_variant, function(x) x$selected_states))
+  g5_wfa_bind_rows_fill(lapply(policy_authorities$pooled_family_asset_variant, function(x) x$selected_states)),
+  g5_wfa_bind_rows_fill(lapply(policy_authorities$pooled_family_asset_variant_state_fallback, function(x) x$selected_states))
 ))
 gen5_family <- as.data.frame(table(selection_policy = as.character(selected_all$selection_policy), strategy_family = as.character(selected_all$strategy_family)), stringsAsFactors = FALSE)
 names(gen5_family) <- c("selection_policy", "strategy_family", "count")
@@ -932,6 +976,7 @@ run_spec <- data.frame(
   selection_policies = paste(selection_policies, collapse = ","),
   strategy_grid_preset = strategy_grid_preset,
   model_grid_filter = settings$grid_filter,
+  reuse_authority_root = settings$reuse_authority_root,
   model_grid_rows = settings$model_grid_rows,
   unmatched_gen4_spec_count = length(settings$unmatched_gen4_specs),
   candidate_families = paste(settings$candidate_families, collapse = ","),

@@ -296,6 +296,36 @@ test_that("Gen4-faithful pooled family policy filters low-trade active variants"
   expect_match(bbb$selection_reason[[1L]], "no_asset_variant_for_family_trend")
 })
 
+test_that("Gen4 state-leader fallback fills missing asset variants", {
+  perf <- data.frame(
+    symbol = rep(c("AAA", "BBB"), each = 3L),
+    quarter_id = "2026Q2",
+    state_id = "S1_1",
+    strategy_family = rep(c("no_trade", "trend", "mean_reversion"), times = 2L),
+    model_instance_id = c("no_trade", "trend", "mean_rev", "no_trade", "trend", "mean_rev"),
+    exit_stack_id = "native_only",
+    strategy_spec_id = c("aaa_no_trade", "aaa_trend", "aaa_mean", "bbb_no_trade", "bbb_trend", "bbb_mean"),
+    sharpe = c(0, 2.0, 0.5, 0, 1.5, 1.0),
+    total_return = c(0, 0.20, 0.05, 0, 0.15, 0.10),
+    train_state_row_count = 50L,
+    train_state_trade_count = c(0, 5, 5, 0, 1, 1),
+    stringsAsFactors = FALSE
+  )
+
+  strict <- g5_selection_policy_pooled_family_asset_variant(perf, min_train_state_rows = 20L)
+  fallback <- g5_selection_policy_pooled_family_asset_variant_state_fallback(perf, min_train_state_rows = 20L)
+  bbb_strict <- strict[strict$symbol == "BBB", , drop = FALSE]
+  bbb_fallback <- fallback[fallback$symbol == "BBB", , drop = FALSE]
+
+  expect_equal(bbb_strict$strategy_family[[1L]], "no_trade")
+  expect_equal(bbb_fallback$strategy_family[[1L]], "trend")
+  expect_equal(bbb_fallback$strategy_spec_id[[1L]], "aaa_trend")
+  expect_true(isTRUE(bbb_fallback$fallback_used[[1L]]))
+  expect_equal(bbb_fallback$fallback_source_symbol[[1L]], "AAA")
+  expect_match(bbb_fallback$selection_reason[[1L]], "state_leader_fallback")
+  expect_true(all(fallback$selection_policy_recipe == "gen4_phase40_pooled_family_asset_variant_state_leader_fallback"))
+})
+
 test_that("Gen5.2 direct policy rebuilds selected states from TRAIN performance", {
   perf <- data.frame(
     symbol = "AAA",

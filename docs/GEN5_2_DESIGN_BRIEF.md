@@ -1,6 +1,6 @@
 # Gen5.2 Design Brief
 
-Status date: 2026-07-07
+Status date: 2026-07-08
 
 Gen5.2 begins where the Gen4-equivalence screens left off. The Gen5.1 stack could match many visible Gen4 settings, but it still did not reproduce the Gen4 artifact behavior closely enough to treat the remaining alpha gap as a research conclusion. The operator decision for Gen5.2 is to absorb the useful Gen4 mechanics into the active Gen5 pipeline instead of keeping them only as a forensic comparison.
 
@@ -23,12 +23,13 @@ Both Gen5.2 selection modes now share the same candidate eligibility and winner-
 1. Use TRAIN evidence only.
 2. Keep active candidate rows only when `train_state_trade_count >= 5`; keep no-trade families as valid abstention rows.
 3. Score candidates with the Gen4-style winner score: Sharpe-like metric, with missing no-trade score treated as `0` and missing active scores treated as unusable.
-4. Force sparse asset/state rows to ordinary `no_trade`.
+4. In the strict pooled-family lane, force sparse or missing asset/state winners to ordinary `no_trade`.
 
 That shared substrate keeps the research comparison clean:
 
 - `asset_state_direct_spec` still chooses the best full asset/state spec directly by score, then return.
 - `pooled_family_asset_variant` chooses the state-level family by mean score, then mean return, then number of variants; within that family it chooses each asset's parameter variant by score, then return.
+- `pooled_family_asset_variant_state_fallback` is a calibration lane that mimics Gen4's hidden hierarchical fallback: choose the pooled state family, use the asset/state winner when present, and otherwise borrow the pooled state leader's strategy spec rather than forcing no-trade.
 
 The selection-policy factor is therefore about architecture, not a hidden difference in row filters or score handling.
 
@@ -65,24 +66,28 @@ Implemented in this slice:
 
 - `asset_state_direct_spec` and `pooled_family_asset_variant` now share Gen5.2 candidate eligibility and winner-score handling.
 - `pooled_family_asset_variant` calls the Gen4-faithful family-first recipe after that shared candidate filter.
+- `pooled_family_asset_variant_state_fallback` has been added as an explicit Gen4-calibration lane, leaving the strict pooled-family lane unchanged for A/B testing.
 - Gen4 no-trade exit-immediate compatibility is represented by explicit state exit override helpers.
 - PCA-routed replay and live-advice replay can honor a current-state `force_exit_next_open` override while preserving entry-state ownership otherwise.
 - Focused tests cover direct-lane and pooled-family active-candidate trade-count filtering, selection-policy recipe labeling, and no-trade exit-immediate override detection.
+- A 2024Q4 SOFI/PLTR authority-level probe found that the fallback lane changes `24 / 32` focus asset/state rows and fires on `3` OOS-visited rows where strict pooled-family had abstained.
+- A full 2024Q4 16-symbol replay using cached authority then showed that fallback does not close the Gen4 gap: cluster-3 alpha versus local hold was Gen4 `+1.7 pp`, direct `-19.0 pp`, strict pooled `-32.6 pp`, and fallback pooled `-35.5 pp`. Fallback activated SOFI partially, but the trades lost money instead of reproducing Gen4's long SOFI winner.
 
 Not implemented in this slice:
 
 - SMA family ports.
 - Exact Gen4 volatility-expansion breakout semantics.
-- A full regenerated Gen5.2 research screen using live-capital replay.
+- A live-capital replay screen using the fallback lane; the current fallback replay is still the Phase40-style equivalence surface, not the canonical portfolio-accounting surface.
 - Leveraged live-capital sizing.
 
 ## Next Research Gate
 
 The next useful run should compare:
 
-- Gen4-faithful pooled-family selection;
+- strict Gen5.2 pooled-family selection;
+- Gen4-style pooled-family state-leader fallback selection as a calibration lane;
 - direct full-spec selection as a challenger;
 - true live-capital portfolio replay;
 - a narrow, already-promising context/state setup, likely behavioral-pool PCA plus 3x3 quantile states.
 
-The point of that run is not to crown an allocation. It is to see whether the Gen4-faithful mechanics close the forensic gap and whether live-capital accounting changes the interpretation versus proxy return projections.
+The point of that run is not to crown an allocation. The current Phase40-style replay shows the hierarchical fallback is not sufficient by itself; the next useful probe should focus on why the same-looking SOFI `ema_cross_f1_s10` authority does not reproduce Gen4's signal timing and trade path.

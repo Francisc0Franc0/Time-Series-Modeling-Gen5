@@ -77,6 +77,7 @@ normalize_lane <- function(x) {
   x <- as.character(x)
   x[x == "asset_state_direct_spec"] <- "Gen5.2 direct"
   x[x == "pooled_family_asset_variant"] <- "Gen5.2 pooled"
+  x[x == "pooled_family_asset_variant_state_fallback"] <- "Gen5.2 fallback"
   x
 }
 
@@ -230,10 +231,8 @@ focus_symbols <- intersect(c("SOFI", "PLTR"), run_symbols)
 train_perf <- read_csv_safe(file.path(calibration_dir, "auth", "2024Q4", "bridge_train_state_performance.csv"))
 direct_authority <- g5_selection_policy_direct_asset_state_spec(train_perf, min_train_state_rows = 20L)
 pooled_authority <- g5_selection_policy_pooled_family_asset_variant(train_perf, min_train_state_rows = 20L)
-authority_rows <- rbind(
-  direct_authority[, names(direct_authority), drop = FALSE],
-  pooled_authority[, names(direct_authority), drop = FALSE]
-)
+fallback_authority <- g5_selection_policy_pooled_family_asset_variant_state_fallback(train_perf, min_train_state_rows = 20L)
+authority_rows <- g5_wfa_bind_rows_fill(list(direct_authority, pooled_authority, fallback_authority))
 authority_rows$lane <- normalize_lane(authority_rows$selection_policy)
 authority_focus <- authority_rows[
   as.character(authority_rows$symbol) %in% focus_symbols,
@@ -354,8 +353,8 @@ write.csv(gen4_params_focus, file.path(out_dir, "sofi_pltr_gen4_picked_params.cs
 write.csv(gen4_trades_focus, file.path(out_dir, "sofi_pltr_gen4_trade_tape.csv"), row.names = FALSE)
 
 aesthetic <- audit_theme()
-lanes <- c("Gen4 artifact", "Gen5.2 direct", "Gen5.2 pooled")
-lane_cols <- c("Gen4 artifact" = "#111111", "Gen5.2 direct" = "#2E86AB", "Gen5.2 pooled" = "#9B5DE5")
+lanes <- c("Gen4 artifact", "Gen5.2 direct", "Gen5.2 pooled", "Gen5.2 fallback")
+lane_cols <- c("Gen4 artifact" = "#111111", "Gen5.2 direct" = "#2E86AB", "Gen5.2 pooled" = "#9B5DE5", "Gen5.2 fallback" = "#FF6B35")
 symbols <- sort(unique(as.character(symbol_summary$symbol)))
 
 png_file <- function(path, width = 2200L, height = 1350L, res = 190L) {
@@ -382,9 +381,9 @@ mtext("Cell labels: exposure percent and number of entries", side = 3, line = 0.
 par(oldpar)
 dev.off()
 
-png_file(file.path(out_dir, "cluster3_symbol_participation.png"), width = 2200L, height = 1700L)
+png_file(file.path(out_dir, "cluster3_symbol_participation.png"), width = 2200L, height = 2200L)
 oldpar <- par(no.readonly = TRUE)
-par(mfrow = c(3, 1), mar = c(5, 6, 3, 2))
+par(mfrow = c(length(lanes), 1), mar = c(5, 6, 3, 2))
 for (lane in lanes) {
   x <- symbol_summary[as.character(symbol_summary$lane) == lane, , drop = FALSE]
   x <- x[order(x$symbol), , drop = FALSE]
@@ -413,9 +412,9 @@ legend("topleft", legend = rownames(mat), fill = grDevices::hcl.colors(nrow(mat)
 par(oldpar)
 dev.off()
 
-png_file(file.path(out_dir, "cluster3_trade_tape.png"), width = 2400L, height = 1600L)
+png_file(file.path(out_dir, "cluster3_trade_tape.png"), width = 2400L, height = 2100L)
 oldpar <- par(no.readonly = TRUE)
-par(mfrow = c(3, 1), mar = c(4, 7, 3, 2))
+par(mfrow = c(length(lanes), 1), mar = c(4, 7, 3, 2))
 for (lane in lanes) {
   x <- all_trades[as.character(all_trades$lane) == lane, , drop = FALSE]
   x <- x[order(x$symbol, x$entry_date), , drop = FALSE]
@@ -487,9 +486,9 @@ oldpar <- par(no.readonly = TRUE)
 par(mar = c(8, 9, 4, 2))
 oos_heat_rows <- paste(oos_authority_plot$symbol, oos_authority_plot$state_id, sep = " / ")
 oos_heat_rows <- unique(oos_heat_rows)
-plot(NA, xlim = c(0.5, length(lanes) - 0.5), ylim = c(0.5, length(oos_heat_rows) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "OOS-Visited SOFI / PLTR Authority", col.main = aesthetic$text)
-rect(0.5, 0.5, length(lanes) - 0.5, length(oos_heat_rows) + 0.5, col = aesthetic$panel_background, border = NA)
-plot_lanes <- c("Gen5.2 direct", "Gen5.2 pooled")
+plot_lanes <- c("Gen5.2 direct", "Gen5.2 pooled", "Gen5.2 fallback")
+plot(NA, xlim = c(0.5, length(plot_lanes) + 0.5), ylim = c(0.5, length(oos_heat_rows) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "OOS-Visited SOFI / PLTR Authority", col.main = aesthetic$text)
+rect(0.5, 0.5, length(plot_lanes) + 0.5, length(oos_heat_rows) + 0.5, col = aesthetic$panel_background, border = NA)
 for (i in seq_len(nrow(oos_authority_plot))) {
   row_label <- paste(oos_authority_plot$symbol[[i]], oos_authority_plot$state_id[[i]], sep = " / ")
   x <- match(as.character(oos_authority_plot$lane[[i]]), plot_lanes)
@@ -570,7 +569,7 @@ report <- c(
   paste0("- Window: `", start_date, "` to `", end_date, "`."),
   paste0("- Target Gen4 cluster: `cluster_", target_cluster, "`."),
   paste0("- Cluster symbols available in this calibration: `", paste(symbols, collapse = ","), "`."),
-  "- Lanes: Gen4 artifact, Gen5.2 direct-spec, Gen5.2 pooled-family.",
+  paste0("- Lanes: ", paste(lanes, collapse = ", "), "."),
   "- Evidence role: inspection only; this does not approve allocation or live behavior.",
   "",
   "## Lane Summary",
@@ -611,7 +610,7 @@ report <- c(
   paste0("- No-trade diagnostic: `", file.path(out_dir, "sofi_pltr_no_trade_diagnostic.png"), "`."),
   paste0("- State/position timeline: `", file.path(out_dir, "sofi_pltr_state_position_timeline.png"), "`."),
   "",
-  "Key readout: Gen4 selected `ema_cross_f1_s10` for SOFI in fold 17 and generated three Q4 trades, including one large October-to-December winner. Gen5.2 SOFI stayed flat in both lanes across OOS-visited states, so the gap is not a live-basket mismatch. It is a selected-authority / signal-timing divergence inside the same basket and quarter."
+  "Key readout: Gen4 selected `ema_cross_f1_s10` for SOFI in fold 17 and generated three Q4 trades, including one large October-to-December winner. In the three-lane replay, strict pooled-family still left SOFI flat, while state-leader fallback generated limited, losing SOFI participation. The gap is not a live-basket mismatch; it is now a selected-authority / signal-timing / strategy-semantics divergence inside the same basket and quarter."
 )
 
 writeLines(report, file.path(out_dir, "cluster3_trade_tape_audit_report.md"))
