@@ -39,6 +39,7 @@ const auditDir = path.join(packetDir, "trade_tape_audit");
 const probeDir = path.join(packetDir, "sofi_ema_cross_semantics_probe");
 const mechanicsDir = path.join(repoRoot, "runs", "research_workbench", "gen52_mechanics", "replay_semantics_mechanics_lab_20260708");
 const replayAbDir = path.join(packetDir, "replay_semantics_ab");
+const generalizationDir = path.join(repoRoot, "runs", "research_workbench", "gen52_mechanics", "replay_semantics_generalization_20260708_nonsofi");
 const outputPptx = path.join(repoRoot, "presentations", "gen5_2_mechanics_and_gen4_calibration.pptx");
 const previewDir = path.join(auditDir, "mechanics_deck_preview_final");
 
@@ -194,6 +195,10 @@ function findSymbol(rows, lane, symbol) {
   return rows.find((row) => row.lane === lane && row.symbol === symbol);
 }
 
+function findGeneralization(rows, screenId, selectionPolicy) {
+  return rows.find((row) => row.screen_id === screenId && row.selection_policy === selectionPolicy);
+}
+
 const runSpec = (await readCsv(path.join(packetDir, "gen4_equivalence_run_spec.csv")))[0];
 const comparisonSummary = await readCsv(path.join(packetDir, "gen4_equivalence_comparison_summary.csv"));
 const laneSummary = await readCsv(path.join(auditDir, "cluster3_lane_summary.csv"));
@@ -203,6 +208,7 @@ const semanticsSummary = (await readCsv(path.join(probeDir, "sofi_ema_cross_summ
 const eventIndex = await readCsv(path.join(probeDir, "sofi_ema_cross_event_index.csv"));
 const mechanicsTruth = await readCsv(path.join(mechanicsDir, "mechanics_truth_table.csv"));
 const replayAbSummary = await readCsv(path.join(replayAbDir, "replay_semantics_ab_summary.csv"));
+const replayGeneralizationAggregate = await readCsv(path.join(generalizationDir, "replay_semantics_generalization_aggregate_delta.csv"));
 
 const liveSymbols = runSpec.symbols.split(",").map((x) => x.trim()).filter(Boolean).sort();
 const cluster3Symbols = "AMD,NVDA,PLTR,SOFI,TSLA";
@@ -222,6 +228,9 @@ const fallbackFreshCluster3 = findReplayAb(replayAbSummary, "fallback_fresh_sign
 const fallbackContinuationCluster3 = findReplayAb(replayAbSummary, "fallback_state_switch_continuation", "cluster_3_proxy");
 const directFreshCluster3Ab = findReplayAb(replayAbSummary, "direct_fresh_signal_only", "cluster_3_proxy");
 const mechanicsPassCount = mechanicsTruth.filter((row) => row.pass === "TRUE").length;
+const hbMatchedPooledGeneralization = findGeneralization(replayGeneralizationAggregate, "HB_archetype_matched_no_vxx", "pooled_family_asset_variant");
+const hbBroadPooledGeneralization = findGeneralization(replayGeneralizationAggregate, "HB_broad_risk_no_vxx", "pooled_family_asset_variant");
+const etfBroadDirectGeneralization = findGeneralization(replayGeneralizationAggregate, "ETF_broad_risk_no_vxx", "asset_state_direct_spec");
 
 const event = (type) => eventIndex.find((row) => row.event_type === type)?.event_date ?? "NA";
 
@@ -454,22 +463,49 @@ const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
+  addTitle(slide, "The non-SOFI screen tests whether the timing rule generalizes");
+  await addImage(slide, path.join(generalizationDir, "replay_semantics_generalization_delta_heatmap.png"), { left: 42, top: 190, width: 780, height: 455 }, "Non-SOFI replay semantics alpha delta heatmap");
+  addText(slide, "What changed", { left: 875, top: 216, width: 280, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "SOFI was removed from the evidence surface by using cached high-beta and ETF-sector baskets." },
+    { text: "Authority and state routing stayed frozen; the screen varied only fresh-signal versus state-switch continuation replay." },
+    { text: "Current-quarter OOS replay was isolated, so prior-quarter open-trade continuity did not drive the result." },
+  ], 875, 282, 325, 18, 66);
+  addFooter(slide, 15);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
+  addTitle(slide, "Continuation generalizes as a useful pocket, not a new default");
+  await addImage(slide, path.join(generalizationDir, "replay_semantics_generalization_mean_delta_bars.png"), { left: 42, top: 190, width: 760, height: 455 }, "Mean alpha delta bar chart for non-SOFI replay semantics screen");
+  addMetric(slide, "High-beta matched pooled mean alpha delta", pp(hbMatchedPooledGeneralization?.mean_alpha_delta), { left: 850, top: 214, width: 350 }, colors.continuation);
+  addMetric(slide, "High-beta broad-risk pooled mean alpha delta", pp(hbBroadPooledGeneralization?.mean_alpha_delta), { left: 850, top: 340, width: 350 }, colors.continuation);
+  addMetric(slide, "ETF broad-risk direct mean alpha delta", pp(etfBroadDirectGeneralization?.mean_alpha_delta), { left: 850, top: 466, width: 350 }, colors.fallback);
+  addText(slide, "The broader screen keeps continuation alive as a research factor, especially in high-beta pooled-family lanes, but it is uneven enough that fresh-signal replay remains the default.", { left: 850, top: 590, width: 350, height: 54 }, { fontSize: 18, bold: true, color: colors.accent });
+  addFooter(slide, 16);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
   addTitle(slide, "Updated next move");
   addPanel(slide, { left: 42, top: 214, width: 545, height: 330 });
   addPanel(slide, { left: 650, top: 214, width: 545, height: 330 });
   addText(slide, "Keep continuation as a candidate replay lane", { left: 72, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
   addBullets(slide, [
     { text: "It is mechanistically coherent and improves the fallback result in the fixed 2024Q4 packet." },
+    { text: "The non-SOFI screen shows its benefit is real but uneven across basket/context/policy lanes." },
     { text: "It should remain explicit, named, and A/B tested, not silently replace fresh-signal replay." },
-    { text: "The current evidence says it changes participation timing, not the whole system identity." },
-  ], 72, 310, 440, 19, 58);
-  addText(slide, "The remaining gap needs broader confirmation", { left: 680, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  ], 72, 310, 440, 19, 64);
+  addText(slide, "The remaining gap needs cleaner accounting and signal audits", { left: 680, top: 246, width: 445, height: 34 }, { fontSize: 27, bold: true });
   addBullets(slide, [
-    { text: "Run replay semantics across non-SOFI baskets and multiple market windows using cached scored-state artifacts." },
-    { text: "Probe exact Gen4 strategy signal semantics next, especially where Gen4 artifacts still diverge after continuation." },
+    { text: "Materialize scored-state artifacts so future replay-only probes do not rescore frozen PCA states repeatedly." },
+    { text: "Move surviving lanes into a true live-capital replay screen before interpreting alpha consistency." },
+    { text: "Probe exact Gen4 strategy signal semantics where Gen4 artifacts still diverge after continuation." },
     { text: "Only promote a behavior after it improves alpha consistency without simply increasing market exposure." },
-  ], 680, 310, 440, 19, 58);
-  addFooter(slide, 15);
+  ], 680, 310, 440, 18, 54);
+  addFooter(slide, 17);
 }
 
 await fs.mkdir(path.dirname(outputPptx), { recursive: true });
