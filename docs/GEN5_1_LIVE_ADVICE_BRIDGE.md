@@ -8,6 +8,22 @@ Daily replay now supports quarter continuity: when the immediately previous auth
 
 It is not accepted allocation evidence, not automation, and not an order-entry system.
 
+## Incident Guardrail: Frozen Bridge Semantics
+
+Status date: 2026-07-08
+
+The temporary live bridge is operational continuity infrastructure, not a Gen5.X research surface. Gen5.X research work may add or revise selection policies, replay semantics, strategy families, portfolio accounting, or diagnostics, but it must not silently change live bridge selection, replay, continuity, or advice behavior.
+
+The July 2026 dual-policy bridge incident exposed this boundary: the Gen5.1 direct-spec lane was intended to consume frozen `bridge_selected_states.csv` rows, but later Gen5.2 selection-policy work caused the daily direct lane to rebuild selected states from `bridge_train_state_performance.csv`. That meant the authority folder could stay the same while daily advice changed underneath it.
+
+Freeze-guard behavior:
+
+- The live bridge direct-spec lane must consume frozen `bridge_selected_states.csv` rows.
+- The direct-spec lane must not recompute direct selection from `bridge_train_state_performance.csv` during daily advice.
+- The pooled-family lane may use frozen `bridge_train_state_performance.csv` only as the explicitly labeled side-by-side Gen4-style inspection lane.
+- Daily packets write runtime provenance with branch, git SHA, dirty status, and `live_bridge_code_version`.
+- Changing these semantics is a live-bridge behavior change and requires an explicit operator decision.
+
 ## Current Q3 2026 Bridge
 
 - Basket: `AMD,NVDA,PLTR,TSLA,SOFI`
@@ -125,6 +141,7 @@ Key artifacts:
 
 - `dual_bridge_advice_summary.csv`: text-based advice rows for every symbol under both policy lanes.
 - `dual_bridge_operator_policy_preference.csv`: records the temporary operator-declared reading rule.
+- `dual_bridge_runtime_provenance.csv`: records branch, git SHA, dirty status, and live bridge code/version marker.
 - `dual_bridge_contact_sheet.png`: side-by-side chart sheet with Gen4-style pooled-family on the left and Gen5.1 direct-spec on the right.
 - `gen4_pooled_family/`: full single-policy packet and per-symbol charts for the Gen4-style lane.
 - `gen5_1_direct_spec/`: full single-policy packet and per-symbol charts for the Gen5.1 lane.
@@ -138,6 +155,7 @@ This folder is overwritten by each successful dual-policy run and is the fastest
 - `dual_bridge_latest_advice.csv`
 - `dual_bridge_latest_advice.md`
 - `dual_bridge_latest_contact_sheet.png`
+- `dual_bridge_latest_runtime_provenance.csv`
 - `dual_bridge_latest_manifest.csv`
 
 Temporary operator-declared reading rule:
@@ -167,5 +185,6 @@ For the dual-policy packet, read:
 1. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.md`
 2. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.csv`
 3. `runs/live_advice_bridge/latest/dual_bridge_latest_contact_sheet.png`
-4. `runs/live_advice_bridge/latest/dual_bridge_latest_manifest.csv` to find the source timestamped packet.
-5. The policy-specific folders only if the combined packet needs a closer chart audit.
+4. `runs/live_advice_bridge/latest/dual_bridge_latest_runtime_provenance.csv`
+5. `runs/live_advice_bridge/latest/dual_bridge_latest_manifest.csv` to find the source timestamped packet.
+6. The policy-specific folders only if the combined packet needs a closer chart audit.

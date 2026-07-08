@@ -84,6 +84,95 @@ test_that("bridge authority reader can include TRAIN state performance", {
   expect_equal(authority$train_state_performance$quarter_id[[1L]], "2026Q3")
 })
 
+test_that("live bridge direct lane consumes frozen selected-state authority", {
+  authority <- list(
+    contract = g5_bridge_contract_frame(
+      quarter_id = "2026Q3",
+      symbols = "SOFI",
+      context_symbols = "SOFI",
+      as_of_timestamp = "2026-06-30 17:30:00",
+      refresh = FALSE,
+      market_data_feed = "iex"
+    ),
+    selected_states = data.frame(
+      symbol = "SOFI",
+      quarter_id = "2026Q3",
+      state_id = "S1_1",
+      strategy_family = "ema_trend",
+      model_instance_id = "frozen_ema_trend",
+      exit_stack_id = "native_only",
+      strategy_spec_id = "frozen_ema_trend__native_only",
+      sharpe = 0.5,
+      total_return = 0.05,
+      train_state_row_count = 40L,
+      train_state_trade_count = 5L,
+      stringsAsFactors = FALSE
+    ),
+    train_state_performance = data.frame(
+      symbol = "SOFI",
+      quarter_id = "2026Q3",
+      state_id = "S1_1",
+      strategy_family = c("no_trade", "ema_cross"),
+      model_instance_id = c("no_trade", "recomputed_ema_cross"),
+      exit_stack_id = "native_only",
+      strategy_spec_id = c("no_trade__no_exit", "recomputed_ema_cross__native_only"),
+      sharpe = c(0, 9),
+      total_return = c(0, 0.9),
+      train_state_row_count = 40L,
+      train_state_trade_count = c(0L, 10L),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  direct <- g5_bridge_apply_live_selection_policy(authority, "asset_state_direct_spec", min_train_state_rows = 20L)
+
+  expect_equal(direct$selected_states$strategy_spec_id[[1L]], "frozen_ema_trend__native_only")
+  expect_equal(direct$selected_states$selection_policy_recipe[[1L]], "gen5_1_frozen_bridge_selected_states")
+  expect_equal(direct$selected_states$live_bridge_authority_source[[1L]], "bridge_selected_states.csv")
+  expect_equal(direct$contract$live_bridge_selection_guardrail[[1L]], "direct_lane_consumes_frozen_selected_states_without_recomputing_from_train_performance")
+})
+
+test_that("SOFI Q2 continuity fixture carries 2026-06-29 open trade when still long", {
+  prior_replay <- data.frame(
+    symbol = "SOFI",
+    session_date = as.Date(c("2026-06-26", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-08")),
+    model_position_after_replay = c("FLAT", "LONG", "LONG", "LONG", "LONG"),
+    stringsAsFactors = FALSE
+  )
+  open_trade <- data.frame(
+    symbol = "SOFI",
+    trade_status = "open",
+    entry_execution_date = as.Date("2026-06-29"),
+    strategy_spec_id = "ema_trend_fast15_slow50__native_only",
+    stringsAsFactors = FALSE
+  )
+
+  carry_until <- g5_bridge_first_flat_date_from_prior(prior_replay, as.Date("2026-07-01"))
+
+  expect_true(is.na(carry_until))
+  expect_equal(open_trade$symbol[[1L]], "SOFI")
+  expect_equal(open_trade$entry_execution_date[[1L]], as.Date("2026-06-29"))
+  expect_equal(open_trade$trade_status[[1L]], "open")
+})
+
+test_that("live bridge runtime provenance records code and git fields", {
+  provenance <- g5_bridge_runtime_provenance(
+    repo_root = test_path("..", ".."),
+    quarter_id = "2026Q3",
+    as_of_timestamp = "2026-07-08 17:30:00",
+    selection_policy = "asset_state_direct_spec",
+    selection_policy_label = "Gen5.1 direct-spec",
+    authority_dir = "runs/live_advice_bridge/authority/2026Q3",
+    previous_authority_dir = "runs/live_advice_bridge/authority/2026Q2"
+  )
+
+  expect_equal(nrow(provenance), 1L)
+  expect_equal(provenance$live_bridge_code_version[[1L]], g5_live_bridge_code_version())
+  expect_equal(provenance$live_bridge_semantics[[1L]], "frozen_gen5_1_authority_consumption")
+  expect_true("git_sha" %in% names(provenance))
+  expect_true("git_dirty" %in% names(provenance))
+})
+
 test_that("bridge model grid defaults to the Gen4 daily_default implemented subset", {
   grid <- g5_bridge_model_grid()
   families <- sort(unique(grid$strategy_family))

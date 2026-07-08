@@ -65,22 +65,7 @@ g5_bridge_dual_policy_specs <- function() {
 }
 
 g5_bridge_apply_selection_policy <- function(authority, selection_policy, min_train_state_rows = 20L) {
-  out <- authority
-  out$contract$selection_policy <- selection_policy
-  if (identical(selection_policy, "asset_state_direct_spec")) {
-    out$selected_states <- g5_selection_policy_add_direct_label(out$selected_states, out$train_state_performance, min_train_state_rows = min_train_state_rows)
-  } else if (identical(selection_policy, "pooled_family_asset_variant")) {
-    if (!is.data.frame(out$train_state_performance) || !nrow(out$train_state_performance)) {
-      g5_stop("Pooled-family live advice requires bridge_train_state_performance.csv in the authority packet.")
-    }
-    out$selected_states <- g5_selection_policy_pooled_family_asset_variant(
-      out$train_state_performance,
-      min_train_state_rows = min_train_state_rows
-    )
-  } else {
-    g5_stop(paste0("Unsupported live advice selection policy: ", selection_policy))
-  }
-  out
+  g5_bridge_apply_live_selection_policy(authority, selection_policy, min_train_state_rows = min_train_state_rows)
 }
 
 g5_bridge_tag_daily_policy <- function(daily, selection_policy, policy_label) {
@@ -192,6 +177,7 @@ g5_bridge_write_latest_surface <- function(paths, output_dir, repo_root, quarter
     latest_pending_csv = "dual_bridge_latest_pending_actions.csv",
     latest_policy_preference_csv = "dual_bridge_latest_operator_policy_preference.csv",
     latest_policy_taxonomy_csv = "dual_bridge_latest_policy_taxonomy.csv",
+    latest_runtime_provenance_csv = "dual_bridge_latest_runtime_provenance.csv",
     latest_report_md = "dual_bridge_latest_advice.md",
     latest_contact_sheet_png = "dual_bridge_latest_contact_sheet.png"
   )
@@ -201,6 +187,7 @@ g5_bridge_write_latest_surface <- function(paths, output_dir, repo_root, quarter
     latest_pending_csv = paths$pending_actions_csv,
     latest_policy_preference_csv = paths$operator_policy_preference_csv,
     latest_policy_taxonomy_csv = paths$policy_taxonomy_csv,
+    latest_runtime_provenance_csv = paths$runtime_provenance_csv,
     latest_report_md = paths$report_md,
     latest_contact_sheet_png = paths$contact_sheet_png
   )
@@ -223,6 +210,7 @@ g5_bridge_write_latest_surface <- function(paths, output_dir, repo_root, quarter
     latest_advice_csv = latest_paths$latest_advice_csv,
     latest_report_md = latest_paths$latest_report_md,
     latest_contact_sheet_png = latest_paths$latest_contact_sheet_png,
+    latest_runtime_provenance_csv = latest_paths$latest_runtime_provenance_csv,
     stringsAsFactors = FALSE
   )
   manifest_path <- file.path(latest_dir, "dual_bridge_latest_manifest.csv")
@@ -345,6 +333,15 @@ for (i in seq_len(nrow(policy_specs))) {
     )
   }
   daily <- g5_bridge_tag_daily_policy(daily, policy, label)
+  daily$runtime_provenance <- g5_bridge_runtime_provenance(
+    repo_root = repo_root,
+    quarter_id = quarter_id,
+    as_of_timestamp = result$resolved_session$as_of_timestamp,
+    selection_policy = policy,
+    selection_policy_label = label,
+    authority_dir = authority_dir,
+    previous_authority_dir = previous_authority_dir
+  )
   policy_dir <- file.path(output_dir, as.character(spec$output_slug[[1L]]))
   policy_paths <- g5_bridge_write_daily_outputs(daily, policy_dir)
   policy_results[[policy]] <- list(spec = spec, daily = daily, paths = policy_paths, output_dir = policy_dir)
@@ -355,6 +352,7 @@ book <- g5_wfa_bind_rows_fill(lapply(policy_results, function(x) x$daily$book_su
 pending <- g5_wfa_bind_rows_fill(lapply(policy_results, function(x) x$daily$pending_actions))
 executions <- g5_wfa_bind_rows_fill(lapply(policy_results, function(x) x$daily$executions))
 trades <- g5_wfa_bind_rows_fill(lapply(policy_results, function(x) x$daily$trades))
+provenance <- g5_wfa_bind_rows_fill(lapply(policy_results, function(x) x$daily$runtime_provenance))
 policy_pref <- data.frame(
   symbol = names(operator_policy_by_symbol),
   operator_declared_policy = unname(operator_policy_by_symbol),
@@ -371,6 +369,7 @@ paths <- list(
   trades_csv = file.path(output_dir, "dual_bridge_trades.csv"),
   operator_policy_preference_csv = file.path(output_dir, "dual_bridge_operator_policy_preference.csv"),
   policy_taxonomy_csv = file.path(output_dir, "dual_bridge_policy_taxonomy.csv"),
+  runtime_provenance_csv = file.path(output_dir, "dual_bridge_runtime_provenance.csv"),
   report_md = file.path(output_dir, "dual_bridge_daily_report.md"),
   contact_sheet_png = file.path(output_dir, "dual_bridge_contact_sheet.png")
 )
@@ -381,6 +380,7 @@ g5_wfa_write_csv(executions, paths$executions_csv)
 g5_wfa_write_csv(trades, paths$trades_csv)
 g5_wfa_write_csv(policy_pref, paths$operator_policy_preference_csv)
 g5_wfa_write_csv(policy_specs, paths$policy_taxonomy_csv)
+g5_wfa_write_csv(provenance, paths$runtime_provenance_csv)
 g5_bridge_write_dual_contact_sheet(policy_results, paths$contact_sheet_png)
 
 selected_lines <- if (nrow(advice)) {
@@ -407,8 +407,9 @@ report <- c(
   paste0("- As of timestamp: `", as_of_timestamp, "`"),
   paste0("- Latest replay date: `", as.Date(max(as.Date(result$bars$session_date), na.rm = TRUE)), "`"),
   paste0("- Feed: `", cfg$feed, "`"),
+  paste0("- Live bridge code version: `", g5_live_bridge_code_version(), "`"),
   "- Gen4-style lane: `pooled_family_asset_variant`",
-  "- Gen5.1 lane: `asset_state_direct_spec`",
+  "- Gen5.1 lane: `asset_state_direct_spec`, consumed from frozen `bridge_selected_states.csv` without recomputing direct selection.",
   "- Temporary operator-declared discretion rule recorded in this packet: `AMD` under Gen4-style pooled-family; `NVDA,PLTR,TSLA,SOFI` under Gen5.1 direct-spec.",
   "",
   "## Text Advice",
@@ -419,6 +420,7 @@ report <- c(
   "",
   "- `dual_bridge_advice_summary.csv`",
   "- `dual_bridge_operator_policy_preference.csv`",
+  "- `dual_bridge_runtime_provenance.csv`",
   "- `dual_bridge_contact_sheet.png`",
   "- `gen4_pooled_family/bridge_contact_sheet.png`",
   "- `gen5_1_direct_spec/bridge_contact_sheet.png`",

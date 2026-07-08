@@ -2,6 +2,63 @@ g5_live_bridge_schema_version <- function() {
   "gen5_live_advice_bridge_v0.1"
 }
 
+g5_live_bridge_code_version <- function() {
+  "gen5_1_live_bridge_freeze_guard_v1"
+}
+
+g5_bridge_git_executable <- function() {
+  candidates <- c(
+    unname(Sys.which("git")),
+    "C:/Program Files/Git/cmd/git.exe",
+    "C:/Program Files/Git/bin/git.exe"
+  )
+  candidates <- candidates[nzchar(candidates)]
+  existing <- candidates[file.exists(candidates)]
+  if (!length(existing)) NA_character_ else existing[[1L]]
+}
+
+g5_bridge_git_output_or_na <- function(repo_root, args) {
+  git <- g5_bridge_git_executable()
+  if (!length(git) || is.na(git) || !nzchar(git)) return(NA_character_)
+  repo_root <- normalizePath(repo_root, winslash = "/", mustWork = FALSE)
+  value <- tryCatch(
+    suppressWarnings(system2(git, c("-C", shQuote(repo_root), args), stdout = TRUE, stderr = FALSE)),
+    error = function(e) NA_character_
+  )
+  if (!length(value)) return(NA_character_)
+  value <- paste(as.character(value), collapse = "\n")
+  if (!nzchar(value)) NA_character_ else value
+}
+
+g5_bridge_runtime_provenance <- function(
+  repo_root,
+  quarter_id = NA_character_,
+  as_of_timestamp = NA_character_,
+  selection_policy = NA_character_,
+  selection_policy_label = NA_character_,
+  authority_dir = NA_character_,
+  previous_authority_dir = NA_character_
+) {
+  status <- g5_bridge_git_output_or_na(repo_root, c("status", "--porcelain"))
+  dirty <- !is.na(status) && nzchar(status)
+  data.frame(
+    schema_version = g5_live_bridge_schema_version(),
+    live_bridge_code_version = g5_live_bridge_code_version(),
+    live_bridge_semantics = "frozen_gen5_1_authority_consumption",
+    quarter_id = as.character(quarter_id),
+    as_of_timestamp = as.character(as_of_timestamp),
+    selection_policy = as.character(selection_policy),
+    selection_policy_label = as.character(selection_policy_label),
+    authority_dir = normalizePath(as.character(authority_dir), winslash = "/", mustWork = FALSE),
+    previous_authority_dir = normalizePath(as.character(previous_authority_dir), winslash = "/", mustWork = FALSE),
+    git_branch = g5_bridge_git_output_or_na(repo_root, c("rev-parse", "--abbrev-ref", "HEAD")),
+    git_sha = g5_bridge_git_output_or_na(repo_root, c("rev-parse", "--short", "HEAD")),
+    git_dirty = dirty,
+    git_dirty_row_count = if (is.na(status) || !nzchar(status)) 0L else length(strsplit(status, "\n", fixed = TRUE)[[1L]]),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_bridge_default_symbols <- function() {
   c("AMD", "NVDA", "PLTR", "TSLA", "SOFI")
 }
@@ -941,6 +998,44 @@ g5_bridge_read_authority <- function(authority_dir, include_train_state_performa
   out
 }
 
+g5_bridge_label_frozen_direct_authority <- function(selected_states) {
+  selected_states$selection_policy <- "asset_state_direct_spec"
+  selected_states$selection_policy_recipe <- "gen5_1_frozen_bridge_selected_states"
+  selected_states$live_bridge_authority_source <- "bridge_selected_states.csv"
+  selected_states$live_bridge_code_version <- g5_live_bridge_code_version()
+  if (!"pooled_selected_family" %in% names(selected_states)) selected_states$pooled_selected_family <- NA_character_
+  if (!"pooled_family_mean_sharpe" %in% names(selected_states)) selected_states$pooled_family_mean_sharpe <- NA_real_
+  if (!"pooled_family_mean_total_return" %in% names(selected_states)) selected_states$pooled_family_mean_total_return <- NA_real_
+  if (!"pooled_family_asset_count" %in% names(selected_states)) selected_states$pooled_family_asset_count <- NA_integer_
+  if (!"pooled_family_trade_count" %in% names(selected_states)) selected_states$pooled_family_trade_count <- NA_integer_
+  if (!"pooled_family_n_variants" %in% names(selected_states)) selected_states$pooled_family_n_variants <- NA_integer_
+  selected_states
+}
+
+g5_bridge_apply_live_selection_policy <- function(authority, selection_policy, min_train_state_rows = 20L) {
+  out <- authority
+  out$contract$selection_policy <- selection_policy
+  out$contract$live_bridge_code_version <- g5_live_bridge_code_version()
+  if (identical(selection_policy, "asset_state_direct_spec")) {
+    out$contract$live_bridge_authority_source <- "bridge_selected_states.csv"
+    out$contract$live_bridge_selection_guardrail <- "direct_lane_consumes_frozen_selected_states_without_recomputing_from_train_performance"
+    out$selected_states <- g5_bridge_label_frozen_direct_authority(out$selected_states)
+  } else if (identical(selection_policy, "pooled_family_asset_variant")) {
+    if (!is.data.frame(out$train_state_performance) || !nrow(out$train_state_performance)) {
+      g5_stop("Pooled-family live advice requires bridge_train_state_performance.csv in the authority packet.")
+    }
+    out$contract$live_bridge_authority_source <- "bridge_train_state_performance.csv"
+    out$contract$live_bridge_selection_guardrail <- "pooled_family_lane_recomputed_from_frozen_train_performance_for_side_by_side_inspection"
+    out$selected_states <- g5_selection_policy_pooled_family_asset_variant(
+      out$train_state_performance,
+      min_train_state_rows = min_train_state_rows
+    )
+  } else {
+    g5_stop(paste0("Unsupported live advice selection policy: ", selection_policy))
+  }
+  out
+}
+
 g5_bridge_trades_from_replay <- function(replay, executions, authority_end_date) {
   if (!is.data.frame(executions) || !nrow(executions)) {
     return(data.frame())
@@ -1209,6 +1304,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
     executions_csv = file.path(output_dir, "bridge_executions.csv"),
     trades_csv = file.path(output_dir, "bridge_trades.csv"),
     continuity_csv = file.path(output_dir, "bridge_continuity.csv"),
+    runtime_provenance_csv = file.path(output_dir, "bridge_runtime_provenance.csv"),
     report_md = file.path(output_dir, "bridge_daily_report.md"),
     contact_sheet_png = file.path(output_dir, "bridge_contact_sheet.png")
   )
@@ -1219,6 +1315,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
   g5_wfa_write_csv(daily$executions, paths$executions_csv)
   g5_wfa_write_csv(daily$trades, paths$trades_csv)
   if (!is.null(daily$continuity)) g5_wfa_write_csv(daily$continuity, paths$continuity_csv)
+  if (!is.null(daily$runtime_provenance)) g5_wfa_write_csv(daily$runtime_provenance, paths$runtime_provenance_csv)
   symbols <- names(daily$symbol_results)
   chart_paths <- character()
   packet_label <- if (!is.null(daily$selection_policy_label) && nzchar(as.character(daily$selection_policy_label))) {
@@ -1309,6 +1406,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
     paste0("- As of timestamp: `", daily$as_of_timestamp, "`"),
     paste0("- Latest replay date: `", daily$as_of_date, "`"),
     paste0("- Pending next-open actions: `", pending_count, "`"),
+    paste0("- Live bridge code version: `", g5_live_bridge_code_version(), "`"),
     "",
     "## Current Model Readout",
     "",
@@ -1324,6 +1422,7 @@ g5_bridge_write_daily_outputs <- function(daily, output_dir, chart_lookback_days
     "- `bridge_executions.csv`",
     "- `bridge_trades.csv`",
     "- `bridge_continuity.csv`",
+    "- `bridge_runtime_provenance.csv`",
     "- `bridge_contact_sheet.png`",
     "",
     "## Operator Guardrail",

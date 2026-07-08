@@ -142,6 +142,15 @@ daily <- if (continuity) {
     as_of_timestamp = result$resolved_session$as_of_timestamp
   )
 }
+daily$runtime_provenance <- g5_bridge_runtime_provenance(
+  repo_root = repo_root,
+  quarter_id = quarter_id,
+  as_of_timestamp = result$resolved_session$as_of_timestamp,
+  selection_policy = if ("selection_policy" %in% names(daily$contract)) daily$contract$selection_policy[[1L]] else "frozen_single_policy",
+  selection_policy_label = "Gen5.1 frozen bridge",
+  authority_dir = authority_dir,
+  previous_authority_dir = previous_authority_dir
+)
 
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 query_paths <- g5_write_workbench_query_artifacts(result, output_dir = output_dir, prefix = "bridge_daily_query")
