@@ -326,6 +326,103 @@ test_that("Gen4 state-leader fallback fills missing asset variants", {
   expect_true(all(fallback$selection_policy_recipe == "gen4_phase40_pooled_family_asset_variant_state_leader_fallback"))
 })
 
+test_that("bridge replay can opt into state-switch trend continuation entries", {
+  dates <- as.Date("2025-12-29") + 0:9
+  close <- c(10, 9, 8, 12, 13, 14, 15, 16, 17, 18)
+  bars <- data.frame(
+    symbol = "AAA",
+    session_date = dates,
+    open = close + 0.1,
+    high = close + 1,
+    low = close - 1,
+    close = close,
+    volume = seq_along(close) * 100,
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "fixture",
+    as_of_timestamp = "2026-01-07 17:30:00",
+    latest_completed_session = max(dates),
+    fetch_start_date = min(dates),
+    fetch_end_date = max(dates),
+    data_version_hash = paste0("fixture_", seq_along(close)),
+    stringsAsFactors = FALSE
+  )
+  scored <- data.frame(
+    symbol = "AAA",
+    session_date = dates,
+    state_id = ifelse(dates <= as.Date("2026-01-01"), "S1_1", "S2_1"),
+    stringsAsFactors = FALSE
+  )
+  grid <- g5_wfa_candidate_model_grid(
+    fast_periods = 1L,
+    slow_periods = 3L,
+    candidate_families = c("ema_cross", "no_trade")
+  )
+  no_trade <- grid[grid$strategy_family == "no_trade", , drop = FALSE][1L, , drop = FALSE]
+  no_trade$symbol <- "AAA"
+  no_trade$quarter_id <- "2026Q1"
+  no_trade$state_id <- "S1_1"
+  no_trade$exit_stack_id <- "no_exit"
+  no_trade$strategy_spec_id <- "no_trade__no_exit"
+  ema <- grid[grid$strategy_family == "ema_cross", , drop = FALSE][1L, , drop = FALSE]
+  ema$symbol <- "AAA"
+  ema$quarter_id <- "2026Q1"
+  ema$state_id <- "S2_1"
+  ema$exit_stack_id <- "native_only"
+  ema$strategy_spec_id <- paste0(ema$model_instance_id[[1L]], "__native_only")
+  selected_states <- g5_wfa_bind_rows_fill(list(no_trade, ema))
+  contract <- g5_bridge_contract_frame(
+    quarter_id = "2026Q1",
+    symbols = "AAA",
+    context_symbols = "AAA",
+    as_of_timestamp = "2026-01-07 17:30:00",
+    refresh = FALSE
+  )
+
+  fresh <- g5_bridge_replay_symbol(
+    bars,
+    "AAA",
+    scored,
+    selected_states,
+    contract,
+    replay_start_date = as.Date("2025-12-31"),
+    entry_signal_start_date = as.Date("2025-12-31"),
+    entry_signal_end_date = as.Date("2026-01-07"),
+    entry_replay_semantics = "fresh_signal_only"
+  )
+  continuation <- g5_bridge_replay_symbol(
+    bars,
+    "AAA",
+    scored,
+    selected_states,
+    contract,
+    replay_start_date = as.Date("2025-12-31"),
+    entry_signal_start_date = as.Date("2025-12-31"),
+    entry_signal_end_date = as.Date("2026-01-07"),
+    entry_replay_semantics = "state_switch_continuation"
+  )
+
+  expect_equal(nrow(fresh$executions), 0L)
+  expect_true(any(continuation$replay$signal_status == "ENTER_LONG_NEXT_OPEN"))
+  expect_equal(
+    continuation$replay$entry_trigger_type[continuation$replay$signal_status == "ENTER_LONG_NEXT_OPEN"][[1L]],
+    "state_switch_continuation"
+  )
+  expect_equal(continuation$executions$execution_type[[1L]], "ENTER_LONG")
+  expect_equal(as.Date(continuation$executions$execution_date[[1L]]), as.Date("2026-01-03"))
+  expect_error(
+    g5_bridge_replay_symbol(
+      bars,
+      "AAA",
+      scored,
+      selected_states,
+      contract,
+      entry_replay_semantics = "wide_open"
+    ),
+    "entry_replay_semantics"
+  )
+})
+
 test_that("Gen5.2 direct policy rebuilds selected states from TRAIN performance", {
   perf <- data.frame(
     symbol = "AAA",

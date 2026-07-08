@@ -37,6 +37,8 @@ const packetDir = path.join(
 );
 const auditDir = path.join(packetDir, "trade_tape_audit");
 const probeDir = path.join(packetDir, "sofi_ema_cross_semantics_probe");
+const mechanicsDir = path.join(repoRoot, "runs", "research_workbench", "gen52_mechanics", "replay_semantics_mechanics_lab_20260708");
+const replayAbDir = path.join(packetDir, "replay_semantics_ab");
 const outputPptx = path.join(repoRoot, "presentations", "gen5_2_mechanics_and_gen4_calibration.pptx");
 const previewDir = path.join(auditDir, "mechanics_deck_preview_final");
 
@@ -49,6 +51,7 @@ const colors = {
   direct: "#2E86AB",
   pooled: "#9B5DE5",
   fallback: "#D1495B",
+  continuation: "#2E7D32",
   gen4: "#111111",
   hold: "#AEB4BE",
   accent: "#FF6B35",
@@ -183,6 +186,10 @@ function findLane(rows, lane) {
   return rows.find((row) => row.lane === lane);
 }
 
+function findReplayAb(rows, laneId, groupId) {
+  return rows.find((row) => row.lane_id === laneId && row.group_id === groupId);
+}
+
 function findSymbol(rows, lane, symbol) {
   return rows.find((row) => row.lane === lane && row.symbol === symbol);
 }
@@ -194,6 +201,8 @@ const symbolSummary = await readCsv(path.join(auditDir, "cluster3_symbol_partici
 const authorityLedger = await readCsv(path.join(auditDir, "sofi_pltr_authority_ledger.csv"));
 const semanticsSummary = (await readCsv(path.join(probeDir, "sofi_ema_cross_summary.csv")))[0];
 const eventIndex = await readCsv(path.join(probeDir, "sofi_ema_cross_event_index.csv"));
+const mechanicsTruth = await readCsv(path.join(mechanicsDir, "mechanics_truth_table.csv"));
+const replayAbSummary = await readCsv(path.join(replayAbDir, "replay_semantics_ab_summary.csv"));
 
 const liveSymbols = runSpec.symbols.split(",").map((x) => x.trim()).filter(Boolean).sort();
 const cluster3Symbols = "AMD,NVDA,PLTR,SOFI,TSLA";
@@ -209,6 +218,10 @@ const fallbackLane = findLane(laneSummary, "Gen5.2 fallback");
 const sofiFallback = findSymbol(symbolSummary, "Gen5.2 fallback", "SOFI");
 const sofiGen4 = findSymbol(symbolSummary, "Gen4 artifact", "SOFI");
 const sofiS14Fallback = authorityLedger.find((row) => row.lane === "Gen5.2 fallback" && row.symbol === "SOFI" && row.state_id === "S1_4");
+const fallbackFreshCluster3 = findReplayAb(replayAbSummary, "fallback_fresh_signal_only", "cluster_3_proxy");
+const fallbackContinuationCluster3 = findReplayAb(replayAbSummary, "fallback_state_switch_continuation", "cluster_3_proxy");
+const directFreshCluster3Ab = findReplayAb(replayAbSummary, "direct_fresh_signal_only", "cluster_3_proxy");
+const mechanicsPassCount = mechanicsTruth.filter((row) => row.pass === "TRUE").length;
 
 const event = (type) => eventIndex.find((row) => row.event_type === type)?.event_date ?? "NA";
 
@@ -414,22 +427,49 @@ const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "Recommended next narrow probe");
+  addTitle(slide, "Synthetic data isolates the replay-timing mechanic");
+  await addImage(slide, path.join(mechanicsDir, "synthetic_replay_timeline.png"), { left: 42, top: 194, width: 760, height: 420 }, "Synthetic replay timeline");
+  addMetric(slide, "Mechanics checks passed", `${mechanicsPassCount}/${mechanicsTruth.length}`, { left: 858, top: 214, width: 300 }, colors.continuation);
+  addText(slide, "What this proves", { left: 858, top: 340, width: 280, height: 34 }, { fontSize: 27, bold: true });
+  addBullets(slide, [
+    { text: "Fresh-signal replay stays flat when the cross happened before the state route changed." },
+    { text: "State-switch continuation enters when a trend-following route becomes active while the trend condition is already on." },
+    { text: "A fold-asset authority proxy catches the original cross because the strategy was active before the signal." },
+  ], 858, 400, 310, 18, 62);
+  addFooter(slide, 13);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
+  addTitle(slide, "The historical A/B says continuation helps but does not solve the gap");
+  await addImage(slide, path.join(replayAbDir, "replay_semantics_ab_equity_overlay.png"), { left: 42, top: 194, width: 790, height: 430 }, "Replay semantics A/B equity overlay");
+  addMetric(slide, "Fallback fresh cluster 3 return", pct(fallbackFreshCluster3.strategy_return), { left: 872, top: 214, width: 315 }, colors.fallback);
+  addMetric(slide, "Fallback continuation return", pct(fallbackContinuationCluster3.strategy_return), { left: 872, top: 326, width: 315 }, colors.continuation);
+  addMetric(slide, "Direct fresh return", pct(directFreshCluster3Ab.strategy_return), { left: 872, top: 438, width: 315 }, colors.direct);
+  addText(slide, "Continuation recovers a large share of the fallback lane's missed participation, but it still trails the hold benchmark and does not reproduce the full Gen4 artifact.", { left: 872, top: 560, width: 315, height: 72 }, { fontSize: 18, bold: true, color: colors.accent });
+  addFooter(slide, 14);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
+  addTitle(slide, "Updated next move");
   addPanel(slide, { left: 42, top: 214, width: 545, height: 330 });
   addPanel(slide, { left: 650, top: 214, width: 545, height: 330 });
-  addText(slide, "A/B stale-signal entry semantics", { left: 72, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  addText(slide, "Keep continuation as a candidate replay lane", { left: 72, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
   addBullets(slide, [
-    { text: "Baseline: current Gen5.2 enters only on a fresh signal while flat." },
-    { text: "Probe: when a state switches into a trend-following family, allow entry if the family is already in an active long condition." },
-    { text: "Keep TRAIN, selected specs, context universe, PCA, basket, and portfolio accounting fixed." },
+    { text: "It is mechanistically coherent and improves the fallback result in the fixed 2024Q4 packet." },
+    { text: "It should remain explicit, named, and A/B tested, not silently replace fresh-signal replay." },
+    { text: "The current evidence says it changes participation timing, not the whole system identity." },
   ], 72, 310, 440, 19, 58);
-  addText(slide, "Why this is narrow enough", { left: 680, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
+  addText(slide, "The remaining gap needs broader confirmation", { left: 680, top: 246, width: 430, height: 34 }, { fontSize: 27, bold: true });
   addBullets(slide, [
-    { text: "It directly targets the SOFI October miss without reopening all research design choices." },
-    { text: "It can be run as an additional replay lane using existing authority artifacts." },
-    { text: "Success would mean convergence in trade timing; failure would point us back to Gen4 signal semantics or portfolio accounting." },
+    { text: "Run replay semantics across non-SOFI baskets and multiple market windows using cached scored-state artifacts." },
+    { text: "Probe exact Gen4 strategy signal semantics next, especially where Gen4 artifacts still diverge after continuation." },
+    { text: "Only promote a behavior after it improves alpha consistency without simply increasing market exposure." },
   ], 680, 310, 440, 19, 58);
-  addFooter(slide, 13);
+  addFooter(slide, 15);
 }
 
 await fs.mkdir(path.dirname(outputPptx), { recursive: true });

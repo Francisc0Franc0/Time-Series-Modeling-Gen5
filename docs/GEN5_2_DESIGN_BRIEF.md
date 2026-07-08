@@ -47,6 +47,15 @@ Gen4's `no_trade_exit_immediate` concept is represented in Gen5.2 as an explicit
 
 This preserves the useful Gen4 risk-off behavior without treating the override as a normal entry strategy.
 
+## Entry Replay Semantics
+
+Gen5.2 now names the entry-timing assumption explicitly:
+
+- `fresh_signal_only`: default/current behavior. A flat replay enters only when the selected strategy emits a fresh entry signal while that strategy is routed by the current state.
+- `state_switch_continuation`: research-only challenger. For trend-following families with persistent active states (`ema_cross` as `fast_above`, `ema_trend` as `trend_on`), a flat replay may enter when the PCA route switches into an already-active long condition.
+
+The second mode exists because the SOFI audit showed a specific timing gap: Gen4 entered after a `2024-10-03` cross-above signal, while Gen5.2 fallback did not route SOFI to the same `ema_cross_f1_s10` spec until `2024-10-09`. The new mode should remain an explicit A/B research factor until it generalizes; it is not a silent replacement for the default replay rule.
+
 ## Assessment Surfaces
 
 Gen5.2 keeps two surfaces separate:
@@ -72,12 +81,13 @@ Implemented in this slice:
 - Focused tests cover direct-lane and pooled-family active-candidate trade-count filtering, selection-policy recipe labeling, and no-trade exit-immediate override detection.
 - A 2024Q4 SOFI/PLTR authority-level probe found that the fallback lane changes `24 / 32` focus asset/state rows and fires on `3` OOS-visited rows where strict pooled-family had abstained.
 - A full 2024Q4 16-symbol replay using cached authority then showed that fallback does not close the Gen4 gap: cluster-3 alpha versus local hold was Gen4 `+1.7 pp`, direct `-19.0 pp`, strict pooled `-32.6 pp`, and fallback pooled `-35.5 pp`. Fallback activated SOFI partially, but the trades lost money instead of reproducing Gen4's long SOFI winner.
+- A replay-semantics mechanics lab passed all synthetic truth-table checks and a fixed-authority 2024Q4 A/B showed that `state_switch_continuation` improves fallback cluster-3 proxy return from `6.1%` to `20.8%`. It still lags the local hold benchmark (`45.2%`) and does not reproduce the full Gen4 artifact, so it is promising but not sufficient.
 
 Not implemented in this slice:
 
 - SMA family ports.
 - Exact Gen4 volatility-expansion breakout semantics.
-- A live-capital replay screen using the fallback lane; the current fallback replay is still the Phase40-style equivalence surface, not the canonical portfolio-accounting surface.
+- A live-capital replay screen using the fallback and continuation lanes; the current fallback/continuation replays are still Phase40-style equivalence surfaces, not canonical portfolio-accounting packets.
 - Leveraged live-capital sizing.
 
 ## Next Research Gate
@@ -90,4 +100,4 @@ The next useful run should compare:
 - true live-capital portfolio replay;
 - a narrow, already-promising context/state setup, likely behavioral-pool PCA plus 3x3 quantile states.
 
-The point of that run is not to crown an allocation. The current Phase40-style replay shows the hierarchical fallback is not sufficient by itself; the next useful probe should focus on why the same-looking SOFI `ema_cross_f1_s10` authority does not reproduce Gen4's signal timing and trade path.
+The point of that run is not to crown an allocation. The current Phase40-style replay shows that hierarchical fallback and state-switch continuation both explain part of the Gen4/Gen5.2 gap, but neither is sufficient by itself. The next useful probe should broaden replay-semantics checks across cached non-SOFI baskets/windows and inspect exact remaining Gen4 signal semantics where continuation still diverges.

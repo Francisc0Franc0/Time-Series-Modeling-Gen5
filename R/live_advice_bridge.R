@@ -353,6 +353,24 @@ g5_bridge_model_param_summary <- function(row) {
   if (length(pieces)) paste(pieces, collapse = ";") else NA_character_
 }
 
+g5_bridge_entry_replay_semantics <- function(entry_replay_semantics = "fresh_signal_only") {
+  value <- as.character(entry_replay_semantics)[[1L]]
+  choices <- c("fresh_signal_only", "state_switch_continuation")
+  if (!nzchar(value) || !value %in% choices) {
+    g5_stop(paste0("entry_replay_semantics must be one of: ", paste(choices, collapse = ",")))
+  }
+  value
+}
+
+g5_bridge_continuation_signal_state <- function(ind, idx, selected_family) {
+  selected_family <- as.character(selected_family)[[1L]]
+  if (!"signal_state" %in% names(ind)) return(NA_character_)
+  state <- as.character(ind$signal_state[[idx]])
+  if (selected_family == "ema_cross" && identical(state, "fast_above")) return(state)
+  if (selected_family == "ema_trend" && identical(state, "trend_on")) return(state)
+  NA_character_
+}
+
 g5_bridge_replay_symbol <- function(
   bars,
   symbol,
@@ -364,8 +382,12 @@ g5_bridge_replay_symbol <- function(
   entry_signal_start_date = NULL,
   entry_signal_end_date = NULL,
   honor_pending_entry_execution_until = NULL,
-  authority_role = "current"
+  authority_role = "current",
+  entry_replay_semantics = "fresh_signal_only",
+  state_switch_continuation_families = c("ema_cross", "ema_trend")
 ) {
+  entry_replay_semantics <- g5_bridge_entry_replay_semantics(entry_replay_semantics)
+  state_switch_continuation_families <- unique(as.character(state_switch_continuation_families))
   symbol <- g5_standardize_symbol(symbol)[[1L]]
   train_end_date <- as.Date(contract$train_end_date[[1L]])
   live_start_date <- as.Date(contract$live_start_date[[1L]])
@@ -413,6 +435,7 @@ g5_bridge_replay_symbol <- function(
   open_trade <- NULL
   pending_entry <- NULL
   pending_exit <- NULL
+  previous_selected_spec <- NA_character_
 
   for (idx in signal_indices) {
     current_date <- session_dates[[idx]]
@@ -424,6 +447,8 @@ g5_bridge_replay_symbol <- function(
     selected_family <- if (nrow(selected)) as.character(selected$strategy_family[[1L]]) else NA_character_
     selected_spec <- if (nrow(selected)) as.character(selected$strategy_spec_id[[1L]]) else NA_character_
     selected_params <- g5_bridge_model_param_summary(selected)
+    selected_spec_changed <- nrow(selected) && !identical(selected_spec, previous_selected_spec)
+    entry_trigger_today <- NA_character_
 
     if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position && current_date >= live_start_date && current_date <= honor_pending_entry_execution_until) {
       open_trade <- c(
@@ -444,6 +469,7 @@ g5_bridge_replay_symbol <- function(
         execution_price = as.numeric(all_bars$open[[idx]]),
         strategy_spec_id = open_trade$strategy_spec_id,
         state_id = current_state,
+        entry_trigger_type = if (!is.null(open_trade$entry_trigger_type)) open_trade$entry_trigger_type else NA_character_,
         authority_quarter_id = as.character(contract$quarter_id[[1L]]),
         authority_role = as.character(authority_role),
         stringsAsFactors = FALSE
@@ -476,7 +502,23 @@ g5_bridge_replay_symbol <- function(
     can_emit_entry_signal <- current_date >= entry_signal_start_date && current_date <= entry_signal_end_date
     if (!in_position && is.null(pending_entry) && can_emit_entry_signal && nrow(selected) && !identical(selected_family, "no_trade")) {
       ind <- indicator_cache[[selected_spec]]
+      entry_signal_rule <- NA_character_
+      entry_trigger_type <- NA_character_
       if (isTRUE(ind$entry_signal[[idx]])) {
+        entry_signal_rule <- ind$entry_signal_rule[[idx]]
+        entry_trigger_type <- "fresh_signal"
+      } else if (
+        identical(entry_replay_semantics, "state_switch_continuation") &&
+          selected_spec_changed &&
+          selected_family %in% state_switch_continuation_families
+      ) {
+        continuation_state <- g5_bridge_continuation_signal_state(ind, idx, selected_family)
+        if (!is.na(continuation_state)) {
+          entry_signal_rule <- paste0("state_switch_continuation_", continuation_state, "_when_flat")
+          entry_trigger_type <- "state_switch_continuation"
+        }
+      }
+      if (!is.na(entry_signal_rule)) {
         pending_entry <- list(
           entry_state_id = current_state,
           strategy_family = selected_family,
@@ -488,12 +530,15 @@ g5_bridge_replay_symbol <- function(
           slow_period = g5_wfa_model_value(selected, "slow_period", NA_integer_),
           lookback_period = g5_wfa_model_value(selected, "lookback_period", NA_integer_),
           sd_multiplier = g5_wfa_model_value(selected, "sd_multiplier", NA_real_),
-          entry_signal_rule = ind$entry_signal_rule[[idx]],
+          entry_signal_rule = entry_signal_rule,
+          entry_trigger_type = entry_trigger_type,
+          entry_replay_semantics = entry_replay_semantics,
           entry_signal_date = current_date,
           entry_signal_idx = idx,
           entry_signal_price = as.numeric(all_bars$close[[idx]]),
           execution_date = next_session
         )
+        entry_trigger_today <- entry_trigger_type
         action_today <- "ENTER_LONG_NEXT_OPEN"
         if (!has_next_session_in_data) {
           pending_actions[[length(pending_actions) + 1L]] <- data.frame(
@@ -508,7 +553,9 @@ g5_bridge_replay_symbol <- function(
             signal_price = as.numeric(all_bars$close[[idx]]),
             execution_date = as.Date(NA),
             execution_timing = "next_open_after_as_of_close",
-            signal_rule = ind$entry_signal_rule[[idx]],
+            signal_rule = entry_signal_rule,
+            entry_trigger_type = entry_trigger_type,
+            entry_replay_semantics = entry_replay_semantics,
             authority_quarter_id = as.character(contract$quarter_id[[1L]]),
             authority_role = as.character(authority_role),
             stringsAsFactors = FALSE
@@ -606,6 +653,8 @@ g5_bridge_replay_symbol <- function(
       model_position_after_replay = if (in_position) "LONG" else "FLAT",
       execution_status = execution_today,
       signal_status = action_today,
+      entry_trigger_type = entry_trigger_today,
+      entry_replay_semantics = entry_replay_semantics,
       open_trade_strategy_spec_id = if (in_position && !is.null(open_trade)) open_trade$strategy_spec_id else NA_character_,
       open_trade_signal_params = if (in_position && !is.null(open_trade)) open_trade$signal_model_params else NA_character_,
       open_trade_entry_execution_date = if (in_position && !is.null(open_trade)) open_trade$entry_execution_date else as.Date(NA),
@@ -613,6 +662,7 @@ g5_bridge_replay_symbol <- function(
       authority_role = as.character(authority_role),
       stringsAsFactors = FALSE
     )
+    previous_selected_spec <- selected_spec
   }
   replay <- if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
   pending <- if (length(pending_actions)) g5_wfa_bind_rows_fill(pending_actions) else data.frame()

@@ -249,9 +249,21 @@ The SOFI timing probe lives under:
 
 `runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52fallbackfull162024q420260708/sofi_ema_cross_semantics_probe/`
 
-Key audit files include `cluster3_trade_tape.png`, `cluster3_symbol_participation_summary.csv`, `sofi_pltr_oos_authority_heatmap.png`, `sofi_pltr_no_trade_diagnostic.png`, `sofi_ema_cross_summary.csv`, `sofi_ema_cross_event_index.csv`, and `sofi_ema_cross_signal_timeline.png`.
+The replay-semantics mechanics lab lives under:
 
-Readout: the remaining high-beta/cluster-3 gap is not caused by a live-basket mismatch or by Gen4 cluster labels feeding the simulation. SOFI is the cleanest clue. Gen4 entered SOFI `ema_cross_f1_s10` on `2024-10-04` after a `2024-10-03` cross-above signal and rode that trade to a large gain. The Gen5.2 fallback lane did implement the Gen4-style sparse asset/state fallback and did route SOFI to the same `ema_cross_f1_s10` spec, but not until `2024-10-09`, after the entry signal was stale. Because Gen5.2 replay currently enters only on a fresh signal while flat, it waited for the next fresh cross and first entered SOFI on `2024-12-12`, producing only the late losing trades. The highest-impact next probe is therefore not broader context/PCA/basket work; it is an A/B replay-semantics lane that keeps authority fixed and compares current fresh-cross entry against a state-switch trend-continuation entry rule for trend-following families.
+`runs/research_workbench/gen52_mechanics/replay_semantics_mechanics_lab_20260708/`
+
+The fixed-authority 2024Q4 replay-semantics A/B lives under:
+
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52fallbackfull162024q420260708/replay_semantics_ab/`
+
+Key audit files include `cluster3_trade_tape.png`, `cluster3_symbol_participation_summary.csv`, `sofi_pltr_oos_authority_heatmap.png`, `sofi_pltr_no_trade_diagnostic.png`, `sofi_ema_cross_summary.csv`, `sofi_ema_cross_event_index.csv`, `sofi_ema_cross_signal_timeline.png`, `mechanics_truth_table.csv`, and `replay_semantics_ab_summary.csv`.
+
+Readout: the remaining high-beta/cluster-3 gap is not caused by a live-basket mismatch or by Gen4 cluster labels feeding the simulation. SOFI is the cleanest clue. Gen4 entered SOFI `ema_cross_f1_s10` on `2024-10-04` after a `2024-10-03` cross-above signal and rode that trade to a large gain. The Gen5.2 fallback lane did implement the Gen4-style sparse asset/state fallback and did route SOFI to the same `ema_cross_f1_s10` spec, but not until `2024-10-09`, after the entry signal was stale. Because Gen5.2 replay defaulted to fresh-signal-only entry, it waited for the next fresh cross and first entered SOFI on `2024-12-12`.
+
+The new `entry_replay_semantics` switch in `R/live_advice_bridge.R` preserves `fresh_signal_only` as the default and adds opt-in `state_switch_continuation` for `ema_cross` / `ema_trend` active trend states. Synthetic truth-table checks passed `5 / 5`, confirming the mechanics. On the fixed 2024Q4 full-symbol packet, continuation improved fallback cluster-3 proxy return from `6.1%` to `20.8%`, close to direct fresh at `22.6%`, but still lagged the local hold benchmark at `45.2%` and did not reproduce the full Gen4 artifact. Treat continuation as a promising explicit research lane, not a silent default promotion.
+
+Highest-impact next probe: broaden replay-semantics checks across cached non-SOFI baskets/windows, then inspect exact remaining Gen4 signal semantics where continuation still diverges. Also consider materializing scored-state artifacts so repeated replay-only probes avoid rescoring frozen PCA states.
 
 ## What Is Not Implemented Yet
 
