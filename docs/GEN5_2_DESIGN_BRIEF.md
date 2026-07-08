@@ -83,23 +83,25 @@ Implemented in this slice:
 - A full 2024Q4 16-symbol replay using cached authority then showed that fallback does not close the Gen4 gap: cluster-3 alpha versus local hold was Gen4 `+1.7 pp`, direct `-19.0 pp`, strict pooled `-32.6 pp`, and fallback pooled `-35.5 pp`. Fallback activated SOFI partially, but the trades lost money instead of reproducing Gen4's long SOFI winner.
 - A replay-semantics mechanics lab passed all synthetic truth-table checks and a fixed-authority 2024Q4 A/B showed that `state_switch_continuation` improves fallback cluster-3 proxy return from `6.1%` to `20.8%`. It still lags the local hold benchmark (`45.2%`) and does not reproduce the full Gen4 artifact, so it is promising but not sufficient.
 - A non-SOFI replay-semantics generalization screen over cached high-beta and ETF/sector context-philosophy packets showed positive mean alpha deltas in `7 / 8` aggregate lanes, but with mixed window-level results. The largest mean alpha deltas were high-beta pooled-family lanes: `+2.5 pp` for archetype-matched context and `+2.0 pp` for broad-risk context. ETF broad-risk direct was slightly negative (`-0.2 pp`). This supports keeping continuation alive as a research factor, not promoting it as a default.
+- A style-diversified live-capital generalization screen has now moved the surviving direct/pooled and fresh/continuation lanes into true shared-account accounting. It tested high-beta growth, defensive staples, and energy/commodity baskets over `2020Q3` and `2022Q1`, using behavioral-pool 3x3 states and a uniform broad-anchor context recipe. No lane beat equal-weight basket hold in both windows. High-beta pooled continuation was the strongest high-beta aggregate but still averaged `-6.9 pp` alpha because it undercaptured the 2020Q3 rebound while beating the falling 2022Q1 basket. Defensive lanes lagged basket hold in both windows. Commodity pooled-family beat 2020Q3 basket hold but missed the 2022Q1 commodity surge. This confirms the next mechanics question is participation quality, not simply adding exposure everywhere.
 
 Not implemented in this slice:
 
 - SMA family ports.
 - Exact Gen4 volatility-expansion breakout semantics.
-- A live-capital replay screen using the fallback and continuation lanes; the current fallback/continuation replays are still Phase40-style or equal-symbol replay-proxy surfaces, not canonical portfolio-accounting packets.
+- A live-capital replay screen using the fallback calibration lane; the current style-diversified live-capital screen intentionally excluded fallback to keep the generalization question separate from Gen4 calibration.
 - Materialized frozen scored-state artifacts for replay-only probes; the current generalization wrapper rescores frozen current-authority PCA states when cached continuity replay rows are incomplete for quarter start.
 - Leveraged live-capital sizing.
 
 ## Next Research Gate
 
-The next useful run should compare:
+The next useful run should keep the style-diversified live-capital screen small and add one participation-quality factor:
 
 - strict Gen5.2 pooled-family selection;
-- Gen4-style pooled-family state-leader fallback selection as a calibration lane;
 - direct full-spec selection as a challenger;
-- true live-capital portfolio replay;
-- a narrow, already-promising context/state setup, likely behavioral-pool PCA plus 3x3 quantile states.
+- fresh-signal and state-switch continuation replay as named factors;
+- the same high-beta, defensive, and commodity baskets unless the operator deliberately changes scope;
+- behavioral-pool PCA plus 3x3 quantile states;
+- true live-capital portfolio replay.
 
-The point of that run is not to crown an allocation. The current replay surfaces show that hierarchical fallback and state-switch continuation both explain part of the Gen4/Gen5.2 gap, but neither is sufficient by itself. The broad non-SOFI replay-semantics check is now complete; the next useful probe should move the surviving replay semantics into true live-capital accounting, materialize scored-state artifacts for cheaper replay-only screens, and inspect exact remaining Gen4 signal semantics where continuation still diverges.
+The point of that run is not to crown an allocation. The current live-capital screen shows that continuation and pooled-family selection can help in specific pockets, but no lane beat basket hold across both windows. The next probe should ask how to increase participation during favorable regimes without giving back stress-window protection. Separately, fallback remains a Gen4 calibration lane and can be brought into a focused forensic test when the question is Gen4 mimicry rather than generalization.
