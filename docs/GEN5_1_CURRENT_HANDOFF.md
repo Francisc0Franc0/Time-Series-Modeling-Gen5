@@ -231,6 +231,24 @@ PCA-routed WFA currently uses Option A: `entry_state_owns_trade_until_exit`.
 
 That means the state active on the entry signal date selects the complete `strategy_spec_id`. Once the trade opens, that same spec owns native exits until the trade closes, even if the PCA state changes. Gen5.2 adds one explicit Gen4-faithful exception: a current-state `force_exit_next_open` override, used to represent Gen4's `no_trade_exit_immediate`, can flatten an open trade on the next session open. Broader state-adaptive exit management remains documented but not implemented.
 
+## Latest Gen5.2 Calibration Finding
+
+The newest Gen5.2-vs-Gen4 calibration packet remains:
+
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52calfull162024q420260707/`
+
+The updated mechanics deck is:
+
+`presentations/gen5_2_mechanics_and_gen4_calibration.pptx`
+
+The SOFI/PLTR authority audit now lives under:
+
+`runs/research_workbench/gen4_equivalence/gen4_equivalence_gen52calfull162024q420260707/trade_tape_audit/`
+
+Key audit files include `sofi_pltr_authority_ledger.csv`, `sofi_pltr_state_path_summary.csv`, `sofi_pltr_oos_authority_heatmap.png`, `sofi_pltr_no_trade_diagnostic.png`, and `sofi_pltr_state_position_timeline.png`.
+
+Readout: the remaining high-beta/cluster-3 gap is not caused by a live-basket mismatch or by Gen4 cluster labels feeding the simulation. SOFI is the cleanest clue. In 2024Q4, SOFI spent `53 / 64` OOS days in state `S1_4`; both Gen5.2 lanes selected no-trade there because state-local eligibility found `0` active eligible SOFI variants. Gen4's Phase40 picked-params artifact, however, selected `ema_cross_f1_s10` at fold/asset granularity and generated three Q4 SOFI trades, including a `+98.7%` first trade. The highest-impact next probe is therefore authority granularity: add a narrowly scoped third calibration lane that keeps TRAIN-only state/family routing but chooses asset/family parameters at fold scope, then compare that lane against direct-spec and pooled-family on the same 2024Q4 calibration before reopening larger context/PCA/basket factorials.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:

@@ -180,6 +180,8 @@ function laneRow(rows, lane) {
 const runSpec = (await readCsv(path.join(calibrationDir, "gen4_equivalence_run_spec.csv")))[0];
 const laneSummary = await readCsv(path.join(auditDir, "cluster3_lane_summary.csv"));
 const comparisonSummary = await readCsv(path.join(calibrationDir, "gen4_equivalence_comparison_summary.csv"));
+const authorityLedger = await readCsv(path.join(auditDir, "sofi_pltr_authority_ledger.csv"));
+const gen4FocusTrades = await readCsv(path.join(auditDir, "sofi_pltr_gen4_trade_tape.csv"));
 const clusterMap = await readCsv(path.join(
   "C:",
   "Users",
@@ -202,6 +204,10 @@ const cluster2 = clusterMap.filter((row) => row.cluster_id === "2" && liveSymbol
 const gen4Cluster3 = comparisonSummary.find((row) => row.source === "Gen4 artifact" && row.group_id === "cluster_3");
 const directCluster3 = comparisonSummary.find((row) => row.selection_policy === "asset_state_direct_spec" && row.group_id === "cluster_3");
 const pooledCluster3 = comparisonSummary.find((row) => row.selection_policy === "pooled_family_asset_variant" && row.group_id === "cluster_3");
+const sofiDirectS14 = authorityLedger.find((row) => row.lane === "Gen5.2 direct" && row.symbol === "SOFI" && row.state_id === "S1_4");
+const sofiPooledS14 = authorityLedger.find((row) => row.lane === "Gen5.2 pooled" && row.symbol === "SOFI" && row.state_id === "S1_4");
+const sofiDirectS24 = authorityLedger.find((row) => row.lane === "Gen5.2 direct" && row.symbol === "SOFI" && row.state_id === "S2_4");
+const sofiFirstGen4Trade = gen4FocusTrades.find((row) => row.symbol === "SOFI");
 
 const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 
@@ -360,14 +366,40 @@ const deck = Presentation.create({ slideSize: { width: 1280, height: 720 } });
 {
   const slide = deck.slides.add();
   slide.background.fill = colors.canvas;
-  addTitle(slide, "The next slice should audit authority before expanding the factorial");
-  addPanel(slide, { left: 42, top: 216, width: 525, height: 310 });
-  addPanel(slide, { left: 610, top: 216, width: 628, height: 310 });
-  addText(slide, "Current takeaway", { left: 72, top: 248, width: 410, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, "The comparison basket is identical, and clusters are only reporting bins. The remaining gap is therefore more likely in selected authority, state assignment, or strategy semantics for specific symbols.", { left: 72, top: 310, width: 438, height: 160 }, { fontSize: 21, color: colors.muted });
-  addText(slide, "Recommended next audit", { left: 642, top: 248, width: 500, height: 34 }, { fontSize: 28, bold: true });
-  addText(slide, "For SOFI and PLTR in 2024Q4, compare state occupancy, selected family/spec, TRAIN eligibility, no-trade competition, and the Gen4 picked family/params. This should tell us whether the remaining gap is strategy semantics, selection scoring, or state assignment.", { left: 642, top: 310, width: 520, height: 170 }, { fontSize: 21, color: colors.muted });
+  addTitle(slide, "SOFI narrows the gap to selected authority, not basket mismatch");
+  await addImage(slide, path.join(auditDir, "sofi_pltr_oos_authority_heatmap.png"), { left: 42, top: 192, width: 800, height: 455 }, "SOFI and PLTR OOS-selected authority heatmap");
+  addText(slide, "SOFI state path", { left: 890, top: 212, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, `SOFI spent ${sofiDirectS14?.oos_days ?? "53"} OOS days in S1_4. Both Gen5.2 lanes selected no-trade there because the current state-local gate found ${sofiDirectS14?.active_eligible_count ?? "0"} active eligible SOFI variants.`, { left: 890, top: 270, width: 310, height: 170 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Gen4 contrast", { left: 890, top: 470, width: 280, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, `Gen4's fold-17 SOFI picked params are asset-level: ema_cross_f1_s10. The first Q4 trade returned ${pct(n(sofiFirstGen4Trade?.ret), 1)} over ${sofiFirstGen4Trade?.bars_held ?? "47"} bars.`, { left: 890, top: 528, width: 310, height: 104 }, { fontSize: 20, color: colors.muted });
   addFooter(slide, 11);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
+  addTitle(slide, "The flat SOFI path has two distinct causes");
+  await addImage(slide, path.join(auditDir, "sofi_pltr_no_trade_diagnostic.png"), { left: 42, top: 198, width: 570, height: 395 }, "SOFI and PLTR no-trade diagnostic");
+  await addImage(slide, path.join(auditDir, "sofi_pltr_state_position_timeline.png"), { left: 660, top: 198, width: 578, height: 395 }, "SOFI and PLTR state and position timeline");
+  addText(slide, `In S1_4, the dominant SOFI state, Gen5.2 has no active eligible SOFI candidate. In S2_4, Gen5.2 does select an active pullback spec with ${sofiDirectS24?.train_state_trade_count ?? "9"} TRAIN trades, but the eight OOS days in that state still never trigger a long replay position.`, { left: 58, top: 618, width: 1040, height: 42 }, { fontSize: 18, color: colors.muted });
+  addFooter(slide, 12);
+}
+
+{
+  const slide = deck.slides.add();
+  slide.background.fill = colors.canvas;
+  addTitle(slide, "Highest-impact next probe: authority granularity");
+  addPanel(slide, { left: 42, top: 216, width: 360, height: 330 });
+  addPanel(slide, { left: 460, top: 216, width: 360, height: 330 });
+  addPanel(slide, { left: 878, top: 216, width: 360, height: 330 });
+  addText(slide, "Current Gen5.2", { left: 72, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "Selects a full spec inside each asset/state cell. Active candidates need enough TRAIN trades in that specific state, so a sparse-but-important state can abstain.", { left: 72, top: 306, width: 285, height: 150 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Gen4 artifact clue", { left: 490, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "The picked-params artifact is keyed by fold and asset, not by state. SOFI's selected ema_cross variant can therefore behave like broader fold/asset authority.", { left: 490, top: 306, width: 285, height: 150 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "Recommended test", { left: 908, top: 248, width: 260, height: 34 }, { fontSize: 26, bold: true });
+  addText(slide, "Add a third audit lane that keeps TRAIN-only state family routing but chooses asset/family params at fold scope. Compare it against direct-spec and pooled-family on the same 2024Q4 calibration first.", { left: 908, top: 306, width: 285, height: 170 }, { fontSize: 20, color: colors.muted });
+  addText(slide, "This is the smallest probe likely to explain the remaining alpha gap without reopening context universes, PCA mode, or basket composition.", { left: 42, top: 590, width: 980, height: 42 }, { fontSize: 20, bold: true, color: colors.highlight });
+  addFooter(slide, 13);
 }
 
 await fs.mkdir(path.dirname(outputPptx), { recursive: true });
