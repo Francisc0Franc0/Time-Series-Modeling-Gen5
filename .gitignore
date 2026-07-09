@@ -10,6 +10,10 @@ data_cache/
 runs/
 artifacts/
 logs/
+outputs/
+presentations/
+Rplots.pdf
+tests/testthat/Rplots.pdf
 *.parquet
 *.duckdb
 *.rds
