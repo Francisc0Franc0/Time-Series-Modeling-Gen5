@@ -12,7 +12,7 @@ This scope records contract constraints and future build direction; the current 
 - Alpaca provider only.
 - Adjusted daily OHLCV bars only.
 - After-close analysis for next-open manual market orders.
-- Initial strategy vertical slice later: `ema_cross` plus `no_trade`.
+- Initial strategy vertical slice later: `ema_cross` plus explicit cash/no-trade baselines.
 - Initial benchmark state model later: asset-specific PCA.
 - Portfolio baseline later: equal-weight top-N with 1.0x and 1.8x leverage reports.
 
@@ -184,7 +184,7 @@ Set `GEN5_WORKBENCH_SYMBOLS="NVDA,AMD"` for an explicit small basket, or use `GE
 
 The query output includes canonical adjusted daily bars, a manifest, audit CSV, symbol coverage CSV, refresh plan CSV, and severity-labeled health CSV with `ERROR`, `WARN`, and `INFO` rows. It does not compute indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
-The future research handoff contract and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA code must consume the workbench handoff artifacts rather than calling Alpaca or inferring latest sessions directly. The documentation-only first WFA planning record lives in `docs/GEN5_MINIMAL_WFA_CONTRACT_PLAN.md`.
+The future research handoff contract and gate checklist live in `docs/GEN5_V0_1_RESEARCH_HANDOFF_CHECKLIST.md`. Future WFA code must consume the workbench handoff artifacts rather than calling Alpaca or inferring latest sessions directly.
 
 ## Static Candlestick Inspection
 
@@ -200,6 +200,351 @@ $env:GEN5_CHART_END_DATE="2026-06-23"
 
 Set `GEN5_CHART_REFRESH=true` only when a credentialed Alpaca refresh is intended before plotting. The PNG is an inspection artifact only; it does not add indicators, returns, labels, regimes, strategy signals, WFA folds, allocation, execution, or live-order advice.
 
+## Symbol Data Proof Packet
+
+Gen5.1 adds a friendlier one-symbol data proof launcher. It wraps the workbench query and static chart helper, then writes a tidy packet under ignored `runs/research_workbench/data_proofs/`.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -StartDate 2024-01-01 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+Use `-Refresh` only when a credentialed Alpaca refresh is intended before rendering:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -StartDate 2024-01-01 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00" `
+  -Refresh
+```
+
+Each packet includes canonical bars, manifest, audit, symbol coverage, refresh plan, health CSV, candlestick PNG, and summary CSV/Markdown outputs. It is an inspection/data-proof workflow only; it does not compute indicators, returns, strategy signals, WFA folds, allocation, execution, live advice, or performance claims.
+
+For repeated inspection, use `-LookbackDays` instead of typing a start date:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_symbol_data_proof.ps1 `
+  -Symbol AMD `
+  -LookbackDays 500 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+## Multi-Symbol Data Report
+
+For a small basket, the multi-symbol report writes one packet under ignored `runs/research_workbench/multi_symbol_reports/`, including a multi-pane candlestick PNG plus the same bars, manifest, audit, coverage, refresh-plan, health, and summary artifacts.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/render_multi_symbol_report.ps1 `
+  -Symbols "NVDA,SPY,QQQ,TSLA" `
+  -LookbackDays 120 `
+  -EndDate 2026-06-23 `
+  -AsOfTimestamp "2026-06-23 17:30:00"
+```
+
+Use `-Refresh` only when a credentialed Alpaca refresh is intended before rendering. If a symbol is stale, partial, empty, or missing from cache, the report keeps that visible in the health and coverage outputs. It charts symbols with available canonical bars and fails only when no requested symbol has chartable bars.
+
+The shared chart aesthetic is documented in `docs/GEN5_1_CHART_AESTHETIC.md`. It defines the standard candlestick colors, future trade marker colors/symbols, round-trip connector colors, backgrounds, and multi-pane layout rules.
+
+## Green-Day Hold Diagnostic Strategy
+
+Gen5.1 includes one deliberately simple strategy proof before WFA work: when a bar closes above its open, record an entry signal on that signal bar, enter at the next session open, hold for a fixed number of trading sessions, record the exit signal at the close after the hold window, and exit at the next session open. It assumes one position at a time, no leverage, all-in sizing, and full round trips only. If a trade is still open at the end of the chart, its dashed connector traces from entry execution to the latest close.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_green_day_hold_demo.ps1 `
+  -Symbol AMD `
+  -LookbackDays 180 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -HoldSessions 10 `
+  -Leverage 1.0
+```
+
+Use `-Refresh` when a credentialed Alpaca refresh is intended before rendering. Set `-Leverage 1.8` to run the same diagnostic strategy with 1.8x return exposure and no financing-cost model. The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes bars, manifest, audit, coverage, health, trade history, chart events, equity curve CSV, metrics CSV/Markdown, a strategy chart with separate signal and execution markers, and an equity curve PNG.
+
+The equity curve marks strategy equity at each session close: cash remains flat, open positions are marked from entry open to that close, and closed trades are marked at exit open on the exit-execution date. The baseline is no-leverage buy-and-hold on the same asset over the chart period, drawn as a solid black line. Strategy drawdown periods are marked with soft red high-water shelf lines.
+
+The standard metrics currently emitted are trade count, closed/open trade count, win/loss/flat count, win rate, compounded closed return, compounded marked return, CAGR, max drawdown, time underwater, max underwater streak, average/median/best/worst closed-trade return, average win/loss, gross profit/loss, profit factor, expectancy, exposure fraction, average holding sessions, closed-trade equity drawdown, and matching buy-and-hold return/CAGR/drawdown/time-underwater baseline metrics. This is diagnostic accounting only; it is not WFA evidence, live advice, allocation logic, or a deployable strategy.
+
+## EMA Cross Backtest Proof
+
+Gen5.1 also includes a pure in-sample EMA crossover proof. The fast EMA crossing above the slow EMA generates an entry signal at that close and enters at the next session open. The fast EMA crossing below the slow EMA generates an exit signal at that close and exits at the next session open. The runner uses a two-year trading window by default, fetches extra warmup bars for EMA calculation, evaluates a modest parameter grid, selects the highest-Sharpe row, and writes a sortable parameter-performance CSV plus selected strategy/equity charts.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_backtest.ps1 `
+  -Symbol AMD `
+  -TradingWindowDays 730 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Leverage 1.0 `
+  -Refresh
+```
+
+Run the same window at 1.8x simple return exposure:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_backtest.ps1 `
+  -Symbol AMD `
+  -TradingWindowDays 730 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Leverage 1.8 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/strategy_demos/` and includes the query artifacts, parameter-performance table, selected indicators, selected trade history, chart events, selected equity curve, metrics CSV/Markdown, a selected strategy chart, and selected equity curve PNG. This is a basic backtest proof only: it is not train/OOS validation, WFA evidence, live advice, allocation logic, or a deployable strategy.
+
+## EMA Cross One-Fold WFA POC
+
+The first WFA proof of concept runs exactly one earliest possible train/OOS fold. By default it pulls about 2.9 years of data, trains on 8 quarters, runs OOS on 1 quarter, selects EMA parameters by train-window Sharpe, then freezes that parameter set before running the OOS slice. The OOS strategy starts flat, except that an entry signal generated at the final train-session close may execute at the first OOS open.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_ema_cross_wfa_poc.ps1 `
+  -Symbol AMD `
+  -LookbackDays 1065 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes the query artifacts, fold specification, train parameter-performance table, train-selected metrics, OOS context indicators, OOS trades/events/equity/metrics, an OOS strategy chart, and an OOS equity curve PNG. This is one-fold methodology plumbing only: it is not multi-fold WFA evidence, live advice, allocation logic, or a deployable strategy.
+
+## Multi-Signal Three-Fold WFA POC
+
+The three-fold WFA proof rolls the train window forward by one OOS period at a time. By default, each TRAIN fold evaluates both `ema_cross` and `bollinger_touch` signal families plus a modest close-based exit-stack grid. A model instance means the strategy family plus concrete entry/native-exit parameters, such as `ema_cross_fast12_slow30` or `bollinger_touch_n20_sd2p5`. An exit stack is a bundle of active close-based exit rules, such as `native_only`, `native_maxhold20`, or `native_stop10pct_take25pct_maxhold40`. The full selected unit is a `strategy_spec_id`: `model_instance_id + exit_stack_id`. The best TRAIN strategy spec by Sharpe, with return as the existing secondary sort, is selected for that fold and then traded on its OOS period. Open positions are carried across fold boundaries; once a new fold begins, future exit signals are governed by the current fold-selected strategy spec. A signal generated on the final bar of a fold may execute at the next open if that next session is inside the stitched OOS span.
+
+Gen5.1 can also run a broader Gen4-inspired POC candidate set: `ema_cross`, `ema_trend`, `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, `donchian_breakout_vol_expand`, and `no_trade`. The two Bollinger families are intentionally separate: `bollinger_touch` enters on a lower-band touch and exits on an upper-band touch, while `bollinger_mid_reversion` enters on a lower-band touch and exits on the middle band. The volatility-expansion breakout families require breakout confirmation plus expanding Bollinger width; the Donchian variant also requires prior Bollinger-width compression. The `no_trade` family is an inert cash/no-position competitor with zero exposure and a single `no_exit` pseudo stack. SMA variants are intentionally deferred.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_signal_wfa_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -FoldCount 3 `
+  -FastPeriods "8,12,20" `
+  -SlowPeriods "30,50,80,120" `
+  -BbLookbackPeriods "10,20,30" `
+  -BbSdMultipliers "1.5,2,2.5" `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -MaxHoldSessions "10,20,40" `
+  -StopLossPcts "0.10" `
+  -TakeProfitPcts "0.25" `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/wfa_pocs/` and includes fold specs, selected model/spec rows, exit stacks, train parameter performance by fold, model/spec stability, fold-level OOS summaries, stitched trades, stitched equity, a markdown run report, and stitched OOS strategy/equity charts. The stitched charts alternate fold backgrounds between white and light gray so fold transitions and strategy-spec changes are auditable at a glance. EMA overlays are plotted in EMA-selected folds; Bollinger bands are plotted in Bollinger-selected folds, including both upper-exit and mid-band-exit variants. Native exits and exit-stack exits are attributed separately in the trade ledger and plotted with distinct exit markers when both appear in the selected OOS path.
+
+The older `scripts/inspect/run_ema_cross_wfa_multi.ps1` name remains as a compatibility wrapper, but new work should use the multi-signal script name. New run folders and files use the `multi_wfa_...` artifact prefix, including a candidate-family count such as `multi_wfa_AMD_3f_2fam_...` so focused runs do not collide with broad candidate runs for the same symbol/date/as-of settings.
+
+## Multi-Asset WFA Batch Diagnostic
+
+The multi-asset batch runner executes the same single-asset WFA POC independently for each requested symbol. It does not pool TRAIN data, choose global parameters, or perform portfolio allocation. Its only aggregate layer is reporting: one row per asset, one row per selected asset/fold spec, and path links to each per-asset WFA packet.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_multi_asset_wfa_batch.ps1 `
+  -Symbols "AMD,NVDA,TSLA,META,QQQ,SPY" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 3 `
+  -MaxFacetsPerImage 6 `
+  -Refresh
+```
+
+The batch packet is written under ignored `runs/research_workbench/wfa_pocs/` with a short `mawfa_...` prefix, meaning multi-asset WFA, to avoid Windows path-length issues. The prefix includes asset count, fold count, and candidate-family count, such as `mawfa_6a_3f_8fam_...`, so broad-family runs do not collide with narrower smoke tests. It includes an asset summary CSV, selected specs by fold CSV, path index CSV, contact-sheet index CSV, Markdown batch report, strategy/equity contact-sheet PNGs capped by `-MaxFacetsPerImage`, and per-symbol WFA packets/charts.
+
+## PCA Regime Diagnostic POC
+
+The PCA regime runner is a diagnostic-only Gen5.1 state-labeling proof. It fits PCA center/scale/loadings and PC1/PC2 3x3 quantile breaks on TRAIN rows only, then scores OOS rows with the frozen TRAIN model. It does not route WFA strategy selection, exits, allocation, leverage, or live advice.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_regime_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/regime_pocs/` with a `pca_regime_...` prefix. It includes canonical data-query artifacts, PCA scores, a model contract, diagnostics, state coverage, run lengths, a markdown report, a PC1/PC2 scatter plot with TRAIN/OOS markers and grid lines, and a price chart with colored state bands plus a dashed TRAIN/OOS boundary.
+
+## PCA K-Means Regime Diagnostic POC
+
+The PCA k-means runner is a diagnostic-only engine swap for the PCA regime layer. It keeps the same TRAIN-fit PCA mechanics, then fits k-means clusters on TRAIN PC1/PC2 scores and scores OOS rows by nearest frozen centroid.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_kmeans_regime_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -ClusterCount 9 `
+  -KmeansNstart 30 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/regime_pocs/` with a `pca_kmeans_...` prefix. It includes the same diagnostic surfaces as the quantile-grid POC plus cluster centroids and distance-to-centroid diagnostics.
+
+## PCA-Routed WFA POC
+
+The PCA-routed WFA runner is the first state-aware WFA integration proof. For each fold, it fits a TRAIN-only PCA state engine, selects one complete `strategy_spec_id` per TRAIN state, and replays the frozen state router on stitched OOS folds. This POC uses the conservative Option A ownership policy: the entry state owns the trade until exit, so state changes after entry do not swap the trade manager.
+
+The runner also supports a deliberately narrow universe expansion. `-RegimeContextSymbols` defines the **Regime Context Universe** used to build the PCA feature panel and state labels. The **Research Candidate Universe**, **Tradeable Universe**, and **Active Allocation Set** remain the single `-Symbol` for this POC. For example, AMD can be the only traded asset while AMD, NVDA, and TSLA all contribute state-context features. This is not pooled strategy optimization, portfolio allocation, or multi-asset trading.
+
+The clean operator wrapper is:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_router_workbench.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -PanelMode contextual_snapshot `
+  -StateMap quantile_grid `
+  -StateCount 3 `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -Refresh
+```
+
+The wrapper exposes two experiment toggles while delegating to the stable lower-level WFA runner:
+
+- `-PanelMode contextual_snapshot`: date-aligned wide PCA panel, internally `date_aligned_context`.
+- `-PanelMode behavioral_pool`: Gen4-style long pooled asset-day PCA panel, internally `pooled_asset_day`.
+- `-StateMap quantile_grid`: PC1/PC2 quantile binning, with `-StateCount 3` meaning a 3x3 grid.
+- `-StateMap kmeans`: PCA k-means state map, with `-StateCount 9` meaning nine clusters.
+
+To run the current two-by-two comparison surface for AMD with AMD/NVDA/TSLA regime context:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_comparison_report.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
+  -Refresh
+```
+
+This comparison runner executes or, with `-SkipChildRuns`, consumes the four child packets from `PanelMode x StateMap`: contextual snapshot plus quantile grid, contextual snapshot plus k-means, behavioral pool plus quantile grid, and behavioral pool plus k-means. It writes a compact comparison packet under ignored `runs/research_workbench/regime_wfa_comparisons/` with a Markdown report, OOS metrics summary, state-coverage summary, selected-family counts, child artifact paths, and three 2x2 contact-sheet PNGs: stitched equity, stitched OOS/state bands, and PCA state-space scatter. It remains an inspection/reporting layer over Option A; it does not add state-adaptive exits, allocation, live advice, or execution.
+
+To compare named Regime Context Universe variants through that same 2x2 surface while still researching/trading/allocating AMD only:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_context_universe_panels.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -QuantileStateCount 3 `
+  -KmeansStateCount 9 `
+  -Refresh
+```
+
+The context-universe wrapper runs one 2x2 comparison packet per named universe, then writes a top-level packet under ignored `runs/research_workbench/regime_wfa_universe_comparisons/` with universe definitions, a universe index, a long summary CSV, a metrics overview PNG, split cross-universe contact sheets, and a Markdown report with paths to the three 2x2 contact sheets for each universe. The current named universes are:
+
+- `baseline_context`: `AMD,NVDA,TSLA`.
+- `similar_high_beta_tech_semis`: `AMD,NVDA,TSLA,SMH,AVGO,MU,INTC`.
+- `diverse_market_risk_context`: `AMD,NVDA,TSLA,SPY,QQQ,IWM,SMH,TLT,GLD,VXX`.
+
+This is an experiment/reporting surface only. It does not make a research gate decision and does not expand the Research Candidate Universe, Tradeable Universe, or Active Allocation Set beyond AMD.
+
+The cross-universe overview graphics are split to avoid one overloaded 12-panel image:
+
+- one metrics overview PNG with total return, Sharpe, max drawdown, and trade count panels;
+- equity overview PNGs split by `contextual_snapshot` and `behavioral_pool`;
+- stitched OOS/state-band overview PNGs split by `contextual_snapshot` and `behavioral_pool`;
+- PCA scatter overview PNGs split by `contextual_snapshot` and `behavioral_pool`.
+
+Two PCA panel modes are available:
+
+- `date_aligned_context`: the default Gen5.1 mode. It builds one row per session date, with context features widened into columns such as `AMD__rsi_14`, `NVDA__rsi_14`, and `TSLA__rsi_14`. This treats the context universe as same-day market sensors.
+- `pooled_asset_day`: the Gen4-style comparison mode. It stacks asset-day rows into one long table with common feature names such as `rsi_14` and `vol_20`. PCA trains on all context asset-days, then the WFA router filters scored states back to the target `-Symbol` so OOS trades remain AMD-only.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
+  -Symbol AMD `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -CandidateFamilies "ema_cross,bollinger_touch,no_trade" `
+  -FoldCount 1 `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+For a heavier AMD stress smoke with five folds and the current full candidate-family set:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+For the same five-fold WFA downstream mechanics with the k-means state engine:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -StateEngine pca_kmeans `
+  -GridN 9 `
+  -KmeansNstart 30 `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+For the Gen4-style pooled asset-day PCA comparison with the same five-fold WFA downstream mechanics:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/inspect/run_pca_wfa_router_poc.ps1 `
+  -Symbol AMD `
+  -RegimeContextSymbols "AMD,NVDA,TSLA" `
+  -PcaPanelMode pooled_asset_day `
+  -EndDate 2026-06-24 `
+  -AsOfTimestamp "2026-06-24 17:30:00" `
+  -FoldCount 5 `
+  -CandidateFamilies "ema_cross,ema_trend,bollinger_touch,bollinger_mid_reversion,rsi_mr,zret_mr,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade" `
+  -GridN 3 `
+  -TrainQuarters 8 `
+  -OosQuarters 1 `
+  -Refresh
+```
+
+The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. The folder name carries the run identity with a short `pcawfa_...` prefix and a panel/context label such as `aligned3a` or `pooled3a`, while files inside use short names such as `pcawfa_report.md` to avoid Windows path-length issues. Outputs include selected state specs by fold/state, TRAIN state performance, fold-tagged PCA scores and model contracts, stitched OOS trades, stitched OOS equity, OOS metrics, a PCA scatter plot of fold-local state space, a state-banded strategy chart with dashed fold boundaries, and an equity curve.
+
 ## Generated Local Files
 
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
@@ -212,17 +557,11 @@ The freeze evidence does not certify strategy, WFA, allocation, dashboard, execu
 
 The v0 closeout checklist and non-network coverage map live in `docs/GEN5_V0_DATA_LAYER_CLOSEOUT_CHECKLIST.md`.
 
-## Milestone Status
+## Gen5.1 Planning
 
-Gen5 v0.1 Research Data Workbench is documented in `docs/GEN5_V0_1_RESEARCH_DATA_WORKBENCH.md`. It is a research-plumbing milestone only: small basket/date-range queries, manual universe roles, severity-labeled data health, static candlestick PNG inspection, an opt-in Alpaca credential preflight, and a canonical research handoff manifest.
+Gen5.1 planning lives in `docs/GEN5_1_VERTICAL_SLICE_PLAN.md` and `docs/GEN5_TASK_QUEUE.md`. The fastest restart surface for a new Codex conversation is `docs/GEN5_1_CURRENT_HANDOFF.md`. The v0/v0.1 data layer and workbench are the completed base; post-data-layer capabilities are now treated as an operator-directed backlog rather than a rigid build order.
 
-The v0.1 workbench queue is closed out through the corporate-actions metadata spike. That spike records corporate-actions metadata as a possible later Alpaca sidecar only, not a canonical bar-table change and not a v0.1 signal source.
-
-This milestone does not implement WFA, PCA/state modeling, strategy logic, exits, allocation, dashboards, execution, live orders, corporate-actions ingestion, earnings-data integration, or non-Alpaca providers. Future WFA code should consume the workbench handoff contract rather than calling Alpaca directly.
-
-The first minimal WFA contract is now defined as a planning record only. It covers rolling fold geometry, TRAIN/OOS separation, no-leakage rules, fold-local fitting requirements for later learned components, reserved cash/no-position and buy-and-hold baselines, minimal audit evidence, and explicit out-of-scope boundaries. It does not implement WFA, indicators, returns, labels, regimes, PCA, HMMs, strategy signals, exits, allocation, dashboard, execution, live-order logic, provider expansion, corporate-actions ingestion, or earnings-data integration.
-
-The first Minimal WFA Foundation slice adds a read-only handoff reader/gate in `R/wfa_handoff_gate.R`. It validates a completed Research Data Workbench manifest and linked artifacts before future fold code may consume them. The gate reads only manifest-linked CSV artifacts, rejects hard contract failures and `ERROR` health, and returns `REVIEW_REQUIRED` when `WARN` health rows need operator review. It does not construct folds, compute returns, call Alpaca, read credentials, inspect provider responses, infer latest sessions, or read cache authority outside the manifest.
+Current Gen5.1 includes diagnostic strategy proofs, a multi-signal single-asset WFA POC with a small Gen4-inspired candidate library plus close-based exit stacks, an independent multi-asset batch report wrapper, diagnostic PCA quantile-grid and PCA k-means regime-labeling POCs, and a PCA-routed WFA Option A POC that can run one or more stitched OOS folds with either state engine, an optional multi-asset Regime Context Universe, and either date-aligned or pooled asset-day PCA panels. It does not yet implement portfolio allocation, pooled/global parameter selection, state-adaptive exits, dashboards, execution, live orders, or non-Alpaca providers unless the operator explicitly opens that slice. Future WFA or research code should consume the workbench handoff contract rather than calling Alpaca directly.
 
 ## Design Principle
 

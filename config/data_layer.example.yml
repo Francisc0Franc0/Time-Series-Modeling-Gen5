@@ -5,7 +5,7 @@
 provider: alpaca
 timeframe: 1D
 adjusted: true
-feed: iex
+feed: sip
 signal_timing: after_close_for_next_open
 
 cache:

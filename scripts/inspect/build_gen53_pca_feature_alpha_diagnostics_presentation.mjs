@@ -18,6 +18,11 @@ const DECK_PATH = path.join(OUT_DIR, `${STEM}.pptx`);
 const INSPECT_PATH = path.join(OUT_DIR, `${STEM}.pptx.inspect.ndjson`);
 const MONTAGE_PATH = path.join(OUT_DIR, `${STEM}_montage.webp`);
 const RENDER_DIR = path.join(OUT_DIR, `${STEM}_slides`);
+const SMOKE_DIR = path.join(ROOT, "runs", "research_workbench", "g53", "feat_smoke_20260708a");
+const SMOKE_HEATMAP = path.join(SMOKE_DIR, "style_diversified_live_capital_alpha_heatmap.png");
+const SMOKE_ALPHA_BAR = path.join(SMOKE_DIR, "style_diversified_live_capital_alpha_bar.png");
+const SMOKE_EQUITY = path.join(SMOKE_DIR, "style_diversified_live_capital_equity_overlay.png");
+const SMOKE_SCATTER = path.join(SMOKE_DIR, "style_diversified_live_capital_exposure_alpha_scatter.png");
 
 const SLIDE = { width: 1280, height: 720 };
 const PAGE = { left: 64, top: 48, width: 1152, height: 624 };
@@ -161,6 +166,16 @@ function addBullets(slide, items, x, y, w, lineHeight = 34, options = {}) {
   });
 }
 
+async function addImage(slide, imagePath, position, alt) {
+  slide.images.add({
+    blob: await fs.readFile(imagePath),
+    contentType: "image/png",
+    alt,
+    fit: "contain",
+    position,
+  });
+}
+
 function newSlide(presentation, index) {
   const slide = presentation.slides.add();
   slide.background.fill = COLORS.bg;
@@ -168,7 +183,7 @@ function newSlide(presentation, index) {
   return slide;
 }
 
-function buildDeck() {
+async function buildDeck() {
   const presentation = Presentation.create({ slideSize: SLIDE });
 
   let slide = newSlide(presentation, 1);
@@ -386,6 +401,167 @@ function buildDeck() {
     accent: COLORS.green,
   });
 
+  slide = newSlide(presentation, 11);
+  addTitle(
+    slide,
+    "FIRST SCREEN DESIGN",
+    "The first Gen5.3 test changes features, not the engine",
+    "That keeps the causal question clean: did the state map improve because the PCA saw better information?"
+  );
+  addCard(slide, {
+    x: 72, y: 248, w: 500, h: 132,
+    title: "Held fixed",
+    body: "Behavioral-pool PCA, 3x3 quantile states, direct-spec and pooled-family selection, shared-account live-capital accounting, and equal-weight basket-hold benchmark.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 612, y: 248, w: 500, h: 132,
+    title: "Stress dataset",
+    body: "High beta growth, defensive staples, and energy/commodity baskets across 2020Q3 rebound and 2022Q1 rate-shock drawdown windows.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 72, y: 420, w: 500, h: 132,
+    title: "Lean replay choice",
+    body: "The first run uses state-switch continuation by default, because recent audits point to participation and continuity as the sharper failure mode.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 612, y: 420, w: 500, h: 132,
+    title: "Guardrail",
+    body: "The frozen live advice bridge is untouched. This screen is research-only and cannot change operational advice semantics.",
+    accent: COLORS.rose,
+  });
+
+  slide = newSlide(presentation, 12);
+  addTitle(
+    slide,
+    "FEATURE CONDITIONS",
+    "Each feature set asks a different economic question",
+    "The conditions are deliberately additive so we can see whether each new layer earns its place."
+  );
+  const featureCards = [
+    ["current_features_control", "Does the existing Gen5.2 PCA surface already explain enough state behavior?"],
+    ["trend_participation_plus", "Do returns, EMA shape, and distance from highs help PCA recognize upside participation?"],
+    ["trend_volatility_plus", "Does adding downside vol, range, drawdown, and vol-ratio separate healthy trend from fragile trend?"],
+    ["trend_volatility_relative_plus", "Does context-relative return, volatility, and drawdown distinguish leadership from broad beta?"]
+  ];
+  featureCards.forEach(([title, body], i) => {
+    const x = 72 + (i % 2) * 560;
+    const y = 250 + Math.floor(i / 2) * 156;
+    addCard(slide, {
+      x, y, w: 520, h: 122, title, body,
+      accent: [COLORS.blue, COLORS.green, COLORS.amber, COLORS.violet][i],
+    });
+  });
+
+  slide = newSlide(presentation, 13);
+  addTitle(
+    slide,
+    "ROADMAP",
+    "Gen5.3 should become a feature-regime workbench",
+    "Trend is the first test because it matches the current failure mode, but it should not become the whole research universe."
+  );
+  const roadmap = [
+    ["Mean reversion", "Stretch, dislocation, RSI slope, Bollinger position, and capitulation features."],
+    ["Volatility regimes", "Compression, expansion, downside acceleration, gap frequency, and drawdown speed."],
+    ["Relative leadership", "Context-relative strength, relative drawdown, and cross-sectional rank or z-score."],
+    ["Event and sentiment", "Later extension only, because earnings and sentiment require stricter timestamp and provider guardrails."]
+  ];
+  roadmap.forEach(([title, body], i) => {
+    const y = 236 + i * 92;
+    addCard(slide, {
+      x: 96, y, w: 992, h: 72, title, body,
+      accent: [COLORS.blue, COLORS.green, COLORS.violet, COLORS.rose][i],
+    });
+  });
+
+  slide = newSlide(presentation, 14);
+  addTitle(
+    slide,
+    "FIRST SMOKE RUN",
+    "The staged diverse packet tested all feature sets without paying full factorial compute",
+    "This is not the full answer. It is the first sanity-check surface across high-beta, defensive, and commodity/gold behavior in 2022Q1."
+  );
+  addCard(slide, {
+    x: 70, y: 250, w: 326, h: 160,
+    title: "Scope",
+    body: "Two active symbols per archetype: AMD/NVDA, KO/WMT, XLE/GLD. Same broad anchors, 3x3 behavioral-pool PCA, direct and pooled-family policies.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 430, y: 250, w: 326, h: 160,
+    title: "Why staged",
+    body: "Full-width feature sweeps are compute-heavy because each feature set changes state assignment and requires separate authority fitting.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 790, y: 250, w: 326, h: 160,
+    title: "Implementation finding",
+    body: "Replay now reads frozen pca_feature_cols from authority contracts; compact slugs avoid Windows path-length failures.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 160, y: 450, w: 870, h: 92,
+    title: "Artifact packet",
+    body: "runs/research_workbench/g53/feat_smoke_20260708a",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 15);
+  addTitle(
+    slide,
+    "SMOKE RESULT",
+    "Feature design changed alpha behavior, but no feature block is promoted yet",
+    "Green cells beat the same-basket equal-weight hold over 2022Q1; red cells lagged it."
+  );
+  await addImage(slide, SMOKE_ALPHA_BAR, {
+    left: 78, top: 282, width: 1120, height: 340,
+  }, "Gen5.3 diverse smoke alpha bar chart");
+
+  slide = newSlide(presentation, 16);
+  addTitle(
+    slide,
+    "EQUITY AUDIT",
+    "The same result looks different by basket archetype",
+    "High-beta success was mostly drawdown avoidance in a falling basket; commodity/gold underparticipated in a strong basket."
+  );
+  await addImage(slide, SMOKE_EQUITY, {
+    left: 74, top: 205, width: 1130, height: 438,
+  }, "Gen5.3 diverse smoke equity overlay");
+
+  slide = newSlide(presentation, 17);
+  addTitle(
+    slide,
+    "FIRST INTERPRETATION",
+    "The signal is real enough to continue, but not clean enough to canonize",
+    "The next run should add breadth and at least one more window before changing defaults."
+  );
+  addCard(slide, {
+    x: 64, y: 244, w: 356, h: 178,
+    title: "High beta",
+    body: "All feature sets beat the falling basket. Trend+vol was strongest at +19.3 pp alpha, but only 6.5% exposure and one entry.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 462, y: 244, w: 356, h: 178,
+    title: "Defensive",
+    body: "Trend-participation direct was the best lane at +2.4 pp alpha. Volatility and relative additions lagged the simple basket hold.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 860, y: 244, w: 356, h: 178,
+    title: "Commodity/gold",
+    body: "All lanes made money, but none beat a strong basket hold. Trend-participation was least bad at -7.6 pp alpha.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 156, y: 474, w: 900, h: 94,
+    title: "Working hypothesis",
+    body: "Trend features may improve participation in some baskets; volatility and relative features may be better avoidance filters than general alpha boosters. Test wider before promoting anything.",
+    accent: COLORS.violet,
+  });
+
   return presentation;
 }
 
@@ -393,7 +569,7 @@ async function main() {
   await fs.mkdir(OUT_DIR, { recursive: true });
   await fs.mkdir(RENDER_DIR, { recursive: true });
 
-  const presentation = buildDeck();
+  const presentation = await buildDeck();
 
   for (const [index, slide] of presentation.slides.items.entries()) {
     const stem = `slide-${String(index + 1).padStart(2, "0")}`;

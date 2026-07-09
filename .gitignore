@@ -8,10 +8,10 @@
 # Local data and generated outputs
 data_cache/
 runs/
-artifacts/
-logs/
 outputs/
 presentations/
+artifacts/
+logs/
 Rplots.pdf
 tests/testthat/Rplots.pdf
 *.parquet

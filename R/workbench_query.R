@@ -33,7 +33,7 @@ g5_filter_query_bars <- function(bars, symbols, start_date, end_date) {
 
 g5_git_sha_or_na <- function(repo_root) {
   out <- tryCatch(
-    system2("git", c("-C", repo_root, "rev-parse", "--short", "HEAD"), stdout = TRUE, stderr = FALSE),
+    suppressWarnings(system2("git", c("-C", repo_root, "rev-parse", "--short", "HEAD"), stdout = TRUE, stderr = FALSE)),
     error = function(e) character()
   )
   if (length(out) == 0L || !nzchar(out[[1L]])) {

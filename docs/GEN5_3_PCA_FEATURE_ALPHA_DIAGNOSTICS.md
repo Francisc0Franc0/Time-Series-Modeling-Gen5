@@ -111,6 +111,205 @@ Suggested initial feature conditions:
 3. `trend_volatility_plus`
 4. `trend_volatility_relative_plus`
 
+## First Screen Conditions
+
+The first implemented screen holds the following constant:
+
+- PCA mode: behavioral pool / pooled asset-day.
+- State map: `3x3` quantile grid.
+- Selection policies: `asset_state_direct_spec` and
+  `pooled_family_asset_variant`.
+- Replay/accounting: true shared-account live-capital replay with equal-slot,
+  cash-capped entries.
+- Benchmark: equal-weight buy-and-hold of the same active basket over the same
+  quarter.
+- Live bridge: untouched.
+
+The first diverse dataset uses the same style-diversified stress surface opened
+in Gen5.2:
+
+- High-beta growth: `AMD,NVDA,TSLA,AAPL,MSTR`.
+- Defensive staples: `KO,PEP,WMT,COST,XLP`.
+- Energy/commodity: `XLE,CVX,XOM,GLD,SLV`.
+- Context anchors: each basket plus `SPY,QQQ,IWM,TLT,GLD`.
+- Windows: `2020Q3` risk-on rebound and `2022Q1` rate-shock drawdown.
+
+For the first Gen5.3 run, `state_switch_continuation` replay is the default
+lean slice. It is closer to the continuity question raised by the recent audits
+and halves compute relative to running both continuation and fresh-signal-only.
+
+### Staged Smoke Scope
+
+The first completed implementation run used an explicitly labeled
+`diverse_smoke` scope before attempting the full-width screen.
+
+Reason:
+
+- The full design is scientifically cleaner, but broad Gen4-like strategy grids
+  make feature-set sweeps compute-heavy because each feature set changes state
+  assignment and therefore requires separate authority fitting.
+- A staged smoke packet should catch implementation gaps and reveal directional
+  behavior without pretending to be the final factorial evidence.
+
+Smoke scope:
+
+- Window: `2022Q1_asof_20220331` rate-shock drawdown.
+- High-beta growth: `AMD,NVDA`.
+- Defensive staples: `KO,WMT`.
+- Energy/commodity: `XLE,GLD`.
+- Context anchors: each smoke basket plus `SPY,QQQ,IWM,TLT,GLD`.
+- Feature sets: all four first-screen feature conditions.
+- Selection policies: `asset_state_direct_spec` and
+  `pooled_family_asset_variant`.
+- Replay: `state_switch_continuation`.
+
+Artifact packet:
+
+- `runs/research_workbench/g53/feat_smoke_20260708a/`
+- Report: `style_diversified_live_capital_report.md`
+- Summary: `style_diversified_live_capital_summary.csv`
+- Aggregate: `style_diversified_live_capital_aggregate.csv`
+- Charts:
+  `style_diversified_live_capital_alpha_heatmap.png`,
+  `style_diversified_live_capital_equity_overlay.png`, and
+  `style_diversified_live_capital_exposure_alpha_scatter.png`
+
+Implementation lesson:
+
+- The training path already accepted Gen5.3 feature sets, but replay initially
+  rebuilt PCA scoring features with default Gen5.2 columns. This was fixed by
+  reading `pca_feature_cols` from the frozen authority contract when present.
+- Long Windows/OneDrive paths can break R CSV writes around classic path-length
+  boundaries. Gen5.3 screen packets therefore use compact folder slugs while
+  preserving full condition names inside run specs and summaries.
+
+First smoke readout:
+
+- High-beta smoke basket: all feature sets beat the falling equal-weight basket
+  on alpha. `trend_volatility_plus` had the strongest alpha (`+19.3 pp`) with
+  very low exposure (`6.5%`) and one entry, meaning it behaved more like a
+  defensive avoidance filter than a participation engine in this window.
+- Defensive smoke basket: `trend_participation_plus` direct-spec was the best
+  lane (`+2.4 pp` alpha), while volatility and relative additions lagged the
+  simple basket benchmark.
+- Energy/commodity smoke basket: all lanes produced positive absolute returns,
+  but none beat the strong equal-weight basket hold. `trend_participation_plus`
+  was least bad (`-7.6 pp` alpha), while relative/volatility additions reduced
+  participation too much.
+- Direct versus pooled-family was not the dominant factor in this smoke packet;
+  feature set and basket archetype mattered more.
+
+Interpretation:
+
+- The first smoke packet supports the idea that PCA feature design matters.
+- It does not yet support promoting any feature set as generally better.
+- The strongest near-term hypothesis is narrower: trend-participation features
+  may improve upside capture in some non-crash baskets, while volatility and
+  relative features may help avoidance but can underparticipate in strong
+  commodity or rebound moves.
+- The next full-width or medium-width screen should test whether this pattern
+  survives more symbols and at least one additional window before changing
+  defaults.
+
+### `current_features_control`
+
+Mechanism:
+
+- Uses the existing Gen5.2 PCA features:
+  `ema_gap,trend_slope_5,rsi_14,vol_20,atr_pct,dist_anchor_200,chop_14,bb_width,efficiency_ratio_20,z_close_sma20,ret_skew_20`.
+
+Why:
+
+- Provides the control condition. If a new feature set does not improve or
+  clarify benchmark-relative behavior against this surface, it should not be
+  promoted.
+
+### `trend_participation_plus`
+
+Mechanism:
+
+- Adds multi-horizon log returns: `ret_log_21`, `ret_log_63`,
+  `ret_log_126`.
+- Adds short/intermediate trend shape: `ema_gap_10_30`,
+  `ema_slope_20_20`.
+- Adds proximity to recent highs: `dist_high_63`.
+
+Why:
+
+- Tests whether PCA states under-participate in bull phases because the state
+  engine does not see enough direct information about durable upside and
+  breakout/continuation structure.
+
+### `trend_volatility_plus`
+
+Mechanism:
+
+- Adds the trend-participation features above.
+- Adds downside volatility: `downside_vol_20`.
+- Adds range expansion: `range_pct_20`.
+- Adds recent drawdown: `drawdown_63`.
+- Adds short/intermediate volatility ratio: `vol_ratio_20_63`.
+
+Why:
+
+- Tests whether trend only becomes useful when PCA can distinguish healthy
+  participation from unstable, damaged, or high-volatility trend.
+
+### `trend_volatility_relative_plus`
+
+Mechanism:
+
+- Adds trend and volatility features above.
+- Adds context-relative features computed inside the pooled asset-day panel:
+  `rel_ret_log_21_ctx`, `rel_ret_log_63_ctx`, `rel_vol_20_ctx`,
+  `rel_drawdown_63_ctx`.
+- These subtract the same-date context-universe mean from the asset's own
+  feature value.
+
+Why:
+
+- Tests whether PCA can distinguish true asset leadership from broad beta
+  exposure. A high-beta asset rising with the whole market is not the same as an
+  asset leading its context universe with superior relative strength or less
+  relative drawdown.
+
+Leakage note:
+
+- Context-relative features use only same-date and trailing OHLCV information
+  available after that session's close. PCA center/scale/loadings and state
+  breaks are still fit from TRAIN rows only.
+
+## Medium-Term Feature Families
+
+Gen5.3 should not become "trend forever." The first trend-heavy screen is
+motivated by the current observed failure mode: under-participation in upside.
+After the first screen, the same framework can test other feature families:
+
+1. **Mean-reversion / dislocation features**
+   - Short-horizon return extremes.
+   - Distance from moving averages.
+   - Bollinger position.
+   - RSI level and RSI slope.
+   - Volume/range capitulation.
+
+2. **Volatility / fragility features**
+   - Volatility compression and expansion.
+   - Downside-volatility acceleration.
+   - Gap frequency.
+   - Drawdown speed.
+   - Volatility-of-volatility proxies.
+
+3. **Cross-sectional leadership features**
+   - Relative strength versus market, sector, and context basket.
+   - Relative drawdown versus context.
+   - Cross-sectional rank or z-score within the active context universe.
+
+4. **Event/sentiment features**
+   - Keep as a later extension. Alpaca news can support sentiment experiments,
+     but true earnings-calendar, consensus-estimate, beat/miss, and
+     announcement-time modeling likely requires a fundamentals/event provider
+     and stricter timestamp guardrails.
+
 ## What To Measure
 
 The point is not just whether a lane made more money. The first readout should

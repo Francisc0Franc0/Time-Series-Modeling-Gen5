@@ -41,6 +41,60 @@ test_that("static candlestick PNG renders from canonical adjusted daily bars", {
   )
 })
 
+test_that("chart aesthetic exposes stable colors and future trade markers", {
+  source(test_path("..", "..", "R", "workbench_chart.R"))
+
+  aesthetic <- g5_chart_aesthetic()
+  expect_identical(aesthetic$up_candle, "#00A88F")
+  expect_identical(aesthetic$down_candle, "#F15A5A")
+  expect_identical(aesthetic$entry_signal_color, "#00B4D8")
+  expect_identical(aesthetic$entry_signal_pch, 21L)
+  expect_identical(aesthetic$exit_signal_color, "#FF9F1C")
+  expect_identical(aesthetic$exit_signal_pch, 22L)
+  expect_identical(aesthetic$native_entry_pch, 24L)
+  expect_identical(aesthetic$native_exit_pch, 25L)
+  expect_identical(aesthetic$non_native_exit_pch, 4L)
+  expect_identical(aesthetic$trade_line_lty, 2L)
+})
+
+test_that("multi-symbol candlestick PNG renders chart panes from canonical bars", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "workbench_chart.R"))
+
+  bars <- data.frame(
+    symbol = c("NVDA", "NVDA", "AMD", "AMD"),
+    session_date = as.Date(c("2026-06-18", "2026-06-19", "2026-06-18", "2026-06-19")),
+    open = c(100, 102, 50, 51),
+    high = c(103, 104, 52, 53),
+    low = c(99, 100, 49, 50),
+    close = c(102, 101, 51, 52),
+    volume = c(1000, 1100, 900, 950),
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "alpaca",
+    as_of_timestamp = "2026-06-22 17:00:00",
+    latest_completed_session = as.Date("2026-06-22"),
+    fetch_start_date = as.Date("2026-06-18"),
+    fetch_end_date = as.Date("2026-06-22"),
+    data_version_hash = paste0("h", seq_len(4L)),
+    stringsAsFactors = FALSE
+  )
+
+  png_path <- tempfile("g5_multi_candlestick_", fileext = ".png")
+  written <- g5_write_multi_symbol_candlestick_png(
+    bars,
+    symbols = c("NVDA", "AMD"),
+    path = png_path,
+    start_date = as.Date("2026-06-18"),
+    end_date = as.Date("2026-06-22")
+  )
+
+  expect_true(file.exists(written))
+  expect_gt(file.info(written)$size, 0)
+  signature <- readBin(written, what = "raw", n = 8L)
+  expect_identical(as.integer(signature), c(137L, 80L, 78L, 71L, 13L, 10L, 26L, 10L))
+})
+
 test_that("static candlestick PNG rejects non-canonical or empty chart inputs", {
   source(test_path("..", "..", "R", "data_contract.R"))
   source(test_path("..", "..", "R", "workbench_chart.R"))
