@@ -836,6 +836,11 @@ g5_bridge_first_flat_date_from_prior <- function(prior_replay, current_live_star
   as.Date(flat_rows$session_date[[1L]])
 }
 
+g5_bridge_previous_executions_through_switch <- function(executions, current_start) {
+  if (!is.data.frame(executions) || !nrow(executions)) return(data.frame())
+  executions[as.Date(executions$execution_date) <= as.Date(current_start), , drop = FALSE]
+}
+
 g5_bridge_run_daily_continuity_from_bars <- function(bars, current_authority, previous_authority, as_of_timestamp) {
   current_contract <- current_authority$contract[1L, , drop = FALSE]
   previous_contract <- previous_authority$contract[1L, , drop = FALSE]
@@ -894,11 +899,7 @@ g5_bridge_run_daily_continuity_from_bars <- function(bars, current_authority, pr
         authority_role = "current"
       )
       prior_keep <- previous_result$replay[as.Date(previous_result$replay$session_date) < current_start, , drop = FALSE]
-      prior_exec_keep <- if (is.data.frame(previous_result$executions) && nrow(previous_result$executions)) {
-        previous_result$executions[as.Date(previous_result$executions$execution_date) < current_start, , drop = FALSE]
-      } else {
-        data.frame()
-      }
+      prior_exec_keep <- g5_bridge_previous_executions_through_switch(previous_result$executions, current_start)
       chosen_replay <- g5_wfa_bind_rows_fill(list(prior_keep, current_result$replay))
       chosen_executions <- g5_wfa_bind_rows_fill(list(prior_exec_keep, current_result$executions))
       chosen_pending <- current_result$pending_actions

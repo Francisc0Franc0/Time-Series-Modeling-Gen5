@@ -380,6 +380,30 @@ test_that("continuity detector carries prior authority when first current-quarte
   )
 })
 
+test_that("continuity stitch keeps switch-date exit executions for trade tapes", {
+  executions <- data.frame(
+    symbol = "TSLA",
+    execution_date = as.Date(c("2026-06-25", "2026-07-07")),
+    execution_type = c("ENTER_LONG", "EXIT_LONG"),
+    execution_price = c(375.27, 400),
+    strategy_spec_id = "rsi_mr_n7_lo25_hi65__native_only",
+    stringsAsFactors = FALSE
+  )
+  replay <- data.frame(
+    symbol = "TSLA",
+    session_date = as.Date(c("2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09")),
+    close = c(390, 400, 405, 406),
+    stringsAsFactors = FALSE
+  )
+
+  kept <- g5_bridge_previous_executions_through_switch(executions, as.Date("2026-07-07"))
+  trades <- g5_bridge_trades_from_replay(replay, kept, as.Date("2026-09-30"))
+
+  expect_equal(nrow(kept), 2L)
+  expect_equal(trades$trade_status[[1L]], "closed")
+  expect_equal(trades$exit_execution_date[[1L]], as.Date("2026-07-07"))
+})
+
 test_that("chart replay can use a 90 calendar-day window", {
   replay <- data.frame(
     session_date = as.Date("2026-03-01") + 0:140,
