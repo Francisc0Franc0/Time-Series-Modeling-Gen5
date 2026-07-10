@@ -28,6 +28,11 @@ const FULL_HEATMAP = path.join(FULL_DIR, "style_diversified_live_capital_alpha_h
 const FULL_ALPHA_BAR = path.join(FULL_DIR, "style_diversified_live_capital_alpha_bar.png");
 const FULL_EQUITY = path.join(FULL_DIR, "style_diversified_live_capital_equity_overlay.png");
 const FULL_SCATTER = path.join(FULL_DIR, "style_diversified_live_capital_exposure_alpha_scatter.png");
+const AUDIT_DIR = path.join(FULL_DIR, "feature_audit");
+const AUDIT_TAPES = path.join(AUDIT_DIR, "gen53_representative_trade_tapes.png");
+const AUDIT_STATE = path.join(AUDIT_DIR, "gen53_state_discrimination_diagnostics.png");
+const AUDIT_ALIGNMENT = path.join(AUDIT_DIR, "gen53_action_alignment_diagnostics.png");
+const AUDIT_FAMILY = path.join(AUDIT_DIR, "gen53_selected_family_mix_heatmap.png");
 
 const SLIDE = { width: 1280, height: 720 };
 const PAGE = { left: 64, top: 48, width: 1152, height: 624 };
@@ -693,6 +698,106 @@ async function buildDeck() {
     x: 634, y: 414, w: 520, h: 132,
     title: "Research direction",
     body: "Treat PCA feature work as alive, but pair it with action-quality diagnostics before adding more feature families or a new regime model.",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 24);
+  addTitle(
+    slide,
+    "PERFORMANCE AUDIT",
+    "Representative trade tapes turn the aggregate result into behavior",
+    null
+  );
+  await addImage(slide, AUDIT_TAPES, {
+    left: 72, top: 214, width: 1136, height: 430,
+  }, "Representative Gen5.3 feature trade tapes with state bands and actions");
+
+  slide = newSlide(presentation, 25);
+  addTitle(
+    slide,
+    "STATE QUALITY",
+    "Some feature sets separated future behavior better than the alpha read implies",
+    "This is not allocation evidence; it asks whether PCA states formed meaningfully different forward-return buckets before judging the action layer."
+  );
+  await addImage(slide, AUDIT_STATE, {
+    left: 78, top: 262, width: 730, height: 340,
+  }, "Gen5.3 state discrimination diagnostics");
+  addCard(slide, {
+    x: 842, y: 280, w: 330, h: 148,
+    title: "Best separation signal",
+    body: "High-beta trend-participation had the widest state next-return spread and hit-rate spread, with lower switching than the control.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 842, y: 462, w: 330, h: 118,
+    title: "Interpretation",
+    body: "A feature set can contain regime information even when the current action policy underuses it.",
+    accent: COLORS.green,
+  });
+
+  slide = newSlide(presentation, 26);
+  addTitle(
+    slide,
+    "ACTION QUALITY",
+    "The weaker link often looked like exposure alignment, not state separation",
+    "The chart compares whether states with better next-day behavior actually received more long exposure."
+  );
+  await addImage(slide, AUDIT_ALIGNMENT, {
+    left: 74, top: 262, width: 744, height: 336,
+  }, "Gen5.3 state/action alignment diagnostics");
+  addCard(slide, {
+    x: 850, y: 268, w: 330, h: 126,
+    title: "Mixed alignment",
+    body: "A few lanes had positive state-return versus long-rate alignment, but many were negative or flat.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 850, y: 426, w: 330, h: 126,
+    title: "Practical meaning",
+    body: "The next narrow test should improve action gating before simply adding more PCA features.",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 27);
+  addTitle(
+    slide,
+    "AUTHORITY MIX",
+    "Selected families reveal whether the engine is trading or abstaining",
+    "This heatmap is a sanity check for no-trade dominance, trend-family concentration, and whether direct versus pooled policy changes the selected action vocabulary."
+  );
+  await addImage(slide, AUDIT_FAMILY, {
+    left: 72, top: 246, width: 1136, height: 370,
+  }, "Gen5.3 selected strategy family mix heatmap");
+
+  slide = newSlide(presentation, 28);
+  addTitle(
+    slide,
+    "AUDIT READOUT",
+    "The features are not dead, but promotion would be premature",
+    "The right next step is a narrower state/action-gating probe, not a broader feature search."
+  );
+  addCard(slide, {
+    x: 74, y: 304, w: 520, h: 124,
+    title: "What survived",
+    body: "Trend-participation features showed useful state discrimination in high-beta baskets. Volatility/relative features may still help avoidance or commodity pockets.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 634, y: 304, w: 520, h: 124,
+    title: "What failed",
+    body: "Benchmark-relative alpha did not generalize. The action layer often stayed flat in favorable states or traded in weaker states.",
+    accent: COLORS.rose,
+  });
+  addCard(slide, {
+    x: 74, y: 452, w: 520, h: 150,
+    title: "Diagnostic to keep",
+    body: "Track state return spread, hit-rate spread, state/action alignment, no-trade in good states, and long-rate in bad states alongside performance.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 634, y: 452, w: 520, h: 150,
+    title: "Next slice",
+    body: "Pick strong benchmark quarters and test whether action gating can increase upside participation without destroying the downside-avoidance pockets.",
     accent: COLORS.violet,
   });
 

@@ -298,6 +298,62 @@ Interpretation update:
   benchmark windows: which states stay flat, which strategy families are chosen,
   whether no-trade dominates, and why continuation still undercaptures upside.
 
+## Feature/State Audit
+
+The follow-up audit asks whether the feature sets were useless, or whether they
+contained regime information that the action layer failed to exploit.
+
+Artifact packet:
+
+- `runs/research_workbench/g53/feat_full5w_20260709a/feature_audit/`
+- Report:
+  `runs/research_workbench/g53/feat_full5w_20260709a/feature_audit/gen53_feature_audit_report.md`
+- Representative trade tapes:
+  `gen53_representative_trade_tapes.png`
+- Diagnostics:
+  `gen53_state_discrimination_diagnostics.png`,
+  `gen53_action_alignment_diagnostics.png`, and
+  `gen53_selected_family_mix_heatmap.png`
+
+The audit is artifact-only. It reads the completed five-window packet and does
+not refit authority, refresh market data, or change the frozen live advice
+bridge.
+
+Representative trade tapes include:
+
+- Missed upside: `TSLA` in `2020Q3` under `trend_volatility_plus` direct-spec.
+- Downside avoidance: `MSTR` in `2022Q4` under the control direct-spec lane.
+- Defensive lag: `WMT` in `2021Q4` under `trend_volatility_plus` direct-spec.
+- Commodity lag: `XLE` in `2022Q1` under control pooled-family.
+- More promising pockets: `SLV` in `2020Q3` and `AMD` in `2022Q1` under
+  `trend_volatility_relative_plus`.
+
+Diagnostics added:
+
+- Effective number of OOS states used.
+- OOS state switch rate.
+- State-level next-session return dispersion and spread.
+- State-level next-session hit-rate spread.
+- Correlation between state forward return and long exposure.
+- No-trade rate inside positive-forward states.
+- Long rate inside negative-forward states.
+- Selected strategy-family mix by basket, feature set, and selection policy.
+
+Readout:
+
+- Some feature sets do appear to provide regime discrimination even though
+  benchmark-relative alpha was weak. The clearest example is high-beta
+  `trend_participation_plus`, which had the strongest state next-return spread
+  and hit-rate spread while using fewer effective states and switching less than
+  the control.
+- The weaker layer often looked like action alignment. Several lanes created
+  states with different forward behavior but did not consistently put more long
+  exposure into the better states.
+- This keeps PCA feature work alive, but argues against promoting any tested
+  feature set yet. The next high-value slice is action-gating diagnosis: reduce
+  no-trade in favorable states and reduce long exposure in bad states without
+  destroying useful downside avoidance.
+
 ### `current_features_control`
 
 Mechanism:
