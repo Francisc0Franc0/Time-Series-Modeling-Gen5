@@ -532,6 +532,37 @@ write_trade_tape_contact_sheet <- function(symbol_results_by_lane, path) {
   invisible(path)
 }
 
+write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
+  focus_lane <- "2020Q3__pooled_family_asset_variant__state_switch_continuation"
+  focus_symbols <- c("AMD", "NVDA", "TSLA", "MSTR")
+  if (!focus_lane %in% names(symbol_results_by_lane)) return(invisible(NULL))
+  lane <- symbol_results_by_lane[[focus_lane]]
+  focus_symbols <- focus_symbols[focus_symbols %in% names(lane)]
+  if (!length(focus_symbols)) return(invisible(NULL))
+  grDevices::png(path, width = 2600L, height = 1900L, res = 190L)
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
+  graphics::par(mfrow = c(2, 2), mar = c(4, 4, 3, 1), oma = c(0, 0, 2.2, 0))
+  for (symbol in focus_symbols) {
+    result <- lane[[symbol]]
+    g5_bridge_plot_panel(
+      result$replay_oos,
+      result$executions,
+      result$pending_actions,
+      result$trades,
+      main = paste0(symbol, " / 2020Q3 continuation")
+    )
+  }
+  graphics::mtext(
+    "Representative Timing Tapes: 2020Q3 Pooled-Family Continuation",
+    side = 3,
+    outer = TRUE,
+    line = 0.6,
+    font = 2
+  )
+  invisible(path)
+}
+
 write_selection_family_heatmap <- function(selected_states, path) {
   if (!is.data.frame(selected_states) || !nrow(selected_states)) return(invisible(NULL))
   aesthetic <- g5_chart_aesthetic()
@@ -640,6 +671,7 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     paste0("- Exposure/alpha scatter: `", paths$exposure_alpha_scatter_png, "`"),
     paste0("- Selection family heatmap: `", paths$selection_family_heatmap_png, "`"),
     paste0("- Trade tape contact sheet: `", paths$trade_tape_contact_sheet_png, "`"),
+    paste0("- Representative timing tapes: `", paths$representative_trade_tapes_png, "`"),
     "",
     "## Guardrails",
     "",
@@ -881,6 +913,7 @@ paths <- list(
   exposure_alpha_scatter_png = file.path(output_dir, "bull_momentum_specialist_exposure_alpha_scatter.png"),
   selection_family_heatmap_png = file.path(output_dir, "bull_momentum_specialist_selection_family_heatmap.png"),
   trade_tape_contact_sheet_png = file.path(output_dir, "bull_momentum_specialist_trade_tape_contact_sheet.png"),
+  representative_trade_tapes_png = file.path(output_dir, "bull_momentum_specialist_representative_trade_tapes.png"),
   artifact_index_csv = file.path(output_dir, "bull_momentum_specialist_artifact_index.csv"),
   report_md = file.path(output_dir, "bull_momentum_specialist_report.md")
 )
@@ -904,6 +937,7 @@ write_alpha_heatmap(summary, paths$alpha_heatmap_png)
 write_exposure_alpha_scatter(summary, paths$exposure_alpha_scatter_png)
 write_selection_family_heatmap(g5_wfa_bind_rows_fill(authority_rows), paths$selection_family_heatmap_png)
 write_trade_tape_contact_sheet(trade_tape_symbol_results, paths$trade_tape_contact_sheet_png)
+write_representative_trade_tapes(trade_tape_symbol_results, paths$representative_trade_tapes_png)
 
 artifact_index <- data.frame(
   artifact = names(paths),
@@ -923,4 +957,4 @@ message("Summary:")
 print(printable[, c("screen_id", "window_id", "selection_policy", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills"), drop = FALSE], row.names = FALSE)
 message("")
 message("Report: ", paths$report_md)
-message("Deck visuals: ", paths$equity_overlay_png, " / ", paths$alpha_heatmap_png, " / ", paths$exposure_alpha_scatter_png, " / ", paths$selection_family_heatmap_png, " / ", paths$trade_tape_contact_sheet_png)
+message("Deck visuals: ", paths$equity_overlay_png, " / ", paths$alpha_heatmap_png, " / ", paths$exposure_alpha_scatter_png, " / ", paths$selection_family_heatmap_png, " / ", paths$trade_tape_contact_sheet_png, " / ", paths$representative_trade_tapes_png)

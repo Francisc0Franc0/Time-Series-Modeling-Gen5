@@ -27,6 +27,7 @@ const resultPaths = {
   exposure: path.join(resultDir, "bull_momentum_specialist_exposure_alpha_scatter.png"),
   family: path.join(resultDir, "bull_momentum_specialist_selection_family_heatmap.png"),
   tapes: path.join(resultDir, "bull_momentum_specialist_trade_tape_contact_sheet.png"),
+  representativeTapes: path.join(resultDir, "bull_momentum_specialist_representative_trade_tapes.png"),
   report: path.join(resultDir, "bull_momentum_specialist_report.md"),
 };
 
@@ -524,6 +525,22 @@ async function createDeck() {
     await addImage(slide, resultPaths.equity, { left: 46, top: 190, width: 650, height: 430 }, "Gen5.3 bullish momentum specialist equity overlay");
     await addImage(slide, resultPaths.family, { left: 722, top: 196, width: 500, height: 340 }, "Selected strategy family by asset and PCA state");
     addText(slide, "The state/family map selected plenty of momentum candidates, so the first failure mode is not that no-trade swallowed the whole system. The problem is more specific: exposure still arrived too late or too lightly in the rebound while drawdown avoidance worked better in the stress window.", { left: 742, top: 554, width: 440, height: 86 }, { fontSize: 18, color: colors.muted });
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = colors.canvas;
+    addTitle(slide, "Representative trade tapes show the system joined the move but did not stay with enough of it");
+    await addImage(slide, resultPaths.representativeTapes, { left: 50, top: 178, width: 780, height: 455 }, "Representative Gen5.3 2020Q3 continuation trade tapes");
+    addPanel(slide, { left: 864, top: 206, width: 320, height: 338 }, { fill: "#F8FAFC", line: "#D7DEE8" });
+    addText(slide, "What to look for", { left: 894, top: 236, width: 250, height: 30 }, { fontSize: 25, bold: true, color: colors.ink });
+    addBulletList(slide, [
+      "Blue markers are entries; yellow markers are exits.",
+      "Dashed lines trace completed or open trades.",
+      "State bands often change after the trend is underway.",
+      "Continuation helps, but it still misses part of the move.",
+    ], { left: 896, top: 296, width: 248, height: 210 }, { dotColor: colors.amber, fontSize: 15, lineHeight: 52 });
+    addText(slide, "For exploratory POCs, include representative trade tapes whenever timing, participation, or state behavior is central.", { left: 118, top: 648, width: 980, height: 30 }, { fontSize: 18, bold: true, color: colors.ink, alignment: "center" });
   }
 
   {
