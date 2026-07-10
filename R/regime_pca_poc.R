@@ -273,6 +273,7 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
   ema_fast <- g5_pca_regime_ema(close, 20L)
   ema_slow <- g5_pca_regime_ema(close, 50L)
   sma_20 <- g5_pca_regime_rolling_mean(close, 20L)
+  sma_50 <- g5_pca_regime_rolling_mean(close, 50L)
   sma_200 <- g5_pca_regime_rolling_mean(close, 200L)
   sd_20_close <- g5_pca_regime_rolling_sd(close, 20L)
   vol_20 <- g5_pca_regime_rolling_sd(ret1, 20L)
@@ -295,6 +296,7 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
     rsi_14 = g5_pca_regime_rsi(close, 14L),
     vol_20 = vol_20,
     atr_pct = atr_14 / close,
+    dist_anchor_50 = close / sma_50 - 1,
     dist_anchor_200 = close / sma_200 - 1,
     chop_14 = g5_pca_regime_adx(high, low, close, 14L),
     bb_width = (bb_up - bb_dn) / pmax(bb_mid, 1e-8),

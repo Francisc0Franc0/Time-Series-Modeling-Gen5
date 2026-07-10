@@ -155,6 +155,152 @@ test_that("SOFI Q2 continuity fixture carries 2026-06-29 open trade when still l
   expect_equal(open_trade$trade_status[[1L]], "open")
 })
 
+test_that("PCA feature table exposes legacy Gen4 dist_anchor_50 without changing defaults", {
+  bars <- data.frame(
+    symbol = "AMD",
+    session_date = as.Date("2026-01-01") + 0:80,
+    open = 100 + 0:80,
+    high = 101 + 0:80,
+    low = 99 + 0:80,
+    close = 100 + 0:80,
+    volume = 1000,
+    adjusted = TRUE,
+    timeframe = "1D",
+    provider = "fixture",
+    as_of_timestamp = "2026-03-31 17:30:00",
+    latest_completed_session = as.Date("2026-03-31"),
+    fetch_start_date = as.Date("2026-01-01"),
+    fetch_end_date = as.Date("2026-03-31"),
+    data_version_hash = "fixture",
+    stringsAsFactors = FALSE
+  )
+
+  features <- g5_pca_regime_feature_table(bars, "AMD")
+
+  expect_true("dist_anchor_50" %in% names(features))
+  expect_false("dist_anchor_50" %in% g5_pca_regime_default_features())
+})
+
+test_that("frozen scoring accepts global Gen4-style state contracts", {
+  features <- data.frame(
+    schema_version = "fixture",
+    symbol = "AMD",
+    session_date = as.Date("2026-06-30") + 0:1,
+    open = 1,
+    high = 1,
+    low = 1,
+    close = 1,
+    volume = 1,
+    dist_anchor_50 = c(-0.75, 0.75),
+    stringsAsFactors = FALSE
+  )
+  contract <- data.frame(
+    record_type = c("feature", rep("pc_break", 12), "meta"),
+    feature = c("dist_anchor_50", rep(NA_character_, 13)),
+    center = c(0, rep(NA_real_, 13)),
+    scale = c(1, rep(NA_real_, 13)),
+    loading_pc1 = c(1, rep(NA_real_, 13)),
+    loading_pc2 = c(1, rep(NA_real_, 13)),
+    break_axis = c(NA, rep("pc1", 6), rep("pc2", 6), NA),
+    break_index = c(NA, 1:6, 1:6, NA),
+    break_value = c(NA, -2, -1, 0, 1, 2, 3, -2, -1, 0, 1, 2, 3, NA),
+    key = c(NA, rep(NA_character_, 12), "state_grid_n"),
+    value = c(NA, rep(NA_character_, 12), "5"),
+    stringsAsFactors = FALSE
+  )
+
+  scored <- g5_bridge_score_frozen_quantile(features, contract, "AMD")
+
+  expect_equal(scored$state_id, c("S2_2", "S3_3"))
+})
+
+test_that("Gen4 Phase50 and Phase60 artifacts seed prior open AMD continuity", {
+  phase50_dir <- tempfile("phase50_")
+  phase60_dir <- tempfile("phase60_")
+  dir.create(phase50_dir, recursive = TRUE)
+  dir.create(phase60_dir, recursive = TRUE)
+  utils::write.csv(
+    data.frame(
+      asset = "AMD",
+      state_id = "1_1",
+      family = "ema_cross",
+      strategy = "ema_cross_f10_s20",
+      selection_mode = "pooled_family_asset_variant",
+      variant_metric = 0.25,
+      x_param = 10,
+      y_param = 20,
+      source_fold_id = 19,
+      source_validated_quarter = "2026Q1",
+      live_quarter_id = "2026Q2",
+      stringsAsFactors = FALSE
+    ),
+    file.path(phase50_dir, "phase50_asset_variant_map.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(
+      quarter_id = "2026Q2",
+      live_quarter_start_date = "2026-04-01",
+      live_quarter_end_date = "2026-06-30",
+      phase50_schema_version = "phase50_freeze_pack_v1",
+      stringsAsFactors = FALSE
+    ),
+    file.path(phase50_dir, "phase50_quarter_contract.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(
+      record_type = c("feature", "meta"),
+      feature = c("dist_anchor_50", NA),
+      center = c(0, NA),
+      scale = c(1, NA),
+      loading_pc1 = c(1, NA),
+      loading_pc2 = c(1, NA),
+      break_axis = NA,
+      break_index = NA,
+      break_value = NA,
+      key = c(NA, "state_grid_n"),
+      value = c(NA, "5"),
+      stringsAsFactors = FALSE
+    ),
+    file.path(phase50_dir, "phase50_state_model_contract.csv"),
+    row.names = FALSE
+  )
+  utils::write.csv(
+    data.frame(
+      asset = "AMD",
+      date = "2026-06-30",
+      state_id = "1_1",
+      chosen_family = "ema_cross",
+      chosen_strategy = "ema_cross_f10_s20",
+      current_exec_pos = 1,
+      stringsAsFactors = FALSE
+    ),
+    file.path(phase60_dir, "phase60_operator_packet.csv"),
+    row.names = FALSE
+  )
+  template <- list(
+    contract = g5_bridge_contract_frame(
+      quarter_id = "2026Q2",
+      symbols = "AMD",
+      context_symbols = "AMD",
+      as_of_timestamp = "2026-03-31 17:30:00",
+      refresh = FALSE,
+      market_data_feed = "iex"
+    )
+  )
+
+  authority <- g5_bridge_authority_from_gen4_phase50(phase50_dir, template)
+  authority$seed_positions <- g5_bridge_seed_positions_from_gen4_phase60(phase60_dir, authority)
+  seed <- g5_bridge_seed_for_symbol(authority, "AMD")
+
+  expect_equal(authority$selected_states$state_id[[1L]], "S1_1")
+  expect_equal(authority$selected_states$strategy_spec_id[[1L]], "ema_cross_fast10_slow20__native_only")
+  expect_equal(seed$strategy_spec_id[[1L]], "ema_cross_fast10_slow20__native_only")
+  expect_equal(seed$entry_execution_date[[1L]], as.Date("2026-06-30"))
+  expect_equal(seed$entry_trigger_type[[1L]], "gen4_phase60_seed_position")
+})
+
 test_that("live bridge runtime provenance records code and git fields", {
   provenance <- g5_bridge_runtime_provenance(
     repo_root = test_path("..", ".."),

@@ -260,10 +260,19 @@ if (as_of_date > as.Date(contract$live_end_date[[1L]])) {
 
 previous_authority <- NULL
 previous_authority_dir <- ""
+previous_gen4_phase50_authority <- NULL
+previous_gen4_phase50_dir <- ""
+previous_gen4_phase60_dir <- ""
 if (continuity) {
   previous_quarter_id <- g5_bridge_previous_quarter_id(quarter_id)
   previous_authority_dir <- arg_or_env("previous_authority_dir", "GEN5_BRIDGE_PREVIOUS_AUTHORITY_DIR", g5_bridge_authority_dir(repo_root, previous_quarter_id))
   previous_authority <- g5_bridge_read_authority(previous_authority_dir, include_train_state_performance = TRUE)
+  previous_gen4_phase50_dir <- arg_or_env("gen4_previous_phase50_dir", "GEN5_BRIDGE_GEN4_PREVIOUS_PHASE50_DIR", g5_bridge_gen4_phase50_dir(repo_root, previous_quarter_id))
+  previous_gen4_phase60_dir <- arg_or_env("gen4_previous_phase60_dir", "GEN5_BRIDGE_GEN4_PREVIOUS_PHASE60_DIR", g5_bridge_gen4_phase60_dir(repo_root, previous_quarter_id))
+  if (dir.exists(previous_gen4_phase50_dir)) {
+    previous_gen4_phase50_authority <- g5_bridge_authority_from_gen4_phase50(previous_gen4_phase50_dir, previous_authority)
+    previous_gen4_phase50_authority$seed_positions <- g5_bridge_seed_positions_from_gen4_phase60(previous_gen4_phase60_dir, previous_gen4_phase50_authority)
+  }
 }
 
 query_start_date <- as.Date(contract$train_start_date[[1L]]) - warmup_days
@@ -278,6 +287,10 @@ message("Repository: ", repo_root)
 message("Quarter: ", quarter_id)
 message("Authority: ", authority_dir)
 if (continuity) message("Previous authority: ", previous_authority_dir)
+if (continuity && !is.null(previous_gen4_phase50_authority)) message("Previous Gen4 Phase50 continuity authority: ", previous_gen4_phase50_dir)
+if (continuity && !is.null(previous_gen4_phase50_authority) && is.data.frame(previous_gen4_phase50_authority$seed_positions) && nrow(previous_gen4_phase50_authority$seed_positions)) {
+  message("Previous Gen4 Phase60 seed positions: ", previous_gen4_phase60_dir)
+}
 message("Symbols: ", paste(symbols, collapse = ", "))
 message("As of: ", as_of_timestamp)
 message("Feed: ", cfg$feed)
@@ -314,7 +327,11 @@ for (i in seq_len(nrow(policy_specs))) {
   label <- as.character(spec$policy_short_label[[1L]])
   current_policy_authority <- g5_bridge_apply_selection_policy(authority, policy, min_train_state_rows = min_train_state_rows)
   previous_policy_authority <- if (!is.null(previous_authority)) {
-    g5_bridge_apply_selection_policy(previous_authority, policy, min_train_state_rows = min_train_state_rows)
+    if (identical(policy, "pooled_family_asset_variant") && !is.null(previous_gen4_phase50_authority)) {
+      previous_gen4_phase50_authority
+    } else {
+      g5_bridge_apply_selection_policy(previous_authority, policy, min_train_state_rows = min_train_state_rows)
+    }
   } else {
     NULL
   }

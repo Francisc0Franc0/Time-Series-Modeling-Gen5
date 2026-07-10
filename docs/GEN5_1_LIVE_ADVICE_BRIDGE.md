@@ -1,6 +1,6 @@
 # Gen5.1 Temporary Live Advice Bridge
 
-Status date: 2026-07-01
+Status date: 2026-07-10
 
 This bridge keeps daily advice-first operation available while the final Gen5.1 production layer is still under construction. It freezes quarter-specific authority from completed prior-quarter data, then replays the frozen model daily to infer current position and next-open advice.
 
@@ -21,8 +21,31 @@ Freeze-guard behavior:
 - The live bridge direct-spec lane must consume frozen `bridge_selected_states.csv` rows.
 - The direct-spec lane must not recompute direct selection from `bridge_train_state_performance.csv` during daily advice.
 - The pooled-family lane may use frozen `bridge_train_state_performance.csv` only as the explicitly labeled side-by-side Gen4-style inspection lane.
+- For previous-quarter continuity in the operator-used Gen4-style pooled-family lane, the bridge should consume actual Gen4 `Phase50_Quarterly_FreezePack` authority and actual Gen4 `Phase60_Daily_LiveRunner` open-position status when those artifacts are available, instead of reconstructing Gen4 authority from Gen5 train-performance tables.
 - Daily packets write runtime provenance with branch, git SHA, dirty status, and `live_bridge_code_version`.
 - Changing these semantics is a live-bridge behavior change and requires an explicit operator decision.
+
+## Incident Guardrail: Gen4 Open-Position Carry
+
+Status date: 2026-07-10
+
+The AMD continuity audit found a second bridge containment issue. The bridge had been protected against direct-spec recomputation, but the Gen4-style pooled-family prior-quarter continuity lane was still approximating Gen4 authority from Gen5 bridge artifacts and replaying forward from fresh signals. That can miss a real live position that was already open before the bridge replay window.
+
+Observed example:
+
+- Gen4 `Phase60_Daily_LiveRunner` showed `AMD` long on `2026-06-30`, with `HOLD_LONG`, `ALREADY_IN_POSITION`, state `1_1`, and strategy `ema_cross_f10_s20`.
+- The bridge prior to this fix showed `AMD` flat because the reconstructed Gen5-side prior-quarter replay did not contain the already-open Gen4 live position.
+
+Patched behavior:
+
+- For the Gen4-style pooled-family previous-continuity lane, the dual bridge reads Gen4 `phase50_asset_variant_map.csv` as the previous-quarter frozen authority when present.
+- It also reads Gen4 `phase60_operator_packet.csv` as an open-position seed when present.
+- A seeded open position remains locked to its seeded strategy until the frozen native exit closes it, then current-quarter authority may take over.
+- This remains advice-only. It does not place orders or approve a methodology.
+
+Known limitation:
+
+- Gen4 Phase60 status artifacts identify the live handoff date and current held strategy, but not necessarily the original historical entry date. In that case the bridge trade tape seeds the open trade at the Phase60 handoff date, so the chart correctly shows the carried live position but may not reconstruct the full original dotted-line entry history.
 
 ## Current Q3 2026 Bridge
 
@@ -108,9 +131,14 @@ Key artifacts:
 - `bridge_contact_sheet.png`
 - `bridge_daily_report.md`
 
-Current July 1 readout after rebuilding with previous-quarter continuity:
+Current July 8 AMD continuity smoke after importing Gen4 Phase50/Phase60 prior-quarter carry:
 
-- `AMD`: `FLAT`, current `2026Q3` authority from quarter start, no pending action.
+- `AMD` under the operator-used Gen4-style pooled-family lane: `LONG`, open trade carried from `2026Q2` Gen4 continuity, locked to `ema_cross_fast10_slow20__native_only`, no next-open action.
+- The visible trade trace starts at the Gen4 Phase60 handoff date because the available Gen4 Phase60 status packet records the held position, not the original full trade entry date.
+
+Historical July 1 single-policy packet after the first previous-quarter continuity rebuild, before the July 10 Gen4 Phase50/Phase60 open-position seed guardrail:
+
+- `AMD`: `FLAT`, current `2026Q3` authority from quarter start, no pending action. This older reading is superseded for the operator-used Gen4-style pooled-family lane by the July 10 Gen4 open-position carry fix above.
 - `NVDA`: `LONG`, open trade carried from `2026Q2` authority, locked to `rsi_mr_n7_lo30_hi75__native_only`.
 - `PLTR`: `FLAT`, current `2026Q3` authority from quarter start, no pending action.
 - `TSLA`: `LONG`, open trade carried from `2026Q2` authority, locked to `rsi_mr_n7_lo25_hi65__native_only`.

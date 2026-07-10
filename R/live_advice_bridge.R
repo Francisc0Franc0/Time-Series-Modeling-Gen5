@@ -332,7 +332,16 @@ g5_bridge_build_authority_from_bars <- function(
 
 g5_bridge_score_frozen_quantile <- function(features, contract, symbol) {
   symbol <- g5_standardize_symbol(symbol)[[1L]]
-  contract <- contract[contract$research_candidate_symbol == symbol | contract$symbol == symbol, , drop = FALSE]
+  contract_keep <- rep(FALSE, nrow(contract))
+  if ("research_candidate_symbol" %in% names(contract)) {
+    contract_keep <- contract_keep | (!is.na(contract$research_candidate_symbol) & contract$research_candidate_symbol == symbol)
+  }
+  if ("symbol" %in% names(contract)) {
+    contract_keep <- contract_keep | (!is.na(contract$symbol) & contract$symbol == symbol)
+  }
+  if (any(contract_keep)) {
+    contract <- contract[contract_keep, , drop = FALSE]
+  }
   feature_rows <- contract[contract$record_type == "feature", , drop = FALSE]
   if (!nrow(feature_rows)) {
     g5_stop(paste0("No frozen PCA feature rows found for ", symbol, "."))
@@ -355,7 +364,7 @@ g5_bridge_score_frozen_quantile <- function(features, contract, symbol) {
   x <- sweep(x, 2, scales[feature_cols], "/")
   scored$pc1 <- as.numeric(x %*% loading_pc1[feature_cols])
   scored$pc2 <- as.numeric(x %*% loading_pc2[feature_cols])
-  meta_grid <- contract[contract$record_type == "meta" & contract$key == "grid_n", "value", drop = TRUE]
+  meta_grid <- contract[contract$record_type == "meta" & contract$key %in% c("grid_n", "state_grid_n"), "value", drop = TRUE]
   grid_n <- as.integer(meta_grid[[1L]])
   if (is.na(grid_n) || grid_n < 2L) {
     g5_stop("Frozen PCA contract has invalid grid_n metadata.")
@@ -441,7 +450,8 @@ g5_bridge_replay_symbol <- function(
   honor_pending_entry_execution_until = NULL,
   authority_role = "current",
   entry_replay_semantics = "fresh_signal_only",
-  state_switch_continuation_families = c("ema_cross", "ema_trend")
+  state_switch_continuation_families = c("ema_cross", "ema_trend"),
+  initial_open_trade = NULL
 ) {
   entry_replay_semantics <- g5_bridge_entry_replay_semantics(entry_replay_semantics)
   state_switch_continuation_families <- unique(as.character(state_switch_continuation_families))
@@ -493,6 +503,62 @@ g5_bridge_replay_symbol <- function(
   pending_entry <- NULL
   pending_exit <- NULL
   previous_selected_spec <- NA_character_
+  if (is.data.frame(initial_open_trade) && nrow(initial_open_trade)) {
+    seed <- initial_open_trade[1L, , drop = FALSE]
+    seed_date <- as.Date(seed$entry_execution_date[[1L]])
+    if (!is.na(seed_date)) {
+      seed_idx <- suppressWarnings(max(which(session_dates <= seed_date)))
+      if (!is.finite(seed_idx)) seed_idx <- signal_indices[[1L]]
+      seed_state <- if ("entry_state_id" %in% names(seed) && nzchar(as.character(seed$entry_state_id[[1L]]))) {
+        as.character(seed$entry_state_id[[1L]])
+      } else {
+        unname(state_lookup[[as.character(session_dates[[seed_idx]])]])
+      }
+      seed_spec <- as.character(seed$strategy_spec_id[[1L]])
+      seed_selected <- selected_states[selected_states$strategy_spec_id == seed_spec, , drop = FALSE]
+      if (!nrow(seed_selected) && !is.na(seed_state)) {
+        seed_selected <- selected_states[selected_states$state_id == seed_state, , drop = FALSE]
+      }
+      if (!nrow(seed_selected)) {
+        g5_stop(paste0("Initial open trade seed has no matching selected-state authority for ", symbol, ": ", seed_spec))
+      }
+      seed_selected <- seed_selected[1L, , drop = FALSE]
+      seed_price <- if ("entry_execution_price" %in% names(seed)) suppressWarnings(as.numeric(seed$entry_execution_price[[1L]])) else NA_real_
+      if (!is.finite(seed_price)) seed_price <- as.numeric(all_bars$close[[seed_idx]])
+      open_trade <- list(
+        entry_state_id = seed_state,
+        strategy_family = as.character(seed_selected$strategy_family[[1L]]),
+        model_instance_id = as.character(seed_selected$model_instance_id[[1L]]),
+        exit_stack_id = as.character(seed_selected$exit_stack_id[[1L]]),
+        strategy_spec_id = as.character(seed_selected$strategy_spec_id[[1L]]),
+        signal_model_params = g5_bridge_model_param_summary(seed_selected),
+        entry_signal_rule = "seeded_open_position_from_external_live_runner",
+        entry_trigger_type = if ("entry_trigger_type" %in% names(seed)) as.character(seed$entry_trigger_type[[1L]]) else "external_seed_position",
+        entry_replay_semantics = entry_replay_semantics,
+        entry_signal_date = seed_date,
+        entry_signal_idx = seed_idx,
+        entry_signal_price = seed_price,
+        entry_execution_idx = seed_idx,
+        entry_execution_date = seed_date,
+        entry_execution_price = seed_price,
+        entry_execution_state_id = seed_state
+      )
+      in_position <- TRUE
+      executions[[length(executions) + 1L]] <- data.frame(
+        symbol = symbol,
+        execution_date = seed_date,
+        execution_type = "ENTER_LONG",
+        execution_price = seed_price,
+        strategy_spec_id = open_trade$strategy_spec_id,
+        state_id = seed_state,
+        entry_trigger_type = open_trade$entry_trigger_type,
+        authority_quarter_id = as.character(contract$quarter_id[[1L]]),
+        authority_role = as.character(authority_role),
+        execution_source = "seeded_open_position_from_external_live_runner",
+        stringsAsFactors = FALSE
+      )
+    }
+  }
 
   for (idx in signal_indices) {
     current_date <- session_dates[[idx]]
@@ -737,11 +803,14 @@ g5_bridge_score_authority_symbol <- function(bars, authority, symbol, as_of_date
   } else {
     symbols
   }
+  feature_cols <- as.character(authority$pca_model_contract$feature[authority$pca_model_contract$record_type == "feature"])
+  feature_cols <- feature_cols[nzchar(feature_cols) & !is.na(feature_cols)]
   features <- g5_pca_regime_pooled_feature_table(
     bars,
     target_symbol = symbol,
     context_symbols = context_symbols,
-    end_date = as_of_date
+    end_date = as_of_date,
+    feature_cols = feature_cols
   )
   g5_bridge_score_frozen_quantile(features, authority$pca_model_contract, symbol)
 }
@@ -785,6 +854,8 @@ g5_bridge_run_daily_continuity_from_bars <- function(bars, current_authority, pr
   results <- list()
   continuity_rows <- list()
   for (symbol in symbols) {
+    previous_seed <- g5_bridge_seed_for_symbol(previous_authority, symbol)
+    previous_replay_start <- if (!is.null(previous_seed)) as.Date(previous_seed$entry_execution_date[[1L]]) else as.Date(previous_contract$train_end_date[[1L]])
     previous_scored <- g5_bridge_score_authority_symbol(bars, previous_authority, symbol, current_as_of_date)
     previous_result <- g5_bridge_replay_symbol(
       bars,
@@ -793,11 +864,12 @@ g5_bridge_run_daily_continuity_from_bars <- function(bars, current_authority, pr
       previous_authority$selected_states,
       previous_contract,
       allow_as_of_after_live_end = TRUE,
-      replay_start_date = as.Date(previous_contract$train_end_date[[1L]]),
+      replay_start_date = previous_replay_start,
       entry_signal_start_date = as.Date(previous_contract$train_end_date[[1L]]),
       entry_signal_end_date = previous_live_end,
       honor_pending_entry_execution_until = current_live_start,
-      authority_role = "previous_continuity"
+      authority_role = "previous_continuity",
+      initial_open_trade = previous_seed
     )
 
     current_start <- g5_bridge_first_flat_date_from_prior(previous_result$replay, current_live_start)
@@ -1034,6 +1106,173 @@ g5_bridge_apply_live_selection_policy <- function(authority, selection_policy, m
     g5_stop(paste0("Unsupported live advice selection policy: ", selection_policy))
   }
   out
+}
+
+g5_bridge_gen4_current_live_root <- function(repo_root) {
+  override <- Sys.getenv("GEN5_BRIDGE_GEN4_CURRENT_LIVE_ROOT", unset = "")
+  if (nzchar(override)) return(normalizePath(override, winslash = "/", mustWork = FALSE))
+  normalizePath(
+    file.path(dirname(normalizePath(repo_root, winslash = "/", mustWork = FALSE)), "Time-Series-Modeling", "Experiments", "CURRENT_LIVE"),
+    winslash = "/",
+    mustWork = FALSE
+  )
+}
+
+g5_bridge_gen4_phase50_dir <- function(repo_root, quarter_id) {
+  file.path(g5_bridge_gen4_current_live_root(repo_root), "Phase50_Quarterly_FreezePack", as.character(quarter_id))
+}
+
+g5_bridge_gen4_phase60_dir <- function(repo_root, quarter_id) {
+  file.path(g5_bridge_gen4_current_live_root(repo_root), "Phase60_Daily_LiveRunner", as.character(quarter_id))
+}
+
+g5_bridge_gen4_strategy_family <- function(family) {
+  family <- as.character(family)
+  family[family == "bb_touch"] <- "bollinger_touch"
+  family
+}
+
+g5_bridge_gen4_strategy_id <- function(family, strategy) {
+  family <- g5_bridge_gen4_strategy_family(family)
+  strategy <- as.character(strategy)
+  out <- strategy
+  ema <- grepl("^ema_cross_f[0-9]+_s[0-9]+$", strategy)
+  out[ema] <- sub("^ema_cross_f([0-9]+)_s([0-9]+)$", "ema_cross_fast\\1_slow\\2", strategy[ema])
+  trend <- grepl("^ema_trend_f[0-9]+_s[0-9]+$", strategy)
+  out[trend] <- sub("^ema_trend_f([0-9]+)_s([0-9]+)$", "ema_trend_fast\\1_slow\\2", strategy[trend])
+  bb <- family == "bollinger_touch" & grepl("^bb_touch_n[0-9]+_k", strategy)
+  if (any(bb, na.rm = TRUE)) {
+    bb_n <- as.integer(sub("^bb_touch_n([0-9]+)_k(.+)$", "\\1", strategy[bb]))
+    bb_sd <- as.numeric(sub("^bb_touch_n([0-9]+)_k(.+)$", "\\2", strategy[bb]))
+    out[bb] <- mapply(g5_bollinger_touch_strategy_id, bb_n, bb_sd, USE.NAMES = FALSE)
+  }
+  out[family == "no_trade"] <- "no_trade"
+  out
+}
+
+g5_bridge_authority_from_gen4_phase50 <- function(phase50_dir, template_authority) {
+  paths <- list(
+    asset_map = file.path(phase50_dir, "phase50_asset_variant_map.csv"),
+    quarter_contract = file.path(phase50_dir, "phase50_quarter_contract.csv"),
+    state_model_contract = file.path(phase50_dir, "phase50_state_model_contract.csv")
+  )
+  missing <- names(paths)[!file.exists(unlist(paths))]
+  if (length(missing)) {
+    g5_stop(paste0("Missing Gen4 Phase50 artifact(s): ", paste(missing, collapse = ","), " in ", phase50_dir))
+  }
+  asset_map <- utils::read.csv(paths$asset_map, stringsAsFactors = FALSE)
+  quarter_contract <- utils::read.csv(paths$quarter_contract, stringsAsFactors = FALSE)
+  state_model_contract <- utils::read.csv(paths$state_model_contract, stringsAsFactors = FALSE)
+  contract <- template_authority$contract[1L, , drop = FALSE]
+  symbols <- g5_standardize_symbol(strsplit(contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  keep <- g5_standardize_symbol(asset_map$asset) %in% symbols
+  asset_map <- asset_map[keep, , drop = FALSE]
+  if (!nrow(asset_map)) {
+    g5_stop(paste0("Gen4 Phase50 asset map has no rows for bridge symbols in ", phase50_dir))
+  }
+  grid <- g5_bridge_model_grid(
+    candidate_families = g5_bridge_default_candidate_families(),
+    strategy_grid_preset = "gen4_daily_default"
+  )
+  asset_map$strategy_family <- g5_bridge_gen4_strategy_family(asset_map$family)
+  asset_map$model_instance_id <- g5_bridge_gen4_strategy_id(asset_map$strategy_family, asset_map$strategy)
+  bb_rows <- asset_map$strategy_family == "bollinger_touch"
+  if (any(bb_rows, na.rm = TRUE)) {
+    asset_map$model_instance_id[bb_rows] <- mapply(
+      g5_bollinger_touch_strategy_id,
+      as.integer(asset_map$x_param[bb_rows]),
+      as.numeric(asset_map$y_param[bb_rows]),
+      USE.NAMES = FALSE
+    )
+  }
+  selected <- merge(asset_map, grid, by = c("strategy_family", "model_instance_id"), all.x = TRUE, sort = FALSE)
+  selected$symbol <- g5_standardize_symbol(selected$asset)
+  selected$quarter_id <- as.character(contract$quarter_id[[1L]])
+  selected$state_id <- paste0("S", as.character(selected$state_id))
+  selected$exit_stack_id <- ifelse(selected$strategy_family == "no_trade", "no_exit", "native_only")
+  selected$strategy_spec_id <- ifelse(
+    selected$strategy_family == "no_trade",
+    "no_trade__no_exit",
+    paste0(selected$model_instance_id, "__native_only")
+  )
+  selected$include_native_exit <- selected$strategy_family != "no_trade"
+  selected$selection_policy <- "pooled_family_asset_variant"
+  selected$selection_policy_recipe <- "gen4_phase50_asset_variant_map"
+  selected$live_bridge_authority_source <- "Gen4 Phase50 phase50_asset_variant_map.csv"
+  selected$live_bridge_code_version <- g5_live_bridge_code_version()
+  selected$selection_reason <- "gen4_phase50_frozen_asset_variant"
+  selected$train_state_row_count <- NA_integer_
+  selected$train_state_trade_count <- NA_integer_
+  selected$sharpe <- suppressWarnings(as.numeric(selected$variant_metric))
+  selected$total_return <- NA_real_
+  state_model_contract$record_type <- as.character(state_model_contract$record_type)
+  if ("key" %in% names(state_model_contract)) {
+    state_model_contract$key <- as.character(state_model_contract$key)
+    state_model_contract$key[state_model_contract$key == "state_grid_n"] <- "grid_n"
+  }
+  contract$selection_policy <- "pooled_family_asset_variant"
+  contract$live_bridge_authority_source <- normalizePath(phase50_dir, winslash = "/", mustWork = FALSE)
+  contract$live_bridge_selection_guardrail <- "gen4_style_previous_continuity_consumes_actual_phase50_freeze_pack"
+  contract$live_bridge_code_version <- g5_live_bridge_code_version()
+  if ("phase50_schema_version" %in% names(quarter_contract)) {
+    contract$gen4_phase50_schema_version <- as.character(quarter_contract$phase50_schema_version[[1L]])
+  }
+  list(
+    authority_dir = normalizePath(phase50_dir, winslash = "/", mustWork = FALSE),
+    contract = contract,
+    selected_states = selected,
+    pca_model_contract = state_model_contract,
+    train_state_performance = data.frame()
+  )
+}
+
+g5_bridge_seed_positions_from_gen4_phase60 <- function(phase60_dir, template_authority) {
+  path <- file.path(phase60_dir, "phase60_operator_packet.csv")
+  if (!file.exists(path)) return(data.frame())
+  packet <- utils::read.csv(path, stringsAsFactors = FALSE)
+  if (!nrow(packet) || !"asset" %in% names(packet)) return(data.frame())
+  contract <- template_authority$contract[1L, , drop = FALSE]
+  symbols <- g5_standardize_symbol(strsplit(contract$symbols[[1L]], ",", fixed = TRUE)[[1L]])
+  exec_col <- if ("current_exec_pos" %in% names(packet)) "current_exec_pos" else if ("exec_pos" %in% names(packet)) "exec_pos" else ""
+  if (!nzchar(exec_col)) return(data.frame())
+  packet$symbol <- g5_standardize_symbol(packet$asset)
+  packet <- packet[packet$symbol %in% symbols & suppressWarnings(as.numeric(packet[[exec_col]])) > 0, , drop = FALSE]
+  if (!nrow(packet)) return(data.frame())
+  packet$strategy_family <- g5_bridge_gen4_strategy_family(packet$chosen_family)
+  packet$model_instance_id <- g5_bridge_gen4_strategy_id(packet$strategy_family, packet$chosen_strategy)
+  bb_rows <- rep(FALSE, nrow(packet))
+  if (all(c("x_param", "y_param") %in% names(packet))) {
+    bb_rows <- packet$strategy_family == "bollinger_touch"
+  }
+  if (any(bb_rows, na.rm = TRUE)) {
+    packet$model_instance_id[bb_rows] <- mapply(
+      g5_bollinger_touch_strategy_id,
+      as.integer(packet$x_param[bb_rows]),
+      as.numeric(packet$y_param[bb_rows]),
+      USE.NAMES = FALSE
+    )
+  }
+  data.frame(
+    symbol = packet$symbol,
+    entry_execution_date = as.Date(packet$date),
+    entry_execution_price = NA_real_,
+    entry_state_id = paste0("S", as.character(packet$state_id)),
+    strategy_family = packet$strategy_family,
+    model_instance_id = packet$model_instance_id,
+    exit_stack_id = ifelse(packet$strategy_family == "no_trade", "no_exit", "native_only"),
+    strategy_spec_id = ifelse(packet$strategy_family == "no_trade", "no_trade__no_exit", paste0(packet$model_instance_id, "__native_only")),
+    entry_trigger_type = "gen4_phase60_seed_position",
+    seed_source = normalizePath(path, winslash = "/", mustWork = FALSE),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_bridge_seed_for_symbol <- function(authority, symbol) {
+  if (is.null(authority$seed_positions) || !is.data.frame(authority$seed_positions) || !nrow(authority$seed_positions)) {
+    return(NULL)
+  }
+  rows <- authority$seed_positions[g5_standardize_symbol(authority$seed_positions$symbol) == g5_standardize_symbol(symbol)[[1L]], , drop = FALSE]
+  if (nrow(rows)) rows[1L, , drop = FALSE] else NULL
 }
 
 g5_bridge_trades_from_replay <- function(replay, executions, authority_end_date) {
