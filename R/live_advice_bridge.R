@@ -1111,11 +1111,22 @@ g5_bridge_apply_live_selection_policy <- function(authority, selection_policy, m
 g5_bridge_gen4_current_live_root <- function(repo_root) {
   override <- Sys.getenv("GEN5_BRIDGE_GEN4_CURRENT_LIVE_ROOT", unset = "")
   if (nzchar(override)) return(normalizePath(override, winslash = "/", mustWork = FALSE))
-  normalizePath(
+  sibling_root <- normalizePath(
     file.path(dirname(normalizePath(repo_root, winslash = "/", mustWork = FALSE)), "Time-Series-Modeling", "Experiments", "CURRENT_LIVE"),
     winslash = "/",
     mustWork = FALSE
   )
+  if (dir.exists(sibling_root)) return(sibling_root)
+  userprofile <- Sys.getenv("USERPROFILE", unset = "")
+  if (nzchar(userprofile)) {
+    onedrive_root <- normalizePath(
+      file.path(userprofile, "OneDrive", "Documents", "Francis", "Peltata Project", "Time-Series-Modeling", "Experiments", "CURRENT_LIVE"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+    if (dir.exists(onedrive_root)) return(onedrive_root)
+  }
+  sibling_root
 }
 
 g5_bridge_gen4_phase50_dir <- function(repo_root, quarter_id) {

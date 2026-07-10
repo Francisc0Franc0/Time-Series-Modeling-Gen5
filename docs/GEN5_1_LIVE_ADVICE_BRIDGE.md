@@ -41,6 +41,7 @@ Patched behavior:
 - For the Gen4-style pooled-family previous-continuity lane, the dual bridge reads Gen4 `phase50_asset_variant_map.csv` as the previous-quarter frozen authority when present.
 - It also reads Gen4 `phase60_operator_packet.csv` as an open-position seed when present.
 - A seeded open position remains locked to its seeded strategy until the frozen native exit closes it, then current-quarter authority may take over.
+- In Codex worktrees, the Gen4 artifact resolver must still find the original Gen4 `Experiments/CURRENT_LIVE` folder. It checks `GEN5_BRIDGE_GEN4_CURRENT_LIVE_ROOT` first, then the sibling-repo layout, then the operator's OneDrive Gen4 project path.
 - This remains advice-only. It does not place orders or approve a methodology.
 
 Known limitation:
