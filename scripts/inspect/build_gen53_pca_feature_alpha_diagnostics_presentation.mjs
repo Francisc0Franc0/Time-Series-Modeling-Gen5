@@ -23,6 +23,11 @@ const SMOKE_HEATMAP = path.join(SMOKE_DIR, "style_diversified_live_capital_alpha
 const SMOKE_ALPHA_BAR = path.join(SMOKE_DIR, "style_diversified_live_capital_alpha_bar.png");
 const SMOKE_EQUITY = path.join(SMOKE_DIR, "style_diversified_live_capital_equity_overlay.png");
 const SMOKE_SCATTER = path.join(SMOKE_DIR, "style_diversified_live_capital_exposure_alpha_scatter.png");
+const FULL_DIR = path.join(ROOT, "runs", "research_workbench", "g53", "feat_full5w_20260709a");
+const FULL_HEATMAP = path.join(FULL_DIR, "style_diversified_live_capital_alpha_heatmap.png");
+const FULL_ALPHA_BAR = path.join(FULL_DIR, "style_diversified_live_capital_alpha_bar.png");
+const FULL_EQUITY = path.join(FULL_DIR, "style_diversified_live_capital_equity_overlay.png");
+const FULL_SCATTER = path.join(FULL_DIR, "style_diversified_live_capital_exposure_alpha_scatter.png");
 
 const SLIDE = { width: 1280, height: 720 };
 const PAGE = { left: 64, top: 48, width: 1152, height: 624 };
@@ -559,6 +564,135 @@ async function buildDeck() {
     x: 156, y: 474, w: 900, h: 94,
     title: "Working hypothesis",
     body: "Trend features may improve participation in some baskets; volatility and relative features may be better avoidance filters than general alpha boosters. Test wider before promoting anything.",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 18);
+  addTitle(
+    slide,
+    "FULL-SYMBOL FOLLOW-UP",
+    "The confidence run deliberately made the smoke result harder to survive",
+    "The next screen kept PCA 3x3, selection policy, accounting, and replay fixed while expanding symbols and historical regimes."
+  );
+  addCard(slide, {
+    x: 68, y: 238, w: 330, h: 164,
+    title: "More symbols",
+    body: "Full five-name baskets: high-beta growth, defensive staples, and energy/commodity. This reduces the chance that one symbol explains the result.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 430, y: 238, w: 330, h: 164,
+    title: "More regimes",
+    body: "Five OOS windows: 2020Q3, 2021Q4, 2022Q1, 2022Q4, and 2024Q4. The screen spans rebound, late-cycle growth, drawdown, stress, and risk-on periods.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 792, y: 238, w: 330, h: 164,
+    title: "Same comparison",
+    body: "Four PCA feature sets, direct-spec versus pooled-family, state-switch continuation, and equal-weight live-basket hold as benchmark.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 156, y: 456, w: 900, h: 92,
+    title: "Artifact packet",
+    body: "runs/research_workbench/g53/feat_full5w_20260709a",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 19);
+  addTitle(
+    slide,
+    "REALITY CHECK",
+    "The feature signal did not generalize into benchmark-relative alpha",
+    "Across 120 portfolio rows, every feature/policy/basket aggregate lagged the equal-weight basket hold."
+  );
+  await addImage(slide, FULL_HEATMAP, {
+    left: 78, top: 282, width: 1120, height: 340,
+  }, "Five-window full-symbol Gen5.3 alpha heatmap");
+
+  slide = newSlide(presentation, 20);
+  addTitle(
+    slide,
+    "WHAT CHANGED",
+    "The new features changed behavior, but not enough to beat the benchmark",
+    "The expanded screen is useful because it separates a promising local smoke result from a robust default."
+  );
+  addCard(slide, {
+    x: 64, y: 228, w: 360, h: 166,
+    title: "Best high-beta aggregate",
+    body: "Control plus pooled-family was least bad: mean alpha -6.7 pp, 40% positive-alpha windows, 36% average exposure.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 460, y: 228, w: 360, h: 166,
+    title: "Best defensive aggregate",
+    body: "Trend-volatility plus direct-spec was least bad: mean alpha -3.6 pp, but no positive-alpha windows across the five-window panel.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 856, y: 228, w: 360, h: 166,
+    title: "Best commodity aggregate",
+    body: "Relative trend-volatility plus pooled-family was least bad: mean alpha -3.9 pp, 40% positive-alpha windows.",
+    accent: COLORS.amber,
+  });
+  addCard(slide, {
+    x: 114, y: 454, w: 1010, h: 106,
+    title: "Policy readout",
+    body: "Pooled-family again looked more robust than direct-spec by trading less: -6.6 pp mean alpha versus -7.6 pp, with lower exposure and fewer entries.",
+    accent: COLORS.violet,
+  });
+
+  slide = newSlide(presentation, 21);
+  addTitle(
+    slide,
+    "PARTICIPATION PROBLEM",
+    "The benchmark gap is largest when buy-and-hold had a strong quarter",
+    "The system can avoid some downside, but it still tends to undercapture strong basket upside."
+  );
+  await addImage(slide, FULL_ALPHA_BAR, {
+    left: 78, top: 282, width: 1120, height: 340,
+  }, "Five-window full-symbol Gen5.3 alpha bar chart");
+
+  slide = newSlide(presentation, 22);
+  addTitle(
+    slide,
+    "EXPOSURE AUDIT",
+    "More exposure alone did not solve the alpha problem",
+    "The scatter helps separate undertrading from poor state/action choice at comparable exposure."
+  );
+  await addImage(slide, FULL_SCATTER, {
+    left: 92, top: 286, width: 1096, height: 318,
+  }, "Five-window exposure versus alpha scatter");
+
+  slide = newSlide(presentation, 23);
+  addTitle(
+    slide,
+    "UPDATED INTERPRETATION",
+    "Gen5.3 should shift from feature promotion to failure-mode diagnosis",
+    "The screen did its job: it protected us from canonizing a feature set based on one favorable smoke window."
+  );
+  addCard(slide, {
+    x: 74, y: 236, w: 520, h: 132,
+    title: "Do not promote a new default yet",
+    body: "The current control feature set remains the top aggregate across all baskets/windows. New trend and volatility features remain research candidates, not defaults.",
+    accent: COLORS.rose,
+  });
+  addCard(slide, {
+    x: 634, y: 236, w: 520, h: 132,
+    title: "Keep pooled-family alive",
+    body: "It remains less brittle than direct-spec in this broader screen, but it still does not clear the benchmark alpha bar.",
+    accent: COLORS.green,
+  });
+  addCard(slide, {
+    x: 74, y: 414, w: 520, h: 132,
+    title: "Next narrow slice",
+    body: "Audit state/action gating during strong benchmark quarters: which states are flat, which families are chosen, and why continuation misses upside.",
+    accent: COLORS.blue,
+  });
+  addCard(slide, {
+    x: 634, y: 414, w: 520, h: 132,
+    title: "Research direction",
+    body: "Treat PCA feature work as alive, but pair it with action-quality diagnostics before adding more feature families or a new regime model.",
     accent: COLORS.violet,
   });
 

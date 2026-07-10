@@ -110,10 +110,28 @@ candidate_families <- g5_wfa_candidate_families(split_csv(env_or(
 candidate_families <- unique(c(candidate_families, "no_trade"))
 
 windows <- data.frame(
-  window_id = c("2020Q3_asof_20200930", "2022Q1_asof_20220331"),
-  quarter_id = c("2020Q3", "2022Q1"),
-  as_of_timestamp = c("2020-09-30 17:30:00", "2022-03-31 17:30:00"),
-  regime_label = c("risk_on_rebound", "rate_shock_drawdown"),
+  window_id = c(
+    "2020Q3_asof_20200930",
+    "2021Q4_asof_20211231",
+    "2022Q1_asof_20220331",
+    "2022Q4_asof_20221230",
+    "2024Q4_asof_20241231"
+  ),
+  quarter_id = c("2020Q3", "2021Q4", "2022Q1", "2022Q4", "2024Q4"),
+  as_of_timestamp = c(
+    "2020-09-30 17:30:00",
+    "2021-12-31 17:30:00",
+    "2022-03-31 17:30:00",
+    "2022-12-30 17:30:00",
+    "2024-12-31 17:30:00"
+  ),
+  regime_label = c(
+    "risk_on_rebound",
+    "late_cycle_growth",
+    "rate_shock_drawdown",
+    "bear_market_inflation_stress",
+    "post_2024_risk_on"
+  ),
   stringsAsFactors = FALSE
 )
 
@@ -574,6 +592,11 @@ write_alpha_bar_chart <- function(summary, path) {
   alpha <- as.numeric(summary$alpha_vs_active_equal)
   labels <- as.character(summary$plot_label)
   colors <- ifelse(alpha >= 0, "#00A88F", "#F15A5A")
+  chart_title <- if (length(unique(as.character(summary$window_id))) > 1L) {
+    "Gen5.3 Full Follow-Up: Basket-Relative Alpha"
+  } else {
+    "Gen5.3 Feature Smoke: Basket-Relative Alpha"
+  }
 
   grDevices::png(path, width = 3200L, height = 1200L, res = 220L)
   oldpar <- graphics::par(no.readonly = TRUE)
@@ -591,7 +614,7 @@ write_alpha_bar_chart <- function(summary, path) {
     col = rev(grDevices::adjustcolor(colors, alpha.f = 0.82)),
     border = NA,
     xlab = "Alpha vs equal-weight basket hold",
-    main = "Gen5.3 Feature Smoke: Basket-Relative Alpha",
+    main = chart_title,
     col.axis = aesthetic$axis,
     col.lab = aesthetic$text,
     col.main = aesthetic$text,

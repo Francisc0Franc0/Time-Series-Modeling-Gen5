@@ -132,7 +132,12 @@ in Gen5.2:
 - Defensive staples: `KO,PEP,WMT,COST,XLP`.
 - Energy/commodity: `XLE,CVX,XOM,GLD,SLV`.
 - Context anchors: each basket plus `SPY,QQQ,IWM,TLT,GLD`.
-- Windows: `2020Q3` risk-on rebound and `2022Q1` rate-shock drawdown.
+- Windows:
+  - `2020Q3` risk-on rebound.
+  - `2021Q4` late-cycle growth.
+  - `2022Q1` rate-shock drawdown.
+  - `2022Q4` bear-market / inflation stress.
+  - `2024Q4` later risk-on period.
 
 For the first Gen5.3 run, `state_switch_continuation` replay is the default
 lean slice. It is closer to the continuity question raised by the recent audits
@@ -210,6 +215,88 @@ Interpretation:
 - The next full-width or medium-width screen should test whether this pattern
   survives more symbols and at least one additional window before changing
   defaults.
+
+## Five-Window Full-Symbol Follow-Up
+
+The next immediate run expands the staged smoke packet to the full active
+symbols in each archetype and five OOS windows.
+
+Purpose:
+
+- Check whether the encouraging smoke result survives more symbols.
+- Check whether the feature ranking changes across distinct market regimes.
+- Separate "good avoidance in a falling basket" from "true participation alpha
+  in a rising basket."
+
+Run shape:
+
+- Scope: `full`.
+- Symbols:
+  - High-beta growth: `AMD,NVDA,TSLA,AAPL,MSTR`.
+  - Defensive staples: `KO,PEP,WMT,COST,XLP`.
+  - Energy/commodity: `XLE,CVX,XOM,GLD,SLV`.
+- Windows: `2020Q3`, `2021Q4`, `2022Q1`, `2022Q4`, `2024Q4`.
+- Feature sets: all four first-screen conditions.
+- Selection policies: `asset_state_direct_spec` and
+  `pooled_family_asset_variant`.
+- Replay: `state_switch_continuation`.
+
+Expected interpretation standard:
+
+- Do not promote a feature set because it wins one archetype or one window.
+- Prefer feature sets that improve basket-relative alpha without simply
+  eliminating participation in strong positive windows.
+- Inspect exposure alongside alpha because low-exposure alpha in down windows
+  and high-participation alpha in up windows are different virtues.
+
+Executed packet:
+
+- Packet:
+  `runs/research_workbench/g53/feat_full5w_20260709a`.
+- Report:
+  `runs/research_workbench/g53/feat_full5w_20260709a/style_diversified_live_capital_report.md`.
+- Summary:
+  `runs/research_workbench/g53/feat_full5w_20260709a/style_diversified_live_capital_summary.csv`.
+- Aggregate helper:
+  `runs/research_workbench/g53/feat_full5w_20260709a/style_diversified_live_capital_feature_policy_aggregate.csv`.
+- Visuals:
+  `style_diversified_live_capital_alpha_heatmap.png`,
+  `style_diversified_live_capital_alpha_bar.png`,
+  `style_diversified_live_capital_equity_overlay.png`, and
+  `style_diversified_live_capital_exposure_alpha_scatter.png`.
+
+Full follow-up readout:
+
+- The staged smoke signal did not generalize into benchmark-relative alpha.
+  Across `120` portfolio rows (`3` baskets x `4` feature sets x `5` windows x
+  `2` policies), every feature/policy/basket aggregate lagged the corresponding
+  equal-weight live-basket hold.
+- The best high-beta aggregate was still the control feature set with
+  pooled-family selection: mean alpha `-6.7 pp`, positive-alpha windows `40%`,
+  and mean exposure `36%`.
+- The best defensive aggregate was `trend_volatility_plus` with direct-spec
+  selection: mean alpha `-3.6 pp`, but `0%` positive-alpha windows. This is not
+  a promotion signal.
+- The best energy/commodity aggregate was `trend_volatility_relative_plus` with
+  pooled-family selection: mean alpha `-3.9 pp`, positive-alpha windows `40%`.
+- Across all baskets/windows, pooled-family remained less brittle than
+  direct-spec on average (`-6.6 pp` versus `-7.6 pp` mean alpha) and did so
+  with lower mean exposure and fewer entries. This keeps pooled-family alive as
+  a research factor, but not as accepted allocation evidence.
+- The control feature set was the best overall feature/policy aggregate. The
+  added trend/volatility/relative features changed behavior but did not earn
+  default status.
+
+Interpretation update:
+
+- The Gen5.3 feature work remains useful, but the next slice should be a
+  failure-mode audit rather than another blind feature expansion.
+- The main observed failure mode is benchmark underparticipation during strong
+  basket quarters. The system can avoid some downside in weak windows, but it
+  still tends to miss too much upside when the basket itself is strong.
+- The next narrow test should inspect state/action gating during strong
+  benchmark windows: which states stay flat, which strategy families are chosen,
+  whether no-trade dominates, and why continuation still undercaptures upside.
 
 ### `current_features_control`
 
