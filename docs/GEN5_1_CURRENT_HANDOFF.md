@@ -271,6 +271,28 @@ The new `entry_replay_semantics` switch in `R/live_advice_bridge.R` preserves `f
 
 Highest-impact next probe: move the surviving continuation/fresh lanes into true live-capital replay on a narrow, already-promising context/state setup, then inspect exact remaining Gen4 signal semantics where continuation still diverges. Also consider materializing scored-state artifacts so repeated replay-only probes avoid rescoring frozen PCA states.
 
+## Gen5.3 Specialist Pivot
+
+The newest research-planning direction is documented in:
+
+`docs/GEN5_3_BULL_MOMENTUM_SPECIALIST_PLAN.md`
+
+Planning deck:
+
+`presentations/gen5_3_bull_momentum_specialist_plan.pptx`
+
+Reason for pivot: the broad Gen5.1/Gen5.2 universal regime router is asking one PCA-state engine to trade dynamic bull markets, quiet bull markets, sideways mean reversion, turbulent ranges, breakouts, and rallies inside downtrends. Recent style-diversified live-capital tests showed that the broad engine can make positive tactical trades while still lagging equal-weight basket hold because it underparticipates during favorable upside windows.
+
+Gen5.3 narrows the next PCA research gate to a bullish high-beta momentum specialist:
+
+- curate or hand-pick a high-beta bullish basket using TRAIN-only information;
+- use behavioral-pool PCA and 3x3 quantile states as participation filters;
+- restrict downstream hypotheses to implemented momentum-compatible families plus `no_trade`;
+- judge against equal-weight basket hold with true live-capital replay and participation diagnostics;
+- keep mean-reversion families and SMA additions out of the first specialist baseline unless the operator explicitly opens them.
+
+Recommended first slice: `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context, behavioral-pool PCA, 3x3 states, implemented momentum-compatible families, true live-capital replay over two contrasting windows, benchmark-relative alpha, time-in-market, state/family heatmaps, and representative trade tapes.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:
