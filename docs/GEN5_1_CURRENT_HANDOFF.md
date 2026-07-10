@@ -277,7 +277,7 @@ The newest research-planning direction is documented in:
 
 `docs/GEN5_3_BULL_MOMENTUM_SPECIALIST_PLAN.md`
 
-Planning deck:
+Planning/result deck:
 
 `presentations/gen5_3_bull_momentum_specialist_plan.pptx`
 
@@ -291,7 +291,17 @@ Gen5.3 narrows the next PCA research gate to a bullish high-beta momentum specia
 - judge against equal-weight basket hold with true live-capital replay and participation diagnostics;
 - keep mean-reversion families and SMA additions out of the first specialist baseline unless the operator explicitly opens them.
 
-Recommended first slice: `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context, behavioral-pool PCA, 3x3 states, implemented momentum-compatible families, true live-capital replay over two contrasting windows, benchmark-relative alpha, time-in-market, state/family heatmaps, and representative trade tapes.
+First baseline packet:
+
+`runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710/`
+
+Wrapper:
+
+`scripts/inspect/run_gen53_bull_momentum_specialist_screen.R`
+
+The first baseline used `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context without `VXX`, behavioral-pool PCA, `3x3` quantile states, pooled-family selection, fresh versus state-switch-continuation replay, implemented momentum-compatible families plus `no_trade`, and true live-capital replay against equal-weight basket hold. Readout: the specialist still undercaptured the `2020Q3` high-beta rebound (`17.1%` continuation return versus `48.9%` basket hold, `-31.9 pp` alpha) but protected capital in `2022Q1` (`-0.5%` continuation versus `-12.8%` basket hold, `+12.2 pp` alpha). This sharpens the next question: improve bullish participation timing without losing stress-window protection.
+
+Recommended next slice: keep the same basket, context, PCA, policy, replay semantics, and benchmark fixed; add one compact momentum-participation feature-set challenger focused on trend slope, relative strength, and drawdown recovery. Start with compact grids for speed, then confirm with the full Gen4 daily-default breadth after the mechanism is visible.
 
 ## What Is Not Implemented Yet
 

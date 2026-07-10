@@ -251,3 +251,41 @@ Run a narrow Gen5.3 specialist baseline over `AMD,NVDA,TSLA,AAPL,MSTR` using beh
 
 Do not add SMA yet. Do not include mean-reversion families in the first specialist baseline. Keep the first run small enough that failures are interpretable.
 
+## First Baseline Result
+
+Packet:
+
+`runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710/`
+
+Deck:
+
+`presentations/gen5_3_bull_momentum_specialist_plan.pptx`
+
+Wrapper:
+
+`scripts/inspect/run_gen53_bull_momentum_specialist_screen.R`
+
+Design actually run:
+
+- basket: `AMD,NVDA,TSLA,AAPL,MSTR`;
+- context: basket plus `SPY,QQQ,IWM,SMH,TLT,GLD`;
+- PCA/state surface: behavioral-pool plus `3x3` quantile states;
+- selection policy: `pooled_family_asset_variant`;
+- replay semantics: `fresh_signal_only` and `state_switch_continuation`;
+- strategy pool: `ema_cross,ema_trend,breakout,pullback_in_uptrend,vol_expansion_breakout,donchian_breakout_vol_expand,no_trade`;
+- accounting: true shared-account live-capital replay against equal-weight basket hold and SPY reference;
+- windows: `2020Q3` rebound and `2022Q1` drawdown/stress.
+
+Readout:
+
+- In `2020Q3`, equal-weight basket hold returned `48.9%`. The specialist returned `9.3%` fresh and `17.1%` continuation, lagging by `-39.7 pp` and `-31.9 pp`. Continuation improved exposure from `40.9%` to `57.2%`, but still undercaptured the rebound.
+- In `2022Q1`, equal-weight basket hold returned `-12.8%`. The specialist returned `-0.1%` fresh and `-0.5%` continuation, beating hold by `+12.7 pp` and `+12.2 pp` by staying lightly exposed.
+- Across the two windows, continuation had better mean alpha than fresh (`-9.8 pp` versus `-13.5 pp`) but still did not beat basket hold on average.
+
+Interpretation:
+
+The first baseline does not prove a bullish specialist edge. It does sharpen the failure mode. The system can avoid a high-beta drawdown, and selected states do choose momentum families rather than collapsing entirely into `no_trade`, but bullish participation is still late or too light during a strong rebound. The next useful slice should keep basket, context, PCA, policy, and benchmark fixed while testing whether momentum-participation features help states enter and stay long earlier without surrendering drawdown protection.
+
+Compute note:
+
+The full Gen4 daily-default breadth is expensive enough that feature-engineering probes should start with compact grids, then confirm with full breadth once the mechanism is visible.
