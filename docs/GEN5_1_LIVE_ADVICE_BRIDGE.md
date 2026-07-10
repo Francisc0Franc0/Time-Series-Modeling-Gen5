@@ -183,6 +183,8 @@ This folder is overwritten by each successful dual-policy run and is the fastest
 
 - `dual_bridge_latest_advice.csv`
 - `dual_bridge_latest_advice.md`
+- `dual_bridge_latest_executions.csv`
+- `dual_bridge_latest_trades.csv`
 - `dual_bridge_latest_contact_sheet.png`
 - `dual_bridge_latest_runtime_provenance.csv`
 - `dual_bridge_latest_manifest.csv`
@@ -213,7 +215,9 @@ For the dual-policy packet, read:
 
 1. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.md`
 2. `runs/live_advice_bridge/latest/dual_bridge_latest_advice.csv`
-3. `runs/live_advice_bridge/latest/dual_bridge_latest_contact_sheet.png`
-4. `runs/live_advice_bridge/latest/dual_bridge_latest_runtime_provenance.csv`
-5. `runs/live_advice_bridge/latest/dual_bridge_latest_manifest.csv` to find the source timestamped packet.
-6. The policy-specific folders only if the combined packet needs a closer chart audit.
+3. `runs/live_advice_bridge/latest/dual_bridge_latest_trades.csv`
+4. `runs/live_advice_bridge/latest/dual_bridge_latest_executions.csv`
+5. `runs/live_advice_bridge/latest/dual_bridge_latest_contact_sheet.png`
+6. `runs/live_advice_bridge/latest/dual_bridge_latest_runtime_provenance.csv`
+7. `runs/live_advice_bridge/latest/dual_bridge_latest_manifest.csv` to find the source timestamped packet.
+8. The policy-specific folders only if the combined packet needs a closer chart audit.
