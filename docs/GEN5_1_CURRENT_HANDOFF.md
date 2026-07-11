@@ -330,6 +330,8 @@ This screen responds to the realization that one-quarter OOS windows were too sp
 
 Readout: the independent-stitch packet's best aggregate lane was `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation`: `81.7%` mean return, `-9.8 pp` mean alpha versus equal-weight basket hold, `2 / 4` windows beating basket, and `64.6%` mean exposure. The live-faithful continuity rerun kept the same top lane but lowered it materially to `55.9%` mean return, `-35.6 pp` mean alpha, `2 / 4` windows beating basket, and `40.3%` mean exposure. The continuity audit recorded `448` symbol/boundary cases where prior authority carried until flat and `4` carried through annual as-of. This confirms annual windows are useful, but annual alpha-oriented screens should use `quarter_continuity_replay` rather than independent quarter stitching. Broader risk-aware context and workhorse features remain the control lane; the new momentum feature sets still do not become defaults.
 
+Next planned slice: hold `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation` fixed under annual continuity replay, then vary strategy pools before retesting basket/context size. Candidate pools are current EMA-only momentum, trend/breakout expansion, mean-reversion diagnostic, and broad classical full. Keep `workhorse_enriched` as feature control, include `momentum_plus_stress` as the strongest existing challenger, and add a compact `reversion_breakout_context` feature set only if reopened non-EMA families need it.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:

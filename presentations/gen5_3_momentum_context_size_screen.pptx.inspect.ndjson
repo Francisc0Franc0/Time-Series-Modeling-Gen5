@@ -1,258 +1,309 @@
-{"kind":"deck","id":"pr/l02dgu","name":"Deck"}
-{"kind":"layout","layoutId":"84a329d8-bea9-42f4-9c60-010da16ed483","name":"Master","type":"master"}
-{"kind":"layout","layoutId":"78145b2d-773f-4626-93ba-fdb480c7a3d9","name":"Title Slide","type":"title"}
-{"kind":"slide","id":"sl/ztsh7p","slide":1,"title":"GEN5.3 RESEARCH SCREEN","textShapes":5}
-{"kind":"textbox","id":"sh/kb6xkf6d","slide":1,"text":"GEN5.3 RESEARCH SCREEN","textPreview":"GEN5.3 RESEARCH SCREEN","textChars":22,"textLines":1,"bbox":[60,60,520,26]}
-{"kind":"textbox","id":"sh/rqd4vmtw","slide":1,"text":"Annual windows made the momentum-specialist question sharper","textPreview":"Annual windows made the momentum-specialist question sharper","textChars":60,"textLines":1,"bbox":[60,130,900,126]}
-{"kind":"textbox","id":"sh/25kb6xkf","slide":1,"text":"The first one-year context-size screen suggests the best current lane is not the newest feature set. It is broader risk-aware context, the existing workhorse PCA surface, and continuation replay.","textPreview":"The first one-year context-size screen suggests the best current lane is not the newest feature set. It is broader risk-aware context, th...","textChars":195,"textLines":1,"bbox":[64,310,820,92]}
-{"kind":"shape","id":"sh/9knih4by","slide":1,"bbox":[64,512,1030,1]}
-{"kind":"textbox","id":"sh/kzupwb2h","slide":1,"text":"Packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260710ctxsize","textPreview":"Packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260710ctxsize","textChars":86,"textLines":1,"bbox":[64,542,990,28]}
-{"kind":"textbox","id":"sh/re1w7mp0","slide":1,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/ztsh7p","slide":1,"text":""}
-{"kind":"slide","id":"sl/bxqdkk","slide":2,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":9}
-{"kind":"textbox","id":"sh/94fu18jq","slide":2,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/2hwfyxob","slide":2,"text":"The test changed because one quarter was too sparse","textPreview":"The test changed because one quarter was too sparse","textChars":51,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/r2p8nqxs","slide":2,"bbox":[54,170,1172,1]}
-{"kind":"textbox","id":"sh/gvy90je9","slide":2,"text":"The prior slices were useful for mechanics, but they did not give much OOS surface area: a five-symbol live basket can easily look good or bad from a handful of trades in one quarter.","textPreview":"The prior slices were useful for mechanics, but they did not give much OOS surface area: a five-symbol live basket can easily look good o...","textChars":183,"textLines":1,"bbox":[76,212,540,132]}
-{"kind":"shape","id":"sh/9gr2p8nq","slide":2,"bbox":[702,206,444,106]}
-{"kind":"shape","id":"sh/2p8nqxs7","slide":2,"bbox":[702,356,444,146]}
-{"kind":"textbox","id":"sh/ra5gbq1o","slide":2,"text":"Before","textPreview":"Before","textChars":6,"textLines":1,"bbox":[732,228,160,26]}
-{"kind":"textbox","id":"sh/kzupwb2h","slide":2,"text":"One OOS quarter. Faster, but low resolution for alpha and trade behavior.","textPreview":"One OOS quarter. Faster, but low resolution for alpha and trade behavior.","textChars":73,"textLines":1,"bbox":[732,262,350,34]}
-{"kind":"textbox","id":"sh/9knih4by","slide":2,"text":"Now","textPreview":"Now","textChars":3,"textLines":1,"bbox":[732,380,160,26]}
-{"kind":"textbox","id":"sh/p8nqxs72","slide":2,"text":"Four independent quarterly TRAIN authorities stitched into a one-year OOS/accounting window.","textPreview":"Four independent quarterly TRAIN authorities stitched into a one-year OOS/accounting window.","textChars":92,"textLines":1,"bbox":[732,416,350,52]}
-{"kind":"textbox","id":"sh/0nuxc3yl","slide":2,"text":"This keeps the leakage boundary while making each condition easier to judge.","textPreview":"This keeps the leakage boundary while making each condition easier to judge.","textChars":76,"textLines":1,"bbox":[108,582,1040,44]}
-{"kind":"textbox","id":"sh/72x4nap4","slide":2,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/bxqdkk","slide":2,"text":""}
-{"kind":"slide","id":"sl/l9hnrh","slide":3,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":12}
-{"kind":"textbox","id":"sh/nap4r65w","slide":3,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/cvixczed","slide":3,"text":"The screen isolates a narrow EMA-only participation hypothesis","textPreview":"The screen isolates a narrow EMA-only participation hypothesis","textChars":62,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/5gbq1ory","slide":3,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/udg7adsj","slide":3,"bbox":[74,222,250,244]}
-{"kind":"textbox","id":"sh/nyd0z610","slide":3,"text":"Live basket","textPreview":"Live basket","textChars":11,"textLines":1,"bbox":[92,246,210,30]}
-{"kind":"textbox","id":"sh/cj6tovah","slide":3,"text":"AMD, NVDA, TSLA, MSTR, AVGO","textPreview":"AMD, NVDA, TSLA, MSTR, AVGO","textChars":27,"textLines":1,"bbox":[92,308,208,112]}
-{"kind":"shape","id":"sh/54zidony","slide":3,"bbox":[360,222,250,244]}
-{"kind":"textbox","id":"sh/u9knih4b","slide":3,"text":"Context axis","textPreview":"Context axis","textChars":12,"textLines":1,"bbox":[378,246,210,30]}
-{"kind":"textbox","id":"sh/judg7ads","slide":3,"text":"5 self assets; 12 with high-beta peers; 18 with peers and risk anchors","textPreview":"5 self assets; 12 with high-beta peers; 18 with peers and risk anchors","textChars":70,"textLines":1,"bbox":[378,308,208,112]}
-{"kind":"shape","id":"sh/nyd0z610","slide":3,"bbox":[646,222,250,244]}
-{"kind":"textbox","id":"sh/udg7adsj","slide":3,"text":"Feature axis","textPreview":"Feature axis","textChars":12,"textLines":1,"bbox":[664,246,210,30]}
-{"kind":"textbox","id":"sh/54zidony","slide":3,"text":"Workhorse enriched; momentum participation; momentum plus stress; market-relative momentum","textPreview":"Workhorse enriched; momentum participation; momentum plus stress; market-relative momentum","textChars":90,"textLines":1,"bbox":[664,308,208,112]}
-{"kind":"shape","id":"sh/cj6tovah","slide":3,"bbox":[932,222,250,244]}
-{"kind":"textbox","id":"sh/nap4r65w","slide":3,"text":"Strategy pool","textPreview":"Strategy pool","textChars":13,"textLines":1,"bbox":[950,246,210,30]}
-{"kind":"textbox","id":"sh/upwb2hwf","slide":3,"text":"EMA cross, EMA trend, no-trade, no-trade exit-immediate","textPreview":"EMA cross, EMA trend, no-trade, no-trade exit-immediate","textChars":55,"textLines":1,"bbox":[950,308,208,112]}
-{"kind":"textbox","id":"sh/5gbq1ory","slide":3,"text":"Selection policy stayed fixed at pooled-family asset-variant, so this slice asks about feature design, context size, and replay semantics rather than reopening the whole Gen4-vs-Gen5 selection debate.","textPreview":"Selection policy stayed fixed at pooled-family asset-variant, so this slice asks about feature design, context size, and replay semantics...","textChars":200,"textLines":1,"bbox":[100,558,1040,58]}
-{"kind":"textbox","id":"sh/cvixczed","slide":3,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/l9hnrh","slide":3,"text":""}
-{"kind":"slide","id":"sl/9oeulv","slide":4,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":47}
-{"kind":"textbox","id":"sh/q1orytsv","slide":4,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/xs72x4na","slide":4,"text":"The best aggregate lane was risk-aware context plus the workhorse feature set","textPreview":"The best aggregate lane was risk-aware context plus the workhorse feature set","textChars":77,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/87ed8bat","slide":4,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/je9cvixc","slide":4,"bbox":[78,196,1038,38]}
-{"kind":"textbox","id":"sh/qtcj6tov","slide":4,"text":"Best lane: Live + peers + risk anchors + Workhorse enriched + continuation. Mean return 81.7%, mean alpha -9.8 pp, exposure 64.6%.","textPreview":"Best lane: Live + peers + risk anchors + Workhorse enriched + continuation. Mean return 81.7%, mean alpha -9.8 pp, exposure 64.6%.","textChars":130,"textLines":1,"bbox":[96,205,1000,22]}
-{"kind":"shape","id":"sh/1gvy90je","slide":4,"bbox":[78,250,230,36]}
-{"kind":"textbox","id":"sh/8z25kb6x","slide":4,"text":"Context","textPreview":"Context","textChars":7,"textLines":1,"bbox":[86,258,214,22]}
-{"kind":"shape","id":"sh/fa9w3m94","slide":4,"bbox":[308,250,230,36]}
-{"kind":"textbox","id":"sh/qpg3ex0n","slide":4,"text":"Feature","textPreview":"Feature","textChars":7,"textLines":1,"bbox":[316,258,214,22]}
-{"kind":"shape","id":"sh/wjudg7ad","slide":4,"bbox":[538,250,122,36]}
-{"kind":"textbox","id":"sh/p4r65wju","slide":4,"text":"Replay","textPreview":"Replay","textChars":6,"textLines":1,"bbox":[546,258,106,22]}
-{"kind":"shape","id":"sh/ed8v6psf","slide":4,"bbox":[660,250,118,36]}
-{"kind":"textbox","id":"sh/7y1kre1w","slide":4,"text":"Win years","textPreview":"Win years","textChars":9,"textLines":1,"bbox":[668,258,102,22]}
-{"kind":"shape","id":"sh/0bi9s36h","slide":4,"bbox":[778,250,118,36]}
-{"kind":"textbox","id":"sh/pwb2hwfy","slide":4,"text":"Mean ret.","textPreview":"Mean ret.","textChars":9,"textLines":1,"bbox":[786,258,102,22]}
-{"kind":"shape","id":"sh/i5sneloj","slide":4,"bbox":[896,250,112,36]}
-{"kind":"textbox","id":"sh/7qpg3ex0","slide":4,"text":"Mean alpha","textPreview":"Mean alpha","textChars":10,"textLines":1,"bbox":[904,258,96,22]}
-{"kind":"shape","id":"sh/0z61032l","slide":4,"bbox":[1008,250,108,36]}
-{"kind":"textbox","id":"sh/pkzupwb2","slide":4,"text":"Exposure","textPreview":"Exposure","textChars":8,"textLines":1,"bbox":[1016,258,92,22]}
-{"kind":"shape","id":"sh/donyd0z6","slide":4,"bbox":[78,286,230,54]}
-{"kind":"textbox","id":"sh/k3q5o7qp","slide":4,"text":"Live + peers + risk anchors","textPreview":"Live + peers + risk anchors","textChars":27,"textLines":1,"bbox":[86,299,214,28]}
-{"kind":"shape","id":"sh/vixczed8","slide":4,"bbox":[308,286,230,54]}
-{"kind":"textbox","id":"sh/2x4nap4r","slide":4,"text":"Workhorse enriched","textPreview":"Workhorse enriched","textChars":18,"textLines":1,"bbox":[316,299,214,28]}
-{"kind":"shape","id":"sh/dcbulwva","slide":4,"bbox":[538,286,122,54]}
-{"kind":"textbox","id":"sh/kre1w7mp","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,299,106,28]}
-{"kind":"shape","id":"sh/val87ed8","slide":4,"bbox":[660,286,118,54]}
-{"kind":"textbox","id":"sh/6psfil0r","slide":4,"text":"2/4","textPreview":"2/4","textChars":3,"textLines":1,"bbox":[668,299,102,28]}
-{"kind":"shape","id":"sh/d8bat47y","slide":4,"bbox":[778,286,118,54]}
-{"kind":"textbox","id":"sh/knih4byh","slide":4,"text":"81.7%","textPreview":"81.7%","textChars":5,"textLines":1,"bbox":[786,299,102,28]}
-{"kind":"shape","id":"sh/yhgn29gr","slide":4,"bbox":[896,286,112,54]}
-{"kind":"textbox","id":"sh/n29gr2p8","slide":4,"text":"-9.8 pp","textPreview":"-9.8 pp","textChars":7,"textLines":1,"bbox":[904,299,96,28]}
-{"kind":"shape","id":"sh/gn29gr2p","slide":4,"bbox":[1008,286,108,54]}
-{"kind":"textbox","id":"sh/58z25kb6","slide":4,"text":"64.6%","textPreview":"64.6%","textChars":5,"textLines":1,"bbox":[1016,299,92,28]}
-{"kind":"shape","id":"sh/y90je9cv","slide":4,"bbox":[78,340,230,54]}
-{"kind":"textbox","id":"sh/nuxc3ylc","slide":4,"text":"Live basket only","textPreview":"Live basket only","textChars":16,"textLines":1,"bbox":[86,353,214,28]}
-{"kind":"shape","id":"sh/gbq1oryt","slide":4,"bbox":[308,340,230,54]}
-{"kind":"textbox","id":"sh/5wjudg7a","slide":4,"text":"Market-relative momentum","textPreview":"Market-relative momentum","textChars":24,"textLines":1,"bbox":[316,353,214,28]}
-{"kind":"shape","id":"sh/u54zidon","slide":4,"bbox":[538,340,122,54]}
-{"kind":"textbox","id":"sh/nqxs72x4","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,353,106,28]}
-{"kind":"shape","id":"sh/7mp0bi9s","slide":4,"bbox":[660,340,118,54]}
-{"kind":"textbox","id":"sh/e1w7mp0b","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,353,102,28]}
-{"kind":"shape","id":"sh/psfil0rq","slide":4,"bbox":[778,340,118,54]}
-{"kind":"textbox","id":"sh/w7mp0bi9","slide":4,"text":"69.3%","textPreview":"69.3%","textChars":5,"textLines":1,"bbox":[786,353,102,28]}
-{"kind":"shape","id":"sh/7adsji5s","slide":4,"bbox":[896,340,112,54]}
-{"kind":"textbox","id":"sh/epkzupwb","slide":4,"text":"-22.3 pp","textPreview":"-22.3 pp","textChars":8,"textLines":1,"bbox":[904,353,96,28]}
-{"kind":"shape","id":"sh/pg3ex0nu","slide":4,"bbox":[1008,340,108,54]}
-{"kind":"textbox","id":"sh/wval87ed","slide":4,"text":"57.1%","textPreview":"57.1%","textChars":5,"textLines":1,"bbox":[1016,353,92,28]}
-{"kind":"shape","id":"sh/36hcrmhk","slide":4,"bbox":[78,394,230,54]}
-{"kind":"textbox","id":"sh/eloj2t83","slide":4,"text":"Live + peers + risk anchors","textPreview":"Live + peers + risk anchors","textChars":27,"textLines":1,"bbox":[86,407,214,28]}
-{"kind":"shape","id":"sh/sfil0rqd","slide":4,"bbox":[308,394,230,54]}
-{"kind":"textbox","id":"sh/h0fepkzu","slide":4,"text":"Workhorse enriched","textPreview":"Workhorse enriched","textChars":18,"textLines":1,"bbox":[316,407,214,28]}
-{"kind":"shape","id":"sh/a9w3m94f","slide":4,"bbox":[538,394,122,54]}
-{"kind":"textbox","id":"sh/zupwb2hw","slide":4,"text":"fresh","textPreview":"fresh","textChars":5,"textLines":1,"bbox":[546,407,106,28]}
-{"kind":"shape","id":"sh/orytsvu9","slide":4,"bbox":[660,394,118,54]}
-{"kind":"textbox","id":"sh/hcrmhk3q","slide":4,"text":"2/4","textPreview":"2/4","textChars":3,"textLines":1,"bbox":[668,407,102,28]}
-{"kind":"shape","id":"sh/al87ed8b","slide":4,"bbox":[778,394,118,54]}
-{"kind":"textbox","id":"sh/z61032ls","slide":4,"text":"68.5%","textPreview":"68.5%","textChars":5,"textLines":1,"bbox":[786,407,102,28]}
-{"kind":"shape","id":"sh/oza1gvy9","slide":4,"bbox":[896,394,112,54]}
-{"kind":"textbox","id":"sh/hk3q5o7q","slide":4,"text":"-23.1 pp","textPreview":"-23.1 pp","textChars":8,"textLines":1,"bbox":[904,407,96,28]}
-{"kind":"shape","id":"sh/1w7mp0bi","slide":4,"bbox":[1008,394,108,54]}
-{"kind":"textbox","id":"sh/8bat47y1","slide":4,"text":"49.2%","textPreview":"49.2%","textChars":5,"textLines":1,"bbox":[1016,407,92,28]}
-{"kind":"shape","id":"sh/jqh0fepk","slide":4,"bbox":[78,448,230,54]}
-{"kind":"textbox","id":"sh/q5o7qpg3","slide":4,"text":"Live + high-beta peers","textPreview":"Live + high-beta peers","textChars":22,"textLines":1,"bbox":[86,461,214,28]}
-{"kind":"shape","id":"sh/18jqh0fe","slide":4,"bbox":[308,448,230,54]}
-{"kind":"textbox","id":"sh/8nqxs72x","slide":4,"text":"Momentum plus stress","textPreview":"Momentum plus stress","textChars":20,"textLines":1,"bbox":[316,461,214,28]}
-{"kind":"shape","id":"sh/j2t83itg","slide":4,"bbox":[538,448,122,54]}
-{"kind":"textbox","id":"sh/qh0fepkz","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,461,106,28]}
-{"kind":"shape","id":"sh/1cfa9w3m","slide":4,"bbox":[660,448,118,54]}
-{"kind":"textbox","id":"sh/crmhk3q5","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,461,102,28]}
-{"kind":"shape","id":"sh/mp0bi9s3","slide":4,"bbox":[778,448,118,54]}
-{"kind":"textbox","id":"sh/bat47y1k","slide":4,"text":"64.1%","textPreview":"64.1%","textChars":5,"textLines":1,"bbox":[786,461,102,28]}
-{"kind":"shape","id":"sh/4vmtwra5","slide":4,"bbox":[896,448,112,54]}
-{"kind":"textbox","id":"sh/tgfmlkjm","slide":4,"text":"-27.4 pp","textPreview":"-27.4 pp","textChars":8,"textLines":1,"bbox":[904,461,96,28]}
-{"kind":"shape","id":"sh/m1cfa9w3","slide":4,"bbox":[1008,448,108,54]}
-{"kind":"textbox","id":"sh/bm58z25k","slide":4,"text":"68.5%","textPreview":"68.5%","textChars":5,"textLines":1,"bbox":[1016,461,92,28]}
-{"kind":"shape","id":"sh/47y1kre1","slide":4,"bbox":[78,502,230,54]}
-{"kind":"textbox","id":"sh/tsvu9kni","slide":4,"text":"Live + high-beta peers","textPreview":"Live + high-beta peers","textChars":22,"textLines":1,"bbox":[86,515,214,28]}
-{"kind":"shape","id":"sh/m58z25kb","slide":4,"bbox":[308,502,230,54]}
-{"kind":"textbox","id":"sh/bq1oryts","slide":4,"text":"Market-relative momentum","textPreview":"Market-relative momentum","textChars":24,"textLines":1,"bbox":[316,515,214,28]}
-{"kind":"shape","id":"sh/jqh0fepk","slide":4,"bbox":[538,502,122,54]}
-{"kind":"textbox","id":"sh/q5o7qpg3","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,515,106,28]}
-{"kind":"shape","id":"sh/1w7mp0bi","slide":4,"bbox":[660,502,118,54]}
-{"kind":"textbox","id":"sh/8bat47y1","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,515,102,28]}
-{"kind":"shape","id":"sh/j2t83itg","slide":4,"bbox":[778,502,118,54]}
-{"kind":"textbox","id":"sh/qh0fepkz","slide":4,"text":"61.8%","textPreview":"61.8%","textChars":5,"textLines":1,"bbox":[786,515,102,28]}
-{"kind":"shape","id":"sh/18jqh0fe","slide":4,"bbox":[896,502,112,54]}
-{"kind":"textbox","id":"sh/8nqxs72x","slide":4,"text":"-29.8 pp","textPreview":"-29.8 pp","textChars":8,"textLines":1,"bbox":[904,515,96,28]}
-{"kind":"shape","id":"sh/j6tovaho","slide":4,"bbox":[1008,502,108,54]}
-{"kind":"textbox","id":"sh/ulwval87","slide":4,"text":"54.8%","textPreview":"54.8%","textChars":5,"textLines":1,"bbox":[1016,515,92,28]}
-{"kind":"textbox","id":"sh/4nap4r65","slide":4,"text":"Even the best lane did not beat equal-weight high-beta hold on average. The signal is subtler: broader risk-aware context made the specialist less bad against a very hard benchmark and produced positive alpha in two annual windows.","textPreview":"Even the best lane did not beat equal-weight high-beta hold on average. The signal is subtler: broader risk-aware context made the specia...","textChars":231,"textLines":1,"bbox":[92,592,1060,50]}
-{"kind":"textbox","id":"sh/t83itgfm","slide":4,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/9oeulv","slide":4,"text":""}
-{"kind":"slide","id":"sl/a1g4mm","slide":5,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":8}
-{"kind":"textbox","id":"sh/7adsji5s","slide":5,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/wval87ed","slide":5,"text":"The annual heatmap shows why this is not a simple feature-set win","textPreview":"The annual heatmap shows why this is not a simple feature-set win","textChars":65,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/pg3ex0nu","slide":5,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/7mp0bi9s","slide":5,"bbox":[790,214,360,284]}
-{"kind":"textbox","id":"sh/w7mp0bi9","slide":5,"text":"What matters","textPreview":"What matters","textChars":12,"textLines":1,"bbox":[822,242,260,32]}
-{"kind":"shape","id":"sh/psfil0rq","slide":5,"bbox":[824,312,8,8]}
-{"kind":"textbox","id":"sh/ed8bat47","slide":5,"text":"2020 remains punishing because basket hold returned about 227%.","textPreview":"2020 remains punishing because basket hold returned about 227%.","textChars":63,"textLines":1,"bbox":[846,302,264,50]}
-{"kind":"shape","id":"sh/7u54zido","slide":5,"bbox":[824,356,8,8]}
-{"kind":"textbox","id":"sh/3q5o7qpg","slide":5,"text":"2022 rewards staying out of a falling high-beta basket.","textPreview":"2022 rewards staying out of a falling high-beta basket.","textChars":55,"textLines":1,"bbox":[846,346,264,50]}
-{"kind":"shape","id":"sh/e9cvixcz","slide":5,"bbox":[824,400,8,8]}
-{"kind":"textbox","id":"sh/lwval87e","slide":5,"text":"2024 is the clean positive clue for risk-aware workhorse continuation.","textPreview":"2024 is the clean positive clue for risk-aware workhorse continuation.","textChars":70,"textLines":1,"bbox":[846,390,264,50]}
-{"kind":"shape","id":"sh/wb2hwfyx","slide":5,"bbox":[824,444,8,8]}
-{"kind":"textbox","id":"sh/3itgfmlk","slide":5,"text":"New momentum feature sets did not become the aggregate default.","textPreview":"New momentum feature sets did not become the aggregate default.","textChars":63,"textLines":1,"bbox":[846,434,264,50]}
-{"kind":"textbox","id":"sh/ex0nuxc3","slide":5,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"image","id":"im/vixczed8","slide":5,"name":"","alt":"Alpha heatmap versus equal-weight basket hold","bbox":[44,178,690,486]}
-{"kind":"notes","id":"nt/a1g4mm","slide":5,"text":""}
-{"kind":"slide","id":"sl/99a49w","slide":6,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":24}
-{"kind":"textbox","id":"sh/nap4r65w","slide":6,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/cvixczed","slide":6,"text":"The best lane still tells a mixed window-by-window story","textPreview":"The best lane still tells a mixed window-by-window story","textChars":56,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/5gbq1ory","slide":6,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/udg7adsj","slide":6,"bbox":[86,220,242,240]}
-{"kind":"textbox","id":"sh/nyd0z610","slide":6,"text":"2019","textPreview":"2019","textChars":4,"textLines":1,"bbox":[108,244,180,38]}
-{"kind":"textbox","id":"sh/cj6tovah","slide":6,"text":"-25.7 pp","textPreview":"-25.7 pp","textChars":8,"textLines":1,"bbox":[108,306,190,44]}
-{"kind":"textbox","id":"sh/54zidony","slide":6,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[110,356,170,24]}
-{"kind":"textbox","id":"sh/u9knih4b","slide":6,"text":"strategy 32.7%","textPreview":"strategy 32.7%","textChars":14,"textLines":1,"bbox":[110,402,170,24]}
-{"kind":"textbox","id":"sh/judg7ads","slide":6,"text":"basket NA","textPreview":"basket NA","textChars":9,"textLines":1,"bbox":[110,430,170,24]}
-{"kind":"shape","id":"sh/nyd0z610","slide":6,"bbox":[372,220,242,240]}
-{"kind":"textbox","id":"sh/udg7adsj","slide":6,"text":"2020","textPreview":"2020","textChars":4,"textLines":1,"bbox":[394,244,180,38]}
-{"kind":"textbox","id":"sh/54zidony","slide":6,"text":"-69.0 pp","textPreview":"-69.0 pp","textChars":8,"textLines":1,"bbox":[394,306,190,44]}
-{"kind":"textbox","id":"sh/cj6tovah","slide":6,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[396,356,170,24]}
-{"kind":"textbox","id":"sh/nap4r65w","slide":6,"text":"strategy 158.3%","textPreview":"strategy 158.3%","textChars":15,"textLines":1,"bbox":[396,402,170,24]}
-{"kind":"textbox","id":"sh/upwb2hwf","slide":6,"text":"basket NA","textPreview":"basket NA","textChars":9,"textLines":1,"bbox":[396,430,170,24]}
-{"kind":"shape","id":"sh/5gbq1ory","slide":6,"bbox":[658,220,242,240]}
-{"kind":"textbox","id":"sh/cvixczed","slide":6,"text":"2022","textPreview":"2022","textChars":4,"textLines":1,"bbox":[680,244,180,38]}
-{"kind":"textbox","id":"sh/jm1cfa9w","slide":6,"text":"+17.0 pp","textPreview":"+17.0 pp","textChars":8,"textLines":1,"bbox":[680,306,190,44]}
-{"kind":"textbox","id":"sh/u18jqh0f","slide":6,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[682,356,170,24]}
-{"kind":"textbox","id":"sh/25kb6xkf","slide":6,"text":"strategy -36.1%","textPreview":"strategy -36.1%","textChars":15,"textLines":1,"bbox":[682,402,170,24]}
-{"kind":"textbox","id":"sh/rqd4vmtw","slide":6,"text":"basket NA","textPreview":"basket NA","textChars":9,"textLines":1,"bbox":[682,430,170,24]}
-{"kind":"shape","id":"sh/kb6xkf6d","slide":6,"bbox":[944,220,242,240]}
-{"kind":"textbox","id":"sh/9w3m94fu","slide":6,"text":"2024","textPreview":"2024","textChars":4,"textLines":1,"bbox":[966,244,180,38]}
-{"kind":"textbox","id":"sh/2t83itgf","slide":6,"text":"+38.3 pp","textPreview":"+38.3 pp","textChars":8,"textLines":1,"bbox":[966,306,190,44]}
-{"kind":"textbox","id":"sh/re1w7mp0","slide":6,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[968,356,170,24]}
-{"kind":"textbox","id":"sh/kzupwb2h","slide":6,"text":"strategy 171.8%","textPreview":"strategy 171.8%","textChars":15,"textLines":1,"bbox":[968,402,170,24]}
-{"kind":"textbox","id":"sh/9knih4by","slide":6,"text":"basket NA","textPreview":"basket NA","textChars":9,"textLines":1,"bbox":[968,430,170,24]}
-{"kind":"textbox","id":"sh/2p8nqxs7","slide":6,"text":"Annual windows reveal a useful profile: strong 2024 participation and decent 2022 defense, but still serious undercapture in 2019 and 2020 high-beta upside.","textPreview":"Annual windows reveal a useful profile: strong 2024 participation and decent 2022 defense, but still serious undercapture in 2019 and 202...","textChars":156,"textLines":1,"bbox":[118,570,1010,56]}
-{"kind":"textbox","id":"sh/ra5gbq1o","slide":6,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/99a49w","slide":6,"text":""}
-{"kind":"slide","id":"sl/gcianb","slide":7,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":5}
-{"kind":"textbox","id":"sh/ih4byhgn","slide":7,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/p8nqxs72","slide":7,"text":"Exposure helps, but simply being long more is not the whole answer","textPreview":"Exposure helps, but simply being long more is not the whole answer","textChars":66,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/0nuxc3yl","slide":7,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/itgfmlkj","slide":7,"bbox":[828,238,330,256]}
-{"kind":"textbox","id":"sh/pkzupwb2","slide":7,"text":"Readout","textPreview":"Readout","textChars":7,"textLines":1,"bbox":[858,268,240,32]}
-{"kind":"textbox","id":"sh/0z61032l","slide":7,"text":"Continuation generally lifts exposure, and the better lanes cluster at moderate-to-high participation. But many high-exposure points are still deeply negative versus basket hold, so timing and state discrimination still matter.","textPreview":"Continuation generally lifts exposure, and the better lanes cluster at moderate-to-high participation. But many high-exposure points are ...","textChars":227,"textLines":1,"bbox":[858,326,260,118]}
-{"kind":"textbox","id":"sh/7qpg3ex0","slide":7,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"image","id":"im/e1w7mp0b","slide":7,"name":"","alt":"Exposure versus basket-relative alpha scatter","bbox":[70,178,700,460]}
-{"kind":"notes","id":"nt/gcianb","slide":7,"text":""}
-{"kind":"slide","id":"sl/08s3wh","slide":8,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":7}
-{"kind":"textbox","id":"sh/tsvu9kni","slide":8,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/m1cfa9w3","slide":8,"text":"The best lane beats in 2022 and 2024, but misses the big upside years","textPreview":"The best lane beats in 2022 and 2024, but misses the big upside years","textChars":69,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/bm58z25k","slide":8,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/tgfmlkjm","slide":8,"bbox":[846,226,306,292]}
-{"kind":"textbox","id":"sh/mp0bi9s3","slide":8,"text":"What the chart adds","textPreview":"What the chart adds","textChars":19,"textLines":1,"bbox":[876,256,240,32]}
-{"kind":"shape","id":"sh/bat47y1k","slide":8,"bbox":[878,328,8,8]}
-{"kind":"textbox","id":"sh/4nap4r65","slide":8,"text":"In 2020, the benchmark was too strong for a timing layer to catch.","textPreview":"In 2020, the benchmark was too strong for a timing layer to catch.","textChars":66,"textLines":1,"bbox":[900,318,210,56]}
-{"kind":"shape","id":"sh/t83itgfm","slide":8,"bbox":[878,378,8,8]}
-{"kind":"textbox","id":"sh/9gr2p8nq","slide":8,"text":"In 2022, the system's partial exposure was valuable.","textPreview":"In 2022, the system's partial exposure was valuable.","textChars":52,"textLines":1,"bbox":[900,368,210,56]}
-{"kind":"shape","id":"sh/gvy90je9","slide":8,"bbox":[878,428,8,8]}
-{"kind":"textbox","id":"sh/ra5gbq1o","slide":8,"text":"In 2024, the same lane finally beat the high-beta basket while still trading selectively.","textPreview":"In 2024, the same lane finally beat the high-beta basket while still trading selectively.","textChars":89,"textLines":1,"bbox":[900,418,210,56]}
-{"kind":"textbox","id":"sh/2p8nqxs7","slide":8,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"chart","id":"ch/wfyxobm5","slide":8,"name":"","chartType":"bar","bbox":[88,210,690,378]}
-{"kind":"notes","id":"nt/08s3wh","slide":8,"text":""}
-{"kind":"slide","id":"sl/2avd0g","slide":9,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":5}
-{"kind":"textbox","id":"sh/8z25kb6x","slide":9,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/je9cvixc","slide":9,"text":"The authority map is cash-dominant, which explains part of the underparticipation","textPreview":"The authority map is cash-dominant, which explains part of the underparticipation","textChars":81,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/qtcj6tov","slide":9,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/87ed8bat","slide":9,"bbox":[812,228,338,268]}
-{"kind":"textbox","id":"sh/fmlkjm1c","slide":9,"text":"Sanity check","textPreview":"Sanity check","textChars":12,"textLines":1,"bbox":[842,258,240,32]}
-{"kind":"textbox","id":"sh/q1orytsv","slide":9,"text":"Across the full annual screen, no-trade remains the dominant selected authority in many asset-state cells. That is philosophically clean for a specialist, but it also means missed upside is expected unless the favorable states are timely and persistent.","textPreview":"Across the full annual screen, no-trade remains the dominant selected authority in many asset-state cells. That is philosophically clean ...","textChars":253,"textLines":1,"bbox":[842,320,270,128]}
-{"kind":"textbox","id":"sh/x4nap4r6","slide":9,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"image","id":"im/wra5gbq1","slide":9,"name":"","alt":"Selected strategy family by asset and PCA state","bbox":[62,188,700,430]}
-{"kind":"notes","id":"nt/2avd0g","slide":9,"text":""}
-{"kind":"slide","id":"sl/av6o2u","slide":10,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":7}
-{"kind":"textbox","id":"sh/9cvixcze","slide":10,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/ylc7u54z","slide":10,"text":"Representative tapes show both the promise and the weakness","textPreview":"Representative tapes show both the promise and the weakness","textChars":59,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/r65wjudg","slide":10,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/5o7qpg3e","slide":10,"bbox":[866,210,300,336]}
-{"kind":"textbox","id":"sh/yxobm58z","slide":10,"text":"Visual audit","textPreview":"Visual audit","textChars":12,"textLines":1,"bbox":[896,240,220,32]}
-{"kind":"shape","id":"sh/nih4byhg","slide":10,"bbox":[898,316,8,8]}
-{"kind":"textbox","id":"sh/g7adsji5","slide":10,"text":"AMD shows churn and missed/stopped participation.","textPreview":"AMD shows churn and missed/stopped participation.","textChars":49,"textLines":1,"bbox":[920,306,214,60]}
-{"kind":"shape","id":"sh/9s36hcrm","slide":10,"bbox":[898,370,8,8]}
-{"kind":"textbox","id":"sh/d8v6psfi","slide":10,"text":"NVDA, TSLA, and MSTR show the lane can ride substantial trends.","textPreview":"NVDA, TSLA, and MSTR show the lane can ride substantial trends.","textChars":63,"textLines":1,"bbox":[920,360,214,60]}
-{"kind":"shape","id":"sh/onyd0z61","slide":10,"bbox":[898,424,8,8]}
-{"kind":"textbox","id":"sh/z25kb6xk","slide":10,"text":"Open exit signals at year end should be inspected in the next tape audit.","textPreview":"Open exit signals at year end should be inspected in the next tape audit.","textChars":73,"textLines":1,"bbox":[920,414,214,60]}
-{"kind":"textbox","id":"sh/6hcrmhk3","slide":10,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"image","id":"im/9cvixcze","slide":10,"name":"","alt":"Representative trade tapes for risk-aware workhorse 2024 continuation","bbox":[42,172,780,500]}
-{"kind":"notes","id":"nt/av6o2u","slide":10,"text":""}
-{"kind":"slide","id":"sl/l4pvcf","slide":11,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":12}
-{"kind":"textbox","id":"sh/j6tovaho","slide":11,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
-{"kind":"textbox","id":"sh/crmhk3q5","slide":11,"text":"The annual screen changes the next research question","textPreview":"The annual screen changes the next research question","textChars":52,"textLines":1,"bbox":[54,66,1080,104]}
-{"kind":"shape","id":"sh/1cfa9w3m","slide":11,"bbox":[54,170,1172,1]}
-{"kind":"shape","id":"sh/uxc3ylc7","slide":11,"bbox":[86,210,470,286]}
-{"kind":"shape","id":"sh/ji5snelo","slide":11,"bbox":[676,210,470,286]}
-{"kind":"textbox","id":"sh/c3ylc7u5","slide":11,"text":"Do not chase yet","textPreview":"Do not chase yet","textChars":16,"textLines":1,"bbox":[122,244,320,34]}
-{"kind":"shape","id":"sh/1kre1w7m","slide":11,"bbox":[124,320,8,8]}
-{"kind":"textbox","id":"sh/q5o7qpg3","slide":11,"text":"Do not promote the new momentum feature sets as defaults.","textPreview":"Do not promote the new momentum feature sets as defaults.","textChars":57,"textLines":1,"bbox":[146,310,338,50]}
-{"kind":"shape","id":"sh/jqh0fepk","slide":11,"bbox":[124,364,8,8]}
-{"kind":"textbox","id":"sh/fmlkjm1c","slide":11,"text":"Do not treat positive 2024 alpha as allocation evidence.","textPreview":"Do not treat positive 2024 alpha as allocation evidence.","textChars":56,"textLines":1,"bbox":[146,354,338,50]}
-{"kind":"shape","id":"sh/q1orytsv","slide":11,"bbox":[124,408,8,8]}
-{"kind":"textbox","id":"sh/xs72x4na","slide":11,"text":"Do not widen the strategy grid until the state layer looks cleaner.","textPreview":"Do not widen the strategy grid until the state layer looks cleaner.","textChars":67,"textLines":1,"bbox":[146,398,338,50]}
-{"kind":"textbox","id":"sh/87ed8bat","slide":11,"text":"Do probe next","textPreview":"Do probe next","textChars":13,"textLines":1,"bbox":[712,244,320,34]}
-{"kind":"shape","id":"sh/je9cvixc","slide":11,"bbox":[714,320,8,8]}
-{"kind":"textbox","id":"sh/qtcj6tov","slide":11,"text":"Use risk-aware context plus workhorse as the near-term control.","textPreview":"Use risk-aware context plus workhorse as the near-term control.","textChars":63,"textLines":1,"bbox":[736,310,338,50]}
-{"kind":"shape","id":"sh/1gvy90je","slide":11,"bbox":[714,364,8,8]}
-{"kind":"textbox","id":"sh/8z25kb6x","slide":11,"text":"Audit full trade tapes for 2024 and missed upside in 2020.","textPreview":"Audit full trade tapes for 2024 and missed upside in 2020.","textChars":58,"textLines":1,"bbox":[736,354,338,50]}
-{"kind":"shape","id":"sh/fa9w3m94","slide":11,"bbox":[714,408,8,8]}
-{"kind":"textbox","id":"sh/qpg3ex0n","slide":11,"text":"Test whether annual windows need true cross-quarter continuity, not only stitched quarterly authorities.","textPreview":"Test whether annual windows need true cross-quarter continuity, not only stitched quarterly authorities.","textChars":104,"textLines":1,"bbox":[736,398,338,50]}
-{"kind":"textbox","id":"sh/ytsvu9kn","slide":11,"text":"The core lesson is methodological: longer OOS windows are now the default for alpha-oriented screens because sparse one-quarter results were too easy to overread.","textPreview":"The core lesson is methodological: longer OOS windows are now the default for alpha-oriented screens because sparse one-quarter results w...","textChars":162,"textLines":1,"bbox":[122,584,1016,54]}
-{"kind":"textbox","id":"sh/neloj2t8","slide":11,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
-{"kind":"notes","id":"nt/l4pvcf","slide":11,"text":""}
+{"kind":"deck","id":"pr/y5i7my","name":"Deck"}
+{"kind":"layout","layoutId":"e6f3d510-36c0-49e2-a6ba-898b1b117447","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"8f25d155-9a4e-4799-aca6-8bf4ae8fe844","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/zsjhzl","slide":1,"title":"GEN5.3 RESEARCH SCREEN","textShapes":5}
+{"kind":"textbox","id":"sh/j2t83itg","slide":1,"text":"GEN5.3 RESEARCH SCREEN","textPreview":"GEN5.3 RESEARCH SCREEN","textChars":22,"textLines":1,"bbox":[60,60,520,26]}
+{"kind":"textbox","id":"sh/8nqxs72x","slide":1,"text":"Annual continuity replay made the next strategy question sharper","textPreview":"Annual continuity replay made the next strategy question sharper","textChars":64,"textLines":1,"bbox":[60,130,980,126]}
+{"kind":"textbox","id":"sh/18jqh0fe","slide":1,"text":"The corrected one-year screen keeps risk-aware context, the workhorse PCA surface, and continuation replay as the control lane. It also shows that the EMA-only pool may be too narrow to judge the broader hypothesis.","textPreview":"The corrected one-year screen keeps risk-aware context, the workhorse PCA surface, and continuation replay as the control lane. It also s...","textChars":215,"textLines":1,"bbox":[64,310,860,104]}
+{"kind":"shape","id":"sh/q5o7qpg3","slide":1,"bbox":[64,512,1030,1]}
+{"kind":"textbox","id":"sh/jqh0fepk","slide":1,"text":"Continuity packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity","textPreview":"Continuity packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity","textChars":100,"textLines":1,"bbox":[64,542,1040,28]}
+{"kind":"textbox","id":"sh/8bat47y1","slide":1,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/zsjhzl","slide":1,"text":""}
+{"kind":"slide","id":"sl/1qgquz","slide":2,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":9}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":2,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":2,"text":"The test changed because one quarter was too sparse","textPreview":"The test changed because one quarter was too sparse","textChars":51,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/bm58z25k","slide":2,"bbox":[54,170,1172,1]}
+{"kind":"textbox","id":"sh/4vmtwra5","slide":2,"text":"The prior slices were useful for mechanics, but they did not give much OOS surface area: a five-symbol live basket can easily look good or bad from a handful of trades in one quarter.","textPreview":"The prior slices were useful for mechanics, but they did not give much OOS surface area: a five-symbol live basket can easily look good o...","textChars":183,"textLines":1,"bbox":[76,212,540,132]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":2,"bbox":[702,206,444,106]}
+{"kind":"shape","id":"sh/mp0bi9s3","slide":2,"bbox":[702,356,444,146]}
+{"kind":"textbox","id":"sh/bat47y1k","slide":2,"text":"Before","textPreview":"Before","textChars":6,"textLines":1,"bbox":[732,228,160,26]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":2,"text":"One OOS quarter. Faster, but low resolution for alpha and trade behavior.","textPreview":"One OOS quarter. Faster, but low resolution for alpha and trade behavior.","textChars":73,"textLines":1,"bbox":[732,262,350,34]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":2,"text":"Now","textPreview":"Now","textChars":3,"textLines":1,"bbox":[732,380,160,26]}
+{"kind":"textbox","id":"sh/9gr2p8nq","slide":2,"text":"Four independent quarterly TRAIN authorities replayed across one year, with open trades carrying until flat.","textPreview":"Four independent quarterly TRAIN authorities replayed across one year, with open trades carrying until flat.","textChars":108,"textLines":1,"bbox":[732,416,350,70]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":2,"text":"This keeps the leakage boundary and avoids artificial quarter-end trade resets.","textPreview":"This keeps the leakage boundary and avoids artificial quarter-end trade resets.","textChars":79,"textLines":1,"bbox":[108,582,1040,44]}
+{"kind":"textbox","id":"sh/ra5gbq1o","slide":2,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/1qgquz","slide":2,"text":""}
+{"kind":"slide","id":"sl/qfksm2","slide":3,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":12}
+{"kind":"textbox","id":"sh/oza1gvy9","slide":3,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/zed8v6ps","slide":3,"text":"The screen isolates a narrow EMA-only participation hypothesis","textPreview":"The screen isolates a narrow EMA-only participation hypothesis","textChars":62,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/6xkf6dcb","slide":3,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/hwfyxobm","slide":3,"bbox":[74,222,250,244]}
+{"kind":"textbox","id":"sh/obm58z25","slide":3,"text":"Live basket","textPreview":"Live basket","textChars":11,"textLines":1,"bbox":[92,246,210,30]}
+{"kind":"textbox","id":"sh/zqtcj6to","slide":3,"text":"AMD, NVDA, TSLA, MSTR, AVGO","textPreview":"AMD, NVDA, TSLA, MSTR, AVGO","textChars":27,"textLines":1,"bbox":[92,308,208,112]}
+{"kind":"shape","id":"sh/65wjudg7","slide":3,"bbox":[360,222,250,244]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":3,"text":"Context axis","textPreview":"Context axis","textChars":12,"textLines":1,"bbox":[378,246,210,30]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":3,"text":"5 self assets; 12 with high-beta peers; 18 with peers and risk anchors","textPreview":"5 self assets; 12 with high-beta peers; 18 with peers and risk anchors","textChars":70,"textLines":1,"bbox":[378,308,208,112]}
+{"kind":"shape","id":"sh/qtcj6tov","slide":3,"bbox":[646,222,250,244]}
+{"kind":"textbox","id":"sh/je9cvixc","slide":3,"text":"Feature axis","textPreview":"Feature axis","textChars":12,"textLines":1,"bbox":[664,246,210,30]}
+{"kind":"textbox","id":"sh/8z25kb6x","slide":3,"text":"Workhorse enriched; momentum participation; momentum plus stress; market-relative momentum","textPreview":"Workhorse enriched; momentum participation; momentum plus stress; market-relative momentum","textChars":90,"textLines":1,"bbox":[664,308,208,112]}
+{"kind":"shape","id":"sh/1gvy90je","slide":3,"bbox":[932,222,250,244]}
+{"kind":"textbox","id":"sh/q1orytsv","slide":3,"text":"Strategy pool","textPreview":"Strategy pool","textChars":13,"textLines":1,"bbox":[950,246,210,30]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":3,"text":"EMA cross, EMA trend, no-trade, no-trade exit-immediate","textPreview":"EMA cross, EMA trend, no-trade, no-trade exit-immediate","textChars":55,"textLines":1,"bbox":[950,308,208,112]}
+{"kind":"textbox","id":"sh/87ed8bat","slide":3,"text":"Selection policy stayed fixed at pooled-family asset-variant, so this slice asks about feature design, context size, and replay semantics rather than reopening the whole Gen4-vs-Gen5 selection debate.","textPreview":"Selection policy stayed fixed at pooled-family asset-variant, so this slice asks about feature design, context size, and replay semantics...","textChars":200,"textLines":1,"bbox":[100,558,1040,58]}
+{"kind":"textbox","id":"sh/xs72x4na","slide":3,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/qfksm2","slide":3,"text":""}
+{"kind":"slide","id":"sl/eqe6oe","slide":4,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":47}
+{"kind":"textbox","id":"sh/lszqtcj6","slide":4,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":4,"text":"The best aggregate lane was risk-aware context plus the workhorse feature set","textPreview":"The best aggregate lane was risk-aware context plus the workhorse feature set","textChars":77,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/3m94fu18","slide":4,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/sji5snel","slide":4,"bbox":[78,196,1038,38]}
+{"kind":"textbox","id":"sh/h4byhgn2","slide":4,"text":"Best lane: Live + peers + risk anchors + Workhorse enriched + continuation. Mean return 55.9%, mean alpha -35.6 pp, exposure 40.3%.","textPreview":"Best lane: Live + peers + risk anchors + Workhorse enriched + continuation. Mean return 55.9%, mean alpha -35.6 pp, exposure 40.3%.","textChars":131,"textLines":1,"bbox":[96,205,1000,22]}
+{"kind":"shape","id":"sh/adsji5sn","slide":4,"bbox":[78,250,230,36]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":4,"text":"Context","textPreview":"Context","textChars":7,"textLines":1,"bbox":[86,258,214,22]}
+{"kind":"shape","id":"sh/svu9knih","slide":4,"bbox":[308,250,230,36]}
+{"kind":"textbox","id":"sh/hgn29gr2","slide":4,"text":"Feature","textPreview":"Feature","textChars":7,"textLines":1,"bbox":[316,258,214,22]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":4,"bbox":[538,250,122,36]}
+{"kind":"textbox","id":"sh/4vmtwra5","slide":4,"text":"Replay","textPreview":"Replay","textChars":6,"textLines":1,"bbox":[546,258,106,22]}
+{"kind":"shape","id":"sh/bat47y1k","slide":4,"bbox":[660,250,118,36]}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":4,"text":"Win years","textPreview":"Win years","textChars":9,"textLines":1,"bbox":[668,258,102,22]}
+{"kind":"shape","id":"sh/tsvu9kni","slide":4,"bbox":[778,250,118,36]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":4,"text":"Mean ret.","textPreview":"Mean ret.","textChars":9,"textLines":1,"bbox":[786,258,102,22]}
+{"kind":"shape","id":"sh/bm58z25k","slide":4,"bbox":[896,250,112,36]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":4,"text":"Mean alpha","textPreview":"Mean alpha","textChars":10,"textLines":1,"bbox":[904,258,96,22]}
+{"kind":"shape","id":"sh/twra5gbq","slide":4,"bbox":[1008,250,108,36]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":4,"text":"Exposure","textPreview":"Exposure","textChars":8,"textLines":1,"bbox":[1016,258,92,22]}
+{"kind":"shape","id":"sh/0je9cvix","slide":4,"bbox":[78,286,230,54]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":4,"text":"Live + peers + risk anchors","textPreview":"Live + peers + risk anchors","textChars":27,"textLines":1,"bbox":[86,299,214,28]}
+{"kind":"shape","id":"sh/idonyd0z","slide":4,"bbox":[308,286,230,54]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":4,"text":"Workhorse enriched","textPreview":"Workhorse enriched","textChars":18,"textLines":1,"bbox":[316,299,214,28]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":4,"bbox":[538,286,122,54]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,299,106,28]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":4,"bbox":[660,286,118,54]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":4,"text":"2/4","textPreview":"2/4","textChars":3,"textLines":1,"bbox":[668,299,102,28]}
+{"kind":"shape","id":"sh/032lszqt","slide":4,"bbox":[778,286,118,54]}
+{"kind":"textbox","id":"sh/tovahoza","slide":4,"text":"55.9%","textPreview":"55.9%","textChars":5,"textLines":1,"bbox":[786,299,102,28]}
+{"kind":"shape","id":"sh/z61032ls","slide":4,"bbox":[896,286,112,54]}
+{"kind":"textbox","id":"sh/al87ed8b","slide":4,"text":"-35.6 pp","textPreview":"-35.6 pp","textChars":8,"textLines":1,"bbox":[904,299,96,28]}
+{"kind":"shape","id":"sh/hcrmhk3q","slide":4,"bbox":[1008,286,108,54]}
+{"kind":"textbox","id":"sh/orytsvu9","slide":4,"text":"40.3%","textPreview":"40.3%","textChars":5,"textLines":1,"bbox":[1016,299,92,28]}
+{"kind":"shape","id":"sh/zupwb2hw","slide":4,"bbox":[78,340,230,54]}
+{"kind":"textbox","id":"sh/a9w3m94f","slide":4,"text":"Live + peers + risk anchors","textPreview":"Live + peers + risk anchors","textChars":27,"textLines":1,"bbox":[86,353,214,28]}
+{"kind":"shape","id":"sh/h0fepkzu","slide":4,"bbox":[308,340,230,54]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":4,"text":"Workhorse enriched","textPreview":"Workhorse enriched","textChars":18,"textLines":1,"bbox":[316,353,214,28]}
+{"kind":"shape","id":"sh/zqtcj6to","slide":4,"bbox":[538,340,122,54]}
+{"kind":"textbox","id":"sh/65wjudg7","slide":4,"text":"fresh","textPreview":"fresh","textChars":5,"textLines":1,"bbox":[546,353,106,28]}
+{"kind":"shape","id":"sh/q1orytsv","slide":4,"bbox":[660,340,118,54]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,353,102,28]}
+{"kind":"shape","id":"sh/87ed8bat","slide":4,"bbox":[778,340,118,54]}
+{"kind":"textbox","id":"sh/xs72x4na","slide":4,"text":"38.6%","textPreview":"38.6%","textChars":5,"textLines":1,"bbox":[786,353,102,28]}
+{"kind":"shape","id":"sh/qtcj6tov","slide":4,"bbox":[896,340,112,54]}
+{"kind":"textbox","id":"sh/je9cvixc","slide":4,"text":"-52.9 pp","textPreview":"-52.9 pp","textChars":8,"textLines":1,"bbox":[904,353,96,28]}
+{"kind":"shape","id":"sh/8z25kb6x","slide":4,"bbox":[1008,340,108,54]}
+{"kind":"textbox","id":"sh/1gvy90je","slide":4,"text":"26.3%","textPreview":"26.3%","textChars":5,"textLines":1,"bbox":[1016,353,92,28]}
+{"kind":"shape","id":"sh/qpg3ex0n","slide":4,"bbox":[78,394,230,54]}
+{"kind":"textbox","id":"sh/fa9w3m94","slide":4,"text":"Live + peers + risk anchors","textPreview":"Live + peers + risk anchors","textChars":27,"textLines":1,"bbox":[86,407,214,28]}
+{"kind":"shape","id":"sh/58z25kb6","slide":4,"bbox":[308,394,230,54]}
+{"kind":"textbox","id":"sh/gn29gr2p","slide":4,"text":"Momentum plus stress","textPreview":"Momentum plus stress","textChars":20,"textLines":1,"bbox":[316,407,214,28]}
+{"kind":"shape","id":"sh/n29gr2p8","slide":4,"bbox":[538,394,122,54]}
+{"kind":"textbox","id":"sh/yhgn29gr","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,407,106,28]}
+{"kind":"shape","id":"sh/5wjudg7a","slide":4,"bbox":[660,394,118,54]}
+{"kind":"textbox","id":"sh/gbq1oryt","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,407,102,28]}
+{"kind":"shape","id":"sh/nuxc3ylc","slide":4,"bbox":[778,394,118,54]}
+{"kind":"textbox","id":"sh/y90je9cv","slide":4,"text":"33.1%","textPreview":"33.1%","textChars":5,"textLines":1,"bbox":[786,407,102,28]}
+{"kind":"shape","id":"sh/5sneloj2","slide":4,"bbox":[896,394,112,54]}
+{"kind":"textbox","id":"sh/cbulwval","slide":4,"text":"-58.5 pp","textPreview":"-58.5 pp","textChars":8,"textLines":1,"bbox":[904,407,96,28]}
+{"kind":"shape","id":"sh/8nqxs72x","slide":4,"bbox":[1008,394,108,54]}
+{"kind":"textbox","id":"sh/18jqh0fe","slide":4,"text":"35.0%","textPreview":"35.0%","textChars":5,"textLines":1,"bbox":[1016,407,92,28]}
+{"kind":"shape","id":"sh/qh0fepkz","slide":4,"bbox":[78,448,230,54]}
+{"kind":"textbox","id":"sh/j2t83itg","slide":4,"text":"Live basket only","textPreview":"Live basket only","textChars":16,"textLines":1,"bbox":[86,461,214,28]}
+{"kind":"shape","id":"sh/8bat47y1","slide":4,"bbox":[308,448,230,54]}
+{"kind":"textbox","id":"sh/1w7mp0bi","slide":4,"text":"Momentum participation","textPreview":"Momentum participation","textChars":22,"textLines":1,"bbox":[316,461,214,28]}
+{"kind":"shape","id":"sh/q5o7qpg3","slide":4,"bbox":[538,448,122,54]}
+{"kind":"textbox","id":"sh/jqh0fepk","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,461,106,28]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":4,"bbox":[660,448,118,54]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,461,102,28]}
+{"kind":"shape","id":"sh/re1w7mp0","slide":4,"bbox":[778,448,118,54]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":4,"text":"30.9%","textPreview":"30.9%","textChars":5,"textLines":1,"bbox":[786,461,102,28]}
+{"kind":"shape","id":"sh/9knih4by","slide":4,"bbox":[896,448,112,54]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":4,"text":"-60.6 pp","textPreview":"-60.6 pp","textChars":8,"textLines":1,"bbox":[904,461,96,28]}
+{"kind":"shape","id":"sh/rqd4vmtw","slide":4,"bbox":[1008,448,108,54]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":4,"text":"39.3%","textPreview":"39.3%","textChars":5,"textLines":1,"bbox":[1016,461,92,28]}
+{"kind":"shape","id":"sh/9w3m94fu","slide":4,"bbox":[78,502,230,54]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":4,"text":"Live + high-beta peers","textPreview":"Live + high-beta peers","textChars":22,"textLines":1,"bbox":[86,515,214,28]}
+{"kind":"shape","id":"sh/r2p8nqxs","slide":4,"bbox":[308,502,230,54]}
+{"kind":"textbox","id":"sh/2hwfyxob","slide":4,"text":"Momentum plus stress","textPreview":"Momentum plus stress","textChars":20,"textLines":1,"bbox":[316,515,214,28]}
+{"kind":"shape","id":"sh/idonyd0z","slide":4,"bbox":[538,502,122,54]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":4,"text":"continuation","textPreview":"continuation","textChars":12,"textLines":1,"bbox":[546,515,106,28]}
+{"kind":"shape","id":"sh/0je9cvix","slide":4,"bbox":[660,502,118,54]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":4,"text":"1/4","textPreview":"1/4","textChars":3,"textLines":1,"bbox":[668,515,102,28]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":4,"bbox":[778,502,118,54]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":4,"text":"29.8%","textPreview":"29.8%","textChars":5,"textLines":1,"bbox":[786,515,102,28]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":4,"bbox":[896,502,112,54]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":4,"text":"-61.8 pp","textPreview":"-61.8 pp","textChars":8,"textLines":1,"bbox":[904,515,96,28]}
+{"kind":"shape","id":"sh/ixczed8v","slide":4,"bbox":[1008,502,108,54]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":4,"text":"34.0%","textPreview":"34.0%","textChars":5,"textLines":1,"bbox":[1016,515,92,28]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":4,"text":"Even the best lane did not beat equal-weight high-beta hold on average. The signal is subtler: broader risk-aware context made the specialist less bad against a very hard benchmark and produced positive alpha in two annual windows.","textPreview":"Even the best lane did not beat equal-weight high-beta hold on average. The signal is subtler: broader risk-aware context made the specia...","textChars":231,"textLines":1,"bbox":[92,592,1060,50]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":4,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/eqe6oe","slide":4,"text":""}
+{"kind":"slide","id":"sl/u52alm","slide":5,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":21}
+{"kind":"textbox","id":"sh/qpg3ex0n","slide":5,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/xczed8v6","slide":5,"text":"Continuity replay corrected the optimistic annual readout","textPreview":"Continuity replay corrected the optimistic annual readout","textChars":57,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/8v6psfil","slide":5,"bbox":[54,170,1172,1]}
+{"kind":"textbox","id":"sh/fyxobm58","slide":5,"text":"The independent-stitch packet was useful as a first annual inspection, but it could reset open trades at quarter boundaries. The continuity packet asks the live-like question: keep the quarterly authorities independent, but let open trades carry until flat.","textPreview":"The independent-stitch packet was useful as a first annual inspection, but it could reset open trades at quarter boundaries. The continui...","textChars":257,"textLines":1,"bbox":[80,202,1040,78]}
+{"kind":"shape","id":"sh/qd4vmtwr","slide":5,"bbox":[92,332,230,172]}
+{"kind":"textbox","id":"sh/x4nap4r6","slide":5,"text":"Mean return","textPreview":"Mean return","textChars":11,"textLines":1,"bbox":[110,354,190,24]}
+{"kind":"textbox","id":"sh/8jqh0fep","slide":5,"text":"81.7%","textPreview":"81.7%","textChars":5,"textLines":1,"bbox":[110,392,190,34]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":5,"text":"independent stitch","textPreview":"independent stitch","textChars":18,"textLines":1,"bbox":[110,428,190,24]}
+{"kind":"textbox","id":"sh/q1orytsv","slide":5,"text":"55.9%","textPreview":"55.9%","textChars":5,"textLines":1,"bbox":[110,462,190,38]}
+{"kind":"shape","id":"sh/4nap4r65","slide":5,"bbox":[370,332,230,172]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":5,"text":"Alpha vs basket","textPreview":"Alpha vs basket","textChars":15,"textLines":1,"bbox":[388,354,190,24]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":5,"text":"-9.8 pp","textPreview":"-9.8 pp","textChars":7,"textLines":1,"bbox":[388,392,190,34]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":5,"text":"independent stitch","textPreview":"independent stitch","textChars":18,"textLines":1,"bbox":[388,428,190,24]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":5,"text":"-35.6 pp","textPreview":"-35.6 pp","textChars":8,"textLines":1,"bbox":[388,462,190,38]}
+{"kind":"shape","id":"sh/twra5gbq","slide":5,"bbox":[648,332,230,172]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":5,"text":"Mean exposure","textPreview":"Mean exposure","textChars":13,"textLines":1,"bbox":[666,354,190,24]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":5,"text":"64.6%","textPreview":"64.6%","textChars":5,"textLines":1,"bbox":[666,392,190,34]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":5,"text":"independent stitch","textPreview":"independent stitch","textChars":18,"textLines":1,"bbox":[666,428,190,24]}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":5,"text":"40.3%","textPreview":"40.3%","textChars":5,"textLines":1,"bbox":[666,462,190,38]}
+{"kind":"shape","id":"sh/xkf6dcbu","slide":5,"bbox":[926,332,230,172]}
+{"kind":"textbox","id":"sh/4zidonyd","slide":5,"text":"Win years","textPreview":"Win years","textChars":9,"textLines":1,"bbox":[944,354,190,24]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":5,"text":"2/4","textPreview":"2/4","textChars":3,"textLines":1,"bbox":[944,392,190,34]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":5,"text":"independent stitch","textPreview":"independent stitch","textChars":18,"textLines":1,"bbox":[944,428,190,24]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":5,"text":"2/4","textPreview":"2/4","textChars":3,"textLines":1,"bbox":[944,462,190,38]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":5,"text":"448 symbol/boundary cases carried prior authority until flat, and 4 carried through annual as-of. The boundary mechanic materially changed the evidence.","textPreview":"448 symbol/boundary cases carried prior authority until flat, and 4 carried through annual as-of. The boundary mechanic materially change...","textChars":152,"textLines":1,"bbox":[110,582,1010,54]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":5,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/u52alm","slide":5,"text":""}
+{"kind":"slide","id":"sl/sxjdqn","slide":6,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":8}
+{"kind":"textbox","id":"sh/onyd0z61","slide":6,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/z25kb6xk","slide":6,"text":"The annual heatmap shows why this is not a simple feature-set win","textPreview":"The annual heatmap shows why this is not a simple feature-set win","textChars":65,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/6hcrmhk3","slide":6,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/ovahoza1","slide":6,"bbox":[790,214,360,284]}
+{"kind":"textbox","id":"sh/vahoza1g","slide":6,"text":"What matters","textPreview":"What matters","textChars":12,"textLines":1,"bbox":[822,242,260,32]}
+{"kind":"shape","id":"sh/6tovahoz","slide":6,"bbox":[824,312,8,8]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":6,"text":"2020 remains punishing because basket hold returned about 227%.","textPreview":"2020 remains punishing because basket hold returned about 227%.","textChars":63,"textLines":1,"bbox":[846,302,264,50]}
+{"kind":"shape","id":"sh/o7qpg3ex","slide":6,"bbox":[824,356,8,8]}
+{"kind":"textbox","id":"sh/q5o7qpg3","slide":6,"text":"2022 rewards staying out of a falling high-beta basket.","textPreview":"2022 rewards staying out of a falling high-beta basket.","textChars":55,"textLines":1,"bbox":[846,346,264,50]}
+{"kind":"shape","id":"sh/jqh0fepk","slide":6,"bbox":[824,400,8,8]}
+{"kind":"textbox","id":"sh/8bat47y1","slide":6,"text":"2024 is the clean positive clue for risk-aware workhorse continuation.","textPreview":"2024 is the clean positive clue for risk-aware workhorse continuation.","textChars":70,"textLines":1,"bbox":[846,390,264,50]}
+{"kind":"shape","id":"sh/1w7mp0bi","slide":6,"bbox":[824,444,8,8]}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":6,"text":"New momentum feature sets did not become the aggregate default.","textPreview":"New momentum feature sets did not become the aggregate default.","textChars":63,"textLines":1,"bbox":[846,434,264,50]}
+{"kind":"textbox","id":"sh/j2t83itg","slide":6,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"image","id":"im/wb2hwfyx","slide":6,"name":"","alt":"Alpha heatmap versus equal-weight basket hold","bbox":[44,178,690,486]}
+{"kind":"notes","id":"nt/sxjdqn","slide":6,"text":""}
+{"kind":"slide","id":"sl/qw9u7y","slide":7,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":24}
+{"kind":"textbox","id":"sh/4byhgn29","slide":7,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":7,"text":"The best lane still tells a mixed window-by-window story","textPreview":"The best lane still tells a mixed window-by-window story","textChars":56,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/m58z25kb","slide":7,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/t83itgfm","slide":7,"bbox":[86,220,242,240]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":7,"text":"2019","textPreview":"2019","textChars":4,"textLines":1,"bbox":[108,244,180,38]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":7,"text":"-56.2 pp","textPreview":"-56.2 pp","textChars":8,"textLines":1,"bbox":[108,306,190,44]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":7,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[110,356,170,24]}
+{"kind":"textbox","id":"sh/tgfmlkjm","slide":7,"text":"strategy 2.2%","textPreview":"strategy 2.2%","textChars":13,"textLines":1,"bbox":[110,402,170,24]}
+{"kind":"textbox","id":"sh/4vmtwra5","slide":7,"text":"basket 58.4%","textPreview":"basket 58.4%","textChars":12,"textLines":1,"bbox":[110,430,170,24]}
+{"kind":"shape","id":"sh/i5sneloj","slide":7,"bbox":[372,220,242,240]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":7,"text":"2020","textPreview":"2020","textChars":4,"textLines":1,"bbox":[394,244,180,38]}
+{"kind":"textbox","id":"sh/0bi9s36h","slide":7,"text":"-121.3 pp","textPreview":"-121.3 pp","textChars":9,"textLines":1,"bbox":[394,306,190,44]}
+{"kind":"textbox","id":"sh/pwb2hwfy","slide":7,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[396,356,170,24]}
+{"kind":"textbox","id":"sh/ed8v6psf","slide":7,"text":"strategy 106.0%","textPreview":"strategy 106.0%","textChars":15,"textLines":1,"bbox":[396,402,170,24]}
+{"kind":"textbox","id":"sh/7y1kre1w","slide":7,"text":"basket 227.3%","textPreview":"basket 227.3%","textChars":13,"textLines":1,"bbox":[396,430,170,24]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":7,"bbox":[658,220,242,240]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":7,"text":"2022","textPreview":"2022","textChars":4,"textLines":1,"bbox":[680,244,180,38]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":7,"text":"+30.4 pp","textPreview":"+30.4 pp","textChars":8,"textLines":1,"bbox":[680,306,190,44]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":7,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[682,356,170,24]}
+{"kind":"textbox","id":"sh/ji5snelo","slide":7,"text":"strategy -22.6%","textPreview":"strategy -22.6%","textChars":15,"textLines":1,"bbox":[682,402,170,24]}
+{"kind":"textbox","id":"sh/uxc3ylc7","slide":7,"text":"basket -53.0%","textPreview":"basket -53.0%","textChars":13,"textLines":1,"bbox":[682,430,170,24]}
+{"kind":"shape","id":"sh/1kre1w7m","slide":7,"bbox":[944,220,242,240]}
+{"kind":"textbox","id":"sh/c3ylc7u5","slide":7,"text":"2024","textPreview":"2024","textChars":4,"textLines":1,"bbox":[966,244,180,38]}
+{"kind":"textbox","id":"sh/j6tovaho","slide":7,"text":"+4.7 pp","textPreview":"+4.7 pp","textChars":7,"textLines":1,"bbox":[966,306,190,44]}
+{"kind":"textbox","id":"sh/ulwval87","slide":7,"text":"alpha vs basket","textPreview":"alpha vs basket","textChars":15,"textLines":1,"bbox":[968,356,170,24]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":7,"text":"strategy 138.1%","textPreview":"strategy 138.1%","textChars":15,"textLines":1,"bbox":[968,402,170,24]}
+{"kind":"textbox","id":"sh/crmhk3q5","slide":7,"text":"basket 133.5%","textPreview":"basket 133.5%","textChars":13,"textLines":1,"bbox":[968,430,170,24]}
+{"kind":"textbox","id":"sh/j2t83itg","slide":7,"text":"Annual windows reveal a useful profile: strong 2024 participation and decent 2022 defense, but still serious undercapture in 2019 and 2020 high-beta upside.","textPreview":"Annual windows reveal a useful profile: strong 2024 participation and decent 2022 defense, but still serious undercapture in 2019 and 202...","textChars":156,"textLines":1,"bbox":[118,570,1010,56]}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":7,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/qw9u7y","slide":7,"text":""}
+{"kind":"slide","id":"sl/m14ndp","slide":8,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":5}
+{"kind":"textbox","id":"sh/2hwfyxob","slide":8,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/94fu18jq","slide":8,"text":"Exposure helps, but simply being long more is not the whole answer","textPreview":"Exposure helps, but simply being long more is not the whole answer","textChars":66,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/kjm1cfa9","slide":8,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/2p8nqxs7","slide":8,"bbox":[828,238,330,256]}
+{"kind":"textbox","id":"sh/9gr2p8nq","slide":8,"text":"Readout","textPreview":"Readout","textChars":7,"textLines":1,"bbox":[858,268,240,32]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":8,"text":"Continuation generally lifts exposure, and the better lanes cluster at moderate-to-high participation. But many high-exposure points are still deeply negative versus basket hold, so timing and state discrimination still matter.","textPreview":"Continuation generally lifts exposure, and the better lanes cluster at moderate-to-high participation. But many high-exposure points are ...","textChars":227,"textLines":1,"bbox":[858,326,260,118]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":8,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"image","id":"im/i5sneloj","slide":8,"name":"","alt":"Exposure versus basket-relative alpha scatter","bbox":[70,178,700,460]}
+{"kind":"notes","id":"nt/m14ndp","slide":8,"text":""}
+{"kind":"slide","id":"sl/586x2j","slide":9,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":7}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":9,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":9,"text":"The best lane beats in 2022 and 2024, but misses the big upside years","textPreview":"The best lane beats in 2022 and 2024, but misses the big upside years","textChars":69,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/90je9cvi","slide":9,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":9,"bbox":[846,226,306,292]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":9,"text":"What the chart adds","textPreview":"What the chart adds","textChars":19,"textLines":1,"bbox":[876,256,240,32]}
+{"kind":"shape","id":"sh/9s36hcrm","slide":9,"bbox":[878,328,8,8]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":9,"text":"In 2020, the benchmark was too strong for a timing layer to catch.","textPreview":"In 2020, the benchmark was too strong for a timing layer to catch.","textChars":66,"textLines":1,"bbox":[900,318,210,56]}
+{"kind":"shape","id":"sh/nih4byhg","slide":9,"bbox":[878,378,8,8]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":9,"text":"In 2022, the system's partial exposure was valuable.","textPreview":"In 2022, the system's partial exposure was valuable.","textChars":52,"textLines":1,"bbox":[900,368,210,56]}
+{"kind":"shape","id":"sh/ih4byhgn","slide":9,"bbox":[878,428,8,8]}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":9,"text":"In 2024, the same lane finally beat the high-beta basket while still trading selectively.","textPreview":"In 2024, the same lane finally beat the high-beta basket while still trading selectively.","textChars":89,"textLines":1,"bbox":[900,418,210,56]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":9,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"chart","id":"ch/idonyd0z","slide":9,"name":"","chartType":"bar","bbox":[88,210,690,378]}
+{"kind":"notes","id":"nt/586x2j","slide":9,"text":""}
+{"kind":"slide","id":"sl/q9gyas","slide":10,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":5}
+{"kind":"textbox","id":"sh/0z61032l","slide":10,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/7ed8bat4","slide":10,"text":"The authority map is cash-dominant, which explains part of the underparticipation","textPreview":"The authority map is cash-dominant, which explains part of the underparticipation","textChars":81,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/itgfmlkj","slide":10,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/0nuxc3yl","slide":10,"bbox":[812,228,338,268]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":10,"text":"Sanity check","textPreview":"Sanity check","textChars":12,"textLines":1,"bbox":[842,258,240,32]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":10,"text":"Across the full annual screen, no-trade remains the dominant selected authority in many asset-state cells. That is philosophically clean for a specialist, but it also means missed upside is expected unless the favorable states are timely and persistent.","textPreview":"Across the full annual screen, no-trade remains the dominant selected authority in many asset-state cells. That is philosophically clean ...","textChars":253,"textLines":1,"bbox":[842,320,270,128]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":10,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"image","id":"im/w3m94fu1","slide":10,"name":"","alt":"Selected strategy family by asset and PCA state","bbox":[62,188,700,430]}
+{"kind":"notes","id":"nt/q9gyas","slide":10,"text":""}
+{"kind":"slide","id":"sl/6a0fvy","slide":11,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":7}
+{"kind":"textbox","id":"sh/sneloj2t","slide":11,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":11,"text":"Representative tapes show both the promise and the weakness","textPreview":"Representative tapes show both the promise and the weakness","textChars":59,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":11,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/szqtcj6t","slide":11,"bbox":[866,210,300,336]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":11,"text":"Visual audit","textPreview":"Visual audit","textChars":12,"textLines":1,"bbox":[896,240,220,32]}
+{"kind":"shape","id":"sh/at47y1kr","slide":11,"bbox":[898,316,8,8]}
+{"kind":"textbox","id":"sh/loj2t83i","slide":11,"text":"AMD shows churn and missed/stopped participation.","textPreview":"AMD shows churn and missed/stopped participation.","textChars":49,"textLines":1,"bbox":[920,306,214,60]}
+{"kind":"shape","id":"sh/w3m94fu1","slide":11,"bbox":[898,370,8,8]}
+{"kind":"textbox","id":"sh/udg7adsj","slide":11,"text":"NVDA, TSLA, and MSTR show the lane can ride substantial trends.","textPreview":"NVDA, TSLA, and MSTR show the lane can ride substantial trends.","textChars":63,"textLines":1,"bbox":[920,360,214,60]}
+{"kind":"shape","id":"sh/nyd0z610","slide":11,"bbox":[898,424,8,8]}
+{"kind":"textbox","id":"sh/cj6tovah","slide":11,"text":"Open exit signals at year end should be inspected in the next tape audit.","textPreview":"Open exit signals at year end should be inspected in the next tape audit.","textChars":73,"textLines":1,"bbox":[920,414,214,60]}
+{"kind":"textbox","id":"sh/54zidony","slide":11,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"image","id":"im/obm58z25","slide":11,"name":"","alt":"Representative or contact-sheet trade tapes for risk-aware workhorse continuation","bbox":[42,172,780,500]}
+{"kind":"notes","id":"nt/6a0fvy","slide":11,"text":""}
+{"kind":"slide","id":"sl/zzsbx4","slide":12,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":14}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":12,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":12,"text":"The next narrow screen should reopen strategy diversity carefully","textPreview":"The next narrow screen should reopen strategy diversity carefully","textChars":65,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/fepkzupw","slide":12,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/4r65wjud","slide":12,"bbox":[86,210,470,286]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":12,"bbox":[676,210,470,286]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":12,"text":"Hold fixed","textPreview":"Hold fixed","textChars":10,"textLines":1,"bbox":[122,244,320,34]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":12,"bbox":[124,320,8,8]}
+{"kind":"textbox","id":"sh/4fu18jqh","slide":12,"text":"Context: hb_risk_aware_18.","textPreview":"Context: hb_risk_aware_18.","textChars":26,"textLines":1,"bbox":[146,310,338,46]}
+{"kind":"shape","id":"sh/x0nuxc3y","slide":12,"bbox":[124,360,8,8]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":12,"text":"Feature control: workhorse_enriched.","textPreview":"Feature control: workhorse_enriched.","textChars":36,"textLines":1,"bbox":[146,350,338,46]}
+{"kind":"shape","id":"sh/szqtcj6t","slide":12,"bbox":[124,400,8,8]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":12,"text":"Replay: quarter_continuity_replay plus state-switch continuation.","textPreview":"Replay: quarter_continuity_replay plus state-switch continuation.","textChars":65,"textLines":1,"bbox":[146,390,338,46]}
+{"kind":"shape","id":"sh/at47y1kr","slide":12,"bbox":[124,440,8,8]}
+{"kind":"textbox","id":"sh/l87ed8ba","slide":12,"text":"Benchmark: equal-weight high-beta basket hold.","textPreview":"Benchmark: equal-weight high-beta basket hold.","textChars":46,"textLines":1,"bbox":[146,430,338,46]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":12,"text":"Vary first","textPreview":"Vary first","textChars":10,"textLines":1,"bbox":[712,244,320,34]}
+{"kind":"shape","id":"sh/32lszqtc","slide":12,"bbox":[714,320,8,8]}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":12,"text":"EMA-only momentum control.","textPreview":"EMA-only momentum control.","textChars":26,"textLines":1,"bbox":[736,310,338,46]}
+{"kind":"shape","id":"sh/lwval87e","slide":12,"bbox":[714,360,8,8]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":12,"text":"Trend plus breakout expansion.","textPreview":"Trend plus breakout expansion.","textChars":30,"textLines":1,"bbox":[736,350,338,46]}
+{"kind":"shape","id":"sh/sji5snel","slide":12,"bbox":[714,400,8,8]}
+{"kind":"textbox","id":"sh/h4byhgn2","slide":12,"text":"Mean-reversion diagnostic pool.","textPreview":"Mean-reversion diagnostic pool.","textChars":31,"textLines":1,"bbox":[736,390,338,46]}
+{"kind":"shape","id":"sh/adsji5sn","slide":12,"bbox":[714,440,8,8]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":12,"text":"Classical full reopened pool.","textPreview":"Classical full reopened pool.","textChars":29,"textLines":1,"bbox":[736,430,338,46]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":12,"text":"The cleanest next question is whether the strategy pool was too narrow under the now-correct annual continuity surface.","textPreview":"The cleanest next question is whether the strategy pool was too narrow under the now-correct annual continuity surface.","textChars":119,"textLines":1,"bbox":[122,584,1016,54]}
+{"kind":"textbox","id":"sh/lszqtcj6","slide":12,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/zzsbx4","slide":12,"text":""}
+{"kind":"slide","id":"sl/6m14ut","slide":13,"title":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textShapes":13}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":13,"text":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textPreview":"GEN5.3 MOMENTUM CONTEXT-SIZE SCREEN","textChars":35,"textLines":1,"bbox":[54,28,620,24]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":13,"text":"Feature sets should support the strategy question, not explode the grid","textPreview":"Feature sets should support the strategy question, not explode the grid","textChars":71,"textLines":1,"bbox":[54,66,1080,104]}
+{"kind":"shape","id":"sh/bm58z25k","slide":13,"bbox":[54,170,1172,1]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":13,"bbox":[86,226,306,260]}
+{"kind":"textbox","id":"sh/tgfmlkjm","slide":13,"text":"Control","textPreview":"Control","textChars":7,"textLines":1,"bbox":[110,252,246,30]}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":13,"text":"workhorse_enriched","textPreview":"workhorse_enriched","textChars":18,"textLines":1,"bbox":[110,308,246,30]}
+{"kind":"textbox","id":"sh/bat47y1k","slide":13,"text":"Keeps the best observed continuity lane intact.","textPreview":"Keeps the best observed continuity lane intact.","textChars":47,"textLines":1,"bbox":[110,368,238,86]}
+{"kind":"shape","id":"sh/4nap4r65","slide":13,"bbox":[446,226,306,260]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":13,"text":"Momentum challenger","textPreview":"Momentum challenger","textChars":19,"textLines":1,"bbox":[470,252,246,30]}
+{"kind":"textbox","id":"sh/9gr2p8nq","slide":13,"text":"momentum_plus_stress","textPreview":"momentum_plus_stress","textChars":20,"textLines":1,"bbox":[470,308,246,30]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":13,"text":"Checks whether richer trend and stress descriptors help once strategies are reopened.","textPreview":"Checks whether richer trend and stress descriptors help once strategies are reopened.","textChars":85,"textLines":1,"bbox":[470,368,238,86]}
+{"kind":"shape","id":"sh/ra5gbq1o","slide":13,"bbox":[806,226,306,260]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":13,"text":"New diagnostic","textPreview":"New diagnostic","textChars":14,"textLines":1,"bbox":[830,252,246,30]}
+{"kind":"textbox","id":"sh/94fu18jq","slide":13,"text":"reversion_breakout_context","textPreview":"reversion_breakout_context","textChars":26,"textLines":1,"bbox":[830,308,246,30]}
+{"kind":"textbox","id":"sh/kjm1cfa9","slide":13,"text":"Adds range location, volatility compression, stretch, chop, impulse, and recovery cues for non-EMA families.","textPreview":"Adds range location, volatility compression, stretch, chop, impulse, and recovery cues for non-EMA families.","textChars":108,"textLines":1,"bbox":[830,368,238,86]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":13,"text":"If the reopened strategy pools do not help under these feature sets, the next problem is probably state timing/exposure design rather than missing mean-reversion or breakout families.","textPreview":"If the reopened strategy pools do not help under these feature sets, the next problem is probably state timing/exposure design rather tha...","textChars":183,"textLines":1,"bbox":[116,574,1020,58]}
+{"kind":"textbox","id":"sh/2hwfyxob","slide":13,"text":"Research/inspection only. Not allocation evidence or live-advice behavior.","textPreview":"Research/inspection only. Not allocation evidence or live-advice behavior.","textChars":74,"textLines":1,"bbox":[54,680,1172,22]}
+{"kind":"notes","id":"nt/6m14ut","slide":13,"text":""}

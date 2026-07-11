@@ -92,3 +92,31 @@ Interpretation:
 ## Recommended Next Slice
 
 Use `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation` as the near-term control lane, but use the continuity packet as the valid annual baseline. Audit full trade tapes for why `2022` and `2024` still work better than `2019` and `2020`, then test participation improvements inside this narrower control lane rather than widening the grid immediately.
+
+## Next Narrow Strategy-Reopening Screen
+
+After the continuity rerun, the cleanest next question is not whether annual windows work. They do. The cleaner question is whether the EMA-only momentum-specialist pool was too narrow once the annual continuity surface gives us enough OOS behavior to judge.
+
+Hold fixed:
+
+- Context: `hb_risk_aware_18`.
+- Feature control: `workhorse_enriched`.
+- Replay: `quarter_continuity_replay` plus `state_switch_continuation`.
+- Live basket: `AMD,NVDA,TSLA,MSTR,AVGO`.
+- Benchmark: equal-weight buy-and-hold of the exact live basket.
+- Annual windows: the same continuity windows unless the operator explicitly expands them.
+
+Vary first:
+
+- `ema_only_momentum`: current control pool, `ema_cross`, `ema_trend`, `no_trade`, and `no_trade_exit_immediate`.
+- `trend_breakout`: adds upside participation families such as `breakout`, `vol_expansion_breakout`, `donchian_breakout_vol_expand`, and `pullback_in_uptrend`.
+- `mean_reversion_only`: diagnostic pool for `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, and `zret_mr` plus no-trade variants.
+- `classical_full`: broad reopened pool with trend, breakout, mean reversion, and no-trade variants.
+
+Feature sets should support that question without exploding the grid:
+
+- Keep `workhorse_enriched` as the control because it won the continuity screen.
+- Keep `momentum_plus_stress` as the strongest existing challenger conceptually.
+- Add a small `reversion_breakout_context` feature set only if the reopened strategy pools need it; this should emphasize range location, volatility compression/expansion, distance from moving averages, choppiness, drawdown/recovery, and return impulse.
+
+Do not retest every basket yet. If a broader strategy pool improves the fixed `hb_risk_aware_18` control lane, then the follow-up screen can hold the winning strategy pool and feature set fixed while varying context size/composition again.

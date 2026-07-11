@@ -387,3 +387,30 @@ Readout:
 Interpretation:
 
 The annual-window idea still stands, but the independent-stitch packet was too optimistic for live-like interpretation. Going forward, annual alpha-oriented screens should use `quarter_continuity_replay` unless we explicitly decide to lengthen the authority duration itself. The narrower conclusion is: risk-aware context plus workhorse features plus continuation replay remains the control lane, but it is not close enough to benchmark hold to justify widening the strategy grid yet. The next useful work is trade-tape diagnosis of participation timing and boundary behavior inside this continuity replay surface.
+
+## Strategy-Reopening Plan
+
+The continuity packet turns the next question from "are annual windows useful?" into "was the EMA-only strategy pool too narrow?" The next screen should hold the best continuity lane fixed and vary the strategy pool before reopening basket/context size again.
+
+Fixed control:
+
+- context: `hb_risk_aware_18`;
+- feature control: `workhorse_enriched`;
+- replay: `quarter_continuity_replay` plus `state_switch_continuation`;
+- live basket: `AMD,NVDA,TSLA,MSTR,AVGO`;
+- benchmark: equal-weight live-basket buy-and-hold.
+
+Strategy pools to test:
+
+- `ema_only_momentum`: current control pool.
+- `trend_breakout`: EMA trend/cross plus breakout, volatility-expansion breakout, Donchian-style breakout, and pullback-in-uptrend families.
+- `mean_reversion_only`: Bollinger, RSI, and z-return mean-reversion families as a diagnostic.
+- `classical_full`: all implemented classical families plus no-trade variants.
+
+Feature-set stance:
+
+- Keep `workhorse_enriched` as the control.
+- Include `momentum_plus_stress` as the strongest existing challenger.
+- Add `reversion_breakout_context` only if needed for the reopened non-EMA families; it should describe range location, stretch, compression/expansion, chop, recovery, and return impulse.
+
+If strategy diversity helps under the fixed control context, the next follow-up should vary context size/composition using the winning strategy pool and feature set. If strategy diversity does not help, the likely limiting factor is state timing/exposure design rather than missing strategy families.

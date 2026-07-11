@@ -12,17 +12,25 @@ const outputPptx = path.join(repoRoot, "presentations", "gen5_3_momentum_context
 const previewDir = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen_slides");
 const montagePath = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen_montage.webp");
 const inspectPath = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen.pptx.inspect.ndjson");
-const resultDir = path.join(
+const independentResultDir = path.join(
   repoRoot,
   "runs",
   "research_workbench",
   "gen53_momentum_context_size",
   "g53_momctx_20260710ctxsize",
 );
+const resultDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_20260711continuity",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
   aggregate: path.join(resultDir, "momentum_context_size_aggregate.csv"),
+  continuity: path.join(resultDir, "momentum_context_size_continuity.csv"),
   taxonomy: path.join(resultDir, "momentum_context_size_feature_taxonomy.csv"),
   report: path.join(resultDir, "momentum_context_size_report.md"),
   heatmap: path.join(resultDir, "momentum_context_size_alpha_heatmap.png"),
@@ -31,6 +39,11 @@ const resultPaths = {
   family: path.join(resultDir, "momentum_context_size_selection_family_heatmap.png"),
   tapes: path.join(resultDir, "momentum_context_size_trade_tape_contact_sheet.png"),
   representativeTapes: path.join(resultDir, "momentum_context_size_representative_trade_tapes.png"),
+};
+
+const independentPaths = {
+  summary: path.join(independentResultDir, "momentum_context_size_summary.csv"),
+  aggregate: path.join(independentResultDir, "momentum_context_size_aggregate.csv"),
 };
 
 const W = 1280;
@@ -105,6 +118,24 @@ function pp(value, digits = 1) {
   return Number.isFinite(x) ? `${x >= 0 ? "+" : ""}${(100 * x).toFixed(digits)} pp` : "NA";
 }
 
+function activeBasketReturn(row) {
+  return row?.active_equal_buy_hold_return ?? row?.active_equal_return ?? "";
+}
+
+function sameControlLane(row) {
+  return row.context_id === "hb_risk_aware_18" &&
+    row.feature_set_id === "workhorse_enriched" &&
+    row.entry_replay_semantics === "state_switch_continuation";
+}
+
+function countBy(rows, key) {
+  return rows.reduce((acc, row) => {
+    const value = row[key] || "missing";
+    acc[value] = (acc[value] ?? 0) + 1;
+    return acc;
+  }, {});
+}
+
 function text(slide, value, position, style = {}) {
   const shape = slide.shapes.add({
     geometry: "textbox",
@@ -163,6 +194,17 @@ async function image(slide, filePath, position, alt) {
   });
 }
 
+async function imageWithFallback(slide, filePaths, position, alt) {
+  for (const filePath of filePaths) {
+    try {
+      await fs.access(filePath);
+      return image(slide, filePath, position, alt);
+    } catch {
+    }
+  }
+  throw new Error(`None of the requested image assets exist: ${filePaths.join(", ")}`);
+}
+
 function metric(slide, label, value, x, y, w, color = colors.ink) {
   rect(slide, { left: x, top: y, width: w, height: 112 }, colors.soft, colors.rule);
   text(slide, value, { left: x + 16, top: y + 18, width: w - 32, height: 46 }, { fontSize: 34, bold: true, color, alignment: "center" });
@@ -215,21 +257,25 @@ async function createDeck() {
   const deck = Presentation.create({ slideSize: { width: W, height: H } });
   const aggregate = await readCsv(resultPaths.aggregate);
   const summary = await readCsv(resultPaths.summary);
+  const continuity = await readCsv(resultPaths.continuity);
+  const independentAggregate = await readCsv(independentPaths.aggregate);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
-  const best2019 = summary.find((x) => x.context_id === "hb_risk_aware_18" && x.feature_set_id === "workhorse_enriched" && x.entry_replay_semantics === "state_switch_continuation" && x.window_id === "2019Y_asof_20191231");
-  const best2020 = summary.find((x) => x.context_id === "hb_risk_aware_18" && x.feature_set_id === "workhorse_enriched" && x.entry_replay_semantics === "state_switch_continuation" && x.window_id === "2020Y_asof_20201231");
-  const best2022 = summary.find((x) => x.context_id === "hb_risk_aware_18" && x.feature_set_id === "workhorse_enriched" && x.entry_replay_semantics === "state_switch_continuation" && x.window_id === "2022Y_asof_20221231");
-  const best2024 = summary.find((x) => x.context_id === "hb_risk_aware_18" && x.feature_set_id === "workhorse_enriched" && x.entry_replay_semantics === "state_switch_continuation" && x.window_id === "2024Y_asof_20241231");
+  const independentControl = independentAggregate.find(sameControlLane);
+  const continuityCounts = countBy(continuity, "continuity_mode");
+  const best2019 = summary.find((x) => sameControlLane(x) && x.window_id === "2019Y_asof_20191231");
+  const best2020 = summary.find((x) => sameControlLane(x) && x.window_id === "2020Y_asof_20201231");
+  const best2022 = summary.find((x) => sameControlLane(x) && x.window_id === "2022Y_asof_20221231");
+  const best2024 = summary.find((x) => sameControlLane(x) && x.window_id === "2024Y_asof_20241231");
 
   {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
     text(slide, "GEN5.3 RESEARCH SCREEN", { left: 60, top: 60, width: 520, height: 26 }, { fontSize: 15, bold: true, color: colors.muted });
-    text(slide, "Annual windows made the momentum-specialist question sharper", { left: 60, top: 130, width: 900, height: 126 }, { fontSize: 54, bold: true });
-    text(slide, "The first one-year context-size screen suggests the best current lane is not the newest feature set. It is broader risk-aware context, the existing workhorse PCA surface, and continuation replay.", { left: 64, top: 310, width: 820, height: 92 }, { fontSize: 25, color: colors.muted });
+    text(slide, "Annual continuity replay made the next strategy question sharper", { left: 60, top: 130, width: 980, height: 126 }, { fontSize: 52, bold: true });
+    text(slide, "The corrected one-year screen keeps risk-aware context, the workhorse PCA surface, and continuation replay as the control lane. It also shows that the EMA-only pool may be too narrow to judge the broader hypothesis.", { left: 64, top: 310, width: 860, height: 104 }, { fontSize: 24, color: colors.muted });
     rect(slide, { left: 64, top: 512, width: 1030, height: 1 }, colors.rule, colors.rule);
-    text(slide, "Packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260710ctxsize", { left: 64, top: 542, width: 990, height: 28 }, { fontSize: 16, color: colors.muted });
+    text(slide, "Continuity packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity", { left: 64, top: 542, width: 1040, height: 28 }, { fontSize: 16, color: colors.muted });
     footer(slide);
   }
 
@@ -243,8 +289,8 @@ async function createDeck() {
     text(slide, "Before", { left: 732, top: 228, width: 160, height: 26 }, { fontSize: 22, bold: true, color: colors.red });
     text(slide, "One OOS quarter. Faster, but low resolution for alpha and trade behavior.", { left: 732, top: 262, width: 350, height: 34 }, { fontSize: 18, color: colors.muted });
     text(slide, "Now", { left: 732, top: 380, width: 160, height: 26 }, { fontSize: 22, bold: true, color: colors.green });
-    text(slide, "Four independent quarterly TRAIN authorities stitched into a one-year OOS/accounting window.", { left: 732, top: 416, width: 350, height: 52 }, { fontSize: 18, color: colors.muted });
-    text(slide, "This keeps the leakage boundary while making each condition easier to judge.", { left: 108, top: 582, width: 1040, height: 44 }, { fontSize: 28, bold: true, alignment: "center" });
+    text(slide, "Four independent quarterly TRAIN authorities replayed across one year, with open trades carrying until flat.", { left: 732, top: 416, width: 350, height: 70 }, { fontSize: 18, color: colors.muted });
+    text(slide, "This keeps the leakage boundary and avoids artificial quarter-end trade resets.", { left: 108, top: 582, width: 1040, height: 44 }, { fontSize: 28, bold: true, alignment: "center" });
     footer(slide);
   }
 
@@ -282,6 +328,26 @@ async function createDeck() {
   {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
+    title(slide, "Continuity replay corrected the optimistic annual readout");
+    text(slide, "The independent-stitch packet was useful as a first annual inspection, but it could reset open trades at quarter boundaries. The continuity packet asks the live-like question: keep the quarterly authorities independent, but let open trades carry until flat.", { left: 80, top: 202, width: 1040, height: 78 }, { fontSize: 22 });
+    const labels = ["Mean return", "Alpha vs basket", "Mean exposure", "Win years"];
+    const oldVals = [pct(independentControl.mean_total_return), pp(independentControl.mean_alpha_vs_active_equal), pct(independentControl.mean_exposure), `${independentControl.windows_beating_basket}/4`];
+    const newVals = [pct(best.mean_total_return), pp(best.mean_alpha_vs_active_equal), pct(best.mean_exposure), `${best.windows_beating_basket}/4`];
+    labels.forEach((label, index) => {
+      const x = 92 + index * 278;
+      rect(slide, { left: x, top: 332, width: 230, height: 172 }, colors.soft, colors.rule);
+      text(slide, label, { left: x + 18, top: 354, width: 190, height: 24 }, { fontSize: 18, bold: true, alignment: "center" });
+      text(slide, oldVals[index], { left: x + 18, top: 392, width: 190, height: 34 }, { fontSize: 25, color: colors.muted, alignment: "center" });
+      text(slide, "independent stitch", { left: x + 18, top: 428, width: 190, height: 24 }, { fontSize: 13, color: colors.muted, alignment: "center" });
+      text(slide, newVals[index], { left: x + 18, top: 462, width: 190, height: 38 }, { fontSize: 29, bold: true, color: index === 3 ? colors.ink : colors.red, alignment: "center" });
+    });
+    text(slide, `${continuityCounts.prior_authority_until_flat_then_active_quarter ?? 0} symbol/boundary cases carried prior authority until flat, and ${continuityCounts.prior_authority_open_trade_carry_through_as_of ?? 0} carried through annual as-of. The boundary mechanic materially changed the evidence.`, { left: 110, top: 582, width: 1010, height: 54 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
     title(slide, "The annual heatmap shows why this is not a simple feature-set win");
     await image(slide, resultPaths.heatmap, { left: 44, top: 178, width: 690, height: 486 }, "Alpha heatmap versus equal-weight basket hold");
     rect(slide, { left: 790, top: 214, width: 360, height: 284 }, colors.soft, colors.rule);
@@ -300,10 +366,10 @@ async function createDeck() {
     slide.background.fill = "#FFFFFF";
     title(slide, "The best lane still tells a mixed window-by-window story");
     const years = [
-      ["2019", pp(best2019.alpha_vs_active_equal), pct(best2019.total_return), pct(best2019.active_equal_return)],
-      ["2020", pp(best2020.alpha_vs_active_equal), pct(best2020.total_return), pct(best2020.active_equal_return)],
-      ["2022", pp(best2022.alpha_vs_active_equal), pct(best2022.total_return), pct(best2022.active_equal_return)],
-      ["2024", pp(best2024.alpha_vs_active_equal), pct(best2024.total_return), pct(best2024.active_equal_return)],
+      ["2019", pp(best2019.alpha_vs_active_equal), pct(best2019.total_return), pct(activeBasketReturn(best2019))],
+      ["2020", pp(best2020.alpha_vs_active_equal), pct(best2020.total_return), pct(activeBasketReturn(best2020))],
+      ["2022", pp(best2022.alpha_vs_active_equal), pct(best2022.total_return), pct(activeBasketReturn(best2022))],
+      ["2024", pp(best2024.alpha_vs_active_equal), pct(best2024.total_return), pct(activeBasketReturn(best2024))],
     ];
     years.forEach(([year, alpha, ret, hold], index) => {
       const x = 86 + index * 286;
@@ -344,7 +410,7 @@ async function createDeck() {
         },
         {
           name: "Basket hold",
-          values: [num(best2019.active_equal_return) * 100, num(best2020.active_equal_return) * 100, num(best2022.active_equal_return) * 100, num(best2024.active_equal_return) * 100],
+          values: [num(activeBasketReturn(best2019)) * 100, num(activeBasketReturn(best2020)) * 100, num(activeBasketReturn(best2022)) * 100, num(activeBasketReturn(best2024)) * 100],
           fill: colors.ink,
         },
       ],
@@ -379,7 +445,7 @@ async function createDeck() {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
     title(slide, "Representative tapes show both the promise and the weakness");
-    await image(slide, resultPaths.representativeTapes, { left: 42, top: 172, width: 780, height: 500 }, "Representative trade tapes for risk-aware workhorse 2024 continuation");
+    await imageWithFallback(slide, [resultPaths.representativeTapes, resultPaths.tapes], { left: 42, top: 172, width: 780, height: 500 }, "Representative or contact-sheet trade tapes for risk-aware workhorse continuation");
     rect(slide, { left: 866, top: 210, width: 300, height: 336 }, colors.soft, colors.rule);
     text(slide, "Visual audit", { left: 896, top: 240, width: 220, height: 32 }, { fontSize: 26, bold: true });
     bullets(slide, [
@@ -393,22 +459,44 @@ async function createDeck() {
   {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
-    title(slide, "The annual screen changes the next research question");
+    title(slide, "The next narrow screen should reopen strategy diversity carefully");
     rect(slide, { left: 86, top: 210, width: 470, height: 286 }, colors.soft, colors.rule);
     rect(slide, { left: 676, top: 210, width: 470, height: 286 }, colors.soft, colors.rule);
-    text(slide, "Do not chase yet", { left: 122, top: 244, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.red });
+    text(slide, "Hold fixed", { left: 122, top: 244, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.red });
     bullets(slide, [
-      "Do not promote the new momentum feature sets as defaults.",
-      "Do not treat positive 2024 alpha as allocation evidence.",
-      "Do not widen the strategy grid until the state layer looks cleaner.",
-    ], { left: 124, top: 310, width: 360, height: 138 }, { fontSize: 18, lineHeight: 44, dotColor: colors.red });
-    text(slide, "Do probe next", { left: 712, top: 244, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.green });
+      "Context: hb_risk_aware_18.",
+      "Feature control: workhorse_enriched.",
+      "Replay: quarter_continuity_replay plus state-switch continuation.",
+      "Benchmark: equal-weight high-beta basket hold.",
+    ], { left: 124, top: 310, width: 360, height: 168 }, { fontSize: 18, lineHeight: 40, dotColor: colors.red });
+    text(slide, "Vary first", { left: 712, top: 244, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.green });
     bullets(slide, [
-      "Use risk-aware context plus workhorse as the near-term control.",
-      "Audit full trade tapes for 2024 and missed upside in 2020.",
-      "Test whether annual windows need true cross-quarter continuity, not only stitched quarterly authorities.",
-    ], { left: 714, top: 310, width: 360, height: 138 }, { fontSize: 18, lineHeight: 44, dotColor: colors.green });
-    text(slide, "The core lesson is methodological: longer OOS windows are now the default for alpha-oriented screens because sparse one-quarter results were too easy to overread.", { left: 122, top: 584, width: 1016, height: 54 }, { fontSize: 23, bold: true, alignment: "center" });
+      "EMA-only momentum control.",
+      "Trend plus breakout expansion.",
+      "Mean-reversion diagnostic pool.",
+      "Classical full reopened pool.",
+    ], { left: 714, top: 310, width: 360, height: 168 }, { fontSize: 18, lineHeight: 40, dotColor: colors.green });
+    text(slide, "The cleanest next question is whether the strategy pool was too narrow under the now-correct annual continuity surface.", { left: 122, top: 584, width: 1016, height: 54 }, { fontSize: 23, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Feature sets should support the strategy question, not explode the grid");
+    const cols = [
+      ["Control", "workhorse_enriched", "Keeps the best observed continuity lane intact."],
+      ["Momentum challenger", "momentum_plus_stress", "Checks whether richer trend and stress descriptors help once strategies are reopened."],
+      ["New diagnostic", "reversion_breakout_context", "Adds range location, volatility compression, stretch, chop, impulse, and recovery cues for non-EMA families."],
+    ];
+    cols.forEach(([head, id, body], index) => {
+      const x = 86 + index * 360;
+      rect(slide, { left: x, top: 226, width: 306, height: 260 }, colors.soft, colors.rule);
+      text(slide, head, { left: x + 24, top: 252, width: 246, height: 30 }, { fontSize: 24, bold: true });
+      text(slide, id, { left: x + 24, top: 308, width: 246, height: 30 }, { fontSize: 19, bold: true, color: colors.orange });
+      text(slide, body, { left: x + 24, top: 368, width: 238, height: 86 }, { fontSize: 18, color: colors.muted });
+    });
+    text(slide, "If the reopened strategy pools do not help under these feature sets, the next problem is probably state timing/exposure design rather than missing mean-reversion or breakout families.", { left: 116, top: 574, width: 1020, height: 58 }, { fontSize: 22, bold: true, alignment: "center" });
     footer(slide);
   }
 
