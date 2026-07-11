@@ -344,7 +344,7 @@ Wrapper:
 
 Purpose:
 
-The one-quarter feature-set slices were too sparse for judging alpha behavior. This screen therefore uses annual stitched OOS windows: four independent quarterly TRAIN-only authority packets are stitched into a one-year portfolio/accounting view. This keeps leakage discipline while giving each condition more time to show trading behavior.
+The one-quarter feature-set slices were too sparse for judging alpha behavior. This screen therefore uses annual OOS windows: four independent quarterly TRAIN-only authority packets are evaluated inside a one-year portfolio/accounting view. The first packet used independent quarter replay; the follow-up continuity packet keeps leakage discipline while allowing open trades to carry cleanly across quarter boundaries until flat.
 
 Design actually run:
 
@@ -356,7 +356,7 @@ Design actually run:
 - replay semantics: `fresh_signal_only` and `state_switch_continuation`;
 - strategy pool: `ema_cross,ema_trend,no_trade,no_trade_exit_immediate`;
 - annual windows: `2019`, `2020`, `2022`, and `2024`;
-- benchmark: equal-weight buy-and-hold of the same live basket over the same annual stitched OOS window.
+- benchmark: equal-weight buy-and-hold of the same live basket over the same annual OOS window.
 
 Readout:
 
@@ -365,3 +365,25 @@ The best aggregate lane was `hb_risk_aware_18 + workhorse_enriched + state_switc
 Interpretation:
 
 Annual windows are now the better default for alpha-oriented screens. The result keeps the broader risk-aware context thesis alive, but it does not promote the new momentum feature sets as defaults. The best current control lane is risk-aware context, the older workhorse PCA surface, and continuation replay. The next useful slice is not a wider grid yet; it is trade-tape and continuity inspection around why the best lane beats in `2022` and `2024` while still missing too much `2019` and `2020` upside.
+
+## Annual Continuity Replay Follow-Up
+
+Continuity packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/`
+
+Purpose:
+
+The first annual screen stitched four independent quarterly authority/replay chunks. That was useful for higher-resolution assessment, but it was not fully live-faithful because an open trade at a quarter boundary was not guaranteed to carry under its entry-quarter authority until exit. This follow-up reran the same screen with `quarter_continuity_replay`: quarterly authority fitting stays independent, but open trades remain locked to their entry-quarter authority until flat; only then does the currently active quarter's authority take over.
+
+Readout:
+
+- The same aggregate lane remained best: `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation`.
+- The result dropped from the independent-stitch readout of `81.7%` mean return and `-9.8 pp` mean alpha to `55.9%` mean return and `-35.6 pp` mean alpha.
+- Mean exposure for that lane dropped from `64.6%` to `40.3%`.
+- It still beat equal-weight basket hold in `2 / 4` annual windows.
+- The continuity audit recorded `448` symbol/boundary cases where prior authority carried until flat, `4` carried through annual as-of, and `981` handed off to next-quarter authority from quarter start.
+
+Interpretation:
+
+The annual-window idea still stands, but the independent-stitch packet was too optimistic for live-like interpretation. Going forward, annual alpha-oriented screens should use `quarter_continuity_replay` unless we explicitly decide to lengthen the authority duration itself. The narrower conclusion is: risk-aware context plus workhorse features plus continuation replay remains the control lane, but it is not close enough to benchmark hold to justify widening the strategy grid yet. The next useful work is trade-tape diagnosis of participation timing and boundary behavior inside this continuity replay surface.

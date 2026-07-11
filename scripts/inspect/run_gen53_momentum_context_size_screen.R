@@ -90,9 +90,18 @@ refresh <- g5_parse_bool_env(env_or("GEN5_GEN53_MOM_CTX_REFRESH", "false"), defa
 stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN53_MOM_CTX_STAMP", "20260710ctxsize"))
 output_dir <- file.path(repo_root, "runs", "research_workbench", "gen53_momentum_context_size", paste0("g53_momctx_", stamp))
 ensure_dir(output_dir)
+reuse_auth_root <- env_or("GEN5_GEN53_MOM_CTX_REUSE_AUTH_ROOT", "")
+if (nzchar(reuse_auth_root)) {
+  reuse_auth_root <- normalizePath(reuse_auth_root, winslash = "/", mustWork = FALSE)
+}
 
 selection_policies <- c("pooled_family_asset_variant")
 entry_replay_semantics <- c("fresh_signal_only", "state_switch_continuation")
+annual_replay_mode <- env_or("GEN5_GEN53_MOM_CTX_ANNUAL_REPLAY_MODE", "quarter_continuity_replay")
+annual_replay_choices <- c("quarter_independent_stitch", "quarter_continuity_replay")
+if (!annual_replay_mode %in% annual_replay_choices) {
+  g5_stop(paste0("GEN5_GEN53_MOM_CTX_ANNUAL_REPLAY_MODE must be one of: ", paste(annual_replay_choices, collapse = ",")))
+}
 min_train_state_rows <- 20L
 warmup_days <- 420L
 grid_n <- 3L
@@ -201,6 +210,7 @@ if (length(window_override)) {
 }
 assessment_quarters <- unique(unlist(lapply(windows$quarter_ids, split_csv), use.names = FALSE))
 data_floor <- as.Date(env_or("GEN5_GEN53_MOM_CTX_DATA_FLOOR", "2016-01-04"))
+score_cache <- new.env(parent = emptyenv())
 
 symbol_fit_path <- function(authority_dir, symbol) {
   file.path(authority_dir, "symbol_models", paste0(g5_standardize_symbol(symbol)[[1L]], "_fit.rds"))
@@ -277,6 +287,17 @@ read_full_authority_packet <- function(authority_dir) {
 }
 
 build_authority <- function(spec, bars, quarter_id, authority_dir) {
+  if (!isTRUE(refresh) && nzchar(reuse_auth_root)) {
+    reuse_dir <- file.path(reuse_auth_root, spec$screen_id, "auth", quarter_id)
+    if (file.exists(file.path(reuse_dir, "bridge_authority_contract.csv")) &&
+        file.exists(file.path(reuse_dir, "bridge_selected_states.csv")) &&
+        file.exists(file.path(reuse_dir, "bridge_train_state_performance.csv"))) {
+      message("Reuse authority from prior packet: ", spec$screen_id, " / ", quarter_id)
+      authority <- read_full_authority_packet(reuse_dir)
+      write_authority_packet(authority, authority_dir)
+      return(authority)
+    }
+  }
   if (!isTRUE(refresh) &&
       file.exists(file.path(authority_dir, "bridge_authority_contract.csv")) &&
       file.exists(file.path(authority_dir, "bridge_selected_states.csv")) &&
@@ -344,8 +365,26 @@ make_policy_authority <- function(authority, selection_policy) {
   out
 }
 
+score_authority_symbol_cached <- function(bars, authority, symbol, as_of_date, screen_id, cache_env = score_cache) {
+  contract <- authority$contract[1L, , drop = FALSE]
+  key <- paste(
+    screen_id,
+    as.character(contract$quarter_id[[1L]]),
+    if ("feature_set_id" %in% names(contract)) as.character(contract$feature_set_id[[1L]]) else "feature_set_unknown",
+    g5_standardize_symbol(symbol)[[1L]],
+    as.character(as.Date(as_of_date)),
+    sep = "|"
+  )
+  if (exists(key, envir = cache_env, inherits = FALSE)) {
+    return(get(key, envir = cache_env, inherits = FALSE))
+  }
+  scored <- g5_bridge_score_authority_symbol(bars, authority, symbol, as.Date(as_of_date))
+  assign(key, scored, envir = cache_env)
+  scored
+}
+
 replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semantics, lane_id, screen_id, window_id, feature_set_id) {
-  scored <- g5_bridge_score_authority_symbol(bars, authority, symbol, as_of_date)
+  scored <- score_authority_symbol_cached(bars, authority, symbol, as_of_date, screen_id)
   contract <- authority$contract[1L, , drop = FALSE]
   live_start <- as.Date(contract$live_start_date[[1L]])
   out <- g5_bridge_replay_symbol(
@@ -370,6 +409,7 @@ replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semanti
       out[[field]]$feature_set_id <- feature_set_id
       out[[field]]$selection_policy <- as.character(authority$contract$selection_policy[[1L]])
       out[[field]]$entry_replay_semantics <- entry_semantics
+      out[[field]]$annual_replay_mode <- "quarter_independent_stitch"
       out[[field]]$quarter_id <- as.character(contract$quarter_id[[1L]])
     }
   }
@@ -379,6 +419,160 @@ replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semanti
     drop = FALSE
   ]
   out
+}
+
+first_symbol_session_on_or_after <- function(bars, symbol, date, max_date) {
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  dates <- sort(unique(as.Date(bars$session_date[g5_standardize_symbol(bars$symbol) == symbol])))
+  dates <- dates[dates >= as.Date(date) & dates <= as.Date(max_date)]
+  if (length(dates)) dates[[1L]] else as.Date(max_date)
+}
+
+annotate_symbol_result <- function(out, authority, screen_id, window_id, lane_id, feature_set_id, entry_semantics, replay_mode) {
+  contract <- authority$contract[1L, , drop = FALSE]
+  for (field in c("replay", "replay_oos", "executions", "trades", "pending_actions")) {
+    if (is.data.frame(out[[field]]) && nrow(out[[field]])) {
+      out[[field]]$screen_id <- screen_id
+      out[[field]]$window_id <- window_id
+      out[[field]]$lane_id <- lane_id
+      out[[field]]$feature_set_id <- feature_set_id
+      out[[field]]$selection_policy <- as.character(contract$selection_policy[[1L]])
+      out[[field]]$entry_replay_semantics <- entry_semantics
+      out[[field]]$annual_replay_mode <- replay_mode
+    }
+  }
+  out
+}
+
+quarter_contract_bounds <- function(authority) {
+  contract <- authority$contract[1L, , drop = FALSE]
+  data.frame(
+    quarter_id = as.character(contract$quarter_id[[1L]]),
+    live_start_date = as.Date(contract$live_start_date[[1L]]),
+    live_end_date = as.Date(contract$live_end_date[[1L]]),
+    stringsAsFactors = FALSE
+  )
+}
+
+replay_symbol_annual_continuity <- function(bars, authorities, symbol, as_of_date, entry_semantics, lane_id, screen_id, window_id, feature_set_id) {
+  if (!length(authorities)) return(list(replay = data.frame(), replay_oos = data.frame(), executions = data.frame(), trades = data.frame(), pending_actions = data.frame(), latest = data.frame(), continuity = data.frame()))
+  bounds <- do.call(rbind, lapply(authorities, quarter_contract_bounds))
+  bounds <- bounds[order(bounds$live_start_date), , drop = FALSE]
+  authorities <- authorities[match(bounds$quarter_id, names(authorities))]
+  names(authorities) <- bounds$quarter_id
+  as_of_date <- as.Date(as_of_date)
+  annual_start <- bounds$live_start_date[[1L]]
+  segment_start <- annual_start
+  replay_rows <- list()
+  execution_rows <- list()
+  pending_rows <- list()
+  continuity_rows <- list()
+
+  while (segment_start <= as_of_date) {
+    active_idx <- which(bounds$live_end_date >= segment_start)
+    active_idx <- active_idx[active_idx >= 1L]
+    if (!length(active_idx)) break
+    i <- active_idx[[1L]]
+    authority <- authorities[[i]]
+    contract <- authority$contract[1L, , drop = FALSE]
+    quarter_id <- as.character(contract$quarter_id[[1L]])
+    quarter_end <- min(as.Date(contract$live_end_date[[1L]]), as_of_date)
+    if (segment_start > quarter_end && i < nrow(bounds)) {
+      segment_start <- max(segment_start, bounds$live_start_date[[i + 1L]])
+      next
+    }
+
+    next_start <- if (i < nrow(bounds)) bounds$live_start_date[[i + 1L]] else as.Date(NA)
+    honor_until <- if (!is.na(next_start)) {
+      first_symbol_session_on_or_after(bars, symbol, next_start, as_of_date)
+    } else {
+      as_of_date
+    }
+    scored <- score_authority_symbol_cached(bars, authority, symbol, as_of_date, screen_id)
+    result <- g5_bridge_replay_symbol(
+      bars,
+      symbol,
+      scored,
+      authority$selected_states,
+      contract,
+      allow_as_of_after_live_end = TRUE,
+      replay_start_date = segment_start,
+      entry_signal_start_date = segment_start,
+      entry_signal_end_date = quarter_end,
+      honor_pending_entry_execution_until = honor_until,
+      authority_role = paste0("gen53_momentum_context_size_continuity_", lane_id),
+      entry_replay_semantics = entry_semantics
+    )
+
+    if (i >= nrow(bounds) || is.na(next_start) || next_start > as_of_date) {
+      keep_replay <- result$replay[as.Date(result$replay$session_date) >= segment_start & as.Date(result$replay$session_date) <= as_of_date, , drop = FALSE]
+      keep_exec <- result$executions
+      replay_rows[[length(replay_rows) + 1L]] <- keep_replay
+      execution_rows[[length(execution_rows) + 1L]] <- keep_exec
+      pending_rows[[length(pending_rows) + 1L]] <- result$pending_actions
+      continuity_rows[[length(continuity_rows) + 1L]] <- data.frame(
+        symbol = g5_standardize_symbol(symbol)[[1L]],
+        authority_quarter_id = quarter_id,
+        next_quarter_id = NA_character_,
+        boundary_date = as.Date(NA),
+        continuity_mode = "final_authority_to_as_of",
+        current_authority_start_date = segment_start,
+        stringsAsFactors = FALSE
+      )
+      break
+    }
+
+    switch_date <- g5_bridge_first_flat_date_from_prior(result$replay, next_start)
+    if (is.na(switch_date)) {
+      keep_replay <- result$replay[as.Date(result$replay$session_date) >= segment_start & as.Date(result$replay$session_date) <= as_of_date, , drop = FALSE]
+      replay_rows[[length(replay_rows) + 1L]] <- keep_replay
+      execution_rows[[length(execution_rows) + 1L]] <- result$executions
+      pending_rows[[length(pending_rows) + 1L]] <- result$pending_actions
+      continuity_rows[[length(continuity_rows) + 1L]] <- data.frame(
+        symbol = g5_standardize_symbol(symbol)[[1L]],
+        authority_quarter_id = quarter_id,
+        next_quarter_id = bounds$quarter_id[[i + 1L]],
+        boundary_date = next_start,
+        continuity_mode = "prior_authority_open_trade_carry_through_as_of",
+        current_authority_start_date = as.Date(NA),
+        stringsAsFactors = FALSE
+      )
+      break
+    }
+
+    keep_replay <- result$replay[as.Date(result$replay$session_date) >= segment_start & as.Date(result$replay$session_date) < switch_date, , drop = FALSE]
+    keep_exec <- g5_bridge_previous_executions_through_switch(result$executions, switch_date)
+    replay_rows[[length(replay_rows) + 1L]] <- keep_replay
+    execution_rows[[length(execution_rows) + 1L]] <- keep_exec
+    continuity_rows[[length(continuity_rows) + 1L]] <- data.frame(
+      symbol = g5_standardize_symbol(symbol)[[1L]],
+      authority_quarter_id = quarter_id,
+      next_quarter_id = bounds$quarter_id[[i + 1L]],
+      boundary_date = next_start,
+      continuity_mode = if (switch_date > next_start) "prior_authority_until_flat_then_active_quarter" else "next_authority_from_quarter_start",
+      current_authority_start_date = switch_date,
+      stringsAsFactors = FALSE
+    )
+    segment_start <- switch_date
+  }
+
+  replay <- g5_wfa_bind_rows_fill(replay_rows)
+  executions <- g5_wfa_bind_rows_fill(execution_rows)
+  pending <- g5_wfa_bind_rows_fill(pending_rows)
+  if (is.data.frame(replay) && nrow(replay)) replay <- replay[order(as.Date(replay$session_date)), , drop = FALSE]
+  if (is.data.frame(executions) && nrow(executions)) executions <- executions[order(as.Date(executions$execution_date)), , drop = FALSE]
+  trades <- g5_bridge_trades_from_replay(replay, executions, as_of_date)
+  latest <- if (is.data.frame(replay) && nrow(replay)) replay[nrow(replay), , drop = FALSE] else data.frame()
+  out <- list(
+    replay = replay,
+    replay_oos = replay,
+    executions = executions,
+    trades = trades,
+    pending_actions = pending,
+    latest = latest,
+    continuity = g5_wfa_bind_rows_fill(continuity_rows)
+  )
+  annotate_symbol_result(out, authorities[[length(authorities)]], screen_id, window_id, lane_id, feature_set_id, entry_semantics, "quarter_continuity_replay")
 }
 
 combine_symbol_results <- function(pieces) {
@@ -402,12 +596,13 @@ combine_symbol_results <- function(pieces) {
   )
 }
 
-accounting_trade_table <- function(trades, symbol, lane_id, screen_id, window_id) {
+accounting_trade_table <- function(trades, symbol, lane_id, screen_id, window_id, replay_mode) {
   if (!is.data.frame(trades) || !nrow(trades)) return(trades)
   trades$trade_id <- paste(
     "gen53momctx",
     screen_id,
     window_id,
+    replay_mode,
     lane_id,
     g5_standardize_symbol(symbol)[[1L]],
     seq_len(nrow(trades)),
@@ -438,7 +633,7 @@ drawdown <- function(equity) {
   equity / cummax(equity) - 1
 }
 
-summarize_accounting <- function(screen_id, basket_archetype, context_id, context_label, context_recipe, feature_set_id, feature_set_label, window, lane_id, policy, semantics, accounting, initial_capital) {
+summarize_accounting <- function(screen_id, basket_archetype, context_id, context_label, context_recipe, feature_set_id, feature_set_label, window, lane_id, policy, semantics, replay_mode, accounting, initial_capital) {
   metrics <- g5_portfolio_poc_metrics(accounting$equity, initial_capital)
   baseline_metrics <- g5_portfolio_poc_baseline_metrics(accounting$baselines, initial_capital)
   active_baseline <- baseline_metrics[baseline_metrics$baseline_id == "active_equal_buy_hold", , drop = FALSE]
@@ -458,6 +653,7 @@ summarize_accounting <- function(screen_id, basket_archetype, context_id, contex
     lane_id = lane_id,
     selection_policy = policy,
     entry_replay_semantics = semantics,
+    annual_replay_mode = replay_mode,
     total_return = as.numeric(metrics$total_return[[1L]]),
     sharpe = as.numeric(metrics$sharpe[[1L]]),
     max_drawdown = as.numeric(metrics$max_drawdown[[1L]]),
@@ -571,7 +767,7 @@ write_alpha_heatmap <- function(summary, path) {
   }
   graphics::axis(1, at = seq_along(cols), labels = col_labels, las = 1, cex.axis = 0.86, col.axis = aesthetic$axis)
   graphics::axis(2, at = rev(seq_along(rows)), labels = rows, las = 1, cex.axis = 0.68, col.axis = aesthetic$axis)
-  graphics::mtext("Green means live-capital strategy beat equal-weight basket hold in the same annual stitched OOS window.", side = 1, line = 4.4, cex = 0.72, col = aesthetic$text)
+  graphics::mtext("Green means live-capital strategy beat equal-weight basket hold in the same annual OOS window.", side = 1, line = 4.4, cex = 0.72, col = aesthetic$text)
   invisible(path)
 }
 
@@ -774,20 +970,20 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     "- Selection policy: pooled-family asset-variant, held fixed so this first slice tests specialist participation rather than reopening selection-policy as a factor.",
     "- Replay semantics: fresh-signal-only versus state-switch continuation.",
     "- Accounting: true shared-account live-capital replay with dynamic equal-slot, cash-capped entries.",
-    "- Benchmark: equal-weight buy-and-hold of the exact live basket over the same annual stitched OOS window, plus SPY reference.",
-    "- Annual assessment shape: four independent quarterly TRAIN-only authority packets stitched into a one-year portfolio/accounting window. This improves OOS resolution versus one-quarter screens but is still a research-inspection surface, not final live continuity policy.",
+    "- Benchmark: equal-weight buy-and-hold of the exact live basket over the same annual OOS window, plus SPY reference.",
+    paste0("- Annual replay mode: `", annual_replay_mode, "`. `quarter_continuity_replay` keeps independent quarterly authority fitting, but lets an open trade remain locked to its entry-quarter authority until it exits; new entries then use the authority active at the flat date."),
     "",
     "## Run Spec",
     "",
-    md_table(run_spec, c("screen_id", "context_id", "feature_set_label", "basket_archetype", "symbols", "context_symbols", "window_id", "selection_policy", "entry_replay_semantics"), n = 36L),
+    md_table(run_spec, c("screen_id", "context_id", "feature_set_label", "basket_archetype", "symbols", "context_symbols", "window_id", "selection_policy", "entry_replay_semantics", "annual_replay_mode"), n = 36L),
     "",
     "## Live-Capital Summary",
     "",
-    md_table(printable, c("context_id", "feature_set_label", "window_id", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills", "max_drawdown")),
+    md_table(printable, c("context_id", "feature_set_label", "window_id", "entry_replay_semantics", "annual_replay_mode", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills", "max_drawdown")),
     "",
     "## Aggregate Readout",
     "",
-    md_table(agg, c("context_id", "feature_set_label", "entry_replay_semantics", "windows_tested", "windows_beating_basket", "mean_total_return", "mean_alpha_vs_active_equal", "mean_exposure", "worst_drawdown")),
+    md_table(agg, c("context_id", "feature_set_label", "entry_replay_semantics", "annual_replay_mode", "windows_tested", "windows_beating_basket", "mean_total_return", "mean_alpha_vs_active_equal", "mean_exposure", "worst_drawdown")),
     "",
     "## Visual Outputs",
     "",
@@ -797,12 +993,14 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     paste0("- Selection family heatmap: `", paths$selection_family_heatmap_png, "`"),
     paste0("- Trade tape contact sheet: `", paths$trade_tape_contact_sheet_png, "`"),
     paste0("- Representative timing tapes: `", paths$representative_trade_tapes_png, "`"),
+    paste0("- Continuity audit: `", paths$continuity_csv, "`"),
     paste0("- Feature taxonomy: `", paths$feature_taxonomy_csv, "`"),
     "",
     "## Guardrails",
     "",
     "- Authority is fit from TRAIN only for each quarter and basket.",
     "- OOS replay consumes frozen state maps and selected strategy authority.",
+    "- Cross-quarter continuity preserves open-trade exit ownership; it does not allow OOS information to refit, relabel, or reselect authority.",
     "- The screen is research/inspection only and does not change live advice behavior.",
     "- Performance is not accepted allocation evidence.",
     "- Mean-reversion, breakout, pullback, and SMA families are intentionally excluded from this EMA-only specialist probe."
@@ -822,6 +1020,7 @@ symbol_summary_rows <- list()
 summary_rows <- list()
 authority_rows <- list()
 packet_rows <- list()
+continuity_rows <- list()
 trade_tape_symbol_results <- list()
 
 message("Gen5.3 momentum context-size specialist screen")
@@ -831,6 +1030,8 @@ message("Refresh: ", refresh)
 message("Strategy pool: ", strategy_pool_id, " / ", strategy_pool_label)
 message("Strategy grid preset: ", strategy_grid_preset)
 message("Candidate families: ", paste(candidate_families, collapse = ","))
+message("Annual replay mode: ", annual_replay_mode)
+if (nzchar(reuse_auth_root)) message("Reuse authority root: ", reuse_auth_root)
 
 for (spec in screen_specs) {
   screen_dir <- file.path(output_dir, spec$screen_id)
@@ -887,25 +1088,56 @@ for (spec in screen_specs) {
     for (policy in selection_policies) {
       for (semantics in entry_replay_semantics) {
         lane_id <- paste(policy, semantics, sep = "__")
-        message("Replay/accounting: ", spec$screen_id, " / ", window$window_id[[1L]], " / ", lane_id)
+        message("Replay/accounting: ", spec$screen_id, " / ", window$window_id[[1L]], " / ", lane_id, " / ", annual_replay_mode)
         results <- stats::setNames(vector("list", length(spec$symbols)), spec$symbols)
         for (symbol in spec$symbols) {
-          quarter_results <- lapply(window_quarters, function(quarter_id) {
-            authority <- quarter_policy_authorities[[quarter_id]][[policy]]
-            quarter_end <- as.Date(authority$contract$live_end_date[[1L]])
-            replay_symbol_oos(
+          if (identical(annual_replay_mode, "quarter_continuity_replay")) {
+            authorities_for_policy <- stats::setNames(lapply(window_quarters, function(quarter_id) {
+              quarter_policy_authorities[[quarter_id]][[policy]]
+            }), window_quarters)
+            results[[symbol]] <- replay_symbol_annual_continuity(
               replay_bars,
-              authority,
+              authorities_for_policy,
               symbol,
-              min(as_of_date, quarter_end),
+              as_of_date,
               semantics,
               lane_id,
               spec$screen_id,
               window$window_id[[1L]],
               spec$feature_set_id
             )
-          })
-          results[[symbol]] <- combine_symbol_results(quarter_results)
+          } else {
+            quarter_results <- lapply(window_quarters, function(quarter_id) {
+              authority <- quarter_policy_authorities[[quarter_id]][[policy]]
+              quarter_end <- as.Date(authority$contract$live_end_date[[1L]])
+              replay_symbol_oos(
+                replay_bars,
+                authority,
+                symbol,
+                min(as_of_date, quarter_end),
+                semantics,
+                lane_id,
+                spec$screen_id,
+                window$window_id[[1L]],
+                spec$feature_set_id
+              )
+            })
+            results[[symbol]] <- combine_symbol_results(quarter_results)
+          }
+        }
+        if (identical(annual_replay_mode, "quarter_continuity_replay")) {
+          continuity <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$continuity))
+          if (is.data.frame(continuity) && nrow(continuity)) {
+            continuity$screen_id <- spec$screen_id
+            continuity$context_id <- spec$context_id
+            continuity$feature_set_id <- spec$feature_set_id
+            continuity$window_id <- window$window_id[[1L]]
+            continuity$lane_id <- lane_id
+            continuity$selection_policy <- policy
+            continuity$entry_replay_semantics <- semantics
+            continuity$annual_replay_mode <- annual_replay_mode
+            continuity_rows[[length(continuity_rows) + 1L]] <- continuity
+          }
         }
         if (spec$context_id %in% c("hb_self_5", "hb_risk_aware_18") &&
             spec$feature_set_id %in% c("workhorse_enriched", "momentum_plus_stress", "market_relative_momentum") &&
@@ -914,7 +1146,7 @@ for (spec in screen_specs) {
           trade_tape_symbol_results[[paste(spec$context_id, spec$feature_set_id, window$window_id[[1L]], lane_id, sep = "__")]] <- results
         }
         trades_by_symbol <- stats::setNames(lapply(spec$symbols, function(symbol) {
-          accounting_trade_table(results[[symbol]]$trades, symbol, lane_id, spec$screen_id, window$window_id[[1L]])
+          accounting_trade_table(results[[symbol]]$trades, symbol, lane_id, spec$screen_id, window$window_id[[1L]], annual_replay_mode)
         }), spec$symbols)
         equity_by_symbol <- stats::setNames(lapply(results, function(x) equity_from_replay(x$replay_oos)), spec$symbols)
         accounting <- g5_portfolio_poc_build_accounting(
@@ -946,6 +1178,7 @@ for (spec in screen_specs) {
         eq$lane_id <- lane_id
         eq$selection_policy <- policy
         eq$entry_replay_semantics <- semantics
+        eq$annual_replay_mode <- annual_replay_mode
         eq$active_equal_buy_hold_equity <- base$active_equal_buy_hold_equity[match(as.Date(eq$session_date), as.Date(base$session_date))]
         eq$spy_buy_hold_equity <- base$spy_buy_hold_equity[match(as.Date(eq$session_date), as.Date(base$session_date))]
         equity_rows[[length(equity_rows) + 1L]] <- eq
@@ -963,6 +1196,7 @@ for (spec in screen_specs) {
           ev$lane_id <- lane_id
           ev$selection_policy <- policy
           ev$entry_replay_semantics <- semantics
+          ev$annual_replay_mode <- annual_replay_mode
           event_rows[[length(event_rows) + 1L]] <- ev
         }
         standalone <- accounting$standalone_symbol_equity
@@ -978,6 +1212,7 @@ for (spec in screen_specs) {
         standalone$lane_id <- lane_id
         standalone$selection_policy <- policy
         standalone$entry_replay_semantics <- semantics
+        standalone$annual_replay_mode <- annual_replay_mode
         standalone_rows[[length(standalone_rows) + 1L]] <- standalone
         sym <- accounting$symbol_summary
         sym$screen_id <- spec$screen_id
@@ -992,8 +1227,9 @@ for (spec in screen_specs) {
         sym$lane_id <- lane_id
         sym$selection_policy <- policy
         sym$entry_replay_semantics <- semantics
+        sym$annual_replay_mode <- annual_replay_mode
         symbol_summary_rows[[length(symbol_summary_rows) + 1L]] <- sym
-        summary_rows[[length(summary_rows) + 1L]] <- summarize_accounting(spec$screen_id, spec$basket_archetype, spec$context_id, spec$context_label, spec$context_recipe, spec$feature_set_id, spec$feature_set_label, window, lane_id, policy, semantics, accounting, initial_capital)
+        summary_rows[[length(summary_rows) + 1L]] <- summarize_accounting(spec$screen_id, spec$basket_archetype, spec$context_id, spec$context_label, spec$context_recipe, spec$feature_set_id, spec$feature_set_label, window, lane_id, policy, semantics, annual_replay_mode, accounting, initial_capital)
         replay_rows[[length(replay_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$replay_oos))
         trade_rows[[length(trade_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$trades))
         execution_rows[[length(execution_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$executions))
@@ -1011,6 +1247,7 @@ for (spec in screen_specs) {
           quarter_ids = window$quarter_ids[[1L]],
           selection_policy = policy,
           entry_replay_semantics = semantics,
+          annual_replay_mode = annual_replay_mode,
           lane_id = lane_id,
           authority_dirs = paste(unlist(authority_dirs, use.names = FALSE), collapse = ";"),
           query_manifest_csv = normalizePath(query_paths$paths$manifest_csv, winslash = "/", mustWork = FALSE),
@@ -1049,12 +1286,13 @@ run_spec <- do.call(rbind, lapply(screen_specs, function(spec) {
 }))
 run_spec <- merge(run_spec, windows[, c("window_id", "quarter_ids", "as_of_timestamp", "regime_label"), drop = FALSE], by = NULL)
 run_spec <- merge(run_spec, expand.grid(selection_policy = selection_policies, entry_replay_semantics = entry_replay_semantics, stringsAsFactors = FALSE), by = NULL)
+run_spec$annual_replay_mode <- annual_replay_mode
 run_spec$research_only <- TRUE
 run_spec$output_dir <- normalizePath(output_dir, winslash = "/", mustWork = FALSE)
 
 summary <- g5_wfa_bind_rows_fill(summary_rows)
-summary <- summary[order(summary$context_id, summary$feature_set_id, summary$window_id, summary$selection_policy, summary$entry_replay_semantics), , drop = FALSE]
-aggregate <- do.call(rbind, lapply(split(summary, paste(summary$context_id, summary$feature_set_id, summary$basket_archetype, summary$selection_policy, summary$entry_replay_semantics, sep = "|")), function(x) {
+summary <- summary[order(summary$context_id, summary$feature_set_id, summary$window_id, summary$selection_policy, summary$entry_replay_semantics, summary$annual_replay_mode), , drop = FALSE]
+aggregate <- do.call(rbind, lapply(split(summary, paste(summary$context_id, summary$feature_set_id, summary$basket_archetype, summary$selection_policy, summary$entry_replay_semantics, summary$annual_replay_mode, sep = "|")), function(x) {
   data.frame(
     basket_archetype = x$basket_archetype[[1L]],
     context_id = x$context_id[[1L]],
@@ -1065,6 +1303,7 @@ aggregate <- do.call(rbind, lapply(split(summary, paste(summary$context_id, summ
     strategy_pool_id = strategy_pool_id,
     selection_policy = x$selection_policy[[1L]],
     entry_replay_semantics = x$entry_replay_semantics[[1L]],
+    annual_replay_mode = x$annual_replay_mode[[1L]],
     windows_tested = nrow(x),
     windows_beating_basket = sum(as.numeric(x$alpha_vs_active_equal) > 0, na.rm = TRUE),
     mean_total_return = mean(as.numeric(x$total_return), na.rm = TRUE),
@@ -1075,7 +1314,7 @@ aggregate <- do.call(rbind, lapply(split(summary, paste(summary$context_id, summ
     stringsAsFactors = FALSE
   )
 }))
-aggregate <- aggregate[order(aggregate$context_id, aggregate$feature_set_id, aggregate$selection_policy, aggregate$entry_replay_semantics), , drop = FALSE]
+aggregate <- aggregate[order(aggregate$context_id, aggregate$feature_set_id, aggregate$selection_policy, aggregate$entry_replay_semantics, aggregate$annual_replay_mode), , drop = FALSE]
 
 paths <- list(
   run_spec_csv = file.path(output_dir, "momentum_context_size_run_spec.csv"),
@@ -1085,6 +1324,7 @@ paths <- list(
   executions_csv = file.path(output_dir, "momentum_context_size_executions.csv"),
   trades_csv = file.path(output_dir, "momentum_context_size_trades.csv"),
   pending_csv = file.path(output_dir, "momentum_context_size_pending_actions.csv"),
+  continuity_csv = file.path(output_dir, "momentum_context_size_continuity.csv"),
   portfolio_equity_csv = file.path(output_dir, "momentum_context_size_portfolio_equity.csv"),
   portfolio_events_csv = file.path(output_dir, "momentum_context_size_portfolio_events.csv"),
   standalone_symbol_equity_csv = file.path(output_dir, "momentum_context_size_standalone_symbol_equity.csv"),
@@ -1109,6 +1349,7 @@ g5_wfa_write_csv(g5_wfa_bind_rows_fill(replay_rows), paths$replay_oos_csv)
 g5_wfa_write_csv(g5_wfa_bind_rows_fill(execution_rows), paths$executions_csv)
 g5_wfa_write_csv(g5_wfa_bind_rows_fill(trade_rows), paths$trades_csv)
 g5_wfa_write_csv(g5_wfa_bind_rows_fill(pending_rows), paths$pending_csv)
+g5_wfa_write_csv(g5_wfa_bind_rows_fill(continuity_rows), paths$continuity_csv)
 equity_all <- g5_wfa_bind_rows_fill(equity_rows)
 g5_wfa_write_csv(equity_all, paths$portfolio_equity_csv)
 g5_wfa_write_csv(g5_wfa_bind_rows_fill(event_rows), paths$portfolio_events_csv)
@@ -1139,7 +1380,7 @@ for (col in c("total_return", "active_equal_buy_hold_return", "alpha_vs_active_e
 message("")
 message("Gen5.3 momentum context-size specialist annual screen complete: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Summary:")
-print(printable[, c("context_id", "feature_set_label", "window_id", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills"), drop = FALSE], row.names = FALSE)
+print(printable[, c("context_id", "feature_set_label", "window_id", "entry_replay_semantics", "annual_replay_mode", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills"), drop = FALSE], row.names = FALSE)
 message("")
 message("Report: ", paths$report_md)
 message("Deck visuals: ", paths$equity_overlay_png, " / ", paths$alpha_heatmap_png, " / ", paths$exposure_alpha_scatter_png, " / ", paths$selection_family_heatmap_png, " / ", paths$trade_tape_contact_sheet_png, " / ", paths$representative_trade_tapes_png)
