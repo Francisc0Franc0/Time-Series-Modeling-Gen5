@@ -307,7 +307,22 @@ The first baseline used `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context with
 
 Feature-set challenger readout: the follow-up held the first specialist setup fixed and compared `workhorse_enriched`, `momentum_participation`, and `momentum_plus_stress` PCA feature sets. `momentum_plus_stress` was the best two-window continuation lane: it returned `20.8%` in `2020Q3` versus `17.1%` for workhorse continuation, while preserving similar `2022Q1` protection (`-0.7%` versus `-0.5%`). Mean continuation alpha improved from `-9.8 pp` workhorse to `-8.0 pp` momentum-plus-stress, but remained negative versus basket hold. The feature taxonomy is `runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710features/bull_momentum_specialist_feature_taxonomy.csv`.
 
-Recommended next slice: keep `momentum_plus_stress` as the leading feature challenger and confirm across additional high-beta windows before widening the strategy grid. Use representative trade tapes to inspect whether entries actually occur earlier.
+Newest annual context-size screen:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260710ctxsize/`
+
+Documentation and deck:
+
+- `docs/GEN5_3_MOMENTUM_CONTEXT_SIZE_SCREEN.md`
+- `presentations/gen5_3_momentum_context_size_screen.pptx`
+
+Wrapper:
+
+`scripts/inspect/run_gen53_momentum_context_size_screen.R`
+
+This screen responds to the realization that one-quarter OOS windows were too sparse for alpha-oriented judgment. It uses `AMD,NVDA,TSLA,MSTR,AVGO`, behavioral-pool PCA, `3x3` states, pooled-family selection, an EMA-only momentum-specialist pool (`ema_cross,ema_trend,no_trade,no_trade_exit_immediate`), annual stitched OOS windows (`2019`, `2020`, `2022`, `2024`), and equal-weight basket hold as the primary benchmark. It varies context size/composition (`hb_self_5`, `hb_peer_12`, `hb_risk_aware_18`), feature set (`workhorse_enriched`, `momentum_participation`, `momentum_plus_stress`, `market_relative_momentum`), and fresh versus continuation replay.
+
+Readout: the best aggregate lane was `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation`: `81.7%` mean return, `-9.8 pp` mean alpha versus equal-weight basket hold, `2 / 4` windows beating basket, and `64.6%` mean exposure. This keeps broader risk-aware context and continuation replay alive, but it does not promote the new momentum feature sets. Annual windows are now the preferred default for alpha-oriented screens. Next useful slice: use this best lane as the control, audit full trade tapes for the strong 2024 behavior and missed 2020 upside, and test whether annual windows need true cross-quarter continuity rather than only stitched quarterly authorities before widening the strategy grid.
 
 ## What Is Not Implemented Yet
 

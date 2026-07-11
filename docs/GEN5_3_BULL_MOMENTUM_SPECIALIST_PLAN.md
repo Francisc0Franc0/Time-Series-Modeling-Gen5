@@ -327,3 +327,41 @@ The feature layer matters. The richer momentum-plus-stress surface moved in the 
 Recommended next slice:
 
 Keep basket, context, PCA mode, 3x3 state map, pooled-family policy, replay semantics, strategy grid, and benchmark fixed. Expand `momentum_plus_stress` confirmation across additional high-beta windows and use representative trade tapes to verify whether entries actually occur earlier. Defer wider strategy-grid testing until the state-feature signal survives more windows.
+
+## Context-Size Annual Screen Result
+
+Packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260710ctxsize/`
+
+Deck:
+
+`presentations/gen5_3_momentum_context_size_screen.pptx`
+
+Wrapper:
+
+`scripts/inspect/run_gen53_momentum_context_size_screen.R`
+
+Purpose:
+
+The one-quarter feature-set slices were too sparse for judging alpha behavior. This screen therefore uses annual stitched OOS windows: four independent quarterly TRAIN-only authority packets are stitched into a one-year portfolio/accounting view. This keeps leakage discipline while giving each condition more time to show trading behavior.
+
+Design actually run:
+
+- live basket: `AMD,NVDA,TSLA,MSTR,AVGO`;
+- context recipes: live basket only, live plus high-beta peers, and live plus peers plus risk anchors;
+- PCA/state surface: behavioral-pool plus `3x3` quantile states;
+- feature sets: `workhorse_enriched`, `momentum_participation`, `momentum_plus_stress`, and `market_relative_momentum`;
+- selection policy: `pooled_family_asset_variant`;
+- replay semantics: `fresh_signal_only` and `state_switch_continuation`;
+- strategy pool: `ema_cross,ema_trend,no_trade,no_trade_exit_immediate`;
+- annual windows: `2019`, `2020`, `2022`, and `2024`;
+- benchmark: equal-weight buy-and-hold of the same live basket over the same annual stitched OOS window.
+
+Readout:
+
+The best aggregate lane was `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation`. It averaged `81.7%` total return across the four annual windows, but still averaged `-9.8 pp` alpha versus equal-weight high-beta basket hold. It beat basket hold in `2 / 4` annual windows, with mean exposure of `64.6%`.
+
+Interpretation:
+
+Annual windows are now the better default for alpha-oriented screens. The result keeps the broader risk-aware context thesis alive, but it does not promote the new momentum feature sets as defaults. The best current control lane is risk-aware context, the older workhorse PCA surface, and continuation replay. The next useful slice is not a wider grid yet; it is trade-tape and continuity inspection around why the best lane beats in `2022` and `2024` while still missing too much `2019` and `2020` upside.

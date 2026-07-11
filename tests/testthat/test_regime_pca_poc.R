@@ -60,7 +60,7 @@ test_that("PCA regime feature-set presets expose declared feature columns", {
   features <- g5_pca_regime_feature_table(bars, "AMD")
   taxonomy <- g5_pca_regime_feature_set_taxonomy()
 
-  expect_true(all(c("workhorse_enriched", "momentum_participation", "momentum_plus_stress") %in% taxonomy$feature_set_id))
+  expect_true(all(c("workhorse_enriched", "momentum_participation", "momentum_plus_stress", "market_relative_momentum") %in% taxonomy$feature_set_id))
   for (feature_set_id in taxonomy$feature_set_id) {
     cols <- g5_pca_regime_feature_set(feature_set_id)
     expect_true(all(cols %in% names(features)))
@@ -68,6 +68,7 @@ test_that("PCA regime feature-set presets expose declared feature columns", {
   }
   expect_true(all(c("ret_20", "trend_slope_20", "drawdown_60", "recovery_from_low_60") %in% g5_pca_regime_feature_set("momentum_participation")))
   expect_true(all(c("vol_20", "atr_pct", "bb_width") %in% g5_pca_regime_feature_set("momentum_plus_stress")))
+  expect_true(all(c("ret_60", "dist_anchor_200", "close_location_60") %in% g5_pca_regime_feature_set("market_relative_momentum")))
 })
 
 test_that("PCA regime context feature table builds a wide multi-asset panel for one target", {

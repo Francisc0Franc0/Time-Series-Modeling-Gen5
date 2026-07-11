@@ -250,7 +250,7 @@ g5_pca_wfa_select_state_specs <- function(
   no_trade_rows <- list()
   for (model_i in seq_len(nrow(model_grid))) {
     model <- model_grid[model_i, , drop = FALSE]
-    stacks_for_model <- if (identical(as.character(model$strategy_family[[1L]]), "no_trade")) {
+    stacks_for_model <- if (as.character(model$strategy_family[[1L]]) %in% g5_wfa_gen52_no_trade_families()) {
       g5_wfa_no_trade_exit_stack()
     } else {
       exit_stacks[exit_stacks$exit_stack_id != "no_exit", , drop = FALSE]
@@ -440,7 +440,7 @@ g5_pca_wfa_simulate_oos <- function(bars, symbol, fold, pca_result, selected_sta
 
     if (!in_position && is.null(pending_entry)) {
       selected <- get_selected(current_state)
-      if (nrow(selected) == 0L || identical(as.character(selected$strategy_family[[1L]]), "no_trade")) {
+      if (nrow(selected) == 0L || identical(as.character(selected$strategy_family[[1L]]), "no_trade") || g5_wfa_is_force_exit_override(selected)) {
         next
       }
       ind <- indicator_cache[[selected$strategy_spec_id[[1L]]]]
@@ -906,7 +906,7 @@ g5_pca_wfa_simulate_stitched_oos <- function(bars, symbol, folds, fold_models, s
 
     if (!in_position && is.null(pending_entry)) {
       selected <- get_selected(signal_fold_no, current_state)
-      if (nrow(selected) == 0L || identical(as.character(selected$strategy_family[[1L]]), "no_trade")) {
+      if (nrow(selected) == 0L || identical(as.character(selected$strategy_family[[1L]]), "no_trade") || g5_wfa_is_force_exit_override(selected)) {
         next
       }
       ind <- indicator_cache[[selected$strategy_spec_id[[1L]]]]

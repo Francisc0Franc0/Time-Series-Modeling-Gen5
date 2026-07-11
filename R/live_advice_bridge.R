@@ -623,7 +623,7 @@ g5_bridge_replay_symbol <- function(
     next_session <- if (has_next_session_in_data) session_dates[[next_idx]] else as.Date(NA)
 
     can_emit_entry_signal <- current_date >= entry_signal_start_date && current_date <= entry_signal_end_date
-    if (!in_position && is.null(pending_entry) && can_emit_entry_signal && nrow(selected) && !identical(selected_family, "no_trade")) {
+    if (!in_position && is.null(pending_entry) && can_emit_entry_signal && nrow(selected) && !identical(selected_family, "no_trade") && !g5_wfa_is_force_exit_override(selected)) {
       ind <- indicator_cache[[selected_spec]]
       entry_signal_rule <- NA_character_
       entry_trigger_type <- NA_character_

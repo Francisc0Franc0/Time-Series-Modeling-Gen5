@@ -168,7 +168,8 @@ g5_wfa_candidate_families <- function(candidate_families) {
     "pullback_in_uptrend",
     "vol_expansion_breakout",
     "donchian_breakout_vol_expand",
-    "no_trade"
+    "no_trade",
+    "no_trade_exit_immediate"
   )
   if (length(candidate_families) == 0L || any(!candidate_families %in% allowed)) {
     g5_stop(paste0("candidate_families must be drawn from: ", paste(allowed, collapse = ", ")))
@@ -760,16 +761,16 @@ g5_wfa_vol_expansion_breakout_indicators <- function(bars, symbol, model, requir
 
 g5_wfa_model_indicators <- function(bars, symbol, model) {
   family <- as.character(model$strategy_family[[1L]])
-  if (identical(family, "no_trade")) {
+  if (family %in% g5_wfa_gen52_no_trade_families()) {
     ind <- g5_ema_cross_prepare_bars(bars, symbol)
-    ind$strategy_family <- "no_trade"
-    ind$strategy_id <- "no_trade"
-    ind$model_instance_id <- "no_trade"
+    ind$strategy_family <- family
+    ind$strategy_id <- family
+    ind$model_instance_id <- family
     ind$entry_signal <- FALSE
     ind$exit_signal <- FALSE
-    ind$entry_signal_rule <- "no_trade_never_enters"
-    ind$exit_signal_rule <- "no_trade_no_exit"
-    ind$signal_state <- "cash"
+    ind$entry_signal_rule <- paste0(family, "_never_enters")
+    ind$exit_signal_rule <- if (identical(family, "no_trade_exit_immediate")) "state_exit_override_force_exit_next_open" else "no_trade_no_exit"
+    ind$signal_state <- if (identical(family, "no_trade_exit_immediate")) "cash_force_exit_if_long" else "cash"
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
   if (identical(family, "ema_cross")) {
@@ -1049,6 +1050,9 @@ g5_wfa_candidate_model_grid <- function(
   if ("no_trade" %in% candidate_families) {
     add_model("no_trade", "no_trade")
   }
+  if ("no_trade_exit_immediate" %in% candidate_families) {
+    add_model("no_trade_exit_immediate", "no_trade_exit_immediate")
+  }
   if ("ema_cross" %in% candidate_families) {
     fast_periods <- sort(unique(as.integer(fast_periods)))
     slow_periods <- sort(unique(as.integer(slow_periods)))
@@ -1250,7 +1254,7 @@ g5_wfa_strategy_spec_metrics <- function(trades, equity_curve, symbol, model, ex
   end_date <- max(equity_curve$session_date)
   ending_equity <- tail(equity_curve$strategy_equity, 1L)
   buy_hold_ending_equity <- tail(equity_curve$buy_hold_equity, 1L)
-  is_no_trade <- identical(as.character(model$strategy_family[[1L]]), "no_trade")
+  is_no_trade <- as.character(model$strategy_family[[1L]]) %in% g5_wfa_gen52_no_trade_families()
   data.frame(
     schema_version = g5_ema_cross_wfa_multi_schema_version(),
     symbol = symbol,
@@ -1529,7 +1533,7 @@ g5_wfa_evaluate_strategy_spec_grid <- function(bars, symbol, trading_start_date,
   rows <- list()
   for (model_i in seq_len(nrow(model_grid))) {
     model <- model_grid[model_i, , drop = FALSE]
-    stacks_for_model <- if (identical(as.character(model$strategy_family[[1L]]), "no_trade")) {
+    stacks_for_model <- if (as.character(model$strategy_family[[1L]]) %in% g5_wfa_gen52_no_trade_families()) {
       g5_wfa_no_trade_exit_stack()
     } else {
       exit_stacks[exit_stacks$exit_stack_id != "no_exit", , drop = FALSE]

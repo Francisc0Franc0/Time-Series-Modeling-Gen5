@@ -59,6 +59,22 @@ g5_pca_regime_feature_set <- function(feature_set_id = "workhorse_enriched") {
       "atr_pct",
       "bb_width",
       "ret_skew_20"
+    ),
+    market_relative_momentum = c(
+      "ret_20",
+      "ret_60",
+      "ema_gap",
+      "ema_gap_10_50",
+      "ema_gap_20_100",
+      "trend_slope_20",
+      "efficiency_ratio_20",
+      "above_sma20_frac_20",
+      "dist_anchor_50",
+      "dist_anchor_200",
+      "close_location_60",
+      "drawdown_60",
+      "recovery_from_low_60",
+      "vol_20"
     )
   )
   if (!feature_set_id %in% names(presets)) {
@@ -72,20 +88,23 @@ g5_pca_regime_feature_set_taxonomy <- function() {
     feature_set_id = c(
       "workhorse_enriched",
       "momentum_participation",
-      "momentum_plus_stress"
+      "momentum_plus_stress",
+      "market_relative_momentum"
     ),
     feature_set_label = c(
       "Workhorse enriched",
       "Momentum participation",
-      "Momentum plus stress"
+      "Momentum plus stress",
+      "Market-relative momentum"
     ),
     purpose = c(
       "Current Gen5 workhorse surface combining trend, stretch, volatility, chop, efficiency, and return-shape descriptors.",
       "Sharper bullish-participation surface meant to detect trend strength, persistence, recent return impulse, and recovery position.",
-      "Momentum-participation surface with volatility and stress descriptors added back to preserve drawdown-avoidance context."
+      "Momentum-participation surface with volatility and stress descriptors added back to preserve drawdown-avoidance context.",
+      "Compact trend surface meant to let behavioral-pool PCA compare each asset-day's return, trend, anchor distance, persistence, and drawdown posture against the wider context pool."
     ),
     feature_cols = vapply(
-      c("workhorse_enriched", "momentum_participation", "momentum_plus_stress"),
+      c("workhorse_enriched", "momentum_participation", "momentum_plus_stress", "market_relative_momentum"),
       function(id) paste(g5_pca_regime_feature_set(id), collapse = ","),
       character(1L)
     ),

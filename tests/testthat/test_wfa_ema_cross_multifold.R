@@ -460,6 +460,37 @@ test_that("no-trade candidate is inert and uses one cash exit stack", {
   expect_equal(no_trade_rows$trade_count[[1L]], 0L)
 })
 
+test_that("no-trade exit-immediate candidate is a force-exit override and never an entry source", {
+  bars <- g5_test_wfa_multi_bars(close = c(10, 11, 12, 13, 14, 13, 12, 11, 10, 9, 8, 7))
+  grid <- g5_wfa_candidate_model_grid(candidate_families = c("no_trade", "no_trade_exit_immediate"))
+  exit_stacks <- g5_wfa_exit_stacks_for_candidates(g5_wfa_exit_stack_grid(), c("no_trade", "no_trade_exit_immediate"))
+  indicators <- g5_wfa_model_indicators(
+    bars,
+    "AMD",
+    grid[grid$strategy_family == "no_trade_exit_immediate", , drop = FALSE]
+  )
+  perf <- g5_wfa_evaluate_strategy_spec_grid(
+    bars,
+    symbol = "AMD",
+    trading_start_date = min(bars$session_date),
+    trading_end_date = max(bars$session_date),
+    model_grid = grid,
+    exit_stacks = exit_stacks
+  )
+  force_rows <- perf[perf$strategy_family == "no_trade_exit_immediate", , drop = FALSE]
+
+  expect_equal(nrow(grid), 2L)
+  expect_true("no_trade_exit_immediate" %in% grid$model_instance_id)
+  expect_equal(unique(indicators$entry_signal), FALSE)
+  expect_equal(unique(indicators$exit_signal_rule), "state_exit_override_force_exit_next_open")
+  expect_equal(unique(indicators$signal_state), "cash_force_exit_if_long")
+  expect_true(g5_wfa_is_force_exit_override(grid[grid$strategy_family == "no_trade_exit_immediate", , drop = FALSE]))
+  expect_equal(nrow(force_rows), 1L)
+  expect_equal(force_rows$exit_stack_id[[1L]], "no_exit")
+  expect_equal(force_rows$total_return[[1L]], 0)
+  expect_equal(force_rows$trade_count[[1L]], 0L)
+})
+
 test_that("stitched indicators tolerate mixed selected model families", {
   close <- c(
     10, 10, 10, 9, 7, 8, 11, 13, 15, 13,
