@@ -289,3 +289,41 @@ The first baseline does not prove a bullish specialist edge. It does sharpen the
 Compute note:
 
 The full Gen4 daily-default breadth is expensive enough that feature-engineering probes should start with compact grids, then confirm with full breadth once the mechanism is visible.
+
+## Feature-Set Challenger Result
+
+Packet:
+
+`runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710features/`
+
+Deck:
+
+`presentations/gen5_3_bull_momentum_specialist_plan.pptx`
+
+Wrapper:
+
+`scripts/inspect/run_gen53_bull_momentum_specialist_screen.R`
+
+Purpose:
+
+This follow-up keeps the first specialist setup fixed and varies only the PCA feature set. The goal is to test whether the workhorse PCA surface is too blunt for bullish participation timing.
+
+Feature sets:
+
+- `workhorse_enriched`: the existing Gen5 workhorse surface, combining trend, stretch, volatility, chop, efficiency, and return-shape descriptors.
+- `momentum_participation`: a sharper bullish-participation surface focused on trend strength, return impulse, persistence, range location, drawdown, and recovery.
+- `momentum_plus_stress`: the momentum-participation surface with volatility/range/stress descriptors added back to preserve drawdown context.
+
+Readout:
+
+- In `2020Q3`, `momentum_plus_stress` continuation returned `20.8%` versus `17.1%` for workhorse continuation. Its basket-relative alpha was still negative (`-28.1 pp`), but it improved over the workhorse continuation lane (`-31.9 pp`).
+- In `2022Q1`, `momentum_plus_stress` continuation returned `-0.7%` versus `-0.5%` for workhorse continuation. Both preserved the same broad stress-window behavior versus the falling high-beta basket (`+12.1 pp` versus `+12.2 pp` alpha).
+- Across the two windows, `momentum_plus_stress` continuation improved mean alpha from `-9.8 pp` to `-8.0 pp` and mean total return from `8.3%` to `10.1%`.
+
+Interpretation:
+
+The feature layer matters. The richer momentum-plus-stress surface moved in the desired direction without surrendering the stress-window protection, but it still did not beat equal-weight basket hold. Treat `momentum_plus_stress` as the leading feature challenger for the next confirmation slice, not as an accepted default.
+
+Recommended next slice:
+
+Keep basket, context, PCA mode, 3x3 state map, pooled-family policy, replay semantics, strategy grid, and benchmark fixed. Expand `momentum_plus_stress` confirmation across additional high-beta windows and use representative trade tapes to verify whether entries actually occur earlier. Defer wider strategy-grid testing until the state-feature signal survives more windows.

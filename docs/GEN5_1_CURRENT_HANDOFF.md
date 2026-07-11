@@ -295,13 +295,19 @@ First baseline packet:
 
 `runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710/`
 
+Feature-set challenger packet:
+
+`runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710features/`
+
 Wrapper:
 
 `scripts/inspect/run_gen53_bull_momentum_specialist_screen.R`
 
-The first baseline used `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context without `VXX`, behavioral-pool PCA, `3x3` quantile states, pooled-family selection, fresh versus state-switch-continuation replay, implemented momentum-compatible families plus `no_trade`, and true live-capital replay against equal-weight basket hold. Readout: the specialist still undercaptured the `2020Q3` high-beta rebound (`17.1%` continuation return versus `48.9%` basket hold, `-31.9 pp` alpha) but protected capital in `2022Q1` (`-0.5%` continuation versus `-12.8%` basket hold, `+12.2 pp` alpha). This sharpens the next question: improve bullish participation timing without losing stress-window protection.
+The first baseline used `AMD,NVDA,TSLA,AAPL,MSTR`, active-plus-risk context without `VXX`, behavioral-pool PCA, `3x3` quantile states, pooled-family selection, fresh versus state-switch-continuation replay, implemented momentum-compatible families plus `no_trade`, and true live-capital replay against equal-weight basket hold. Readout: the specialist still undercaptured the `2020Q3` high-beta rebound (`17.1%` continuation return versus `48.9%` basket hold, `-31.9 pp` alpha) but protected capital in `2022Q1` (`-0.5%` continuation versus `-12.8%` basket hold, `+12.2 pp` alpha). This sharpened the next question: improve bullish participation timing without losing stress-window protection.
 
-Recommended next slice: keep the same basket, context, PCA, policy, replay semantics, and benchmark fixed; add one compact momentum-participation feature-set challenger focused on trend slope, relative strength, and drawdown recovery. Start with compact grids for speed, then confirm with the full Gen4 daily-default breadth after the mechanism is visible.
+Feature-set challenger readout: the follow-up held the first specialist setup fixed and compared `workhorse_enriched`, `momentum_participation`, and `momentum_plus_stress` PCA feature sets. `momentum_plus_stress` was the best two-window continuation lane: it returned `20.8%` in `2020Q3` versus `17.1%` for workhorse continuation, while preserving similar `2022Q1` protection (`-0.7%` versus `-0.5%`). Mean continuation alpha improved from `-9.8 pp` workhorse to `-8.0 pp` momentum-plus-stress, but remained negative versus basket hold. The feature taxonomy is `runs/research_workbench/gen53_bull_momentum_specialist/g53_bullmom_20260710features/bull_momentum_specialist_feature_taxonomy.csv`.
+
+Recommended next slice: keep `momentum_plus_stress` as the leading feature challenger and confirm across additional high-beta windows before widening the strategy grid. Use representative trade tapes to inspect whether entries actually occur earlier.
 
 ## What Is Not Implemented Yet
 

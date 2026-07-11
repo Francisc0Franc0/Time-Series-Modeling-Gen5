@@ -55,6 +55,21 @@ test_that("PCA regime POC fits on TRAIN and scores OOS with frozen states", {
   expect_true("extend_to_infinity_for_oos_extremes" %in% fit$model_contract$value)
 })
 
+test_that("PCA regime feature-set presets expose declared feature columns", {
+  bars <- g5_test_pca_bars()
+  features <- g5_pca_regime_feature_table(bars, "AMD")
+  taxonomy <- g5_pca_regime_feature_set_taxonomy()
+
+  expect_true(all(c("workhorse_enriched", "momentum_participation", "momentum_plus_stress") %in% taxonomy$feature_set_id))
+  for (feature_set_id in taxonomy$feature_set_id) {
+    cols <- g5_pca_regime_feature_set(feature_set_id)
+    expect_true(all(cols %in% names(features)))
+    expect_gte(length(cols), 3L)
+  }
+  expect_true(all(c("ret_20", "trend_slope_20", "drawdown_60", "recovery_from_low_60") %in% g5_pca_regime_feature_set("momentum_participation")))
+  expect_true(all(c("vol_20", "atr_pct", "bb_width") %in% g5_pca_regime_feature_set("momentum_plus_stress")))
+})
+
 test_that("PCA regime context feature table builds a wide multi-asset panel for one target", {
   bars <- rbind(
     g5_test_pca_bars(symbol = "AMD"),

@@ -1,4 +1,4 @@
-# Gen5.3 bullish momentum specialist baseline screen.
+# Gen5.3 bullish momentum specialist feature-set screen.
 #
 # This screen asks whether a narrowed PCA-routed, momentum-only hypothesis set
 # can improve high-beta upside participation under true shared-account accounting.
@@ -74,7 +74,7 @@ feed <- env_or("GEN5_GEN53_BULL_MOMENTUM_FEED", as.character(cfg$feed))
 if (nzchar(feed)) cfg$feed <- feed
 
 refresh <- g5_parse_bool_env(env_or("GEN5_GEN53_BULL_MOMENTUM_REFRESH", "false"), default = FALSE)
-stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN53_BULL_MOMENTUM_STAMP", "20260710"))
+stamp <- gsub("[^0-9A-Za-z]+", "", env_or("GEN5_GEN53_BULL_MOMENTUM_STAMP", "20260710features"))
 output_dir <- file.path(repo_root, "runs", "research_workbench", "gen53_bull_momentum_specialist", paste0("g53_bullmom_", stamp))
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -104,12 +104,37 @@ windows <- data.frame(
 broad_context <- c("SPY", "QQQ", "IWM", "SMH", "TLT", "GLD")
 screen_specs <- list(
   list(
-    screen_id = "HB_apr",
-    screen_label = "High-beta growth / active-plus-risk context",
+    screen_id = "HB_workhorse",
+    screen_label = "High-beta growth / workhorse features",
     basket_archetype = "high_beta_growth",
+    feature_set_id = "workhorse_enriched",
+    feature_set_label = "Workhorse enriched",
+    feature_cols = g5_pca_regime_feature_set("workhorse_enriched"),
     symbols = unique_symbols(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR")),
     context_symbols = with_context(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR"), broad_context),
-    interpretation_note = "First Gen5.3 baseline: hand-picked high-beta basket, active-plus-risk context, behavioral-pool PCA, 3x3 states, and momentum-compatible candidate families only."
+    interpretation_note = "Control lane: the existing enriched Gen5 PCA feature surface applied to the narrowed bullish momentum specialist."
+  ),
+  list(
+    screen_id = "HB_momentum",
+    screen_label = "High-beta growth / momentum participation features",
+    basket_archetype = "high_beta_growth",
+    feature_set_id = "momentum_participation",
+    feature_set_label = "Momentum participation",
+    feature_cols = g5_pca_regime_feature_set("momentum_participation"),
+    symbols = unique_symbols(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR")),
+    context_symbols = with_context(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR"), broad_context),
+    interpretation_note = "Feature challenger: emphasizes trend strength, return impulse, persistence, range location, drawdown, and recovery position."
+  ),
+  list(
+    screen_id = "HB_momentum_stress",
+    screen_label = "High-beta growth / momentum plus stress features",
+    basket_archetype = "high_beta_growth",
+    feature_set_id = "momentum_plus_stress",
+    feature_set_label = "Momentum plus stress",
+    feature_cols = g5_pca_regime_feature_set("momentum_plus_stress"),
+    symbols = unique_symbols(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR")),
+    context_symbols = with_context(c("AMD", "NVDA", "TSLA", "AAPL", "MSTR"), broad_context),
+    interpretation_note = "Feature challenger: keeps the momentum-participation surface but adds volatility/range/stress descriptors to preserve drawdown context."
   )
 )
 
@@ -136,7 +161,7 @@ read_symbol_fit <- function(path) {
   fit
 }
 
-build_symbol_fit_checkpoint <- function(bars, symbol, contract, model_grid, context_symbols, authority_dir) {
+build_symbol_fit_checkpoint <- function(bars, symbol, contract, model_grid, context_symbols, authority_dir, feature_cols) {
   symbol <- g5_standardize_symbol(symbol)[[1L]]
   path <- symbol_fit_path(authority_dir, symbol)
   if (!isTRUE(refresh) && file.exists(path)) {
@@ -155,7 +180,8 @@ build_symbol_fit_checkpoint <- function(bars, symbol, contract, model_grid, cont
     state_engine = "quantile_grid",
     regime_context_symbols = context_symbols,
     pca_panel_mode = "pooled_asset_day",
-    min_train_state_rows = min_train_state_rows
+    min_train_state_rows = min_train_state_rows,
+    feature_cols = feature_cols
   )
   fitted$selected_states$symbol <- symbol
   fitted$selected_states$quarter_id <- contract$quarter_id[[1L]]
@@ -219,12 +245,15 @@ build_authority <- function(spec, bars, quarter_id, authority_dir) {
     strategy_grid_preset
   )
   contract$authority_status <- "RESEARCH_INSPECTION_ONLY"
-  contract$research_note <- "Gen5.3 bullish momentum specialist baseline: behavioral-pool PCA, 3x3 quantile states, active-plus-risk context, momentum-compatible candidate families only, live-capital portfolio replay."
+  contract$research_note <- "Gen5.3 bullish momentum specialist feature-set screen: behavioral-pool PCA, 3x3 quantile states, active-plus-risk context, momentum-compatible candidate families only, live-capital portfolio replay."
   contract$grid_n <- grid_n
   contract$selection_policy <- "base_direct_authority"
+  contract$feature_set_id <- spec$feature_set_id
+  contract$feature_set_label <- spec$feature_set_label
+  contract$feature_cols <- paste(spec$feature_cols, collapse = ",")
   model_grid <- g5_bridge_model_grid(candidate_families = candidate_families, strategy_grid_preset = strategy_grid_preset)
   fits <- lapply(spec$symbols, function(symbol) {
-    build_symbol_fit_checkpoint(bars, symbol, contract, model_grid, spec$context_symbols, authority_dir)
+    build_symbol_fit_checkpoint(bars, symbol, contract, model_grid, spec$context_symbols, authority_dir, spec$feature_cols)
   })
   names(fits) <- spec$symbols
   authority <- list(
@@ -262,7 +291,7 @@ make_policy_authority <- function(authority, selection_policy) {
   out
 }
 
-replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semantics, lane_id, screen_id, window_id) {
+replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semantics, lane_id, screen_id, window_id, feature_set_id) {
   scored <- g5_bridge_score_authority_symbol(bars, authority, symbol, as_of_date)
   contract <- authority$contract[1L, , drop = FALSE]
   live_start <- as.Date(contract$live_start_date[[1L]])
@@ -285,6 +314,7 @@ replay_symbol_oos <- function(bars, authority, symbol, as_of_date, entry_semanti
       out[[field]]$screen_id <- screen_id
       out[[field]]$window_id <- window_id
       out[[field]]$lane_id <- lane_id
+      out[[field]]$feature_set_id <- feature_set_id
       out[[field]]$selection_policy <- as.character(authority$contract$selection_policy[[1L]])
       out[[field]]$entry_replay_semantics <- entry_semantics
       out[[field]]$quarter_id <- as.character(contract$quarter_id[[1L]])
@@ -336,7 +366,7 @@ drawdown <- function(equity) {
   equity / cummax(equity) - 1
 }
 
-summarize_accounting <- function(screen_id, basket_archetype, window, lane_id, policy, semantics, accounting, initial_capital) {
+summarize_accounting <- function(screen_id, basket_archetype, feature_set_id, feature_set_label, window, lane_id, policy, semantics, accounting, initial_capital) {
   metrics <- g5_portfolio_poc_metrics(accounting$equity, initial_capital)
   baseline_metrics <- g5_portfolio_poc_baseline_metrics(accounting$baselines, initial_capital)
   active_baseline <- baseline_metrics[baseline_metrics$baseline_id == "active_equal_buy_hold", , drop = FALSE]
@@ -345,6 +375,8 @@ summarize_accounting <- function(screen_id, basket_archetype, window, lane_id, p
   data.frame(
     screen_id = screen_id,
     basket_archetype = basket_archetype,
+    feature_set_id = feature_set_id,
+    feature_set_label = feature_set_label,
     window_id = window$window_id[[1L]],
     quarter_id = window$quarter_id[[1L]],
     regime_label = window$regime_label[[1L]],
@@ -374,7 +406,7 @@ write_equity_overlay <- function(equity_all, summary, path) {
     pooled_family_asset_variant__fresh_signal_only = "#9B5DE5",
     pooled_family_asset_variant__state_switch_continuation = "#00A88F"
   )
-  grDevices::png(path, width = 3600L, height = 2600L, res = 220L)
+  grDevices::png(path, width = 3600L, height = max(2600L, 900L * length(screens)), res = 220L)
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
   graphics::par(bg = aesthetic$background, mfrow = c(length(screens), length(windows_plot)), mar = c(4.5, 4.6, 3, 1), oma = c(0, 0, 3, 0))
@@ -421,8 +453,10 @@ heat_colors <- function(values) {
 
 write_alpha_heatmap <- function(summary, path) {
   aesthetic <- g5_chart_aesthetic()
-  basket_label <- c(
-    high_beta_growth = "High beta"
+  feature_label <- c(
+    workhorse_enriched = "Workhorse",
+    momentum_participation = "Momentum",
+    momentum_plus_stress = "Momentum+stress"
   )
   policy_label <- c(
     asset_state_direct_spec = "direct",
@@ -433,7 +467,7 @@ write_alpha_heatmap <- function(summary, path) {
     state_switch_continuation = "continuation"
   )
   summary$row_label <- paste(
-    basket_label[as.character(summary$basket_archetype)],
+    feature_label[as.character(summary$feature_set_id)],
     policy_label[as.character(summary$selection_policy)],
     semantics_label[as.character(summary$entry_replay_semantics)]
   )
@@ -444,10 +478,10 @@ write_alpha_heatmap <- function(summary, path) {
   for (i in seq_len(nrow(summary))) {
     values[summary$row_label[[i]], summary$window_id[[i]]] <- as.numeric(summary$alpha_vs_active_equal[[i]])
   }
-  grDevices::png(path, width = 2200L, height = 2300L, res = 220L)
+  grDevices::png(path, width = 2500L, height = max(2300L, 240L * nrow(values) + 900L), res = 220L)
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit({ graphics::par(oldpar); grDevices::dev.off() }, add = TRUE)
-  graphics::par(bg = aesthetic$background, mar = c(6, 8, 4, 2))
+  graphics::par(bg = aesthetic$background, mar = c(6, 12, 4, 2))
   graphics::plot(NA, xlim = c(0.5, ncol(values) + 0.5), ylim = c(0.5, nrow(values) + 0.5), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "Alpha vs Equal-Weight Basket Hold", col.main = aesthetic$text, fg = aesthetic$axis)
   graphics::rect(0.5, 0.5, ncol(values) + 0.5, nrow(values) + 0.5, col = aesthetic$panel_background, border = NA)
   colors <- heat_colors(as.vector(values))
@@ -460,14 +494,18 @@ write_alpha_heatmap <- function(summary, path) {
     }
   }
   graphics::axis(1, at = seq_along(cols), labels = col_labels, las = 1, cex.axis = 0.86, col.axis = aesthetic$axis)
-  graphics::axis(2, at = rev(seq_along(rows)), labels = rows, las = 1, cex.axis = 0.58, col.axis = aesthetic$axis)
+  graphics::axis(2, at = rev(seq_along(rows)), labels = rows, las = 1, cex.axis = 0.68, col.axis = aesthetic$axis)
   graphics::mtext("Green means live-capital strategy beat equal-weight basket hold in the same quarter.", side = 1, line = 4.4, cex = 0.72, col = aesthetic$text)
   invisible(path)
 }
 
 write_exposure_alpha_scatter <- function(summary, path) {
   aesthetic <- g5_chart_aesthetic()
-  colors <- c(high_beta_growth = "#2E86AB")
+  colors <- c(
+    workhorse_enriched = "#2E86AB",
+    momentum_participation = "#00A88F",
+    momentum_plus_stress = "#D97706"
+  )
   pch <- c(fresh_signal_only = 21L, state_switch_continuation = 24L)
   x <- as.numeric(summary$mean_open_position_fraction)
   y <- as.numeric(summary$alpha_vs_active_equal)
@@ -488,12 +526,12 @@ write_exposure_alpha_scatter <- function(summary, path) {
       x[[i]],
       y[[i]],
       pch = pch[[as.character(summary$entry_replay_semantics[[i]])]],
-      bg = colors[[as.character(summary$basket_archetype[[i]])]],
+      bg = colors[[as.character(summary$feature_set_id[[i]])]],
       col = aesthetic$axis,
       cex = ifelse(summary$selection_policy[[i]] == "pooled_family_asset_variant", 1.45, 1.1)
     )
   }
-  graphics::legend("bottomleft", legend = names(colors), pt.bg = colors, pch = 21L, bty = "n", cex = 0.78)
+  graphics::legend("bottomleft", legend = c("workhorse", "momentum", "momentum+stress"), pt.bg = colors, pch = 21L, bty = "n", cex = 0.78)
   graphics::legend("topright", legend = c("fresh", "continuation", "larger marker = pooled"), pch = c(21L, 24L, 21L), pt.bg = c("#AAAAAA", "#AAAAAA", "#AAAAAA"), bty = "n", cex = 0.78)
   invisible(path)
 }
@@ -510,9 +548,12 @@ write_trade_tape_contact_sheet <- function(symbol_results_by_lane, path) {
   graphics::par(mfrow = c(length(lane_names), length(symbols)), mar = c(3.8, 3.6, 3, 0.8), oma = c(0, 0, 2, 0))
   for (lane_id in lane_names) {
     lane <- symbol_results_by_lane[[lane_id]]
-    lane_label <- sub("^([0-9]{4}Q[0-9])__pooled_family_asset_variant__", "\\1 ", lane_id)
-    lane_label <- sub("state_switch_continuation", "continuation", lane_label)
-    lane_label <- sub("fresh_signal_only", "fresh", lane_label)
+    parts <- strsplit(lane_id, "__", fixed = TRUE)[[1L]]
+    lane_label <- if (length(parts) >= 4L) {
+      paste(parts[[1L]], parts[[2L]], sub("state_switch_continuation", "continuation", sub("fresh_signal_only", "fresh", parts[[4L]])))
+    } else {
+      lane_id
+    }
     for (symbol in symbols) {
       result <- lane[[symbol]]
       if (is.null(result)) {
@@ -533,7 +574,7 @@ write_trade_tape_contact_sheet <- function(symbol_results_by_lane, path) {
 }
 
 write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
-  focus_lane <- "2020Q3__pooled_family_asset_variant__state_switch_continuation"
+  focus_lane <- "momentum_plus_stress__2020Q3__pooled_family_asset_variant__state_switch_continuation"
   focus_symbols <- c("AMD", "NVDA", "TSLA", "MSTR")
   if (!focus_lane %in% names(symbol_results_by_lane)) return(invisible(NULL))
   lane <- symbol_results_by_lane[[focus_lane]]
@@ -550,11 +591,11 @@ write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
       result$executions,
       result$pending_actions,
       result$trades,
-      main = paste0(symbol, " / 2020Q3 continuation")
+      main = paste0(symbol, " / momentum+stress / 2020Q3 continuation")
     )
   }
   graphics::mtext(
-    "Representative Timing Tapes: 2020Q3 Pooled-Family Continuation",
+    "Representative Timing Tapes: Momentum+Stress 2020Q3 Pooled-Family Continuation",
     side = 3,
     outer = TRUE,
     line = 0.6,
@@ -634,18 +675,19 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     agg[[col]] <- pct_label(agg[[col]], 1L)
   }
   lines <- c(
-    "# Gen5.3 Bullish Momentum Specialist Baseline",
+    "# Gen5.3 Bullish Momentum Specialist Feature-Set Screen",
     "",
     "## Plain-Language Purpose",
     "",
     "This screen deliberately narrows the PCA engine's job. Instead of asking one universal router to trade every market behavior, it asks whether behavioral-pool PCA can act as a participation filter for a hand-picked high-beta bullish basket.",
     "",
-    "The intent is to establish a clean baseline before adding TRAIN-only basket curation or new feature sets. If the specialist cannot participate well in its own chosen domain, expanding the system would only hide the problem.",
+    "This follow-up keeps the bullish specialist mechanics fixed and varies only the PCA feature set. The question is whether richer participation features help states come online earlier and stay active longer in bullish high-beta windows without giving back stress-window protection.",
     "",
     "## Design",
     "",
     "- PCA/state surface: behavioral-pool long PCA plus `3x3` quantile states.",
     "- Context recipe: high-beta basket plus active-plus-risk anchors `SPY,QQQ,IWM,SMH,TLT,GLD`; no `VXX`.",
+    "- Feature-set axis: workhorse enriched versus momentum participation versus momentum plus stress.",
     "- Strategy pool: implemented momentum-compatible families plus `no_trade`.",
     "- Selection policy: pooled-family asset-variant, held fixed so this first slice tests specialist participation rather than reopening selection-policy as a factor.",
     "- Replay semantics: fresh-signal-only versus state-switch continuation.",
@@ -654,15 +696,15 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     "",
     "## Run Spec",
     "",
-    md_table(run_spec, c("screen_id", "basket_archetype", "symbols", "context_symbols", "window_id", "selection_policy", "entry_replay_semantics"), n = 18L),
+    md_table(run_spec, c("screen_id", "feature_set_id", "feature_set_label", "basket_archetype", "symbols", "context_symbols", "window_id", "selection_policy", "entry_replay_semantics"), n = 24L),
     "",
     "## Live-Capital Summary",
     "",
-    md_table(printable, c("screen_id", "window_id", "selection_policy", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills", "max_drawdown")),
+    md_table(printable, c("screen_id", "feature_set_label", "window_id", "selection_policy", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills", "max_drawdown")),
     "",
     "## Aggregate Readout",
     "",
-    md_table(agg, c("basket_archetype", "selection_policy", "entry_replay_semantics", "windows_tested", "windows_beating_basket", "mean_total_return", "mean_alpha_vs_active_equal", "mean_exposure", "worst_drawdown")),
+    md_table(agg, c("feature_set_label", "selection_policy", "entry_replay_semantics", "windows_tested", "windows_beating_basket", "mean_total_return", "mean_alpha_vs_active_equal", "mean_exposure", "worst_drawdown")),
     "",
     "## Visual Outputs",
     "",
@@ -672,6 +714,7 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     paste0("- Selection family heatmap: `", paths$selection_family_heatmap_png, "`"),
     paste0("- Trade tape contact sheet: `", paths$trade_tape_contact_sheet_png, "`"),
     paste0("- Representative timing tapes: `", paths$representative_trade_tapes_png, "`"),
+    paste0("- Feature taxonomy: `", paths$feature_taxonomy_csv, "`"),
     "",
     "## Guardrails",
     "",
@@ -679,7 +722,7 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     "- OOS replay consumes frozen state maps and selected strategy authority.",
     "- The screen is research/inspection only and does not change live advice behavior.",
     "- Performance is not accepted allocation evidence.",
-    "- Mean-reversion families and SMA families are intentionally excluded from this first specialist baseline."
+    "- Mean-reversion families and SMA families are intentionally excluded from this specialist feature-set probe."
   )
   writeLines(unlist(lines), paths$report_md, useBytes = TRUE)
 }
@@ -698,7 +741,7 @@ authority_rows <- list()
 packet_rows <- list()
 trade_tape_symbol_results <- list()
 
-message("Gen5.3 bullish momentum specialist baseline")
+message("Gen5.3 bullish momentum specialist feature-set screen")
 message("Output: ", output_dir)
 message("Feed: ", cfg$feed)
 message("Refresh: ", refresh)
@@ -714,7 +757,7 @@ for (spec in screen_specs) {
   end_date <- max(as.Date(substr(windows$as_of_timestamp, 1L, 10L)))
   query_symbols <- unique(c(spec$symbols, spec$context_symbols, "SPY"))
   message("")
-  message("Query bars: ", spec$screen_id, " / ", start_date, " through ", end_date)
+  message("Query bars: ", spec$screen_id, " / ", spec$feature_set_id, " / ", start_date, " through ", end_date)
   query <- g5_workbench_query_adjusted_daily_bars(
     cfg = cfg,
     start_date = start_date,
@@ -741,6 +784,8 @@ for (spec in screen_specs) {
     policy_authorities <- stats::setNames(lapply(selection_policies, function(policy) make_policy_authority(authority_base, policy)), selection_policies)
     policy_states <- g5_wfa_bind_rows_fill(lapply(policy_authorities, function(x) x$selected_states))
     policy_states$screen_id <- spec$screen_id
+    policy_states$feature_set_id <- spec$feature_set_id
+    policy_states$feature_set_label <- spec$feature_set_label
     policy_states$window_id <- window$window_id[[1L]]
     authority_rows[[length(authority_rows) + 1L]] <- policy_states
     as_of_date <- as.Date(substr(window$as_of_timestamp[[1L]], 1L, 10L))
@@ -759,11 +804,12 @@ for (spec in screen_specs) {
             semantics,
             lane_id,
             spec$screen_id,
-            window$window_id[[1L]]
+            window$window_id[[1L]],
+            spec$feature_set_id
           )
         }
-        if (identical(spec$screen_id, "HB_apr")) {
-          trade_tape_symbol_results[[paste(window$quarter_id[[1L]], lane_id, sep = "__")]] <- results
+        if (window$quarter_id[[1L]] %in% c("2020Q3", "2022Q1") && identical(semantics, "state_switch_continuation")) {
+          trade_tape_symbol_results[[paste(spec$feature_set_id, window$quarter_id[[1L]], lane_id, sep = "__")]] <- results
         }
         trades_by_symbol <- stats::setNames(lapply(spec$symbols, function(symbol) {
           accounting_trade_table(results[[symbol]]$trades, symbol, lane_id, spec$screen_id, window$window_id[[1L]])
@@ -787,6 +833,8 @@ for (spec in screen_specs) {
         base <- accounting$baselines
         eq$screen_id <- spec$screen_id
         eq$basket_archetype <- spec$basket_archetype
+        eq$feature_set_id <- spec$feature_set_id
+        eq$feature_set_label <- spec$feature_set_label
         eq$window_id <- window$window_id[[1L]]
         eq$quarter_id <- window$quarter_id[[1L]]
         eq$regime_label <- window$regime_label[[1L]]
@@ -800,6 +848,8 @@ for (spec in screen_specs) {
         if (is.data.frame(ev) && nrow(ev)) {
           ev$screen_id <- spec$screen_id
           ev$basket_archetype <- spec$basket_archetype
+          ev$feature_set_id <- spec$feature_set_id
+          ev$feature_set_label <- spec$feature_set_label
           ev$window_id <- window$window_id[[1L]]
           ev$quarter_id <- window$quarter_id[[1L]]
           ev$lane_id <- lane_id
@@ -810,6 +860,8 @@ for (spec in screen_specs) {
         standalone <- accounting$standalone_symbol_equity
         standalone$screen_id <- spec$screen_id
         standalone$basket_archetype <- spec$basket_archetype
+        standalone$feature_set_id <- spec$feature_set_id
+        standalone$feature_set_label <- spec$feature_set_label
         standalone$window_id <- window$window_id[[1L]]
         standalone$quarter_id <- window$quarter_id[[1L]]
         standalone$lane_id <- lane_id
@@ -819,13 +871,15 @@ for (spec in screen_specs) {
         sym <- accounting$symbol_summary
         sym$screen_id <- spec$screen_id
         sym$basket_archetype <- spec$basket_archetype
+        sym$feature_set_id <- spec$feature_set_id
+        sym$feature_set_label <- spec$feature_set_label
         sym$window_id <- window$window_id[[1L]]
         sym$quarter_id <- window$quarter_id[[1L]]
         sym$lane_id <- lane_id
         sym$selection_policy <- policy
         sym$entry_replay_semantics <- semantics
         symbol_summary_rows[[length(symbol_summary_rows) + 1L]] <- sym
-        summary_rows[[length(summary_rows) + 1L]] <- summarize_accounting(spec$screen_id, spec$basket_archetype, window, lane_id, policy, semantics, accounting, initial_capital)
+        summary_rows[[length(summary_rows) + 1L]] <- summarize_accounting(spec$screen_id, spec$basket_archetype, spec$feature_set_id, spec$feature_set_label, window, lane_id, policy, semantics, accounting, initial_capital)
         replay_rows[[length(replay_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$replay_oos))
         trade_rows[[length(trade_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$trades))
         execution_rows[[length(execution_rows) + 1L]] <- g5_wfa_bind_rows_fill(lapply(results, function(x) x$executions))
@@ -833,6 +887,8 @@ for (spec in screen_specs) {
         packet_rows[[length(packet_rows) + 1L]] <- data.frame(
           screen_id = spec$screen_id,
           basket_archetype = spec$basket_archetype,
+          feature_set_id = spec$feature_set_id,
+          feature_set_label = spec$feature_set_label,
           strategy_pool_id = strategy_pool_id,
           window_id = window$window_id[[1L]],
           quarter_id = window$quarter_id[[1L]],
@@ -855,6 +911,9 @@ run_spec <- do.call(rbind, lapply(screen_specs, function(spec) {
     basket_archetype = spec$basket_archetype,
     strategy_pool_id = strategy_pool_id,
     strategy_pool_label = strategy_pool_label,
+    feature_set_id = spec$feature_set_id,
+    feature_set_label = spec$feature_set_label,
+    feature_cols = paste(spec$feature_cols, collapse = ","),
     symbols = paste(spec$symbols, collapse = ","),
     context_symbols = paste(spec$context_symbols, collapse = ","),
     context_recipe = "active_plus_risk_context_no_vxx",
@@ -876,9 +935,11 @@ run_spec$output_dir <- normalizePath(output_dir, winslash = "/", mustWork = FALS
 
 summary <- g5_wfa_bind_rows_fill(summary_rows)
 summary <- summary[order(summary$screen_id, summary$window_id, summary$selection_policy, summary$entry_replay_semantics), , drop = FALSE]
-aggregate <- do.call(rbind, lapply(split(summary, paste(summary$basket_archetype, summary$selection_policy, summary$entry_replay_semantics, sep = "|")), function(x) {
+aggregate <- do.call(rbind, lapply(split(summary, paste(summary$feature_set_id, summary$basket_archetype, summary$selection_policy, summary$entry_replay_semantics, sep = "|")), function(x) {
   data.frame(
     basket_archetype = x$basket_archetype[[1L]],
+    feature_set_id = x$feature_set_id[[1L]],
+    feature_set_label = x$feature_set_label[[1L]],
     strategy_pool_id = strategy_pool_id,
     selection_policy = x$selection_policy[[1L]],
     entry_replay_semantics = x$entry_replay_semantics[[1L]],
@@ -892,7 +953,7 @@ aggregate <- do.call(rbind, lapply(split(summary, paste(summary$basket_archetype
     stringsAsFactors = FALSE
   )
 }))
-aggregate <- aggregate[order(aggregate$basket_archetype, aggregate$selection_policy, aggregate$entry_replay_semantics), , drop = FALSE]
+aggregate <- aggregate[order(aggregate$feature_set_id, aggregate$selection_policy, aggregate$entry_replay_semantics), , drop = FALSE]
 
 paths <- list(
   run_spec_csv = file.path(output_dir, "bull_momentum_specialist_run_spec.csv"),
@@ -908,6 +969,7 @@ paths <- list(
   symbol_summary_csv = file.path(output_dir, "bull_momentum_specialist_symbol_summary.csv"),
   summary_csv = file.path(output_dir, "bull_momentum_specialist_summary.csv"),
   aggregate_csv = file.path(output_dir, "bull_momentum_specialist_aggregate.csv"),
+  feature_taxonomy_csv = file.path(output_dir, "bull_momentum_specialist_feature_taxonomy.csv"),
   equity_overlay_png = file.path(output_dir, "bull_momentum_specialist_equity_overlay.png"),
   alpha_heatmap_png = file.path(output_dir, "bull_momentum_specialist_alpha_heatmap.png"),
   exposure_alpha_scatter_png = file.path(output_dir, "bull_momentum_specialist_exposure_alpha_scatter.png"),
@@ -932,6 +994,7 @@ g5_wfa_write_csv(g5_wfa_bind_rows_fill(standalone_rows), paths$standalone_symbol
 g5_wfa_write_csv(g5_wfa_bind_rows_fill(symbol_summary_rows), paths$symbol_summary_csv)
 g5_wfa_write_csv(summary, paths$summary_csv)
 g5_wfa_write_csv(aggregate, paths$aggregate_csv)
+g5_wfa_write_csv(g5_pca_regime_feature_set_taxonomy(), paths$feature_taxonomy_csv)
 write_equity_overlay(equity_all, summary, paths$equity_overlay_png)
 write_alpha_heatmap(summary, paths$alpha_heatmap_png)
 write_exposure_alpha_scatter(summary, paths$exposure_alpha_scatter_png)
@@ -952,9 +1015,9 @@ for (col in c("total_return", "active_equal_buy_hold_return", "alpha_vs_active_e
   printable[[col]] <- pct_label(printable[[col]], 1L)
 }
 message("")
-message("Gen5.3 bullish momentum specialist screen complete: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
+message("Gen5.3 bullish momentum specialist feature-set screen complete: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Summary:")
-print(printable[, c("screen_id", "window_id", "selection_policy", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills"), drop = FALSE], row.names = FALSE)
+print(printable[, c("screen_id", "feature_set_label", "window_id", "selection_policy", "entry_replay_semantics", "total_return", "active_equal_buy_hold_return", "alpha_vs_active_equal", "mean_open_position_fraction", "total_entry_fills"), drop = FALSE], row.names = FALSE)
 message("")
 message("Report: ", paths$report_md)
 message("Deck visuals: ", paths$equity_overlay_png, " / ", paths$alpha_heatmap_png, " / ", paths$exposure_alpha_scatter_png, " / ", paths$selection_family_heatmap_png, " / ", paths$trade_tape_contact_sheet_png, " / ", paths$representative_trade_tapes_png)

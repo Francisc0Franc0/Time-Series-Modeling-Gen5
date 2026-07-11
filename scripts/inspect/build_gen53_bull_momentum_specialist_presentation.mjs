@@ -17,11 +17,12 @@ const resultDir = path.join(
   "runs",
   "research_workbench",
   "gen53_bull_momentum_specialist",
-  "g53_bullmom_20260710",
+  "g53_bullmom_20260710features",
 );
 const resultPaths = {
   summary: path.join(resultDir, "bull_momentum_specialist_summary.csv"),
   aggregate: path.join(resultDir, "bull_momentum_specialist_aggregate.csv"),
+  taxonomy: path.join(resultDir, "bull_momentum_specialist_feature_taxonomy.csv"),
   heatmap: path.join(resultDir, "bull_momentum_specialist_alpha_heatmap.png"),
   equity: path.join(resultDir, "bull_momentum_specialist_equity_overlay.png"),
   exposure: path.join(resultDir, "bull_momentum_specialist_exposure_alpha_scatter.png"),
@@ -215,13 +216,13 @@ async function createDeck() {
   const deck = Presentation.create({ slideSize: { width: W, height: H } });
   const summary = await readCsv(resultPaths.summary);
   const aggregate = await readCsv(resultPaths.aggregate);
-  const row = (windowId, semantics) => summary.find((x) => x.window_id === windowId && x.entry_replay_semantics === semantics) ?? {};
-  const fresh2020 = row("2020Q3_asof_20200930", "fresh_signal_only");
-  const cont2020 = row("2020Q3_asof_20200930", "state_switch_continuation");
-  const fresh2022 = row("2022Q1_asof_20220331", "fresh_signal_only");
-  const cont2022 = row("2022Q1_asof_20220331", "state_switch_continuation");
-  const aggFresh = aggregate.find((x) => x.entry_replay_semantics === "fresh_signal_only") ?? {};
-  const aggCont = aggregate.find((x) => x.entry_replay_semantics === "state_switch_continuation") ?? {};
+  const row = (featureSetId, windowId, semantics) => summary.find((x) => x.feature_set_id === featureSetId && x.window_id === windowId && x.entry_replay_semantics === semantics) ?? {};
+  const workhorseCont2020 = row("workhorse_enriched", "2020Q3_asof_20200930", "state_switch_continuation");
+  const stressCont2020 = row("momentum_plus_stress", "2020Q3_asof_20200930", "state_switch_continuation");
+  const workhorseCont2022 = row("workhorse_enriched", "2022Q1_asof_20220331", "state_switch_continuation");
+  const stressCont2022 = row("momentum_plus_stress", "2022Q1_asof_20220331", "state_switch_continuation");
+  const aggStressCont = aggregate.find((x) => x.feature_set_id === "momentum_plus_stress" && x.entry_replay_semantics === "state_switch_continuation") ?? {};
+  const aggWorkhorseCont = aggregate.find((x) => x.feature_set_id === "workhorse_enriched" && x.entry_replay_semantics === "state_switch_continuation") ?? {};
 
   {
     const slide = deck.slides.add();
@@ -477,9 +478,9 @@ async function createDeck() {
   {
     const slide = deck.slides.add();
     slide.background.fill = colors.canvas;
-    addTitle(slide, "The first baseline gives us a clean, bounded answer");
+    addTitle(slide, "The feature-set screen keeps the mechanics fixed and changes only the PCA inputs");
     addPanel(slide, { left: 74, top: 204, width: 520, height: 350 }, { fill: "#EFF6FF", line: "#BFDBFE" });
-    addText(slide, "What we tested", { left: 108, top: 236, width: 360, height: 32 }, { fontSize: 27, bold: true, color: colors.blue });
+    addText(slide, "Held fixed", { left: 108, top: 236, width: 360, height: 32 }, { fontSize: 27, bold: true, color: colors.blue });
     addBulletList(slide, [
       "High-beta basket: AMD, NVDA, TSLA, AAPL, MSTR",
       "Context: basket + SPY/QQQ/IWM/SMH/TLT/GLD",
@@ -489,33 +490,52 @@ async function createDeck() {
     ], { left: 110, top: 298, width: 410, height: 200 }, { dotColor: colors.blue, fontSize: 18, lineHeight: 34 });
 
     addPanel(slide, { left: 682, top: 204, width: 520, height: 350 }, { fill: "#F0FDF4", line: "#A7F3D0" });
-    addText(slide, "Why this matters", { left: 716, top: 236, width: 360, height: 32 }, { fontSize: 27, bold: true, color: colors.green });
+    addText(slide, "Varied deliberately", { left: 716, top: 236, width: 360, height: 32 }, { fontSize: 27, bold: true, color: colors.green });
     addBulletList(slide, [
-      "It tests participation quality before adding basket curation",
-      "It keeps mean reversion and SMA out of the first specialist baseline",
-      "It judges the system against the hard comparator: holding the exact basket",
-      "It separates upside capture from drawdown avoidance",
-    ], { left: 718, top: 306, width: 410, height: 176 }, { dotColor: colors.green, fontSize: 18, lineHeight: 39 });
+      "Workhorse enriched",
+      "Momentum participation",
+      "Momentum plus stress",
+      "Same strategy grid and replay semantics for every lane",
+      "Same equal-weight basket-hold benchmark",
+    ], { left: 718, top: 306, width: 410, height: 176 }, { dotColor: colors.green, fontSize: 18, lineHeight: 34 });
   }
 
   {
     const slide = deck.slides.add();
     slide.background.fill = colors.canvas;
-    addTitle(slide, "The baseline protected capital in stress but still undercaptured the rebound");
+    addTitle(slide, "Each feature set asks a different question about bullish participation");
+    const featureCards = [
+      ["Workhorse enriched", "Can the existing broad Gen5 state surface do the job without modification?", "#EFF6FF", colors.blue],
+      ["Momentum participation", "Can trend strength, impulse, persistence, range location, drawdown, and recovery sharpen entries?", "#ECFDF5", colors.green],
+      ["Momentum plus stress", "Can the participation surface improve upside while keeping volatility and stress context for drawdown windows?", "#FFF7ED", colors.amber],
+    ];
+    featureCards.forEach(([title, body, fill, color], index) => {
+      const x = 74 + index * 394;
+      addPanel(slide, { left: x, top: 218, width: 342, height: 286 }, { fill, line: "#D7DEE8" });
+      addText(slide, title, { left: x + 26, top: 246, width: 286, height: 54 }, { fontSize: 25, bold: true, color });
+      addText(slide, body, { left: x + 26, top: 326, width: 286, height: 126 }, { fontSize: 20, color: colors.ink });
+    });
+    addText(slide, "The feature taxonomy CSV records the exact columns used in each lane, so the interpretation does not depend on memory.", { left: 130, top: 592, width: 1020, height: 44 }, { fontSize: 23, bold: true, color: colors.ink, alignment: "center" });
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = colors.canvas;
+    addTitle(slide, "Momentum plus stress improved upside capture without losing the stress-window protection");
     addPanel(slide, { left: 72, top: 210, width: 270, height: 140 }, { fill: "#FFF1F2", line: "#FDA4AF" });
-    addText(slide, pp(cont2020.alpha_vs_active_equal), { left: 96, top: 238, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.rose, alignment: "center" });
-    addText(slide, "Continuation alpha vs hold in 2020Q3", { left: 98, top: 294, width: 210, height: 38 }, { fontSize: 16, color: colors.muted, alignment: "center" });
+    addText(slide, pp(stressCont2020.alpha_vs_active_equal), { left: 96, top: 238, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.rose, alignment: "center" });
+    addText(slide, "Momentum+stress continuation alpha in 2020Q3", { left: 98, top: 292, width: 210, height: 48 }, { fontSize: 16, color: colors.muted, alignment: "center" });
     addPanel(slide, { left: 72, top: 390, width: 270, height: 140 }, { fill: "#ECFDF5", line: "#A7F3D0" });
-    addText(slide, pp(cont2022.alpha_vs_active_equal), { left: 96, top: 418, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.green, alignment: "center" });
-    addText(slide, "Continuation alpha vs hold in 2022Q1", { left: 98, top: 474, width: 210, height: 38 }, { fontSize: 16, color: colors.muted, alignment: "center" });
+    addText(slide, pp(stressCont2022.alpha_vs_active_equal), { left: 96, top: 418, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.green, alignment: "center" });
+    addText(slide, "Momentum+stress continuation alpha in 2022Q1", { left: 98, top: 472, width: 210, height: 48 }, { fontSize: 16, color: colors.muted, alignment: "center" });
     addPanel(slide, { left: 374, top: 210, width: 270, height: 140 }, { fill: "#F8FAFC", line: "#CBD5E1" });
-    addText(slide, pct(cont2020.mean_open_position_fraction), { left: 398, top: 238, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.teal, alignment: "center" });
-    addText(slide, "Continuation exposure in 2020Q3", { left: 400, top: 294, width: 210, height: 38 }, { fontSize: 16, color: colors.muted, alignment: "center" });
+    addText(slide, pct(stressCont2020.mean_open_position_fraction), { left: 398, top: 238, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.teal, alignment: "center" });
+    addText(slide, "Momentum+stress exposure in 2020Q3", { left: 400, top: 292, width: 210, height: 48 }, { fontSize: 16, color: colors.muted, alignment: "center" });
     addPanel(slide, { left: 374, top: 390, width: 270, height: 140 }, { fill: "#F8FAFC", line: "#CBD5E1" });
-    addText(slide, pct(cont2022.mean_open_position_fraction), { left: 398, top: 418, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.teal, alignment: "center" });
-    addText(slide, "Continuation exposure in 2022Q1", { left: 400, top: 474, width: 210, height: 38 }, { fontSize: 16, color: colors.muted, alignment: "center" });
+    addText(slide, pct(stressCont2022.mean_open_position_fraction), { left: 398, top: 418, width: 210, height: 46 }, { fontSize: 34, bold: true, color: colors.teal, alignment: "center" });
+    addText(slide, "Momentum+stress exposure in 2022Q1", { left: 400, top: 472, width: 210, height: 48 }, { fontSize: 16, color: colors.muted, alignment: "center" });
     await addImage(slide, resultPaths.heatmap, { left: 682, top: 190, width: 500, height: 392 }, "Gen5.3 alpha heatmap versus equal-weight basket hold");
-    addText(slide, `Aggregate mean alpha was ${pp(aggFresh.mean_alpha_vs_active_equal)} for fresh and ${pp(aggCont.mean_alpha_vs_active_equal)} for continuation. This is not a victory lap; it is a sharper diagnosis.`, { left: 114, top: 596, width: 1030, height: 44 }, { fontSize: 22, bold: true, color: colors.ink, alignment: "center" });
+    addText(slide, `Against workhorse continuation, momentum+stress improved mean alpha from ${pp(aggWorkhorseCont.mean_alpha_vs_active_equal)} to ${pp(aggStressCont.mean_alpha_vs_active_equal)}. It is still not benchmark-beating, but the feature layer moved in the desired direction.`, { left: 104, top: 596, width: 1060, height: 58 }, { fontSize: 21, bold: true, color: colors.ink, alignment: "center" });
   }
 
   {
@@ -524,7 +544,7 @@ async function createDeck() {
     addTitle(slide, "The audit points to participation timing, not just strategy availability");
     await addImage(slide, resultPaths.equity, { left: 46, top: 190, width: 650, height: 430 }, "Gen5.3 bullish momentum specialist equity overlay");
     await addImage(slide, resultPaths.family, { left: 722, top: 196, width: 500, height: 340 }, "Selected strategy family by asset and PCA state");
-    addText(slide, "The state/family map selected plenty of momentum candidates, so the first failure mode is not that no-trade swallowed the whole system. The problem is more specific: exposure still arrived too late or too lightly in the rebound while drawdown avoidance worked better in the stress window.", { left: 742, top: 554, width: 440, height: 86 }, { fontSize: 18, color: colors.muted });
+    addText(slide, "The challenger improved participation but still lagged basket hold. That means the feature layer is probably relevant, but not sufficient by itself. The next useful tests should confirm across more windows and inspect whether entries remain late.", { left: 742, top: 554, width: 440, height: 86 }, { fontSize: 18, color: colors.muted });
   }
 
   {
@@ -546,16 +566,16 @@ async function createDeck() {
   {
     const slide = deck.slides.add();
     slide.background.fill = colors.canvas;
-    addTitle(slide, "Next Gen5.3 slice: diagnose why bullish participation is still late");
+    addTitle(slide, "Next Gen5.3 slice: confirm the feature signal before widening the grid");
     addPanel(slide, { left: 82, top: 214, width: 1090, height: 330 }, { fill: "#F8FAFC", line: "#D7DEE8" });
     addText(slide, "Recommended next question", { left: 120, top: 248, width: 430, height: 34 }, { fontSize: 27, bold: true, color: colors.ink });
-    addText(slide, "Do improved momentum-participation features make PCA states enter and stay long earlier during obvious high-beta upside without surrendering the 2022 drawdown protection?", { left: 120, top: 312, width: 940, height: 78 }, { fontSize: 25, color: colors.ink });
+    addText(slide, "The first challenger moved in the right direction, but it still did not beat the high-beta basket hold. The next question is whether that improvement survives more windows and whether the trade tapes show earlier participation.", { left: 120, top: 312, width: 940, height: 78 }, { fontSize: 25, color: colors.ink });
     addBulletList(slide, [
-      "Keep the same basket, context, 3x3 PCA, pooled-family policy, and benchmark.",
-      "Add one compact feature-set challenger focused on trend slope, relative strength, and drawdown recovery.",
-      "Run 2020Q3 and 2022Q1 first; expand windows only if the behavior changes mechanically.",
+      "Keep momentum plus stress as the leading feature challenger.",
+      "Add several adjacent and non-adjacent high-beta windows before changing strategy parameters.",
+      "Use representative trade tapes to verify whether entries actually move earlier.",
     ], { left: 124, top: 430, width: 940, height: 100 }, { dotColor: colors.amber, fontSize: 18, lineHeight: 32 });
-    addText(slide, "Compute note: full Gen4 daily-default breadth is expensive enough that feature engineering should start with compact grids, then confirm with full breadth after the mechanism is visible.", { left: 128, top: 610, width: 1010, height: 42 }, { fontSize: 20, bold: true, color: colors.ink, alignment: "center" });
+    addText(slide, "A wider strategy grid is still a later confirmation tool. Right now the higher-signal question is whether the state features consistently improve timing.", { left: 128, top: 610, width: 1010, height: 42 }, { fontSize: 20, bold: true, color: colors.ink, alignment: "center" });
   }
 
   return deck;

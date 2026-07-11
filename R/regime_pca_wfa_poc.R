@@ -656,7 +656,8 @@ g5_pca_wfa_fit_fold_models <- function(
   kmeans_nstart = 30L,
   regime_context_symbols = symbol,
   pca_panel_mode = "date_aligned_context",
-  min_train_state_rows = 20L
+  min_train_state_rows = 20L,
+  feature_cols = g5_pca_regime_default_features()
 ) {
   state_engine <- g5_pca_wfa_state_engine(state_engine[[1L]])
   pca_panel_mode <- g5_pca_wfa_panel_mode(pca_panel_mode)
@@ -678,7 +679,8 @@ g5_pca_wfa_fit_fold_models <- function(
       symbol = symbol,
       regime_context_symbols = regime_context_symbols,
       pca_panel_mode = pca_panel_mode,
-      fold = fold
+      fold = fold,
+      feature_cols = feature_cols
     )
     pca <- if (state_engine %in% c("pca_kmeans", "pca_kmeans_auto")) {
       g5_pca_regime_fit_kmeans(

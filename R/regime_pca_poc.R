@@ -20,6 +20,79 @@ g5_pca_regime_default_features <- function() {
   )
 }
 
+g5_pca_regime_feature_set <- function(feature_set_id = "workhorse_enriched") {
+  feature_set_id <- as.character(feature_set_id)[[1L]]
+  if (!nzchar(feature_set_id)) feature_set_id <- "workhorse_enriched"
+  presets <- list(
+    workhorse_enriched = g5_pca_regime_default_features(),
+    momentum_participation = c(
+      "ema_gap",
+      "ema_gap_10_50",
+      "ema_gap_20_100",
+      "trend_slope_5",
+      "trend_slope_20",
+      "ret_5",
+      "ret_20",
+      "ret_60",
+      "efficiency_ratio_20",
+      "above_sma20_frac_20",
+      "close_location_20",
+      "drawdown_60",
+      "recovery_from_low_60"
+    ),
+    momentum_plus_stress = c(
+      "ema_gap",
+      "ema_gap_10_50",
+      "ema_gap_20_100",
+      "trend_slope_5",
+      "trend_slope_20",
+      "ret_5",
+      "ret_20",
+      "ret_60",
+      "efficiency_ratio_20",
+      "above_sma20_frac_20",
+      "close_location_20",
+      "close_location_60",
+      "drawdown_60",
+      "recovery_from_low_60",
+      "vol_20",
+      "atr_pct",
+      "bb_width",
+      "ret_skew_20"
+    )
+  )
+  if (!feature_set_id %in% names(presets)) {
+    g5_stop(paste0("Unknown PCA regime feature_set_id: ", feature_set_id))
+  }
+  presets[[feature_set_id]]
+}
+
+g5_pca_regime_feature_set_taxonomy <- function() {
+  data.frame(
+    feature_set_id = c(
+      "workhorse_enriched",
+      "momentum_participation",
+      "momentum_plus_stress"
+    ),
+    feature_set_label = c(
+      "Workhorse enriched",
+      "Momentum participation",
+      "Momentum plus stress"
+    ),
+    purpose = c(
+      "Current Gen5 workhorse surface combining trend, stretch, volatility, chop, efficiency, and return-shape descriptors.",
+      "Sharper bullish-participation surface meant to detect trend strength, persistence, recent return impulse, and recovery position.",
+      "Momentum-participation surface with volatility and stress descriptors added back to preserve drawdown-avoidance context."
+    ),
+    feature_cols = vapply(
+      c("workhorse_enriched", "momentum_participation", "momentum_plus_stress"),
+      function(id) paste(g5_pca_regime_feature_set(id), collapse = ","),
+      character(1L)
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_pca_regime_artifact_prefix <- function(as_of_timestamp, symbol, grid_n, train_start_date, oos_end_date) {
   stamp <- gsub("[^0-9A-Za-z]+", "", as.character(as_of_timestamp))
   symbol <- gsub("[^0-9A-Za-z_.-]+", "_", g5_standardize_symbol(symbol)[[1L]])
@@ -116,6 +189,44 @@ g5_pca_regime_rolling_sum <- function(x, n) {
     window <- x[(i - n + 1L):i]
     if (all(is.finite(window))) {
       out[[i]] <- sum(window)
+    }
+  }
+  out
+}
+
+g5_pca_regime_rolling_min <- function(x, n) {
+  x <- as.numeric(x)
+  n <- as.integer(n)
+  if (is.na(n) || n < 1L) {
+    g5_stop("rolling min period must be positive.")
+  }
+  out <- rep(NA_real_, length(x))
+  if (length(x) < n) {
+    return(out)
+  }
+  for (i in n:length(x)) {
+    window <- x[(i - n + 1L):i]
+    if (all(is.finite(window))) {
+      out[[i]] <- min(window)
+    }
+  }
+  out
+}
+
+g5_pca_regime_rolling_max <- function(x, n) {
+  x <- as.numeric(x)
+  n <- as.integer(n)
+  if (is.na(n) || n < 1L) {
+    g5_stop("rolling max period must be positive.")
+  }
+  out <- rep(NA_real_, length(x))
+  if (length(x) < n) {
+    return(out)
+  }
+  for (i in n:length(x)) {
+    window <- x[(i - n + 1L):i]
+    if (all(is.finite(window))) {
+      out[[i]] <- max(window)
     }
   }
   out
@@ -270,14 +381,29 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
   high <- as.numeric(bars$high)
   low <- as.numeric(bars$low)
   ret1 <- c(NA_real_, close[-1L] / close[-length(close)] - 1)
+  ret_n <- function(n) {
+    n <- as.integer(n)
+    out <- rep(NA_real_, length(close))
+    if (length(close) > n) {
+      out[(n + 1L):length(close)] <- close[(n + 1L):length(close)] / close[seq_len(length(close) - n)] - 1
+    }
+    out
+  }
   ema_fast <- g5_pca_regime_ema(close, 20L)
   ema_slow <- g5_pca_regime_ema(close, 50L)
+  ema_10 <- g5_pca_regime_ema(close, 10L)
+  ema_100 <- g5_pca_regime_ema(close, 100L)
   sma_20 <- g5_pca_regime_rolling_mean(close, 20L)
   sma_50 <- g5_pca_regime_rolling_mean(close, 50L)
   sma_200 <- g5_pca_regime_rolling_mean(close, 200L)
   sd_20_close <- g5_pca_regime_rolling_sd(close, 20L)
   vol_20 <- g5_pca_regime_rolling_sd(ret1, 20L)
   atr_14 <- g5_pca_regime_rolling_mean(g5_pca_regime_true_range(high, low, close), 14L)
+  high_20 <- g5_pca_regime_rolling_max(high, 20L)
+  low_20 <- g5_pca_regime_rolling_min(low, 20L)
+  high_60 <- g5_pca_regime_rolling_max(high, 60L)
+  low_60 <- g5_pca_regime_rolling_min(low, 60L)
+  close_high_60 <- g5_pca_regime_rolling_max(close, 60L)
   bb_mid <- sma_20
   bb_up <- bb_mid + 2 * sd_20_close
   bb_dn <- bb_mid - 2 * sd_20_close
@@ -291,8 +417,14 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
     close = close,
     volume = as.numeric(bars$volume),
     ret1 = ret1,
+    ret_5 = ret_n(5L),
+    ret_20 = ret_n(20L),
+    ret_60 = ret_n(60L),
     ema_gap = ema_fast / ema_slow - 1,
+    ema_gap_10_50 = ema_10 / ema_slow - 1,
+    ema_gap_20_100 = ema_fast / ema_100 - 1,
     trend_slope_5 = (ema_fast / c(rep(NA_real_, 5L), head(ema_fast, -5L)) - 1) / 5,
+    trend_slope_20 = (ema_fast / c(rep(NA_real_, 20L), head(ema_fast, -20L)) - 1) / 20,
     rsi_14 = g5_pca_regime_rsi(close, 14L),
     vol_20 = vol_20,
     atr_pct = atr_14 / close,
@@ -303,6 +435,11 @@ g5_pca_regime_feature_table <- function(bars, symbol, end_date = NULL) {
     efficiency_ratio_20 = g5_pca_regime_efficiency_ratio(close, 20L),
     z_close_sma20 = (close - sma_20) / pmax(sd_20_close, 1e-8),
     ret_skew_20 = g5_pca_regime_rolling_skewness(ret1, 20L),
+    above_sma20_frac_20 = g5_pca_regime_rolling_mean(as.numeric(close > sma_20), 20L),
+    close_location_20 = (close - low_20) / pmax(high_20 - low_20, 1e-8),
+    close_location_60 = (close - low_60) / pmax(high_60 - low_60, 1e-8),
+    drawdown_60 = close / pmax(close_high_60, 1e-8) - 1,
+    recovery_from_low_60 = close / pmax(low_60, 1e-8) - 1,
     stringsAsFactors = FALSE
   )
 }
