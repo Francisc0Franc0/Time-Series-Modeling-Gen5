@@ -968,6 +968,22 @@ write_report <- function(paths, run_spec, summary, aggregate) {
   for (col in c("mean_total_return", "mean_alpha_vs_active_equal", "mean_exposure", "worst_drawdown")) {
     agg[[col]] <- pct_label(agg[[col]], 1L)
   }
+  context_line <- if (length(unique(run_spec$context_id)) == 1L) {
+    paste0("- Context: `", unique(run_spec$context_id), "`.")
+  } else {
+    "- Context-size axis: live basket only, live plus high-beta peers, and live plus high-beta peers plus macro/risk anchors."
+  }
+  feature_line <- if (length(unique(run_spec$feature_set_label)) == 1L) {
+    paste0("- Feature set: ", unique(run_spec$feature_set_label), ".")
+  } else {
+    "- Feature-set axis: workhorse enriched, momentum participation, momentum plus stress, market-relative momentum, and any configured diagnostic feature sets."
+  }
+  replay_line <- if (length(unique(run_spec$entry_replay_semantics)) == 1L) {
+    paste0("- Replay semantics: `", unique(run_spec$entry_replay_semantics), "`.")
+  } else {
+    "- Replay semantics: fresh-signal-only versus state-switch continuation."
+  }
+  pool_families <- paste(paste0("`", candidate_families, "`"), collapse = ", ")
   lines <- c(
     "# Gen5.3 Momentum Context-Size Specialist Screen",
     "",
@@ -975,17 +991,17 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     "",
     "This screen deliberately narrows the PCA engine's job. Instead of asking one universal router to trade every market behavior, it asks whether behavioral-pool PCA can act as a participation filter for a hand-picked high-beta bullish basket.",
     "",
-    "The motivating memory from Gen4 is that reliable alpha seemed to appear only after the research universe became larger and more diverse. This screen tests that memory with a stricter downstream hypothesis set: only EMA cross, EMA trend, no-trade, and no-trade exit-immediate behavior may compete.",
+    paste0("The motivating memory from Gen4 is that reliable alpha seemed to appear only after the research universe became larger and more diverse. This packet tests that memory with the configured downstream hypothesis set: ", pool_families, "."),
     "",
     "## Design",
     "",
     "- PCA/state surface: behavioral-pool long PCA plus `3x3` quantile states.",
     "- Live basket: long-history high-beta symbols `AMD,NVDA,TSLA,MSTR,AVGO`.",
-    "- Context-size axis: live basket only, live plus high-beta peers, and live plus high-beta peers plus macro/risk anchors.",
-    "- Feature-set axis: workhorse enriched, momentum participation, momentum plus stress, and market-relative momentum.",
-    "- Strategy pool: `ema_cross`, `ema_trend`, `no_trade`, and `no_trade_exit_immediate` only.",
+    context_line,
+    feature_line,
+    paste0("- Strategy pool: `", strategy_pool_id, "` / ", strategy_pool_label, ". Candidate families: ", pool_families, "."),
     "- Selection policy: pooled-family asset-variant, held fixed so this first slice tests specialist participation rather than reopening selection-policy as a factor.",
-    "- Replay semantics: fresh-signal-only versus state-switch continuation.",
+    replay_line,
     "- Accounting: true shared-account live-capital replay with dynamic equal-slot, cash-capped entries.",
     "- Benchmark: equal-weight buy-and-hold of the exact live basket over the same annual OOS window, plus SPY reference.",
     paste0("- Annual replay mode: `", annual_replay_mode, "`. `quarter_continuity_replay` keeps independent quarterly authority fitting, but lets an open trade remain locked to its entry-quarter authority until it exits; new entries then use the authority active at the flat date."),
@@ -1020,7 +1036,7 @@ write_report <- function(paths, run_spec, summary, aggregate) {
     "- Cross-quarter continuity preserves open-trade exit ownership; it does not allow OOS information to refit, relabel, or reselect authority.",
     "- The screen is research/inspection only and does not change live advice behavior.",
     "- Performance is not accepted allocation evidence.",
-    "- Mean-reversion, breakout, pullback, and SMA families are intentionally excluded from this EMA-only specialist probe."
+    "- Candidate-family scope is packet-specific and must be read from the run spec; no family is accepted as a default from this inspection packet alone."
   )
   writeLines(unlist(lines), paths$report_md, useBytes = TRUE)
 }

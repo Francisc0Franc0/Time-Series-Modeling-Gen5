@@ -173,3 +173,34 @@ Recommended compute-safe next run:
 2. Start with `trend_breakout` on two annual windows: `2020Y_asof_20201231` and `2022Y_asof_20221231`.
 3. Only run `mean_reversion_only` or `classical_full` after the trend/breakout diagnostic either improves participation or fails cleanly.
 4. Consider adding resume/checkpoint behavior before launching broad all-window reopened-pool sweeps.
+
+## Trend/Breakout Two-Window Result
+
+Completed packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260712stratbreakout2win/`
+
+Purpose:
+
+This was the deliberately scheduled compute slice after the broad-pool timing gate. It kept the annual continuity control lane fixed and reopened only the trend/breakout strategy families:
+
+- context: `hb_risk_aware_18`;
+- feature set: `workhorse_enriched`;
+- annual replay: `quarter_continuity_replay`;
+- replay semantics: `state_switch_continuation`;
+- strategy pool: `trend_breakout`;
+- candidate families: `ema_cross`, `ema_trend`, `breakout`, `pullback_in_uptrend`, `vol_expansion_breakout`, `donchian_breakout_vol_expand`, `no_trade`, and `no_trade_exit_immediate`;
+- windows: `2020Y_asof_20201231` and `2022Y_asof_20221231`.
+
+Apples-to-apples readout versus the EMA-only control:
+
+- `2020`: EMA-only returned `106.0%` with `-121.3 pp` basket alpha and `58.5%` exposure. Trend/breakout returned `53.3%` with `-173.9 pp` basket alpha and `36.8%` exposure.
+- `2022`: EMA-only returned `-22.6%` with `+30.4 pp` basket alpha and `16.8%` exposure. Trend/breakout returned `-10.8%` with `+42.2 pp` basket alpha and `19.3%` exposure.
+
+Interpretation:
+
+The trend/breakout pool did not solve the upside participation problem. It made the system more defensive/selective: much worse in the 2020 high-beta rebound, but cleaner in the 2022 drawdown. The selection family heatmap shows a cash-dominant authority map with only selective pullback, Donchian breakout, and EMA-cross cells.
+
+Decision implication:
+
+Do not run the full four-window trend/breakout sweep yet. The next narrower question should be about entry/participation design or state timing, not simply adding more breakout families. If strategy diversity is reopened again, it should be because we have a specific participation hypothesis, not because a broader pool is assumed to be better.

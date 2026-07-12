@@ -443,3 +443,26 @@ Feature design matters, but the system still has a participation/timing problem 
 
 - schedule the bounded `trend_breakout` two-window compute job deliberately; or
 - improve wrapper checkpoint/resume behavior before running broad reopened pools.
+
+## Trend/Breakout Reopening Result
+
+Trend/breakout packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260712stratbreakout2win/`
+
+Purpose:
+
+This follow-up ran the deliberately bounded two-window `trend_breakout` compute slice. It held `hb_risk_aware_18`, `workhorse_enriched`, `state_switch_continuation`, annual continuity replay, and the live basket fixed, then added breakout, pullback, volatility-expansion breakout, and Donchian-style breakout families to the EMA/no-trade control pool.
+
+Readout:
+
+- In `2020`, trend/breakout returned `53.3%` versus `106.0%` for the EMA-only control. Basket-relative alpha worsened from `-121.3 pp` to `-173.9 pp`, and exposure fell from `58.5%` to `36.8%`.
+- In `2022`, trend/breakout returned `-10.8%` versus `-22.6%` for EMA-only. Basket-relative alpha improved from `+30.4 pp` to `+42.2 pp`, and max drawdown improved from `-25.0%` to `-12.8%`.
+
+Interpretation:
+
+The reopened trend/breakout pool behaved as a more defensive/selective variant, not as a better bullish participation engine. That is useful, but it does not address the central Gen5.3 failure mode: undercapturing high-beta upside when the benchmark basket rips higher.
+
+Current implication:
+
+Do not immediately run the full four-window trend/breakout sweep or jump to the broad classical pool. The next narrow test should target state timing and entry/hold participation more directly.

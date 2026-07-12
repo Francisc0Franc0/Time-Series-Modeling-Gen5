@@ -33,6 +33,13 @@ const featureDiagnosticDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_20260711stratema",
 );
+const trendBreakoutDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_20260712stratbreakout2win",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -60,6 +67,14 @@ const featureDiagnosticPaths = {
   exposure: path.join(featureDiagnosticDir, "momentum_context_size_exposure_alpha_scatter.png"),
   family: path.join(featureDiagnosticDir, "momentum_context_size_selection_family_heatmap.png"),
   tapes: path.join(featureDiagnosticDir, "momentum_context_size_trade_tape_contact_sheet.png"),
+};
+
+const trendBreakoutPaths = {
+  summary: path.join(trendBreakoutDir, "momentum_context_size_summary.csv"),
+  aggregate: path.join(trendBreakoutDir, "momentum_context_size_aggregate.csv"),
+  heatmap: path.join(trendBreakoutDir, "momentum_context_size_alpha_heatmap.png"),
+  family: path.join(trendBreakoutDir, "momentum_context_size_selection_family_heatmap.png"),
+  tapes: path.join(trendBreakoutDir, "momentum_context_size_trade_tape_contact_sheet.png"),
 };
 
 const W = 1280;
@@ -275,7 +290,9 @@ async function createDeck() {
   const summary = await readCsv(resultPaths.summary);
   const continuity = await readCsv(resultPaths.continuity);
   const independentAggregate = await readCsv(independentPaths.aggregate);
+  const featureDiagnosticSummary = await readCsv(featureDiagnosticPaths.summary);
   const featureDiagnosticAggregate = await readCsv(featureDiagnosticPaths.aggregate);
+  const trendBreakoutSummary = await readCsv(trendBreakoutPaths.summary);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
@@ -286,6 +303,10 @@ async function createDeck() {
   const best2020 = summary.find((x) => sameControlLane(x) && x.window_id === "2020Y_asof_20201231");
   const best2022 = summary.find((x) => sameControlLane(x) && x.window_id === "2022Y_asof_20221231");
   const best2024 = summary.find((x) => sameControlLane(x) && x.window_id === "2024Y_asof_20241231");
+  const ema2020 = featureDiagnosticSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231");
+  const ema2022 = featureDiagnosticSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
+  const breakout2020 = trendBreakoutSummary.find((x) => x.window_id === "2020Y_asof_20201231");
+  const breakout2022 = trendBreakoutSummary.find((x) => x.window_id === "2022Y_asof_20221231");
 
   {
     const slide = deck.slides.add();
@@ -547,23 +568,62 @@ async function createDeck() {
   {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
-    title(slide, "Broad strategy-pool reopening is now a deliberate compute run");
-    rect(slide, { left: 86, top: 218, width: 466, height: 260 }, colors.soft, colors.rule);
-    rect(slide, { left: 680, top: 218, width: 466, height: 260 }, colors.soft, colors.rule);
-    text(slide, "What we learned", { left: 120, top: 252, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.orange });
+    title(slide, "Trend and breakout families made the lane more defensive, not more participatory");
+    const rows = [
+      ["2020", "EMA-only", ema2020],
+      ["2020", "Trend/breakout", breakout2020],
+      ["2022", "EMA-only", ema2022],
+      ["2022", "Trend/breakout", breakout2022],
+    ];
+    const x = 88;
+    const y = 214;
+    const widths = [88, 190, 134, 128, 128, 128, 110];
+    const headers = ["Year", "Pool", "Return", "Alpha", "Exposure", "Drawdown", "Entries"];
+    let left = x;
+    headers.forEach((header, index) => {
+      rect(slide, { left, top: y, width: widths[index], height: 38 }, colors.soft, colors.rule);
+      text(slide, header, { left: left + 8, top: y + 9, width: widths[index] - 16, height: 22 }, { fontSize: 15, bold: true });
+      left += widths[index];
+    });
+    rows.forEach(([year, pool, row], rowIndex) => {
+      left = x;
+      const yy = y + 38 + rowIndex * 62;
+      const values = [
+        year,
+        pool,
+        pct(row.total_return),
+        pp(row.alpha_vs_active_equal),
+        pct(row.mean_open_position_fraction),
+        pct(row.max_drawdown),
+        row.total_entry_fills,
+      ];
+      values.forEach((value, index) => {
+        rect(slide, { left, top: yy, width: widths[index], height: 62 }, rowIndex % 2 ? "#FFFFFF" : colors.softer, colors.rule);
+        text(slide, String(value), { left: left + 8, top: yy + 18, width: widths[index] - 16, height: 26 }, {
+          fontSize: 16,
+          bold: index === 1,
+          color: index === 3 ? (String(value).startsWith("+") ? colors.green : colors.red) : colors.ink,
+        });
+        left += widths[index];
+      });
+    });
+    text(slide, "The reopened pool improved 2022 defense, but it cut 2020 exposure and return sharply. That is useful selectivity evidence, not a solution to the high-beta upside capture problem.", { left: 112, top: 566, width: 1024, height: 62 }, { fontSize: 23, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The strategy map explains the defensive readout");
+    await image(slide, trendBreakoutPaths.family, { left: 60, top: 176, width: 700, height: 472 }, "Trend-breakout selected strategy family heatmap");
+    rect(slide, { left: 820, top: 228, width: 334, height: 280 }, colors.soft, colors.rule);
+    text(slide, "Visual read", { left: 852, top: 258, width: 240, height: 32 }, { fontSize: 26, bold: true });
     bullets(slide, [
-      "EMA-only feature diagnostics are cheap enough for interactive iteration.",
-      "Trend/breakout authority fitting was much slower: roughly twenty minutes for one quarter across five symbols.",
-      "A full four-window reopened-pool sweep would be a dedicated compute job.",
-    ], { left: 122, top: 314, width: 350, height: 140 }, { fontSize: 17, lineHeight: 46, dotColor: colors.orange });
-    text(slide, "Recommended next compute slice", { left: 714, top: 252, width: 360, height: 34 }, { fontSize: 26, bold: true, color: colors.green });
-    bullets(slide, [
-      "Keep the control lane fixed.",
-      "Run one reopened pool at a time.",
-      "Start with trend/breakout on two annual windows before running classical full.",
-      "Treat partial packets as timing evidence only, not performance evidence.",
-    ], { left: 716, top: 314, width: 350, height: 156 }, { fontSize: 17, lineHeight: 40, dotColor: colors.green });
-    text(slide, "This is a useful engineering result: the next question is still valid, but it should be scheduled rather than hidden inside a chat turn.", { left: 112, top: 584, width: 1024, height: 54 }, { fontSize: 23, bold: true, alignment: "center" });
+      "Most asset-state cells still select cash.",
+      "Breakout additions appear only in narrow pockets.",
+      "The pool reduced drawdown but did not keep the system long enough in 2020.",
+    ], { left: 854, top: 320, width: 246, height: 160 }, { fontSize: 17, lineHeight: 50, dotColor: colors.orange });
+    text(slide, "Next question: improve state timing and hold participation directly, instead of assuming a broader family list will create upside capture.", { left: 110, top: 590, width: 1030, height: 42 }, { fontSize: 22, bold: true, alignment: "center" });
     footer(slide);
   }
 

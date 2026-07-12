@@ -340,6 +340,14 @@ Strategy-pool compute gate:
 
 Attempted `trend_breakout` reopened-pool packets under `g53_momctx_20260711stratbreakout` and `g53_momctx_20260711stratbreakout2win` were intentionally stopped after measuring cost. The bounded two-window run took roughly twenty minutes to fit one quarter across five live symbols, before full replay/accounting. Those partial folders are compute-timing evidence only, not completed performance evidence. Next planned slice: schedule one reopened pool at a time, starting with a deliberate two-window `trend_breakout` run, or add checkpoint/resume behavior before broad reopened-pool sweeps. Keep live advice bridge behavior untouched.
 
+Completed trend/breakout reopening packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260712stratbreakout2win/`
+
+This ran the deliberately bounded two-window `trend_breakout` slice over `2020Y_asof_20201231` and `2022Y_asof_20221231`, holding `hb_risk_aware_18`, `workhorse_enriched`, state-switch continuation, annual continuity replay, and the live basket fixed. It did not solve the upside participation issue. In `2020`, trend/breakout returned `53.3%` versus `106.0%` for the EMA-only control, with alpha worsening from `-121.3 pp` to `-173.9 pp` and exposure falling from `58.5%` to `36.8%`. In `2022`, it improved defense: return improved from `-22.6%` to `-10.8%`, alpha from `+30.4 pp` to `+42.2 pp`, and max drawdown from `-25.0%` to `-12.8%`. Read this as a defensive/selectivity result, not as evidence that broader trend/breakout pools fix high-beta upside capture.
+
+Next best Gen5.3 research question: target state timing and entry/hold participation directly. Do not immediately run full four-window trend/breakout or broad classical sweeps unless there is a more specific mechanism to test.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:
