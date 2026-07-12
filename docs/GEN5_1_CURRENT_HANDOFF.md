@@ -330,7 +330,15 @@ This screen responds to the realization that one-quarter OOS windows were too sp
 
 Readout: the independent-stitch packet's best aggregate lane was `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation`: `81.7%` mean return, `-9.8 pp` mean alpha versus equal-weight basket hold, `2 / 4` windows beating basket, and `64.6%` mean exposure. The live-faithful continuity rerun kept the same top lane but lowered it materially to `55.9%` mean return, `-35.6 pp` mean alpha, `2 / 4` windows beating basket, and `40.3%` mean exposure. The continuity audit recorded `448` symbol/boundary cases where prior authority carried until flat and `4` carried through annual as-of. This confirms annual windows are useful, but annual alpha-oriented screens should use `quarter_continuity_replay` rather than independent quarter stitching. Broader risk-aware context and workhorse features remain the control lane; the new momentum feature sets still do not become defaults.
 
-Next planned slice: hold `hb_risk_aware_18 + workhorse_enriched + state_switch_continuation` fixed under annual continuity replay, then vary strategy pools before retesting basket/context size. Candidate pools are current EMA-only momentum, trend/breakout expansion, mean-reversion diagnostic, and broad classical full. Keep `workhorse_enriched` as feature control, include `momentum_plus_stress` as the strongest existing challenger, and add a compact `reversion_breakout_context` feature set only if reopened non-EMA families need it.
+Feature diagnostic follow-up:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711stratema/`
+
+This held `hb_risk_aware_18`, EMA-only strategies, state-switch continuation, annual continuity replay, and the live basket fixed while comparing `workhorse_enriched`, `momentum_plus_stress`, and the new `reversion_breakout_context` feature set. `reversion_breakout_context` improved the EMA-only annual readout versus workhorse (`68.1%` mean return and `-23.4 pp` mean alpha versus `55.9%` and `-35.6 pp`) and raised exposure (`48.0%` versus `40.3%`), but still beat basket hold in only `1 / 4` annual windows. Treat it as promising diagnostic evidence, not a default promotion.
+
+Strategy-pool compute gate:
+
+Attempted `trend_breakout` reopened-pool packets under `g53_momctx_20260711stratbreakout` and `g53_momctx_20260711stratbreakout2win` were intentionally stopped after measuring cost. The bounded two-window run took roughly twenty minutes to fit one quarter across five live symbols, before full replay/accounting. Those partial folders are compute-timing evidence only, not completed performance evidence. Next planned slice: schedule one reopened pool at a time, starting with a deliberate two-window `trend_breakout` run, or add checkpoint/resume behavior before broad reopened-pool sweeps. Keep live advice bridge behavior untouched.
 
 ## What Is Not Implemented Yet
 

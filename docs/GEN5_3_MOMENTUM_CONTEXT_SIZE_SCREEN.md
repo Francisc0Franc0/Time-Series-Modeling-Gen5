@@ -46,6 +46,7 @@ Feature sets:
 - `momentum_participation`;
 - `momentum_plus_stress`;
 - `market_relative_momentum`.
+- `reversion_breakout_context` was added later as a targeted diagnostic feature set for reopened non-EMA strategy families. It emphasizes range location, stretch, volatility compression/expansion, choppiness, return impulse, drawdown, recovery, and distance from moving-average anchors.
 
 ## Primary Artifacts
 
@@ -55,6 +56,7 @@ Feature sets:
 - Continuity summary: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_summary.csv`
 - Continuity aggregate: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_aggregate.csv`
 - Continuity audit: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_continuity.csv`
+- EMA feature diagnostic packet: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711stratema/`
 - Deck: `presentations/gen5_3_momentum_context_size_screen.pptx`
 
 ## Readout
@@ -120,3 +122,54 @@ Feature sets should support that question without exploding the grid:
 - Add a small `reversion_breakout_context` feature set only if the reopened strategy pools need it; this should emphasize range location, volatility compression/expansion, distance from moving averages, choppiness, drawdown/recovery, and return impulse.
 
 Do not retest every basket yet. If a broader strategy pool improves the fixed `hb_risk_aware_18` control lane, then the follow-up screen can hold the winning strategy pool and feature set fixed while varying context size/composition again.
+
+## EMA Feature Diagnostic Result
+
+Completed packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711stratema/`
+
+Purpose:
+
+Before paying the compute cost for broad reopened strategy pools, this diagnostic kept the already-identified control surface fixed:
+
+- context: `hb_risk_aware_18`;
+- annual replay: `quarter_continuity_replay`;
+- replay semantics: `state_switch_continuation`;
+- strategy pool: `ema_cross`, `ema_trend`, `no_trade`, and `no_trade_exit_immediate`;
+- selection policy: `pooled_family_asset_variant`;
+- live basket: `AMD,NVDA,TSLA,MSTR,AVGO`;
+- benchmark: equal-weight live-basket buy-and-hold.
+
+It then compared:
+
+- `workhorse_enriched`;
+- `momentum_plus_stress`;
+- `reversion_breakout_context`.
+
+Readout:
+
+- `reversion_breakout_context` averaged `68.1%` total return, `-23.4 pp` alpha versus basket hold, `48.0%` exposure, and beat the basket in `1 / 4` annual windows.
+- `workhorse_enriched` averaged `55.9%` total return, `-35.6 pp` alpha, `40.3%` exposure, and beat the basket in `2 / 4` windows.
+- `momentum_plus_stress` averaged `33.1%` total return, `-58.5 pp` alpha, `35.0%` exposure, and beat the basket in `1 / 4` windows.
+
+Interpretation:
+
+The new `reversion_breakout_context` surface moved in the desired direction for EMA-only participation: higher mean return, higher exposure, and less negative mean alpha than the workhorse control. It did not become accepted evidence because it still lagged equal-weight basket hold in `3 / 4` annual windows. The most useful read is that feature design matters, but the next question is still state timing and participation quality rather than a default feature promotion.
+
+## Broad Strategy-Pool Compute Gate
+
+The planned `trend_breakout`, `mean_reversion_only`, and `classical_full` reopened-pool screens were started as the next direct test of whether EMA-only was too narrow. The `trend_breakout` run was intentionally stopped after measuring the fitting cost:
+
+- full four-window run began under `g53_momctx_20260711stratbreakout`;
+- bounded two-window run began under `g53_momctx_20260711stratbreakout2win`;
+- the bounded run took roughly twenty minutes to fit one quarter across the five-symbol live basket before replay/accounting, implying a multi-hour job for even the reduced strategy-pool diagnostic.
+
+Those partial folders are compute-timing evidence only. They are not performance evidence and should not be interpreted as completed research packets.
+
+Recommended compute-safe next run:
+
+1. Run one reopened strategy pool at a time.
+2. Start with `trend_breakout` on two annual windows: `2020Y_asof_20201231` and `2022Y_asof_20221231`.
+3. Only run `mean_reversion_only` or `classical_full` after the trend/breakout diagnostic either improves participation or fails cleanly.
+4. Consider adding resume/checkpoint behavior before launching broad all-window reopened-pool sweeps.

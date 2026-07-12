@@ -414,3 +414,32 @@ Feature-set stance:
 - Add `reversion_breakout_context` only if needed for the reopened non-EMA families; it should describe range location, stretch, compression/expansion, chop, recovery, and return impulse.
 
 If strategy diversity helps under the fixed control context, the next follow-up should vary context size/composition using the winning strategy pool and feature set. If strategy diversity does not help, the likely limiting factor is state timing/exposure design rather than missing strategy families.
+
+## EMA Feature Diagnostic And Strategy-Pool Compute Gate
+
+Feature diagnostic packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711stratema/`
+
+Purpose:
+
+Before reopening every strategy family, this diagnostic held the current annual continuity control setup fixed and compared feature surfaces under the EMA-only pool:
+
+- `workhorse_enriched`;
+- `momentum_plus_stress`;
+- `reversion_breakout_context`.
+
+Readout:
+
+`reversion_breakout_context` improved the EMA-only annual readout versus the workhorse control: `68.1%` mean total return and `-23.4 pp` mean alpha versus basket hold, compared with `55.9%` and `-35.6 pp` for workhorse. It also raised mean exposure from `40.3%` to `48.0%`. The result is directionally useful but not an accepted default because it still lagged basket hold in `3 / 4` annual windows.
+
+Compute note:
+
+The attempted `trend_breakout` strategy-pool reopening was stopped after measuring fitting cost. The bounded two-window run took roughly twenty minutes to fit one quarter across five symbols, implying that broad reopened-pool sweeps should be treated as scheduled compute jobs rather than casual interactive follow-ups. Partial `stratbreakout` folders are not completed research evidence.
+
+Current implication:
+
+Feature design matters, but the system still has a participation/timing problem versus a harsh high-beta buy-and-hold benchmark. The next productive run should either:
+
+- schedule the bounded `trend_breakout` two-window compute job deliberately; or
+- improve wrapper checkpoint/resume behavior before running broad reopened pools.

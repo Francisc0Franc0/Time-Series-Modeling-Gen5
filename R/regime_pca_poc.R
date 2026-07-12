@@ -75,6 +75,24 @@ g5_pca_regime_feature_set <- function(feature_set_id = "workhorse_enriched") {
       "drawdown_60",
       "recovery_from_low_60",
       "vol_20"
+    ),
+    reversion_breakout_context = c(
+      "z_close_sma20",
+      "close_location_20",
+      "close_location_60",
+      "bb_width",
+      "vol_20",
+      "atr_pct",
+      "chop_14",
+      "ret_5",
+      "ret_20",
+      "trend_slope_5",
+      "trend_slope_20",
+      "ema_gap",
+      "dist_anchor_50",
+      "dist_anchor_200",
+      "drawdown_60",
+      "recovery_from_low_60"
     )
   )
   if (!feature_set_id %in% names(presets)) {
@@ -89,22 +107,25 @@ g5_pca_regime_feature_set_taxonomy <- function() {
       "workhorse_enriched",
       "momentum_participation",
       "momentum_plus_stress",
-      "market_relative_momentum"
+      "market_relative_momentum",
+      "reversion_breakout_context"
     ),
     feature_set_label = c(
       "Workhorse enriched",
       "Momentum participation",
       "Momentum plus stress",
-      "Market-relative momentum"
+      "Market-relative momentum",
+      "Reversion-breakout context"
     ),
     purpose = c(
       "Current Gen5 workhorse surface combining trend, stretch, volatility, chop, efficiency, and return-shape descriptors.",
       "Sharper bullish-participation surface meant to detect trend strength, persistence, recent return impulse, and recovery position.",
       "Momentum-participation surface with volatility and stress descriptors added back to preserve drawdown-avoidance context.",
-      "Compact trend surface meant to let behavioral-pool PCA compare each asset-day's return, trend, anchor distance, persistence, and drawdown posture against the wider context pool."
+      "Compact trend surface meant to let behavioral-pool PCA compare each asset-day's return, trend, anchor distance, persistence, and drawdown posture against the wider context pool.",
+      "Diagnostic surface for reopened non-EMA families, describing stretch, range location, compression/expansion, chop, impulse, trend, drawdown, recovery, and anchor distance."
     ),
     feature_cols = vapply(
-      c("workhorse_enriched", "momentum_participation", "momentum_plus_stress", "market_relative_momentum"),
+      c("workhorse_enriched", "momentum_participation", "momentum_plus_stress", "market_relative_momentum", "reversion_breakout_context"),
       function(id) paste(g5_pca_regime_feature_set(id), collapse = ","),
       character(1L)
     ),

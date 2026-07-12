@@ -96,7 +96,11 @@ if (nzchar(reuse_auth_root)) {
 }
 
 selection_policies <- c("pooled_family_asset_variant")
-entry_replay_semantics <- c("fresh_signal_only", "state_switch_continuation")
+entry_replay_semantics <- split_csv(env_or("GEN5_GEN53_MOM_CTX_ENTRY_REPLAY_SEMANTICS", "fresh_signal_only,state_switch_continuation"))
+allowed_entry_replay_semantics <- c("fresh_signal_only", "state_switch_continuation")
+if (!length(entry_replay_semantics) || any(!entry_replay_semantics %in% allowed_entry_replay_semantics)) {
+  g5_stop(paste0("GEN5_GEN53_MOM_CTX_ENTRY_REPLAY_SEMANTICS must be drawn from: ", paste(allowed_entry_replay_semantics, collapse = ",")))
+}
 annual_replay_mode <- env_or("GEN5_GEN53_MOM_CTX_ANNUAL_REPLAY_MODE", "quarter_continuity_replay")
 annual_replay_choices <- c("quarter_independent_stitch", "quarter_continuity_replay")
 if (!annual_replay_mode %in% annual_replay_choices) {
@@ -171,8 +175,19 @@ feature_recipes <- list(
     feature_set_label = "Market-relative momentum",
     feature_cols = g5_pca_regime_feature_set("market_relative_momentum"),
     feature_note = "Compact trend surface meant to let pooled PCA compare return, anchor distance, persistence, and drawdown posture across the context pool."
+  ),
+  list(
+    feature_set_id = "reversion_breakout_context",
+    feature_set_label = "Reversion-breakout context",
+    feature_cols = g5_pca_regime_feature_set("reversion_breakout_context"),
+    feature_note = "Diagnostic surface for reopened non-EMA families: stretch, range location, compression/expansion, chop, impulse, trend, drawdown, recovery, and anchor distance."
   )
 )
+only_feature_sets <- split_csv(env_or("GEN5_GEN53_MOM_CTX_FEATURE_SETS", ""))
+if (length(only_feature_sets)) {
+  feature_recipes <- Filter(function(x) x$feature_set_id %in% only_feature_sets, feature_recipes)
+  if (!length(feature_recipes)) g5_stop("GEN5_GEN53_MOM_CTX_FEATURE_SETS did not match any configured feature_set_id.")
+}
 screen_specs <- list()
 for (context in context_recipes) {
   for (feature in feature_recipes) {
@@ -728,7 +743,8 @@ write_alpha_heatmap <- function(summary, path) {
     workhorse_enriched = "Workhorse",
     momentum_participation = "Momentum",
     momentum_plus_stress = "Momentum+stress",
-    market_relative_momentum = "Market-relative"
+    market_relative_momentum = "Market-relative",
+    reversion_breakout_context = "Reversion/breakout"
   )
   policy_label <- c(
     asset_state_direct_spec = "direct",
@@ -777,7 +793,8 @@ write_exposure_alpha_scatter <- function(summary, path) {
     workhorse_enriched = "#2E86AB",
     momentum_participation = "#00A88F",
     momentum_plus_stress = "#D97706",
-    market_relative_momentum = "#7C3AED"
+    market_relative_momentum = "#7C3AED",
+    reversion_breakout_context = "#C2410C"
   )
   pch <- c(fresh_signal_only = 21L, state_switch_continuation = 24L)
   x <- as.numeric(summary$mean_open_position_fraction)
@@ -1140,7 +1157,7 @@ for (spec in screen_specs) {
           }
         }
         if (spec$context_id %in% c("hb_self_5", "hb_risk_aware_18") &&
-            spec$feature_set_id %in% c("workhorse_enriched", "momentum_plus_stress", "market_relative_momentum") &&
+            spec$feature_set_id %in% c("workhorse_enriched", "momentum_plus_stress", "market_relative_momentum", "reversion_breakout_context") &&
             window$window_id[[1L]] %in% c("2020Y_asof_20201231", "2022Y_asof_20221231") &&
             identical(semantics, "state_switch_continuation")) {
           trade_tape_symbol_results[[paste(spec$context_id, spec$feature_set_id, window$window_id[[1L]], lane_id, sep = "__")]] <- results

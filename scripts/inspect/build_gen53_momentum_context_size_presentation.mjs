@@ -26,6 +26,13 @@ const resultDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_20260711continuity",
 );
+const featureDiagnosticDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_20260711stratema",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -44,6 +51,15 @@ const resultPaths = {
 const independentPaths = {
   summary: path.join(independentResultDir, "momentum_context_size_summary.csv"),
   aggregate: path.join(independentResultDir, "momentum_context_size_aggregate.csv"),
+};
+
+const featureDiagnosticPaths = {
+  summary: path.join(featureDiagnosticDir, "momentum_context_size_summary.csv"),
+  aggregate: path.join(featureDiagnosticDir, "momentum_context_size_aggregate.csv"),
+  heatmap: path.join(featureDiagnosticDir, "momentum_context_size_alpha_heatmap.png"),
+  exposure: path.join(featureDiagnosticDir, "momentum_context_size_exposure_alpha_scatter.png"),
+  family: path.join(featureDiagnosticDir, "momentum_context_size_selection_family_heatmap.png"),
+  tapes: path.join(featureDiagnosticDir, "momentum_context_size_trade_tape_contact_sheet.png"),
 };
 
 const W = 1280;
@@ -259,8 +275,11 @@ async function createDeck() {
   const summary = await readCsv(resultPaths.summary);
   const continuity = await readCsv(resultPaths.continuity);
   const independentAggregate = await readCsv(independentPaths.aggregate);
+  const featureDiagnosticAggregate = await readCsv(featureDiagnosticPaths.aggregate);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
+  const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
+  const featureBest = featureRows[0];
   const independentControl = independentAggregate.find(sameControlLane);
   const continuityCounts = countBy(continuity, "continuity_mode");
   const best2019 = summary.find((x) => sameControlLane(x) && x.window_id === "2019Y_asof_20191231");
@@ -497,6 +516,54 @@ async function createDeck() {
       text(slide, body, { left: x + 24, top: 368, width: 238, height: 86 }, { fontSize: 18, color: colors.muted });
     });
     text(slide, "If the reopened strategy pools do not help under these feature sets, the next problem is probably state timing/exposure design rather than missing mean-reversion or breakout families.", { left: 116, top: 574, width: 1020, height: 58 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "A targeted EMA feature diagnostic improved returns, but did not clear the benchmark");
+    text(slide, "After the annual continuity control lane was identified, the next quick test held the high-beta risk-aware context, EMA-only pool, and continuation replay fixed while comparing three PCA feature surfaces.", { left: 78, top: 204, width: 1040, height: 58 }, { fontSize: 21 });
+    addTopTable(slide, featureRows);
+    text(slide, `Best diagnostic feature set: ${featureBest.feature_set_label}. It averaged ${pct(featureBest.mean_total_return)} return, ${pp(featureBest.mean_alpha_vs_active_equal)} alpha versus basket hold, ${pct(featureBest.mean_exposure)} exposure, and beat the basket in ${featureBest.windows_beating_basket}/4 annual windows.`, { left: 90, top: 592, width: 1060, height: 48 }, { fontSize: 21, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The reversion-breakout feature set raised participation without solving upside capture");
+    await image(slide, featureDiagnosticPaths.heatmap, { left: 48, top: 178, width: 696, height: 482 }, "Feature diagnostic alpha heatmap");
+    rect(slide, { left: 802, top: 218, width: 340, height: 292 }, colors.soft, colors.rule);
+    text(slide, "Interpretation", { left: 832, top: 248, width: 246, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      "Reversion-breakout context lifted mean return versus the workhorse control.",
+      "It came close in 2024 and improved 2019/2020 participation, but still lagged the basket in 3 of 4 years.",
+      "This argues for better state timing, not a feature-set promotion yet.",
+    ], { left: 834, top: 310, width: 246, height: 160 }, { fontSize: 16, lineHeight: 52, dotColor: colors.orange });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Broad strategy-pool reopening is now a deliberate compute run");
+    rect(slide, { left: 86, top: 218, width: 466, height: 260 }, colors.soft, colors.rule);
+    rect(slide, { left: 680, top: 218, width: 466, height: 260 }, colors.soft, colors.rule);
+    text(slide, "What we learned", { left: 120, top: 252, width: 320, height: 34 }, { fontSize: 28, bold: true, color: colors.orange });
+    bullets(slide, [
+      "EMA-only feature diagnostics are cheap enough for interactive iteration.",
+      "Trend/breakout authority fitting was much slower: roughly twenty minutes for one quarter across five symbols.",
+      "A full four-window reopened-pool sweep would be a dedicated compute job.",
+    ], { left: 122, top: 314, width: 350, height: 140 }, { fontSize: 17, lineHeight: 46, dotColor: colors.orange });
+    text(slide, "Recommended next compute slice", { left: 714, top: 252, width: 360, height: 34 }, { fontSize: 26, bold: true, color: colors.green });
+    bullets(slide, [
+      "Keep the control lane fixed.",
+      "Run one reopened pool at a time.",
+      "Start with trend/breakout on two annual windows before running classical full.",
+      "Treat partial packets as timing evidence only, not performance evidence.",
+    ], { left: 716, top: 314, width: 350, height: 156 }, { fontSize: 17, lineHeight: 40, dotColor: colors.green });
+    text(slide, "This is a useful engineering result: the next question is still valid, but it should be scheduled rather than hidden inside a chat turn.", { left: 112, top: 584, width: 1024, height: 54 }, { fontSize: 23, bold: true, alignment: "center" });
     footer(slide);
   }
 
