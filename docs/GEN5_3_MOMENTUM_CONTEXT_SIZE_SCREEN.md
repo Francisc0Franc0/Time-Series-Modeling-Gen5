@@ -272,3 +272,40 @@ Readout:
 Interpretation:
 
 Leverage did not reveal hidden alpha. It magnified the same behavioral profile already visible at `1x`: defensive/selective lanes look better in the falling `2022` window and worse relative to the explosive `2020` rebound. Treat leverage as a later risk overlay for a robust strategy, not as evidence that the current entry/exit/state timing problem is solved.
+
+## State-Only Exposure Diagnostic
+
+Completed packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_statehold2feat/`
+
+Purpose:
+
+After EMA, trend/breakout, and mean-reversion lanes all showed some form of underparticipation, this diagnostic asked a simpler question: are the PCA states themselves good enough to act as an exposure switch?
+
+Mechanics:
+
+- context: `hb_risk_aware_18`;
+- annual replay: `quarter_continuity_replay`;
+- replay semantics: `fresh_signal_only`;
+- selection policy: `pooled_family_asset_variant`;
+- live basket: `AMD,NVDA,TSLA,MSTR,AVGO`;
+- windows: `2020Y_asof_20201231` and `2022Y_asof_20221231`;
+- candidate families: `state_buy_hold`, `no_trade_exit_immediate`, and the required inert `no_trade` row;
+- binary state-only rule: selected cash rows were coerced to force-exit cash so unfavorable states mean exit/flat, not hold-until-later;
+- minimum train trades: `1`, because a state-only hold segment can be a small number of long state episodes rather than many repeated indicator trades.
+
+Readout:
+
+- Workhorse `2020`: `175.1%` active return, `227.3%` basket hold, `-52.2 pp` alpha, `85.5%` exposure.
+- Reversion-breakout context `2020`: `189.8%` active return, `227.3%` basket hold, `-37.5 pp` alpha, `78.7%` exposure.
+- Workhorse `2022`: `-50.9%` active return, `-53.0%` basket hold, `+2.1 pp` alpha, `98.9%` exposure.
+- Reversion-breakout context `2022`: `-49.8%` active return, `-53.0%` basket hold, `+3.2 pp` alpha, `99.0%` exposure.
+
+Interpretation:
+
+This is the strongest 2020 participation read so far, and it supports the hypothesis that the PCA state layer contains useful direct exposure information. It still did not beat the explosive 2020 equal-weight high-beta basket, and it stayed almost fully exposed through 2022. That means the binary state-only switch is promising but too blunt.
+
+Decision implication:
+
+Do not promote state-only exposure as a finished strategy. It is a useful new control/diagnostic lane. The next narrow test should compare binary `state_buy_hold` against a three-action state policy: `enter/hold`, `hold-only/no-new-entry`, and `exit/flat`, because the current result suggests that direct state exposure improves participation but needs a better exit/abstention distinction.

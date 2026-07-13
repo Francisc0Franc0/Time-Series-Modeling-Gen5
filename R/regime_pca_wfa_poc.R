@@ -190,6 +190,188 @@ g5_pca_wfa_state_lookup <- function(scores) {
   out
 }
 
+g5_pca_wfa_state_buy_hold_trades <- function(bars, symbol, state_lookup, state_id, model, exit_stack, trading_start_date, trading_end_date, leverage = 1) {
+  leverage <- g5_ema_cross_validate_leverage(leverage)
+  symbol <- g5_standardize_symbol(symbol)[[1L]]
+  state_id <- as.character(state_id)[[1L]]
+  trading_start_date <- as.Date(trading_start_date)
+  trading_end_date <- as.Date(trading_end_date)
+  all_bars <- g5_ema_cross_prepare_bars(bars, symbol = symbol, end_date = trading_end_date)
+  session_dates <- as.Date(all_bars$session_date)
+  signal_indices <- which(session_dates >= trading_start_date & session_dates <= trading_end_date)
+  if (!length(signal_indices)) return(data.frame())
+  latest_idx <- max(which(session_dates <= trading_end_date))
+  strategy_spec_id <- g5_wfa_strategy_spec_id(model$model_instance_id[[1L]], exit_stack$exit_stack_id[[1L]])
+  state_on <- function(date) {
+    current <- unname(state_lookup[[as.character(as.Date(date))]])
+    !is.null(current) && !is.na(current) && identical(as.character(current), state_id)
+  }
+
+  trades <- list()
+  trade_no <- 0L
+  in_position <- FALSE
+  open_trade <- NULL
+  pending_entry <- NULL
+  pending_exit <- NULL
+
+  for (idx in signal_indices) {
+    current_date <- session_dates[[idx]]
+    current_state_on <- state_on(current_date)
+
+    if (!is.null(pending_entry) && identical(as.Date(pending_entry$execution_date), current_date) && !in_position) {
+      trade_no <- trade_no + 1L
+      open_trade <- c(pending_entry, list(
+        trade_no = trade_no,
+        entry_execution_idx = idx,
+        entry_execution_date = current_date,
+        entry_execution_price = as.numeric(all_bars$open[[idx]])
+      ))
+      in_position <- TRUE
+      pending_entry <- NULL
+    }
+
+    if (!is.null(pending_exit) && identical(as.Date(pending_exit$execution_date), current_date) && in_position) {
+      entry_price <- open_trade$entry_execution_price
+      exit_price <- as.numeric(all_bars$open[[idx]])
+      underlying_realized_return <- (exit_price / entry_price) - 1
+      realized_return <- leverage * underlying_realized_return
+      trades[[length(trades) + 1L]] <- data.frame(
+        schema_version = g5_ema_cross_wfa_multi_schema_version(),
+        trade_id = sprintf("%s_%s_%s_%03d", symbol, strategy_spec_id, state_id, open_trade$trade_no),
+        symbol = symbol,
+        strategy_family = model$strategy_family[[1L]],
+        model_instance_id = model$model_instance_id[[1L]],
+        exit_stack_id = exit_stack$exit_stack_id[[1L]],
+        strategy_spec_id = strategy_spec_id,
+        primary_exit_reason = "state_changed",
+        triggered_exit_rules = "selected_pca_state_turned_off",
+        exit_attribution = "state_buy_hold_state_gate",
+        fast_period = NA_integer_,
+        slow_period = NA_integer_,
+        lookback_period = NA_integer_,
+        sd_multiplier = NA_real_,
+        trade_status = "closed",
+        entry_signal_date = open_trade$entry_signal_date,
+        entry_signal_index = open_trade$entry_signal_idx,
+        entry_signal_price = open_trade$entry_signal_price,
+        entry_execution_date = open_trade$entry_execution_date,
+        entry_execution_index = open_trade$entry_execution_idx,
+        entry_execution_price = entry_price,
+        exit_signal_date = pending_exit$exit_signal_date,
+        exit_signal_index = pending_exit$exit_signal_idx,
+        exit_signal_price = pending_exit$exit_signal_price,
+        exit_execution_date = current_date,
+        exit_execution_index = idx,
+        exit_execution_price = exit_price,
+        latest_mark_date = session_dates[[latest_idx]],
+        latest_mark_price = as.numeric(all_bars$close[[latest_idx]]),
+        trace_end_date = current_date,
+        trace_end_index = idx,
+        trace_end_price = exit_price,
+        underlying_realized_return = underlying_realized_return,
+        underlying_unrealized_return = NA_real_,
+        realized_return = realized_return,
+        unrealized_return = NA_real_,
+        trace_return = realized_return,
+        trade_outcome = if (realized_return > 0) "win" else if (realized_return < 0) "loss" else "flat",
+        holding_sessions_completed = idx - open_trade$entry_execution_idx + 1L,
+        signal_rule = open_trade$entry_signal_rule,
+        entry_execution_rule = "next_session_open_after_state_turns_on",
+        exit_signal_rule = pending_exit$exit_signal_rule,
+        exit_execution_rule = "next_session_open_after_state_turns_off",
+        leverage = leverage,
+        capital_fraction = 1,
+        stringsAsFactors = FALSE
+      )
+      in_position <- FALSE
+      open_trade <- NULL
+      pending_exit <- NULL
+    }
+
+    next_idx <- idx + 1L
+    if (next_idx > nrow(all_bars) || session_dates[[next_idx]] > trading_end_date) next
+
+    if (!in_position && is.null(pending_entry) && isTRUE(current_state_on)) {
+      pending_entry <- list(
+        entry_signal_rule = "pca_state_turns_favorable_for_state_buy_hold",
+        entry_signal_date = current_date,
+        entry_signal_idx = idx,
+        entry_signal_price = as.numeric(all_bars$close[[idx]]),
+        execution_date = session_dates[[next_idx]]
+      )
+    }
+
+    if (in_position && is.null(pending_exit) && !isTRUE(current_state_on)) {
+      pending_exit <- list(
+        exit_signal_rule = "pca_state_no_longer_favorable_for_state_buy_hold",
+        exit_signal_date = current_date,
+        exit_signal_idx = idx,
+        exit_signal_price = as.numeric(all_bars$close[[idx]]),
+        execution_date = session_dates[[next_idx]]
+      )
+    }
+  }
+
+  if (in_position && !is.null(open_trade)) {
+    entry_price <- open_trade$entry_execution_price
+    latest_close <- as.numeric(all_bars$close[[latest_idx]])
+    underlying_unrealized_return <- (latest_close / entry_price) - 1
+    unrealized_return <- leverage * underlying_unrealized_return
+    trades[[length(trades) + 1L]] <- data.frame(
+      schema_version = g5_ema_cross_wfa_multi_schema_version(),
+      trade_id = sprintf("%s_%s_%s_%03d", symbol, strategy_spec_id, state_id, open_trade$trade_no),
+      symbol = symbol,
+      strategy_family = model$strategy_family[[1L]],
+      model_instance_id = model$model_instance_id[[1L]],
+      exit_stack_id = exit_stack$exit_stack_id[[1L]],
+      strategy_spec_id = strategy_spec_id,
+      primary_exit_reason = NA_character_,
+      triggered_exit_rules = NA_character_,
+      exit_attribution = NA_character_,
+      fast_period = NA_integer_,
+      slow_period = NA_integer_,
+      lookback_period = NA_integer_,
+      sd_multiplier = NA_real_,
+      trade_status = "open",
+      entry_signal_date = open_trade$entry_signal_date,
+      entry_signal_index = open_trade$entry_signal_idx,
+      entry_signal_price = open_trade$entry_signal_price,
+      entry_execution_date = open_trade$entry_execution_date,
+      entry_execution_index = open_trade$entry_execution_idx,
+      entry_execution_price = entry_price,
+      exit_signal_date = as.Date(NA),
+      exit_signal_index = NA_integer_,
+      exit_signal_price = NA_real_,
+      exit_execution_date = as.Date(NA),
+      exit_execution_index = NA_integer_,
+      exit_execution_price = NA_real_,
+      latest_mark_date = session_dates[[latest_idx]],
+      latest_mark_price = latest_close,
+      trace_end_date = session_dates[[latest_idx]],
+      trace_end_index = latest_idx,
+      trace_end_price = latest_close,
+      underlying_realized_return = NA_real_,
+      underlying_unrealized_return = underlying_unrealized_return,
+      realized_return = NA_real_,
+      unrealized_return = unrealized_return,
+      trace_return = unrealized_return,
+      trade_outcome = if (unrealized_return > 0) "win" else if (unrealized_return < 0) "loss" else "flat",
+      holding_sessions_completed = latest_idx - open_trade$entry_execution_idx + 1L,
+      signal_rule = open_trade$entry_signal_rule,
+      entry_execution_rule = "next_session_open_after_state_turns_on",
+      exit_signal_rule = "state_still_favorable_at_end",
+      exit_execution_rule = "none_open_trade_marked_to_latest_close",
+      leverage = leverage,
+      capital_fraction = 1,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  out <- if (length(trades)) g5_wfa_bind_rows_fill(trades) else data.frame()
+  if (is.data.frame(out) && nrow(out)) rownames(out) <- NULL
+  out
+}
+
 g5_pca_wfa_add_entry_states <- function(trades, state_lookup) {
   if (!is.data.frame(trades) || nrow(trades) == 0L) {
     return(trades)
@@ -250,13 +432,46 @@ g5_pca_wfa_select_state_specs <- function(
   no_trade_rows <- list()
   for (model_i in seq_len(nrow(model_grid))) {
     model <- model_grid[model_i, , drop = FALSE]
-    stacks_for_model <- if (as.character(model$strategy_family[[1L]]) %in% g5_wfa_gen52_no_trade_families()) {
+    model_family <- as.character(model$strategy_family[[1L]])
+    stacks_for_model <- if (model_family %in% c(g5_wfa_gen52_no_trade_families(), "state_buy_hold")) {
       g5_wfa_no_trade_exit_stack()
     } else {
       exit_stacks[exit_stacks$exit_stack_id != "no_exit", , drop = FALSE]
     }
     for (stack_i in seq_len(nrow(stacks_for_model))) {
       exit_stack <- stacks_for_model[stack_i, , drop = FALSE]
+      if (identical(model_family, "state_buy_hold")) {
+        for (state in states) {
+          state_trades <- g5_pca_wfa_state_buy_hold_trades(
+            bars,
+            symbol = symbol,
+            state_lookup = state_lookup,
+            state_id = state,
+            model = model,
+            exit_stack = exit_stack,
+            trading_start_date = fold$train_start_date[[1L]],
+            trading_end_date = fold$train_end_date[[1L]],
+            leverage = leverage
+          )
+          equity_curve <- g5_ema_cross_equity_curve(
+            state_trades,
+            bars,
+            symbol = symbol,
+            trading_start_date = fold$train_start_date[[1L]],
+            trading_end_date = fold$train_end_date[[1L]],
+            leverage = leverage
+          )
+          metrics <- g5_wfa_strategy_spec_metrics(state_trades, equity_curve, symbol, model, exit_stack, leverage)
+          metrics$fold_id <- fold$fold_id[[1L]]
+          metrics$fold_no <- fold$fold_no[[1L]]
+          metrics$state_id <- state
+          metrics$train_state_row_count <- unname(train_rows_by_state[[state]])
+          metrics$train_state_trade_count <- if (is.data.frame(state_trades)) nrow(state_trades) else 0L
+          metrics$ownership_policy <- "selected_state_owns_trade_until_state_exit"
+          perf_rows[[length(perf_rows) + 1L]] <- metrics
+        }
+        next
+      }
       trades <- g5_wfa_strategy_spec_trades(
         bars,
         symbol = symbol,

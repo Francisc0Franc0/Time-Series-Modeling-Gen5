@@ -38,6 +38,39 @@ g5_test_pca_wfa_quarters_for_days <- function(days) {
   as.numeric(days) / (365.25 / 4)
 }
 
+test_that("state buy-hold training trades are gated by PCA state segments", {
+  bars <- g5_test_pca_wfa_bars(n = 8L)
+  bars$open <- bars$close
+  state_lookup <- stats::setNames(
+    c("S1_1", "S1_1", "S1_1", "S1_2", "S1_2", "S1_1", "S1_1", "S1_2"),
+    as.character(bars$session_date)
+  )
+  model <- g5_wfa_candidate_model_grid(candidate_families = c("state_buy_hold", "no_trade"))[
+    2L,
+    ,
+    drop = FALSE
+  ]
+  exit_stack <- g5_wfa_no_trade_exit_stack()
+
+  trades <- g5_pca_wfa_state_buy_hold_trades(
+    bars,
+    symbol = "AMD",
+    state_lookup = state_lookup,
+    state_id = "S1_1",
+    model = model,
+    exit_stack = exit_stack,
+    trading_start_date = min(bars$session_date),
+    trading_end_date = max(bars$session_date)
+  )
+
+  expect_equal(nrow(trades), 2L)
+  expect_equal(trades$entry_execution_date[[1L]], bars$session_date[[2L]])
+  expect_equal(trades$exit_execution_date[[1L]], bars$session_date[[5L]])
+  expect_equal(trades$entry_execution_date[[2L]], bars$session_date[[7L]])
+  expect_equal(trades$trade_status[[2L]], "open")
+  expect_equal(unique(trades$strategy_family), "state_buy_hold")
+})
+
 g5_test_pca_wfa_context_bars <- function(n = 760L) {
   amd <- g5_test_pca_wfa_bars(n = n, symbol = "AMD")
   nvda <- g5_test_pca_wfa_bars(n = n, symbol = "NVDA")

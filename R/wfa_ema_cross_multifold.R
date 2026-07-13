@@ -168,6 +168,7 @@ g5_wfa_candidate_families <- function(candidate_families) {
     "pullback_in_uptrend",
     "vol_expansion_breakout",
     "donchian_breakout_vol_expand",
+    "state_buy_hold",
     "no_trade",
     "no_trade_exit_immediate"
   )
@@ -330,6 +331,9 @@ g5_wfa_model_parameter_label <- function(model) {
   }
   if (identical(family, "pullback_in_uptrend")) {
     return(paste0("fast=", model$fast_period[[1L]], ", slow=", model$slow_period[[1L]], ", rsi_lo=", model$rsi_lower[[1L]], ", rsi_hi=", model$rsi_upper[[1L]]))
+  }
+  if (identical(family, "state_buy_hold")) {
+    return("state-gated buy-and-hold")
   }
   if (identical(family, "no_trade")) {
     return("cash/no-position benchmark")
@@ -534,7 +538,7 @@ g5_wfa_is_force_exit_override <- function(selected_state) {
 
 g5_wfa_exit_stacks_for_candidates <- function(exit_stacks, candidate_families) {
   candidate_families <- g5_wfa_candidate_families(candidate_families)
-  if (!"no_trade" %in% candidate_families) {
+  if (!any(candidate_families %in% g5_wfa_gen52_no_trade_families())) {
     return(exit_stacks)
   }
   out <- rbind(exit_stacks, g5_wfa_no_trade_exit_stack())
@@ -771,6 +775,18 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
     ind$entry_signal_rule <- paste0(family, "_never_enters")
     ind$exit_signal_rule <- if (identical(family, "no_trade_exit_immediate")) "state_exit_override_force_exit_next_open" else "no_trade_no_exit"
     ind$signal_state <- if (identical(family, "no_trade_exit_immediate")) "cash_force_exit_if_long" else "cash"
+    return(g5_wfa_normalize_indicator_columns(ind, model))
+  }
+  if (identical(family, "state_buy_hold")) {
+    ind <- g5_ema_cross_prepare_bars(bars, symbol)
+    ind$strategy_family <- "state_buy_hold"
+    ind$strategy_id <- "state_buy_hold"
+    ind$model_instance_id <- "state_buy_hold"
+    ind$entry_signal <- TRUE
+    ind$exit_signal <- FALSE
+    ind$entry_signal_rule <- "selected_state_is_favorable_enter_next_open"
+    ind$exit_signal_rule <- "exit_only_when_selected_state_forces_cash"
+    ind$signal_state <- "state_hold"
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
   if (identical(family, "ema_cross")) {
@@ -1052,6 +1068,9 @@ g5_wfa_candidate_model_grid <- function(
   }
   if ("no_trade_exit_immediate" %in% candidate_families) {
     add_model("no_trade_exit_immediate", "no_trade_exit_immediate")
+  }
+  if ("state_buy_hold" %in% candidate_families) {
+    add_model("state_buy_hold", "state_buy_hold")
   }
   if ("ema_cross" %in% candidate_families) {
     fast_periods <- sort(unique(as.integer(fast_periods)))

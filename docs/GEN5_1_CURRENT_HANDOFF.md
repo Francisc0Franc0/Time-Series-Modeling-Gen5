@@ -363,7 +363,15 @@ Leverage overlay follow-up:
 
 This repeated the completed trend/breakout and mean-reversion two-window slices with `1x` and `1.8x` portfolio accounting rows, leaving signals and authority unchanged. The correct benchmark for a `1.8x` active lane is the same equal-weight live-basket hold levered to `1.8x`. At `1.8x`, trend/breakout returned `108.1%` in `2020` but lagged the same-leverage basket by `-301.0 pp`; it beat the `2022` same-leverage basket by `+76.4 pp`. Workhorse mean reversion lagged `2020` by `-371.8 pp` and beat `2022` by `+72.4 pp`. This confirms leverage magnifies the same defensive/selective profile; it does not solve the rally participation gap or count as accepted allocation evidence.
 
-Next best Gen5.3 research question: target state timing and entry/hold participation directly. Do not immediately run full four-window trend/breakout, broad classical, or mean-reversion sweeps unless there is a more specific mechanism to test.
+State-only exposure follow-up:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_statehold2feat/`
+
+This added a research-only `state_buy_hold` candidate and tested whether PCA states can directly decide long/flat exposure without waiting for EMA, breakout, or mean-reversion signal generation. The first narrow slice held `hb_risk_aware_18`, pooled-family selection, annual continuity replay, and the live basket fixed, then compared `workhorse_enriched` and `reversion_breakout_context` over `2020` and `2022`. Binary cash coercion made selected cash states force-exit cash, so unfavorable state means exit/flat rather than hold-until-later.
+
+Readout: this produced the strongest 2020 participation result so far, returning `175.1%` on workhorse and `189.8%` on reversion-breakout context, but still lagged the `227.3%` equal-weight basket hold benchmark. In `2022`, it stayed almost fully exposed (`98.9%` to `99.0%`) and only barely beat the falling basket (`+2.1 pp` to `+3.2 pp`). Treat this as evidence that PCA states contain useful direct exposure information, but that a binary switch is too blunt.
+
+Next best Gen5.3 research question: compare binary `state_buy_hold` with a three-action state policy that distinguishes `enter/hold`, `hold-only/no-new-entry`, and `exit/flat`. Do not immediately run full four-window trend/breakout, broad classical, mean-reversion, or context-size sweeps unless this participation-specific mechanism helps under the fixed control context.
 
 ## What Is Not Implemented Yet
 

@@ -66,6 +66,13 @@ const meanReversionLeverageDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_levmr",
 );
+const stateOnlyDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_statehold2feat",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -122,6 +129,16 @@ const meanReversionLeveragePaths = {
   summary: path.join(meanReversionLeverageDir, "momentum_context_size_summary.csv"),
   heatmap: path.join(meanReversionLeverageDir, "momentum_context_size_alpha_heatmap.png"),
   equity: path.join(meanReversionLeverageDir, "momentum_context_size_equity_overlay.png"),
+};
+
+const stateOnlyPaths = {
+  summary: path.join(stateOnlyDir, "momentum_context_size_summary.csv"),
+  heatmap: path.join(stateOnlyDir, "momentum_context_size_alpha_heatmap.png"),
+  equity: path.join(stateOnlyDir, "momentum_context_size_equity_overlay.png"),
+  family: path.join(stateOnlyDir, "momentum_context_size_selection_family_heatmap.png"),
+  tapes: path.join(stateOnlyDir, "momentum_context_size_trade_tape_contact_sheet.png"),
+  representativeTapes: path.join(stateOnlyDir, "momentum_context_size_representative_trade_tapes.png"),
+  bullishParticipationTapes: path.join(stateOnlyDir, "momentum_context_size_bullish_participation_audit_tapes.png"),
 };
 
 const W = 1280;
@@ -343,6 +360,7 @@ async function createDeck() {
   const meanReversionSummary = await readCsv(meanReversionPaths.summary);
   const trendBreakoutLeverageSummary = await readCsv(trendBreakoutLeveragePaths.summary);
   const meanReversionLeverageSummary = await readCsv(meanReversionLeveragePaths.summary);
+  const stateOnlySummary = await readCsv(stateOnlyPaths.summary);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
@@ -365,6 +383,10 @@ async function createDeck() {
   const trendLev2022 = trendBreakoutLeverageSummary.find((x) => x.window_id === "2022Y_asof_20221231" && Number(x.leverage) === 1.8);
   const meanLevWorkhorse2020 = meanReversionLeverageSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231" && Number(x.leverage) === 1.8);
   const meanLevWorkhorse2022 = meanReversionLeverageSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231" && Number(x.leverage) === 1.8);
+  const stateWorkhorse2020 = stateOnlySummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231");
+  const stateWorkhorse2022 = stateOnlySummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
+  const stateReversion2020 = stateOnlySummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2020Y_asof_20201231");
+  const stateReversion2022 = stateOnlySummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2022Y_asof_20221231");
 
   {
     const slide = deck.slides.add();
@@ -808,6 +830,98 @@ async function createDeck() {
       "Leverage amplified the defensive value and the rally underparticipation.",
     ], { left: 814, top: 314, width: 292, height: 170 }, { fontSize: 16, lineHeight: 54, dotColor: colors.orange });
     text(slide, `At 1.8x, workhorse mean reversion produced ${pp(meanLevWorkhorse2020.alpha_vs_active_equal)} alpha in 2020 and ${pp(meanLevWorkhorse2022.alpha_vs_active_equal)} in 2022.`, { left: 112, top: 608, width: 1024, height: 34 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "State-only exposure asks whether PCA states can time the hold decision");
+    text(slide, "The prior lanes asked PCA states to choose a downstream technical strategy, then waited for that strategy to emit entries and exits. This diagnostic removes that second layer.", { left: 82, top: 202, width: 1040, height: 70 }, { fontSize: 22 });
+    rect(slide, { left: 92, top: 320, width: 470, height: 166 }, colors.soft, colors.rule);
+    rect(slide, { left: 666, top: 320, width: 470, height: 166 }, colors.soft, colors.rule);
+    text(slide, "Favorable state", { left: 124, top: 350, width: 280, height: 32 }, { fontSize: 28, bold: true, color: colors.green });
+    text(slide, "Enter next open if flat. Stay long while selected states remain favorable.", { left: 124, top: 404, width: 350, height: 52 }, { fontSize: 20, color: colors.muted });
+    text(slide, "Unfavorable state", { left: 698, top: 350, width: 300, height: 32 }, { fontSize: 28, bold: true, color: colors.red });
+    text(slide, "Exit next open if long. Remain flat while cash/exit-cash states persist.", { left: 698, top: 404, width: 350, height: 52 }, { fontSize: 20, color: colors.muted });
+    text(slide, "This is a direct test of whether the regime engine itself has enough directional value to act as an exposure switch.", { left: 124, top: 576, width: 1010, height: 48 }, { fontSize: 24, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "State-only exposure improved rally participation, but still did not beat 2020 basket hold");
+    const rows = [
+      ["2020", "Workhorse", stateWorkhorse2020],
+      ["2020", "Reversion context", stateReversion2020],
+      ["2022", "Workhorse", stateWorkhorse2022],
+      ["2022", "Reversion context", stateReversion2022],
+    ];
+    const x = 76;
+    const y = 218;
+    const widths = [82, 204, 132, 128, 128, 128, 108];
+    const headers = ["Year", "Feature", "Return", "Alpha", "Exposure", "Drawdown", "Entries"];
+    let left = x;
+    headers.forEach((header, index) => {
+      rect(slide, { left, top: y, width: widths[index], height: 38 }, colors.soft, colors.rule);
+      text(slide, header, { left: left + 8, top: y + 9, width: widths[index] - 16, height: 22 }, { fontSize: 15, bold: true });
+      left += widths[index];
+    });
+    rows.forEach(([year, feature, row], rowIndex) => {
+      left = x;
+      const yy = y + 38 + rowIndex * 62;
+      const values = [
+        year,
+        feature,
+        pct(row.total_return),
+        pp(row.alpha_vs_active_equal),
+        pct(row.mean_open_position_fraction),
+        pct(row.max_drawdown),
+        row.total_entry_fills,
+      ];
+      values.forEach((value, index) => {
+        rect(slide, { left, top: yy, width: widths[index], height: 62 }, rowIndex % 2 ? "#FFFFFF" : colors.softer, colors.rule);
+        text(slide, String(value), { left: left + 8, top: yy + 18, width: widths[index] - 16, height: 26 }, {
+          fontSize: 16,
+          bold: index === 1,
+          color: index === 3 ? (String(value).startsWith("+") ? colors.green : colors.red) : colors.ink,
+        });
+        left += widths[index];
+      });
+    });
+    text(slide, "This is the strongest 2020 participation read so far, but the equal-weight high-beta basket still won. In 2022, the state-only policy stayed almost fully exposed, so its edge over the falling basket was small.", { left: 106, top: 570, width: 1040, height: 62 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The state-only map is a true binary exposure policy");
+    await image(slide, stateOnlyPaths.family, { left: 58, top: 174, width: 690, height: 460 }, "State-only selected strategy family heatmap");
+    rect(slide, { left: 806, top: 220, width: 350, height: 310 }, colors.soft, colors.rule);
+    text(slide, "Sanity check", { left: 838, top: 250, width: 240, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      "Selections are only State hold or Exit cash.",
+      "AVGO was almost always favorable.",
+      "MSTR and TSLA were more selective.",
+      "Cash states force exit, not passive holding.",
+    ], { left: 840, top: 314, width: 260, height: 170 }, { fontSize: 16, lineHeight: 38, dotColor: colors.orange });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The visual audit shows why this deserves a wider but careful follow-up");
+    await imageWithFallback(slide, [stateOnlyPaths.bullishParticipationTapes, stateOnlyPaths.representativeTapes, stateOnlyPaths.tapes], { left: 44, top: 166, width: 800, height: 450 }, "State-only exposure trade tapes");
+    rect(slide, { left: 888, top: 214, width: 286, height: 300 }, colors.soft, colors.rule);
+    text(slide, "Interpretation", { left: 918, top: 244, width: 210, height: 32 }, { fontSize: 25, bold: true });
+    bullets(slide, [
+      "Much stronger 2020 upside participation.",
+      "Too much 2022 exposure.",
+      "Next: test a hold-only middle action.",
+    ], { left: 920, top: 314, width: 218, height: 150 }, { fontSize: 16, lineHeight: 46, dotColor: colors.orange });
     footer(slide);
   }
 

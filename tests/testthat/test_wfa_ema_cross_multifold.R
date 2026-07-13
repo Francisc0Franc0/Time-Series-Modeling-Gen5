@@ -491,6 +491,20 @@ test_that("no-trade exit-immediate candidate is a force-exit override and never 
   expect_equal(force_rows$trade_count[[1L]], 0L)
 })
 
+test_that("state buy-hold candidate enters whenever selected and has no native exit", {
+  bars <- g5_test_wfa_multi_bars(close = c(10, 11, 12, 13, 12, 14))
+  grid <- g5_wfa_candidate_model_grid(candidate_families = c("state_buy_hold", "no_trade_exit_immediate"))
+  state_hold <- grid[grid$strategy_family == "state_buy_hold", , drop = FALSE]
+  indicators <- g5_wfa_model_indicators(bars, "AMD", state_hold)
+  stacks <- g5_wfa_exit_stacks_for_candidates(g5_wfa_exit_stack_grid(), c("state_buy_hold", "no_trade_exit_immediate"))
+
+  expect_true("state_buy_hold" %in% grid$model_instance_id)
+  expect_true("no_exit" %in% stacks$exit_stack_id)
+  expect_true(all(indicators$entry_signal))
+  expect_false(any(indicators$exit_signal))
+  expect_equal(unique(indicators$signal_state), "state_hold")
+})
+
 test_that("stitched indicators tolerate mixed selected model families", {
   close <- c(
     10, 10, 10, 9, 7, 8, 11, 13, 15, 13,

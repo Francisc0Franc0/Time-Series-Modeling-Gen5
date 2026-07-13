@@ -113,6 +113,10 @@ if (!annual_replay_mode %in% annual_replay_choices) {
   g5_stop(paste0("GEN5_GEN53_MOM_CTX_ANNUAL_REPLAY_MODE must be one of: ", paste(annual_replay_choices, collapse = ",")))
 }
 min_train_state_rows <- 20L
+min_train_trades <- as.integer(env_or("GEN5_GEN53_MOM_CTX_MIN_TRAIN_TRADES", "5"))
+if (is.na(min_train_trades) || min_train_trades < 0L) {
+  g5_stop("GEN5_GEN53_MOM_CTX_MIN_TRAIN_TRADES must be a non-negative integer.")
+}
 warmup_days <- 420L
 grid_n <- 3L
 initial_capital <- as.numeric(env_or("GEN5_GEN53_MOM_CTX_INITIAL_CAPITAL", "100000"))
@@ -129,6 +133,10 @@ candidate_families <- g5_wfa_candidate_families(split_csv(env_or(
 candidate_families <- unique(c(candidate_families, "no_trade", "no_trade_exit_immediate"))
 strategy_pool_id <- env_or("GEN5_GEN53_MOM_CTX_STRATEGY_POOL_ID", "ema_only_momentum_specialist")
 strategy_pool_label <- env_or("GEN5_GEN53_MOM_CTX_STRATEGY_POOL_LABEL", "EMA-only momentum specialist")
+state_only_binary_exit <- g5_parse_bool_env(
+  env_or("GEN5_GEN53_MOM_CTX_STATE_ONLY_BINARY_EXIT", if ("state_buy_hold" %in% candidate_families) "true" else "false"),
+  default = FALSE
+)
 
 windows <- data.frame(
   window_id = c("2019Y_asof_20191231", "2020Y_asof_20201231", "2022Y_asof_20221231", "2024Y_asof_20241231"),
@@ -350,6 +358,8 @@ build_authority <- function(spec, bars, quarter_id, authority_dir) {
   contract$research_note <- "Gen5.3 momentum context-size specialist screen: behavioral-pool PCA, 3x3 quantile states, high-beta live basket, feature-set and context-size axes, EMA-only momentum candidate families plus no-trade controls, live-capital portfolio replay."
   contract$grid_n <- grid_n
   contract$selection_policy <- "base_direct_authority"
+  contract$min_train_trades <- min_train_trades
+  contract$state_only_binary_exit <- state_only_binary_exit
   contract$feature_set_id <- spec$feature_set_id
   contract$feature_set_label <- spec$feature_set_label
   contract$feature_cols <- paste(spec$feature_cols, collapse = ",")
@@ -373,6 +383,46 @@ build_authority <- function(spec, bars, quarter_id, authority_dir) {
   authority
 }
 
+force_state_only_binary_cash_exit <- function(authority) {
+  if (!isTRUE(state_only_binary_exit) || !"state_buy_hold" %in% candidate_families) {
+    return(authority)
+  }
+  selected <- authority$selected_states
+  perf <- authority$train_state_performance
+  if (!is.data.frame(selected) || !nrow(selected) || !is.data.frame(perf) || !nrow(perf)) {
+    return(authority)
+  }
+  cash_rows <- which(as.character(selected$strategy_family) == "no_trade")
+  if (!length(cash_rows)) {
+    return(authority)
+  }
+  for (idx in cash_rows) {
+    keys <- c("symbol", "quarter_id", "state_id")
+    key_ok <- keys %in% names(selected) & keys %in% names(perf)
+    if (!all(key_ok)) next
+    replacement <- perf[
+      as.character(perf$symbol) == as.character(selected$symbol[[idx]]) &
+        as.character(perf$quarter_id) == as.character(selected$quarter_id[[idx]]) &
+        as.character(perf$state_id) == as.character(selected$state_id[[idx]]) &
+        as.character(perf$strategy_family) == "no_trade_exit_immediate",
+      ,
+      drop = FALSE
+    ]
+    if (!nrow(replacement)) next
+    replacement <- g5_selection_policy_gen4_rank_rows(replacement)[1L, , drop = FALSE]
+    common <- intersect(names(selected), names(replacement))
+    selected[idx, common] <- replacement[1L, common]
+    selected$selection_reason[[idx]] <- "state_only_binary_cash_forces_exit"
+    override <- g5_selection_policy_gen4_state_exit_override_fields(selected[idx, , drop = FALSE])
+    for (col in names(override)) {
+      if (!col %in% names(selected)) selected[[col]] <- NA
+      selected[[col]][[idx]] <- override[[col]][[1L]]
+    }
+  }
+  authority$selected_states <- selected
+  authority
+}
+
 make_policy_authority <- function(authority, selection_policy) {
   out <- authority
   out$contract$selection_policy <- selection_policy
@@ -380,16 +430,19 @@ make_policy_authority <- function(authority, selection_policy) {
     out$selected_states <- g5_selection_policy_add_direct_label(
       out$selected_states,
       out$train_state_performance,
-      min_train_state_rows = min_train_state_rows
+      min_train_state_rows = min_train_state_rows,
+      min_train_trades = min_train_trades
     )
   } else if (identical(selection_policy, "pooled_family_asset_variant")) {
     out$selected_states <- g5_selection_policy_pooled_family_asset_variant(
       out$train_state_performance,
-      min_train_state_rows = min_train_state_rows
+      min_train_state_rows = min_train_state_rows,
+      min_train_trades = min_train_trades
     )
   } else {
     g5_stop(paste0("Unsupported selection policy: ", selection_policy))
   }
+  out <- force_state_only_binary_cash_exit(out)
   out
 }
 
@@ -922,6 +975,10 @@ write_trade_tape_contact_sheet <- function(symbol_results_by_lane, path) {
 
 write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
   focus_lane <- "hb_risk_aware_18__workhorse_enriched__2024Y_asof_20241231__pooled_family_asset_variant__state_switch_continuation"
+  if (!focus_lane %in% names(symbol_results_by_lane)) {
+    candidates <- grep("hb_risk_aware_18__.*2020Y_asof_20201231.*pooled_family_asset_variant", names(symbol_results_by_lane), value = TRUE)
+    if (length(candidates)) focus_lane <- candidates[[1L]]
+  }
   focus_symbols <- c("AMD", "NVDA", "TSLA", "MSTR")
   if (!focus_lane %in% names(symbol_results_by_lane)) return(invisible(NULL))
   lane <- symbol_results_by_lane[[focus_lane]]
@@ -938,11 +995,11 @@ write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
       result$executions,
       result$pending_actions,
       result$trades,
-      main = paste0(symbol, " / risk-aware workhorse / 2024Y continuation")
+      main = paste(symbol, focus_lane, sep = " / ")
     )
   }
   graphics::mtext(
-    "Representative Timing Tapes: Risk-Aware Workhorse 2024Y Continuation",
+    "Representative Timing Tapes",
     side = 3,
     outer = TRUE,
     line = 0.6,
@@ -953,6 +1010,10 @@ write_representative_trade_tapes <- function(symbol_results_by_lane, path) {
 
 write_bullish_participation_audit_tapes <- function(symbol_results_by_lane, path) {
   focus_lane <- "hb_risk_aware_18__workhorse_enriched__2020Y_asof_20201231__pooled_family_asset_variant__state_switch_continuation"
+  if (!focus_lane %in% names(symbol_results_by_lane)) {
+    candidates <- grep("hb_risk_aware_18__.*2020Y_asof_20201231.*pooled_family_asset_variant", names(symbol_results_by_lane), value = TRUE)
+    if (length(candidates)) focus_lane <- candidates[[1L]]
+  }
   focus_symbols <- c("TSLA", "AMD", "NVDA", "MSTR")
   if (!focus_lane %in% names(symbol_results_by_lane)) return(invisible(NULL))
   lane <- symbol_results_by_lane[[focus_lane]]
@@ -969,12 +1030,12 @@ write_bullish_participation_audit_tapes <- function(symbol_results_by_lane, path
       result$executions,
       result$pending_actions,
       result$trades,
-      main = paste0(symbol, " / 2020 risk-aware workhorse continuation"),
+      main = paste(symbol, focus_lane, sep = " / "),
       ema_overlay = TRUE
     )
   }
   graphics::mtext(
-    "Bullish Participation Audit: 2020 Risk-Aware Workhorse Continuation",
+    "Bullish Participation Audit: 2020 Risk-Aware Lane",
     side = 3,
     outer = TRUE,
     line = 0.7,
@@ -1005,6 +1066,7 @@ write_selection_family_heatmap <- function(selected_states, path) {
   family_palette <- c(
     no_trade = "#D1D5DB",
     no_trade_exit_immediate = "#B8BCC4",
+    state_buy_hold = "#175CD3",
     ema_cross = "#2563EB",
     ema_trend = "#00A88F",
     breakout = "#277DA1",
@@ -1019,6 +1081,7 @@ write_selection_family_heatmap <- function(selected_states, path) {
   family_label <- c(
     no_trade = "Cash",
     no_trade_exit_immediate = "Exit cash",
+    state_buy_hold = "State hold",
     ema_cross = "EMA cross",
     ema_trend = "EMA trend",
     breakout = "Breakout",
@@ -1274,7 +1337,7 @@ for (spec in screen_specs) {
         if (spec$context_id %in% c("hb_self_5", "hb_risk_aware_18") &&
             spec$feature_set_id %in% c("workhorse_enriched", "momentum_plus_stress", "market_relative_momentum", "reversion_breakout_context") &&
             window$window_id[[1L]] %in% c("2020Y_asof_20201231", "2022Y_asof_20221231") &&
-            identical(semantics, "state_switch_continuation")) {
+            (identical(semantics, "state_switch_continuation") || "state_buy_hold" %in% candidate_families)) {
           trade_tape_symbol_results[[paste(spec$context_id, spec$feature_set_id, window$window_id[[1L]], lane_id, sep = "__")]] <- results
         }
         trades_by_symbol <- stats::setNames(lapply(spec$symbols, function(symbol) {
@@ -1448,6 +1511,8 @@ run_spec <- do.call(rbind, lapply(screen_specs, function(spec) {
     strategy_grid_preset = strategy_grid_preset,
     candidate_families = paste(candidate_families, collapse = ","),
     min_train_state_rows = min_train_state_rows,
+    min_train_trades = min_train_trades,
+    state_only_binary_exit = state_only_binary_exit,
     initial_capital = initial_capital,
     interpretation_note = spec$interpretation_note,
     stringsAsFactors = FALSE

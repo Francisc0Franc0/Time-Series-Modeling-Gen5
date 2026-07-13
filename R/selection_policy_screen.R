@@ -283,23 +283,23 @@ g5_selection_policy_choose_pooled_family <- function(state_rows, min_train_state
   summary[1L, , drop = FALSE]
 }
 
-g5_selection_policy_pooled_family_asset_variant <- function(train_state_performance, min_train_state_rows = 20L) {
+g5_selection_policy_pooled_family_asset_variant <- function(train_state_performance, min_train_state_rows = 20L, min_train_trades = 5L) {
   g5_selection_policy_gen4_pooled_family_asset_variant(
     train_state_performance,
     min_train_state_rows = min_train_state_rows,
-    min_train_trades = 5L
+    min_train_trades = min_train_trades
   )
 }
 
-g5_selection_policy_pooled_family_asset_variant_state_fallback <- function(train_state_performance, min_train_state_rows = 20L) {
+g5_selection_policy_pooled_family_asset_variant_state_fallback <- function(train_state_performance, min_train_state_rows = 20L, min_train_trades = 5L) {
   g5_selection_policy_gen4_pooled_family_asset_variant_state_fallback(
     train_state_performance,
     min_train_state_rows = min_train_state_rows,
-    min_train_trades = 5L
+    min_train_trades = min_train_trades
   )
 }
 
-g5_selection_policy_direct_asset_state_spec <- function(train_state_performance, min_train_state_rows = 20L) {
+g5_selection_policy_direct_asset_state_spec <- function(train_state_performance, min_train_state_rows = 20L, min_train_trades = 5L) {
   required <- c("symbol", "state_id", "strategy_family", "strategy_spec_id", "sharpe", "total_return", "train_state_row_count")
   missing <- setdiff(required, names(train_state_performance))
   if (length(missing)) {
@@ -319,7 +319,7 @@ g5_selection_policy_direct_asset_state_spec <- function(train_state_performance,
       state_rows,
       no_trade_row = no_trade,
       min_train_state_rows = min_train_state_rows,
-      min_train_trades = 5L
+      min_train_trades = min_train_trades
     )
   })
   selected <- g5_wfa_bind_rows_fill(winners)
