@@ -204,3 +204,45 @@ The trend/breakout pool did not solve the upside participation problem. It made 
 Decision implication:
 
 Do not run the full four-window trend/breakout sweep yet. The next narrower question should be about entry/participation design or state timing, not simply adding more breakout families. If strategy diversity is reopened again, it should be because we have a specific participation hypothesis, not because a broader pool is assumed to be better.
+
+## Mean-Reversion Two-Feature Diagnostic Result
+
+Completed packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260712meanrev2feat/`
+
+Purpose:
+
+After the trend/breakout pool became more defensive rather than more participatory, this diagnostic asked whether classic mean-reversion families could add useful range-trading behavior without widening all strategy families at once.
+
+Fixed design:
+
+- context: `hb_risk_aware_18`;
+- annual replay: `quarter_continuity_replay`;
+- replay semantics: `state_switch_continuation`;
+- selection policy: `pooled_family_asset_variant`;
+- live basket: `AMD,NVDA,TSLA,MSTR,AVGO`;
+- windows: `2020Y_asof_20201231` and `2022Y_asof_20221231`;
+- candidate families: `bollinger_touch`, `bollinger_mid_reversion`, `rsi_mr`, `zret_mr`, `no_trade`, and `no_trade_exit_immediate`.
+
+Feature sets compared:
+
+- `workhorse_enriched`;
+- `reversion_breakout_context`.
+
+Readout:
+
+- `2020`: workhorse mean reversion returned `20.3%` with `-207.0 pp` basket alpha, `21.3%` exposure, and `26` entries. Reversion-breakout mean reversion returned `13.6%` with `-213.7 pp` basket alpha, `19.8%` exposure, and `30` entries. The basket returned `227.3%`.
+- `2022`: workhorse mean reversion returned `-12.9%` with `+40.1 pp` basket alpha, `25.9%` exposure, and `41` entries. Reversion-breakout mean reversion returned `-17.6%` with `+35.4 pp` basket alpha, `27.3%` exposure, and `44` entries. The basket returned `-53.0%`.
+
+Trade-tape interpretation:
+
+The 2020 failure mode is underparticipation and late/episodic participation, not an absence of trades. In the completed trend/breakout tape, TSLA first entered on `2020-09-18`, after much of the early/mid-2020 rally had already occurred. AMD and NVDA caught some legs, but exited or remained underexposed relative to buy-and-hold. The mean-reversion tapes show small countertrend/range attempts and defensive cash selection, not early sticky participation in a broad high-beta rally.
+
+Selection-map interpretation:
+
+The mean-reversion authority map remains cash-dominant. Bollinger-style pockets appear selectively, especially for AVGO, while RSI and z-return variants do not dominate the selected state map.
+
+Decision implication:
+
+Mean reversion is worth keeping as a future broad-system ingredient, especially for range or falling-market behavior, but it is not the missing mechanism for the current bullish high-beta specialist. The next high-impact question is state timing and entry/hold participation directly: when a favorable state appears, does the system enter early enough and stay long enough to matter?

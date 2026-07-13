@@ -40,6 +40,13 @@ const trendBreakoutDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_20260712stratbreakout2win",
 );
+const meanReversionDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_20260712meanrev2feat",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -75,6 +82,14 @@ const trendBreakoutPaths = {
   heatmap: path.join(trendBreakoutDir, "momentum_context_size_alpha_heatmap.png"),
   family: path.join(trendBreakoutDir, "momentum_context_size_selection_family_heatmap.png"),
   tapes: path.join(trendBreakoutDir, "momentum_context_size_trade_tape_contact_sheet.png"),
+};
+
+const meanReversionPaths = {
+  summary: path.join(meanReversionDir, "momentum_context_size_summary.csv"),
+  aggregate: path.join(meanReversionDir, "momentum_context_size_aggregate.csv"),
+  heatmap: path.join(meanReversionDir, "momentum_context_size_alpha_heatmap.png"),
+  family: path.join(meanReversionDir, "momentum_context_size_selection_family_heatmap.png"),
+  tapes: path.join(meanReversionDir, "momentum_context_size_trade_tape_contact_sheet.png"),
 };
 
 const W = 1280;
@@ -293,6 +308,7 @@ async function createDeck() {
   const featureDiagnosticSummary = await readCsv(featureDiagnosticPaths.summary);
   const featureDiagnosticAggregate = await readCsv(featureDiagnosticPaths.aggregate);
   const trendBreakoutSummary = await readCsv(trendBreakoutPaths.summary);
+  const meanReversionSummary = await readCsv(meanReversionPaths.summary);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
@@ -307,6 +323,10 @@ async function createDeck() {
   const ema2022 = featureDiagnosticSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
   const breakout2020 = trendBreakoutSummary.find((x) => x.window_id === "2020Y_asof_20201231");
   const breakout2022 = trendBreakoutSummary.find((x) => x.window_id === "2022Y_asof_20221231");
+  const meanRevWorkhorse2020 = meanReversionSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231");
+  const meanRevWorkhorse2022 = meanReversionSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
+  const meanRevReversion2020 = meanReversionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2020Y_asof_20201231");
+  const meanRevReversion2022 = meanReversionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2022Y_asof_20221231");
 
   {
     const slide = deck.slides.add();
@@ -624,6 +644,69 @@ async function createDeck() {
       "The pool reduced drawdown but did not keep the system long enough in 2020.",
     ], { left: 854, top: 320, width: 246, height: 160 }, { fontSize: 17, lineHeight: 50, dotColor: colors.orange });
     text(slide, "Next question: improve state timing and hold participation directly, instead of assuming a broader family list will create upside capture.", { left: 110, top: 590, width: 1030, height: 42 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Mean reversion did not solve the upside participation problem");
+    const rows = [
+      ["2020", "Workhorse", meanRevWorkhorse2020],
+      ["2020", "Reversion context", meanRevReversion2020],
+      ["2022", "Workhorse", meanRevWorkhorse2022],
+      ["2022", "Reversion context", meanRevReversion2022],
+    ];
+    const x = 86;
+    const y = 214;
+    const widths = [88, 206, 130, 128, 128, 128, 110];
+    const headers = ["Year", "Feature", "Return", "Alpha", "Exposure", "Drawdown", "Entries"];
+    let left = x;
+    headers.forEach((header, index) => {
+      rect(slide, { left, top: y, width: widths[index], height: 38 }, colors.soft, colors.rule);
+      text(slide, header, { left: left + 8, top: y + 9, width: widths[index] - 16, height: 22 }, { fontSize: 15, bold: true });
+      left += widths[index];
+    });
+    rows.forEach(([year, feature, row], rowIndex) => {
+      left = x;
+      const yy = y + 38 + rowIndex * 62;
+      const values = [
+        year,
+        feature,
+        pct(row.total_return),
+        pp(row.alpha_vs_active_equal),
+        pct(row.mean_open_position_fraction),
+        pct(row.max_drawdown),
+        row.total_entry_fills,
+      ];
+      values.forEach((value, index) => {
+        rect(slide, { left, top: yy, width: widths[index], height: 62 }, rowIndex % 2 ? "#FFFFFF" : colors.softer, colors.rule);
+        text(slide, String(value), { left: left + 8, top: yy + 18, width: widths[index] - 16, height: 26 }, {
+          fontSize: 16,
+          bold: index === 1,
+          color: index === 3 ? (String(value).startsWith("+") ? colors.green : colors.red) : colors.ink,
+        });
+        left += widths[index];
+      });
+    });
+    text(slide, "The diagnostic behaved like a defensive/range-trading probe: it reduced 2022 damage versus basket hold, but it badly lagged the 2020 rally and did not improve on the EMA control.", { left: 112, top: 566, width: 1024, height: 62 }, { fontSize: 23, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The mean-reversion map is mostly cash with narrow Bollinger pockets");
+    await image(slide, meanReversionPaths.family, { left: 58, top: 176, width: 706, height: 470 }, "Mean-reversion selected strategy family heatmap");
+    rect(slide, { left: 820, top: 226, width: 334, height: 292 }, colors.soft, colors.rule);
+    text(slide, "Visual read", { left: 852, top: 256, width: 240, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      "No-trade still dominates many asset-state cells.",
+      "Bollinger variants appear in selective pockets, especially AVGO.",
+      "RSI and z-return did not become dominant state actions.",
+      "This is not a high-beta upside engine in its current form.",
+    ], { left: 854, top: 314, width: 246, height: 178 }, { fontSize: 16, lineHeight: 43, dotColor: colors.orange });
+    text(slide, "The trade tapes reinforce the same story: countertrend chips and defensive abstention, not early sticky participation in a broad high-beta rally.", { left: 102, top: 590, width: 1048, height: 42 }, { fontSize: 22, bold: true, alignment: "center" });
     footer(slide);
   }
 

@@ -923,7 +923,11 @@ write_selection_family_heatmap <- function(selected_states, path) {
     breakout = "#277DA1",
     pullback_in_uptrend = "#43AA8B",
     vol_expansion_breakout = "#F8961E",
-    donchian_breakout_vol_expand = "#577590"
+    donchian_breakout_vol_expand = "#577590",
+    bollinger_touch = "#7C3AED",
+    bollinger_mid_reversion = "#A855F7",
+    rsi_mr = "#DB2777",
+    zret_mr = "#BE123C"
   )
   family_label <- c(
     no_trade = "Cash",
@@ -933,7 +937,11 @@ write_selection_family_heatmap <- function(selected_states, path) {
     breakout = "Breakout",
     pullback_in_uptrend = "Pullback",
     vol_expansion_breakout = "Vol BO",
-    donchian_breakout_vol_expand = "Donchian BO"
+    donchian_breakout_vol_expand = "Donchian BO",
+    bollinger_touch = "BB touch",
+    bollinger_mid_reversion = "BB mid",
+    rsi_mr = "RSI MR",
+    zret_mr = "Z-ret MR"
   )
   grDevices::png(path, width = 2600L, height = 1700L, res = 220L)
   oldpar <- graphics::par(no.readonly = TRUE)
@@ -948,7 +956,9 @@ write_selection_family_heatmap <- function(selected_states, path) {
     fill <- family_palette[[fam]]
     if (is.null(fill) || is.na(fill)) fill <- "#F5F7FA"
     graphics::rect(x - 0.5, y - 0.5, x + 0.5, y + 0.5, col = fill, border = aesthetic$grid)
-    label <- paste0(family_label[[fam]], "\n", selected_states$selected_count[[i]], "/", selected_states$selected_total[[i]])
+    label_family <- family_label[[fam]]
+    if (is.null(label_family) || is.na(label_family)) label_family <- fam
+    label <- paste0(label_family, "\n", selected_states$selected_count[[i]], "/", selected_states$selected_total[[i]])
     graphics::text(x, y, labels = label, cex = 0.44, col = if (identical(fam, "no_trade")) aesthetic$text else "white", font = 2)
   }
   graphics::axis(1, at = seq_along(states), labels = states, las = 2, cex.axis = 0.72, col.axis = aesthetic$axis)

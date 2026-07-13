@@ -466,3 +466,26 @@ The reopened trend/breakout pool behaved as a more defensive/selective variant, 
 Current implication:
 
 Do not immediately run the full four-window trend/breakout sweep or jump to the broad classical pool. The next narrow test should target state timing and entry/hold participation more directly.
+
+## Mean-Reversion Reopening Diagnostic
+
+Mean-reversion packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260712meanrev2feat/`
+
+Purpose:
+
+This follow-up reopened only Bollinger, RSI, and z-return mean-reversion families under the same two annual windows and the same `hb_risk_aware_18 + state_switch_continuation + quarter_continuity_replay` control surface. It compared `workhorse_enriched` against the diagnostic `reversion_breakout_context` feature set.
+
+Readout:
+
+- In `2020`, mean reversion badly lagged the high-beta basket: `20.3%` for workhorse and `13.6%` for reversion-breakout context versus `227.3%` basket hold.
+- In `2022`, mean reversion behaved more defensively than hold: `-12.9%` and `-17.6%` versus `-53.0%` basket hold.
+
+Interpretation:
+
+The diagnostic confirms that mean reversion can be a useful future ingredient for range or drawdown regimes, but it does not solve the Gen5.3 bullish participation problem. The trade tapes and selection map point to cash dominance, selective Bollinger pockets, and countertrend chips rather than early, sticky high-beta rally participation.
+
+Current implication:
+
+Do not promote mean reversion into the bullish specialist yet. The next bounded test should directly inspect and modify favorable-state timing, entry latency, and hold persistence.
