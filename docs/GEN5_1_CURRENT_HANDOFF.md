@@ -401,6 +401,18 @@ Important design answers already settled for the first slice:
 
 First implementation step: build `ML-P0`, a feature/label proof wrapper over `AMD,NVDA,TSLA,MSTR,AVGO`, risk-aware context, `2020` and `2022` assessment windows, and the `h3` next-open label. It should output a run spec, schema/taxonomy, feature-label sample, label distributions, leakage audit, and compact report. Do not install XGBoost until this surface passes inspection.
 
+ML-P0 completed packet:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p0_20260713p0/`
+
+Companion deck:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Completed readout: the wrapper produced `22,440` usable labeled fold rows across `AMD,NVDA,TSLA,MSTR,AVGO`, `40` selected features, and `100%` finite selected-feature coverage after eligibility filters. All leakage checks passed: feature date before execution date, execution before label endpoint, TRAIN labels inside TRAIN, and OOS labels inside OOS. Treat this as table-quality evidence only. It is not model evidence or allocation evidence.
+
+Next implementation step: `ML-P1`, a GLM logistic daily replay. Fit only on TRAIN rows using frozen transforms; predict OOS h3 probability after each close; apply fixed or TRAIN-selected thresholds; replay long/flat decisions through the existing inspection/accounting surface; produce probability traces, trade tapes, equity, and equal-weight basket-hold comparison. Do not install XGBoost until GLM proves the replay surface.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:
@@ -434,7 +446,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P0: a leakage-safe supervised ML feature/label proof wrapper using adjusted daily OHLCV, the AMD,NVDA,TSLA,MSTR,AVGO live basket, risk-aware context, 2020 and 2022 assessment windows, and the h3 next-open label. Do not fit a model yet and do not change live bridge behavior. Produce a run spec, feature schema/taxonomy, feature-label sample, label distributions, leakage audit, compact report, validate, commit, and push.
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P1: a no-new-dependency GLM logistic daily replay using the completed ML-P0 feature/label contract. Fit only on TRAIN rows, freeze all transforms, predict OOS h3 probability after each close, apply fixed or TRAIN-selected thresholds without OOS tuning, and replay long/flat decisions through the existing inspection/accounting surface. Produce probability traces, action tables, trade tapes, equity versus equal-weight basket hold, a compact report, and update the Gen5.4 deck with a transition slide from table proof to model replay. Do not change live bridge behavior and do not install XGBoost yet. Validate, commit, and push.
 ```
 
 ```text

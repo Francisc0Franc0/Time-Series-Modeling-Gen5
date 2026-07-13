@@ -211,6 +211,26 @@ This should avoid new package installation until the data surface is proven. It 
 
 Only after ML-P0 passes should we add model-fitting dependencies.
 
+## ML-P0 Packet
+
+The first ML-P0 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p0_20260713p0/`
+
+The companion deck is:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper produced `22,440` usable labeled fold rows over `AMD,NVDA,TSLA,MSTR,AVGO`.
+- It used `40` selected features seeded by the PCA feature surface and supplemented with OHLCV/execution-aligned features.
+- All leakage checks passed: feature date precedes execution date, execution precedes label endpoint, TRAIN labels end inside TRAIN, and OOS labels end inside OOS.
+- Usable rows had `100%` finite selected-feature coverage after eligibility filters.
+- The deck now documents the incremental build process and the visuals that demonstrate table quality: fold calendar, feature coverage, label balance, forward-return distributions, alignment example, feature behavior strips, and univariate decile audit.
+
+This is not model evidence yet. It only proves that the supervised table is coherent enough to support ML-P1.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
