@@ -169,6 +169,7 @@ g5_wfa_candidate_families <- function(candidate_families) {
     "vol_expansion_breakout",
     "donchian_breakout_vol_expand",
     "state_buy_hold",
+    "state_hold_only",
     "no_trade",
     "no_trade_exit_immediate"
   )
@@ -335,6 +336,9 @@ g5_wfa_model_parameter_label <- function(model) {
   if (identical(family, "state_buy_hold")) {
     return("state-gated buy-and-hold")
   }
+  if (identical(family, "state_hold_only")) {
+    return("hold existing position; no new entry")
+  }
   if (identical(family, "no_trade")) {
     return("cash/no-position benchmark")
   }
@@ -460,7 +464,7 @@ g5_wfa_no_trade_exit_stack <- function() {
 }
 
 g5_wfa_gen52_no_trade_families <- function() {
-  c("no_trade", "no_trade_exit_immediate")
+  c("no_trade", "state_hold_only", "no_trade_exit_immediate")
 }
 
 g5_wfa_gen52_trade_count <- function(rows) {
@@ -774,7 +778,13 @@ g5_wfa_model_indicators <- function(bars, symbol, model) {
     ind$exit_signal <- FALSE
     ind$entry_signal_rule <- paste0(family, "_never_enters")
     ind$exit_signal_rule <- if (identical(family, "no_trade_exit_immediate")) "state_exit_override_force_exit_next_open" else "no_trade_no_exit"
-    ind$signal_state <- if (identical(family, "no_trade_exit_immediate")) "cash_force_exit_if_long" else "cash"
+    ind$signal_state <- if (identical(family, "no_trade_exit_immediate")) {
+      "cash_force_exit_if_long"
+    } else if (identical(family, "state_hold_only")) {
+      "hold_only_no_new_entry"
+    } else {
+      "cash"
+    }
     return(g5_wfa_normalize_indicator_columns(ind, model))
   }
   if (identical(family, "state_buy_hold")) {
@@ -1068,6 +1078,9 @@ g5_wfa_candidate_model_grid <- function(
   }
   if ("no_trade_exit_immediate" %in% candidate_families) {
     add_model("no_trade_exit_immediate", "no_trade_exit_immediate")
+  }
+  if ("state_hold_only" %in% candidate_families) {
+    add_model("state_hold_only", "state_hold_only")
   }
   if ("state_buy_hold" %in% candidate_families) {
     add_model("state_buy_hold", "state_buy_hold")

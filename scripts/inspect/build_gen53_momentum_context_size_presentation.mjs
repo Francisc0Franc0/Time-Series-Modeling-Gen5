@@ -73,6 +73,13 @@ const stateOnlyDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_statehold2feat",
 );
+const stateThreeActionDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_state3action2feat",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -139,6 +146,17 @@ const stateOnlyPaths = {
   tapes: path.join(stateOnlyDir, "momentum_context_size_trade_tape_contact_sheet.png"),
   representativeTapes: path.join(stateOnlyDir, "momentum_context_size_representative_trade_tapes.png"),
   bullishParticipationTapes: path.join(stateOnlyDir, "momentum_context_size_bullish_participation_audit_tapes.png"),
+};
+
+const stateThreeActionPaths = {
+  summary: path.join(stateThreeActionDir, "momentum_context_size_summary.csv"),
+  selected: path.join(stateThreeActionDir, "momentum_context_size_selected_states.csv"),
+  heatmap: path.join(stateThreeActionDir, "momentum_context_size_alpha_heatmap.png"),
+  equity: path.join(stateThreeActionDir, "momentum_context_size_equity_overlay.png"),
+  family: path.join(stateThreeActionDir, "momentum_context_size_selection_family_heatmap.png"),
+  tapes: path.join(stateThreeActionDir, "momentum_context_size_trade_tape_contact_sheet.png"),
+  representativeTapes: path.join(stateThreeActionDir, "momentum_context_size_representative_trade_tapes.png"),
+  bullishParticipationTapes: path.join(stateThreeActionDir, "momentum_context_size_bullish_participation_audit_tapes.png"),
 };
 
 const W = 1280;
@@ -267,6 +285,19 @@ function footer(slide, value = "Research/inspection only. Not allocation evidenc
   text(slide, value, { left: page.left, top: 680, width: page.width, height: 22 }, { fontSize: 12, color: colors.muted });
 }
 
+function transitionSlide(deck, kicker, headline, body, packet) {
+  const slide = deck.slides.add();
+  slide.background.fill = "#FFFFFF";
+  text(slide, kicker, { left: 64, top: 72, width: 720, height: 28 }, { fontSize: 15, bold: true, color: colors.blue });
+  text(slide, headline, { left: 64, top: 150, width: 960, height: 150 }, { fontSize: 50, bold: true });
+  text(slide, body, { left: 68, top: 338, width: 900, height: 104 }, { fontSize: 24, color: colors.muted });
+  rect(slide, { left: 68, top: 530, width: 1050, height: 1 }, colors.rule, colors.rule);
+  if (packet) {
+    text(slide, packet, { left: 70, top: 560, width: 1040, height: 28 }, { fontSize: 16, color: colors.muted });
+  }
+  footer(slide);
+}
+
 function bullets(slide, items, position, opts = {}) {
   const lineHeight = opts.lineHeight ?? 34;
   items.forEach((item, index) => {
@@ -361,6 +392,8 @@ async function createDeck() {
   const trendBreakoutLeverageSummary = await readCsv(trendBreakoutLeveragePaths.summary);
   const meanReversionLeverageSummary = await readCsv(meanReversionLeveragePaths.summary);
   const stateOnlySummary = await readCsv(stateOnlyPaths.summary);
+  const stateThreeActionSummary = await readCsv(stateThreeActionPaths.summary);
+  const stateThreeActionSelected = await readCsv(stateThreeActionPaths.selected);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
@@ -387,6 +420,11 @@ async function createDeck() {
   const stateWorkhorse2022 = stateOnlySummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
   const stateReversion2020 = stateOnlySummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2020Y_asof_20201231");
   const stateReversion2022 = stateOnlySummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2022Y_asof_20221231");
+  const actionWorkhorse2020 = stateThreeActionSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231");
+  const actionWorkhorse2022 = stateThreeActionSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
+  const actionReversion2020 = stateThreeActionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2020Y_asof_20201231");
+  const actionReversion2022 = stateThreeActionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2022Y_asof_20221231");
+  const threeActionCounts = countBy(stateThreeActionSelected, "strategy_family");
 
   {
     const slide = deck.slides.add();
@@ -834,6 +872,16 @@ async function createDeck() {
   }
 
   {
+    transitionSlide(
+      deck,
+      "SECTION TRANSITION",
+      "Pivot: stop asking technical strategies to do all the timing",
+      "The prior sections tested EMA, breakout, mean-reversion, and leverage overlays. The next diagnostic asks whether PCA states themselves can be used as the exposure decision layer.",
+      "Binary state packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_statehold2feat",
+    );
+  }
+
+  {
     const slide = deck.slides.add();
     slide.background.fill = "#FFFFFF";
     title(slide, "State-only exposure asks whether PCA states can time the hold decision");
@@ -922,6 +970,100 @@ async function createDeck() {
       "Too much 2022 exposure.",
       "Next: test a hold-only middle action.",
     ], { left: 920, top: 314, width: 218, height: 150 }, { fontSize: 16, lineHeight: 46, dotColor: colors.orange });
+    footer(slide);
+  }
+
+  {
+    transitionSlide(
+      deck,
+      "SECTION TRANSITION",
+      "Pivot: add a neutral gear to the state policy",
+      "The binary state-only run treated every non-favorable state as an exit. The next slice tests a three-action policy: enter/hold, hold-only/no-new-entry, and exit/flat.",
+      "Three-action packet: runs/research_workbench/gen53_momentum_context_size/g53_momctx_state3action2feat",
+    );
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The three-action policy made the state map more realistic");
+    text(slide, "This slice keeps the same two windows, context, features, and annual continuity replay as the binary diagnostic. Only the state action grammar changes.", { left: 82, top: 196, width: 1030, height: 58 }, { fontSize: 22 });
+    const actions = [
+      ["Enter / hold", "State selected state_buy_hold. Enter next open if flat; stay long while no exit state appears.", colors.blue],
+      ["Hold only", "State selected state_hold_only. Do not open a new trade, but allow an existing trade to continue.", "#8EA7D8"],
+      ["Exit / flat", "State selected no_trade_exit_immediate. Exit next open if long; remain flat while the state persists.", colors.rule],
+    ];
+    actions.forEach(([head, body, color], index) => {
+      const x = 86 + index * 370;
+      rect(slide, { left: x, top: 318, width: 316, height: 178 }, color, colors.rule);
+      text(slide, head, { left: x + 22, top: 346, width: 260, height: 34 }, { fontSize: 25, bold: true, color: index === 2 ? colors.ink : "#FFFFFF", alignment: "center" });
+      text(slide, body, { left: x + 24, top: 404, width: 260, height: 58 }, { fontSize: 17, color: index === 2 ? colors.ink : "#FFFFFF", alignment: "center" });
+    });
+    text(slide, "The policy is still TRAIN-only: cash states are converted to exit only when state-hold TRAIN evidence is negative; otherwise they become hold-only.", { left: 112, top: 582, width: 1030, height: 44 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Three-action improved nuance, but did not solve 2022 over-participation");
+    const rows = [
+      ["Workhorse", "2020", pct(stateWorkhorse2020.total_return), pct(actionWorkhorse2020.total_return), pp(actionWorkhorse2020.alpha_vs_active_equal), pct(actionWorkhorse2020.mean_open_position_fraction)],
+      ["Workhorse", "2022", pct(stateWorkhorse2022.total_return), pct(actionWorkhorse2022.total_return), pp(actionWorkhorse2022.alpha_vs_active_equal), pct(actionWorkhorse2022.mean_open_position_fraction)],
+      ["Rev/BO", "2020", pct(stateReversion2020.total_return), pct(actionReversion2020.total_return), pp(actionReversion2020.alpha_vs_active_equal), pct(actionReversion2020.mean_open_position_fraction)],
+      ["Rev/BO", "2022", pct(stateReversion2022.total_return), pct(actionReversion2022.total_return), pp(actionReversion2022.alpha_vs_active_equal), pct(actionReversion2022.mean_open_position_fraction)],
+    ];
+    const headers = ["Feature", "Window", "Binary", "3-action", "3-action alpha", "Exposure"];
+    const widths = [160, 120, 160, 170, 210, 160];
+    let y = 198;
+    const x0 = 94;
+    headers.forEach((header, index) => {
+      const left = x0 + widths.slice(0, index).reduce((a, b) => a + b, 0);
+      rect(slide, { left, top: y, width: widths[index], height: 38 }, colors.soft, colors.rule);
+      text(slide, header, { left: left + 8, top: y + 9, width: widths[index] - 16, height: 22 }, { fontSize: 15, bold: true });
+    });
+    rows.forEach((row, rowIndex) => {
+      const yy = y + 38 + rowIndex * 62;
+      row.forEach((value, index) => {
+        const left = x0 + widths.slice(0, index).reduce((a, b) => a + b, 0);
+        rect(slide, { left, top: yy, width: widths[index], height: 62 }, rowIndex % 2 ? "#FFFFFF" : colors.softer, colors.rule);
+        text(slide, value, { left: left + 8, top: yy + 18, width: widths[index] - 16, height: 26 }, {
+          fontSize: 16,
+          bold: index === 4,
+          color: String(value).startsWith("+") ? colors.green : (index === 4 ? colors.red : colors.ink),
+          alignment: index > 1 ? "center" : undefined,
+        });
+      });
+    });
+    text(slide, "The neutral gear reduced entry churn, but 2022 exposure stayed around 99%. That points back to feature/state discrimination, not merely the lack of a hold-only action.", { left: 108, top: 578, width: 1030, height: 58 }, { fontSize: 23, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The action map confirms the neutral gear is active");
+    await image(slide, stateThreeActionPaths.family, { left: 58, top: 174, width: 690, height: 460 }, "Three-action selected state-policy family heatmap");
+    rect(slide, { left: 804, top: 214, width: 352, height: 312 }, colors.soft, colors.rule);
+    text(slide, "Action counts", { left: 836, top: 244, width: 250, height: 32 }, { fontSize: 26, bold: true });
+    text(slide, `State hold: ${threeActionCounts.state_buy_hold ?? 0}\nHold only: ${threeActionCounts.state_hold_only ?? 0}\nExit cash: ${threeActionCounts.no_trade_exit_immediate ?? 0}`, { left: 838, top: 302, width: 250, height: 96 }, { fontSize: 23, bold: true });
+    text(slide, "This is not just relabeling. The map contains all three actions, but the dominant action remains state hold, especially in the 2022 authorities.", { left: 838, top: 424, width: 250, height: 78 }, { fontSize: 18, color: colors.muted });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Visual audit: the policy still participates too much when defense matters");
+    await imageWithFallback(slide, [stateThreeActionPaths.bullishParticipationTapes, stateThreeActionPaths.representativeTapes, stateThreeActionPaths.tapes], { left: 44, top: 166, width: 800, height: 450 }, "Three-action exposure trade tapes");
+    rect(slide, { left: 888, top: 214, width: 286, height: 300 }, colors.soft, colors.rule);
+    text(slide, "Interpretation", { left: 918, top: 244, width: 210, height: 32 }, { fontSize: 25, bold: true });
+    bullets(slide, [
+      "Fewer entries",
+      "2020 still strong",
+      "2022 still lacks risk-off",
+      "Next: features",
+    ], { left: 918, top: 306, width: 220, lineHeight: 45 });
     footer(slide);
   }
 

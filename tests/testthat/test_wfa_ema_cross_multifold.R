@@ -491,6 +491,21 @@ test_that("no-trade exit-immediate candidate is a force-exit override and never 
   expect_equal(force_rows$trade_count[[1L]], 0L)
 })
 
+test_that("state hold-only candidate is inert but not a force-exit override", {
+  bars <- g5_test_wfa_multi_bars(close = c(10, 11, 12, 13, 12, 14))
+  grid <- g5_wfa_candidate_model_grid(candidate_families = c("state_hold_only", "no_trade_exit_immediate"))
+  hold_only <- grid[grid$strategy_family == "state_hold_only", , drop = FALSE]
+  indicators <- g5_wfa_model_indicators(bars, "AMD", hold_only)
+
+  expect_true("state_hold_only" %in% grid$model_instance_id)
+  expect_equal(unique(indicators$entry_signal), FALSE)
+  expect_equal(unique(indicators$exit_signal), FALSE)
+  expect_equal(unique(indicators$entry_signal_rule), "state_hold_only_never_enters")
+  expect_equal(unique(indicators$exit_signal_rule), "no_trade_no_exit")
+  expect_equal(unique(indicators$signal_state), "hold_only_no_new_entry")
+  expect_false(g5_wfa_is_force_exit_override(hold_only))
+})
+
 test_that("state buy-hold candidate enters whenever selected and has no native exit", {
   bars <- g5_test_wfa_multi_bars(close = c(10, 11, 12, 13, 12, 14))
   grid <- g5_wfa_candidate_model_grid(candidate_families = c("state_buy_hold", "no_trade_exit_immediate"))

@@ -309,3 +309,44 @@ This is the strongest 2020 participation read so far, and it supports the hypoth
 Decision implication:
 
 Do not promote state-only exposure as a finished strategy. It is a useful new control/diagnostic lane. The next narrow test should compare binary `state_buy_hold` against a three-action state policy: `enter/hold`, `hold-only/no-new-entry`, and `exit/flat`, because the current result suggests that direct state exposure improves participation but needs a better exit/abstention distinction.
+
+## Three-Action State Policy Diagnostic
+
+Completed packet:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_state3action2feat/`
+
+Purpose:
+
+The binary state-only slice made every non-favorable state an exit. This follow-up tested whether a neutral gear would improve behavior: some states should forbid new entries but allow an already-open trade to continue, while genuinely negative states should still force cash.
+
+Mechanics:
+
+- same context, basket, windows, replay mode, and feature surfaces as the binary state-only diagnostic;
+- candidate families: `state_buy_hold`, `state_hold_only`, `no_trade_exit_immediate`, plus the required inert `no_trade` row;
+- policy mode: `three_action`;
+- `state_buy_hold`: enter next open if flat and selected;
+- `state_hold_only`: no new entry, no forced exit;
+- `no_trade_exit_immediate`: exit next open if long and remain flat;
+- cash states were converted to exit only when TRAIN state-hold evidence was negative; otherwise they became hold-only.
+
+Readout:
+
+- Workhorse `2020`: `185.3%` active return, `227.3%` basket hold, `-42.0 pp` alpha, `90.8%` exposure.
+- Reversion-breakout context `2020`: `187.2%` active return, `227.3%` basket hold, `-40.1 pp` alpha, `86.1%` exposure.
+- Workhorse `2022`: `-52.5%` active return, `-53.0%` basket hold, `+0.6 pp` alpha, `99.6%` exposure.
+- Reversion-breakout context `2022`: `-51.6%` active return, `-53.0%` basket hold, `+1.5 pp` alpha, `99.4%` exposure.
+
+Selected action counts across the two feature surfaces and two windows:
+
+- `state_buy_hold`: `399`;
+- `state_hold_only`: `213`;
+- `no_trade_exit_immediate`: `108`.
+
+Interpretation:
+
+The neutral gear worked mechanically: the selected-state map now contains all three actions. It also reduced entry churn versus the binary run. However, it did not solve the main 2022 problem. The policy still selected `state_buy_hold` too often in the rate-shock drawdown window, leaving exposure near `99%`.
+
+Decision implication:
+
+This shifts the next question back upstream. The action grammar is richer, but the PCA state/features still need better bear-regime or distribution-regime discrimination. The next narrow slice should focus on feature validity for risk-off separation, not on adding more downstream strategies.

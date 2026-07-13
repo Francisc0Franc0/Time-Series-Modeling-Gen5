@@ -371,7 +371,15 @@ This added a research-only `state_buy_hold` candidate and tested whether PCA sta
 
 Readout: this produced the strongest 2020 participation result so far, returning `175.1%` on workhorse and `189.8%` on reversion-breakout context, but still lagged the `227.3%` equal-weight basket hold benchmark. In `2022`, it stayed almost fully exposed (`98.9%` to `99.0%`) and only barely beat the falling basket (`+2.1 pp` to `+3.2 pp`). Treat this as evidence that PCA states contain useful direct exposure information, but that a binary switch is too blunt.
 
-Next best Gen5.3 research question: compare binary `state_buy_hold` with a three-action state policy that distinguishes `enter/hold`, `hold-only/no-new-entry`, and `exit/flat`. Do not immediately run full four-window trend/breakout, broad classical, mean-reversion, or context-size sweeps unless this participation-specific mechanism helps under the fixed control context.
+Three-action state policy follow-up:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_state3action2feat/`
+
+This added explicit `state_hold_only` beside `state_buy_hold` and `no_trade_exit_immediate`. The three-action policy used TRAIN-only state-hold evidence to convert otherwise cash states into either hold-only/no-new-entry or force-exit cash. It held the same context, basket, annual continuity replay, and two feature surfaces as the binary state-only diagnostic.
+
+Readout: the neutral gear worked mechanically (`399` state-hold, `213` hold-only, `108` exit-cash selected rows), and entry fills fell versus the binary run. However, it did not solve the `2022` problem: exposure remained near `99%`, with workhorse returning `-52.5%` and reversion-breakout returning `-51.6%` versus `-53.0%` basket hold. In `2020`, workhorse improved versus the binary run (`185.3%` versus `175.1%`), while reversion-breakout was similar/slightly lower (`187.2%` versus `189.8%`), still below `227.3%` basket hold.
+
+Next best Gen5.3 research question: target PCA feature/state validity for risk-off separation and bullish hold discrimination. The three-action grammar is useful, but the system still selected too many hold states in the 2022 drawdown. Do not immediately run full four-window trend/breakout, broad classical, mean-reversion, or context-size sweeps unless the next feature-validity slice improves this fixed-control behavior.
 
 ## What Is Not Implemented Yet
 

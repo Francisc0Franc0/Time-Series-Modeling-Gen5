@@ -137,6 +137,19 @@ state_only_binary_exit <- g5_parse_bool_env(
   env_or("GEN5_GEN53_MOM_CTX_STATE_ONLY_BINARY_EXIT", if ("state_buy_hold" %in% candidate_families) "true" else "false"),
   default = FALSE
 )
+state_policy_mode <- env_or(
+  "GEN5_GEN53_MOM_CTX_STATE_POLICY_MODE",
+  if (isTRUE(state_only_binary_exit) && "state_buy_hold" %in% candidate_families) "binary_exit" else "native"
+)
+state_policy_mode <- as.character(state_policy_mode)[[1L]]
+allowed_state_policy_modes <- c("native", "binary_exit", "three_action")
+if (!state_policy_mode %in% allowed_state_policy_modes) {
+  g5_stop(paste0("GEN5_GEN53_MOM_CTX_STATE_POLICY_MODE must be one of: ", paste(allowed_state_policy_modes, collapse = ",")))
+}
+if (identical(state_policy_mode, "three_action") && "state_buy_hold" %in% candidate_families) {
+  candidate_families <- unique(c(candidate_families, "state_hold_only"))
+  state_only_binary_exit <- FALSE
+}
 
 windows <- data.frame(
   window_id = c("2019Y_asof_20191231", "2020Y_asof_20201231", "2022Y_asof_20221231", "2024Y_asof_20241231"),
@@ -360,6 +373,7 @@ build_authority <- function(spec, bars, quarter_id, authority_dir) {
   contract$selection_policy <- "base_direct_authority"
   contract$min_train_trades <- min_train_trades
   contract$state_only_binary_exit <- state_only_binary_exit
+  contract$state_policy_mode <- state_policy_mode
   contract$feature_set_id <- spec$feature_set_id
   contract$feature_set_label <- spec$feature_set_label
   contract$feature_cols <- paste(spec$feature_cols, collapse = ",")
@@ -384,7 +398,7 @@ build_authority <- function(spec, bars, quarter_id, authority_dir) {
 }
 
 force_state_only_binary_cash_exit <- function(authority) {
-  if (!isTRUE(state_only_binary_exit) || !"state_buy_hold" %in% candidate_families) {
+  if ((!isTRUE(state_only_binary_exit) && !identical(state_policy_mode, "binary_exit")) || !"state_buy_hold" %in% candidate_families) {
     return(authority)
   }
   selected <- authority$selected_states
@@ -423,6 +437,65 @@ force_state_only_binary_cash_exit <- function(authority) {
   authority
 }
 
+replace_selected_state_row <- function(selected, idx, replacement, reason) {
+  if (!is.data.frame(replacement) || !nrow(replacement)) {
+    return(selected)
+  }
+  replacement <- replacement[1L, , drop = FALSE]
+  common <- intersect(names(selected), names(replacement))
+  selected[idx, common] <- replacement[1L, common]
+  selected$selection_reason[[idx]] <- reason
+  override <- g5_selection_policy_gen4_state_exit_override_fields(selected[idx, , drop = FALSE])
+  for (col in names(override)) {
+    if (!col %in% names(selected)) selected[[col]] <- NA
+    selected[[col]][[idx]] <- override[[col]][[1L]]
+  }
+  selected
+}
+
+apply_state_only_three_action_policy <- function(authority) {
+  if (!identical(state_policy_mode, "three_action") || !"state_buy_hold" %in% candidate_families) {
+    return(authority)
+  }
+  selected <- authority$selected_states
+  perf <- authority$train_state_performance
+  if (!is.data.frame(selected) || !nrow(selected) || !is.data.frame(perf) || !nrow(perf)) {
+    return(authority)
+  }
+  cash_rows <- which(as.character(selected$strategy_family) == "no_trade")
+  if (!length(cash_rows)) {
+    return(authority)
+  }
+  for (idx in cash_rows) {
+    keys <- c("symbol", "quarter_id", "state_id")
+    if (!all(keys %in% names(selected)) || !all(keys %in% names(perf))) next
+    same_state <- as.character(perf$symbol) == as.character(selected$symbol[[idx]]) &
+      as.character(perf$quarter_id) == as.character(selected$quarter_id[[idx]]) &
+      as.character(perf$state_id) == as.character(selected$state_id[[idx]])
+    state_hold <- perf[same_state & as.character(perf$strategy_family) == "state_buy_hold", , drop = FALSE]
+    state_hold <- g5_selection_policy_gen4_rank_rows(state_hold)
+    state_score <- if (nrow(state_hold)) {
+      g5_selection_policy_gen4_winner_score(state_hold$sharpe[[1L]], state_hold$strategy_family[[1L]])
+    } else {
+      NA_real_
+    }
+    state_return <- if (nrow(state_hold)) suppressWarnings(as.numeric(state_hold$total_return[[1L]])) else NA_real_
+    state_trades <- if (nrow(state_hold)) g5_selection_policy_trade_count(state_hold[1L, , drop = FALSE])[[1L]] else 0
+    force_exit <- is.finite(state_score) && state_trades > 0 && (state_score < 0 || (is.finite(state_return) && state_return < 0))
+    target_family <- if (isTRUE(force_exit)) "no_trade_exit_immediate" else "state_hold_only"
+    replacement <- perf[same_state & as.character(perf$strategy_family) == target_family, , drop = FALSE]
+    replacement <- g5_selection_policy_gen4_rank_rows(replacement)
+    reason <- if (isTRUE(force_exit)) {
+      "state_only_three_action_negative_state_hold_score_forces_exit"
+    } else {
+      "state_only_three_action_neutral_cash_becomes_hold_only"
+    }
+    selected <- replace_selected_state_row(selected, idx, replacement, reason)
+  }
+  authority$selected_states <- selected
+  authority
+}
+
 make_policy_authority <- function(authority, selection_policy) {
   out <- authority
   out$contract$selection_policy <- selection_policy
@@ -443,6 +516,7 @@ make_policy_authority <- function(authority, selection_policy) {
     g5_stop(paste0("Unsupported selection policy: ", selection_policy))
   }
   out <- force_state_only_binary_cash_exit(out)
+  out <- apply_state_only_three_action_policy(out)
   out
 }
 
@@ -1066,6 +1140,7 @@ write_selection_family_heatmap <- function(selected_states, path) {
   family_palette <- c(
     no_trade = "#D1D5DB",
     no_trade_exit_immediate = "#B8BCC4",
+    state_hold_only = "#8EA7D8",
     state_buy_hold = "#175CD3",
     ema_cross = "#2563EB",
     ema_trend = "#00A88F",
@@ -1081,6 +1156,7 @@ write_selection_family_heatmap <- function(selected_states, path) {
   family_label <- c(
     no_trade = "Cash",
     no_trade_exit_immediate = "Exit cash",
+    state_hold_only = "Hold only",
     state_buy_hold = "State hold",
     ema_cross = "EMA cross",
     ema_trend = "EMA trend",
