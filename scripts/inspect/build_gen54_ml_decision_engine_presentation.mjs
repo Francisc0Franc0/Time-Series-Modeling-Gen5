@@ -20,6 +20,10 @@ const p1bRunRoot =
   process.env.GEN5_GEN54_ML_P1B_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p1b_20260713p1b");
 const p1bVisualRoot = path.join(p1bRunRoot, "visuals");
+const p1cRunRoot =
+  process.env.GEN5_GEN54_ML_P1C_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p1c_20260713p1c");
+const p1cVisualRoot = path.join(p1cRunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -162,6 +166,10 @@ async function main() {
   let p1bSummary = [];
   let p1bPolicyThresholds = [];
   let p1bLeakage = [];
+  let p1cAvailable = false;
+  let p1cSummary = [];
+  let p1cRanking = [];
+  let p1cLeakage = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -179,6 +187,15 @@ async function main() {
     p1bAvailable = true;
   } catch {
     p1bAvailable = false;
+  }
+  try {
+    await fs.access(path.join(p1cRunRoot, "ml_p1c_summary.csv"));
+    p1cSummary = await readCsv(path.join(p1cRunRoot, "ml_p1c_summary.csv"));
+    p1cRanking = await readCsv(path.join(p1cRunRoot, "ml_p1c_ranking_audit.csv"));
+    p1cLeakage = await readCsv(path.join(p1cRunRoot, "ml_p1c_leakage_audit.csv"));
+    p1cAvailable = true;
+  } catch {
+    p1cAvailable = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -459,6 +476,71 @@ async function main() {
       addBullet(slide, "Next test should compare label horizons or probability calibration before adding XGBoost.", 128, 444, 760);
       addBullet(slide, "If XGBoost comes next, it should be judged on better ranking and timing, not merely higher exposure.", 128, 514, 760);
       addBullet(slide, `Watch the 2022 tradeoff: grid exposure rose to ${pct(grid2022.mean_exposure)} while return fell to ${pct(grid2022.active_return)}.`, 128, 584, 760);
+    }
+  }
+
+  if (p1cAvailable) {
+    const h1Grid2020 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.horizon_id === "h1") || {};
+    const h3Grid2020 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.horizon_id === "h3") || {};
+    const h5Grid2020 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.horizon_id === "h5") || {};
+    const h1Grid2022 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.horizon_id === "h1") || {};
+    const h3Grid2022 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.horizon_id === "h3") || {};
+    const h5Grid2022 = p1cSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.horizon_id === "h5") || {};
+    const h1Rank2020 = p1cRanking.find((r) => r.window_id === "2020Y" && r.horizon_id === "h1") || {};
+    const h3Rank2020 = p1cRanking.find((r) => r.window_id === "2020Y" && r.horizon_id === "h3") || {};
+    const h5Rank2020 = p1cRanking.find((r) => r.window_id === "2020Y" && r.horizon_id === "h5") || {};
+    const p1cAllPass = p1cLeakage.every((r) => r.status === "PASS");
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "The next question is whether the label itself is too blunt", 72, 168, 940, 92, { fontSize: 52, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P1c compares h1, h3, and h5 next-open labels while keeping the GLM, feature set, TRAIN-only policy selection, and continuous annual replay surface fixed.", 76, 364, 790, 112, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P1c", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Label horizon", 952, 322, 290, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The one-day label improved participation, but not enough");
+      addMetric(slide, "Guardrails", p1cAllPass ? "All PASS" : "Review", "Fit, labels, and policy selection stay inside TRAIN.", 74, 226, 245);
+      addMetric(slide, "2020 h1 return", pct(h1Grid2020.active_return), `Basket hold was ${pct(h1Grid2020.benchmark_return)}.`, 358, 226, 245);
+      addMetric(slide, "2020 h3 return", pct(h3Grid2020.active_return), `Same policy surface returned ${pct(h3Grid2020.active_return)}.`, 642, 226, 245);
+      addMetric(slide, "2020 h5 return", pct(h5Grid2020.active_return), `Longer label fell back to ${pct(h5Grid2020.active_return)}.`, 926, 226, 245);
+      addText(slide, "h1 is the best GLM horizon in the 2020 rally, lifting the TRAIN-grid lane to 54.0%. That is real improvement, but it still leaves most of the basket rally uncaptured.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The equity curves show why h1 is useful but not sufficient");
+      await addImage(slide, path.join(p1cVisualRoot, "ml_p1c_horizon_equity_vs_benchmark.png"), 70, 210, 760, 414, "ML-P1c horizon equity comparison");
+      addText(slide, "What changed", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `h1 had the strongest 2020 participation at ${pct(h1Grid2020.mean_exposure)} exposure and ${pct(h1Grid2020.active_return)} return. In 2022, no horizon solved defense: h1 returned ${pct(h1Grid2022.active_return)}, h3 ${pct(h3Grid2022.active_return)}, and h5 ${pct(h5Grid2022.active_return)}.`, 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The ranking audit argues against more GLM-only tinkering");
+      await addImage(slide, path.join(p1cVisualRoot, "ml_p1c_horizon_ranking_audit.png"), 74, 214, 600, 360, "ML-P1c horizon ranking audit");
+      addText(slide, "What it means", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, `The best 2020 AUC was h1 at ${Number(h1Rank2020.auc).toFixed(3)}. h3 was ${Number(h3Rank2020.auc).toFixed(3)} and h5 was ${Number(h5Rank2020.auc).toFixed(3)}. That is weak ranking, not just a threshold issue.`, 746, 288, 330, 210, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "This is a clean gate into XGBoost rather than an excuse to keep circling");
+      addText(slide, "The GLM path has now answered the basic plumbing questions: features and labels are leakage-safe, replay works, thresholds matter, and h1 is the strongest horizon so far. The remaining obstacle is probability ranking quality.", 92, 224, 980, 96, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep h1 as the first XGBoost challenger label unless a calibration-only check is explicitly useful.", 128, 374, 780);
+      addBullet(slide, "Do not run a broad GLM threshold search; P1b already showed the limit of exposure tuning.", 128, 444, 780);
+      addBullet(slide, "Judge XGBoost on ranking, timing, replay return versus basket hold, drawdown, and probability tapes.", 128, 514, 780);
+      addBullet(slide, "If XGBoost cannot improve ranking, backtrack to feature design rather than deeper model knobs.", 128, 584, 780);
     }
   }
 

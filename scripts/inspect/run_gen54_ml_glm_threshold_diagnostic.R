@@ -687,6 +687,7 @@ write_p1b_report <- function(path, run_spec, summary, policy_table, leakage_audi
   invisible(path)
 }
 
+if (!identical(Sys.getenv("GEN5_GEN54_ML_P1B_SOURCE_ONLY", unset = "false"), "true")) {
 g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 feed <- env_or("GEN5_GEN54_ML_P1B_FEED", as.character(cfg$feed))
@@ -857,3 +858,4 @@ message("Gen5.4 ML-P1b GLM threshold diagnostic complete.")
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Report: ", normalizePath(paths$report_md, winslash = "/", mustWork = FALSE))
 message("Summary: ", summary_line)
+}

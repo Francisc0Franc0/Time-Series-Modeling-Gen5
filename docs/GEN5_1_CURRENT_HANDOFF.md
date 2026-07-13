@@ -423,7 +423,13 @@ ML-P1b completed packet:
 
 Completed readout: the threshold diagnostic kept the ML-P1 GLM fixed and compared three policies under continuous annual OOS replay: fixed `0.55 / 0.50`, TRAIN prediction quantiles `p60 / p45`, and a TRAIN forward-return grid. All guardrails passed: TRAIN-only fitting, TRAIN-only policy selection, OOS-only replay, no OOS threshold tuning, and no live bridge change. Fixed reproduced ML-P1 exactly. The TRAIN forward-return grid improved 2020 return from `8.0%` to `30.0%` and exposure from `27.6%` to `34.8%`, but still lagged `214.0%` basket hold by `-184.0 pp`. In 2022, the same grid weakened defense: `-48.4%` versus fixed `-42.4%`, with exposure rising to `67.4%`. The Gen5.4 deck now includes an ML-P1b section with threshold, action, equity, and probability-tape diagnostics.
 
-Next implementation step: test probability quality rather than simply increasing exposure. Good next candidates are a small label-horizon comparison (`h1`, `h3`, `h5`) or a probability-calibration diagnostic using the same continuous annual replay and probability-tape audit. Do not let ML outputs influence live advice.
+ML-P1c completed packet:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p1c_20260713p1c/`
+
+Completed readout: the label-horizon diagnostic kept the GLM, feature set, TRAIN-only policy selection surface, and continuous annual replay fixed while comparing `h1`, `h3`, and `h5`. All guardrails passed. Under the TRAIN forward-return grid, `h1` was the strongest 2020 label: `54.0%` active return versus `225.2%` basket hold, with `43.0%` exposure. `h3` returned `30.0%` versus `214.0%`, and `h5` returned `9.6%` versus `205.2%`. In 2022, all horizons modestly beat the falling basket in absolute terms but still had large losses. The ranking audit was weak: best AUC was `0.520` for `2020Y h1`, with other horizon/window pairs below `0.50` or near random. The Gen5.4 deck now includes an ML-P1c section with horizon comparison, equity, ranking audit, and the XGBoost gate.
+
+Next implementation step: stop broad GLM-only optimization. Keep `h1` as the first XGBoost challenger label unless a very narrow calibration sanity check is explicitly useful. `ML-P2` should compare XGBoost against the same leakage-safe feature table, continuous annual replay, TRAIN-only threshold policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability trade tapes. Do not let ML outputs influence live advice.
 
 ## What Is Not Implemented Yet
 
@@ -458,7 +464,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement the next Gen5.4 ML probability-quality diagnostic. Keep the ML-P1b continuous annual replay and policy-audit surface fixed. Compare a small set of leakage-safe label horizons, such as `h1`, `h3`, and `h5`, using the no-new-dependency GLM first. For each horizon, fit only on TRAIN rows, select any thresholds or calibration only from TRAIN, replay OOS continuously, and produce equity versus basket hold, probability trade tapes, calibration/ranking diagnostics, compact report, and a Gen5.4 deck update. Do not change live bridge behavior and do not install XGBoost unless the label-horizon diagnostic clearly requires a separate approved nonlinear challenger. Validate, commit, and push.
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P2, the first XGBoost challenger for the Gen5.4 supervised daily decision engine. Reuse the ML-P1c leakage-safe feature table, `h1` label, annual continuous replay surface, TRAIN-only threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability trade tapes. Compare XGBoost against the GLM `h1` control without changing live bridge behavior. If `xgboost` is unavailable locally, install it only as an approved research dependency for this branch. Produce a compact report and update the Gen5.4 deck. Validate, commit, and push.
 ```
 
 ```text

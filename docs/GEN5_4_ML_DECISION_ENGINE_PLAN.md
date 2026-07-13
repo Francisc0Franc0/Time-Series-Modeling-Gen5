@@ -274,6 +274,39 @@ Readout:
 
 The next narrow slice should test probability quality rather than simply increasing exposure. Good candidates are label-horizon comparison, probability calibration, or a small nonlinear challenger judged against the same continuous replay and probability-tape surface.
 
+## ML-P1c Packet
+
+The first ML-P1c packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p1c_20260713p1c/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper kept the ML-P1b GLM, feature set, TRAIN-only policy selection surface, and continuous annual replay fixed while comparing `h1`, `h3`, and `h5` next-open labels.
+- All ML-P1c guardrail checks passed: TRAIN-only fitting, TRAIN-only threshold selection, OOS-only replay, no OOS threshold tuning, and no live bridge change.
+- Under the TRAIN forward-return grid, `h1` was the strongest 2020 label: `54.0%` active return versus `225.2%` basket hold, with `43.0%` mean exposure.
+- The same policy returned `30.0%` for `h3` versus `214.0%` basket hold, and `9.6%` for `h5` versus `205.2%` basket hold.
+- In `2022Y`, all three horizons beat the falling basket modestly in absolute terms, but still had large losses: `h1` returned `-49.7%` versus `-53.3%`, `h3` returned `-48.4%` versus `-54.2%`, and `h5` returned `-42.4%` versus `-51.9%`.
+- The ranking audit was weak. The best AUC was only `0.520` for `2020Y h1`; the other horizon/window pairs were below `0.50` or close to random. Top-minus-bottom decile forward-return separation was inconsistent.
+- Interpretation: `h1` is the best GLM label horizon so far, and it improves participation, but the remaining obstacle is probability ranking quality. This is no longer mainly a threshold or label-horizon problem.
+
+## GLM Optimization Boundary Before XGBoost
+
+The useful GLM stage has now answered the plumbing questions it was meant to answer:
+
+- `ML-P0`: adjusted daily OHLCV features and labels can be built deterministically and leakage-safely.
+- `ML-P1`: fold-local GLM prediction and continuous OOS replay work.
+- `ML-P1b`: TRAIN-only threshold selection matters, but more permissive thresholds do not close the rally-participation gap.
+- `ML-P1c`: `h1` is the strongest GLM label horizon so far, but probability ranking remains weak.
+
+Do not keep broadening GLM-only knobs from here. One narrow calibration sanity check is acceptable only if it answers a specific diagnostic question. Otherwise, the next learning step should be `ML-P2`: an XGBoost challenger using the same leakage-safe feature table, `h1` label, continuous annual replay, threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability trade tapes.
+
+If XGBoost cannot materially improve probability ranking, timing, or benchmark-relative replay behavior, backtrack to feature design rather than adding more model knobs.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
