@@ -429,7 +429,13 @@ ML-P1c completed packet:
 
 Completed readout: the label-horizon diagnostic kept the GLM, feature set, TRAIN-only policy selection surface, and continuous annual replay fixed while comparing `h1`, `h3`, and `h5`. All guardrails passed. Under the TRAIN forward-return grid, `h1` was the strongest 2020 label: `54.0%` active return versus `225.2%` basket hold, with `43.0%` exposure. `h3` returned `30.0%` versus `214.0%`, and `h5` returned `9.6%` versus `205.2%`. In 2022, all horizons modestly beat the falling basket in absolute terms but still had large losses. The ranking audit was weak: best AUC was `0.520` for `2020Y h1`, with other horizon/window pairs below `0.50` or near random. The Gen5.4 deck now includes an ML-P1c section with horizon comparison, equity, ranking audit, and the XGBoost gate.
 
-Next implementation step: stop broad GLM-only optimization. Keep `h1` as the first XGBoost challenger label unless a very narrow calibration sanity check is explicitly useful. `ML-P2` should compare XGBoost against the same leakage-safe feature table, continuous annual replay, TRAIN-only threshold policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability trade tapes. Do not let ML outputs influence live advice.
+ML-P2 completed packet:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p2_20260713p2/`
+
+Completed readout: the XGBoost challenger kept the `h1` label, feature table, annual continuous replay, TRAIN-only threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability tapes fixed. The only decision-engine change was model class: `glm_logit_h1_train_grid` versus predeclared `xgboost_h1_fixed_params`. All guardrails passed, including no OOS parameter tuning and no live bridge change. Under the TRAIN forward-return grid, XGBoost improved `2020Y` active return to `79.1%` versus GLM `54.0%`, with lower exposure (`36.9%` versus `43.0%`), but still lagged basket hold `225.2%`. In `2022Y`, XGBoost improved defense to `-41.4%` versus GLM `-49.7%`, compared with basket hold `-53.3%`. The ranking audit stayed mixed: XGBoost `2020Y` AUC was `0.511` versus GLM `0.520`; `2022Y` AUC was `0.484`. Interpretation: XGBoost improved replay behavior but did not solve global probability ranking or benchmark alpha.
+
+Next implementation step: run one small TRAIN-only XGBoost parameter diagnostic, not a broad model search. Keep `h1`, the current feature table, annual replay, threshold-policy audit, benchmark, ranking diagnostics, and probability tapes fixed. Candidate small grid: depth `2,3,4`, rounds `60,100`, and `min_child_weight` `5,10,20`, selected only on TRAIN proxy evidence inside each fold. Do not let ML outputs influence live advice.
 
 ## What Is Not Implemented Yet
 
@@ -439,7 +445,7 @@ Do not assume any of the following exist as production-ready systems:
 - multi-asset pooled/global parameter selection;
 - state-adaptive exits;
 - leverage/risk overlay beyond earlier isolated POCs;
-- supervised ML decision engine;
+- production-ready supervised ML decision engine;
 - live advice generation;
 - dashboards;
 - broker execution;
@@ -464,7 +470,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P2, the first XGBoost challenger for the Gen5.4 supervised daily decision engine. Reuse the ML-P1c leakage-safe feature table, `h1` label, annual continuous replay surface, TRAIN-only threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability trade tapes. Compare XGBoost against the GLM `h1` control without changing live bridge behavior. If `xgboost` is unavailable locally, install it only as an approved research dependency for this branch. Produce a compact report and update the Gen5.4 deck. Validate, commit, and push.
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement the next ML-P2b Gen5.4 XGBoost parameter diagnostic. Keep the ML-P2 surface fixed: `h1` label, current OHLCV/context feature table, annual continuous replay, TRAIN-only threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability tapes. Compare the fixed ML-P2 XGBoost control against a small TRAIN-only parameter grid, such as depth `2,3,4`, rounds `60,100`, and `min_child_weight` `5,10,20`. Select parameters only from TRAIN proxy evidence inside each fold; use OOS only for frozen-model replay inspection. Do not change live bridge behavior. Produce a compact report and update the Gen5.4 deck. Validate, commit, and push.
 ```
 
 ```text

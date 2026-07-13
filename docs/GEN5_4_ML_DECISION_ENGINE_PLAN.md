@@ -307,6 +307,28 @@ Do not keep broadening GLM-only knobs from here. One narrow calibration sanity c
 
 If XGBoost cannot materially improve probability ranking, timing, or benchmark-relative replay behavior, backtrack to feature design rather than adding more model knobs.
 
+## ML-P2 Packet
+
+The first ML-P2 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p2_20260713p2/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper kept the `h1` label, feature table, annual continuous replay, TRAIN-only threshold-policy audit, equity-versus-basket benchmark, ranking diagnostics, and probability tapes fixed.
+- The only decision-engine change was model class: `glm_logit_h1_train_grid` versus a conservative predeclared `xgboost_h1_fixed_params`.
+- XGBoost parameters were fixed before OOS replay: `nrounds=80`, `max_depth=3`, `eta=0.05`, `subsample=0.80`, `colsample_bytree=0.80`, and `min_child_weight=10`.
+- All ML-P2 guardrail checks passed: TRAIN-only fitting, predeclared XGBoost parameters, TRAIN-only policy selection, OOS-only replay, label-horizon boundary filtering, and no live bridge change.
+- Under the TRAIN forward-return grid, XGBoost improved `2020Y` active return to `79.1%` versus GLM `54.0%`, with lower mean exposure (`36.9%` versus `43.0%`). Basket hold was still much higher at `225.2%`.
+- In `2022Y`, XGBoost improved defense to `-41.4%` versus GLM `-49.7%`; basket hold was `-53.3%`.
+- The ranking audit remained mixed. XGBoost's `2020Y` AUC was `0.511` versus GLM `0.520`, and `2022Y` AUC was `0.484`. Replay improvement may come from threshold-crossing timing, drawdown behavior, or localized pockets rather than cleaner global probability ranking.
+- XGBoost feature importance highlighted OHLCV structure and context features, including `intraday_oc_ret`, `gap_open_pct`, `ret1`, `atr_compression_20`, `lower_wick_pct`, `ret_3`, `efficiency_ratio_20`, `volume_z20`, and market-relative returns. Treat this as a diagnostic, not causal evidence.
+- Interpretation: ML-P2 earned one cautious follow-up because replay improved in both tested windows without OOS parameter tuning. It did not earn a broad XGBoost search. The next slice should be a small TRAIN-only parameter diagnostic, keeping labels, features, replay, thresholds, benchmarks, and probability tapes fixed.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

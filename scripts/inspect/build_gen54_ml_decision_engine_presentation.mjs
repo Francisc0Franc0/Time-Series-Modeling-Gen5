@@ -24,6 +24,10 @@ const p1cRunRoot =
   process.env.GEN5_GEN54_ML_P1C_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p1c_20260713p1c");
 const p1cVisualRoot = path.join(p1cRunRoot, "visuals");
+const p2RunRoot =
+  process.env.GEN5_GEN54_ML_P2_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p2_20260713p2");
+const p2VisualRoot = path.join(p2RunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -170,6 +174,11 @@ async function main() {
   let p1cSummary = [];
   let p1cRanking = [];
   let p1cLeakage = [];
+  let p2Available = false;
+  let p2Summary = [];
+  let p2Ranking = [];
+  let p2Leakage = [];
+  let p2Importance = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -196,6 +205,16 @@ async function main() {
     p1cAvailable = true;
   } catch {
     p1cAvailable = false;
+  }
+  try {
+    await fs.access(path.join(p2RunRoot, "ml_p2_summary.csv"));
+    p2Summary = await readCsv(path.join(p2RunRoot, "ml_p2_summary.csv"));
+    p2Ranking = await readCsv(path.join(p2RunRoot, "ml_p2_ranking_audit.csv"));
+    p2Leakage = await readCsv(path.join(p2RunRoot, "ml_p2_leakage_audit.csv"));
+    p2Importance = await readCsv(path.join(p2RunRoot, "ml_p2_xgb_feature_importance.csv"));
+    p2Available = true;
+  } catch {
+    p2Available = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -541,6 +560,102 @@ async function main() {
       addBullet(slide, "Do not run a broad GLM threshold search; P1b already showed the limit of exposure tuning.", 128, 444, 780);
       addBullet(slide, "Judge XGBoost on ranking, timing, replay return versus basket hold, drawdown, and probability tapes.", 128, 514, 780);
       addBullet(slide, "If XGBoost cannot improve ranking, backtrack to feature design rather than deeper model knobs.", 128, 584, 780);
+    }
+  }
+
+  if (p2Available) {
+    const glmGrid2020 = p2Summary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.model_id === "glm_logit_h1_train_grid") || {};
+    const glmGrid2022 = p2Summary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.model_id === "glm_logit_h1_train_grid") || {};
+    const xgbGrid2020 = p2Summary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const xgbGrid2022 = p2Summary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const glmRank2020 = p2Ranking.find((r) => r.window_id === "2020Y" && r.model_id === "glm_logit_h1_train_grid") || {};
+    const xgbRank2020 = p2Ranking.find((r) => r.window_id === "2020Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const xgbRank2022 = p2Ranking.find((r) => r.window_id === "2022Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const p2AllPass = p2Leakage.every((r) => r.status === "PASS");
+    const topImportance = p2Importance.slice().sort((a, b) => Number(b.gain) - Number(a.gain))[0] || {};
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "The first nonlinear challenger tests XGBoost", 72, 168, 820, 96, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P2 keeps the h1 label, feature table, TRAIN-only threshold selection, and annual replay fixed. Only the model class changes: GLM control versus conservative XGBoost.", 76, 364, 790, 112, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P2", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "XGBoost challenger", 944, 322, 306, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "GLM is a straight-line lens; XGBoost is a conditional lens");
+      addText(slide, "The GLM asks whether a mostly linear combination of today’s features predicts a favorable next-open h1 outcome.", 92, 222, 470, 100, { fontSize: 25, color: "#000000", bold: true });
+      addText(slide, "XGBoost can learn conditional pockets, thresholds, and interactions without us hand-writing every combination.", 690, 222, 440, 112, { fontSize: 25, color: "#000000", bold: true });
+      addRule(slide, 92, 392, 430);
+      addRule(slide, 690, 392, 430);
+      addBullet(slide, "Good for proving the plumbing and exposing simple directional effects.", 110, 432, 470);
+      addBullet(slide, "Can average away useful conditions when a feature is good in one regime and bad in another.", 110, 520, 470);
+      addBullet(slide, "Can express rules like momentum only matters with supportive market context.", 708, 432, 470);
+      addBullet(slide, "Must be judged carefully, because extra flexibility can overfit if we start tuning too many knobs.", 708, 520, 470);
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "XGBoost improved the replay, but it still did not beat the 2020 basket");
+      addMetric(slide, "Guardrails", p2AllPass ? "All PASS" : "Review", "Fit, params, and thresholds stay inside TRAIN.", 74, 226, 245);
+      addMetric(slide, "2020 XGB", pct(xgbGrid2020.active_return), `GLM was ${pct(glmGrid2020.active_return)}; basket hold was ${pct(xgbGrid2020.benchmark_return)}.`, 358, 226, 245);
+      addMetric(slide, "2022 XGB", pct(xgbGrid2022.active_return), `GLM was ${pct(glmGrid2022.active_return)}; basket hold was ${pct(xgbGrid2022.benchmark_return)}.`, 642, 226, 245);
+      addMetric(slide, "2020 exposure", pct(xgbGrid2020.mean_exposure), `XGB used less exposure than GLM at ${pct(glmGrid2020.mean_exposure)}.`, 926, 226, 245);
+      addText(slide, "This is encouraging because the nonlinear model improved return with less 2020 exposure and better 2022 defense. It is not a victory lap: 2020 still lagged basket hold by a lot.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The equity curves show useful improvement, not a solved system");
+      await addImage(slide, path.join(p2VisualRoot, "ml_p2_model_equity_vs_benchmark.png"), 70, 210, 760, 414, "ML-P2 model equity comparison");
+      addText(slide, "What changed", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `XGBoost lifted 2020 return from ${pct(glmGrid2020.active_return)} to ${pct(xgbGrid2020.active_return)} and improved 2022 from ${pct(glmGrid2022.active_return)} to ${pct(xgbGrid2022.active_return)}. Equal-weight hold remains the hurdle in strong bull windows.`, 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The ranking audit gives a caution flag");
+      await addImage(slide, path.join(p2VisualRoot, "ml_p2_model_ranking_audit.png"), 74, 214, 600, 360, "ML-P2 model ranking audit");
+      addText(slide, "Why this is nuanced", 746, 224, 330, 34, { fontSize: 26, bold: true });
+      addText(slide, `XGBoost improved replay, but its 2020 AUC was ${Number(xgbRank2020.auc).toFixed(3)} versus GLM at ${Number(glmRank2020.auc).toFixed(3)}. The gain may come from threshold-crossing timing and drawdown behavior rather than cleaner global ranking.`, 746, 288, 350, 230, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes are now the most important audit surface");
+      await addImage(slide, path.join(p2VisualRoot, "ml_p2_model_probability_tapes.png"), 70, 210, 760, 414, "ML-P2 probability tapes");
+      addText(slide, "What to inspect", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "The key question is whether XGBoost changes entries and exits in places that make intuitive market sense. The tapes show a less linear probability trace and a different set of entry timings.", 890, 284, 284, 240, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The feature-importance audit points back to OHLCV structure");
+      await addImage(slide, path.join(p2VisualRoot, "ml_p2_xgb_feature_importance.png"), 74, 214, 620, 360, "ML-P2 XGBoost feature importance");
+      addText(slide, "Interpret carefully", 748, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, `The top split-gain feature in this first run was ${topImportance.feature || "not available"}. Importance is not causality, but it tells us XGBoost is using candle structure, gaps, short returns, compression, and market-relative features rather than only long trend memory.`, 748, 288, 350, 240, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next gate is small XGBoost tuning, not a large search");
+      addText(slide, "ML-P2 earned a cautious follow-up because replay improved in both windows under fixed model settings. The ranking audit keeps us honest: this is not yet proof that the model has solved alpha.", 92, 224, 980, 96, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Run one small TRAIN-only XGBoost parameter slice: depth, rounds, and minimum child weight.", 128, 374, 780);
+      addBullet(slide, "Keep h1, features, annual replay, thresholds, benchmark, and probability tapes fixed.", 128, 444, 780);
+      addBullet(slide, `Watch 2022: XGBoost AUC was ${Number(xgbRank2022.auc).toFixed(3)}, so defense may still be fragile.`, 128, 514, 780);
+      addBullet(slide, "If small tuning does not improve ranking or timing, return to feature design instead of widening model knobs.", 128, 584, 780);
     }
   }
 
