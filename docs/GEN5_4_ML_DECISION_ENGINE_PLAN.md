@@ -231,6 +231,27 @@ Readout:
 
 This is not model evidence yet. It only proves that the supervised table is coherent enough to support ML-P1.
 
+## ML-P1 Packet
+
+The first ML-P1 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p1_20260713p1/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper fit `glm_logit_h3_fixed_threshold` models fold-by-fold using TRAIN rows only.
+- The replay used fixed thresholds: enter long at `p >= 0.55`, exit long at `p < 0.50`.
+- All ML-P1 guardrail checks passed: TRAIN-only fitting, OOS-only prediction/replay, fixed thresholds, and no live bridge change.
+- The GLM replay returned `8.0%` in `2020Y` versus `214.0%` equal-weight basket hold, with `27.6%` mean exposure.
+- The GLM replay returned `-42.4%` in `2022Y` versus `-54.2%` equal-weight basket hold, with `59.9%` mean exposure.
+- Interpretation: ML-P1 proves the model/replay plumbing and creates useful probability/action/trade-tape diagnostics, but the fixed-threshold GLM is defensive/selective rather than a rally-participation solution.
+
+The next narrow slice should improve the decision policy before adding model complexity: compare fixed thresholds against TRAIN-only threshold selection or calibration, while keeping GLM interpretability and probability trade tapes.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

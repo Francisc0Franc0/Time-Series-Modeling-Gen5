@@ -596,6 +596,7 @@ write_report <- function(path, run_spec, label_summary_df, audit, artifact_index
   invisible(path)
 }
 
+if (!identical(Sys.getenv("GEN5_GEN54_ML_P0_SOURCE_ONLY", unset = "false"), "true")) {
 g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 feed <- env_or("GEN5_GEN54_ML_P0_FEED", as.character(cfg$feed))
@@ -740,3 +741,4 @@ message("Gen5.4 ML-P0 feature/label proof complete.")
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Report: ", normalizePath(paths$report_md, winslash = "/", mustWork = FALSE))
 message("Leakage audit statuses: ", paste(audit$check_id, audit$status, sep = "=", collapse = "; "))
+}
