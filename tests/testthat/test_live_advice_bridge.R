@@ -84,6 +84,31 @@ test_that("bridge authority reader can include TRAIN state performance", {
   expect_equal(authority$train_state_performance$quarter_id[[1L]], "2026Q3")
 })
 
+test_that("bridge plot helper resolves dominant EMA overlay periods", {
+  parsed <- g5_bridge_parse_ema_periods_from_spec(c(
+    "ema_cross_fast5_slow30__native_only",
+    "no_trade__no_exit",
+    "ema_trend_fast10_slow20__native_only"
+  ))
+
+  expect_equal(parsed$fast_period, c(5L, 10L))
+  expect_equal(parsed$slow_period, c(30L, 20L))
+
+  replay <- data.frame(
+    selected_strategy_spec_id = c(
+      "ema_cross_fast5_slow30__native_only",
+      "ema_cross_fast5_slow30__native_only",
+      "ema_trend_fast10_slow20__native_only"
+    ),
+    open_trade_strategy_spec_id = c(NA_character_, NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  dominant <- g5_bridge_dominant_ema_periods(replay)
+
+  expect_equal(dominant$fast_period, 5L)
+  expect_equal(dominant$slow_period, 30L)
+})
+
 test_that("live bridge direct lane consumes frozen selected-state authority", {
   authority <- list(
     contract = g5_bridge_contract_frame(

@@ -1396,7 +1396,42 @@ g5_bridge_visible_trade_segments <- function(trades, dates) {
   if (length(rows)) g5_wfa_bind_rows_fill(rows) else data.frame()
 }
 
-g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.frame(), main = "") {
+g5_bridge_parse_ema_periods_from_spec <- function(spec) {
+  spec <- as.character(spec)
+  spec <- spec[!is.na(spec) & nzchar(spec)]
+  spec <- spec[grepl("ema_(cross|trend)_fast[0-9]+_slow[0-9]+", spec)]
+  if (!length(spec)) return(data.frame())
+  fast <- as.integer(sub(".*_fast([0-9]+)_slow[0-9]+.*", "\\1", spec))
+  slow <- as.integer(sub(".*_fast[0-9]+_slow([0-9]+).*", "\\1", spec))
+  out <- data.frame(strategy_spec_id = spec, fast_period = fast, slow_period = slow, stringsAsFactors = FALSE)
+  out <- out[!is.na(out$fast_period) & !is.na(out$slow_period) & out$fast_period < out$slow_period, , drop = FALSE]
+  out[!duplicated(out$strategy_spec_id), , drop = FALSE]
+}
+
+g5_bridge_dominant_ema_periods <- function(replay) {
+  if (!is.data.frame(replay) || !nrow(replay)) return(NULL)
+  specs <- character()
+  if ("open_trade_strategy_spec_id" %in% names(replay)) {
+    open <- as.character(replay$open_trade_strategy_spec_id)
+    specs <- c(specs, open[!is.na(open) & nzchar(open)])
+  }
+  if ("selected_strategy_spec_id" %in% names(replay)) {
+    selected <- as.character(replay$selected_strategy_spec_id)
+    specs <- c(specs, selected[!is.na(selected) & nzchar(selected)])
+  }
+  parsed <- g5_bridge_parse_ema_periods_from_spec(specs)
+  if (!nrow(parsed)) return(NULL)
+  ema_specs <- specs[specs %in% parsed$strategy_spec_id]
+  counts <- sort(table(ema_specs), decreasing = TRUE)
+  chosen <- parsed[match(names(counts)[[1L]], parsed$strategy_spec_id), , drop = FALSE]
+  list(
+    strategy_spec_id = chosen$strategy_spec_id[[1L]],
+    fast_period = as.integer(chosen$fast_period[[1L]]),
+    slow_period = as.integer(chosen$slow_period[[1L]])
+  )
+}
+
+g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.frame(), main = "", ema_overlay = FALSE) {
   if (!is.data.frame(replay) || !nrow(replay)) {
     graphics::plot.new()
     graphics::title(main)
@@ -1446,6 +1481,24 @@ g5_bridge_plot_panel <- function(replay, executions, pending, trades = data.fram
       col = body_colors[flat_body],
       lwd = 2
     )
+  }
+  if (isTRUE(ema_overlay)) {
+    ema <- g5_bridge_dominant_ema_periods(replay)
+    if (!is.null(ema)) {
+      fast <- g5_ema_cross_ema(close, ema$fast_period)
+      slow <- g5_ema_cross_ema(close, ema$slow_period)
+      graphics::lines(x, fast, col = "#2563EB", lwd = 1.05)
+      graphics::lines(x, slow, col = "#F97316", lwd = 1.05)
+      graphics::legend(
+        "bottomright",
+        legend = c(paste0("fast EMA ", ema$fast_period), paste0("slow EMA ", ema$slow_period)),
+        col = c("#2563EB", "#F97316"),
+        lwd = 1.05,
+        bty = "n",
+        cex = 0.58,
+        text.col = aesthetic$text
+      )
+    }
   }
   if (is.data.frame(trades) && nrow(trades)) {
     trace_segments <- g5_bridge_visible_trade_segments(trades, dates)

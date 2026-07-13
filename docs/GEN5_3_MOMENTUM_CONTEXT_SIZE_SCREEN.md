@@ -57,6 +57,7 @@ Feature sets:
 - Continuity aggregate: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_aggregate.csv`
 - Continuity audit: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_continuity.csv`
 - EMA feature diagnostic packet: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711stratema/`
+- Bullish participation audit tapes: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_20260711continuity/momentum_context_size_bullish_participation_audit_tapes.png`
 - Deck: `presentations/gen5_3_momentum_context_size_screen.pptx`
 
 ## Readout
@@ -83,6 +84,7 @@ Interpretation:
 - The new momentum feature sets did not become the aggregate default.
 - Continuation replay remains useful, but continuity lowered exposure and alpha relative to the optimistic independent-stitch packet.
 - The benchmark is harsh and appropriate: a bullish high-beta specialist must compete with simply holding the high-beta basket.
+- The focused 2020 bullish-participation tapes make the miss visible: TSLA and MSTR in particular spent long stretches rallying before the system entered or held meaningful exposure. EMA overlays show that the underlying trend was visible in price, so the next question is state timing and hold persistence, not merely adding more families.
 
 ## Guardrails
 

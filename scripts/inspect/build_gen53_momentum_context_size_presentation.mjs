@@ -8,10 +8,15 @@ const artifactModule =
   "C:/Users/Franc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs";
 const { Presentation, PresentationFile } = await import(pathToFileURL(artifactModule).href);
 
-const outputPptx = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen.pptx");
-const previewDir = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen_slides");
-const montagePath = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen_montage.webp");
-const inspectPath = path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen.pptx.inspect.ndjson");
+const outputPptx = process.env.GEN5_GEN53_MOM_CTX_PRESENTATION_OUTPUT ||
+  path.join(repoRoot, "presentations", "gen5_3_momentum_context_size_screen.pptx");
+const outputStem = path.basename(outputPptx, ".pptx");
+const previewDir = process.env.GEN5_GEN53_MOM_CTX_PRESENTATION_PREVIEW_DIR ||
+  path.join(repoRoot, "presentations", `${outputStem}_slides`);
+const montagePath = process.env.GEN5_GEN53_MOM_CTX_PRESENTATION_MONTAGE ||
+  path.join(repoRoot, "presentations", `${outputStem}_montage.webp`);
+const inspectPath = process.env.GEN5_GEN53_MOM_CTX_PRESENTATION_INSPECT ||
+  path.join(repoRoot, "presentations", `${outputStem}.pptx.inspect.ndjson`);
 const independentResultDir = path.join(
   repoRoot,
   "runs",
@@ -60,6 +65,7 @@ const resultPaths = {
   family: path.join(resultDir, "momentum_context_size_selection_family_heatmap.png"),
   tapes: path.join(resultDir, "momentum_context_size_trade_tape_contact_sheet.png"),
   representativeTapes: path.join(resultDir, "momentum_context_size_representative_trade_tapes.png"),
+  bullishParticipationTapes: path.join(resultDir, "momentum_context_size_bullish_participation_audit_tapes.png"),
 };
 
 const independentPaths = {
@@ -513,6 +519,22 @@ async function createDeck() {
       "NVDA, TSLA, and MSTR show the lane can ride substantial trends.",
       "Open exit signals at year end should be inspected in the next tape audit.",
     ], { left: 898, top: 306, width: 236, height: 176 }, { fontSize: 16, lineHeight: 54, dotColor: colors.orange });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "The 2020 tapes show late and uneven bullish participation");
+    await image(slide, resultPaths.bullishParticipationTapes, { left: 42, top: 168, width: 800, height: 430 }, "Bullish participation audit tapes for 2020 risk-aware workhorse continuation");
+    rect(slide, { left: 884, top: 214, width: 292, height: 300 }, colors.soft, colors.rule);
+    text(slide, "What to notice", { left: 914, top: 244, width: 220, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      "TSLA and MSTR rally for long stretches before entries appear.",
+      "State bands change often, but many strong stretches stay flat.",
+      "EMA overlays show price trend was visible.",
+    ], { left: 916, top: 306, width: 224, height: 150 }, { fontSize: 16, lineHeight: 48, dotColor: colors.orange });
+    text(slide, "The engine did trade, but it did not stay long enough early enough in the strongest bullish year.", { left: 124, top: 626, width: 1002, height: 34 }, { fontSize: 24, bold: true, alignment: "center" });
     footer(slide);
   }
 
