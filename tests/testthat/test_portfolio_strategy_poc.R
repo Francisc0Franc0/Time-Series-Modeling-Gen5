@@ -92,3 +92,72 @@ test_that("portfolio POC builds SPY and active-set buy-and-hold baselines", {
   expect_equal(metrics$baseline_id, c("spy_buy_hold", "active_equal_buy_hold"))
   expect_equal(metrics$ending_equity, c(120, 150))
 })
+
+test_that("portfolio POC leverage increases target notional and allows margin-style cash", {
+  symbols <- c("AAA", "BBB")
+  equity_by_symbol <- list(
+    AAA = g5_test_portfolio_equity("AAA", c(10, 11, 12)),
+    BBB = g5_test_portfolio_equity("BBB", c(20, 21, 22))
+  )
+  trades_by_symbol <- list(
+    AAA = data.frame(
+      trade_id = "AAA_1",
+      symbol = "AAA",
+      entry_execution_date = as.Date("2026-01-01"),
+      entry_execution_price = 10,
+      exit_execution_date = as.Date(NA),
+      exit_execution_price = NA_real_,
+      trade_status = "open",
+      stringsAsFactors = FALSE
+    ),
+    BBB = data.frame(
+      trade_id = "BBB_1",
+      symbol = "BBB",
+      entry_execution_date = as.Date("2026-01-01"),
+      entry_execution_price = 20,
+      exit_execution_date = as.Date(NA),
+      exit_execution_price = NA_real_,
+      trade_status = "open",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  accounting <- g5_portfolio_poc_build_accounting(
+    trades_by_symbol = trades_by_symbol,
+    equity_by_symbol = equity_by_symbol,
+    active_symbols = symbols,
+    initial_capital = 100,
+    slot_count = 2,
+    leverage = 1.8
+  )
+
+  entries <- accounting$events[accounting$events$event_type == "entry", , drop = FALSE]
+  expect_equal(entries$event_status, c("filled", "filled"))
+  expect_equal(entries$target_notional, c(90, 90))
+  expect_equal(entries$actual_notional, c(90, 90))
+  expect_equal(tail(accounting$equity$cash, 1L), -80)
+  expect_equal(unique(accounting$equity$leverage), 1.8)
+})
+
+test_that("portfolio POC baselines include same-leverage passive comparators", {
+  dates <- as.Date("2026-01-01") + 0:1
+  bars <- rbind(
+    data.frame(symbol = "SPY", session_date = dates, close = c(100, 110), stringsAsFactors = FALSE),
+    data.frame(symbol = "AAA", session_date = dates, close = c(10, 12), stringsAsFactors = FALSE),
+    data.frame(symbol = "BBB", session_date = dates, close = c(20, 20), stringsAsFactors = FALSE)
+  )
+
+  baselines <- g5_portfolio_poc_build_baselines(
+    bars = bars,
+    dates = dates,
+    active_symbols = c("AAA", "BBB"),
+    initial_capital = 100,
+    baseline_symbol = "SPY",
+    leverage = 1.8
+  )
+
+  expect_equal(baselines$active_equal_buy_hold_equity, c(100, 110))
+  expect_equal(baselines$active_equal_buy_hold_levered_equity, c(100, 118))
+  expect_equal(baselines$spy_buy_hold_levered_equity, c(100, 118))
+  expect_equal(unique(baselines$leverage), 1.8)
+})

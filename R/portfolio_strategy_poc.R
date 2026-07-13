@@ -122,9 +122,10 @@ g5_portfolio_poc_close_series <- function(bars, symbol, dates) {
   out
 }
 
-g5_portfolio_poc_build_baselines <- function(bars, dates, active_symbols, initial_capital = 100000, baseline_symbol = "SPY") {
+g5_portfolio_poc_build_baselines <- function(bars, dates, active_symbols, initial_capital = 100000, baseline_symbol = "SPY", leverage = 1) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
   baseline_symbol <- g5_standardize_symbol(baseline_symbol)[[1L]]
+  leverage <- g5_ema_cross_validate_leverage(leverage)
   bars <- g5_portfolio_poc_bars_table(bars)
   dates <- as.Date(dates)
   if (!length(dates)) {
@@ -138,23 +139,33 @@ g5_portfolio_poc_build_baselines <- function(bars, dates, active_symbols, initia
     (initial_capital / length(active_symbols)) * close / close[[1L]]
   })
   active_equal_buy_hold <- Reduce(`+`, active_curves)
+  spy_buy_hold_levered <- initial_capital + leverage * (spy_equity - initial_capital)
+  active_equal_buy_hold_levered <- initial_capital + leverage * (active_equal_buy_hold - initial_capital)
   out <- data.frame(
     schema_version = g5_portfolio_poc_schema_version(),
     session_date = dates,
     baseline_symbol = baseline_symbol,
+    leverage = leverage,
     spy_buy_hold_equity = spy_equity,
     active_equal_buy_hold_equity = active_equal_buy_hold,
+    spy_buy_hold_levered_equity = spy_buy_hold_levered,
+    active_equal_buy_hold_levered_equity = active_equal_buy_hold_levered,
     spy_buy_hold_return = spy_equity / initial_capital - 1,
     active_equal_buy_hold_return = active_equal_buy_hold / initial_capital - 1,
+    spy_buy_hold_levered_return = spy_buy_hold_levered / initial_capital - 1,
+    active_equal_buy_hold_levered_return = active_equal_buy_hold_levered / initial_capital - 1,
     stringsAsFactors = FALSE
   )
   out$spy_buy_hold_drawdown <- out$spy_buy_hold_equity / cummax(out$spy_buy_hold_equity) - 1
   out$active_equal_buy_hold_drawdown <- out$active_equal_buy_hold_equity / cummax(out$active_equal_buy_hold_equity) - 1
+  out$spy_buy_hold_levered_drawdown <- out$spy_buy_hold_levered_equity / cummax(out$spy_buy_hold_levered_equity) - 1
+  out$active_equal_buy_hold_levered_drawdown <- out$active_equal_buy_hold_levered_equity / cummax(out$active_equal_buy_hold_levered_equity) - 1
   out
 }
 
-g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol, active_symbols, initial_capital = 100000, slot_count = length(active_symbols)) {
+g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol, active_symbols, initial_capital = 100000, slot_count = length(active_symbols), leverage = 1) {
   active_symbols <- g5_portfolio_poc_symbols(active_symbols, "active_symbols")
+  leverage <- g5_ema_cross_validate_leverage(leverage)
   if (!is.numeric(initial_capital) || length(initial_capital) != 1L || !is.finite(initial_capital) || initial_capital <= 0) {
     g5_portfolio_poc_stop("initial_capital must be one positive finite number.")
   }
@@ -194,6 +205,9 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
   }
   marked_open_value <- function() {
     sum(ifelse(quantity > 0 & is.finite(last_mark), quantity * last_mark, 0), na.rm = TRUE)
+  }
+  available_buying_power <- function(equity_reference) {
+    max(0, leverage * equity_reference - marked_open_value())
   }
   portfolio_equity_before_entry <- function() {
     cash + marked_open_value()
@@ -248,7 +262,7 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
         entry <- entries[i, , drop = FALSE]
         entry_px <- as.numeric(entry$entry_execution_price[[1L]])
         equity_reference <- portfolio_equity_before_entry()
-        target <- equity_reference / slot_count
+        target <- leverage * equity_reference / slot_count
         if (quantity[[symbol]] > 0) {
           add_event(
             schema_version = g5_portfolio_poc_schema_version(),
@@ -285,8 +299,15 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
           )
           next
         }
-        actual <- min(target, cash)
-        status <- if (actual <= 0) "skipped_no_cash" else if (actual < target) "filled_cash_capped" else "filled"
+        buying_power <- available_buying_power(equity_reference)
+        actual <- min(target, buying_power)
+        status <- if (actual <= 0) {
+          if (identical(leverage, 1)) "skipped_no_cash" else "skipped_no_buying_power"
+        } else if (actual < target) {
+          if (identical(leverage, 1)) "filled_cash_capped" else "filled_buying_power_capped"
+        } else {
+          "filled"
+        }
         qty <- if (actual > 0) actual / entry_px else 0
         cash <- cash - actual
         if (actual > 0) {
@@ -307,7 +328,7 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
           price = entry_px,
           quantity = qty,
           event_status = status,
-          note = "Dynamic equal-slot entry: current portfolio equity / slot_count, cash-capped."
+          note = paste0("Dynamic equal-slot entry: current portfolio equity * leverage / slot_count; leverage=", leverage, "x.")
         )
       }
     }
@@ -323,6 +344,7 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
       schema_version = g5_portfolio_poc_schema_version(),
       session_date = session_date,
       cash = cash,
+      leverage = leverage,
       open_position_count = sum(quantity > 0),
       invested_value = sum(symbol_values),
       portfolio_equity = portfolio_equity,
@@ -349,6 +371,7 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
       session_date = as.Date(curve$session_date),
       standalone_slot_equity = (initial_capital / slot_count) * as.numeric(curve$strategy_equity),
       standalone_strategy_equity = as.numeric(curve$strategy_equity),
+      leverage = leverage,
       close = as.numeric(curve$close),
       stringsAsFactors = FALSE
     )
@@ -361,7 +384,7 @@ g5_portfolio_poc_build_accounting <- function(trades_by_symbol, equity_by_symbol
       schema_version = g5_portfolio_poc_schema_version(),
       symbol = symbol,
       entry_fills = nrow(fills),
-      cash_capped_entries = if (nrow(ev)) sum(ev$event_status == "filled_cash_capped") else 0L,
+      cash_capped_entries = if (nrow(ev)) sum(ev$event_status %in% c("filled_cash_capped", "filled_buying_power_capped")) else 0L,
       skipped_entries = if (nrow(ev)) sum(grepl("^skipped", ev$event_status)) else 0L,
       total_entry_notional = if (nrow(fills)) sum(as.numeric(fills$actual_notional), na.rm = TRUE) else 0,
       final_position_value = tail(equity[[paste0(symbol, "_position_value")]], 1L),

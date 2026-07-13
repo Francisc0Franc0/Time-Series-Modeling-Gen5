@@ -52,6 +52,20 @@ const meanReversionDir = path.join(
   "gen53_momentum_context_size",
   "g53_momctx_20260712meanrev2feat",
 );
+const trendBreakoutLeverageDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_levtb",
+);
+const meanReversionLeverageDir = path.join(
+  repoRoot,
+  "runs",
+  "research_workbench",
+  "gen53_momentum_context_size",
+  "g53_momctx_levmr",
+);
 
 const resultPaths = {
   summary: path.join(resultDir, "momentum_context_size_summary.csv"),
@@ -96,6 +110,18 @@ const meanReversionPaths = {
   heatmap: path.join(meanReversionDir, "momentum_context_size_alpha_heatmap.png"),
   family: path.join(meanReversionDir, "momentum_context_size_selection_family_heatmap.png"),
   tapes: path.join(meanReversionDir, "momentum_context_size_trade_tape_contact_sheet.png"),
+};
+
+const trendBreakoutLeveragePaths = {
+  summary: path.join(trendBreakoutLeverageDir, "momentum_context_size_summary.csv"),
+  heatmap: path.join(trendBreakoutLeverageDir, "momentum_context_size_alpha_heatmap.png"),
+  equity: path.join(trendBreakoutLeverageDir, "momentum_context_size_equity_overlay.png"),
+};
+
+const meanReversionLeveragePaths = {
+  summary: path.join(meanReversionLeverageDir, "momentum_context_size_summary.csv"),
+  heatmap: path.join(meanReversionLeverageDir, "momentum_context_size_alpha_heatmap.png"),
+  equity: path.join(meanReversionLeverageDir, "momentum_context_size_equity_overlay.png"),
 };
 
 const W = 1280;
@@ -315,6 +341,8 @@ async function createDeck() {
   const featureDiagnosticAggregate = await readCsv(featureDiagnosticPaths.aggregate);
   const trendBreakoutSummary = await readCsv(trendBreakoutPaths.summary);
   const meanReversionSummary = await readCsv(meanReversionPaths.summary);
+  const trendBreakoutLeverageSummary = await readCsv(trendBreakoutLeveragePaths.summary);
+  const meanReversionLeverageSummary = await readCsv(meanReversionLeveragePaths.summary);
   const topRows = [...aggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const featureRows = [...featureDiagnosticAggregate].sort((a, b) => num(b.mean_alpha_vs_active_equal) - num(a.mean_alpha_vs_active_equal));
   const best = topRows[0];
@@ -333,6 +361,10 @@ async function createDeck() {
   const meanRevWorkhorse2022 = meanReversionSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231");
   const meanRevReversion2020 = meanReversionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2020Y_asof_20201231");
   const meanRevReversion2022 = meanReversionSummary.find((x) => x.feature_set_id === "reversion_breakout_context" && x.window_id === "2022Y_asof_20221231");
+  const trendLev2020 = trendBreakoutLeverageSummary.find((x) => x.window_id === "2020Y_asof_20201231" && Number(x.leverage) === 1.8);
+  const trendLev2022 = trendBreakoutLeverageSummary.find((x) => x.window_id === "2022Y_asof_20221231" && Number(x.leverage) === 1.8);
+  const meanLevWorkhorse2020 = meanReversionLeverageSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2020Y_asof_20201231" && Number(x.leverage) === 1.8);
+  const meanLevWorkhorse2022 = meanReversionLeverageSummary.find((x) => x.feature_set_id === "workhorse_enriched" && x.window_id === "2022Y_asof_20221231" && Number(x.leverage) === 1.8);
 
   {
     const slide = deck.slides.add();
@@ -729,6 +761,53 @@ async function createDeck() {
       "This is not a high-beta upside engine in its current form.",
     ], { left: 854, top: 314, width: 246, height: 178 }, { fontSize: 16, lineHeight: 43, dotColor: colors.orange });
     text(slide, "The trade tapes reinforce the same story: countertrend chips and defensive abstention, not early sticky participation in a broad high-beta rally.", { left: 102, top: 590, width: 1048, height: 42 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Leveraged active trading needs a same-leverage passive benchmark");
+    text(slide, "The leverage slice keeps signals, states, entries, exits, and quarterly authority unchanged. Only the portfolio sizing layer changes from 1x to 1.8x.", { left: 84, top: 198, width: 1030, height: 58 }, { fontSize: 22 });
+    rect(slide, { left: 92, top: 302, width: 472, height: 160 }, colors.soft, colors.rule);
+    rect(slide, { left: 668, top: 302, width: 472, height: 160 }, colors.soft, colors.rule);
+    text(slide, "Wrong read", { left: 124, top: 330, width: 260, height: 32 }, { fontSize: 27, bold: true, color: colors.red });
+    text(slide, "Compare 1.8x active return to 1x basket hold, then call the extra return alpha.", { left: 124, top: 382, width: 350, height: 54 }, { fontSize: 20, color: colors.muted });
+    text(slide, "Fair read", { left: 700, top: 330, width: 260, height: 32 }, { fontSize: 27, bold: true, color: colors.green });
+    text(slide, "Compare 1.8x active return to 1.8x equal-weight basket hold over the same dates.", { left: 700, top: 382, width: 350, height: 54 }, { fontSize: 20, color: colors.muted });
+    text(slide, "This keeps leverage as a risk overlay. It prevents sizing from masquerading as a better entry/exit engine.", { left: 128, top: 566, width: 1000, height: 54 }, { fontSize: 24, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Trend/breakout leverage made the defensive profile more obvious");
+    await image(slide, trendBreakoutLeveragePaths.heatmap, { left: 54, top: 184, width: 660, height: 390 }, "Trend-breakout leverage alpha heatmap");
+    rect(slide, { left: 782, top: 222, width: 364, height: 288 }, colors.soft, colors.rule);
+    text(slide, "Same-leverage read", { left: 814, top: 252, width: 270, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      `2020: active ${pct(trendLev2020.total_return)}, but 1.8x basket ${pct(trendLev2020.benchmark_active_equal_return)}.`,
+      `2022: ${pp(trendLev2022.alpha_vs_active_equal)} alpha because the levered basket drawdown was severe.`,
+      "This is defense, not solved upside participation.",
+    ], { left: 814, top: 314, width: 292, height: 170 }, { fontSize: 16, lineHeight: 54, dotColor: colors.orange });
+    text(slide, `At 1.8x, the same lane produced ${pp(trendLev2020.alpha_vs_active_equal)} alpha in 2020 and ${pp(trendLev2022.alpha_vs_active_equal)} in 2022.`, { left: 112, top: 608, width: 1024, height: 34 }, { fontSize: 22, bold: true, alignment: "center" });
+    footer(slide);
+  }
+
+  {
+    const slide = deck.slides.add();
+    slide.background.fill = "#FFFFFF";
+    title(slide, "Mean reversion with leverage still looks like defense, not upside capture");
+    await image(slide, meanReversionLeveragePaths.heatmap, { left: 54, top: 184, width: 660, height: 390 }, "Mean-reversion leverage alpha heatmap");
+    rect(slide, { left: 782, top: 222, width: 364, height: 288 }, colors.soft, colors.rule);
+    text(slide, "Same-leverage read", { left: 814, top: 252, width: 270, height: 32 }, { fontSize: 26, bold: true });
+    bullets(slide, [
+      `2020: active ${pct(meanLevWorkhorse2020.total_return)}, far below the 1.8x basket.`,
+      `2022: active beat the levered basket by ${pp(meanLevWorkhorse2022.alpha_vs_active_equal)}.`,
+      "Leverage amplified the defensive value and the rally underparticipation.",
+    ], { left: 814, top: 314, width: 292, height: 170 }, { fontSize: 16, lineHeight: 54, dotColor: colors.orange });
+    text(slide, `At 1.8x, workhorse mean reversion produced ${pp(meanLevWorkhorse2020.alpha_vs_active_equal)} alpha in 2020 and ${pp(meanLevWorkhorse2022.alpha_vs_active_equal)} in 2022.`, { left: 112, top: 608, width: 1024, height: 34 }, { fontSize: 22, bold: true, alignment: "center" });
     footer(slide);
   }
 

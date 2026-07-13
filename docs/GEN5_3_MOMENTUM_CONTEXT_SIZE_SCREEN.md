@@ -248,3 +248,27 @@ The mean-reversion authority map remains cash-dominant. Bollinger-style pockets 
 Decision implication:
 
 Mean reversion is worth keeping as a future broad-system ingredient, especially for range or falling-market behavior, but it is not the missing mechanism for the current bullish high-beta specialist. The next high-impact question is state timing and entry/hold participation directly: when a favorable state appears, does the system enter early enough and stay long enough to matter?
+
+## Leverage Overlay Diagnostic
+
+Completed packets:
+
+- trend/breakout leverage packet: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_levtb/`
+- mean-reversion leverage packet: `runs/research_workbench/gen53_momentum_context_size/g53_momctx_levmr/`
+
+Purpose:
+
+This was a narrow sizing-layer diagnostic. It repeated the completed two-window trend/breakout and mean-reversion annual continuity slices, but added an extra accounting pass at `1.8x` leverage beside the existing `1x` pass. Signals, PCA states, selected authority, entries, exits, continuity semantics, basket, and windows were unchanged.
+
+Benchmark rule:
+
+The fair benchmark for a `1.8x` active lane is not the unlevered basket hold. It is the same equal-weight live-basket buy-and-hold benchmark levered to `1.8x` over the same dates. The unlevered benchmark remains useful context, but same-leverage alpha is the primary readout.
+
+Readout:
+
+- Trend/breakout `1.8x`: `2020` active return rose to `108.1%`, but the same-leverage basket benchmark returned `409.1%`, so alpha worsened to `-301.0 pp`. In `2022`, active return was `-19.1%` versus `-95.5%` for the same-leverage basket, so alpha improved to `+76.4 pp`.
+- Mean-reversion workhorse `1.8x`: `2020` active return rose to `37.3%`, but same-leverage basket alpha was still `-371.8 pp`. In `2022`, it returned `-23.1%` versus `-95.5%` for the same-leverage basket, for `+72.4 pp` alpha.
+
+Interpretation:
+
+Leverage did not reveal hidden alpha. It magnified the same behavioral profile already visible at `1x`: defensive/selective lanes look better in the falling `2022` window and worse relative to the explosive `2020` rebound. Treat leverage as a later risk overlay for a robust strategy, not as evidence that the current entry/exit/state timing problem is solved.

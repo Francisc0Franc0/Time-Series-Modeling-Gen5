@@ -356,6 +356,13 @@ This ran a bounded `mean_reversion_only` slice over the same `2020` and `2022` a
 
 Readout: mean reversion did not solve 2020 upside participation. Workhorse mean reversion returned `20.3%` and reversion-breakout mean reversion returned `13.6%` versus `227.3%` basket hold. It did provide relative defense in `2022`: `-12.9%` and `-17.6%` versus `-53.0%` basket hold. The trade-tape read is that 2020 underperformance was mostly underparticipation and late/episodic participation, not a lack of trades. In the trend/breakout tape, TSLA first entered on `2020-09-18`, after much of the early/mid-2020 rally. AMD/NVDA caught some legs but did not stay exposed enough. The mean-reversion map is cash-dominant with selective Bollinger pockets and no dominant RSI/z-return authority.
 
+Leverage overlay follow-up:
+
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_levtb/`
+`runs/research_workbench/gen53_momentum_context_size/g53_momctx_levmr/`
+
+This repeated the completed trend/breakout and mean-reversion two-window slices with `1x` and `1.8x` portfolio accounting rows, leaving signals and authority unchanged. The correct benchmark for a `1.8x` active lane is the same equal-weight live-basket hold levered to `1.8x`. At `1.8x`, trend/breakout returned `108.1%` in `2020` but lagged the same-leverage basket by `-301.0 pp`; it beat the `2022` same-leverage basket by `+76.4 pp`. Workhorse mean reversion lagged `2020` by `-371.8 pp` and beat `2022` by `+72.4 pp`. This confirms leverage magnifies the same defensive/selective profile; it does not solve the rally participation gap or count as accepted allocation evidence.
+
 Next best Gen5.3 research question: target state timing and entry/hold participation directly. Do not immediately run full four-window trend/breakout, broad classical, or mean-reversion sweeps unless there is a more specific mechanism to test.
 
 ## What Is Not Implemented Yet
