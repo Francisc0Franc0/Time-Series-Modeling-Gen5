@@ -252,6 +252,28 @@ Readout:
 
 The next narrow slice should improve the decision policy before adding model complexity: compare fixed thresholds against TRAIN-only threshold selection or calibration, while keeping GLM interpretability and probability trade tapes.
 
+## ML-P1b Packet
+
+The first ML-P1b packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p1b_20260713p1b/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper kept the ML-P1 GLM model contract fixed and compared three threshold policies: fixed `0.55 / 0.50`, TRAIN prediction quantiles `p60 / p45`, and a TRAIN forward-return grid.
+- All ML-P1b guardrail checks passed: TRAIN-only fitting, TRAIN-only policy selection, OOS-only replay, no OOS threshold tuning, and no live bridge change.
+- The fixed policy exactly reproduced ML-P1: `8.0%` in `2020Y` versus `214.0%` basket hold, and `-42.4%` in `2022Y` versus `-54.2%` basket hold.
+- The TRAIN quantile policy was more defensive: `5.3%` in `2020Y` and `-39.5%` in `2022Y`.
+- The TRAIN forward-return grid improved 2020 participation and return: `30.0%` in `2020Y` with `34.8%` mean exposure, versus fixed-policy `8.0%` with `27.6%` exposure. It still lagged basket hold by `-184.0 pp`.
+- The same grid weakened 2022 defense: `-48.4%` with `67.4%` exposure, versus fixed-policy `-42.4%` with `59.9%` exposure.
+- Interpretation: threshold policy matters, but lowering or selecting thresholds does not solve the main alpha gap. The model's probability ranking still misses too much early rally participation.
+
+The next narrow slice should test probability quality rather than simply increasing exposure. Good candidates are label-horizon comparison, probability calibration, or a small nonlinear challenger judged against the same continuous replay and probability-tape surface.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

@@ -417,7 +417,13 @@ ML-P1 completed packet:
 
 Completed readout: the fixed-threshold `glm_logit_h3_fixed_threshold` replay worked mechanically but was defensive/selective rather than alpha-ready. It returned `8.0%` in `2020Y` versus `214.0%` equal-weight basket hold, with only `27.6%` mean exposure. It returned `-42.4%` in `2022Y` versus `-54.2%` equal-weight basket hold, with `59.9%` mean exposure. All ML-P1 guardrails passed: TRAIN-only fitting, OOS-only prediction/replay, fixed thresholds, and no live bridge change. The Gen5.4 deck now includes an ML-P1 section with equity, probability trade tapes, action audit, calibration deciles, and coefficient audit.
 
-Next implementation step: `ML-P1b`, a GLM threshold/calibration policy diagnostic. Keep the same feature/label/model contract but compare fixed thresholds against TRAIN-only threshold selection or calibration. Do not install XGBoost until the GLM replay policy surface is better understood.
+ML-P1b completed packet:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p1b_20260713p1b/`
+
+Completed readout: the threshold diagnostic kept the ML-P1 GLM fixed and compared three policies under continuous annual OOS replay: fixed `0.55 / 0.50`, TRAIN prediction quantiles `p60 / p45`, and a TRAIN forward-return grid. All guardrails passed: TRAIN-only fitting, TRAIN-only policy selection, OOS-only replay, no OOS threshold tuning, and no live bridge change. Fixed reproduced ML-P1 exactly. The TRAIN forward-return grid improved 2020 return from `8.0%` to `30.0%` and exposure from `27.6%` to `34.8%`, but still lagged `214.0%` basket hold by `-184.0 pp`. In 2022, the same grid weakened defense: `-48.4%` versus fixed `-42.4%`, with exposure rising to `67.4%`. The Gen5.4 deck now includes an ML-P1b section with threshold, action, equity, and probability-tape diagnostics.
+
+Next implementation step: test probability quality rather than simply increasing exposure. Good next candidates are a small label-horizon comparison (`h1`, `h3`, `h5`) or a probability-calibration diagnostic using the same continuous annual replay and probability-tape audit. Do not let ML outputs influence live advice.
 
 ## What Is Not Implemented Yet
 
@@ -452,7 +458,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P1b: a no-new-dependency GLM threshold/calibration diagnostic using the completed ML-P1 model/replay contract. Keep TRAIN-only fitting and OOS-only replay. Compare the fixed `0.55/0.50` thresholds against one or two TRAIN-only threshold-selection or calibration policies designed to improve upside participation without OOS tuning. Produce updated probability trade tapes, threshold/action audit, equity versus equal-weight basket hold, compact report, and update the Gen5.4 deck with a transition slide from fixed-threshold GLM to policy calibration. Do not change live bridge behavior and do not install XGBoost yet. Validate, commit, and push.
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement the next Gen5.4 ML probability-quality diagnostic. Keep the ML-P1b continuous annual replay and policy-audit surface fixed. Compare a small set of leakage-safe label horizons, such as `h1`, `h3`, and `h5`, using the no-new-dependency GLM first. For each horizon, fit only on TRAIN rows, select any thresholds or calibration only from TRAIN, replay OOS continuously, and produce equity versus basket hold, probability trade tapes, calibration/ranking diagnostics, compact report, and a Gen5.4 deck update. Do not change live bridge behavior and do not install XGBoost unless the label-horizon diagnostic clearly requires a separate approved nonlinear challenger. Validate, commit, and push.
 ```
 
 ```text

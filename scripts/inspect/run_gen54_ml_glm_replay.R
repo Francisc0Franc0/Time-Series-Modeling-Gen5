@@ -455,6 +455,7 @@ write_summary_report <- function(path, run_spec, summary, leakage_audit, artifac
   invisible(path)
 }
 
+if (!identical(Sys.getenv("GEN5_GEN54_ML_P1_SOURCE_ONLY", unset = "false"), "true")) {
 g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 feed <- env_or("GEN5_GEN54_ML_P1_FEED", as.character(cfg$feed))
@@ -605,3 +606,4 @@ message("Gen5.4 ML-P1 GLM replay complete.")
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Report: ", normalizePath(paths$report_md, winslash = "/", mustWork = FALSE))
 message("Summary: ", paste(summary$window_id, sprintf("active=%.1f%% benchmark=%.1f%%", 100 * summary$active_return, 100 * summary$benchmark_return), collapse = "; "))
+}

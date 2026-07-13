@@ -16,6 +16,10 @@ const p1RunRoot =
   process.env.GEN5_GEN54_ML_P1_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p1_20260713p1");
 const p1VisualRoot = path.join(p1RunRoot, "visuals");
+const p1bRunRoot =
+  process.env.GEN5_GEN54_ML_P1B_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p1b_20260713p1b");
+const p1bVisualRoot = path.join(p1bRunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -108,7 +112,7 @@ function addBullet(slide, text, left, top, width, fontSize = 21) {
   addText(slide, text, left + 28, top, width - 28, 54, { fontSize, color: "#222222" });
 }
 
-function addMetric(slide, label, value, note, left, top, width, height = 126) {
+function addMetric(slide, label, value, note, left, top, width, height = 150) {
   slide.shapes.add({
     geometry: "rect",
     position: { left, top, width, height },
@@ -154,6 +158,10 @@ async function main() {
   let p1Summary = [];
   let p1ActionAudit = [];
   let p1Leakage = [];
+  let p1bAvailable = false;
+  let p1bSummary = [];
+  let p1bPolicyThresholds = [];
+  let p1bLeakage = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -162,6 +170,15 @@ async function main() {
     p1Available = true;
   } catch {
     p1Available = false;
+  }
+  try {
+    await fs.access(path.join(p1bRunRoot, "ml_p1b_summary.csv"));
+    p1bSummary = await readCsv(path.join(p1bRunRoot, "ml_p1b_summary.csv"));
+    p1bPolicyThresholds = await readCsv(path.join(p1bRunRoot, "ml_p1b_policy_thresholds.csv"));
+    p1bLeakage = await readCsv(path.join(p1bRunRoot, "ml_p1b_leakage_audit.csv"));
+    p1bAvailable = true;
+  } catch {
+    p1bAvailable = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -369,6 +386,79 @@ async function main() {
       addBullet(slide, "Compare fixed thresholds against a more permissive participation policy.", 128, 432, 720);
       addBullet(slide, "Keep probability trade tapes as the required visual audit for every ML replay.", 128, 502, 720);
       addBullet(slide, "Only then add XGBoost as a nonlinear challenger.", 128, 572, 720);
+    }
+  }
+
+  if (p1bAvailable) {
+    const fixed2020 = p1bSummary.find((r) => r.policy_id === "fixed_055_050" && r.window_id === "2020Y") || {};
+    const fixed2022 = p1bSummary.find((r) => r.policy_id === "fixed_055_050" && r.window_id === "2022Y") || {};
+    const grid2020 = p1bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y") || {};
+    const grid2022 = p1bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y") || {};
+    const quant2022 = p1bSummary.find((r) => r.policy_id === "train_quantile_60_45" && r.window_id === "2022Y") || {};
+    const p1bAllPass = p1bLeakage.every((r) => r.status === "PASS");
+    const policies = [...new Set(p1bSummary.map((r) => r.policy_id))];
+    const avgGridEnter = mean(p1bPolicyThresholds.filter((r) => r.policy_id === "train_forward_return_grid").map((r) => r.enter_threshold));
+    const avgGridExposure = mean(p1bPolicyThresholds.filter((r) => r.policy_id === "train_forward_return_grid").map((r) => r.train_mean_exposure));
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Threshold policy is the first decision layer to audit", 72, 168, 900, 92, { fontSize: 52, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P1b keeps the GLM fixed and changes only the rule that converts probability into long/flat exposure. Thresholds are chosen before OOS replay using TRAIN data only.", 76, 364, 790, 112, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P1b", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Threshold diagnostic", 952, 322, 290, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The participation policy helped, but not enough");
+      addMetric(slide, "Policies tested", String(policies.length), "Fixed, TRAIN quantile, and TRAIN forward-return grid.", 74, 226, 245);
+      addMetric(slide, "Guardrails", p1bAllPass ? "All PASS" : "Review", "Fit and policy selection stay inside TRAIN.", 358, 226, 245);
+      addMetric(slide, "2020 grid return", pct(grid2020.active_return), `Fixed was ${pct(fixed2020.active_return)}; basket hold was ${pct(grid2020.benchmark_return)}.`, 642, 226, 245);
+      addMetric(slide, "2022 quantile return", pct(quant2022.active_return), `Fixed was ${pct(fixed2022.active_return)}; basket hold was ${pct(quant2022.benchmark_return)}.`, 926, 226, 245);
+      addText(slide, "The grid policy raised 2020 exposure and return, which confirms threshold choice matters. It still left most of the high-beta rally unowned, so the problem is not just the original 0.55 / 0.50 cutoff.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The equity curves show a better but still underpowered rally response");
+      await addImage(slide, path.join(p1bVisualRoot, "ml_p1b_policy_equity_vs_benchmark.png"), 70, 210, 760, 414, "ML-P1b policy equity comparison");
+      addText(slide, "What changed", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `The TRAIN grid policy lifted 2020 exposure from ${pct(fixed2020.mean_exposure)} to ${pct(grid2020.mean_exposure)} and return from ${pct(fixed2020.active_return)} to ${pct(grid2020.active_return)}. It still lagged the basket by ${pct(grid2020.excess_return)}.`, 890, 284, 284, 220, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The selected thresholds explain the behavior change");
+      await addImage(slide, path.join(p1bVisualRoot, "ml_p1b_policy_thresholds.png"), 74, 214, 500, 350, "ML-P1b fold thresholds");
+      await addImage(slide, path.join(p1bVisualRoot, "ml_p1b_policy_action_audit.png"), 626, 214, 500, 350, "ML-P1b action audit");
+      addText(slide, `The grid policy's average TRAIN entry threshold was ${avgGridEnter.toFixed(2)}, with a TRAIN proxy exposure target around ${pct(avgGridExposure)}. That made it more permissive in 2020, but also more exposed in 2022.`, 116, 604, 980, 48, { fontSize: 20, color: "#555555", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes show that the model rarely loved the rally early enough");
+      await addImage(slide, path.join(p1bVisualRoot, "ml_p1b_policy_probability_tapes.png"), 70, 210, 760, 414, "ML-P1b probability tapes");
+      addText(slide, "Why this matters", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "Lowering thresholds creates more entries, but the probability trace still spends long rally stretches below the entry line. The next question is whether calibration, labels, or model class can rank those days better.", 890, 284, 284, 240, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next ML slice should test probability quality, not just more exposure");
+      addText(slide, "ML-P1b showed that threshold policy is real, but it did not close the alpha gap. The forward-return grid made the model participate more, yet still undercaptured 2020 and weakened 2022 defense.", 92, 224, 980, 96, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep the continuous annual replay and policy audit as the required ML comparison surface.", 128, 374, 760);
+      addBullet(slide, "Next test should compare label horizons or probability calibration before adding XGBoost.", 128, 444, 760);
+      addBullet(slide, "If XGBoost comes next, it should be judged on better ranking and timing, not merely higher exposure.", 128, 514, 760);
+      addBullet(slide, `Watch the 2022 tradeoff: grid exposure rose to ${pct(grid2022.mean_exposure)} while return fell to ${pct(grid2022.active_return)}.`, 128, 584, 760);
     }
   }
 
