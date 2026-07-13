@@ -381,6 +381,26 @@ Readout: the neutral gear worked mechanically (`399` state-hold, `213` hold-only
 
 Next best Gen5.3 research question: target PCA feature/state validity for risk-off separation and bullish hold discrimination. The three-action grammar is useful, but the system still selected too many hold states in the 2022 drawdown. Do not immediately run full four-window trend/breakout, broad classical, mean-reversion, or context-size sweeps unless the next feature-validity slice improves this fixed-control behavior.
 
+## Gen5.4 Supervised ML Decision Engine Fork
+
+Planning doc:
+
+`docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md`
+
+Gen5.4 is an approved research fork, not a live bridge change. It keeps the Gen5 adjusted-daily OHLCV data layer, explicit `as_of_timestamp` discipline, WFA fold boundaries, portfolio/accounting inspection surface, benchmark comparisons, reports, and trade-tape visual audit conventions. It replaces the PCA-state-plus-strategy-routing decision engine with a supervised daily long/flat decision engine.
+
+Motivation: the Gen5.3 PCA/state-only diagnostics showed that PCA states contain useful exposure information, but the current feature/state surface still underparticipates in some explosive rebound windows and overparticipates in at least one drawdown window. The next clean question is supervised: given only information available after today's close, should the system want exposure over the next few sessions?
+
+Important design answers already settled for the first slice:
+
+- Use OHLCV, not close-to-close only, as the primary ML surface. `open` is required for next-open execution-aligned labels; `high/low` support range, wick, ATR, adverse/favorable excursion, and compression/expansion features; `volume` adds participation and attention context.
+- The existing PCA feature sets are good enough to seed a minimal POC, but they were designed for unsupervised PCA. Gen5.4 should supplement them with explicit supervised OHLCV features such as overnight gap, intraday body/range/wick structure, close-location metrics, relative volume, ATR/range compression, drawdown/recovery, and market-relative returns.
+- Default first label: `h3`, defined as next-open to close three sessions later. This is less noisy than a one-day label while still being a short tactical decision.
+- First model progression: `ML-P0` feature/label proof with no new dependency; `ML-P1` GLM logistic replay as the plumbing baseline; `ML-P2` XGBoost challenger after the data/replay surface is proven.
+- Daily policy: after close, score with features through that close; at next open, enter if flat and probability exceeds an enter threshold, exit if long and probability falls below an exit threshold, otherwise hold. Use TRAIN-only fixed or selected thresholds; do not tune thresholds on OOS.
+
+First implementation step: build `ML-P0`, a feature/label proof wrapper over `AMD,NVDA,TSLA,MSTR,AVGO`, risk-aware context, `2020` and `2022` assessment windows, and the `h3` next-open label. It should output a run spec, schema/taxonomy, feature-label sample, label distributions, leakage audit, and compact report. Do not install XGBoost until this surface passes inspection.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:
@@ -389,6 +409,7 @@ Do not assume any of the following exist as production-ready systems:
 - multi-asset pooled/global parameter selection;
 - state-adaptive exits;
 - leverage/risk overlay beyond earlier isolated POCs;
+- supervised ML decision engine;
 - live advice generation;
 - dashboards;
 - broker execution;
@@ -400,6 +421,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 
 - `README.md`: operator commands and current POC surfaces.
 - `docs/GEN5_2_DESIGN_BRIEF.md`: Gen5.2 mechanics fork, Gen4-faithful pooled-family scoring, state exit override, and assessment-surface separation.
+- `docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md`: supervised ML decision engine fork, OHLCV feature/label design, staged ML-P0/ML-P1/ML-P2 plan, and leakage guardrails.
 - `docs/GEN5_1_RESEARCH_ENGINE_CONTRACT.md`: canonized research/inspection engine layers, run-spec vocabulary, artifact contract, wrapper pattern, and STOP boundaries.
 - `docs/GEN5_1_SELECTION_POLICY_HYPOTHESIS.md`: current methodology fork between Gen4 pooled-family selection and Gen5.1 direct asset/state spec selection.
 - `docs/GEN5_REGIME_FILTER_POC_PLAN.md`: regime/PCA theory, vocabulary, policies, and next POC ideas.
@@ -410,6 +432,10 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 ## Suggested Next Conversation Prompts
 
 Use one of these as the first prompt in a new conversation:
+
+```text
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Implement ML-P0: a leakage-safe supervised ML feature/label proof wrapper using adjusted daily OHLCV, the AMD,NVDA,TSLA,MSTR,AVGO live basket, risk-aware context, 2020 and 2022 assessment windows, and the h3 next-open label. Do not fit a model yet and do not change live bridge behavior. Produce a run spec, feature schema/taxonomy, feature-label sample, label distributions, leakage audit, compact report, validate, commit, and push.
+```
 
 ```text
 Please continue on branch codex/Gen5.1-context-universe-factorial-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_1_SELECTION_POLICY_HYPOTHESIS.md first. Inspect the completed two-lane selection-policy robustness packet under runs/research_workbench/selection_policy_screens/selpol_robust_20260702/. Do not change live bridge behavior. Recommend the next declared research slice now that A_live favors direct as the bridge default while B_hist keeps pooled-family alive as a first-class research factor candidate.
