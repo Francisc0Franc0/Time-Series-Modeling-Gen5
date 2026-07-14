@@ -407,6 +407,7 @@ write_p2_report <- function(path, run_spec, summary, ranking, leakage_audit, art
   invisible(path)
 }
 
+if (!identical(Sys.getenv("GEN5_GEN54_ML_P2_SOURCE_ONLY", unset = "false"), "true")) {
 g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 feed <- env_or("GEN5_GEN54_ML_P2_FEED", as.character(cfg$feed))
@@ -431,6 +432,7 @@ as_of_timestamp <- env_or("GEN5_GEN54_ML_P2_AS_OF", "2022-12-31 17:30:00")
 warmup_days <- as.integer(env_or("GEN5_GEN54_ML_P2_WARMUP_DAYS", "420"))
 xgb_nrounds <- as.integer(env_or("GEN5_GEN54_ML_P2_XGB_NROUNDS", "80"))
 xgb_nthread <- as.integer(env_or("GEN5_GEN54_ML_P2_XGB_NTHREAD", "2"))
+xgb_seed <- as.integer(env_or("GEN5_GEN54_ML_P2_XGB_SEED", "5402"))
 xgb_params <- list(
   objective = "binary:logistic",
   eval_metric = "logloss",
@@ -438,7 +440,8 @@ xgb_params <- list(
   eta = as.numeric(env_or("GEN5_GEN54_ML_P2_XGB_ETA", "0.05")),
   subsample = as.numeric(env_or("GEN5_GEN54_ML_P2_XGB_SUBSAMPLE", "0.80")),
   colsample_bytree = as.numeric(env_or("GEN5_GEN54_ML_P2_XGB_COLSAMPLE", "0.80")),
-  min_child_weight = as.numeric(env_or("GEN5_GEN54_ML_P2_XGB_MIN_CHILD_WEIGHT", "10"))
+  min_child_weight = as.numeric(env_or("GEN5_GEN54_ML_P2_XGB_MIN_CHILD_WEIGHT", "10")),
+  seed = xgb_seed
 )
 
 folds <- build_folds(years)
@@ -556,6 +559,7 @@ run_spec <- data.frame(
   xgb_subsample = xgb_params$subsample,
   xgb_colsample_bytree = xgb_params$colsample_bytree,
   xgb_min_child_weight = xgb_params$min_child_weight,
+  xgb_seed = xgb_seed,
   prediction_rows = nrow(predictions),
   selected_feature_count = length(usable_features),
   output_dir = normalizePath(output_dir, winslash = "/", mustWork = FALSE),
@@ -608,3 +612,4 @@ message("Gen5.4 ML-P2 XGBoost challenger complete.")
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))
 message("Report: ", normalizePath(paths$report_md, winslash = "/", mustWork = FALSE))
 message("TRAIN-grid summary: ", summary_line)
+}

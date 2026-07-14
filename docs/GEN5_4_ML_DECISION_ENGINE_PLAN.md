@@ -323,11 +323,32 @@ Readout:
 - The only decision-engine change was model class: `glm_logit_h1_train_grid` versus a conservative predeclared `xgboost_h1_fixed_params`.
 - XGBoost parameters were fixed before OOS replay: `nrounds=80`, `max_depth=3`, `eta=0.05`, `subsample=0.80`, `colsample_bytree=0.80`, and `min_child_weight=10`.
 - All ML-P2 guardrail checks passed: TRAIN-only fitting, predeclared XGBoost parameters, TRAIN-only policy selection, OOS-only replay, label-horizon boundary filtering, and no live bridge change.
-- Under the TRAIN forward-return grid, XGBoost improved `2020Y` active return to `79.1%` versus GLM `54.0%`, with lower mean exposure (`36.9%` versus `43.0%`). Basket hold was still much higher at `225.2%`.
-- In `2022Y`, XGBoost improved defense to `-41.4%` versus GLM `-49.7%`; basket hold was `-53.3%`.
-- The ranking audit remained mixed. XGBoost's `2020Y` AUC was `0.511` versus GLM `0.520`, and `2022Y` AUC was `0.484`. Replay improvement may come from threshold-crossing timing, drawdown behavior, or localized pockets rather than cleaner global probability ranking.
+- Under the TRAIN forward-return grid, seeded XGBoost improved `2020Y` active return to `108.9%` versus GLM `54.0%`, with similar mean exposure (`42.3%` versus `43.0%`). Basket hold was still much higher at `225.2%`.
+- In `2022Y`, seeded XGBoost improved defense to `-37.8%` versus GLM `-49.7%`; basket hold was `-53.3%`.
+- The ranking audit remained mixed. XGBoost's `2020Y` AUC was `0.510` versus GLM `0.520`, and `2022Y` AUC was `0.478`. Replay improvement may come from threshold-crossing timing, drawdown behavior, or localized pockets rather than cleaner global probability ranking.
 - XGBoost feature importance highlighted OHLCV structure and context features, including `intraday_oc_ret`, `gap_open_pct`, `ret1`, `atr_compression_20`, `lower_wick_pct`, `ret_3`, `efficiency_ratio_20`, `volume_z20`, and market-relative returns. Treat this as a diagnostic, not causal evidence.
 - Interpretation: ML-P2 earned one cautious follow-up because replay improved in both tested windows without OOS parameter tuning. It did not earn a broad XGBoost search. The next slice should be a small TRAIN-only parameter diagnostic, keeping labels, features, replay, thresholds, benchmarks, and probability tapes fixed.
+
+## ML-P2b Packet
+
+The first ML-P2b packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p2b_20260713p2b/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper kept the ML-P2 surface fixed: `h1` label, current OHLCV/context feature table, annual continuous replay, TRAIN-only threshold-policy audit, equal-weight basket benchmark, ranking diagnostics, and probability tapes.
+- It compared the fixed ML-P2 XGBoost control against a small TRAIN-only grid over `max_depth = 2,3,4`, `nrounds = 60,100`, and `min_child_weight = 5,10,20`.
+- Parameters were selected only from TRAIN proxy evidence inside each fold; OOS rows were used only for frozen-model prediction and replay inspection.
+- All guardrail checks passed: TRAIN-only fitting, TRAIN-only parameter selection, TRAIN-only threshold-policy selection, OOS-only replay, label-boundary filtering, and no live bridge change.
+- The TRAIN selector chose the same aggressive candidate in every tested fold: `max_depth=4`, `nrounds=100`, `min_child_weight=5`.
+- Under the TRAIN forward-return grid, fixed seeded XGBoost returned `108.9%` in `2020Y` and `-37.8%` in `2022Y`. The TRAIN-selected parameter grid returned `78.1%` in `2020Y` and `-41.7%` in `2022Y`.
+- Ranking quality did not improve enough to justify the extra tuning surface: selected-grid `2020Y` AUC was `0.489` versus fixed XGBoost `0.510`; selected-grid `2022Y` AUC was `0.481`, but top-minus-bottom forward-return separation remained negative.
+- Interpretation: ML-P2b answers the narrow tuning question. The current bottleneck is unlikely to be that fixed XGBoost was too constrained. The next high-signal slice should target feature/label design or a specific calibration question, not broader model-knob search.
 
 ## STOP Decisions
 

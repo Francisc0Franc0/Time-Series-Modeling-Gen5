@@ -28,6 +28,10 @@ const p2RunRoot =
   process.env.GEN5_GEN54_ML_P2_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p2_20260713p2");
 const p2VisualRoot = path.join(p2RunRoot, "visuals");
+const p2bRunRoot =
+  process.env.GEN5_GEN54_ML_P2B_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p2b_20260713p2b");
+const p2bVisualRoot = path.join(p2bRunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -179,6 +183,11 @@ async function main() {
   let p2Ranking = [];
   let p2Leakage = [];
   let p2Importance = [];
+  let p2bAvailable = false;
+  let p2bSummary = [];
+  let p2bRanking = [];
+  let p2bLeakage = [];
+  let p2bSelectedParams = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -215,6 +224,16 @@ async function main() {
     p2Available = true;
   } catch {
     p2Available = false;
+  }
+  try {
+    await fs.access(path.join(p2bRunRoot, "ml_p2b_summary.csv"));
+    p2bSummary = await readCsv(path.join(p2bRunRoot, "ml_p2b_summary.csv"));
+    p2bRanking = await readCsv(path.join(p2bRunRoot, "ml_p2b_ranking_audit.csv"));
+    p2bLeakage = await readCsv(path.join(p2bRunRoot, "ml_p2b_leakage_audit.csv"));
+    p2bSelectedParams = await readCsv(path.join(p2bRunRoot, "ml_p2b_selected_params.csv"));
+    p2bAvailable = true;
+  } catch {
+    p2bAvailable = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -656,6 +675,103 @@ async function main() {
       addBullet(slide, "Keep h1, features, annual replay, thresholds, benchmark, and probability tapes fixed.", 128, 444, 780);
       addBullet(slide, `Watch 2022: XGBoost AUC was ${Number(xgbRank2022.auc).toFixed(3)}, so defense may still be fragile.`, 128, 514, 780);
       addBullet(slide, "If small tuning does not improve ranking or timing, return to feature design instead of widening model knobs.", 128, 584, 780);
+    }
+  }
+
+  if (p2bAvailable) {
+    const fixed2020 = p2bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const fixed2022 = p2bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const selected2020 = p2bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2020Y" && r.model_id === "xgboost_h1_train_param_grid") || {};
+    const selected2022 = p2bSummary.find((r) => r.policy_id === "train_forward_return_grid" && r.window_id === "2022Y" && r.model_id === "xgboost_h1_train_param_grid") || {};
+    const fixedRank2020 = p2bRanking.find((r) => r.window_id === "2020Y" && r.model_id === "xgboost_h1_fixed_params") || {};
+    const selectedRank2020 = p2bRanking.find((r) => r.window_id === "2020Y" && r.model_id === "xgboost_h1_train_param_grid") || {};
+    const selectedRank2022 = p2bRanking.find((r) => r.window_id === "2022Y" && r.model_id === "xgboost_h1_train_param_grid") || {};
+    const p2bAllPass = p2bLeakage.every((r) => r.status === "PASS");
+    const selectedCandidates = [...new Set(p2bSelectedParams.map((r) => r.candidate_id))].sort();
+    const selectedCandidateLabel = selectedCandidates.map((value) => value.replace(/^d(\d+)_r(\d+)_mcw(\d+)$/, "d$1 r$2")).join(", ");
+    const selectedDepths = [...new Set(p2bSelectedParams.map((r) => r.max_depth))].sort().join(", ");
+    const selectedRounds = [...new Set(p2bSelectedParams.map((r) => r.nrounds))].sort().join(", ");
+    const selectedMinChild = [...new Set(p2bSelectedParams.map((r) => r.min_child_weight))].sort().join(", ");
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we ask whether\nXGBoost was undertuned", 72, 160, 820, 120, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P2b keeps the ML-P2 surface fixed and changes only XGBoost depth, rounds, and minimum child weight. Parameters are selected inside each TRAIN fold before OOS replay.", 76, 364, 790, 116, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P2b", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Small TRAIN grid", 952, 322, 290, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The TRAIN grid wanted the most flexible candidate");
+      addMetric(slide, "Guardrails", p2bAllPass ? "All PASS" : "Review", "Parameter and threshold choices stay inside TRAIN.", 74, 226, 245);
+      addMetric(slide, "Selected candidate", selectedCandidateLabel || "NA", "Unique parameter candidate selected across folds.", 358, 226, 245);
+      addMetric(slide, "Depth / rounds", `${selectedDepths} / ${selectedRounds}`, "Depth and boosting rounds selected by TRAIN proxy evidence.", 642, 226, 245);
+      addMetric(slide, "Min child", selectedMinChild || "NA", "Minimum child weight selected by TRAIN proxy evidence.", 926, 226, 245);
+      addText(slide, "Every tested fold selected the same aggressive candidate: depth 4, 100 rounds, min_child_weight 5. That is a useful diagnostic, but it has to earn its keep OOS.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The selected grid did not improve OOS replay");
+      addMetric(slide, "2020 fixed XGB", pct(fixed2020.active_return), `Basket hold was ${pct(fixed2020.benchmark_return)}.`, 74, 226, 245);
+      addMetric(slide, "2020 selected", pct(selected2020.active_return), `Fixed XGB was ${pct(fixed2020.active_return)}.`, 358, 226, 245);
+      addMetric(slide, "2022 fixed XGB", pct(fixed2022.active_return), `Basket hold was ${pct(fixed2022.benchmark_return)}.`, 642, 226, 245);
+      addMetric(slide, "2022 selected", pct(selected2022.active_return), `Fixed XGB was ${pct(fixed2022.active_return)}.`, 926, 226, 245);
+      addText(slide, "The selected grid was worse than the fixed XGBoost control in both windows under the same TRAIN forward-return policy. This argues against widening model knobs before improving features or labels.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The equity curves show tuning did not solve the core tradeoff");
+      await addImage(slide, path.join(p2bVisualRoot, "ml_p2b_param_equity_vs_benchmark.png"), 70, 210, 760, 414, "ML-P2b parameter equity comparison");
+      addText(slide, "What changed", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `The TRAIN-selected candidate returned ${pct(selected2020.active_return)} in 2020 versus fixed XGB ${pct(fixed2020.active_return)}, and ${pct(selected2022.active_return)} in 2022 versus fixed XGB ${pct(fixed2022.active_return)}. It did not close the bull-window gap.`, 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Ranking quality got weaker, not stronger");
+      await addImage(slide, path.join(p2bVisualRoot, "ml_p2b_param_ranking_audit.png"), 74, 214, 600, 360, "ML-P2b ranking audit");
+      addText(slide, "Readout", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, `The selected-grid 2020 AUC was ${Number(selectedRank2020.auc).toFixed(3)} versus fixed XGB ${Number(fixedRank2020.auc).toFixed(3)}. In 2022, selected-grid AUC was ${Number(selectedRank2022.auc).toFixed(3)} and top-minus-bottom return separation stayed negative.`, 746, 288, 350, 230, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The parameter audit is a stop sign for knob-chasing");
+      await addImage(slide, path.join(p2bVisualRoot, "ml_p2b_param_selection.png"), 74, 214, 600, 360, "ML-P2b selected parameters");
+      addText(slide, "Implication", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, "The TRAIN proxy consistently prefers more flexible trees, but OOS evidence does not reward that flexibility. The next productive slice should target signal definition: richer feature design, alternative labels, or probability calibration with a specific hypothesis.", 746, 288, 350, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes confirm the model is still noisy near the boundary");
+      await addImage(slide, path.join(p2bVisualRoot, "ml_p2b_param_probability_tapes.png"), 70, 210, 760, 414, "ML-P2b probability tapes");
+      addText(slide, "What to inspect", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "The selected grid changes probability texture, but it still spends too much time around the threshold rather than cleanly separating high-participation and risk-off periods.", 890, 284, 284, 240, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next ML gate should return to features and labels");
+      addText(slide, "ML-P2b answered the narrow tuning question: small TRAIN-only XGBoost parameter selection did not improve OOS ranking or replay versus the fixed control.", 92, 224, 980, 96, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Do not broaden XGBoost search yet; that would mostly increase overfit surface area.", 128, 374, 780);
+      addBullet(slide, "Next high-signal slice: feature-family ablation or richer supervised labels, still under annual continuity replay.", 128, 444, 780);
+      addBullet(slide, "Keep XGBoost as the nonlinear model class, but make the input/target question sharper.", 128, 514, 780);
+      addBullet(slide, "Live advice remains walled off; this is research-only evidence.", 128, 584, 780);
     }
   }
 
