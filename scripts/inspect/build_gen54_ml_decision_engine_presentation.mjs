@@ -44,6 +44,10 @@ const p5RunRoot =
   process.env.GEN5_GEN54_ML_P5_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p5_universe_20260714p5universe");
 const p5VisualRoot = path.join(p5RunRoot, "visuals");
+const p6RunRoot =
+  process.env.GEN5_GEN54_ML_P6_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p6_swing_20260714p6swing");
+const p6VisualRoot = path.join(p6RunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -220,6 +224,12 @@ async function main() {
   let p5Ranking = [];
   let p5Leakage = [];
   let p5Taxonomy = [];
+  let p6Available = false;
+  let p6RunSpec = {};
+  let p6Targets = [];
+  let p6TargetSummary = [];
+  let p6Stability = [];
+  let p6Leakage = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -295,6 +305,17 @@ async function main() {
     p5Available = true;
   } catch {
     p5Available = false;
+  }
+  try {
+    await fs.access(path.join(p6RunRoot, "ml_p6_run_spec.csv"));
+    p6RunSpec = (await readCsv(path.join(p6RunRoot, "ml_p6_run_spec.csv")))[0] || {};
+    p6Targets = await readCsv(path.join(p6RunRoot, "ml_p6_target_taxonomy.csv"));
+    p6TargetSummary = await readCsv(path.join(p6RunRoot, "ml_p6_target_summary.csv"));
+    p6Stability = await readCsv(path.join(p6RunRoot, "ml_p6_feature_stability_summary.csv"));
+    p6Leakage = await readCsv(path.join(p6RunRoot, "ml_p6_leakage_audit.csv"));
+    p6Available = true;
+  } catch {
+    p6Available = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -1133,6 +1154,107 @@ async function main() {
       addBullet(slide, "Do not blindly enlarge context universes; broader context helped pockets but did not solve high-beta alpha.", 128, 454, 780);
       addBullet(slide, "Next high-signal slice: benchmark-relative labels or upside-capture objectives, still with h1 relative-strength as the control.", 128, 524, 780);
       addBullet(slide, "Keep all outputs research-only; no live advice or allocation promotion.", 128, 594, 780);
+    }
+  }
+
+  if (p6Available) {
+    const p6AllPass = p6Leakage.every((r) => r.status === "PASS");
+    const p6Oos = p6TargetSummary.filter((r) => r.split === "OOS");
+    const p6Target = (id) => p6Targets.find((r) => r.target_id === id) || {};
+    const p6MeanPositiveRate = (id) => mean(p6Oos.filter((r) => r.target_id === id).map((r) => r.positive_rate));
+    const p6UsableRows = p6TargetSummary
+      .filter((r) => r.target_id === "absolute_return_h10")
+      .map((r) => Number(r.row_count))
+      .reduce((a, b) => a + b, 0)
+      .toLocaleString("en-US");
+    const p6RelativeRate = pct(p6MeanPositiveRate("relative_context_return_h10"));
+    const p6HitRate = pct(p6MeanPositiveRate("hit_up8_before_dn5_h10"));
+    const p6Strongest = [...p6Stability]
+      .filter((r) => r.target_id === "relative_context_return_h10")
+      .sort((a, b) => Math.abs(Number(b.median_spearman)) - Math.abs(Number(a.median_spearman)))[0] || {};
+    const p6FeatureCount = Number(p6RunSpec.selected_feature_count || 0).toLocaleString("en-US");
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we ask what a high-quality bullish swing setup should look like", 72, 154, 850, 126, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P6 pauses model tuning. It starts with the trade shape we actually want: sustained relative upside with manageable interruption risk, observed through a small set of interpretable features.", 76, 364, 790, 132, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EAF7F0", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P6", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Swing feature audit", 952, 322, 290, 48, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The targets describe swing quality, not just tomorrow's direction");
+      addMetric(slide, "Absolute h10", "Return", "Next-open entry through close ten sessions later.", 74, 226, 245);
+      addMetric(slide, "Relative h10", p6RelativeRate, "Asset beats the equal-weight SPY / QQQ / SMH context over the same horizon.", 358, 226, 245);
+      addMetric(slide, "Quality h10", "Upside - MAE", "Forward return penalized by the worst intrahorizon adverse excursion.", 642, 226, 245);
+      addMetric(slide, "Path test", p6HitRate, "Reaches +8% before -5% within ten sessions; diagnostic only.", 926, 226, 245);
+      addText(slide, "The primary candidate is relative h10. It asks whether a position is likely to outperform the market-and-sector backdrop, which is closer to the alpha question than a bare positive-return label.", 112, 430, 980, 104, { fontSize: 27, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Four lenses describe a bullish swing setup without a strategy rule");
+      addMetric(slide, "Leadership", "Lead", "Relative strength, distance from highs, sector / market leadership.", 74, 226, 245);
+      addMetric(slide, "Trend health", "Healthy", "Trend consistency, efficiency, and moving-average posture.", 358, 226, 245);
+      addMetric(slide, "Pullback", "Disciplined", "ATR-scaled depth, volume behavior, recovery, and breakout posture.", 642, 226, 245);
+      addMetric(slide, "Risk-on", "Support", "Breadth, return, volatility, drawdown, and dispersion.", 926, 226, 245);
+      addText(slide, `The audit evaluates ${p6FeatureCount} finite features across AMD, NVDA, TSLA, MSTR, and AVGO, with a broader risk-aware context. It does not choose a model or a live policy.`, 112, 430, 980, 92, { fontSize: 27, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Feature judgment stays inside TRAIN");
+      addMetric(slide, "Windows", "5 annual", "2020Y through 2024Y; each with eight-quarter TRAIN and quarterly authorities.", 74, 226, 245);
+      addMetric(slide, "Fold rows", p6UsableRows, "Usable h10 label rows across TRAIN and OOS fold partitions.", 358, 226, 245);
+      addMetric(slide, "Feature audit", "Fold-local", "Deciles and correlations are recalculated separately inside each authority's TRAIN rows.", 642, 226, 245);
+      addMetric(slide, "Guardrails", p6AllPass ? "All PASS" : "Review", "No horizon spillover, no OOS feature selection, and no live-bridge change.", 926, 226, 245);
+      addText(slide, "OOS rows show whether the target is sufficiently populated and well-formed. They do not decide which feature or target wins. That distinction is what keeps this exploration from quietly becoming a hindsight feature search.", 112, 430, 980, 108, { fontSize: 27, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "No single feature is strong enough to claim victory on its own");
+      await addImage(slide, path.join(p6VisualRoot, "ml_p6_train_feature_stability_heatmap.png"), 64, 204, 780, 438, "ML-P6 TRAIN-only feature stability heatmap");
+      addText(slide, "Readout", 900, 222, 240, 32, { fontSize: 26, bold: true });
+      addText(slide, `${String(p6Strongest.feature || "The strongest feature").replace(/_/g, " ")} has the largest median TRAIN-fold relationship to relative h10 return (${Number(p6Strongest.median_spearman || 0).toFixed(3)}), still small. That is honest evidence: retain a compact set of complementary clues and make the next model test earn its complexity.`, 900, 280, 280, 270, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The decile view reveals shape, not a blanket buy signal");
+      await addImage(slide, path.join(p6VisualRoot, "ml_p6_relative_target_decile_panels.png"), 54, 202, 860, 470, "ML-P6 relative target decile panels");
+      addText(slide, "How to read it", 950, 222, 250, 32, { fontSize: 26, bold: true });
+      addText(slide, "The panels average within-TRAIN deciles across quarterly folds. Semiconductor-relative leadership and fresh-breakout posture slope upward more plausibly than several raw trend measures. Pullback depth is not a simple monotonic buy-the-dip story.", 950, 280, 240, 290, { fontSize: 21, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Price examples keep the features grounded in actual market behavior");
+      await addImage(slide, path.join(p6VisualRoot, "ml_p6_feature_examples.png"), 54, 198, 870, 492, "ML-P6 AMD 2020 and TSLA 2022 feature examples");
+      addText(slide, "Why these two", 956, 222, 250, 32, { fontSize: 26, bold: true });
+      addText(slide, "AMD 2020 shows leadership and breadth interacting during a powerful advance. TSLA 2022 shows why price above moving averages alone is not enough: leadership can remain high while the broader context deteriorates. These are feature diagnostics, not trading signals.", 956, 282, 240, 290, { fontSize: 21, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next slice is a small model test with an explicit alpha objective");
+      addText(slide, "ML-P6 establishes the ingredients and the safety boundary. It does not yet establish that the ingredients form a useful predictive model or beat benchmark.", 92, 224, 980, 90, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep relative h10 as the primary candidate target; retain absolute h10 as the existing control.", 128, 378, 780);
+      addBullet(slide, "Predeclare a compact swing-feature set instead of searching the entire 34-feature surface.", 128, 448, 780);
+      addBullet(slide, "Use the same seeded XGBoost, TRAIN-only policy selection, annual continuity replay, benchmarks, and trade tapes.", 128, 518, 780);
+      addBullet(slide, "Promote nothing unless replay and ranking improve across multiple windows; the live bridge stays frozen.", 128, 588, 780);
     }
   }
 

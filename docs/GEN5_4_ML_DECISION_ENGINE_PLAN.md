@@ -414,6 +414,26 @@ Readout:
 - Feature-set averages did not produce a global winner: `asset_only_control` was least negative on mean excess, while context and relative-strength variants had useful pockets but did not rescue the screen globally.
 - Interpretation: universe architecture matters, but simply adding symbols or context is not sufficient. The next high-signal slice should target the objective itself: benchmark-relative labels, upside-capture labels, or a similarly explicit alpha objective, while keeping `h1 + asset_plus_relative_strength` as the bullish control.
 
+## ML-P6 Swing-Trade Target and Feature Audit
+
+The first ML-P6 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p6_swing_20260714p6swing/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- ML-P6 is a research-only diagnostic packet. It does not fit, optimize, select, or replay a model.
+- It keeps the Gen5.4 data contract intact: adjusted daily OHLCV, after-close feature observation, hypothetical next-open entry, eight-quarter TRAIN, independent quarterly authorities, annual windows, and no live-bridge interaction.
+- The primary target candidate is `relative_context_return_h10`: asset next-open to h10 return minus the equal-weight h10 return of `SPY,QQQ,SMH`. Supporting diagnostics are absolute h10 return, an upside-minus-adverse-excursion quality score, and a `+8% before -5%` path label.
+- The audit covered `AMD,NVDA,TSLA,MSTR,AVGO` against a 17-symbol risk-aware context universe over `2020Y` through `2024Y`, with 34 declared finite features in four families: leadership, trend health, constructive pullback, and risk-on confirmation.
+- All guardrails passed: feature date before next-open execution, label horizon within TRAIN/OOS boundaries, finite label rows, complete declared features, fold-local TRAIN-only feature diagnostics, and live bridge unchanged.
+- Individual univariate relationships are modest, as expected for a noisy swing-trading problem. The strongest median TRAIN-fold relationship to relative h10 return was 21-day semiconductor-relative strength (`swing_rs_smh_21`, Spearman `0.063`). Semiconductor-relative leadership, breakout posture, controlled range compression, and trend consistency are plausible ingredients, not promoted features.
+- The appropriate next slice is a predeclared compact-feature model comparison: absolute `h1` remains the existing bullish-participation control, while relative `h10` is the alpha-objective challenger. Keep seeded XGBoost, TRAIN-only policy selection, annual continuity replay, benchmark comparisons, calibration/ranking diagnostics, and probability/trade tapes fixed.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
