@@ -371,6 +371,26 @@ Readout:
 - Ranking was nuanced. Direct/full context improved `2020Y` AUC modestly (`full_context_compact` `0.530`; `asset_plus_market_context` `0.525`) versus relative strength (`0.510`), but did not improve replay. In `2022Y`, every feature set had AUC below `0.50`, and top-minus-bottom decile forward-return separation remained negative.
 - Interpretation: more context columns are not automatically better. Relative strength remains the strongest replay control, while asset-only is the best defensive control in this first slice. The next feature-engineering slice should test context components one family at a time or investigate calibration/threshold behavior, rather than broadening the feature surface further.
 
+## ML-P4 Packet
+
+The first ML-P4 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p4_horizons_20260713p4horizons/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper reran the validated ML-P3 feature-set surface for `h1`, `h5`, and `h10` labels, then stitched the child packets into one parent report.
+- The replay policy intentionally stayed as daily rescore. This isolates the label-horizon effect before testing a minimum-hold rule.
+- All parent guardrails passed: child guardrails all passed, label horizon was the parent experimental axis, daily rescore policy stayed fixed, and live bridge behavior was untouched.
+- In `2020Y`, the best replay remained `h1 + asset_plus_relative_strength`: `108.9%` active return versus `225.2%` basket hold. `h5 + asset_plus_relative_strength` returned `61.9%`; `h10 + asset_plus_relative_strength` returned `50.8%`.
+- In `2022Y`, `h10 + asset_only_control` defended best in active-return terms at `-28.6%` versus `-48.0%` basket hold. `h1 + asset_only_control` returned `-33.2%` versus `-53.3%` basket hold.
+- Longer horizons improved some 2022 ranking diagnostics: `h10 + asset_plus_relative_strength` AUC was `0.552`, and `h10 + asset_only_control` AUC was `0.551`. But in `2020Y`, `h10` ranking was poor for the asset-only and relative-strength lanes, and longer labels did not improve the main upside-capture replay.
+- Interpretation: longer labels are not simply higher-conviction versions of `h1`; they change the question. They may help risk-off/defensive separation, but under daily rescore replay they do not solve high-beta bull-window participation. Keep `h1 + asset_plus_relative_strength` as the bullish control. If longer labels are revisited, pair `h5`/`h10` with an explicit minimum-hold replay rule or test benchmark-relative forward-return labels.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

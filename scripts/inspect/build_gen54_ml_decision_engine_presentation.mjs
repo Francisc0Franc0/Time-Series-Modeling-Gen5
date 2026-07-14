@@ -36,6 +36,10 @@ const p3RunRoot =
   process.env.GEN5_GEN54_ML_P3_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p3_features_20260713p3features");
 const p3VisualRoot = path.join(p3RunRoot, "visuals");
+const p4RunRoot =
+  process.env.GEN5_GEN54_ML_P4_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p4_horizons_20260713p4horizons");
+const p4VisualRoot = path.join(p4RunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -197,6 +201,10 @@ async function main() {
   let p3Ranking = [];
   let p3Leakage = [];
   let p3Manifest = [];
+  let p4Available = false;
+  let p4Summary = [];
+  let p4Ranking = [];
+  let p4Leakage = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -253,6 +261,15 @@ async function main() {
     p3Available = true;
   } catch {
     p3Available = false;
+  }
+  try {
+    await fs.access(path.join(p4RunRoot, "ml_p4_horizon_summary.csv"));
+    p4Summary = await readCsv(path.join(p4RunRoot, "ml_p4_horizon_summary.csv"));
+    p4Ranking = await readCsv(path.join(p4RunRoot, "ml_p4_horizon_ranking_audit.csv"));
+    p4Leakage = await readCsv(path.join(p4RunRoot, "ml_p4_horizon_leakage_audit.csv"));
+    p4Available = true;
+  } catch {
+    p4Available = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -883,6 +900,95 @@ async function main() {
       addBullet(slide, "Test context features one family at a time: trend, volatility/stress, drawdown, or breadth.", 128, 454, 780);
       addBullet(slide, "Alternatively test a label/policy calibration slice if the operator wants to focus on threshold behavior.", 128, 524, 780);
       addBullet(slide, "Do not promote direct context broadly until it improves replay and ranking together.", 128, 594, 780);
+    }
+  }
+
+  if (p4Available) {
+    const gridRows = p4Summary.filter((r) => r.policy_id === "train_forward_return_grid");
+    const by = (horizon, featureSet, window) =>
+      gridRows.find((r) => r.label_horizon === horizon && r.feature_set_id === featureSet && r.window_id === window) || {};
+    const h1Rel2020 = by("h1", "asset_plus_relative_strength", "2020Y");
+    const h5Rel2020 = by("h5", "asset_plus_relative_strength", "2020Y");
+    const h10Rel2020 = by("h10", "asset_plus_relative_strength", "2020Y");
+    const h10Asset2022 = by("h10", "asset_only_control", "2022Y");
+    const h1Asset2022 = by("h1", "asset_only_control", "2022Y");
+    const h5Market2020 = by("h5", "asset_plus_market_context", "2020Y");
+    const h1Market2020 = by("h1", "asset_plus_market_context", "2020Y");
+    const p4AllPass = p4Leakage.every((r) => r.status === "PASS");
+    const best2020 = gridRows.filter((r) => r.window_id === "2020Y").sort((a, b) => Number(b.active_return) - Number(a.active_return))[0] || {};
+    const best2022 = gridRows.filter((r) => r.window_id === "2022Y").sort((a, b) => Number(b.active_return) - Number(a.active_return))[0] || {};
+    const bestAuc2022 = p4Ranking.filter((r) => r.window_id === "2022Y").sort((a, b) => Number(b.auc) - Number(a.auc))[0] || {};
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we test what future the model is asked to predict", 72, 164, 850, 112, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P4 repeats the ML-P3 feature-set surface across h1, h5, and h10 labels. The replay still rescores daily, so this isolates the label horizon before adding minimum-hold rules.", 76, 364, 790, 116, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P4", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Label horizons", 952, 322, 290, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Longer labels changed the tradeoff, not the answer");
+      addMetric(slide, "Guardrails", p4AllPass ? "All PASS" : "Review", "Child packets and parent stitch passed.", 74, 226, 245);
+      addMetric(slide, "Best 2020", "h1 rel", `${pct(best2020.active_return)} active return.`, 358, 226, 245);
+      addMetric(slide, "Best 2022", "h10 asset", `${pct(best2022.active_return)} active return.`, 642, 226, 245);
+      addMetric(slide, "Best 2022 AUC", Number(bestAuc2022.auc || 0).toFixed(3), `${String(bestAuc2022.label_horizon || "NA")} / ${String(bestAuc2022.feature_set_id || "NA").replace(/asset_plus_|_/g, " ")}.`, 926, 226, 245);
+      addText(slide, "The longer horizons did not create a cleaner high-conviction trader. They mostly lowered 2020 upside capture, while helping some 2022 ranking and defense diagnostics.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The 2020 upside control is still h1 relative strength");
+      addMetric(slide, "h1 relative", pct(h1Rel2020.active_return), `Basket hold was ${pct(h1Rel2020.benchmark_return)}.`, 74, 226, 245);
+      addMetric(slide, "h5 relative", pct(h5Rel2020.active_return), `Exposure was ${pct(h5Rel2020.mean_exposure)}.`, 358, 226, 245);
+      addMetric(slide, "h10 relative", pct(h10Rel2020.active_return), `Exposure was ${pct(h10Rel2020.mean_exposure)}.`, 642, 226, 245);
+      addMetric(slide, "h5 market", pct(h5Market2020.active_return), `h1 market was ${pct(h1Market2020.active_return)}.`, 926, 226, 245);
+      addText(slide, "There is one useful nuance: h5 improved the direct-market-context lane versus its own h1 result. But the best bull-window replay still came from the shorter h1 relative-strength label.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The return matrix shows the horizon tradeoff");
+      await addImage(slide, path.join(p4VisualRoot, "ml_p4_horizon_return_matrix.png"), 70, 210, 760, 414, "ML-P4 horizon return matrix");
+      addText(slide, "Readout", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `For 2020, h1 relative strength returned ${pct(h1Rel2020.active_return)}, while h5/h10 relative strength returned ${pct(h5Rel2020.active_return)} and ${pct(h10Rel2020.active_return)}. For 2022, h10 asset-only defended best at ${pct(h10Asset2022.active_return)}, versus h1 asset-only at ${pct(h1Asset2022.active_return)}.`, 890, 284, 284, 270, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Ranking hints that longer labels may help risk-off separation");
+      await addImage(slide, path.join(p4VisualRoot, "ml_p4_horizon_ranking_audit.png"), 74, 214, 600, 360, "ML-P4 ranking audit");
+      addText(slide, "What changed", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, "h5 and h10 improved several 2022 AUC and top-minus-bottom diagnostics, especially asset-only and relative-strength variants. But in 2020, longer labels often ranked the rally poorly.", 746, 288, 350, 230, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes show why horizon alone is not enough");
+      await addImage(slide, path.join(p4VisualRoot, "ml_p4_horizon_probability_tapes.png"), 70, 210, 760, 414, "ML-P4 horizon probability tapes");
+      addText(slide, "Next gate", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "Longer labels create smoother probability texture in places, but they do not automatically align entries with the major 2020 upside. If we pursue h5/h10, the next test should add minimum-hold or benchmark-relative labels deliberately.", 890, 284, 284, 270, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Keep h1 as the upside control and test one sharper idea next");
+      addText(slide, "ML-P4 pushes back on the simple conviction hypothesis. Longer labels can help defense diagnostics, but they do not solve high-beta upside capture under daily rescore replay.", 92, 224, 980, 96, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep h1 plus relative strength as the control lane for bullish participation.", 128, 374, 780);
+      addBullet(slide, "If testing longer labels again, pair h5/h10 with a minimum-hold replay rule rather than daily churn.", 128, 444, 780);
+      addBullet(slide, "A strong alternative is benchmark-relative h5: predict asset return over market/context, not just positive absolute return.", 128, 514, 780);
+      addBullet(slide, "Do not promote h5/h10 solely from this slice.", 128, 584, 780);
     }
   }
 
