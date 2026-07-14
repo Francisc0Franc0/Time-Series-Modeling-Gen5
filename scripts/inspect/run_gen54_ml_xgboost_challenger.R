@@ -104,13 +104,22 @@ fit_xgboost_fold_with_train_predictions <- function(feature_fold_table, fold_id,
     g5_stop(paste0("ML-P2 fold ", fold_id, " has insufficient TRAIN/OOS rows after feature filtering."))
   }
 
-  train_model <- data.frame(symbol = factor(train$symbol, levels = sort(unique(feature_fold_table$symbol))), stringsAsFactors = FALSE)
-  oos_model <- data.frame(symbol = factor(oos$symbol, levels = levels(train_model$symbol)), stringsAsFactors = FALSE)
+  symbol_levels <- sort(unique(feature_fold_table$symbol))
+  train_model <- data.frame(.row_id = seq_len(nrow(train)), stringsAsFactors = FALSE)
+  oos_model <- data.frame(.row_id = seq_len(nrow(oos)), stringsAsFactors = FALSE)
+  if (length(symbol_levels) > 1L) {
+    train_model$symbol <- factor(train$symbol, levels = symbol_levels)
+    oos_model$symbol <- factor(oos$symbol, levels = symbol_levels)
+  }
   for (feature in features) {
     train_model[[feature]] <- as.numeric(train[[feature]])
     oos_model[[feature]] <- as.numeric(oos[[feature]])
   }
-  formula <- stats::as.formula(paste("~ symbol +", paste(features, collapse = " + "), "- 1"))
+  formula <- if (length(symbol_levels) > 1L) {
+    stats::as.formula(paste("~ symbol +", paste(features, collapse = " + "), "- 1"))
+  } else {
+    stats::as.formula(paste("~", paste(features, collapse = " + "), "- 1"))
+  }
   x_train <- stats::model.matrix(formula, data = train_model)
   x_oos <- stats::model.matrix(formula, data = oos_model)
   y_train <- as.integer(train$label_up_h3)

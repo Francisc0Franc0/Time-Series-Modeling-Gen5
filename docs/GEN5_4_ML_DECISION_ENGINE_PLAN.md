@@ -391,6 +391,29 @@ Readout:
 - Longer horizons improved some 2022 ranking diagnostics: `h10 + asset_plus_relative_strength` AUC was `0.552`, and `h10 + asset_only_control` AUC was `0.551`. But in `2020Y`, `h10` ranking was poor for the asset-only and relative-strength lanes, and longer labels did not improve the main upside-capture replay.
 - Interpretation: longer labels are not simply higher-conviction versions of `h1`; they change the question. They may help risk-off/defensive separation, but under daily rescore replay they do not solve high-beta bull-window participation. Keep `h1 + asset_plus_relative_strength` as the bullish control. If longer labels are revisited, pair `h5`/`h10` with an explicit minimum-hold replay rule or test benchmark-relative forward-return labels.
 
+## ML-P5 Packet
+
+The first ML-P5 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p5_universe_20260714p5universe/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper held the seeded XGBoost model class, `h1` label, daily-rescore replay, TRAIN-only threshold-policy selection, annual stitched windows, equal-weight basket benchmarks, ranking diagnostics, and probability tapes fixed.
+- The experimental axis was universe architecture: live basket archetype, research pool size, and context breadth. Conditions included high-beta, market/ETF, defensive-quality, SPY-only, broad-pool-transfer, and broad-pool-traded variants.
+- A smoke-test fix made the shared XGBoost helper support single-symbol research/replay matrices, so `spy_single` conditions can run without a dummy symbol factor.
+- The wrapper also added declared-context aggregate features for broader context universes, so `core_risk_context` and `broad_diverse_context` are represented by more than the fixed SPY/QQQ/SMH proxy columns.
+- All leakage checks passed: TRAIN-only fitting, TRAIN-only threshold-policy selection, OOS replay restricted to the declared live basket, label-horizon boundary filtering, universe-axis isolation, and no live bridge change.
+- Across the primary TRAIN forward-return policy, the system still looked more like a risk-off timing filter than a high-beta alpha engine. Mean excess return was positive in `2022Y` (`+4.8 pp`) but negative in `2020Y` (`-40.5 pp`), `2021Y` (`-10.0 pp`), `2023Y` (`-32.5 pp`), and `2024Y` (`-19.7 pp`).
+- Broad-pool transfer was the most interesting universe mode, especially for 2022 defense and SPY/ETF timing pockets. The strongest row was `2022Y high_beta_5__broad_pool_transfer asset_plus_relative_strength`, which lost less than the high-beta basket (`-27.1%` active versus `-58.7%` benchmark; `+31.6 pp` excess).
+- Trading the broad pool itself did not solve the alpha problem. `broad_pool_traded__broad_pool_traded` averaged `-15.3 pp` excess return across windows and feature sets.
+- Feature-set averages did not produce a global winner: `asset_only_control` was least negative on mean excess, while context and relative-strength variants had useful pockets but did not rescue the screen globally.
+- Interpretation: universe architecture matters, but simply adding symbols or context is not sufficient. The next high-signal slice should target the objective itself: benchmark-relative labels, upside-capture labels, or a similarly explicit alpha objective, while keeping `h1 + asset_plus_relative_strength` as the bullish control.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

@@ -40,6 +40,10 @@ const p4RunRoot =
   process.env.GEN5_GEN54_ML_P4_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p4_horizons_20260713p4horizons");
 const p4VisualRoot = path.join(p4RunRoot, "visuals");
+const p5RunRoot =
+  process.env.GEN5_GEN54_ML_P5_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p5_universe_20260714p5universe");
+const p5VisualRoot = path.join(p5RunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -161,6 +165,12 @@ function pct(x, digits = 1) {
   return `${(100 * n).toFixed(digits)}%`;
 }
 
+function pp(x, digits = 1) {
+  const n = Number(x);
+  if (!Number.isFinite(n)) return "NA";
+  return `${(100 * n).toFixed(digits)} pp`;
+}
+
 function mean(values) {
   const nums = values.map(Number).filter(Number.isFinite);
   if (!nums.length) return NaN;
@@ -205,6 +215,11 @@ async function main() {
   let p4Summary = [];
   let p4Ranking = [];
   let p4Leakage = [];
+  let p5Available = false;
+  let p5Summary = [];
+  let p5Ranking = [];
+  let p5Leakage = [];
+  let p5Taxonomy = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -270,6 +285,16 @@ async function main() {
     p4Available = true;
   } catch {
     p4Available = false;
+  }
+  try {
+    await fs.access(path.join(p5RunRoot, "ml_p5_universe_summary.csv"));
+    p5Summary = await readCsv(path.join(p5RunRoot, "ml_p5_universe_summary.csv"));
+    p5Ranking = await readCsv(path.join(p5RunRoot, "ml_p5_universe_ranking_audit.csv"));
+    p5Leakage = await readCsv(path.join(p5RunRoot, "ml_p5_universe_leakage_audit.csv"));
+    p5Taxonomy = await readCsv(path.join(p5RunRoot, "ml_p5_universe_condition_taxonomy.csv"));
+    p5Available = true;
+  } catch {
+    p5Available = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -989,6 +1014,125 @@ async function main() {
       addBullet(slide, "If testing longer labels again, pair h5/h10 with a minimum-hold replay rule rather than daily churn.", 128, 444, 780);
       addBullet(slide, "A strong alternative is benchmark-relative h5: predict asset return over market/context, not just positive absolute return.", 128, 514, 780);
       addBullet(slide, "Do not promote h5/h10 solely from this slice.", 128, 584, 780);
+    }
+  }
+
+  if (p5Available) {
+    const gridRows = p5Summary.filter((r) => r.policy_id === "train_forward_return_grid");
+    const p5AllPass = p5Leakage.every((r) => r.status === "PASS");
+    const conditions = [...new Set(p5Taxonomy.map((r) => r.condition_id))];
+    const baskets = [...new Set(p5Taxonomy.map((r) => r.basket_id))];
+    const featureSets = [...new Set(gridRows.map((r) => r.feature_set_id))];
+    const windows = [...new Set(gridRows.map((r) => r.window_id))];
+    const byWindow = (window) => gridRows.filter((r) => r.window_id === window);
+    const byBasketMode = (basket, mode) => gridRows.filter((r) => r.basket_id === basket && r.universe_mode === mode);
+    const meanExcess = (rows) => mean(rows.map((r) => r.excess_return));
+    const meanActive = (rows) => mean(rows.map((r) => r.active_return));
+    const meanBenchmark = (rows) => mean(rows.map((r) => r.benchmark_return));
+    const bestRows = [...gridRows].sort((a, b) => Number(b.excess_return) - Number(a.excess_return));
+    const bestOverall = bestRows[0] || {};
+    const highBetaTransfer = byBasketMode("high_beta_5", "broad_pool_transfer");
+    const highBetaSelf = byBasketMode("high_beta_5", "self_context");
+    const marketTransfer = byBasketMode("market_etf_5", "broad_pool_transfer");
+    const spyTransfer = byBasketMode("spy_single", "broad_pool_transfer");
+    const broadPoolTraded = byBasketMode("broad_pool_traded", "broad_pool_traded");
+    const defensiveTransfer = byBasketMode("defensive_quality_5", "broad_pool_transfer");
+    const featureMeans = Object.fromEntries(
+      featureSets.map((id) => [id, meanExcess(gridRows.filter((r) => r.feature_set_id === id))])
+    );
+    const bestFeature = Object.entries(featureMeans).sort((a, b) => b[1] - a[1])[0] || ["NA", NaN];
+    const bestAuc = [...p5Ranking].sort((a, b) => Number(b.auc) - Number(a.auc))[0] || {};
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we test the habitat the ML engine trains and trades in", 72, 154, 850, 126, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P5 keeps seeded XGBoost, h1 labels, TRAIN-only threshold selection, daily rescore replay, and equal-weight benchmarks fixed. The new question is whether live basket, research pool, and context breadth change the engine's behavior.", 76, 364, 790, 132, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P5", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Universe architecture", 952, 322, 290, 48, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The screen separates basket, context, and research-pool questions");
+      addMetric(slide, "Conditions", String(conditions.length), `${baskets.length} basket archetypes across context modes.`, 74, 226, 245);
+      addMetric(slide, "Windows", String(windows.length), "Annual stitched windows from 2020Y through 2024Y.", 358, 226, 245);
+      addMetric(slide, "Feature sets", String(featureSets.length), "Asset-only, direct context, relative strength, and full compact.", 642, 226, 245);
+      addMetric(slide, "Guardrails", p5AllPass ? "All PASS" : "Review", "Research-only packet; no live bridge change.", 926, 226, 245);
+      addText(slide, "The important design point: broad-pool transfer trains on a larger labeled research pool but replays only the declared target live basket. Broad-pool traded makes the large research pool itself the traded basket.", 112, 430, 980, 100, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The engine is still better at defense than upside capture");
+      addMetric(slide, "2020 mean alpha", pp(meanExcess(byWindow("2020Y"))), `Mean active ${pct(meanActive(byWindow("2020Y")))} versus benchmark ${pct(meanBenchmark(byWindow("2020Y")))}.`, 74, 226, 245);
+      addMetric(slide, "2022 mean alpha", pp(meanExcess(byWindow("2022Y"))), `Mean active ${pct(meanActive(byWindow("2022Y")))} versus benchmark ${pct(meanBenchmark(byWindow("2022Y")))}.`, 358, 226, 245);
+      addMetric(slide, "Best row", pp(bestOverall.excess_return), `${bestOverall.window_id || "NA"} / ${String(bestOverall.condition_id || "NA").replace(/_/g, " ")}.`, 642, 226, 245);
+      addMetric(slide, "Best feature mean", pp(bestFeature[1]), String(bestFeature[0]).replace(/_/g, " "), 926, 226, 245);
+      addText(slide, "The screen did not discover a universal alpha engine. It mostly rediscovered a familiar profile: useful risk-off behavior in 2022, but underparticipation in high-beta bull windows.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The alpha heatmap shows the habitat problem at a glance");
+      await addImage(slide, path.join(p5VisualRoot, "ml_p5_context_mode_alpha_heatmap.png"), 70, 210, 760, 414, "ML-P5 context and basket alpha heatmap");
+      addText(slide, "Readout", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `High-beta rows remain the weakest on mean alpha. Defensive, ETF, and SPY transfer rows are closer to neutral. Broad-pool transfer is interesting, but it is not a cure-all: high-beta transfer averaged ${pp(meanExcess(highBetaTransfer))}.`, 890, 284, 284, 270, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Broad-pool transfer helps in pockets, especially defense");
+      addMetric(slide, "High-beta transfer", pp(meanExcess(highBetaTransfer)), `Self-context averaged ${pp(meanExcess(highBetaSelf))}.`, 74, 226, 245);
+      addMetric(slide, "ETF transfer", pp(meanExcess(marketTransfer)), "Best broad-transfer pockets appeared in 2020 and 2022.", 358, 226, 245);
+      addMetric(slide, "SPY transfer", pp(meanExcess(spyTransfer)), "Single-symbol transfer was surprisingly competitive.", 642, 226, 245);
+      addMetric(slide, "Broad traded", pp(meanExcess(broadPoolTraded)), "Trading the whole broad pool did not solve alpha.", 926, 226, 245);
+      addText(slide, `The clearest positive row was ${String(bestOverall.condition_id || "NA").replace(/_/g, " ")} / ${String(bestOverall.feature_set_id || "NA").replace(/_/g, " ")} in ${bestOverall.window_id || "NA"} with ${pp(bestOverall.excess_return)} alpha. That is useful evidence, but it is mostly defensive selectivity rather than proof of broad upside capture.`, 112, 430, 980, 104, { fontSize: 27, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The window matrix explains why the averages are sobering");
+      await addImage(slide, path.join(p5VisualRoot, "ml_p5_window_alpha_matrix.png"), 70, 210, 760, 414, "ML-P5 best feature-set alpha by window");
+      addText(slide, "Pattern", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "Most rows improve during the 2022 drawdown and lag during 2020, 2023, and 2024. That is the signature of a timing/risk filter, not yet a high-beta alpha capture engine.", 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Ranking diagnostics are mixed, so replay gains need visual audit");
+      await addImage(slide, path.join(p5VisualRoot, "ml_p5_ranking_audit.png"), 74, 214, 600, 360, "ML-P5 ranking audit");
+      addText(slide, "Readout", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, `The best mean AUC row reached ${Number(bestAuc.auc || 0).toFixed(3)}, but top-minus-bottom forward-return separation was inconsistent. Replay can improve through threshold timing even when global ranking is weak, so tapes remain mandatory.`, 746, 288, 350, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes show what the architecture changed");
+      await addImage(slide, path.join(p5VisualRoot, "ml_p5_probability_tapes.png"), 70, 210, 760, 414, "ML-P5 probability tapes");
+      addText(slide, "Human audit", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "The tape examples show probabilities moving, but not yet cleanly enough to own sustained high-beta uptrends. The next narrow slice should target the objective, not simply add more symbols.", 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next ML question should be about alpha objective, not size");
+      addText(slide, "ML-P5 says universe architecture matters, but broadening context or research symbols is not sufficient by itself. The current engine looks most useful as a risk filter and weakest as a bull-market participation engine.", 92, 224, 980, 106, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep broad-pool transfer as a contender for SPY/ETF timing and drawdown defense.", 128, 384, 780);
+      addBullet(slide, "Do not blindly enlarge context universes; broader context helped pockets but did not solve high-beta alpha.", 128, 454, 780);
+      addBullet(slide, "Next high-signal slice: benchmark-relative labels or upside-capture objectives, still with h1 relative-strength as the control.", 128, 524, 780);
+      addBullet(slide, "Keep all outputs research-only; no live advice or allocation promotion.", 128, 594, 780);
     }
   }
 
