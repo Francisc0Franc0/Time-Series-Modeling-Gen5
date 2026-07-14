@@ -350,6 +350,27 @@ Readout:
 - Ranking quality did not improve enough to justify the extra tuning surface: selected-grid `2020Y` AUC was `0.489` versus fixed XGBoost `0.510`; selected-grid `2022Y` AUC was `0.481`, but top-minus-bottom forward-return separation remained negative.
 - Interpretation: ML-P2b answers the narrow tuning question. The current bottleneck is unlikely to be that fixed XGBoost was too constrained. The next high-signal slice should target feature/label design or a specific calibration question, not broader model-knob search.
 
+## ML-P3 Packet
+
+The first ML-P3 packet is:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p3_features_20260713p3features/`
+
+The companion deck remains:
+
+`presentations/gen5_4_ml_decision_engine_incremental_build.pptx`
+
+Readout:
+
+- The wrapper kept the seeded XGBoost model, `h1` label, annual continuous replay, TRAIN-only threshold-policy audit, equal-weight basket benchmark, ranking diagnostics, and probability tapes fixed.
+- The experimental axis was feature-set membership: `asset_only_control`, `asset_plus_market_context`, `asset_plus_relative_strength`, and `full_context_compact`.
+- `asset_only_control` used `37` asset-tape features. `asset_plus_market_context` used `73` features by adding compact SPY/QQQ/SMH context trend, volatility, drawdown, range-location, and breadth features. `asset_plus_relative_strength` used `40` features by adding the existing asset-minus-context relative-return features. `full_context_compact` used `76` features by combining direct context and relative strength.
+- All guardrail checks passed: TRAIN-only fitting, fixed seeded XGBoost parameters, TRAIN-only threshold-policy selection, OOS-only replay, label-boundary filtering, fixed feature-set experimental axis, and no live bridge change.
+- Under the TRAIN forward-return grid, `asset_plus_relative_strength` led `2020Y` replay at `108.9%` versus `225.2%` basket hold. `asset_only_control` returned `81.1%`, `asset_plus_market_context` returned `49.3%`, and `full_context_compact` returned `51.9%`.
+- In `2022Y`, `asset_only_control` was the best defender at `-33.2%` versus `-53.3%` basket hold. `asset_plus_relative_strength` returned `-37.8%`, `full_context_compact` returned `-41.6%`, and `asset_plus_market_context` returned `-43.2%`.
+- Ranking was nuanced. Direct/full context improved `2020Y` AUC modestly (`full_context_compact` `0.530`; `asset_plus_market_context` `0.525`) versus relative strength (`0.510`), but did not improve replay. In `2022Y`, every feature set had AUC below `0.50`, and top-minus-bottom decile forward-return separation remained negative.
+- Interpretation: more context columns are not automatically better. Relative strength remains the strongest replay control, while asset-only is the best defensive control in this first slice. The next feature-engineering slice should test context components one family at a time or investigate calibration/threshold behavior, rather than broadening the feature surface further.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

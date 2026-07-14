@@ -441,6 +441,12 @@ ML-P2b completed packet:
 
 Completed readout: the XGBoost parameter diagnostic kept the ML-P2 surface fixed and compared fixed seeded XGBoost against a small TRAIN-only parameter grid over depth `2,3,4`, rounds `60,100`, and `min_child_weight` `5,10,20`. All guardrails passed: TRAIN-only fitting, TRAIN-only parameter selection, TRAIN-only threshold-policy selection, OOS-only replay, label-boundary filtering, and no live bridge change. The TRAIN selector chose the same more flexible candidate in every fold: `max_depth=4`, `nrounds=100`, `min_child_weight=5`. OOS evidence did not reward it: under the TRAIN forward-return grid, fixed XGBoost returned `108.9%` in `2020Y` and `-37.8%` in `2022Y`, while TRAIN-selected parameters returned `78.1%` and `-41.7%`. Ranking did not improve enough to justify extra knob search: selected-grid `2020Y` AUC was `0.489` versus fixed `0.510`; selected-grid `2022Y` AUC was `0.481`, with negative top-minus-bottom forward-return separation. Interpretation: do not broaden XGBoost knobs yet; the next high-signal Gen5.4 slice should target feature/label design or a specific calibration question.
 
+ML-P3 completed packet:
+
+`runs/research_workbench/gen54_ml_decision_engine/g54_ml_p3_features_20260713p3features/`
+
+Completed readout: the feature-set diagnostic kept seeded XGBoost, the `h1` label, annual continuous replay, TRAIN-only threshold-policy audit, equal-weight basket benchmark, ranking diagnostics, and probability tapes fixed. It compared `asset_only_control` (`37` own-tape features), `asset_plus_market_context` (`73` features including direct SPY/QQQ/SMH context), `asset_plus_relative_strength` (`40` features including asset-minus-context relative returns), and `full_context_compact` (`76` combined features). All guardrails passed, including no live bridge change. Under the TRAIN forward-return grid, relative strength led `2020Y` replay at `108.9%` versus `225.2%` basket hold, while asset-only returned `81.1%`; direct context and full compact lagged at `49.3%` and `51.9%`. In `2022Y`, asset-only was the best defender at `-33.2%` versus `-53.3%` basket hold; relative strength returned `-37.8%`, full compact `-41.6%`, and direct context `-43.2%`. Ranking was nuanced: full/direct context had the best `2020Y` AUCs (`0.530` and `0.525`), but this did not translate into better replay; every `2022Y` AUC was below `0.50`. Interpretation: more context columns are not automatically better. Keep relative strength as the replay control, keep asset-only as a defensive control, and test context components one family at a time before broadening the feature surface.
+
 ## What Is Not Implemented Yet
 
 Do not assume any of the following exist as production-ready systems:
@@ -474,7 +480,7 @@ Generated run artifacts live under ignored `runs/` folders and should not be com
 Use one of these as the first prompt in a new conversation:
 
 ```text
-Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Do not change live bridge behavior. Plan the next Gen5.4 slice after ML-P2b: the small TRAIN-only XGBoost parameter diagnostic selected more flexible trees but did not improve OOS replay or ranking. Recommend a narrow feature/label/calibration diagnostic that keeps annual continuous replay, TRAIN-only selection, equal-weight basket benchmark, ranking diagnostics, and probability tapes fixed. Do not implement until the operator approves the slice.
+Please continue on branch codex/Gen5.4-ml-decision-engine-plan. Read AGENTS.md, docs/GEN5_1_CURRENT_HANDOFF.md, and docs/GEN5_4_ML_DECISION_ENGINE_PLAN.md first. Do not change live bridge behavior. Plan the next Gen5.4 slice after ML-P3: the feature-set diagnostic showed relative-strength features led 2020 replay, asset-only defended 2022 best, and broad direct context improved 2020 ranking slightly without improving replay. Recommend a narrow next test that either decomposes context features one family at a time or investigates threshold/calibration behavior while keeping seeded XGBoost, h1 label, annual continuous replay, TRAIN-only selection, equal-weight benchmark, ranking diagnostics, and probability tapes fixed. Do not implement until the operator approves the slice.
 ```
 
 ```text

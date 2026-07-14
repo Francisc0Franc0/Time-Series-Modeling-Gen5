@@ -32,6 +32,10 @@ const p2bRunRoot =
   process.env.GEN5_GEN54_ML_P2B_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p2b_20260713p2b");
 const p2bVisualRoot = path.join(p2bRunRoot, "visuals");
+const p3RunRoot =
+  process.env.GEN5_GEN54_ML_P3_RUN_ROOT ||
+  path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p3_features_20260713p3features");
+const p3VisualRoot = path.join(p3RunRoot, "visuals");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -188,6 +192,11 @@ async function main() {
   let p2bRanking = [];
   let p2bLeakage = [];
   let p2bSelectedParams = [];
+  let p3Available = false;
+  let p3Summary = [];
+  let p3Ranking = [];
+  let p3Leakage = [];
+  let p3Manifest = [];
   try {
     await fs.access(path.join(p1RunRoot, "ml_p1_summary.csv"));
     p1Summary = await readCsv(path.join(p1RunRoot, "ml_p1_summary.csv"));
@@ -234,6 +243,16 @@ async function main() {
     p2bAvailable = true;
   } catch {
     p2bAvailable = false;
+  }
+  try {
+    await fs.access(path.join(p3RunRoot, "ml_p3_feature_set_summary.csv"));
+    p3Summary = await readCsv(path.join(p3RunRoot, "ml_p3_feature_set_summary.csv"));
+    p3Ranking = await readCsv(path.join(p3RunRoot, "ml_p3_feature_set_ranking_audit.csv"));
+    p3Leakage = await readCsv(path.join(p3RunRoot, "ml_p3_feature_set_leakage_audit.csv"));
+    p3Manifest = await readCsv(path.join(p3RunRoot, "ml_p3_feature_set_manifest.csv"));
+    p3Available = true;
+  } catch {
+    p3Available = false;
   }
 
   const oos = labels.filter((r) => r.split === "OOS");
@@ -772,6 +791,98 @@ async function main() {
       addBullet(slide, "Next high-signal slice: feature-family ablation or richer supervised labels, still under annual continuity replay.", 128, 444, 780);
       addBullet(slide, "Keep XGBoost as the nonlinear model class, but make the input/target question sharper.", 128, 514, 780);
       addBullet(slide, "Live advice remains walled off; this is research-only evidence.", 128, 584, 780);
+    }
+  }
+
+  if (p3Available) {
+    const gridRows = p3Summary.filter((r) => r.policy_id === "train_forward_return_grid");
+    const bySetWindow = (featureSet, window) => gridRows.find((r) => r.feature_set_id === featureSet && r.window_id === window) || {};
+    const asset2020 = bySetWindow("asset_only_control", "2020Y");
+    const asset2022 = bySetWindow("asset_only_control", "2022Y");
+    const market2020 = bySetWindow("asset_plus_market_context", "2020Y");
+    const relative2020 = bySetWindow("asset_plus_relative_strength", "2020Y");
+    const relative2022 = bySetWindow("asset_plus_relative_strength", "2022Y");
+    const full2020 = bySetWindow("full_context_compact", "2020Y");
+    const full2022 = bySetWindow("full_context_compact", "2022Y");
+    const p3AllPass = p3Leakage.every((r) => r.status === "PASS");
+    const featureCounts = Object.fromEntries(
+      [...new Set(p3Manifest.map((r) => r.feature_set_id))].map((id) => [id, p3Manifest.filter((r) => r.feature_set_id === id).length])
+    );
+    const rank = (featureSet, window) => p3Ranking.find((r) => r.feature_set_id === featureSet && r.window_id === window) || {};
+    const bestAuc2020 = p3Ranking
+      .filter((r) => r.window_id === "2020Y")
+      .sort((a, b) => Number(b.auc) - Number(a.auc))[0] || {};
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we test what information the model sees", 72, 164, 850, 112, { fontSize: 50, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P3 keeps seeded XGBoost, h1 labels, TRAIN-only threshold selection, annual replay, and benchmark comparison fixed. Only feature-set membership changes.", 76, 364, 790, 112, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#EDEDED", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P3", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Feature sets", 952, 322, 290, 42, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The four feature sets ask a ladder of questions");
+      addMetric(slide, "Guardrails", p3AllPass ? "All PASS" : "Review", "Model, label, replay, and policy are fixed.", 74, 226, 245);
+      addMetric(slide, "Asset only", String(featureCounts.asset_only_control || "NA"), "Own-tape OHLCV features only.", 358, 226, 245);
+      addMetric(slide, "Relative", String(featureCounts.asset_plus_relative_strength || "NA"), "Asset plus context-relative returns.", 642, 226, 245);
+      addMetric(slide, "Full compact", String(featureCounts.full_context_compact || "NA"), "Own tape plus direct context plus relative strength.", 926, 226, 245);
+      addText(slide, "The point is not to add features for their own sake. The point is to ask whether direct market context, relative strength, or compact combined context improves replay and ranking together.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Relative strength still led 2020 replay; asset-only defended 2022 best");
+      addMetric(slide, "2020 relative", pct(relative2020.active_return), `Basket hold was ${pct(relative2020.benchmark_return)}.`, 74, 226, 245);
+      addMetric(slide, "2020 asset-only", pct(asset2020.active_return), `Relative-strength was ${pct(relative2020.active_return)}.`, 358, 226, 245);
+      addMetric(slide, "2022 asset-only", pct(asset2022.active_return), `Basket hold was ${pct(asset2022.benchmark_return)}.`, 642, 226, 245);
+      addMetric(slide, "2022 relative", pct(relative2022.active_return), `Asset-only was ${pct(asset2022.active_return)}.`, 926, 226, 245);
+      addText(slide, "This is an informative split: relative strength captures more upside in the bull window, while asset-only sheds more damage in the bear window. Direct context did not improve replay in this first slice.", 112, 430, 980, 96, { fontSize: 28, color: "#000000", bold: true, alignment: "center" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The equity curves show context can add noise before it adds edge");
+      await addImage(slide, path.join(p3VisualRoot, "ml_p3_feature_set_equity_vs_benchmark.png"), 70, 210, 760, 414, "ML-P3 feature-set equity comparison");
+      addText(slide, "What changed", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, `Direct market context returned ${pct(market2020.active_return)} in 2020, and full compact returned ${pct(full2020.active_return)}. Both lagged relative strength at ${pct(relative2020.active_return)}. In 2022, asset-only was the best defender at ${pct(asset2022.active_return)}.`, 890, 284, 284, 250, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Ranking improved a little in 2020, but replay did not follow");
+      await addImage(slide, path.join(p3VisualRoot, "ml_p3_feature_set_ranking_audit.png"), 74, 214, 600, 360, "ML-P3 ranking audit");
+      addText(slide, "Readout", 746, 224, 300, 34, { fontSize: 26, bold: true });
+      addText(slide, `The best 2020 AUC was ${Number(bestAuc2020.auc).toFixed(3)} from ${String(bestAuc2020.feature_set_id || "NA").replace(/_/g, " ")}. But 2022 AUC stayed below 0.50 for all sets, and top-minus-bottom separation remained negative in 2022.`, 746, 288, 350, 230, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Probability tapes remain the human sanity check");
+      await addImage(slide, path.join(p3VisualRoot, "ml_p3_feature_set_probability_tapes.png"), 70, 210, 760, 414, "ML-P3 feature-set probability tapes");
+      addText(slide, "What to inspect", 890, 224, 270, 32, { fontSize: 26, bold: true });
+      addText(slide, "The tapes show whether a feature set changes entries in market-intuitive places, or merely changes probability texture near the threshold. For now, more context did not automatically mean better trade behavior.", 890, 284, 284, 240, { fontSize: 22, color: "#222222" });
+    }
+
+    {
+      const slide = deck.slides.add();
+      slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The next feature slice should be smaller, not wider");
+      addText(slide, "ML-P3 says the current relative-strength feature surface remains useful, but direct context features are not yet cleanly tradeable. The next feature-engineering step should explain why context helped ranking a little without improving replay.", 92, 224, 980, 106, { fontSize: 30, color: "#000000", bold: true });
+      addBullet(slide, "Keep relative strength as the control feature set for the next ML slice.", 128, 384, 780);
+      addBullet(slide, "Test context features one family at a time: trend, volatility/stress, drawdown, or breadth.", 128, 454, 780);
+      addBullet(slide, "Alternatively test a label/policy calibration slice if the operator wants to focus on threshold behavior.", 128, 524, 780);
+      addBullet(slide, "Do not promote direct context broadly until it improves replay and ranking together.", 128, 594, 780);
     }
   }
 
