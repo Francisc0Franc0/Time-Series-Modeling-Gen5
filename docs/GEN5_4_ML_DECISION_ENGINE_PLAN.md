@@ -434,6 +434,14 @@ Readout:
 - Individual univariate relationships are modest, as expected for a noisy swing-trading problem. The strongest median TRAIN-fold relationship to relative h10 return was 21-day semiconductor-relative strength (`swing_rs_smh_21`, Spearman `0.063`). Semiconductor-relative leadership, breakout posture, controlled range compression, and trend consistency are plausible ingredients, not promoted features.
 - The appropriate next slice is a predeclared compact-feature model comparison: absolute `h1` remains the existing bullish-participation control, while relative `h10` is the alpha-objective challenger. Keep seeded XGBoost, TRAIN-only policy selection, annual continuity replay, benchmark comparisons, calibration/ranking diagnostics, and probability/trade tapes fixed.
 
+## ML-P7 Compact Swing Target x Feature Screen
+
+The merged packet is `runs/research_workbench/gen54_ml_decision_engine/g54_ml_p7_swing_2020_2024_merged/`.
+
+ML-P7 held the seeded XGBoost/replay/policy surface fixed and compared a predeclared 2x2: absolute `h1` versus benchmark-relative `h10`, crossed with the established relative-control feature set versus a 12-feature compact swing set. The result does not support promotion: all four lanes had negative mean OOS excess return. The least negative was `relative_h10 + existing_relative_control` (`-6.2 pp` mean excess); the other lanes ranged from `-6.6 pp` to `-9.4 pp`.
+
+The window pattern matters. Every lane defended the falling 2022 basket, with `relative_h10 + existing_relative_control` best at `+9.1 pp` excess, but all missed substantial upside in 2020, 2021, 2023, and 2024. Ranking was weak: the two absolute-h1 lanes averaged AUC near `0.51`, while relative-h10 existing-control averaged `0.491` with negative top-minus-bottom target separation. This is diagnostic evidence, not allocation evidence. The next action is a qualitative/quantitative audit of exposure, calibration, selection, and representative trade tapes, not another target or model-parameter search.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

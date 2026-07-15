@@ -48,6 +48,8 @@ const p6RunRoot =
   process.env.GEN5_GEN54_ML_P6_RUN_ROOT ||
   path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p6_swing_20260714p6swing");
 const p6VisualRoot = path.join(p6RunRoot, "visuals");
+const p7RunRoot = process.env.GEN5_GEN54_ML_P7_RUN_ROOT || path.join(repoRoot, "runs", "research_workbench", "gen54_ml_decision_engine", "g54_ml_p7_swing_2020_2024_merged");
+const p8VisualRoot = path.join(p7RunRoot, "ml_p8_participation_audit");
 const presentationDir = path.join(repoRoot, "presentations");
 const finalPptx =
   process.env.GEN5_GEN54_ML_PPTX_OUT ||
@@ -1255,6 +1257,61 @@ async function main() {
       addBullet(slide, "Predeclare a compact swing-feature set instead of searching the entire 34-feature surface.", 128, 448, 780);
       addBullet(slide, "Use the same seeded XGBoost, TRAIN-only policy selection, annual continuity replay, benchmarks, and trade tapes.", 128, 518, 780);
       addBullet(slide, "Promote nothing unless replay and ranking improve across multiple windows; the live bridge stays frozen.", 128, 588, 780);
+    }
+  }
+
+  if (await fs.stat(p7RunRoot).then(() => true).catch(() => false)) {
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we test whether the swing ingredients improve actual decisions", 72, 154, 850, 126, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P7 holds seeded XGBoost, TRAIN-only policy selection, next-open replay, and benchmark comparison fixed. It changes only the future target and the predeclared feature set.", 76, 364, 790, 132, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#F2F2F2", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P7", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Target and feature screen", 952, 322, 290, 48, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addTitle(slide, "None of the four lanes cleared the mean-alpha gate");
+      addText(slide, "Mean OOS excess return versus equal-weight basket hold", 80, 198, 760, 32, { fontSize: 24, color: "#555555" });
+      addText(slide, "Absolute h1 + compact swing: -6.6 pp\nAbsolute h1 + existing control: -6.8 pp\nRelative h10 + compact swing: -9.4 pp\nRelative h10 + existing control: -6.2 pp", 142, 276, 680, 260, { fontSize: 30, color: "#111827", bold: true });
+      addText(slide, "This is a clean negative result, not a reason to tune harder. The relative-h10 existing-control lane was least negative overall, but did not establish alpha.", 850, 290, 300, 190, { fontSize: 23, color: "#222222" });
+    }
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addTitle(slide, "The audit question has shifted from model choice to participation");
+      addText(slide, "Every lane defended the falling 2022 basket; relative h10 + existing control led at +9.1 pp excess. Yet every lane lagged during the bullish 2020, 2021, 2023, and 2024 windows.", 80, 210, 1050, 92, { fontSize: 28, color: "#111827", bold: true });
+      addBullet(slide, "Audit whether calibrated probabilities separate favorable from unfavorable days.", 126, 390, 860);
+      addBullet(slide, "Audit exposure and trade tapes for late entry, early exit, and avoidable flat periods.", 126, 466, 860);
+      addBullet(slide, "Audit symbol concentration before changing labels, features, or model knobs again.", 126, 542, 860);
+    }
+  }
+
+  if (await fs.stat(p8VisualRoot).then(() => true).catch(() => false)) {
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addText(slide, "Transition", 72, 52, 500, 44, { fontSize: 32, color: "#555555", bold: true });
+      addText(slide, "Now we audit participation rather than tune the model", 72, 154, 850, 126, { fontSize: 48, color: "#000000", bold: true });
+      addRule(slide, 76, 326, 600);
+      addText(slide, "ML-P8 reuses completed ML-P7 actions. It adds no model fit and no new policy selection. The question is simply whether the model was long on the kinds of days it needed to capture.", 76, 364, 790, 132, { fontSize: 24, color: "#222222" });
+      slide.shapes.add({ geometry: "rect", position: { left: 924, top: 0, width: 356, height: 720 }, fill: "#F2F2F2", line: { style: "solid", fill: "none", width: 0 } });
+      addText(slide, "ML-P8", 982, 246, 230, 46, { fontSize: 42, color: "#000000", bold: true, alignment: "center" });
+      addText(slide, "Participation audit", 952, 322, 290, 48, { fontSize: 25, color: "#222222", alignment: "center" });
+    }
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Exposure barely changes between benchmark-up and down days");
+      await addImage(slide, path.join(p8VisualRoot, "ml_p8_exposure_by_benchmark_regime.png"), 70, 208, 800, 450, "ML-P8 benchmark-regime exposure audit");
+      addText(slide, "Readout", 928, 230, 220, 32, { fontSize: 26, bold: true });
+      addText(slide, "The focal lanes are roughly half-invested regardless of whether the benchmark rises or falls. That is not enough directional separation to capture bull upside while staying reliably defensive.", 920, 286, 260, 260, { fontSize: 22, color: "#222222" });
+    }
+    {
+      const slide = deck.slides.add(); slide.background.fill = "#FFFFFF";
+      addTitle(slide, "Trade tapes show probabilities without decisive regime separation");
+      await addImage(slide, path.join(p8VisualRoot, "ml_p8_probability_trade_tapes.png"), 58, 198, 880, 500, "ML-P8 AMD probability and position tapes");
+      addText(slide, "Interpretation", 958, 226, 250, 32, { fontSize: 26, bold: true });
+      addText(slide, "The blue points are days held long. Across the 2020 and 2022 examples, probability moves but does not consistently convert into a sharply different exposure posture. The next engineering question is how to obtain better ranking, not how to widen the policy grid.", 950, 282, 240, 310, { fontSize: 21, color: "#222222" });
     }
   }
 

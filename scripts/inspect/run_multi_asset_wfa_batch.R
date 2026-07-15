@@ -424,6 +424,9 @@ if (!any(outer(fast_periods, slow_periods, FUN = "<"))) {
 }
 bb_lookback_periods <- g5_batch_parse_int_list_env(Sys.getenv("GEN5_WFA_BATCH_BB_LOOKBACK_PERIODS", unset = "10,20,30"), "GEN5_WFA_BATCH_BB_LOOKBACK_PERIODS")
 bb_sd_multipliers <- g5_batch_parse_num_list_env(Sys.getenv("GEN5_WFA_BATCH_BB_SD_MULTIPLIERS", unset = "1.5,2,2.5"), "GEN5_WFA_BATCH_BB_SD_MULTIPLIERS")
+ema_trend_fast_periods <- g5_batch_parse_int_list_env(Sys.getenv("GEN5_WFA_BATCH_EMA_TREND_FAST_PERIODS", unset = "5,10,15"), "GEN5_WFA_BATCH_EMA_TREND_FAST_PERIODS")
+ema_trend_slow_periods <- g5_batch_parse_int_list_env(Sys.getenv("GEN5_WFA_BATCH_EMA_TREND_SLOW_PERIODS", unset = "25,50,75"), "GEN5_WFA_BATCH_EMA_TREND_SLOW_PERIODS")
+if (!any(outer(ema_trend_fast_periods, ema_trend_slow_periods, FUN = "<"))) g5_stop("EMA trend grid must include at least one fast_period < slow_period pair.")
 candidate_families <- g5_wfa_candidate_families(g5_batch_parse_character_list_env(Sys.getenv("GEN5_WFA_BATCH_CANDIDATE_FAMILIES", unset = "ema_cross,bollinger_touch"), "GEN5_WFA_BATCH_CANDIDATE_FAMILIES"))
 max_hold_sessions <- g5_batch_parse_int_list_env(Sys.getenv("GEN5_WFA_BATCH_MAX_HOLD_SESSIONS", unset = "10,20,40"), "GEN5_WFA_BATCH_MAX_HOLD_SESSIONS")
 stop_loss_pcts <- g5_batch_parse_num_list_env(Sys.getenv("GEN5_WFA_BATCH_STOP_LOSS_PCTS", unset = "0.10"), "GEN5_WFA_BATCH_STOP_LOSS_PCTS")
@@ -433,6 +436,15 @@ refresh <- g5_parse_bool_env(Sys.getenv("GEN5_WFA_BATCH_REFRESH", unset = ""), d
 warmup_days <- max(c(slow_periods, bb_lookback_periods)) * 4L
 query_start_date <- wfa_start_date - warmup_days
 batch_prefix <- g5_multi_asset_wfa_batch_prefix(as_of_timestamp, symbols, wfa_start_date, wfa_end_date, fold_count, candidate_families)
+run_label <- Sys.getenv("GEN5_WFA_BATCH_RUN_LABEL", unset = "")
+output_prefix <- Sys.getenv("GEN5_WFA_BATCH_OUTPUT_PREFIX", unset = "")
+if (nzchar(output_prefix)) {
+  # Long absolute Windows roots plus repeated generated filenames can exceed MAX_PATH.
+  # A caller-supplied short prefix is deterministic and keeps the packet self-contained.
+  batch_prefix <- gsub("[^0-9A-Za-z_]+", "_", output_prefix)
+} else if (nzchar(run_label)) {
+  batch_prefix <- paste0(batch_prefix, "_", gsub("[^0-9A-Za-z_]+", "_", run_label))
+}
 batch_dir <- file.path(repo_root, "runs", "research_workbench", "wfa_pocs", batch_prefix)
 dir.create(batch_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -481,6 +493,8 @@ for (symbol in symbols) {
     slow_periods = slow_periods,
     bb_lookback_periods = bb_lookback_periods,
     bb_sd_multipliers = bb_sd_multipliers,
+    ema_trend_fast_periods = ema_trend_fast_periods,
+    ema_trend_slow_periods = ema_trend_slow_periods,
     candidate_families = candidate_families,
     max_hold_sessions = max_hold_sessions,
     stop_loss_pcts = stop_loss_pcts,
