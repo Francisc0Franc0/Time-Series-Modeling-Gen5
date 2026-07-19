@@ -492,6 +492,35 @@ payload entered research authority. This remains a provider-access problem, not
 a model gate: F0 must not compute outcomes or predictive relationships. See
 `docs/GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md`.
 
+## OHLCV X1b And C0 Readout
+
+While SEC access remained blocked, a bounded OHLCV-only extension tested a
+second ranking surface and the separately required exposure-permission layer.
+It did not fit a model or construct a selection policy.
+
+X1b used rolling 126-session market and leave-one-out group regressions to
+produce one-step residual returns, then tested residual momentum, residual
+reversal, signed trend efficiency, and intraday-minus-overnight structure. Each
+candidate also had to remain below `0.70` median absolute daily rank correlation
+with the earlier group-relative momentum primitive.
+
+Intraday-minus-overnight 20-session structure passed every frozen gate: pooled
+rank IC `0.0056`, positive IC and top-bottom ordering in `12 / 20` folds,
+`+8.2 bp` pooled top-minus-bottom relative h5 outcome, `47.6%` maximum group
+share, and `0.22` redundancy correlation. Signed efficiency was stronger in raw
+IC and ordering but failed the group-concentration cap at `51.2%`.
+
+C0 used fold-local TRAIN medians to test higher breadth, higher group
+participation, lower average correlation, and lower cross-sectional dispersion
+against absolute equal-weight h5 outcomes. All four failed. The first three had
+large negative pooled separation and only `2-3 / 20` positive folds; low
+dispersion remained negative with `9 / 20`.
+
+Overall status is `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`. The ranking surface now
+has two distinct research primitives when group-relative momentum is included,
+but no accepted price-only exposure-permission condition. Do not drop C0 or
+reinterpret ranking quality as permission to hold long risk.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -506,3 +535,6 @@ The operator owns these decisions before promotion beyond POC:
   family should be opened before cross-sectional X2 is reconsidered.
 - how official SEC data should be supplied to the already-opened five-company
   F0 after the current environment returned Akamai HTTP 403.
+- whether exposure permission should use a different target or horizon, or wait
+  for a distinct macro/credit information family, without retuning failed C0
+  conditions on the inspected OOS evidence.

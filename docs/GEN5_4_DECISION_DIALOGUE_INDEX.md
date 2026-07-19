@@ -43,6 +43,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D19` | Stop after X1 because only one economically distinct primitive cleared every predeclared gate | 8-10 | `autonomously run as large a chunk` | Completed X0/X1 STOP; no model fit |
 | `D20` | Admit earnings and filed fundamentals to a provider-feasibility gate, with SEC filings as the recommended authority | — | `point-in-time earnings and fundamental information` | Theory gate passed; research-only SEC F0 opened |
 | `D21` | Stop the live F0 fetch when SEC returned Akamai HTTP 403; do not substitute an unofficial mirror or snapshot vendor | — | `Akamai 403 Forbidden` | External-access BLOCK; no data admitted |
+| `D22` | Open an OHLCV-only X1b ranking audit and separate C0 exposure-permission audit under frozen nonredundancy and TRAIN-only gates | 14-15 | `X1B and C0 test` | Frozen bounded diagnostics; no model or policy |
+| `D23` | Admit intraday-minus-overnight structure as one distinct ranking primitive, but stop the two-stage design because every C0 exposure diagnostic failed | 16-17 | `more sophisticated approach with your guidance` | Completed X1b/C0 STOP; no demonstrator |
 
 ## Compact Decision Records
 
@@ -301,6 +303,34 @@ tasks by the branch name above, the phrase, or the decision date.
   current-snapshot fundamentals vendor. Retry from a compliant network path or
   use operator-controlled official SEC bulk files with retained provenance.
 
+### D22 — OHLCV-only X1b and C0 contracts
+
+- **Question:** Can the expanded panel support more sophisticated OHLCV-only
+  proof-of-concept work without treating indicator proliferation as new data?
+- **Decision:** Test four X1b ranking mechanisms and four date-level C0 exposure
+  conditions separately. Require rolling residual fits to use only prior data,
+  C0 thresholds to use TRAIN only, and X1b candidates to clear a `0.70`
+  redundancy cap versus group-relative momentum.
+- **Why:** Cross-sectional residuals, return-path structure, and opportunity-set
+  conditions ask different questions from ordinary price momentum while
+  remaining auditable with the current data surface.
+- **Boundary:** X1b/C0 compute diagnostic relationships only. No model, top-K
+  policy, replay, allocation, or live behavior is opened.
+
+### D23 — X1b admits one primitive; C0 stops the architecture
+
+- **Question:** Did the OHLCV extension support both a distinct ranking layer
+  and a separately credible exposure-permission layer?
+- **Decision:** No. Intraday-minus-overnight structure passed X1b, but all four
+  C0 conditions failed. Stop before the two-stage rules demonstrator.
+- **Why:** The admitted X1b feature was distinct and cleared every frozen gate.
+  In contrast, breadth, group participation, and low correlation were ordered
+  correctly in only `3`, `2`, and `2` of 20 folds; low dispersion reached only
+  `9 / 20` and remained negative in pooled separation.
+- **Boundary:** Do not drop C0, reverse feature signs, or loosen gates after
+  seeing the result. The price-only ranking evidence remains research evidence,
+  not authority for a long-entry policy.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -311,18 +341,18 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
+- `presentations/gen5_4_cross_sectional_x1b_c0_evidence_update.pptx`
 
 ## Current Stop State
 
 Three bounded market-only branches now support the same stop state. The narrow
 primitive packet rejected required opportunity breadth; the fresh leadership
 and participation confirmation rejected the joint state; and the wider
-cross-sectional X1 audit admitted only one independent primitive. The wider
-panel improved the research design but did not create sufficient information
-for a learner. Earnings and filed fundamentals now pass the theory gate, with
-SEC EDGAR recommended for a five-company feasibility sample. The operator
-opened that research-only F0, but SEC returned Akamai HTTP 403 from this
-execution environment before any payload was accepted. Model fitting, threshold
-search, top-K policy, allocation, and live-advice code remain closed. The
-immediate STOP is external access: retry from a compliant network path or use
-operator-controlled official SEC bulk files without changing the frozen audit.
+cross-sectional X1 audit admitted only one independent primitive. X1b later
+admitted intraday-minus-overnight structure as a second distinct ranking
+primitive, but every C0 exposure-permission diagnostic failed, so the two-stage
+demonstrator remains closed. The SEC fundamentals lane is separately blocked by
+Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
+search, top-K policy, allocation, and live-advice code remain closed. Do not
+reinterpret relative ranking evidence as long-entry permission or rescue C0 by
+reversing failed signs after OOS inspection.

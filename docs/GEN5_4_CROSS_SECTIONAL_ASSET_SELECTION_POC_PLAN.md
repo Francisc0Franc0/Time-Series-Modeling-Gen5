@@ -149,6 +149,46 @@ improved the measurement surface but did not produce two independent OHLCV
 signals. The next theory gate should consider one genuinely different,
 retail-accessible, point-in-time information family before X2 is reopened.
 
+## OHLCV-Only X1b And C0 Extension
+
+The operator subsequently opened two bounded diagnostics while the external
+fundamentals-data path remained blocked:
+
+- X1b tested residual momentum, residual reversal, signed trend efficiency,
+  and intraday-minus-overnight information structure as ranking primitives.
+- C0 tested 60-session breadth, group participation, low average correlation,
+  and low cross-sectional dispersion as exposure-permission conditions.
+
+Residual coefficients use the preceding 126 sessions only. C0 favorable-state
+thresholds are medians fitted on each fold's eight-quarter TRAIN window. X1b
+candidates must satisfy the original IC, ordering, fold-stability, and group-
+concentration gates and have median absolute daily rank correlation no greater
+than `0.70` versus group-relative 20-session momentum.
+
+X1b admitted one distinct primitive: intraday-minus-overnight 20-session
+structure. It produced pooled rank IC `0.0056`, positive IC and ordering in
+`12 / 20` folds, top-minus-bottom relative h5 outcome `+8.2 bp`, maximum group
+share `47.6%`, and redundancy correlation `0.22`.
+
+Signed efficiency had stronger raw diagnostics—IC `0.0281`, positive IC in
+`15 / 20` folds, ordering in `13 / 20`, and `+24.9 bp` top-minus-bottom—but
+failed the frozen group-concentration cap at `51.2%`. Residual momentum failed
+IC-fold stability and concentration; residual reversal failed direction and
+ordering.
+
+C0 failed decisively. None of the four commonsense risk-on conditions separated
+favorable from unfavorable equal-weight h5 outcomes in the required `12 / 20`
+folds. Breadth, group participation, and low average correlation were positively
+ordered in only `3`, `2`, and `2` folds respectively, with pooled separations
+between `-141 bp` and `-157 bp`. Low dispersion was less poor but still negative
+at `-23.8 bp` with positive separation in `9 / 20` folds.
+
+The overall result is `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`. The ranking layer now
+has two distinct admitted OHLCV primitives when the earlier group-relative
+momentum result is included, but the separately required exposure-permission
+layer did not pass. Do not implement the two-stage demonstrator by dropping C0
+after observing its OOS failure.
+
 ## Artifacts
 
 - Packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/`
@@ -157,9 +197,10 @@ retail-accessible, point-in-time information family before X2 is reopened.
 - Leakage audit: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/xs_leakage_audit.csv`
 - Deck: `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 - Dialogue provenance: `docs/GEN5_4_DECISION_DIALOGUE_INDEX.md`
+- X1b/C0 packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_x1b_c0_20260719/`
 
 ## Current Boundary
 
 No model, top-K portfolio, allocation method, performance acceptance, or live
-behavior is authorized by X0/X1. The frozen result is
-`STOP_BEFORE_MODEL_FIT`.
+behavior is authorized by X0/X1 or X1b/C0. The current frozen result is
+`STOP_BEFORE_TWO_STAGE_RULES_DESIGN`.
