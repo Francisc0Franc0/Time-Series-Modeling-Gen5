@@ -521,6 +521,36 @@ has two distinct research primitives when group-relative momentum is included,
 but no accepted price-only exposure-permission condition. Do not drop C0 or
 reinterpret ranking quality as permission to hold long risk.
 
+## C1 Risk-Forecasting Readout
+
+C1 separated alpha from risk. Rather than asking OHLCV internals to forecast the
+sign of the next basket return, it tested whether four stress measurements could
+order the forward realized volatility of an executable equal-weight reference
+basket over both `h5` and `h20` open-to-open horizons.
+
+Every fold froze its high-stress threshold at the preceding eight-quarter TRAIN
+median. A feature had to show positive mean rank correlation and high-minus-low
+risk separation, at least `12 / 20` positive-correlation folds, at least
+`12 / 20` positive-separation folds, and a nondegenerate high-state share at
+both horizons. No model, scaler, return replay, allocation, or live output was
+created.
+
+The first render exposed a definition mismatch: X1's 20-name minimum blanked
+most of 2023Q3 even though 18-19 names were individually eligible. Before
+interpretation, C1 froze a separate 18-of-24 minimum for the risk reference
+basket. Only the corrected `g54_xs_c1_risk_20260719v2` packet is authority.
+
+SPY drawdown from its trailing 126-session high passed `h5`: `18 / 20` positive
+correlation folds, `12 / 20` positive separation folds, mean rank correlation
+`0.244`, and annualized realized-volatility separation `+0.082`. It failed
+`h20` with `9 / 20`, `7 / 20`, and mean correlation `0.002`. Trailing basket
+volatility, SPY downside volatility, and average correlation did not pass either
+horizon under the full gate.
+
+Overall status is `STOP_BEFORE_RISK_SCALER_DESIGN`. The short-horizon drawdown
+result is retained as theory evidence, but it does not authorize deleting the
+agreed `h20` requirement, choosing a volatility target, or replaying a scaler.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -538,3 +568,6 @@ The operator owns these decisions before promotion beyond POC:
 - whether exposure permission should use a different target or horizon, or wait
   for a distinct macro/credit information family, without retuning failed C0
   conditions on the inspected OOS evidence.
+- whether a future risk controller should be deliberately h5-only, or whether
+  multi-horizon stability remains mandatory and requires a distinct macro/credit
+  information family; C1 must not answer this by dropping h20 after inspection.

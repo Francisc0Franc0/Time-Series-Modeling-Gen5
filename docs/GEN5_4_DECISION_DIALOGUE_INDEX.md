@@ -45,6 +45,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D21` | Stop the live F0 fetch when SEC returned Akamai HTTP 403; do not substitute an unofficial mirror or snapshot vendor | — | `Akamai 403 Forbidden` | External-access BLOCK; no data admitted |
 | `D22` | Open an OHLCV-only X1b ranking audit and separate C0 exposure-permission audit under frozen nonredundancy and TRAIN-only gates | 14-15 | `X1B and C0 test` | Frozen bounded diagnostics; no model or policy |
 | `D23` | Admit intraday-minus-overnight structure as one distinct ranking primitive, but stop the two-stage design because every C0 exposure diagnostic failed | 16-17 | `more sophisticated approach with your guidance` | Completed X1b/C0 STOP; no demonstrator |
+| `D24` | Redefine the exposure layer as portfolio-risk forecasting and require stable ordering at both h5 and h20 before any continuous scaler is designed | 2 | `the exposure layer should probably control risk` | Frozen C1 risk-audit contract; no scaler |
+| `D25` | Stop before scaler design because SPY drawdown passed h5 risk ordering but no OHLCV primitive passed both frozen horizons | 3-5 | `I agree with your recommendations` | Completed C1 STOP; h5 evidence retained |
 
 ## Compact Decision Records
 
@@ -331,6 +333,35 @@ tasks by the branch name above, the phrase, or the decision date.
   seeing the result. The price-only ranking evidence remains research evidence,
   not authority for a long-entry policy.
 
+### D24 — Risk forecasting replaces directional permission
+
+- **Question:** Should the exposure layer forecast near-term return direction,
+  or should it estimate how much portfolio risk is currently justified?
+- **Decision:** Treat alpha selection and risk forecasting as separate jobs.
+  Test trailing basket volatility, SPY downside volatility, SPY drawdown, and
+  average correlation against forward realized risk at both `h5` and `h20`.
+- **Why:** Short-horizon mean returns are difficult to forecast, while risk is
+  often more persistent. A serious exposure layer can rationally reduce size
+  in dangerous states without claiming to know the sign of the next return.
+- **Boundary:** C1 is diagnostic only. TRAIN medians, both horizons, and fold
+  gates are frozen before a scaler, replay, allocation, or live behavior.
+
+### D25 — Short-horizon drawdown evidence does not earn a scaler
+
+- **Question:** Did any OHLCV stress primitive order executable basket risk
+  consistently enough at both horizons to open scaler design?
+- **Decision:** No. SPY drawdown passed `h5` but failed `h20`; every other
+  primitive failed one or both horizons. Stop before scaler design.
+- **Why:** SPY drawdown produced `18 / 20` positive-correlation and `12 / 20`
+  positive-separation folds at `h5`, but only `9 / 20` and `7 / 20` at `h20`.
+  That is horizon-specific evidence, not a stable multi-horizon risk primitive.
+- **Coverage correction:** The authority packet uses individually eligible names
+  with a frozen 18-of-24 minimum. The ranker's 20-name rule had blanked most of
+  2023Q3 in a discarded pre-interpretation render.
+- **Boundary:** Do not delete `h20`, fit a scaler, or choose a target volatility
+  after inspecting this result. A new theory decision must justify an h5-only
+  controller or a distinct macro/credit risk family.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -342,6 +373,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 - `presentations/gen5_4_cross_sectional_x1b_c0_evidence_update.pptx`
+- `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -351,8 +383,10 @@ and participation confirmation rejected the joint state; and the wider
 cross-sectional X1 audit admitted only one independent primitive. X1b later
 admitted intraday-minus-overnight structure as a second distinct ranking
 primitive, but every C0 exposure-permission diagnostic failed, so the two-stage
-demonstrator remains closed. The SEC fundamentals lane is separately blocked by
-Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
-search, top-K policy, allocation, and live-advice code remain closed. Do not
-reinterpret relative ranking evidence as long-entry permission or rescue C0 by
-reversing failed signs after OOS inspection.
+demonstrator remains closed. C1 then reframed exposure as risk forecasting: SPY
+drawdown passed `h5` but no primitive passed both `h5` and `h20`, so continuous
+scaler design is also closed. The SEC fundamentals lane is separately blocked
+by Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
+search, top-K policy, scaling, allocation, and live-advice code remain closed.
+Do not reinterpret relative ranking evidence as long-entry permission, rescue
+C0 by reversing failed signs, or rescue C1 by deleting its failed horizon.

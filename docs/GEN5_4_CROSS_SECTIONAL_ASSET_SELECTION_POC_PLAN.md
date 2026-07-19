@@ -189,6 +189,42 @@ momentum result is included, but the separately required exposure-permission
 layer did not pass. Do not implement the two-stage demonstrator by dropping C0
 after observing its OOS failure.
 
+## C1 Portfolio-Risk Forecasting Audit
+
+The next theory session corrected the role of the exposure layer. C1 did not ask
+OHLCV market internals to predict five-day return direction. It asked whether
+stress measurements available after close `t` could order the realized
+volatility of an executable equal-weight reference basket over the next `h5`
+and `h20` open-to-open sessions.
+
+The four frozen stress measurements were trailing 20-session basket realized
+volatility, 20-session SPY downside volatility, SPY drawdown from its trailing
+126-session high, and 60-session average cross-sectional correlation. Each fold
+used the preceding eight-quarter TRAIN median to define its high-stress state.
+Promotion required positive mean correlation and high-minus-low risk separation,
+at least `12 / 20` positive-correlation folds and `12 / 20` positive-separation
+folds, and a 25%-75% high-state share at both horizons.
+
+The first pre-interpretation render reused X1's 20-name cross-sectional minimum
+and therefore blanked most of 2023Q3 when only 18-19 names were individually
+eligible. That rule protects ranking breadth but is not necessary for a risk
+reference basket. The authority packet instead freezes a minimum of 18 of the
+24 individually point-in-time-eligible names. The discarded render is not used
+as evidence.
+
+Only SPY 126-session drawdown passed one horizon. At `h5` it produced positive
+rank correlation in `18 / 20` folds, positive high-minus-low separation in
+`12 / 20`, mean fold rank correlation `0.244`, annualized realized-volatility
+separation `+0.082`, and a 43.9% high-state share. At `h20` it fell to `9 / 20`
+positive-correlation folds, `7 / 20` positive-separation folds, and mean
+correlation `0.002`.
+
+Trailing basket volatility, SPY downside volatility, and average correlation
+all failed at least one stability and direction gate at each horizon. C1 is
+therefore `STOP_BEFORE_RISK_SCALER_DESIGN`. The result supports a possible
+short-horizon drawdown-risk mechanism, but it does not authorize a continuous
+scaler by deleting the predeclared `h20` requirement after inspection.
+
 ## Artifacts
 
 - Packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/`
@@ -198,9 +234,12 @@ after observing its OOS failure.
 - Deck: `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 - Dialogue provenance: `docs/GEN5_4_DECISION_DIALOGUE_INDEX.md`
 - X1b/C0 packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_x1b_c0_20260719/`
+- C1 authority packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_c1_risk_20260719v2/`
+- C1 deck: `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
 
 ## Current Boundary
 
-No model, top-K portfolio, allocation method, performance acceptance, or live
-behavior is authorized by X0/X1 or X1b/C0. The current frozen result is
-`STOP_BEFORE_TWO_STAGE_RULES_DESIGN`.
+No model, top-K portfolio, exposure scaler, allocation method, performance
+acceptance, or live behavior is authorized by X0/X1, X1b/C0, or C1. The ranking
+architecture remains `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`, and the separate risk
+lane is `STOP_BEFORE_RISK_SCALER_DESIGN`.
