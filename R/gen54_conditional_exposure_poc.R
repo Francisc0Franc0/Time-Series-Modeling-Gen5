@@ -561,3 +561,256 @@ g5_gen54_ce_leakage_audit <- function(fold_rows, folds) {
     stringsAsFactors = FALSE
   )
 }
+
+g5_gen54_lp_confirmation_states <- function(
+    fold_rows,
+    confirmation_fold_ids = c("2025Q1", "2025Q2", "2025Q3", "2025Q4", "2026Q1", "2026Q2"),
+    high_percentile = 0.60) {
+  rows <- list()
+  thresholds <- list()
+  idx <- 1L
+  threshold_idx <- 1L
+  for (fold_id in confirmation_fold_ids) {
+    train <- fold_rows[
+      fold_rows$fold_id == fold_id & fold_rows$split == "TRAIN" &
+        fold_rows$label_inside_split & fold_rows$complete_common,
+      , drop = FALSE
+    ]
+    oos <- fold_rows[
+      fold_rows$fold_id == fold_id & fold_rows$split == "OOS" &
+        fold_rows$label_inside_split & fold_rows$complete_common,
+      , drop = FALSE
+    ]
+    if (!nrow(train) || !nrow(oos)) next
+    leadership_threshold <- as.numeric(stats::quantile(
+      train$target_leadership_20, probs = high_percentile, na.rm = TRUE, names = FALSE, type = 7
+    ))
+    participation_threshold <- as.numeric(stats::quantile(
+      train$participation_dollar_volume_5_60, probs = high_percentile, na.rm = TRUE, names = FALSE, type = 7
+    ))
+    oos$leadership_high <- oos$target_leadership_20 >= leadership_threshold
+    oos$participation_high <- oos$participation_dollar_volume_5_60 >= participation_threshold
+    oos$confirmation_state <- ifelse(
+      oos$leadership_high & oos$participation_high, "A_high_leadership__high_participation",
+      ifelse(
+        oos$leadership_high & !oos$participation_high, "B_high_leadership__low_participation",
+        ifelse(
+          !oos$leadership_high & oos$participation_high, "C_low_leadership__high_participation",
+          "D_low_leadership__low_participation"
+        )
+      )
+    )
+    oos$leadership_train_p60 <- leadership_threshold
+    oos$participation_train_p60 <- participation_threshold
+    oos$confirmation_high_percentile <- high_percentile
+    rows[[idx]] <- oos
+    idx <- idx + 1L
+    thresholds[[threshold_idx]] <- data.frame(
+      fold_no = oos$fold_no[[1L]],
+      fold_id = fold_id,
+      window_id = oos$window_id[[1L]],
+      train_start_date = oos$train_start_date[[1L]],
+      train_end_date = oos$train_end_date[[1L]],
+      leadership_train_p60 = leadership_threshold,
+      participation_train_p60 = participation_threshold,
+      train_complete_row_count = nrow(train),
+      oos_complete_row_count = nrow(oos),
+      stringsAsFactors = FALSE
+    )
+    threshold_idx <- threshold_idx + 1L
+  }
+  if (!length(rows)) return(list(states = data.frame(), thresholds = data.frame()))
+  states <- do.call(rbind, rows)
+  threshold_table <- do.call(rbind, thresholds)
+  rownames(states) <- rownames(threshold_table) <- NULL
+  list(
+    states = states[order(states$fold_no, states$feature_date, states$symbol), , drop = FALSE],
+    thresholds = threshold_table[order(threshold_table$fold_no), , drop = FALSE]
+  )
+}
+
+g5_gen54_lp_state_summary <- function(states) {
+  if (!nrow(states)) return(data.frame())
+  summarize <- function(part, scope) data.frame(
+    scope = scope,
+    fold_no = if (scope == "fold") part$fold_no[[1L]] else NA_integer_,
+    fold_id = if (scope == "fold") part$fold_id[[1L]] else "POOLED",
+    window_id = if (scope == "fold") part$window_id[[1L]] else "2025Q1_2026Q2",
+    confirmation_state = part$confirmation_state[[1L]],
+    row_count = nrow(part),
+    mean_target_return = mean(part$target_open_to_open_return, na.rm = TRUE),
+    target_favorable_rate = mean(part$target_favorable, na.rm = TRUE),
+    mean_basket_return = mean(part$basket_open_to_open_return, na.rm = TRUE),
+    basket_favorable_rate = mean(part$basket_favorable, na.rm = TRUE),
+    stringsAsFactors = FALSE
+  )
+  fold_key <- interaction(states$fold_id, states$confirmation_state, drop = TRUE)
+  fold_rows <- lapply(split(states, fold_key), summarize, scope = "fold")
+  pooled_rows <- lapply(split(states, states$confirmation_state), summarize, scope = "pooled")
+  out <- do.call(rbind, c(fold_rows, pooled_rows))
+  rownames(out) <- NULL
+  out[order(out$scope, out$fold_no, out$confirmation_state), , drop = FALSE]
+}
+
+g5_gen54_lp_fold_contrasts <- function(state_summary) {
+  fold_summary <- state_summary[state_summary$scope == "fold", , drop = FALSE]
+  rows <- lapply(unique(fold_summary$fold_id), function(fold_id) {
+    part <- fold_summary[fold_summary$fold_id == fold_id, , drop = FALSE]
+    value <- function(state, column) {
+      x <- part[part$confirmation_state == state, column, drop = TRUE]
+      if (length(x)) as.numeric(x[[1L]]) else NA_real_
+    }
+    count <- function(state) {
+      x <- part$row_count[part$confirmation_state == state]
+      if (length(x)) as.integer(x[[1L]]) else 0L
+    }
+    a <- "A_high_leadership__high_participation"
+    b <- "B_high_leadership__low_participation"
+    c <- "C_low_leadership__high_participation"
+    a_mean <- value(a, "mean_target_return")
+    b_mean <- value(b, "mean_target_return")
+    c_mean <- value(c, "mean_target_return")
+    data.frame(
+      fold_no = part$fold_no[[1L]],
+      fold_id = fold_id,
+      window_id = part$window_id[[1L]],
+      state_a_count = count(a),
+      state_b_count = count(b),
+      state_c_count = count(c),
+      state_a_minus_b_return = a_mean - b_mean,
+      state_a_minus_c_return = a_mean - c_mean,
+      correct_state_a_ordering = is.finite(a_mean) && is.finite(b_mean) && is.finite(c_mean) &&
+        a_mean > b_mean && a_mean > c_mean,
+      stringsAsFactors = FALSE
+    )
+  })
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out[order(out$fold_no), , drop = FALSE]
+}
+
+g5_gen54_lp_cost_summary <- function(states, cost_bps = c(0, 10, 20)) {
+  if (!nrow(states)) return(data.frame())
+  rows <- list()
+  idx <- 1L
+  for (fold_id in unique(states$fold_id)) {
+    part <- states[states$fold_id == fold_id, , drop = FALSE]
+    part <- part[order(part$symbol, part$feature_date), , drop = FALSE]
+    part$active <- as.numeric(part$confirmation_state == "A_high_leadership__high_participation")
+    part$turnover <- 0
+    for (symbol in unique(part$symbol)) {
+      where <- which(part$symbol == symbol)
+      position <- part$active[where]
+      part$turnover[where] <- abs(position - c(0, position[-length(position)]))
+    }
+    daily <- do.call(rbind, lapply(split(part, part$feature_date), function(day) data.frame(
+      feature_date = day$feature_date[[1L]],
+      gross_return = mean(day$active * day$target_open_to_open_return, na.rm = TRUE),
+      exposure = mean(day$active, na.rm = TRUE),
+      exposure_matched_basket_return = mean(day$active, na.rm = TRUE) * day$basket_open_to_open_return[[1L]],
+      turnover = mean(day$turnover, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )))
+    terminal_turnover <- mean(part$active[!duplicated(part$symbol, fromLast = TRUE)], na.rm = TRUE)
+    for (bps in cost_bps) {
+      rate <- as.numeric(bps) / 10000
+      net_daily <- daily$gross_return - rate * daily$turnover
+      net_daily[[nrow(daily)]] <- net_daily[[nrow(daily)]] - rate * terminal_turnover
+      net_return <- prod(1 + net_daily, na.rm = TRUE) - 1
+      matched_return <- prod(1 + daily$exposure_matched_basket_return, na.rm = TRUE) - 1
+      rows[[idx]] <- data.frame(
+        fold_no = part$fold_no[[1L]],
+        fold_id = fold_id,
+        window_id = part$window_id[[1L]],
+        cost_bps_one_way = as.numeric(bps),
+        session_count = nrow(daily),
+        mean_exposure = mean(daily$exposure, na.rm = TRUE),
+        one_way_turnover = sum(daily$turnover, na.rm = TRUE) + terminal_turnover,
+        cumulative_net_return = net_return,
+        cumulative_exposure_matched_return = matched_return,
+        cumulative_selection_excess = net_return - matched_return,
+        stringsAsFactors = FALSE
+      )
+      idx <- idx + 1L
+    }
+  }
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out[order(out$fold_no, out$cost_bps_one_way), , drop = FALSE]
+}
+
+g5_gen54_lp_concentration <- function(states) {
+  if (!nrow(states)) return(data.frame())
+  rows <- lapply(split(states, states$symbol), function(part) {
+    state_mean <- function(state) mean(
+      part$target_open_to_open_return[part$confirmation_state == state], na.rm = TRUE
+    )
+    state_count <- function(state) sum(part$confirmation_state == state)
+    a <- "A_high_leadership__high_participation"
+    b <- "B_high_leadership__low_participation"
+    c <- "C_low_leadership__high_participation"
+    a_mean <- state_mean(a)
+    b_mean <- state_mean(b)
+    c_mean <- state_mean(c)
+    contrast <- mean(c(a_mean - b_mean, a_mean - c_mean), na.rm = TRUE)
+    weight <- min(state_count(a), state_count(b) + state_count(c))
+    data.frame(
+      symbol = part$symbol[[1L]],
+      state_a_count = state_count(a),
+      state_b_count = state_count(b),
+      state_c_count = state_count(c),
+      mean_joint_contrast = contrast,
+      absolute_contribution = abs(contrast) * weight,
+      stringsAsFactors = FALSE
+    )
+  })
+  out <- do.call(rbind, rows)
+  total <- sum(out$absolute_contribution, na.rm = TRUE)
+  out$absolute_contribution_share <- if (total > 0) out$absolute_contribution / total else NA_real_
+  rownames(out) <- NULL
+  out
+}
+
+g5_gen54_lp_promotion_summary <- function(
+    state_summary,
+    fold_contrasts,
+    cost_summary,
+    concentration,
+    required_correct_folds = 4L) {
+  pooled <- state_summary[state_summary$scope == "pooled", , drop = FALSE]
+  state_return <- function(state) {
+    x <- pooled$mean_target_return[pooled$confirmation_state == state]
+    if (length(x)) as.numeric(x[[1L]]) else NA_real_
+  }
+  a <- state_return("A_high_leadership__high_participation")
+  b <- state_return("B_high_leadership__low_participation")
+  c <- state_return("C_low_leadership__high_participation")
+  correct_folds <- sum(fold_contrasts$correct_state_a_ordering, na.rm = TRUE)
+  base_excess <- sum(cost_summary$cumulative_selection_excess[cost_summary$cost_bps_one_way == 10], na.rm = TRUE)
+  stress_excess <- sum(cost_summary$cumulative_selection_excess[cost_summary$cost_bps_one_way == 20], na.rm = TRUE)
+  max_share <- max(concentration$absolute_contribution_share, na.rm = TRUE)
+  checks <- c(
+    correct_folds >= required_correct_folds,
+    is.finite(a) && is.finite(b) && a > b,
+    is.finite(a) && is.finite(c) && a > c,
+    is.finite(base_excess) && base_excess > 0,
+    is.finite(stress_excess) && stress_excess >= 0,
+    is.finite(max_share) && max_share <= 0.50
+  )
+  data.frame(
+    confirmation_fold_count = nrow(fold_contrasts),
+    correct_state_a_ordering_folds = correct_folds,
+    required_correct_folds = required_correct_folds,
+    pooled_state_a_mean_return = a,
+    pooled_state_b_mean_return = b,
+    pooled_state_c_mean_return = c,
+    pooled_state_a_minus_b_return = a - b,
+    pooled_state_a_minus_c_return = a - c,
+    base_10bps_selection_excess_sum = base_excess,
+    stress_20bps_selection_excess_sum = stress_excess,
+    max_symbol_absolute_contribution_share = max_share,
+    confirmation_status = if (all(checks)) "PASS_FOR_OPERATOR_MODEL_GATE" else "STOP",
+    model_fit_count = 0L,
+    stringsAsFactors = FALSE
+  )
+}

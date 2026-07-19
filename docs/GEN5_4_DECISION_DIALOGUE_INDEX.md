@@ -34,6 +34,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D10` | Freeze one 20-session common panel, opportunity-set breadth, a 5-versus-prior-60-session dollar-volume ratio, strict complete cases, and a semiconductor-only challenger | — | `opportunity-set breadth` | Frozen formulas and missingness |
 | `D11` | Use 20 quarterly OOS folds, eight-quarter rolling TRAIN, TRAIN-defined diagnostic quintiles, turnover-only costs, and cross-fold/concentration promotion gates | — | `positive ordering in at least 12 of the 20 quarterly folds` | Frozen primitive validation protocol |
 | `D12` | Stop the frozen continuation mechanism after leadership passed but required opportunity breadth failed | — | `opportunity breadth has negative average` | Completed POC STOP; no model gate |
+| `D13` | Treat leadership plus abnormal participation as a new four-state hypothesis and confirm it only on 2025Q1-2026Q2 | — | `State A should outperform State B` | Frozen bounded confirmation; no model authority |
+| `D14` | Stop the leadership × participation interaction because the joint state failed ordering and cost gates | 40 | `State A achieved the required ordering in only 2/6 quarters` | Completed confirmation STOP; no model gate |
 
 ## Compact Decision Records
 
@@ -174,18 +176,52 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** No GLM, XGBoost, probability threshold, allocation, or live
   behavior is authorized from this packet.
 
+### D13 — Leadership x participation confirmation
+
+- **Question:** Does target leadership persist specifically when abnormal
+  participation accompanies it?
+- **Decision:** Freeze a 2x2 leadership/high-low x participation/high-low state
+  table using pooled TRAIN 60th-percentile thresholds and confirm only on
+  `2025Q1`-`2026Q2`.
+- **Falsifier:** State A must beat both high-leadership/low-participation State B
+  and low-leadership/high-participation State C in at least `4 / 6` quarters,
+  with positive pooled contrasts and cost robustness.
+- **Why:** This tests whether participation adds information conditional on
+  leadership rather than merely reusing two individually attractive OOS
+  features.
+- **Boundary:** The confirmation is a state diagnostic with human-facing
+  visuals, not a fitted model or selected trading policy.
+
+### D14 — Leadership × participation confirmation STOP
+
+- **Question:** Did the separately frozen high-leadership/high-participation
+  state add information beyond leadership alone on the fresh confirmation
+  window?
+- **Decision:** No. Stop this interaction before model fitting.
+- **Why:** State A beat both single-condition comparators in only `2 / 6`
+  quarters. Pooled A−B was `-15.7 bp`, and selection-excess was negative at both
+  the `10 bp` base cost and `20 bp` stress cost.
+- **Qualification:** Pooled A−C was positive and concentration stayed below the
+  frozen cap, but those passes cannot override the failed ordering, A−B, and
+  cost gates.
+- **Boundary:** Do not retune the quantile, horizon, or interaction on this OOS
+  evidence. No model, allocation, or live behavior is authorized.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
 - [Gen5.4 ML decision-engine plan](GEN5_4_ML_DECISION_ENGINE_PLAN.md)
 - [POC progress log](GEN5_1_POC_PROGRESS_LOG.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
+- `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 
 ## Current Stop State
 
-The completed primitive packet returned `STOP`: leadership and participation
-passed individually, but required opportunity-set breadth did not. Model
-fitting, threshold search, allocation, and live-advice code remain closed. The
-next step is a theory/design decision about whether the failed breadth mechanism
-should be abandoned or replaced in a separately predeclared hypothesis—not an
-OOS-driven feature deletion.
+Both bounded market-only tests returned `STOP`. The primitive packet found that
+leadership and participation passed individually but required opportunity-set
+breadth failed. The fresh leadership × participation confirmation then found
+that the joint state beat both single-condition comparators in only `2 / 6`
+quarters and failed the cost gates. Model fitting, threshold search, allocation,
+and live-advice code remain closed. The next step is a theory-first decision
+about one genuinely distinct, point-in-time information family—not an OOS-driven
+feature deletion or another nearby OHLCV interaction.

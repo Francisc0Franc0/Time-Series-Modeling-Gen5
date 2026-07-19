@@ -239,3 +239,65 @@ packet. Model fitting, threshold search, allocation, leverage, live-advice
 changes, and execution remain closed. The next operator gate depends on the
 completed primitive readout: STOP and revise the hypothesis if the common core
 fails, or explicitly authorize a small model comparison if it passes.
+
+## Frozen Leadership x Participation Confirmation
+
+The primitive POC stopped the original confirmation mechanism because
+opportunity-set breadth failed, while target leadership and dollar-volume
+participation passed individually. Those individual results are treated as
+hypothesis-generating evidence, not permission to delete breadth and fit a
+model on the same OOS period.
+
+The separately accepted confirmation question is:
+
+> Does 20-session cross-sectional leadership persist when accompanied by
+> abnormal target-specific dollar-volume participation, without requiring peer
+> breadth or sector confirmation?
+
+The bounded confirmation protocol is:
+
+- Confirmation authorities: `2025Q1` through `2026Q2` only.
+- Each authority uses the preceding eight quarters as TRAIN.
+- High leadership and high participation each mean at or above the pooled TRAIN
+  `60th` percentile, frozen into the corresponding OOS quarter.
+- State A: high leadership and high participation.
+- State B: high leadership and low participation.
+- State C: low leadership and high participation.
+- State D: low leadership and low participation.
+- The outcome remains the target simple return from open `t + 1` to open
+  `t + 2`.
+- State A must beat both State B and State C. Beating only State D does not
+  confirm that the two inputs add information jointly.
+- Correct State-A ordering is required in at least `4 / 6` OOS quarters.
+- Pooled State A minus State B and pooled State A minus State C must both be
+  positive.
+- A fixed State-A exposure proxy must have positive exposure-matched selection
+  excess after `10` basis points per one-way change and must not reverse after
+  the `20` basis-point stress cost.
+- No single symbol may exceed `50%` of absolute joint-contrast contribution.
+- Failure is a STOP. A `3 / 6` result is inconclusive and does not authorize a
+  threshold or horizon change.
+
+The confirmation packet must include a four-state visual, quarterly contrast
+chart, representative all-symbol state tapes, cost-robustness chart, and an
+explicit pass/stop checklist. It fits no model and changes no live behavior.
+
+## Completed Leadership x Participation Readout
+
+The frozen confirmation ran on `2025Q1` through `2026Q2` and returned `STOP`.
+State A beat both State B and State C in only `2 / 6` quarterly OOS folds versus
+the required `4 / 6`. Pooled State A averaged `+5.2 bp`, compared with `+20.9
+bp` for State B and `-5.6 bp` for State C. The resulting pooled contrasts were
+`-15.7 bp` for A minus B and `+10.9 bp` for A minus C.
+
+The fixed State-A exposure proxy produced selection-excess sums of `-0.0342`
+after the `10 bp` base cost and `-0.0659` under the `20 bp` stress cost. The
+largest symbol contribution was `45.2%`, which passed the concentration cap but
+did not rescue the failed ordering, A-minus-B, and cost gates. Model-fit count
+remained zero.
+
+This result closes the leadership × participation confirmation without
+authorizing a different percentile, horizon, interaction, model, allocation,
+or live behavior. The next research gate is theory-first selection of a
+genuinely distinct point-in-time information family rather than another nearby
+OHLCV transformation.

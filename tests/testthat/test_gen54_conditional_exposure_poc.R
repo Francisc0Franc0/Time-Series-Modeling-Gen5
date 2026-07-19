@@ -109,3 +109,81 @@ test_that("one-way turnover costs reduce the fixed diagnostic proxy", {
   expect_lt(stress, zero)
   expect_gt(summary$one_way_turnover[[1L]], 0)
 })
+
+test_that("leadership-participation confirmation uses TRAIN-only p60 thresholds", {
+  fixture <- data.frame(
+    fold_no = 1L,
+    fold_id = "2025Q1",
+    window_id = "2025Y",
+    split = rep(c("TRAIN", "OOS"), c(10L, 4L)),
+    label_inside_split = TRUE,
+    complete_common = TRUE,
+    feature_date = as.Date("2024-01-01") + 0:13,
+    execution_date = as.Date("2024-01-02") + 0:13,
+    label_end_date = as.Date("2024-01-03") + 0:13,
+    train_start_date = as.Date("2023-01-01"),
+    train_end_date = as.Date("2024-12-31"),
+    oos_start_date = as.Date("2025-01-01"),
+    oos_end_date = as.Date("2025-03-31"),
+    symbol = "AMD",
+    target_leadership_20 = c(1:10, 8, 8, 2, 2),
+    participation_dollar_volume_5_60 = c(1:10, 8, 2, 8, 2),
+    target_open_to_open_return = c(rep(0, 10), 0.04, 0.02, -0.01, -0.02),
+    basket_open_to_open_return = c(rep(0, 10), 0.01, 0.01, -0.01, -0.01),
+    target_favorable = c(rep(FALSE, 10), TRUE, TRUE, FALSE, FALSE),
+    basket_favorable = c(rep(FALSE, 10), TRUE, TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  result <- g5_gen54_lp_confirmation_states(fixture, confirmation_fold_ids = "2025Q1")
+  expect_equal(result$thresholds$leadership_train_p60, 6.4)
+  expect_equal(result$thresholds$participation_train_p60, 6.4)
+  expect_equal(
+    result$states$confirmation_state,
+    c(
+      "A_high_leadership__high_participation",
+      "B_high_leadership__low_participation",
+      "C_low_leadership__high_participation",
+      "D_low_leadership__low_participation"
+    )
+  )
+})
+
+test_that("confirmation gate requires A to beat both B and C", {
+  states <- c(
+    "A_high_leadership__high_participation",
+    "B_high_leadership__low_participation",
+    "C_low_leadership__high_participation",
+    "D_low_leadership__low_participation"
+  )
+  summary <- data.frame(
+    scope = rep(c("fold", "pooled"), each = 4L),
+    fold_no = c(rep(1L, 4L), rep(NA_integer_, 4L)),
+    fold_id = c(rep("2025Q1", 4L), rep("POOLED", 4L)),
+    window_id = c(rep("2025Y", 4L), rep("2025Q1_2026Q2", 4L)),
+    confirmation_state = rep(states, 2L),
+    row_count = 20L,
+    mean_target_return = rep(c(0.02, 0.01, 0.015, 0), 2L),
+    target_favorable_rate = 0.55,
+    mean_basket_return = 0.01,
+    basket_favorable_rate = 0.55,
+    stringsAsFactors = FALSE
+  )
+  contrasts <- g5_gen54_lp_fold_contrasts(summary)
+  expect_true(contrasts$correct_state_a_ordering)
+  cost <- data.frame(
+    cost_bps_one_way = c(10, 20),
+    cumulative_selection_excess = c(0.02, 0.01)
+  )
+  concentration <- data.frame(absolute_contribution_share = c(0.4, 0.3, 0.3))
+  promotion <- g5_gen54_lp_promotion_summary(
+    summary, contrasts, cost, concentration, required_correct_folds = 1L
+  )
+  expect_equal(promotion$confirmation_status, "PASS_FOR_OPERATOR_MODEL_GATE")
+
+  summary$mean_target_return[summary$scope == "pooled" &
+    summary$confirmation_state == "C_low_leadership__high_participation"] <- 0.03
+  promotion_fail <- g5_gen54_lp_promotion_summary(
+    summary, contrasts, cost, concentration, required_correct_folds = 1L
+  )
+  expect_equal(promotion_fail$confirmation_status, "STOP")
+})
