@@ -36,6 +36,11 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D12` | Stop the frozen continuation mechanism after leadership passed but required opportunity breadth failed | — | `opportunity breadth has negative average` | Completed POC STOP; no model gate |
 | `D13` | Treat leadership plus abnormal participation as a new four-state hypothesis and confirm it only on 2025Q1-2026Q2 | — | `State A should outperform State B` | Frozen bounded confirmation; no model authority |
 | `D14` | Stop the leadership × participation interaction because the joint state failed ordering and cost gates | 40 | `State A achieved the required ordering in only 2/6 quarters` | Completed confirmation STOP; no model gate |
+| `D15` | Pivot from timing a narrow retrospective basket to measuring relative opportunity in a fixed diverse cross-section | 2 | `20 or 30 diverse assets` | Frozen X0/X1 research question |
+| `D16` | Keep broad exposure permission separate from cross-sectional asset ranking | 4 | `Relative outperformance is not automatically a long-entry signal` | Frozen architecture boundary |
+| `D17` | Use 24 ranked stocks, six context-only anchors, and point-in-time daily eligibility while disclosing the fixed-panel survivor limitation | 5 | `universe construction` | Frozen X0/X1 universe contract |
+| `D18` | Use a same-date eligible-universe relative h5 target and an X0-X5 gated POC ladder | 6-7 | `plan a series of minimal proof of concepts` | Frozen measurement and escalation protocol |
+| `D19` | Stop after X1 because only one economically distinct primitive cleared every predeclared gate | 8-10 | `autonomously run as large a chunk` | Completed X0/X1 STOP; no model fit |
 
 ## Compact Decision Records
 
@@ -207,21 +212,85 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Do not retune the quantile, horizon, or interaction on this OOS
   evidence. No model, allocation, or live behavior is authorized.
 
+### D15 — Cross-sectional asset-selection pivot
+
+- **Question:** Would a wider, diverse historical candidate panel provide a
+  better research question than continuing to time a handful of known winners?
+- **Decision:** Ask which point-in-time eligible assets are likely to outperform
+  their contemporaneous opportunity set, while keeping candidate identity
+  fixed for the minimal POC.
+- **Why:** A cross-section provides many same-date comparisons and a coherent
+  relative target. It improves measurement breadth without pretending price
+  action has become information-rich.
+- **Boundary:** This fixed panel cannot support claims of prospective universe
+  discovery because membership and survival are not historically reconstructed.
+
+### D16 — Exposure permission versus asset ranking
+
+- **Question:** Is relative outperformance sufficient to trigger a long entry?
+- **Decision:** No. Keep the market/exposure permission decision separate from
+  the asset-ranking decision.
+- **Why:** The best asset in a falling market may still lose money. A relative
+  rank measures selection quality, not absolute long opportunity.
+- **Deferred:** Top-K selection, cash exposure, sizing, turnover, allocation,
+  and live advice.
+
+### D17 — Fixed 24-stock panel and daily eligibility
+
+- **Question:** What is the smallest diverse panel that keeps data plumbing
+  manageable while permitting same-date ranking?
+- **Decision:** Freeze 24 liquid stocks across six economic groups, keep six
+  ETFs as context only, and require daily price, trailing liquidity, feature
+  completeness, and minimum-cross-section eligibility.
+- **Why:** This is broad enough to expose cross-sectional behavior and group
+  concentration without opening a full historical-universe reconstruction.
+- **Boundary:** The fixed identities carry survivor and availability bias; the
+  limitation must travel with every interpretation.
+
+### D18 — Relative h5 target and gated POC ladder
+
+- **Question:** How should evidence accumulate before a learner or portfolio
+  policy is allowed?
+- **Decision:** Observe close `t`, execute open `t+1`, and measure open-to-open
+  h5 return relative to the same-date eligible equal-weight universe. Advance
+  through X0 integrity, X1 no-model measurement, X2 linear, X3 nonlinear, X4
+  policy/cost, and X5 untouched confirmation gates.
+- **Why:** Each stage has a narrow falsifier and cannot use a later model to
+  conceal weak primitive information.
+- **Promotion rule:** At least two economically distinct primitives must pass
+  all X1 gates before X2.
+
+### D19 — X0/X1 evidence and STOP before model fit
+
+- **Question:** Did the wider OHLCV panel produce enough stable independent
+  cross-sectional information to justify a pooled model?
+- **Decision:** No. X0 passed, but X1 admitted only group-relative 20-session
+  momentum; stop before model fitting.
+- **Why:** Sixty-session momentum failed the concentration cap, ordinary and
+  market-relative 20-session momentum were rank-equivalent, and the other
+  primitives did not provide stable positive ordering.
+- **Boundary:** Do not fit X2, loosen the concentration cap, or delete failed
+  gates after seeing OOS evidence. Reopen only after a genuinely distinct,
+  point-in-time information family is accepted.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
 - [Gen5.4 ML decision-engine plan](GEN5_4_ML_DECISION_ENGINE_PLAN.md)
 - [POC progress log](GEN5_1_POC_PROGRESS_LOG.md)
+- [Cross-sectional asset-selection POC plan](GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
+- `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 
 ## Current Stop State
 
-Both bounded market-only tests returned `STOP`. The primitive packet found that
-leadership and participation passed individually but required opportunity-set
-breadth failed. The fresh leadership × participation confirmation then found
-that the joint state beat both single-condition comparators in only `2 / 6`
-quarters and failed the cost gates. Model fitting, threshold search, allocation,
-and live-advice code remain closed. The next step is a theory-first decision
-about one genuinely distinct, point-in-time information family—not an OOS-driven
-feature deletion or another nearby OHLCV interaction.
+Three bounded market-only branches now support the same stop state. The narrow
+primitive packet rejected required opportunity breadth; the fresh leadership
+and participation confirmation rejected the joint state; and the wider
+cross-sectional X1 audit admitted only one independent primitive. The wider
+panel improved the research design but did not create sufficient information
+for a learner. Model fitting, threshold search, top-K policy, allocation, and
+live-advice code remain closed. The next step is a theory-first decision about
+one genuinely distinct, retail-accessible, point-in-time information family,
+not an OOS-driven gate change or another nearby OHLCV interaction.

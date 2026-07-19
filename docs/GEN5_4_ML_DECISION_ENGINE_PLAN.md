@@ -442,6 +442,46 @@ ML-P7 held the seeded XGBoost/replay/policy surface fixed and compared a predecl
 
 The window pattern matters. Every lane defended the falling 2022 basket, with `relative_h10 + existing_relative_control` best at `+9.1 pp` excess, but all missed substantial upside in 2020, 2021, 2023, and 2024. Ranking was weak: the two absolute-h1 lanes averaged AUC near `0.51`, while relative-h10 existing-control averaged `0.491` with negative top-minus-bottom target separation. This is diagnostic evidence, not allocation evidence. The next action is a qualitative/quantitative audit of exposure, calibration, selection, and representative trade tapes, not another target or model-parameter search.
 
+## Cross-Sectional Asset-Selection Pivot
+
+The theory-first discussion opened a different research question from the
+earlier narrow-basket exposure studies: at a historical close, can a diverse,
+point-in-time eligible panel rank which assets are more likely to outperform
+their contemporaneous opportunity set?
+
+The accepted minimal architecture separates broad exposure permission from
+cross-sectional asset ranking. Relative leadership is not automatically a long
+entry because the best-ranked asset may still lose money in a falling market.
+
+The frozen X0/X1 panel contains 24 stocks across six economic groups and six
+context-only ETFs. Features use close-t adjusted daily OHLCV, hypothetical
+execution is next open, and the primary h5 target is relative to the same-date
+equal-weight eligible candidate universe. Candidate identities are fixed for
+this POC, while daily price, trailing-liquidity, completeness, and
+minimum-cross-section eligibility are point-in-time. The fixed panel has an
+explicit survivor limitation and cannot support prospective universe-discovery
+claims.
+
+The gated sequence is:
+
+1. X0 universe and timestamp integrity;
+2. X1 no-model primitive measurement;
+3. X2 pooled regularized linear ranker;
+4. X3 constrained nonlinear challenger;
+5. X4 exposure, top-K, cost, and concentration policy;
+6. X5 untouched forward confirmation.
+
+X0 passed. X1 stopped before model fitting because only group-relative
+20-session momentum cleared every frozen IC, ordering, fold-stability, and
+concentration gate. Sixty-session momentum showed stronger raw ordering but
+failed the 50% economic-group concentration cap. The other primitives did not
+provide stable independent positive ordering. The ladder requires at least two
+economically distinct primitives before X2, so model fitting remains closed.
+
+The detailed contract and evidence are in
+`docs/GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md` and
+`runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/`.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -452,3 +492,5 @@ The operator owns these decisions before promotion beyond POC:
 - whether thresholds should be fixed, TRAIN-selected, or calibrated by symbol;
 - whether ML should eventually replace PCA routing or coexist as another lane;
 - whether any future ML output may influence live advice.
+- whether one genuinely distinct, retail-accessible, point-in-time information
+  family should be opened before cross-sectional X2 is reconsidered.
