@@ -482,6 +482,16 @@ The detailed contract and evidence are in
 `docs/GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md` and
 `runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/`.
 
+The next information-family gate now favors point-in-time earnings and filed
+fundamentals. SEC EDGAR submissions and XBRL facts are the recommended authority
+for a research-only five-company feasibility sample because filing accessions
+and acceptance metadata permit an as-known reconstruction. The operator opened
+that narrow provider gate, but the first official SEC request and a direct
+header check both returned Akamai HTTP 403 from the execution environment. No
+payload entered research authority. This remains a provider-access problem, not
+a model gate: F0 must not compute outcomes or predictive relationships. See
+`docs/GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md`.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -494,3 +504,5 @@ The operator owns these decisions before promotion beyond POC:
 - whether any future ML output may influence live advice.
 - whether one genuinely distinct, retail-accessible, point-in-time information
   family should be opened before cross-sectional X2 is reconsidered.
+- how official SEC data should be supplied to the already-opened five-company
+  F0 after the current environment returned Akamai HTTP 403.

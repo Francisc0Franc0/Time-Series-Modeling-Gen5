@@ -41,6 +41,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D17` | Use 24 ranked stocks, six context-only anchors, and point-in-time daily eligibility while disclosing the fixed-panel survivor limitation | 5 | `universe construction` | Frozen X0/X1 universe contract |
 | `D18` | Use a same-date eligible-universe relative h5 target and an X0-X5 gated POC ladder | 6-7 | `plan a series of minimal proof of concepts` | Frozen measurement and escalation protocol |
 | `D19` | Stop after X1 because only one economically distinct primitive cleared every predeclared gate | 8-10 | `autonomously run as large a chunk` | Completed X0/X1 STOP; no model fit |
+| `D20` | Admit earnings and filed fundamentals to a provider-feasibility gate, with SEC filings as the recommended authority | — | `point-in-time earnings and fundamental information` | Theory gate passed; research-only SEC F0 opened |
+| `D21` | Stop the live F0 fetch when SEC returned Akamai HTTP 403; do not substitute an unofficial mirror or snapshot vendor | — | `Akamai 403 Forbidden` | External-access BLOCK; no data admitted |
 
 ## Compact Decision Records
 
@@ -273,12 +275,39 @@ tasks by the branch name above, the phrase, or the decision date.
   gates after seeing OOS evidence. Reopen only after a genuinely distinct,
   point-in-time information family is accepted.
 
+### D20 — Point-in-time fundamentals admission
+
+- **Question:** Which retail-accessible information family should be audited
+  before cross-sectional X2 can be reconsidered?
+- **Decision:** Admit earnings and filed financial statements to a data-source
+  feasibility gate. Recommend SEC EDGAR filings and XBRL facts as the authority
+  for a five-company F0 sample audit.
+- **Why:** Filed fundamentals are company-specific, economically distinct from
+  price action, and carry accession and acceptance metadata. Alpaca historical
+  news is useful but is not a standardized financial-statement or consensus
+  archive.
+- **Boundary:** The operator's subsequent approval opened only the five-company
+  research-only SEC F0 slice. Full-panel ingestion, predictive measurement, and
+  live behavior remain closed.
+
+### D21 — SEC F0 external-access STOP
+
+- **Question:** Could the approved five-company SEC sample be fetched from the
+  current execution environment under the frozen provenance contract?
+- **Decision:** No. Record an external-access block and stop.
+- **Why:** Both the R provider and a direct contact-bearing command-line request
+  returned Akamai HTTP 403 before any filing payload was accepted.
+- **Boundary:** Do not switch to an unofficial mirror or a convenient
+  current-snapshot fundamentals vendor. Retry from a compliant network path or
+  use operator-controlled official SEC bulk files with retained provenance.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
 - [Gen5.4 ML decision-engine plan](GEN5_4_ML_DECISION_ENGINE_PLAN.md)
 - [POC progress log](GEN5_1_POC_PROGRESS_LOG.md)
 - [Cross-sectional asset-selection POC plan](GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md)
+- [Point-in-time fundamentals admission gate](GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -290,7 +319,10 @@ primitive packet rejected required opportunity breadth; the fresh leadership
 and participation confirmation rejected the joint state; and the wider
 cross-sectional X1 audit admitted only one independent primitive. The wider
 panel improved the research design but did not create sufficient information
-for a learner. Model fitting, threshold search, top-K policy, allocation, and
-live-advice code remain closed. The next step is a theory-first decision about
-one genuinely distinct, retail-accessible, point-in-time information family,
-not an OOS-driven gate change or another nearby OHLCV interaction.
+for a learner. Earnings and filed fundamentals now pass the theory gate, with
+SEC EDGAR recommended for a five-company feasibility sample. The operator
+opened that research-only F0, but SEC returned Akamai HTTP 403 from this
+execution environment before any payload was accepted. Model fitting, threshold
+search, top-K policy, allocation, and live-advice code remain closed. The
+immediate STOP is external access: retry from a compliant network path or use
+operator-controlled official SEC bulk files without changing the frozen audit.
