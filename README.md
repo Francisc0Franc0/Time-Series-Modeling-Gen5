@@ -60,7 +60,7 @@ For the full local operator setup sequence, including config overlays, credentia
 
 ## Alpaca Data Refresh Smoke
 
-The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. The default cache root is the ignored repo-local `data_cache/alpaca_daily_adjusted/` folder; use the local file or `GEN5_CACHE_ROOT` only when an operator-specific override is needed. Use local config for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
+The data scripts load `config/data_layer.example.yml` first, then overlay ignored local settings from `config/data_layer.local.yml` when present. The default cache root is the ignored repo-local `data_cache/alpaca_daily_adjusted/` folder; use the local file or `GEN5_CACHE_ROOT` only when an operator-specific override is needed. Use local config for paths and symbols, not secrets. The live Alpaca refresh path expects `httr` and `jsonlite` plus Alpaca credentials named `ALPACA_KEY` and `ALPACA_SECRET`. The N1L real-time news capability runner additionally requires the operator-approved `websocket` and `later` packages in an active library such as ignored `.codex_r_libs/`. The scripts quietly load ignored local `.Renviron` values before calling Alpaca.
 
 Before a credentialed refresh, operators can run an explicit no-network credential readiness preflight:
 

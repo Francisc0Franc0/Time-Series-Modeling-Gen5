@@ -624,6 +624,30 @@ requires a frozen symbol-history treatment, symbol-local TRAIN-only intensity
 normalization, and a stale-update exclusion rule before any outcome is joined.
 Generic sentiment remains closed.
 
+## News Risk N1B And Live Feasibility N1L
+
+The N1B theory contract is now frozen around one claim: issuer-local TRAIN
+percentiles of novel-news activity may order issuer-relative five-session
+realized path volatility beginning at the next executable open. FB and META are
+one issuer with point-in-time ticker validity; archived updates delayed more
+than 24 hours are excluded; the 2022Q1-2024Q4 evaluation uses twelve quarterly
+OOS folds and three predeclared stability gates. Sentiment, direction, horizon
+search, exposure, and model fitting remain closed.
+
+N1L tested whether that research lane could eventually receive equivalent live
+inputs. Two 120-second Alpaca WebSocket connections opened, authenticated,
+acknowledged all 25 requested symbol keys, and demonstrated deliberate close
+and reconnect. Six control frames received complete local UTC timestamps. The
+corrected 15-minute REST overlap exhausted one HTTP 200 page without a
+reconciliation conflict. All 13 hard gates passed.
+
+No live candidate article arrived during the four-minute observation. The one
+REST article in the corrected overlap predated subscription, so no live-versus-
+REST payload match could be observed. Overall status is
+`PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`. Keep the N1B outcome join
+closed pending a later live candidate observation or explicit operator
+acceptance of this limitation.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

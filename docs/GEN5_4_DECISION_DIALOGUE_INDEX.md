@@ -53,6 +53,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D29` | Accept historical news availability and record index HTTP 403 as an entitlement boundary | 3-5 | `Okay, let's proceed` | `PARTIAL_PASS_NEWS_AVAILABLE_INDEX_NOT_AUTHORIZED` |
 | `D30` | Treat news first as information-arrival and uncertainty context; freeze a point-in-time admissibility audit before outcome measurement | 3-5 | `This sounds great to me. Proceed.` | N1A contract frozen; no sentiment or outcomes |
 | `D31` | Preserve the N1A pass while carrying its symbol-history, concentration, and stale-update limitations into the next theory gate | 3-5 | autonomous execution under D30 | `PASS_N1A_ADMISSIBLE_FOR_N1B_DISCUSSION`; no feature authority |
+| `D32` | Freeze one issuer-relative news-intensity hypothesis against post-next-open five-session realized volatility | — | `These are all wonderful suggestions. Let's proceed` | N1B contract frozen; implementation contingent on N1L |
+| `D33` | Preserve the N1L transport pass but do not claim live payload equivalence without observing a candidate article | — | approved live-feasibility checkpoint | `PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`; N1B remains blocked |
 
 ## Compact Decision Records
 
@@ -445,6 +447,33 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** No post hoc change to N1A thresholds. N1B requires a new frozen
   contract before any outcome join.
 
+### D32 — Freeze uncertainty measurement, not sentiment
+
+- **Question:** What is the first minimal news/outcome association that is both
+  economically interpretable and leakage-safe?
+- **Decision:** Use issuer-local TRAIN percentiles of same-cycle novel-news
+  counts to order issuer-relative five-session realized path volatility
+  beginning at the next executable open.
+- **Why:** News is more defensible as information about distribution width than
+  return sign. FB/META becomes one issuer with point-in-time ticker validity;
+  archived updates delayed over 24 hours are excluded before outcomes.
+- **Boundary:** Twelve quarterly OOS folds, one h5 outcome, and three frozen
+  stability gates. No sentiment, horizon search, exposure, or model fitting.
+
+### D33 — N1L proves transport but not a live article payload
+
+- **Question:** Can the current Alpaca account support receipt-time news
+  capture, deliberate reconnect, and REST reconciliation?
+- **Decision:** Record all 13 hard-gate passes and retain the predeclared partial
+  status because no live candidate article arrived during two 120-second
+  connections.
+- **Why:** Both connections authenticated and acknowledged all 25 symbol keys;
+  the corrected REST overlap returned one article that predated subscription.
+  Transport success is not the same as observing prospective payload
+  equivalence.
+- **Boundary:** Keep the N1B outcome join closed pending a live candidate
+  article observation or explicit operator acceptance of the limitation.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -454,6 +483,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Point-in-time fundamentals admission gate](GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md)
 - [Alpaca context capability POC](GEN5_4_ALPACA_CONTEXT_CAPABILITY_POC.md)
 - [News admissibility N1A contract](GEN5_4_NEWS_ADMISSIBILITY_N1A_CONTRACT.md)
+- [News risk measurement N1B contract](GEN5_4_NEWS_RISK_N1B_CONTRACT.md)
+- [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -462,6 +493,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
 - `presentations/gen5_4_alpaca_context_capability_evidence_update.pptx`
 - `presentations/gen5_4_news_admissibility_n1a_evidence_update.pptx`
+- `presentations/gen5_4_news_live_feasibility_n1l_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -483,6 +515,9 @@ and recorded index-data HTTP 403 as an entitlement boundary. N1A then passed
 all nine frozen archive-admission gates, so one measurement-only N1B theory
 discussion may proceed. No news representation, outcome join, sentiment
 feature, model, or index series has been admitted to feature research.
+N1B is now frozen, but N1L remains a partial pass: every transport and
+reconciliation gate passed while no live candidate article was observed.
+Therefore no news/outcome join is authorized yet.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
