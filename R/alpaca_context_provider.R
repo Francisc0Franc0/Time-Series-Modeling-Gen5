@@ -149,12 +149,21 @@ g5_alpaca_map_news_payload <- function(parsed, request, retrieved_at) {
   )
 }
 
-g5_fetch_alpaca_news <- function(request, retrieved_at, config = g5_alpaca_config_from_env()) {
+g5_fetch_alpaca_news <- function(
+  request,
+  retrieved_at,
+  config = g5_alpaca_config_from_env(),
+  request_pause_seconds = 0
+) {
   if (!is.data.frame(request) || nrow(request) != 1L || request$endpoint[[1L]] != "/v1beta1/news") {
     g5_stop("request must be produced by g5_alpaca_news_request().")
   }
   g5_alpaca_preflight_live_fetch(config)
   .g5_alpaca_context_time(retrieved_at, "retrieved_at")
+  request_pause_seconds <- as.numeric(request_pause_seconds)
+  if (!is.finite(request_pause_seconds) || request_pause_seconds < 0) {
+    g5_stop("request_pause_seconds must be a finite non-negative number.")
+  }
   endpoint <- paste0(sub("/+$", "", config$base_url), request$endpoint[[1L]])
   base_query <- list(
     symbols = request$symbols[[1L]],
@@ -196,6 +205,7 @@ g5_fetch_alpaca_news <- function(request, retrieved_at, config = g5_alpaca_confi
     if (next_token %in% seen_tokens) g5_stop("Alpaca news pagination repeated a page token.")
     seen_tokens <- c(seen_tokens, next_token)
     page_token <- next_token
+    if (request_pause_seconds > 0) Sys.sleep(request_pause_seconds)
   }
   data <- if (!length(frames) || all(vapply(frames, nrow, integer(1L)) == 0L)) {
     g5_alpaca_empty_news()
@@ -204,6 +214,79 @@ g5_fetch_alpaca_news <- function(request, retrieved_at, config = g5_alpaca_confi
   }
   rownames(data) <- NULL
   list(data = data, pages = pages, endpoint = endpoint)
+}
+
+g5_alpaca_map_calendar_payload <- function(parsed, as_of_timestamp, retrieved_at) {
+  if (!is.list(parsed)) g5_stop("Parsed Alpaca calendar payload must be a list.")
+  .g5_alpaca_context_time(as_of_timestamp, "as_of_timestamp")
+  .g5_alpaca_context_time(retrieved_at, "retrieved_at")
+  if (!length(parsed)) {
+    return(data.frame(
+      session_date = as.Date(character()),
+      market_open = character(),
+      market_close = character(),
+      as_of_timestamp = character(),
+      retrieved_at = character(),
+      stringsAsFactors = FALSE
+    ))
+  }
+  rows <- lapply(parsed, function(session) {
+    date <- as.Date(as.character(.g5_alpaca_article_value(session, "date")))
+    if (is.na(date)) g5_stop("Alpaca calendar row has an invalid date.")
+    data.frame(
+      session_date = date,
+      market_open = as.character(.g5_alpaca_article_value(session, "open")),
+      market_close = as.character(.g5_alpaca_article_value(session, "close")),
+      as_of_timestamp = as.character(as_of_timestamp),
+      retrieved_at = as.character(retrieved_at),
+      stringsAsFactors = FALSE
+    )
+  })
+  out <- do.call(rbind, rows)
+  out <- out[order(out$session_date), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+g5_fetch_alpaca_calendar <- function(
+  start_date,
+  end_date,
+  as_of_timestamp,
+  retrieved_at,
+  config = g5_alpaca_config_from_env(),
+  trading_base_url = Sys.getenv("ALPACA_TRADING_BASE_URL", unset = "https://api.alpaca.markets")
+) {
+  start_date <- as.Date(start_date)
+  end_date <- as.Date(end_date)
+  if (any(is.na(c(start_date, end_date))) || start_date > end_date) {
+    g5_stop("Calendar start_date and end_date must be valid and ordered.")
+  }
+  .g5_alpaca_context_validate_window(
+    paste0(start_date, "T00:00:00Z"),
+    paste0(end_date, "T23:59:59Z"),
+    as_of_timestamp
+  )
+  .g5_alpaca_context_time(retrieved_at, "retrieved_at")
+  g5_alpaca_preflight_live_fetch(config)
+  endpoint <- paste0(sub("/+$", "", trading_base_url), "/v2/calendar")
+  response <- httr::GET(
+    endpoint,
+    .g5_alpaca_context_headers(config),
+    query = list(start = as.character(start_date), end = as.character(end_date))
+  )
+  response_text <- httr::content(response, as = "text", encoding = "UTF-8")
+  status <- httr::status_code(response)
+  if (httr::http_error(response)) {
+    g5_stop(paste("Alpaca calendar request failed with HTTP", status, "-", g5_alpaca_response_message(response_text)))
+  }
+  parsed <- jsonlite::fromJSON(response_text, simplifyVector = FALSE)
+  list(
+    data = g5_alpaca_map_calendar_payload(parsed, as_of_timestamp, retrieved_at),
+    endpoint = endpoint,
+    http_status = status,
+    response_bytes = nchar(response_text, type = "bytes"),
+    response_text = response_text
+  )
 }
 
 g5_probe_alpaca_index_values <- function(request, retrieved_at, config = g5_alpaca_config_from_env()) {

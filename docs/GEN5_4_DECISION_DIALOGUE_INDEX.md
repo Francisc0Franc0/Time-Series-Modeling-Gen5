@@ -51,6 +51,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D27` | Retain VIX as multi-horizon continuous risk evidence but stop because the frozen TRAIN-median state was unstable | 3-5 | `small proof of concept using non-OHLCV indicators` | Completed C2 `STOP_THRESHOLD_INSTABILITY`; no scaler |
 | `D28` | Freeze an Alpaca retrieval-only capability POC before defining any news or index feature | 2 | `maybe even a simple POC where we display and prove` | Completed N0/I0 contract; no analysis |
 | `D29` | Accept historical news availability and record index HTTP 403 as an entitlement boundary | 3-5 | `Okay, let's proceed` | `PARTIAL_PASS_NEWS_AVAILABLE_INDEX_NOT_AUTHORIZED` |
+| `D30` | Treat news first as information-arrival and uncertainty context; freeze a point-in-time admissibility audit before outcome measurement | 3-5 | `This sounds great to me. Proceed.` | N1A contract frozen; no sentiment or outcomes |
+| `D31` | Preserve the N1A pass while carrying its symbol-history, concentration, and stale-update limitations into the next theory gate | 3-5 | autonomous execution under D30 | `PASS_N1A_ADMISSIBLE_FOR_N1B_DISCUSSION`; no feature authority |
 
 ## Compact Decision Records
 
@@ -415,6 +417,34 @@ tasks by the branch name above, the phrase, or the decision date.
   sentiment predicts anything. A separate theory contract must precede a news
   representation POC.
 
+### D30 — Information arrival before directional sentiment
+
+- **Question:** What is the first economically defensible role for Alpaca news,
+  given after-close signals and next-open execution?
+- **Decision:** Treat news as a possible information-arrival and uncertainty
+  measure, not a directional tone score. Run N1A as a timestamp, revision,
+  duplicate, and density admission audit before looking at market outcomes.
+- **Why:** Generic sentiment ignores expectations, event asymmetry, repeated
+  coverage, revisions, and the price response that may occur before the next
+  executable open.
+- **Boundary:** `updated_at` is conservative availability authority; 17:30
+  America/New_York is the scheduled cutoff; sentiment, features, outcomes,
+  OHLCV joins, and models remain closed.
+
+### D31 — N1A passes admission, not representation
+
+- **Question:** Is the archive sufficiently auditable and dense to discuss one
+  measurement-only news hypothesis?
+- **Decision:** Record the 9/9 hard-gate pass without converting it into feature
+  authority. Carry three observed limitations into N1B design: the pre-META
+  symbol-key gap, 60.15% top-five association concentration, and a stale-update
+  tail containing 630 delays over 24 hours and 39 over one year.
+- **Why:** The archive is large and timestamp-assignable, but raw counts are not
+  comparable across symbols and a late archival update is not necessarily new
+  economic information.
+- **Boundary:** No post hoc change to N1A thresholds. N1B requires a new frozen
+  contract before any outcome join.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -423,6 +453,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Cross-sectional asset-selection POC plan](GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md)
 - [Point-in-time fundamentals admission gate](GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md)
 - [Alpaca context capability POC](GEN5_4_ALPACA_CONTEXT_CAPABILITY_POC.md)
+- [News admissibility N1A contract](GEN5_4_NEWS_ADMISSIBILITY_N1A_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -430,6 +461,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
 - `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
 - `presentations/gen5_4_alpaca_context_capability_evidence_update.pptx`
+- `presentations/gen5_4_news_admissibility_n1a_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -447,8 +479,10 @@ stability, so scaler design is still closed. The SEC fundamentals lane is separa
 by Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
 search, top-K policy, scaling, allocation, and live-advice code remain closed.
 The Alpaca context capability lane separately proved historical-news retrieval
-and recorded index-data HTTP 403 as an entitlement boundary. No news
-representation or index series was admitted to feature research.
+and recorded index-data HTTP 403 as an entitlement boundary. N1A then passed
+all nine frozen archive-admission gates, so one measurement-only N1B theory
+discussion may proceed. No news representation, outcome join, sentiment
+feature, model, or index series has been admitted to feature research.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

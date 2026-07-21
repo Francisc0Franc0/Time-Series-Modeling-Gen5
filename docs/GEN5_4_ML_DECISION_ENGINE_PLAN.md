@@ -600,6 +600,30 @@ Overall status is `PARTIAL_PASS_NEWS_AVAILABLE_INDEX_NOT_AUTHORIZED`. Sentiment,
 feature, outcome, OHLCV-join, and model-fit counts remain zero. Any next news
 slice requires a separate point-in-time representation theory contract.
 
+## News Admissibility N1A Readout
+
+N1A treated news as possible information arrival rather than directional
+sentiment and audited the 2020-2024 Alpaca archive for the fixed 24-stock panel.
+`updated_at` was conservative availability authority; each article entered the
+first 17:30 America/New_York scheduled decision at or after its final update,
+with execution assigned to the following market session. Exact normalized
+titles repeated within 72 hours were clustered using prior articles only.
+
+The archive contained 95,126 articles across 1,904 complete HTTP 200 pages,
+130,695 candidate associations, and 1,258 market sessions. All nine frozen hard
+gates passed and no predeclared WARN fired. The minimum yearly density result
+was 23 of 24 candidates, maximum single-symbol share was 19.29%, exact-title
+repeat share was 1.76%, and final updates crossed a decision cycle for 1.01% of
+articles.
+
+Overall status is `PASS_N1A_ADMISSIBLE_FOR_N1B_DISCUSSION`, not feature
+authority. Inspection also found a pre-META symbol-history gap, 60.15% of
+associations concentrated in the five most-covered symbols, and 630 articles
+with update delays over 24 hours, including 39 over one year. N1B therefore
+requires a frozen symbol-history treatment, symbol-local TRAIN-only intensity
+normalization, and a stale-update exclusion rule before any outcome is joined.
+Generic sentiment remains closed.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -626,3 +650,7 @@ The operator owns these decisions before promotion beyond POC:
 - whether historical news should stop at capability proof or proceed to a
   point-in-time representation contract; do not begin with generic sentiment or
   inspect market outcomes before that contract is frozen.
+- whether the passing N1A archive should proceed to one measurement-only N1B
+  uncertainty hypothesis. Before implementation, freeze treatment of the
+  pre-META symbol discontinuity, the stale-update tail, and symbol-local
+  TRAIN-only normalization. Do not compare raw article counts across symbols.
