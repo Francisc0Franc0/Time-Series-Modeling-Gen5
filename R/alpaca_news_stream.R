@@ -16,6 +16,37 @@ g5_news_live_symbols <- function() {
   paste0(format(value, "%Y-%m-%dT%H:%M:%OS3", tz = "UTC"), "Z")
 }
 
+g5_news_receipt_axis <- function(received_at, minimum_span_seconds = 120, tick_count = 5L) {
+  if (!length(received_at) || anyNA(received_at) || any(!nzchar(received_at))) {
+    g5_stop("At least one complete receipt timestamp is required.")
+  }
+  minimum_span_seconds <- as.numeric(minimum_span_seconds)
+  tick_count <- as.integer(tick_count)
+  if (!is.finite(minimum_span_seconds) || minimum_span_seconds <= 0) {
+    g5_stop("minimum_span_seconds must be positive.")
+  }
+  if (is.na(tick_count) || tick_count < 2L) g5_stop("tick_count must be at least two.")
+
+  parsed <- as.POSIXct(received_at, tz = "UTC", format = "%Y-%m-%dT%H:%M:%OSZ")
+  if (anyNA(parsed)) g5_stop("Receipt timestamps must be valid RFC3339 UTC values.")
+  positions <- as.numeric(parsed)
+  limits <- range(positions)
+  if (diff(limits) < minimum_span_seconds) {
+    midpoint <- mean(limits)
+    limits <- midpoint + c(-0.5, 0.5) * minimum_span_seconds
+  }
+  ticks <- seq(limits[[1L]], limits[[2L]], length.out = tick_count)
+  tick_times <- as.POSIXct(ticks, origin = "1970-01-01", tz = "UTC")
+  dates <- unique(format(parsed, "%Y-%m-%d", tz = "UTC"))
+  list(
+    positions = positions,
+    limits = limits,
+    ticks = ticks,
+    tick_labels = format(tick_times, "%H:%M:%S", tz = "UTC"),
+    date_label = paste(dates, collapse = " / ")
+  )
+}
+
 .g5_news_bind_rows <- function(rows, empty) {
   if (!length(rows)) return(empty())
   out <- do.call(rbind, rows)

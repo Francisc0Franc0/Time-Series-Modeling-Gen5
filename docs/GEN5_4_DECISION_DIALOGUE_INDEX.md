@@ -55,6 +55,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D31` | Preserve the N1A pass while carrying its symbol-history, concentration, and stale-update limitations into the next theory gate | 3-5 | autonomous execution under D30 | `PASS_N1A_ADMISSIBLE_FOR_N1B_DISCUSSION`; no feature authority |
 | `D32` | Freeze one issuer-relative news-intensity hypothesis against post-next-open five-session realized volatility | — | `These are all wonderful suggestions. Let's proceed` | N1B contract frozen; implementation contingent on N1L |
 | `D33` | Preserve the N1L transport pass but do not claim live payload equivalence without observing a candidate article | — | approved live-feasibility checkpoint | `PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`; N1B remains blocked |
+| `D34` | Promote N1L only after a later bounded shadow run captures and reconciles a valid live article | — | `Proceed` | `PASS_N1L_LIVE_PATH_READY`; operational N1B STOP removed |
 
 ## Compact Decision Records
 
@@ -474,6 +475,20 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Keep the N1B outcome join closed pending a live candidate
   article observation or explicit operator acceptance of the limitation.
 
+### D34 — A live article closes the N1L prospective-path gap
+
+- **Question:** Does a longer bounded premarket observation capture a valid
+  live payload that can be reconciled to the REST archive?
+- **Decision:** Promote N1L to `PASS_N1L_LIVE_PATH_READY` after two 300-second
+  connections passed all 13 gates and connection 2 received one complete live
+  article that matched REST by ID, headline, and symbol metadata.
+- **Why:** This observes the missing prospective payload path rather than
+  accepting it by assumption. The six-second receipt/provider timestamp skew
+  is retained as audit evidence, not hidden.
+- **Boundary:** Local receipt time is prospective availability authority.
+  Passing N1L opens the frozen N1B implementation gate only; it establishes no
+  news predictiveness, exposure policy, allocation, or live-advice authority.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -494,6 +509,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_alpaca_context_capability_evidence_update.pptx`
 - `presentations/gen5_4_news_admissibility_n1a_evidence_update.pptx`
 - `presentations/gen5_4_news_live_feasibility_n1l_evidence_update.pptx`
+- `presentations/gen5_4_news_live_feasibility_n1l_shadow_confirmation.pptx`
 
 ## Current Stop State
 
@@ -515,9 +531,11 @@ and recorded index-data HTTP 403 as an entitlement boundary. N1A then passed
 all nine frozen archive-admission gates, so one measurement-only N1B theory
 discussion may proceed. No news representation, outcome join, sentiment
 feature, model, or index series has been admitted to feature research.
-N1B is now frozen, but N1L remains a partial pass: every transport and
-reconciliation gate passed while no live candidate article was observed.
-Therefore no news/outcome join is authorized yet.
+N1B is frozen and N1L now passes the prospective live-path gate: every
+transport and reconciliation gate passed again, and one complete live article
+matched the REST overlap. The operational block on the frozen N1B measurement
+POC is removed, but no outcome has yet been joined and no predictive claim or
+downstream policy is authorized.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

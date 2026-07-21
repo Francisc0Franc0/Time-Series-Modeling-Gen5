@@ -641,12 +641,18 @@ and reconnect. Six control frames received complete local UTC timestamps. The
 corrected 15-minute REST overlap exhausted one HTTP 200 page without a
 reconciliation conflict. All 13 hard gates passed.
 
-No live candidate article arrived during the four-minute observation. The one
-REST article in the corrected overlap predated subscription, so no live-versus-
-REST payload match could be observed. Overall status is
-`PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`. Keep the N1B outcome join
-closed pending a later live candidate observation or explicit operator
-acceptance of this limitation.
+No live candidate article arrived during the initial four-minute observation,
+so its status remained a predeclared partial pass. A later premarket shadow run
+used two 300-second connections, passed all 13 gates again, and captured one
+complete live article on connection 2. The REST overlap returned the same ID
+with an exact headline and symbol match and no same-version conflict. N1L now
+records `PASS_N1L_LIVE_PATH_READY`.
+
+The local receipt time preceded provider `created_at` metadata by approximately
+six seconds. Prospective availability must therefore use local receipt time;
+provider timestamps remain metadata near decision boundaries. The operational
+N1B STOP is removed, but no outcome join, predictive claim, exposure rule, or
+live-advice authority follows from this transport result.
 
 ## STOP Decisions
 

@@ -10,6 +10,16 @@ test_that("N1L symbol subscription retains both point-in-time Meta aliases", {
   expect_identical(anyDuplicated(symbols), 0L)
 })
 
+test_that("single live receipt timestamps render on a bounded intraday axis", {
+  axis <- g5_news_receipt_axis("2026-07-21T08:46:16.002Z")
+  expect_equal(diff(axis$limits), 120)
+  expect_length(axis$ticks, 5L)
+  expect_identical(axis$date_label, "2026-07-21")
+  expect_true(all(grepl("^[0-9]{2}:[0-9]{2}:[0-9]{2}$", axis$tick_labels)))
+  expect_true(axis$positions[[1L]] > axis$limits[[1L]])
+  expect_true(axis$positions[[1L]] < axis$limits[[2L]])
+})
+
 test_that("Alpaca stream acknowledgements and news map without content", {
   received_at <- "2026-07-21T06:30:00.000Z"
   ack <- g5_parse_alpaca_news_stream_frame(

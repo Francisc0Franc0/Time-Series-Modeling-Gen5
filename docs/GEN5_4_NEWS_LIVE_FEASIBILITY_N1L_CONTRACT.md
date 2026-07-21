@@ -1,6 +1,6 @@
 # Gen5.4 News Live Feasibility N1L Contract
 
-Status: completed; `PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`
+Status: completed; `PASS_N1L_LIVE_PATH_READY`
 
 Decision date: 2026-07-21
 
@@ -100,8 +100,8 @@ contract. It does not establish that news contains predictive information.
 
 ## N1L Readout
 
-The authority run used two 120-second connections and a corrected explicit
-15-minute REST overlap. All 13 frozen hard gates passed:
+The initial authority run used two 120-second connections and a corrected
+explicit 15-minute REST overlap. All 13 frozen hard gates passed:
 
 - both connections opened, authenticated, and received subscription
   acknowledgements for all 25 requested point-in-time symbol keys;
@@ -117,7 +117,27 @@ No live candidate article arrived during the combined four-minute observation.
 The corrected REST window contained one candidate article whose provider update
 preceded the first subscription, so it was correctly classified as REST-only.
 
-The result is therefore the predeclared partial pass rather than full live
-payload equivalence. N1B outcome testing remains blocked unless a later shadow
-observation captures at least one valid live candidate article or the operator
-explicitly accepts this limitation.
+The result was therefore the predeclared partial pass rather than full live
+payload equivalence.
+
+### Premarket Shadow Confirmation
+
+A later shadow run at approximately 04:39-04:49 US Eastern used the maximum
+predeclared duration of two 300-second connections. All 13 hard gates passed
+again. Seven raw frames were receipt-timestamped; connection 1 closed cleanly;
+connection 2 opened, authenticated, and acknowledged all 25 requested symbol
+keys.
+
+Connection 2 received one complete candidate article. The explicit REST
+overlap returned two articles, including the same live article ID with an exact
+headline and symbol-metadata match. There were no same-version conflicts,
+pagination exhausted on one HTTP 200 page, and credentials plus every excluded
+analysis surface remained absent. The final status is therefore
+`PASS_N1L_LIVE_PATH_READY`.
+
+The captured local receipt time preceded Alpaca's provider `created_at` by
+approximately six seconds. This does not invalidate the transport pass, but it
+does establish a conservative timing rule: local receipt time is the
+prospective availability authority, and provider timestamps must not silently
+override it near a decision boundary. N1L removes the operational N1B STOP; it
+does not establish predictive value or authorize live advice.

@@ -1,6 +1,6 @@
 # Gen5.4 News Risk Measurement N1B Contract
 
-Status: frozen; implementation blocked by the N1L partial-pass stop state
+Status: frozen; implementation gate open after the N1L live-path pass
 
 Decision date: 2026-07-21
 
@@ -143,8 +143,16 @@ N1B implementation does not begin until the separately frozen N1L live-news
 feasibility check establishes an operationally reproducible data path or the
 operator explicitly accepts a documented limitation.
 
-N1L subsequently passed all 13 transport and reconciliation gates but observed
-no live candidate article during two 120-second connections. Its status is
-`PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`. That does not satisfy the
-full prospective-equivalence condition above; the N1B outcome join remains
-closed pending a live payload observation or explicit operator acceptance.
+The first N1L authority run passed all 13 transport and reconciliation gates
+but observed no live candidate article during two 120-second connections. A
+later premarket shadow run used two 300-second connections and captured one
+complete live article that matched the REST overlap by article ID, headline,
+and symbol metadata without a same-version conflict. N1L therefore advanced to
+`PASS_N1L_LIVE_PATH_READY`, removing the operational data-path STOP.
+
+The live article's local receipt timestamp preceded the provider `created_at`
+metadata by approximately six seconds. N1B must therefore keep point-in-time
+availability and decision-cycle assignment conservative: local receipt time is
+authoritative prospectively, while archived provider timestamps remain
+metadata whose boundary behavior requires explicit audit. No outcome has yet
+been joined under this contract.

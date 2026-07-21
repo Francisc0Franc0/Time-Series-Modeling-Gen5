@@ -118,6 +118,10 @@ missing_news_fields <- if (!nrow(news_messages)) 0L else sum(
     !nzchar(news_messages$created_at) |
     !nzchar(news_messages$updated_at)
 )
+receipt_provider_offset_seconds <- if (!nrow(news_messages)) numeric() else as.numeric(
+  parse_rfc3339_utc(news_messages$received_at) - parse_rfc3339_utc(news_messages$created_at),
+  units = "secs"
+)
 
 gate_rows <- list(
   data.frame(gate_id = "connection_1_open", passed = event_present(connection_1$lifecycle, "open"), detail = "first bounded connection opened"),
@@ -177,17 +181,21 @@ overall_status <- if (any(!gates$passed)) {
 health <- data.frame(
   severity = c(
     if (nrow(news_messages)) "INFO" else "WARN",
-    "INFO", "INFO", "INFO", "INFO"
+    "INFO", "INFO", "INFO", "INFO", "INFO"
   ),
   check_id = c(
     "live_article_observation", "stream_frame_count", "rest_article_count",
-    "reconciliation_match_count", "credential_artifact_count"
+    "reconciliation_match_count", "receipt_minus_provider_created_seconds",
+    "credential_artifact_count"
   ),
   value = c(
     as.character(nrow(news_messages)),
     as.character(nrow(frames)),
     as.character(nrow(rest$data)),
     as.character(sum(reconciliation$table$reconciliation_status == "matched")),
+    if (length(receipt_provider_offset_seconds)) {
+      paste(format(round(receipt_provider_offset_seconds, 3), nsmall = 3), collapse = "|")
+    } else "",
     "0"
   ),
   detail = c(
@@ -195,6 +203,7 @@ health <- data.frame(
     paste0("connection_1=", nrow(connection_1$frames), ";connection_2=", nrow(connection_2$frames)),
     paste0("window=", rest_start, " through ", reconciliation_at),
     "exact headline and symbol metadata match",
+    "local receipt minus provider created_at; retain receipt time as prospective availability authority",
     "credentials are never written to run artifacts"
   ),
   stringsAsFactors = FALSE
@@ -280,18 +289,20 @@ grDevices::dev.off()
 
 grDevices::png(file.path(visual_dir, "n1l_live_receipt_tape.png"), width = 1500, height = 850, res = 150)
 if (nrow(news_messages)) {
-  receipt_time <- parse_rfc3339_utc(news_messages$received_at)
+  receipt_axis <- g5_news_receipt_axis(news_messages$received_at)
   primary_symbol <- sub("\\|.*$", "", news_messages$symbols)
-  symbol_levels <- rev(unique(primary_symbol))
-  symbol_y <- match(primary_symbol, rev(symbol_levels))
+  symbol_levels <- unique(primary_symbol)
+  symbol_y <- match(primary_symbol, symbol_levels)
   graphics::par(mar = c(7, 10, 4, 2))
   graphics::plot(
-    receipt_time, symbol_y,
+    receipt_axis$positions, symbol_y,
     pch = 19, col = ifelse(news_messages$connection_id == "connection_1", "#2563EB", "#D97706"),
-    yaxt = "n", ylab = "", xlab = "Local UTC receipt time",
+    xaxt = "n", yaxt = "n", ylab = "", xlab = "", xlim = receipt_axis$limits,
     main = "Live articles are preserved at local receipt time"
   )
+  graphics::axis(1, at = receipt_axis$ticks, labels = receipt_axis$tick_labels)
   graphics::axis(2, at = seq_along(symbol_levels), labels = symbol_levels, las = 1)
+  graphics::mtext(paste0("Local UTC receipt time (", receipt_axis$date_label, ")"), side = 1, line = 3)
   graphics::legend("topright", legend = c("Connection 1", "Connection 2"), col = c("#2563EB", "#D97706"), pch = 19, bty = "n")
 } else {
   graphics::plot.new()
@@ -309,7 +320,10 @@ report <- c(
   paste0("- Captured `", nrow(frames), "` raw WebSocket frames and `", nrow(news_messages), "` live news message(s) across two bounded connections."),
   paste0("- REST reconciliation returned `", nrow(rest$data), "` article(s) across `", nrow(rest_page_manifest), "` complete HTTP 200 page(s)."),
   paste0("- Exact stream/REST matches: `", sum(reconciliation$table$reconciliation_status == "matched"), "`; same-version conflicts: `", length(reconciliation$conflicting_stream_ids), "`."),
-  paste0("- Hard transport and reconciliation gates passed: `", sum(gates$passed), " / ", nrow(gates), "`."), "",
+  paste0("- Hard transport and reconciliation gates passed: `", sum(gates$passed), " / ", nrow(gates), "`."),
+  if (length(receipt_provider_offset_seconds)) {
+    paste0("- Local receipt minus provider `created_at` in seconds: `", paste(format(round(receipt_provider_offset_seconds, 3), nsmall = 3), collapse = ", "), "`; local receipt remains prospective availability authority.")
+  } else NULL, "",
   "## Interpretation", "",
   if (overall_status == "PASS_N1L_LIVE_PATH_READY") {
     "At least one live article was received with a local UTC timestamp, and the reconnect plus REST overlap path passed. N1L removes the operational data-path STOP in the frozen N1B contract; it does not establish predictive value."
