@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
-Status: theory-first provenance index; no implementation authority  
-Index date: 2026-07-19  
+Status: theory-first provenance index; capability POCs recorded; no model or live authority
+Index date: 2026-07-21
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -49,6 +49,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D25` | Stop before scaler design because SPY drawdown passed h5 risk ordering but no OHLCV primitive passed both frozen horizons | 3-5 | `I agree with your recommendations` | Completed C1 STOP; h5 evidence retained |
 | `D26` | Use official Cboe VIX rather than silently substituting Alpaca-available VIXY after Alpaca returned no VIX index rows | 2 | `if possible, let's use [Alpaca]` | Research-only Cboe boundary; Alpaca remains OHLCV authority |
 | `D27` | Retain VIX as multi-horizon continuous risk evidence but stop because the frozen TRAIN-median state was unstable | 3-5 | `small proof of concept using non-OHLCV indicators` | Completed C2 `STOP_THRESHOLD_INSTABILITY`; no scaler |
+| `D28` | Freeze an Alpaca retrieval-only capability POC before defining any news or index feature | 2 | `maybe even a simple POC where we display and prove` | Completed N0/I0 contract; no analysis |
+| `D29` | Accept historical news availability and record index HTTP 403 as an entitlement boundary | 3-5 | `Okay, let's proceed` | `PARTIAL_PASS_NEWS_AVAILABLE_INDEX_NOT_AUTHORIZED` |
 
 ## Compact Decision Records
 
@@ -389,6 +391,30 @@ tasks by the branch name above, the phrase, or the decision date.
   or exposure mappings on the inspected C2 folds. Any calibration proposal must
   be predeclared and evaluated on untouched data.
 
+### D28 — Retrieval must precede representation
+
+- **Question:** Can the existing Alpaca account retrieve simple non-OHLCV data
+  before any claim is made about its usefulness?
+- **Decision:** Freeze one seven-day, five-symbol historical-news retrieval and
+  one historical-index entitlement probe. Preserve raw pages, page-token
+  traversal, IDs, and both created and updated timestamps.
+- **Why:** Provider availability, historical coverage, timestamp semantics, and
+  pagination are prerequisites for a leakage-safe feature discussion.
+- **Boundary:** No sentiment, embeddings, labels, outcomes, OHLCV joins, or
+  model fits.
+
+### D29 — News is available; index access is not entitled
+
+- **Question:** What did the current Alpaca credentials actually retrieve?
+- **Decision:** Accept N0 as a capability pass and I0 as an account-entitlement
+  stop. Do not treat either result as predictive evidence.
+- **Why:** N0 returned 239 records across five fully traversed HTTP 200 pages,
+  with unique IDs and complete headline/created/updated fields. I0 returned HTTP
+  403 with `not authorized for index data`.
+- **Boundary:** Do not infer that article volume, symbol counts, or generic
+  sentiment predicts anything. A separate theory contract must precede a news
+  representation POC.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -396,12 +422,14 @@ tasks by the branch name above, the phrase, or the decision date.
 - [POC progress log](GEN5_1_POC_PROGRESS_LOG.md)
 - [Cross-sectional asset-selection POC plan](GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md)
 - [Point-in-time fundamentals admission gate](GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md)
+- [Alpaca context capability POC](GEN5_4_ALPACA_CONTEXT_CAPABILITY_POC.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 - `presentations/gen5_4_cross_sectional_x1b_c0_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
 - `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
+- `presentations/gen5_4_alpaca_context_capability_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -418,6 +446,9 @@ that survived control for SPY drawdown, but its frozen median state failed fold
 stability, so scaler design is still closed. The SEC fundamentals lane is separately blocked
 by Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
 search, top-K policy, scaling, allocation, and live-advice code remain closed.
+The Alpaca context capability lane separately proved historical-news retrieval
+and recorded index-data HTTP 403 as an entitlement boundary. No news
+representation or index series was admitted to feature research.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

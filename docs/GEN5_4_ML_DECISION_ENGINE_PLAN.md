@@ -577,6 +577,29 @@ only `10 / 20` h5 folds and `8 / 20` h20 folds. Overall status is
 `STOP_THRESHOLD_INSTABILITY`. This is a measurement success but a policy-gate
 failure. Do not search a threshold or monotone mapping on the same OOS folds.
 
+## Alpaca Context Capability Readout
+
+The retrieval-only N0/I0 packet tested whether the existing Alpaca credentials
+could supply non-OHLCV context before any feature hypothesis was opened. N0
+requested `AAPL,AMD,NVDA,TSLA,MSTR` news from 2024-01-02 through 2024-01-08,
+retained raw responses, traversed every page token, and normalized metadata
+without copying article content or images into the research table.
+
+N0 passed: 239 articles arrived across five HTTP 200 pages totaling 209,710 raw
+bytes. Duplicate IDs, missing headlines, missing created/updated timestamps, and
+creation dates outside the request window were all zero. This establishes
+availability and auditability only; article counts and symbol mentions are not
+signals.
+
+I0 probed Alpaca's new `/v1beta1/indices/values` endpoint for `VIX,SPX,NDX`.
+The current account returned HTTP 403 with `not authorized for index data`.
+That is an entitlement boundary distinct from the earlier stock-bars result.
+It does not change C2's official Cboe authority.
+
+Overall status is `PARTIAL_PASS_NEWS_AVAILABLE_INDEX_NOT_AUTHORIZED`. Sentiment,
+feature, outcome, OHLCV-join, and model-fit counts remain zero. Any next news
+slice requires a separate point-in-time representation theory contract.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -600,3 +623,6 @@ The operator owns these decisions before promotion beyond POC:
 - whether C2's multi-horizon continuous VIX evidence merits one predeclared
   monotone calibration tested only on untouched post-2024 data, or whether the
   risk-policy lane should stop; do not tune that mapping on C2's inspected folds.
+- whether historical news should stop at capability proof or proceed to a
+  point-in-time representation contract; do not begin with generic sentiment or
+  inspect market outcomes before that contract is frozen.
