@@ -551,6 +551,32 @@ Overall status is `STOP_BEFORE_RISK_SCALER_DESIGN`. The short-horizon drawdown
 result is retained as theory evidence, but it does not authorize deleting the
 agreed `h20` requirement, choosing a volatility target, or replaying a scaler.
 
+## C2 Option-Implied Risk Readout
+
+C2 tested one predeclared non-OHLCV input: the official Cboe VIX close. The
+existing Alpaca stock-bars path returned no VIX rows in a live feasibility
+check. It did return `VIXY`, but that futures-ETF product was rejected because
+it changes the economic hypothesis. Cboe was therefore added only as an
+isolated research provider; Alpaca remains canonical for adjusted daily OHLCV.
+
+The accepted Cboe sample contained 1,780 observations from 2018-01-02 through
+2024-12-31 and joined every evaluation session without filling. The audit reused
+C1's executable basket labels, 20 quarterly OOS folds, eight-quarter TRAIN
+windows, and h5/h20 horizons. A TRAIN median defined the frozen high-VIX state.
+Partial rank correlation controlling for SPY drawdown was predeclared as the
+incremental-information check.
+
+VIX passed continuous ordering at both horizons. Mean direct correlation was
+`0.272` at h5 and `0.131` at h20, with `15 / 20` and `12 / 20` positive folds.
+Mean partial correlation was `0.155` and `0.220`, with `15 / 20` positive folds
+at each horizon. VIX therefore contributes risk information beyond SPY
+drawdown.
+
+The TRAIN-median state failed: high-minus-low risk separation was positive in
+only `10 / 20` h5 folds and `8 / 20` h20 folds. Overall status is
+`STOP_THRESHOLD_INSTABILITY`. This is a measurement success but a policy-gate
+failure. Do not search a threshold or monotone mapping on the same OOS folds.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -571,3 +597,6 @@ The operator owns these decisions before promotion beyond POC:
 - whether a future risk controller should be deliberately h5-only, or whether
   multi-horizon stability remains mandatory and requires a distinct macro/credit
   information family; C1 must not answer this by dropping h20 after inspection.
+- whether C2's multi-horizon continuous VIX evidence merits one predeclared
+  monotone calibration tested only on untouched post-2024 data, or whether the
+  risk-policy lane should stop; do not tune that mapping on C2's inspected folds.

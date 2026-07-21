@@ -225,6 +225,36 @@ therefore `STOP_BEFORE_RISK_SCALER_DESIGN`. The result supports a possible
 short-horizon drawdown-risk mechanism, but it does not authorize a continuous
 scaler by deleting the predeclared `h20` requirement after inspection.
 
+## C2 Option-Implied Risk Audit
+
+C2 opened one genuinely different, retail-accessible risk input: the official
+Cboe VIX close. A credentialed preflight through the existing Alpaca stock-bars
+provider returned zero rows for `VIX` while returning seven rows for `VIXY` in
+the same window. `VIXY` was not accepted as a substitute because it is a traded
+rolling VIX-futures ETF rather than the Cboe VIX index. Alpaca remains the
+adjusted daily OHLCV authority; Cboe is isolated as a research-only index-data
+provider.
+
+The provider audit accepted 1,780 official VIX rows from 2018-01-02 through
+2024-12-31, matched 100% of evaluation sessions without filling, admitted no
+future rows, and passed all nine leakage checks. C2 then reused the C1 basket,
+execution timing, 20 quarterly folds, eight-quarter TRAIN windows, and h5/h20
+forward realized-risk targets. The only feature was the same-session VIX close.
+
+VIX passed continuous risk ordering at both horizons. Direct rank correlation
+was positive in `15 / 20` folds at h5 and `12 / 20` at h20, with mean
+correlations `0.272` and `0.131`. Partial rank correlation controlling for SPY
+drawdown was positive in `15 / 20` folds at both horizons, with means `0.155`
+and `0.220`. The information is therefore not merely a restatement of trailing
+equity drawdown.
+
+The frozen TRAIN-median high/low state did not transport. High-minus-low future
+risk was positive in only `10 / 20` h5 folds and `8 / 20` h20 folds, below the
+required `12 / 20`, even though pooled separation remained positive. C2 is
+therefore `STOP_THRESHOLD_INSTABILITY`. It admits VIX as continuous measurement
+evidence but does not authorize threshold search, a scaler, target volatility,
+allocation, replay, or live behavior.
+
 ## Artifacts
 
 - Packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_20260719x0x1/`
@@ -236,10 +266,13 @@ scaler by deleting the predeclared `h20` requirement after inspection.
 - X1b/C0 packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_x1b_c0_20260719/`
 - C1 authority packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_c1_risk_20260719v2/`
 - C1 deck: `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
+- C2 authority packet: `runs/research_workbench/gen54_ml_decision_engine/g54_c2_vix_risk_20260721/`
+- C2 deck: `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
 
 ## Current Boundary
 
 No model, top-K portfolio, exposure scaler, allocation method, performance
-acceptance, or live behavior is authorized by X0/X1, X1b/C0, or C1. The ranking
-architecture remains `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`, and the separate risk
-lane is `STOP_BEFORE_RISK_SCALER_DESIGN`.
+acceptance, or live behavior is authorized by X0/X1, X1b/C0, C1, or C2. The
+ranking architecture remains `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`. The risk lane
+has multi-horizon continuous VIX evidence but remains stopped before scaler
+design because its frozen state conversion was unstable.

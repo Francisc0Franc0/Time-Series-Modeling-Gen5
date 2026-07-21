@@ -47,6 +47,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D23` | Admit intraday-minus-overnight structure as one distinct ranking primitive, but stop the two-stage design because every C0 exposure diagnostic failed | 16-17 | `more sophisticated approach with your guidance` | Completed X1b/C0 STOP; no demonstrator |
 | `D24` | Redefine the exposure layer as portfolio-risk forecasting and require stable ordering at both h5 and h20 before any continuous scaler is designed | 2 | `the exposure layer should probably control risk` | Frozen C1 risk-audit contract; no scaler |
 | `D25` | Stop before scaler design because SPY drawdown passed h5 risk ordering but no OHLCV primitive passed both frozen horizons | 3-5 | `I agree with your recommendations` | Completed C1 STOP; h5 evidence retained |
+| `D26` | Use official Cboe VIX rather than silently substituting Alpaca-available VIXY after Alpaca returned no VIX index rows | 2 | `if possible, let's use [Alpaca]` | Research-only Cboe boundary; Alpaca remains OHLCV authority |
+| `D27` | Retain VIX as multi-horizon continuous risk evidence but stop because the frozen TRAIN-median state was unstable | 3-5 | `small proof of concept using non-OHLCV indicators` | Completed C2 `STOP_THRESHOLD_INSTABILITY`; no scaler |
 
 ## Compact Decision Records
 
@@ -362,6 +364,31 @@ tasks by the branch name above, the phrase, or the decision date.
   after inspecting this result. A new theory decision must justify an h5-only
   controller or a distinct macro/credit risk family.
 
+### D26 — Provider convenience does not redefine VIX
+
+- **Question:** Can the existing Alpaca adjusted-daily plumbing supply the VIX
+  input without adding a provider?
+- **Decision:** No. The credentialed stock-bars preflight returned zero `VIX`
+  rows and seven `VIXY` rows in the same window. Reject `VIXY` as a substitute
+  and use Cboe's official VIX history in an isolated research provider.
+- **Why:** VIXY tracks a rolling VIX-futures portfolio and can diverge materially
+  from spot VIX. Using it would change the hypothesis after provider discovery.
+- **Boundary:** Alpaca remains the only adjusted daily OHLCV authority. Cboe is
+  admitted only for this official index-history research surface.
+
+### D27 — Continuous information does not guarantee a usable state
+
+- **Question:** Does official VIX order future basket risk at h5 and h20, and
+  does it remain informative after controlling for SPY drawdown?
+- **Decision:** Yes for continuous ordering; no for the frozen median state.
+  Stop before scaler design with `STOP_THRESHOLD_INSTABILITY`.
+- **Why:** Direct correlations were positive in `15 / 20` h5 and `12 / 20` h20
+  folds. Drawdown-controlled correlations were positive in `15 / 20` at both.
+  High-minus-low state separation was positive in only `10 / 20` and `8 / 20`.
+- **Boundary:** Do not search thresholds, calibration curves, target volatility,
+  or exposure mappings on the inspected C2 folds. Any calibration proposal must
+  be predeclared and evaluated on untouched data.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -374,6 +401,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
 - `presentations/gen5_4_cross_sectional_x1b_c0_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
+- `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -385,8 +413,11 @@ admitted intraday-minus-overnight structure as a second distinct ranking
 primitive, but every C0 exposure-permission diagnostic failed, so the two-stage
 demonstrator remains closed. C1 then reframed exposure as risk forecasting: SPY
 drawdown passed `h5` but no primitive passed both `h5` and `h20`, so continuous
-scaler design is also closed. The SEC fundamentals lane is separately blocked
+scaler design remained closed. C2 found multi-horizon continuous VIX ordering
+that survived control for SPY drawdown, but its frozen median state failed fold
+stability, so scaler design is still closed. The SEC fundamentals lane is separately blocked
 by Akamai HTTP 403 before any payload was accepted. Model fitting, threshold
 search, top-K policy, scaling, allocation, and live-advice code remain closed.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
-C0 by reversing failed signs, or rescue C1 by deleting its failed horizon.
+C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
+rescue C2 by tuning a threshold or calibration on its inspected folds.
