@@ -651,8 +651,27 @@ records `PASS_N1L_LIVE_PATH_READY`.
 The local receipt time preceded provider `created_at` metadata by approximately
 six seconds. Prospective availability must therefore use local receipt time;
 provider timestamps remain metadata near decision boundaries. The operational
-N1B STOP is removed, but no outcome join, predictive claim, exposure rule, or
-live-advice authority follows from this transport result.
+N1B STOP was removed, but no predictive claim, exposure rule, or live-advice
+authority follows from this transport result.
+
+N1B has now run under the frozen contract. The authority packet adds the
+historical `FB` lane, treats `FB` and `META` as one issuer, excludes updates
+delayed over 24 hours and backward-looking 72-hour title repeats, and maps each
+issuer's decision-cycle count through its own preceding eight-quarter TRAIN
+ECDF. The only outcome is TRAIN-scaled five-session realized path volatility
+beginning at the next executable open.
+
+All data, support, and leakage checks passed. Mean fold Spearman correlation
+was `0.107321`; correlation was positive in `12 / 12` OOS quarters; and the
+high-intensity-minus-other separation was positive in `12 / 12` quarters.
+Record `PASS_N1B_TO_REPRESENTATION_DISCUSSION`.
+
+This pass is uncertainty-context evidence, not a strategy result. Discrete
+count ties make the frozen p80 state broader than a literal top 20% for some
+issuers, and archive coverage remains non-uniform through time. The next gate
+is a theory-first representation discussion. Sentiment, embeddings, direction,
+threshold search, model fitting, exposure, allocation, PnL, and live-advice
+changes remain closed.
 
 ## STOP Decisions
 
@@ -677,10 +696,8 @@ The operator owns these decisions before promotion beyond POC:
 - whether C2's multi-horizon continuous VIX evidence merits one predeclared
   monotone calibration tested only on untouched post-2024 data, or whether the
   risk-policy lane should stop; do not tune that mapping on C2's inspected folds.
-- whether historical news should stop at capability proof or proceed to a
-  point-in-time representation contract; do not begin with generic sentiment or
-  inspect market outcomes before that contract is frozen.
-- whether the passing N1A archive should proceed to one measurement-only N1B
-  uncertainty hypothesis. Before implementation, freeze treatment of the
-  pre-META symbol discontinuity, the stale-update tail, and symbol-local
-  TRAIN-only normalization. Do not compare raw article counts across symbols.
+- whether the passing N1B association merits one minimal predeclared
+  representation challenger, and if so whether recency, source identity, or
+  cross-issuer context is the first economically defensible addition. Do not
+  begin with generic sentiment, embeddings, directional targets, or threshold
+  search on the inspected 2022-2024 OOS folds.

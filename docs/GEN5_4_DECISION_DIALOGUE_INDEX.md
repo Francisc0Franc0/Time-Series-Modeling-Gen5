@@ -56,6 +56,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D32` | Freeze one issuer-relative news-intensity hypothesis against post-next-open five-session realized volatility | — | `These are all wonderful suggestions. Let's proceed` | N1B contract frozen; implementation contingent on N1L |
 | `D33` | Preserve the N1L transport pass but do not claim live payload equivalence without observing a candidate article | — | approved live-feasibility checkpoint | `PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`; N1B remains blocked |
 | `D34` | Promote N1L only after a later bounded shadow run captures and reconciles a valid live article | — | `Proceed` | `PASS_N1L_LIVE_PATH_READY`; operational N1B STOP removed |
+| `D35` | Accept the frozen N1B uncertainty association while keeping representation, models, and policy as separate gates | 2-7 | `Proceed` | `PASS_N1B_TO_REPRESENTATION_DISCUSSION`; no directional or policy authority |
 
 ## Compact Decision Records
 
@@ -489,6 +490,23 @@ tasks by the branch name above, the phrase, or the decision date.
   Passing N1L opens the frozen N1B implementation gate only; it establishes no
   news predictiveness, exposure policy, allocation, or live-advice authority.
 
+### D35 — News intensity provides stable uncertainty context
+
+- **Question:** Does unusually high issuer-local novel-news activity order
+  unusually wide five-session price paths beginning at the next executable
+  open?
+- **Decision:** Record `PASS_N1B_TO_REPRESENTATION_DISCUSSION`. Mean fold
+  Spearman correlation is `0.107321`; all `12 / 12` quarters have positive
+  correlation and positive high-intensity-minus-other separation.
+- **Why:** Every issuer-fold TRAIN support check and all 11 leakage/boundary
+  checks passed. The historical `FB` lane closes the pre-META identity gap,
+  issuer-local TRAIN ECDFs prevent pooled popularity counts, and no material
+  cache warning remains after refresh and hot-cache rerun.
+- **Boundary:** This is descriptive uncertainty-context evidence. Discrete
+  p80 ties broaden the high state, five-session outcomes overlap, and coverage
+  varies through time. No sentiment, direction, threshold search, model,
+  exposure, allocation, PnL, or live-advice authority follows.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -510,6 +528,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_admissibility_n1a_evidence_update.pptx`
 - `presentations/gen5_4_news_live_feasibility_n1l_evidence_update.pptx`
 - `presentations/gen5_4_news_live_feasibility_n1l_shadow_confirmation.pptx`
+- `presentations/gen5_4_news_risk_n1b_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -533,9 +552,11 @@ discussion may proceed. No news representation, outcome join, sentiment
 feature, model, or index series has been admitted to feature research.
 N1B is frozen and N1L now passes the prospective live-path gate: every
 transport and reconciliation gate passed again, and one complete live article
-matched the REST overlap. The operational block on the frozen N1B measurement
-POC is removed, but no outcome has yet been joined and no predictive claim or
-downstream policy is authorized.
+matched the REST overlap. N1B subsequently passed all frozen data, leakage,
+support, and association gates across 12 quarterly OOS folds. Treat the result
+as stable uncertainty-context evidence and open only a separate representation
+discussion. No directional claim, model, exposure rule, allocation, PnL, or
+live-advice authority is authorized.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

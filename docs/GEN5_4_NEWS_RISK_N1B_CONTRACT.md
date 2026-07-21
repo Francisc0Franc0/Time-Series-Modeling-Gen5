@@ -1,6 +1,6 @@
 # Gen5.4 News Risk Measurement N1B Contract
 
-Status: frozen; implementation gate open after the N1L live-path pass
+Status: completed POC; `PASS_N1B_TO_REPRESENTATION_DISCUSSION`; policy and model gates remain closed
 
 Decision date: 2026-07-21
 
@@ -133,6 +133,34 @@ If N1B is later implemented, the packet must include:
 - a report and slide-deck update that distinguish association from a usable
   exposure policy.
 
+## Authority Run Readout
+
+The accepted authority packet is
+`runs/research_workbench/gen54_ml_decision_engine/g54_news_n1b_20260721`.
+It adds 4,757 historical `FB` articles before issuer mapping, unifies `FB` and
+`META` under the frozen point-in-time validity windows, and evaluates 24
+issuers across 12 quarterly OOS folds. Every issuer has adjusted-bar coverage
+from 2019-12-20 through 2024-12-31. The refreshed hot-cache rerun contains zero
+material bar warnings, zero issuer-fold TRAIN support failures, and 11 of 11
+passing leakage and boundary checks.
+
+All three frozen association gates passed:
+
+- mean fold-level Spearman correlation: `0.107321`;
+- positive fold-level Spearman correlation: `12 / 12` quarters;
+- positive high-intensity-minus-other separation: `12 / 12` quarters.
+
+The high-intensity definition produced 5,725 eligible OOS issuer-cycles. Its
+quarterly share ranged from 24.8% to 46.8%, not exactly 20%, because discrete
+article counts create ties at the TRAIN ECDF boundary. That is a representation
+limitation to carry forward, not authority to retune the frozen percentile on
+the inspected folds.
+
+The result is `PASS_N1B_TO_REPRESENTATION_DISCUSSION`. It establishes a stable
+descriptive association between issuer-local news intensity and subsequent
+path width. It does not establish return direction, causality, an optimal
+threshold, a model, or a usable exposure policy.
+
 ## Hard Boundary
 
 Sentiment, embeddings, language models, event taxonomies, directional-return
@@ -154,5 +182,7 @@ The live article's local receipt timestamp preceded the provider `created_at`
 metadata by approximately six seconds. N1B must therefore keep point-in-time
 availability and decision-cycle assignment conservative: local receipt time is
 authoritative prospectively, while archived provider timestamps remain
-metadata whose boundary behavior requires explicit audit. No outcome has yet
-been joined under this contract.
+metadata whose boundary behavior requires explicit audit. N1B has now joined
+the single frozen uncertainty outcome under these rules; all downstream
+representation, model, exposure, allocation, and live-advice decisions remain
+separate gates.
