@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-07-21
+Index date: 2026-07-25
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -57,6 +57,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D33` | Preserve the N1L transport pass but do not claim live payload equivalence without observing a candidate article | — | approved live-feasibility checkpoint | `PARTIAL_PASS_N1L_TRANSPORT_READY_NO_LIVE_ARTICLE`; N1B remains blocked |
 | `D34` | Promote N1L only after a later bounded shadow run captures and reconciles a valid live article | — | `Proceed` | `PASS_N1L_LIVE_PATH_READY`; operational N1B STOP removed |
 | `D35` | Accept the frozen N1B uncertainty association while keeping representation, models, and policy as separate gates | 2-7 | `Proceed` | `PASS_N1B_TO_REPRESENTATION_DISCUSSION`; no directional or policy authority |
+| `D36` | Audit whether N1B news intensity adds uncertainty ordering beyond recent path volatility and current dollar-volume surprise before enriching the representation | — | `These are great insights. Proceed.` | N1C method and gates frozen for operator confirmation |
+| `D37` | Accept the N1C conditional-information pass while keeping representation and policy as separate gates | 1-6 | `Approved, proceed` | `PASS_N1C_TO_MINIMAL_REPRESENTATION_DISCUSSION`; no challenger or policy authority |
 
 ## Compact Decision Records
 
@@ -507,6 +509,42 @@ tasks by the branch name above, the phrase, or the decision date.
   varies through time. No sentiment, direction, threshold search, model,
   exposure, allocation, PnL, or live-advice authority follows.
 
+### D36 — Establish nonredundancy before representation complexity
+
+- **Question:** Does the passing N1B news measurement retain stable ordering of
+  future h5 path volatility after accounting for turbulence and trading
+  attention already visible at the decision cutoff?
+- **Decision:** Freeze N1C around the unchanged N1B population, news
+  measurement, and outcome, adding only prior h5 path volatility and current
+  dollar-volume surprise as controls. Use fold-level partial Spearman as the
+  primary statistic.
+- **Why:** Volatility clusters and event-driven volume can make a news count
+  proxy information already present in OHLCV. A professional feature process
+  should establish incremental information before adding recency, source,
+  sentiment, or text complexity.
+- **Boundary:** This is a system-information audit, not causal attribution.
+  The operator must confirm the exact control formulas, statistic, and gates
+  before implementation.
+
+### D37 — Accept conditional information without promoting a trading feature
+
+- **Question:** After controlling observable recent turbulence and current
+  dollar-volume surprise, does the frozen news intensity still retain stable
+  ordering of future h5 path volatility?
+- **Decision:** Accept
+  `PASS_N1C_TO_MINIMAL_REPRESENTATION_DISCUSSION`. Mean fold partial Spearman
+  was `0.087842`, all `12 / 12` quarters were positive, and all `11 / 11`
+  integrity/leakage checks passed.
+- **Why:** The raw N1B association was reproduced to machine precision, every
+  accepted OOS row retained complete controls, and the modest attenuation
+  (`0.019479`) did not erase quarterly stability. News therefore contains some
+  uncertainty-ordering information beyond the two frozen tape controls.
+- **Boundary:** The result is predictive association, not causation,
+  direction, economic value, or a deployable feature. Only a theory-first
+  discussion of one minimal recency-weighted challenger is open. Sentiment,
+  alternate controls or horizons, models, exposure, allocation, PnL, and live
+  behavior remain closed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -517,6 +555,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Alpaca context capability POC](GEN5_4_ALPACA_CONTEXT_CAPABILITY_POC.md)
 - [News admissibility N1A contract](GEN5_4_NEWS_ADMISSIBILITY_N1A_CONTRACT.md)
 - [News risk measurement N1B contract](GEN5_4_NEWS_RISK_N1B_CONTRACT.md)
+- [News nonredundancy N1C contract and authority readout](GEN5_4_NEWS_NONREDUNDANCY_N1C_CONTRACT.md)
 - [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
@@ -529,6 +568,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_live_feasibility_n1l_evidence_update.pptx`
 - `presentations/gen5_4_news_live_feasibility_n1l_shadow_confirmation.pptx`
 - `presentations/gen5_4_news_risk_n1b_evidence_update.pptx`
+- `presentations/gen5_4_news_nonredundancy_n1c_evidence_update.pptx`
 
 ## Current Stop State
 

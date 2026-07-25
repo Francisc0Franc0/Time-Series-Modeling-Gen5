@@ -673,6 +673,25 @@ is a theory-first representation discussion. Sentiment, embeddings, direction,
 threshold search, model fitting, exposure, allocation, PnL, and live-advice
 changes remain closed.
 
+The first representation-session decision was to test nonredundancy before
+adding representation complexity. The completed N1C packet kept the N1B
+population, news measurement, h5 future-volatility outcome, folds, and timing
+unchanged, then conditioned the fold-level rank relationship on only two
+pre-decision OHLCV controls: prior five-session path volatility and current
+dollar-volume surprise relative to the previous 60 sessions.
+
+N1C asks whether news adds uncertainty-ordering information beyond recent
+turbulence and market attention already visible in the tape. It does not ask
+whether news causally produces volatility. The authority run passed all 11
+integrity/leakage checks, retained positive conditional ordering in `12 / 12`
+quarters, and produced mean partial Spearman `0.087842` versus raw N1B
+`0.107321`. Record
+`PASS_N1C_TO_MINIMAL_REPRESENTATION_DISCUSSION`. This opens only a theory-first
+decision about one minimal challenger; it does not authorize representation
+code, sentiment, models, policy, exposure, allocation, PnL, or live changes.
+The exact frozen method and authority readout are documented in
+`docs/GEN5_4_NEWS_NONREDUNDANCY_N1C_CONTRACT.md`.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -701,3 +720,8 @@ The operator owns these decisions before promotion beyond POC:
   cross-issuer context is the first economically defensible addition. Do not
   begin with generic sentiment, embeddings, directional targets, or threshold
   search on the inspected 2022-2024 OOS folds.
+- whether the N1C nonredundancy pass merits exactly one predeclared
+  recency-weighted representation challenger. Do not implement that challenger
+  until its economic role, time-decay form, TRAIN-only calibration, and fresh
+  confirmation boundary are agreed without tuning to the inspected N1B/N1C
+  OOS results.
