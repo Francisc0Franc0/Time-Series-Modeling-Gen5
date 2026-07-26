@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-07-25
+Index date: 2026-07-26
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -61,6 +61,9 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D37` | Accept the N1C conditional-information pass while keeping representation and policy as separate gates | 1-6 | `Approved, proceed` | `PASS_N1C_TO_MINIMAL_REPRESENTATION_DISCUSSION`; no challenger or policy authority |
 | `D38` | Freeze one 24-hour exponential-recency challenger on untouched 2025Q1-2026Q2 confirmation data | — | `Perfect, proceed` | N1D method and five gates frozen; no alternate representation or policy authority |
 | `D39` | Retain equal count and close representation expansion after fixed recency failed both improvement gates | 1-8 | `Please try again` | `STOP_N1D_KEEP_EQUAL_COUNT_AND_CLOSE_REPRESENTATION_EXPANSION` |
+| `D40` | Treat a near-ATM straddle first as a forward-risk measurement, not sentiment or return direction, and freeze reconstruction before outcomes | 2-3 | `What would a minimal POC look like for options` | O0/O1 theory and construction frozen |
+| `D41` | Narrow O0 to five recent sessions after the paper account exposed indicative-only access and no expired-contract catalog | 4 | `available timeframe from Alpaca is short` | Retail-accessible capability boundary recorded |
+| `D42` | Stop O0 because QQQ and IWM missed the 90% fixed-time matched-pair gate; keep O1 closed | 5-7 | `Proceed, then let's also document in a new slide deck` | `STOP_O0_RECONSTRUCTION`; no outcome join |
 
 ## Compact Decision Records
 
@@ -590,6 +593,46 @@ tasks by the branch name above, the phrase, or the decision date.
   A future news test would require a genuinely new economic hypothesis and
   fresh uninspected confirmation data.
 
+### D40 — Measure forward risk before calling it sentiment
+
+- **Question:** What is the smallest professional options-data primitive worth
+  reconstructing before prediction?
+- **Decision:** Use one same-strike, same-expiry near-ATM straddle normalized to
+  30 DTE as a forward-risk measurement. Freeze raw-spot alignment, expiry,
+  strike, final-bar timestamp, formula, and coverage gate before joining any
+  future outcome.
+- **Why:** The combined call-plus-put price can reflect expected variability,
+  event risk, risk premia, supply and demand, and microstructure. It is not a
+  clean directional-sentiment label.
+- **Boundary:** O0 is provenance and reconstruction only. O1 can open only
+  after every ETF clears the fixed coverage gate.
+
+### D41 — Let account capability narrow the admissible proof
+
+- **Question:** Can the existing Alpaca account support the frozen historical
+  construction without invented contract history or an unsupported feed claim?
+- **Decision:** Record indicative authorization (HTTP 200) and OPRA denial
+  (HTTP 403), and narrow O0 to `2026-07-20` through `2026-07-24` after the paper
+  contract endpoint returned no expired definitions.
+- **Why:** Applying present-day mutable metadata historically or generating an
+  unverified expired catalog would undermine the point-in-time proof. All
+  selected expiries remained active at retrieval in the narrowed window.
+- **Boundary:** This is an indicative-feed retail plumbing proof, not OPRA
+  evidence or a February-2024 backfill claim.
+
+### D42 — Missing option legs stop O0 before outcomes
+
+- **Question:** Does fixed 15:45 ET same-pair coverage clear `90%` for SPY, QQQ,
+  and IWM separately?
+- **Decision:** Record `STOP_O0_RECONSTRUCTION`. SPY passed `5 / 5`, QQQ stopped
+  at `4 / 5`, and IWM stopped at `3 / 5`.
+- **Why:** Raw underlying bars and contract definitions were complete at
+  `15 / 15`; the failures were missing individual indicative option legs at the
+  frozen timestamp. SPY's complete lane cannot average away QQQ and IWM
+  failures.
+- **Boundary:** Do not interpolate missing legs, mix timestamps, loosen the
+  DTE window, or join future risk. O1 remains closed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -603,6 +646,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [News nonredundancy N1C contract and authority readout](GEN5_4_NEWS_NONREDUNDANCY_N1C_CONTRACT.md)
 - [News recency representation N1D contract](GEN5_4_NEWS_RECENCY_N1D_CONTRACT.md)
 - [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
+- [Options implied-move O0/O1 contract](GEN5_4_OPTIONS_IMPLIED_MOVE_O0_O1_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -616,6 +660,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_risk_n1b_evidence_update.pptx`
 - `presentations/gen5_4_news_nonredundancy_n1c_evidence_update.pptx`
 - `presentations/gen5_4_news_recency_n1d_evidence_update.pptx`
+- `presentations/gen5_4_options_implied_move_o0_evidence.pptx`
 
 ## Current Stop State
 
@@ -648,6 +693,11 @@ N1C then passed its conditional-information audit, but the one predeclared N1D
 recency challenger failed both improvement gates on untouched 2025Q1-2026Q2
 data. Retain equal count and close news-representation expansion. Do not tune
 another decay or text representation on the inspected confirmation outcomes.
+The separate options O0 lane then proved indicative contract/bar access and a
+coherent fixed-time straddle construction where both legs existed, but QQQ
+covered only `4 / 5` sessions and IWM only `3 / 5` against the frozen `90%`
+per-ETF requirement. Record `STOP_O0_RECONSTRUCTION`; do not join O1 outcomes
+or rescue the missing legs on these inspected sessions.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

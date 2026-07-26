@@ -715,6 +715,37 @@ embeddings, models, exposure, allocation, PnL, or live changes on these
 confirmation outcomes. The exact frozen method and authority readout are
 documented in `docs/GEN5_4_NEWS_RECENCY_N1D_CONTRACT.md`.
 
+## Options Implied-Move O0 Readout
+
+The options lane began with reconstruction rather than sentiment or prediction.
+O0 froze a near-30-DTE same-strike call/put pair for `SPY,QQQ,IWM`, selected
+against raw underlying 15:45 America/New_York VWAP and priced from both option
+legs at that same timestamp. The normalized primitive was:
+
+```text
+(call_vwap + put_vwap) / underlying_price * sqrt(30 / DTE)
+```
+
+The paper contract host returned `5,456` active immutable definitions. The
+account entitlement probe authorized `indicative` data (HTTP `200`) but not
+`opra` (HTTP `403`). The historical-bars endpoint used the account-default feed
+and did not accept an explicit feed parameter. Because the paper contract
+endpoint returned no expired definitions, the proof was narrowed before
+outcomes to `2026-07-20` through `2026-07-24`, whose selected expiries remained
+active at retrieval.
+
+Raw underlying final-bar coverage and matched contract-definition coverage
+were both `15 / 15`. Fixed-time matched option-pair coverage was `5 / 5` for
+SPY, `4 / 5` for QQQ, and `3 / 5` for IWM. The missing rows were individual
+indicative option legs, so QQQ and IWM failed the frozen `90%` per-ETF gate.
+Record `STOP_O0_RECONSTRUCTION`.
+
+O1 remains closed. No future realized-volatility outcome, VIX control, TRAIN
+transform, model, policy, replay, allocation, PnL, or live behavior was
+computed. A future reopen requires a new approved gate around a defensible
+historical contract catalog, a denser/official feed, or a separately frozen
+missing-data construction—not a rescue on these five inspected sessions.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -748,3 +779,7 @@ The operator owns these decisions before promotion beyond POC:
   until its economic role, time-decay form, TRAIN-only calibration, and fresh
   confirmation boundary are agreed without tuning to the inspected N1B/N1C
   OOS results.
+- whether the options lane should remain stopped until a defensible expired
+  contract catalog and denser feed are available, or whether a genuinely new
+  fixed-time/missing-data construction merits a separate theory gate. Do not
+  open O1 on the incomplete five-session indicative O0 evidence.

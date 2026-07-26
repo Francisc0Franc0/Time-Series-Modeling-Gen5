@@ -1,0 +1,25 @@
+Gen5.4 Options Implied Move O0 Evidence — Source Notes
+
+Conversation
+codex://threads/019f741e-615f-7fd0-90f7-edce12b5cb66
+Search phrases:
+- One thing that I would like to test is options data
+- What would a minimal POC look like for options
+- Okay, sounds good. Proceed, then let's also document in a new slide deck
+
+Official Alpaca documentation
+- https://docs.alpaca.markets/us/docs/historical-option-data
+- https://docs.alpaca.markets/us/reference/optionbars
+- https://docs.alpaca.markets/us/reference/get-options-contracts
+- https://docs.alpaca.markets/us/docs/about-market-data-api
+
+Local authority
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/docs/GEN5_4_OPTIONS_IMPLIED_MOVE_O0_O1_CONTRACT.md
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/runs/research_workbench/gen54_ml_decision_engine/g54_options_o0_20260726/o0_run_spec.csv
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/runs/research_workbench/gen54_ml_decision_engine/g54_options_o0_20260726/o0_data_health.csv
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/runs/research_workbench/gen54_ml_decision_engine/g54_options_o0_20260726/o0_coverage_summary.csv
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/runs/research_workbench/gen54_ml_decision_engine/g54_options_o0_20260726/o0_implied_move_measure.csv
+- C:/Users/Franc/OneDrive/Documents/Francis/Peltata Project/Time-Series-Modeling-Gen5/runs/research_workbench/gen54_ml_decision_engine/g54_options_o0_20260726/o0_report.md
+
+Boundary
+No outcome join, model, policy, allocation, return replay, PnL, or live behavior.
