@@ -692,6 +692,29 @@ code, sentiment, models, policy, exposure, allocation, PnL, or live changes.
 The exact frozen method and authority readout are documented in
 `docs/GEN5_4_NEWS_NONREDUNDANCY_N1C_CONTRACT.md`.
 
+The subsequent N1D confirmation POC tested exactly one representation change:
+a fixed 24-hour exponential weight on each already-admissible novel article
+cluster. Equal count and recency mass were calibrated separately through
+issuer-local fold-TRAIN ECDFs, while the N1C outcome, controls, issuer mapping,
+novelty rule, and decision clock remained unchanged. The confirmation window
+was the untouched six quarters `2025Q1` through `2026Q2`.
+
+All 15 integrity/leakage checks passed, all 24 issuers had news coverage in
+every quarter, and recency partial Spearman was positive in `5 / 6` quarters
+with mean `0.036938`. However, the simpler equal-count baseline averaged
+`0.038762`. Mean recency lift was therefore `-0.001824`, below the frozen
+`0.01` requirement, and lift was positive in only `3 / 6` quarters versus the
+required `4 / 6`. Record
+`STOP_N1D_KEEP_EQUAL_COUNT_AND_CLOSE_REPRESENTATION_EXPANSION`.
+
+N1D shows an important professional distinction: a representation can create
+more numerical ordering detail without creating more predictive information.
+Retain equal count as the descriptive uncertainty-context measurement. Do not
+rescue N1D by trying alternate half-lives, sentiment, source weights,
+embeddings, models, exposure, allocation, PnL, or live changes on these
+confirmation outcomes. The exact frozen method and authority readout are
+documented in `docs/GEN5_4_NEWS_RECENCY_N1D_CONTRACT.md`.
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:

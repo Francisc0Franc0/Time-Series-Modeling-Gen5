@@ -59,6 +59,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D35` | Accept the frozen N1B uncertainty association while keeping representation, models, and policy as separate gates | 2-7 | `Proceed` | `PASS_N1B_TO_REPRESENTATION_DISCUSSION`; no directional or policy authority |
 | `D36` | Audit whether N1B news intensity adds uncertainty ordering beyond recent path volatility and current dollar-volume surprise before enriching the representation | — | `These are great insights. Proceed.` | N1C method and gates frozen for operator confirmation |
 | `D37` | Accept the N1C conditional-information pass while keeping representation and policy as separate gates | 1-6 | `Approved, proceed` | `PASS_N1C_TO_MINIMAL_REPRESENTATION_DISCUSSION`; no challenger or policy authority |
+| `D38` | Freeze one 24-hour exponential-recency challenger on untouched 2025Q1-2026Q2 confirmation data | — | `Perfect, proceed` | N1D method and five gates frozen; no alternate representation or policy authority |
+| `D39` | Retain equal count and close representation expansion after fixed recency failed both improvement gates | 1-8 | `Please try again` | `STOP_N1D_KEEP_EQUAL_COUNT_AND_CLOSE_REPRESENTATION_EXPANSION` |
 
 ## Compact Decision Records
 
@@ -545,6 +547,49 @@ tasks by the branch name above, the phrase, or the decision date.
   alternate controls or horizons, models, exposure, allocation, PnL, and live
   behavior remain closed.
 
+### D38 — Freeze one recency challenger before opening confirmation data
+
+- **Question:** Can article timing add useful uncertainty information when two
+  issuer-decision cycles contain the same number of admissible novel-news
+  clusters?
+- **Decision:** Compare the accepted equal-count representation with one fixed
+  exponential-recency mass using a 24-hour half-life. Keep issuer-local
+  fold-TRAIN ECDF calibration, the N1C outcome and controls, and reserve exactly
+  `2025Q1` through `2026Q2` as the untouched confirmation window.
+- **Why:** Information arriving close to the 17:30 decision cutoff may be less
+  resolved than otherwise identical information that arrived earlier in the
+  cycle. A single predeclared decay is the smallest representation change that
+  tests this mechanism without opening generic text or sentiment mining.
+- **Gates:** Require integrity, positive mean recency partial Spearman, positive
+  recency ordering in at least `4 / 6` quarters, mean improvement over equal
+  count of at least `0.01`, and positive improvement in at least `4 / 6`
+  quarters.
+- **Boundary:** No alternate half-life, source weights, sentiment, embeddings,
+  model, policy, exposure, allocation, PnL, or live-facing change may be
+  inspected in N1D.
+
+### D39 — More ordering detail is not more predictive information
+
+- **Question:** Does the predeclared 24-hour-recency representation earn its
+  added complexity on the untouched six-quarter confirmation window?
+- **Decision:** Record
+  `STOP_N1D_KEEP_EQUAL_COUNT_AND_CLOSE_REPRESENTATION_EXPANSION`. Retain the
+  accepted equal-count news measurement and do not inspect another news
+  representation on these outcomes.
+- **Why:** All `15 / 15` integrity checks passed and recency remained positive
+  in `5 / 6` quarters, but its mean conditional partial Spearman was `0.036938`
+  versus `0.038762` for equal count. Mean lift was `-0.001824` instead of the
+  required `0.01`, and lift was positive in only `3 / 6` quarters instead of
+  `4 / 6`.
+- **Teaching point:** Recency created many more distinct TRAIN percentile
+  values and resolved count ties, but granularity alone did not improve
+  predictive ordering. Complexity must earn itself against a simpler frozen
+  baseline.
+- **Boundary:** No alternate half-life, sentiment, source weights, embeddings,
+  model, policy, exposure, allocation, PnL, or live-facing change was computed.
+  A future news test would require a genuinely new economic hypothesis and
+  fresh uninspected confirmation data.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -556,6 +601,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [News admissibility N1A contract](GEN5_4_NEWS_ADMISSIBILITY_N1A_CONTRACT.md)
 - [News risk measurement N1B contract](GEN5_4_NEWS_RISK_N1B_CONTRACT.md)
 - [News nonredundancy N1C contract and authority readout](GEN5_4_NEWS_NONREDUNDANCY_N1C_CONTRACT.md)
+- [News recency representation N1D contract](GEN5_4_NEWS_RECENCY_N1D_CONTRACT.md)
 - [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
@@ -569,6 +615,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_live_feasibility_n1l_shadow_confirmation.pptx`
 - `presentations/gen5_4_news_risk_n1b_evidence_update.pptx`
 - `presentations/gen5_4_news_nonredundancy_n1c_evidence_update.pptx`
+- `presentations/gen5_4_news_recency_n1d_evidence_update.pptx`
 
 ## Current Stop State
 
@@ -597,6 +644,10 @@ support, and association gates across 12 quarterly OOS folds. Treat the result
 as stable uncertainty-context evidence and open only a separate representation
 discussion. No directional claim, model, exposure rule, allocation, PnL, or
 live-advice authority is authorized.
+N1C then passed its conditional-information audit, but the one predeclared N1D
+recency challenger failed both improvement gates on untouched 2025Q1-2026Q2
+data. Retain equal count and close news-representation expansion. Do not tune
+another decay or text representation on the inspected confirmation outcomes.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

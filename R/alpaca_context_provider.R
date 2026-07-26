@@ -216,6 +216,176 @@ g5_fetch_alpaca_news <- function(
   list(data = data, pages = pages, endpoint = endpoint)
 }
 
+g5_fetch_alpaca_news_resilient <- function(
+  request,
+  retrieved_at,
+  config = g5_alpaca_config_from_env(),
+  request_pause_seconds = 0,
+  request_timeout_seconds = 30,
+  maximum_page_attempts = 5L,
+  retry_pause_seconds = 2,
+  page_callback = NULL
+) {
+  if (!is.data.frame(request) || nrow(request) != 1L ||
+      request$endpoint[[1L]] != "/v1beta1/news") {
+    g5_stop("request must be produced by g5_alpaca_news_request().")
+  }
+  g5_alpaca_preflight_live_fetch(config)
+  .g5_alpaca_context_time(retrieved_at, "retrieved_at")
+  request_pause_seconds <- as.numeric(request_pause_seconds)
+  request_timeout_seconds <- as.numeric(request_timeout_seconds)
+  maximum_page_attempts <- as.integer(maximum_page_attempts)
+  retry_pause_seconds <- as.numeric(retry_pause_seconds)
+  if (!is.finite(request_pause_seconds) || request_pause_seconds < 0) {
+    g5_stop("request_pause_seconds must be a finite non-negative number.")
+  }
+  if (!is.finite(request_timeout_seconds) || request_timeout_seconds <= 0) {
+    g5_stop("request_timeout_seconds must be positive.")
+  }
+  if (is.na(maximum_page_attempts) || maximum_page_attempts < 1L) {
+    g5_stop("maximum_page_attempts must be a positive integer.")
+  }
+  if (!is.finite(retry_pause_seconds) || retry_pause_seconds < 0) {
+    g5_stop("retry_pause_seconds must be a finite non-negative number.")
+  }
+  if (!is.null(page_callback) && !is.function(page_callback)) {
+    g5_stop("page_callback must be NULL or a function.")
+  }
+
+  endpoint <- paste0(
+    sub("/+$", "", config$base_url),
+    request$endpoint[[1L]]
+  )
+  base_query <- list(
+    symbols = request$symbols[[1L]],
+    start = request$start_timestamp[[1L]],
+    end = request$end_timestamp[[1L]],
+    sort = request$sort[[1L]],
+    limit = request$limit[[1L]],
+    include_content =
+      if (isTRUE(request$include_content[[1L]])) "true" else "false"
+  )
+  page_token <- NULL
+  seen_tokens <- character()
+  pages <- list()
+  frames <- list()
+  page_number <- 0L
+  repeat {
+    page_number <- page_number + 1L
+    query <- base_query
+    if (!is.null(page_token) && nzchar(page_token)) {
+      query$page_token <- page_token
+    }
+
+    response <- NULL
+    response_text <- NULL
+    status <- NA_integer_
+    last_error <- NULL
+    for (attempt in seq_len(maximum_page_attempts)) {
+      response <- tryCatch(
+        httr::GET(
+          endpoint,
+          .g5_alpaca_context_headers(config),
+          query = query,
+          httr::timeout(request_timeout_seconds)
+        ),
+        error = function(error) error
+      )
+      if (inherits(response, "error")) {
+        last_error <- conditionMessage(response)
+        retryable <- TRUE
+      } else {
+        response_text <- httr::content(
+          response,
+          as = "text",
+          encoding = "UTF-8"
+        )
+        status <- httr::status_code(response)
+        retryable <- status %in% c(408L, 425L, 429L) ||
+          status >= 500L
+        if (!retryable && !httr::http_error(response)) break
+        if (!retryable && httr::http_error(response)) {
+          g5_stop(paste(
+            "Alpaca news request failed with HTTP",
+            status,
+            "-",
+            g5_alpaca_response_message(response_text)
+          ))
+        }
+        last_error <- paste(
+          "HTTP",
+          status,
+          g5_alpaca_response_message(response_text)
+        )
+      }
+      if (attempt >= maximum_page_attempts) {
+        g5_stop(paste0(
+          "Alpaca news page ",
+          page_number,
+          " failed after ",
+          maximum_page_attempts,
+          " attempts: ",
+          last_error
+        ))
+      }
+      message(
+        "Retrying Alpaca news page ",
+        page_number,
+        " after attempt ",
+        attempt,
+        ": ",
+        last_error
+      )
+      if (retry_pause_seconds > 0) Sys.sleep(retry_pause_seconds)
+    }
+
+    parsed <- jsonlite::fromJSON(response_text, simplifyVector = FALSE)
+    if (is.null(parsed$news) || !is.list(parsed$news)) {
+      g5_stop("Alpaca news response did not include a news list.")
+    }
+    next_token <- parsed$next_page_token
+    next_token <- if (
+      is.null(next_token) || !nzchar(as.character(next_token))
+    ) {
+      ""
+    } else {
+      as.character(next_token)
+    }
+    page <- list(
+      page_number = page_number,
+      http_status = status,
+      page_token_in = if (is.null(page_token)) "" else page_token,
+      next_page_token = next_token,
+      response_bytes = nchar(response_text, type = "bytes"),
+      response_text = response_text
+    )
+    pages[[page_number]] <- page
+    frames[[page_number]] <- g5_alpaca_map_news_payload(
+      parsed,
+      request,
+      retrieved_at
+    )
+    if (!is.null(page_callback)) page_callback(page)
+    if (!nzchar(next_token)) break
+    if (next_token %in% seen_tokens) {
+      g5_stop("Alpaca news pagination repeated a page token.")
+    }
+    seen_tokens <- c(seen_tokens, next_token)
+    page_token <- next_token
+    if (request_pause_seconds > 0) Sys.sleep(request_pause_seconds)
+  }
+  data <- if (
+    !length(frames) ||
+      all(vapply(frames, nrow, integer(1L)) == 0L)
+  ) {
+    g5_alpaca_empty_news()
+  } else {
+    do.call(rbind, frames[vapply(frames, nrow, integer(1L)) > 0L])
+  }
+  rownames(data) <- NULL
+  list(data = data, pages = pages, endpoint = endpoint)
+}
+
 g5_alpaca_map_calendar_payload <- function(parsed, as_of_timestamp, retrieved_at) {
   if (!is.list(parsed)) g5_stop("Parsed Alpaca calendar payload must be a list.")
   .g5_alpaca_context_time(as_of_timestamp, "as_of_timestamp")

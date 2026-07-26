@@ -89,3 +89,39 @@ test_that("Alpaca news mapper preserves an auditable empty schema", {
   expect_equal(nrow(mapped), 0L)
   expect_identical(names(mapped), names(g5_alpaca_empty_news()))
 })
+
+test_that("resilient news fetch validates retry controls before network use", {
+  source(test_path("..", "..", "R", "data_contract.R"))
+  source(test_path("..", "..", "R", "alpaca_provider.R"))
+  source(test_path("..", "..", "R", "alpaca_context_provider.R"))
+
+  request <- g5_alpaca_news_request(
+    symbols = "AAPL",
+    start_timestamp = "2024-01-01T00:00:00Z",
+    end_timestamp = "2024-01-02T00:00:00Z",
+    as_of_timestamp = "2024-01-03T00:00:00Z"
+  )
+  fake_config <- list(
+    key_id = "key",
+    secret_key = "secret",
+    base_url = "https://example.invalid"
+  )
+  expect_error(
+    g5_fetch_alpaca_news_resilient(
+      request,
+      retrieved_at = "2024-01-03T00:00:00Z",
+      config = fake_config,
+      maximum_page_attempts = 0L
+    ),
+    "positive integer"
+  )
+  expect_error(
+    g5_fetch_alpaca_news_resilient(
+      request,
+      retrieved_at = "2024-01-03T00:00:00Z",
+      config = fake_config,
+      page_callback = "not a function"
+    ),
+    "page_callback"
+  )
+})
