@@ -66,6 +66,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D42` | Stop O0 because QQQ and IWM missed the 90% fixed-time matched-pair gate; keep O1 closed | 5-7 | `Proceed, then let's also document in a new slide deck` | `STOP_O0_RECONSTRUCTION`; no outcome join |
 | `D43` | Freeze one two-feature pooled linear ranker as a ranking-only confirmation gate, separate from exposure and portfolio semantics | 2-4 | `cut a path to a concrete minimal POC` | X2a contract frozen |
 | `D44` | Stop the multivariate ranking lane after the linear model reversed the frozen comparators on confirmation data | 5-8 | `Approved, proceed` | `STOP_X2A_MULTIVARIATE_RANKING`; no top-five proof |
+| `D45` | Define issuer information cycles as point-in-time observable units and freeze construction before any price-response join | 2-4 | `Okay, let's proceed with that discussion` | E0 contract frozen; no semantic-event claim |
+| `D46` | Accept exact E0 reconstruction and open only the initial-reaction theory gate | 5-9 | `This makes total sense. Proceed` | `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`; no predictive claim |
 
 ## Compact Decision Records
 
@@ -663,6 +665,35 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Do not tune weights, interactions, regularization, nonlinear
   ML, or a top-five portfolio on these inspected outcomes.
 
+### D45 — Observable information cycles precede interpretation
+
+- **Question:** What is the smallest leakage-safe unit for an event-conditioned
+  underreaction POC?
+- **Decision:** Define one issuer information cycle per issuer and scheduled
+  17:30 America/New_York decision, aggregating all admissible novel clusters
+  known at that cutoff.
+- **Why:** Same-day articles can describe unrelated happenings. Calling the
+  unit a semantic event would claim interpretation that E0 does not perform.
+  Historical availability uses `updated_at`; prospective authority remains
+  local receipt time.
+- **Boundary:** Construction only. No price, volume, outcome, sentiment,
+  feature, model, policy, portfolio, PnL, or live behavior.
+
+### D46 — Exact reconstruction opens feature theory only
+
+- **Question:** Can accepted raw Alpaca evidence reproduce a sufficiently
+  supported point-in-time issuer-cycle tape?
+- **Decision:** Record
+  `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`. Replaying `698` raw
+  pages exactly reproduced `49,590` admitted article-issuer keys and formed
+  `7,392` cycles across all `24` issuers and `6` quarters; all `12` gates
+  passed.
+- **Why:** Minimum issuer-quarter support was `22` against the frozen gate of
+  `5`, and no predictive surface entered the packet. However, all historical
+  articles are Benzinga-sourced, so source diversity is not established.
+- **Boundary:** Open only theory for one initial-reaction measurement and one
+  prospective confirmation rule. E1 price response remains closed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -678,6 +709,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
 - [Options implied-move O0/O1 contract](GEN5_4_OPTIONS_IMPLIED_MOVE_O0_O1_CONTRACT.md)
 - [Cross-sectional X2a linear-ranker contract](GEN5_4_CROSS_SECTIONAL_X2A_LINEAR_RANKER_CONTRACT.md)
+- [Event construction E0 contract](GEN5_4_EVENT_CONSTRUCTION_E0_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -693,6 +725,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_recency_n1d_evidence_update.pptx`
 - `presentations/gen5_4_options_implied_move_o0_evidence.pptx`
 - `presentations/gen5_4_cross_sectional_x2a_linear_ranker_evidence.pptx`
+- `presentations/gen5_4_event_construction_e0_evidence.pptx`
 
 ## Current Stop State
 
@@ -736,6 +769,11 @@ checks but produced negative mean IC, negative top-bottom ordering, and
 `-0.0965` IC lift versus raw group-relative momentum. Record
 `STOP_X2A_MULTIVARIATE_RANKING`; do not tune the combination or open a top-five
 portfolio proof on these outcomes.
+The event-conditioned lane separately passed E0 construction: accepted raw
+Alpaca pages exactly reproduce a fully supported issuer information-cycle tape.
+This opens only feature theory. Because the archive is Benzinga-only and no
+price response has been joined, source-diversity, underreaction, direction,
+model, policy, and trading claims remain closed.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

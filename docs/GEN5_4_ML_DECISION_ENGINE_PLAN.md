@@ -770,6 +770,42 @@ computed. A future reopen requires a new approved gate around a defensible
 historical contract catalog, a denser/official feed, or a separately frozen
 missing-data construction—not a rescue on these five inspected sessions.
 
+## Event Construction E0 Readout
+
+E0 reopened news from a genuinely different hypothesis after N1D: delayed
+market assimilation around observable issuer information arrival, rather than
+another transformation of news count. The slice deliberately stopped before
+price response. Its unit is an **issuer information cycle**:
+
+```text
+issuer x scheduled 17:30 America/New_York decision
+```
+
+Each cycle aggregates every admissible novel article cluster for that issuer
+known at the cutoff. This is not called a semantic event because same-day
+articles need not describe one coherent real-world happening.
+
+The wrapper replayed all `698` accepted cached Alpaca pages for 2025Q1-2026Q2,
+rebuilt `34,871` raw articles, and exactly reproduced all `49,590` accepted
+article-issuer authority keys. Those associations formed `7,392` information
+cycles across all `24` issuers and all `6` quarters. Minimum issuer-quarter
+support was `22` cycles against the frozen requirement of `5`. All `12`
+construction and leakage gates passed.
+
+Record `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`. This is an
+auditable construction result, not a directional or predictive claim. Every
+historical article in this Alpaca sample is sourced from Benzinga, so source
+diversity and cross-provider robustness are not established. The next gate is
+theory-only: agree exactly one initial-reaction measurement and one prospective
+confirmation rule before any E1 price-response join.
+
+Artifacts:
+
+- Contract: `docs/GEN5_4_EVENT_CONSTRUCTION_E0_CONTRACT.md`
+- Packet: `runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726/`
+- Deck: `presentations/gen5_4_event_construction_e0_evidence.pptx`
+- Wrapper: `scripts/inspect/run_gen54_event_construction_e0.R`
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -807,3 +843,7 @@ The operator owns these decisions before promotion beyond POC:
   contract catalog and denser feed are available, or whether a genuinely new
   fixed-time/missing-data construction merits a separate theory gate. Do not
   open O1 on the incomplete five-session indicative O0 evidence.
+- whether the event-conditioned lane should advance from passing E0
+  construction to a frozen E1 initial-reaction and prospective-confirmation
+  design. Do not join price response, interpret headlines, or fit a model until
+  that theory contract is accepted.

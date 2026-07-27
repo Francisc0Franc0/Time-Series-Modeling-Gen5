@@ -308,3 +308,7 @@ or live behavior is authorized by X0/X1, X1b/C0, X2a, C1, or C2. The ranking
 architecture is `STOP_X2A_MULTIVARIATE_RANKING`; the two-stage design remains
 closed. The risk lane has multi-horizon continuous VIX evidence but remains
 stopped before scaler design because its frozen state conversion was unstable.
+The separate event-conditioned lane has passed E0 point-in-time information-
+cycle construction. That does not reopen X2a or authorize event-conditioned
+ranking: E1 remains theory-only until an initial-reaction measurement and a
+prospective confirmation rule are frozen.
