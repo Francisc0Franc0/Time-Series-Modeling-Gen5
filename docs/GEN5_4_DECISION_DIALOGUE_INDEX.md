@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-07-26
+Index date: 2026-07-27
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -74,6 +74,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D50` | Select multi-asset time-series trend as the first mechanism POC and draft its leakage-safe contract before coding | — | `bookmark these approaches... then get started on the T1 POC` | T1 contract and atlas deck opened; subsequently approved and frozen |
 | `D51` | Stop T1 after valid confirmation evidence distinguishes drawdown defense from asset-selection edge | 1-11 | `Approved—implement T1 as frozen` | `STOP_T1_TREND_PERSISTENCE`; no retuning or live authority |
 | `D52` | Draft M1 as an equity-only ranking test with a hard mechanism gate before portfolio replay | 1-10 | `Approved, proceed` | Exact M1 contract drafted; implementation awaits approval |
+| `D53` | Stop M1 at the ranking gate after repeated-ordering, randomized-control, and concentration failures | 1-9 | `Approved` | `STOP_M1_RANKING_MECHANISM`; M1B structurally not run |
 
 ## Compact Decision Records
 
@@ -809,6 +810,24 @@ tasks by the branch name above, the phrase, or the decision date.
   live behavior until the operator approves all symbols, eligibility,
   thresholds, controls, costs, evidence windows, and ten gates.
 
+### D53 — A positive average spread is not a robust ranking mechanism
+
+- **Question:** Does the exact frozen M1 rank repeatedly order next-month ETF
+  returns, beat randomized concentration, and remain diversified enough to
+  permit M1B portfolio replay?
+- **Decision:** Record `STOP_M1_RANKING_MECHANISM`. All 25 symbols shared the
+  same 2,638 reference sessions and all 11 integrity checks passed, but only
+  `2 / 6` M1A gates passed.
+- **Why:** Mean confirmation rank IC was `0.029382`, but only `19 / 36` months
+  were positive. Mean top-minus-bottom was `22.10 bp`, but only `6 / 12`
+  quarters were positive. Observed top-K excess `26.84 bp` missed the seeded
+  random-policy p90 `33.74 bp`, and emerging-country ETFs supplied `92.3%` of
+  positive contribution.
+- **Boundary:** M1B was structurally not run. No portfolio CAGR, drawdown,
+  turnover, or P&L was computed. Do not rescue M1 with a nearby formation
+  horizon, revised subset, group-neutral rank, weaker concentration gate, or
+  altered confirmation window. Return to theory for a distinct mechanism.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -849,6 +868,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_retail_quant_mechanism_atlas_and_t1_design.pptx`
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
+- `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
 
 ## Current Stop State
 
@@ -907,10 +927,13 @@ confirmation state separation was negative, only `5 / 14` assets had positive
 full-history separation, and T1 trailed the exposure-matched control. Record
 `STOP_T1_TREND_PERSISTENCE`. Its drawdown reduction is retained as risk-shaping
 evidence only; do not retune T1 or treat the result as production authority.
-The mechanism-first detour has now drafted an exact M1 contract, but no M1
-outcomes or portfolio evidence exist. M1 implementation remains closed until
-the operator accepts its fixed 24-ETF panel, point-in-time eligibility,
-12-minus-1 rank, M1A/M1B gating, random controls, costs, and STOP rules.
+The mechanism-first M1 lane then implemented its exact frozen 24-ETF
+cross-sectional momentum contract. Coverage and timing passed, but repeated
+ordering, randomized concentration, and contribution-diversification gates
+failed. Record `STOP_M1_RANKING_MECHANISM`. M1B was structurally not run, so no
+M1 portfolio performance exists to reinterpret. Do not retune its universe,
+formation horizon, quartile, group treatment, random percentile, or evidence
+window.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

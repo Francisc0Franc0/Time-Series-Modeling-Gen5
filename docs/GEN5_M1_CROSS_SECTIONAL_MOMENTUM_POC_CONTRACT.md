@@ -1,6 +1,44 @@
 # Gen5 M1 Cross-Sectional Momentum POC Contract
 
-Status: `DRAFT_FOR_OPERATOR_APPROVAL_NO_IMPLEMENTATION_AUTHORITY`
+Status: `IMPLEMENTED_STOP_M1_RANKING_MECHANISM`
+
+## Implementation readout
+
+The operator approved this contract exactly as frozen. M1 was implemented and
+run with Alpaca SIP adjusted daily bars under explicit as-of
+`2026-07-27 17:30:00`.
+
+- All 24 ranked ETFs plus `BIL` shared the same `2,638` reference sessions
+  from `2016-01-04` through `2026-07-01`.
+- All `11 / 11` integrity and timing checks passed.
+- Confirmation mean rank IC was `0.029382`, but only `19 / 36` months were
+  positive versus the required `21 / 36`.
+- Mean top-minus-bottom return was `22.10 bp` per month, but only `6 / 12`
+  complete quarters were positive versus the required `7 / 12`.
+- Observed top-K excess was `26.84 bp` per month versus the frozen random-policy
+  p90 of `33.74 bp`.
+- Emerging-country ETFs supplied `92.3%` of positive spread contribution
+  versus the `50%` group cap; the largest ETF supplied `25.4%` versus the
+  `25%` cap.
+- The 6-minus-1 diagnostic reversed while 18-minus-1 supported the primary, so
+  the two diagnostic horizons did not both reverse.
+
+Only `2 / 6` M1A gates passed. Record:
+
+```text
+STOP_M1_RANKING_MECHANISM
+```
+
+M1B was structurally not run. No M1 portfolio CAGR, drawdown, turnover,
+portfolio P&L, allocation, or live behavior was computed or interpreted.
+Preserve the result as falsification evidence; do not rescue M1 by retuning
+the universe, horizon, quartile, group neutralization, or confirmation window.
+
+Primary packet:
+`runs/research_workbench/retail_quant_mechanisms/m1_cross_sectional_momentum_20260727`.
+
+Evidence deck:
+`presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`.
 
 ## Purpose
 

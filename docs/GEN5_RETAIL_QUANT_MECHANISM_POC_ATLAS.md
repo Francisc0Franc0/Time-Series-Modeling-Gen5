@@ -1,6 +1,6 @@
 # Gen5 Retail Quant Mechanism POC Atlas
 
-Status: `T1_STOP_M1_CONTRACT_DRAFTED_NO_IMPLEMENTATION_AUTHORITY`
+Status: `T1_STOP_M1_STOP_NEXT_MECHANISM_REQUIRES_THEORY`
 
 ## Purpose
 
@@ -169,18 +169,32 @@ horizons reverse the conclusion.
 Momentum is a serious return regularity, but it can crash. Its existence does
 not justify maximum concentration in recent winners.
 
-### Current M1 design decision
+### M1 decision and readout
 
-The operator approved an equity-only, measurement-first M1 direction. The
-exact proposed contract is recorded in
+The operator approved and froze the exact equity-only, measurement-first M1
+contract in
 `docs/GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md`.
 
-The contract proposes a fixed 24-ETF panel across US sectors, developed
-countries, and emerging countries; point-in-time eligibility; one
-12-minus-1-month rank; a hard M1A ranking gate before any M1B portfolio replay;
-and a fully invested top-quartile portfolio only if the ranking mechanism
-passes. Exact contract approval remains required before data retrieval or
-outcome calculation.
+M1 was implemented without changing the fixed 24-ETF panel, point-in-time
+eligibility, 12-minus-1 rank, next-open outcome, randomized control,
+concentration caps, or M1A/M1B gate sequence. All 25 required histories shared
+the same 2,638 reference sessions and all 11 integrity checks passed.
+
+The ranking mechanism nevertheless failed four of six M1A gates:
+
+- mean confirmation rank IC was positive at `0.029382`, but only `19 / 36`
+  months were positive;
+- mean top-minus-bottom return was `22.10 bp`, but only `6 / 12` quarters were
+  positive;
+- observed top-K excess was `26.84 bp` versus the random-policy p90 of
+  `33.74 bp`; and
+- emerging-country ETFs supplied `92.3%` of positive contribution, while the
+  largest ETF supplied `25.4%`.
+
+Record `STOP_M1_RANKING_MECHANISM`. M1B was structurally not run, so no
+portfolio CAGR, drawdown, turnover, or P&L exists to reinterpret. Do not rescue
+M1 with a new horizon, subset, group-neutral rank, or tuned concentration
+rule. The next mechanism requires a fresh theory discussion and contract.
 
 ## Minimal POC 3 — S0 statistical-arbitrage admissibility
 
@@ -413,6 +427,7 @@ Decks:
 - `presentations/gen5_retail_quant_mechanism_atlas_and_t1_design.pptx`
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
+- `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
 
 ## Research anchors
 
