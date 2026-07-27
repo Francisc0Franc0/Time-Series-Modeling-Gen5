@@ -1,6 +1,6 @@
 # Gen5 Retail Quant Mechanism POC Atlas
 
-Status: `T1_IMPLEMENTED_STOP_T1_TREND_PERSISTENCE`
+Status: `T1_STOP_M1_CONTRACT_DRAFTED_NO_IMPLEMENTATION_AUTHORITY`
 
 ## Purpose
 
@@ -168,6 +168,19 @@ horizons reverse the conclusion.
 
 Momentum is a serious return regularity, but it can crash. Its existence does
 not justify maximum concentration in recent winners.
+
+### Current M1 design decision
+
+The operator approved an equity-only, measurement-first M1 direction. The
+exact proposed contract is recorded in
+`docs/GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md`.
+
+The contract proposes a fixed 24-ETF panel across US sectors, developed
+countries, and emerging countries; point-in-time eligibility; one
+12-minus-1-month rank; a hard M1A ranking gate before any M1B portfolio replay;
+and a fully invested top-quartile portfolio only if the ranking mechanism
+passes. Exact contract approval remains required before data retrieval or
+outcome calculation.
 
 ## Minimal POC 3 — S0 statistical-arbitrage admissibility
 
@@ -399,6 +412,7 @@ Decks:
 
 - `presentations/gen5_retail_quant_mechanism_atlas_and_t1_design.pptx`
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
+- `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 
 ## Research anchors
 

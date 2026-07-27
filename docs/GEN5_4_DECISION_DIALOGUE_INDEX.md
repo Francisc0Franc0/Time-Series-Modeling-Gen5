@@ -73,6 +73,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D49` | Zoom out from E1 and reopen strategy selection around retail-deployable economic mechanisms rather than a favored model or data family | — | `approach this again with fresh eyes and zoom out` | Retail quant mechanism atlas opened; no POC implementation authority |
 | `D50` | Select multi-asset time-series trend as the first mechanism POC and draft its leakage-safe contract before coding | — | `bookmark these approaches... then get started on the T1 POC` | T1 contract and atlas deck opened; subsequently approved and frozen |
 | `D51` | Stop T1 after valid confirmation evidence distinguishes drawdown defense from asset-selection edge | 1-11 | `Approved—implement T1 as frozen` | `STOP_T1_TREND_PERSISTENCE`; no retuning or live authority |
+| `D52` | Draft M1 as an equity-only ranking test with a hard mechanism gate before portfolio replay | 1-10 | `Approved, proceed` | Exact M1 contract drafted; implementation awaits approval |
 
 ## Compact Decision Records
 
@@ -788,6 +789,26 @@ tasks by the branch name above, the phrase, or the decision date.
   operator-owned theory discussion may define M1 cross-sectional momentum as
   a distinct POC; no M1 implementation is yet authorized.
 
+### D52 — Ranking must pass before a momentum portfolio exists
+
+- **Question:** What is the smallest retail-deployable cross-sectional
+  momentum POC that does not confuse relative leadership, concentration,
+  exposure timing, and a favorable backtest?
+- **Decision:** Draft M1 around a fixed 24-ETF equity panel, point-in-time
+  eligibility, one 12-minus-1 rank, monthly following-open outcomes, and a
+  hard M1A ranking STOP before any M1B portfolio replay. If M1A passes, M1B is
+  fully invested in the top quartile and compared with the identical eligible
+  panel, BIL, the bottom quartile, and 2,000 seeded random K-name policies.
+- **Why:** An equity-only panel reduces the risk that raw ranks merely select
+  the highest-volatility asset class. Rank IC, top-minus-bottom ordering,
+  randomized concentration controls, and group/asset/year attribution test
+  the mechanism before compounding can hide it. Full investment prevents cash
+  exposure from recreating T1's defense-versus-selection ambiguity.
+- **Boundary:** Exact contract and deck only. Do not retrieve the M1 universe,
+  inspect outcomes, simulate random controls, replay a portfolio, or change
+  live behavior until the operator approves all symbols, eligibility,
+  thresholds, controls, costs, evidence windows, and ten gates.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -807,6 +828,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Event-reaction E1 contract](GEN5_4_EVENT_REACTION_E1_CONTRACT.md)
 - [Retail quant mechanism POC atlas](GEN5_RETAIL_QUANT_MECHANISM_POC_ATLAS.md)
 - [T1 multi-asset trend POC contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md)
+- [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -826,6 +848,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_event_reaction_e1_evidence.pptx`
 - `presentations/gen5_retail_quant_mechanism_atlas_and_t1_design.pptx`
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
+- `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 
 ## Current Stop State
 
@@ -884,6 +907,10 @@ confirmation state separation was negative, only `5 / 14` assets had positive
 full-history separation, and T1 trailed the exposure-matched control. Record
 `STOP_T1_TREND_PERSISTENCE`. Its drawdown reduction is retained as risk-shaping
 evidence only; do not retune T1 or treat the result as production authority.
+The mechanism-first detour has now drafted an exact M1 contract, but no M1
+outcomes or portfolio evidence exist. M1 implementation remains closed until
+the operator accepts its fixed 24-ETF panel, point-in-time eligibility,
+12-minus-1 rank, M1A/M1B gating, random controls, costs, and STOP rules.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
