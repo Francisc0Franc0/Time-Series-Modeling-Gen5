@@ -122,6 +122,7 @@ At the conclusion of each future POC or research-inspection slice, add or update
 
 | 89. Gen5.4 Event Construction E0 | `PASS` | Can the accepted Alpaca news archive deterministically produce point-in-time issuer information cycles before any price or outcome join? | [contract](GEN5_4_EVENT_CONSTRUCTION_E0_CONTRACT.md), [packet](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726), [report](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726/e0_report.md), [coverage](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726/visuals/e0_issuer_quarter_coverage.png), [representative cycles](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726/visuals/e0_representative_cycle_tapes.png), [gates](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e0_20260726/visuals/e0_gate_summary.png), [deck](../presentations/gen5_4_event_construction_e0_evidence.pptx), [wrapper](../scripts/inspect/run_gen54_event_construction_e0.R) | Replayed 698 accepted cached raw pages and exactly reproduced 49,590 admitted article-issuer keys from 34,871 raw articles. The result contains 7,392 issuer information cycles across 24/24 issuers and 6/6 quarters; minimum issuer-quarter support was 22 against the frozen gate of 5. All 12 construction gates passed. Every article is sourced from Benzinga, so source diversity is not established. Record `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`: open only theory for one initial-reaction measurement and one prospective confirmation rule; price/outcome joins, sentiment, models, policy, PnL, and live behavior remain closed. |
 | 90. Gen5.4 Event-Reaction E1 | `STOP` | After an unusual issuer information cycle and a positive two-stage SPY-adjusted initial reaction, is five-session relative continuation distinguishable from the same issuer's matched zero-news price pattern? | [contract](GEN5_4_EVENT_REACTION_E1_CONTRACT.md), [packet](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727), [report](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/e1_report.md), [signal funnel](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/visuals/e1_signal_funnel.png), [match support](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/visuals/e1_match_support.png), [fold readout](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/visuals/e1_fold_readout.png), [representative tapes](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/visuals/e1_representative_event_reaction_tapes.png), [gates](../runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/visuals/e1_gate_summary.png), [deck](../presentations/gen5_4_event_reaction_e1_evidence.pptx), [wrapper](../scripts/inspect/run_gen54_event_reaction_e1.R) | Froze issuer-local TRAIN-p80 information intensity, positive SPY-adjusted overnight and next-session intraday reactions, signal knowledge after that close, earliest following-open entry, and a five-session entry-open to endpoint-open SPY-relative outcome. The development panel produced 465 non-overlapping signals across 24/24 issuers and 6/6 quarters. Fourteen of fifteen frozen gates passed, including source authority, point-in-time timing, TRAIN-only thresholds/scales, outcome boundaries, overlap control, and outcome-free matching. Only 122 signals matched a same-issuer zero-news price pattern: 26.2% versus the frozen 70% minimum; 160 had no such candidate and 183 had candidates only outside the 0.50z caliper. Record `STOP_E1_DEVELOPMENT_MECHANICS`. Do not widen the caliper or change zero-news after inspection. The matched subset's pooled difference was -0.4 bp with unstable quarterly signs, but it is descriptive only. A prospective-shadow schema exists with no matured prospective signals and is not confirmation authority. |
+| 91. T1 Multi-Asset Trend Persistence | `STOP` | Does a frozen fourteen-sleeve monthly trend rule produce positive, diversified persistence evidence and beat a control with the same aggregate risky exposure? | [contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md), [packet](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727), [report](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/t1_report.md), [signal support](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_signal_support.png), [asset separation](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_asset_separation.png), [exposure tape](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_risky_exposure_tape.png), [equity and drawdown](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_equity_drawdown.png), [decision tapes](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_representative_decision_tapes.png), [gates](../runs/research_workbench/retail_quant_mechanisms/t1_multi_asset_trend_20260727/visuals/t1_gate_summary.png), [deck](../presentations/gen5_t1_multi_asset_trend_evidence.pptx), [wrapper](../scripts/inspect/run_gen5_t1_multi_asset_trend_poc.R) | Implemented the accepted contract without changing the fourteen risk ETFs, `BIL` hurdle/cash proxy, 12-month sign, monthly next-open timing, equal sleeves, controls, costs, windows, or nine gates. All 15 symbols exactly matched 2,638 reference sessions and all 10 integrity checks passed. Confirmation pooled ON-minus-OFF was `-29.71 bp`; only `5 / 14` assets had positive full-history separation. At 5 bp one way, T1 CAGR was `3.29%` with `-3.51%` maximum drawdown versus `3.88%` for the exposure-matched control and `4.55%` / `-12.79%` for static equal weight. Five of nine gates passed. Record `STOP_T1_TREND_PERSISTENCE`: drawdown reduction is valid risk shaping, but the exposure-matched comparison rejects asset-specific selection edge. Do not rescue T1 after inspection. |
 
 ## Current Research Posture
 
@@ -192,6 +193,15 @@ caliper or changing zero-news after seeing the result. The next step is an
 operator-owned theory choice between a same-issuer ordinary-news control and a
 predeclared economic-peer zero-news control; neither is yet authorized.
 
+32. T1 implemented the first mechanism-first detour exactly as frozen. All
+coverage, timing, explicit-as-of, adjusted-bar, cost, and next-open integrity
+checks passed, but the persistence mechanism did not: confirmation ON-minus-OFF
+was `-29.71 bp`, only `5 / 14` assets had positive full-history separation,
+and T1 trailed its exposure-matched control. Preserve the `72.5%` drawdown
+reduction as risk-shaping evidence, not selection alpha. The next recommended
+conversation is a fresh M1 cross-sectional momentum contract; do not implement
+M1 or retune T1 without an explicit operator gate.
+
 ## Next Candidate Tests
 
 - Run the older-window temporal context batch as an overnight job over `AMD,NVDA,TSLA,AAPL,MSTR`, starting with adjacent 2021 and 2022 windows; resolve the `VXX` pre-2018 context choice before claiming older fully comparable windows.
@@ -212,6 +222,11 @@ predeclared economic-peer zero-news control; neither is yet authorized.
   confirmation data; do not rescue the failed recency challenger with another
   half-life, sentiment, source weighting, embeddings, policy, exposure,
   allocation, or PnL.
+- Discuss M1 cross-sectional momentum as the next mechanism-first detour.
+  Freeze its point-in-time universe, rank horizon, eligibility, long-only
+  mapping, controls, costs, confirmation window, concentration limit, and
+  crash diagnostics before implementation. M1 must not reuse T1 outcomes to
+  choose a favorable lookback or asset subset.
 
 ## STOP States
 
@@ -226,3 +241,7 @@ predeclared economic-peer zero-news control; neither is yet authorized.
 - Do not treat the E1 prospective-shadow schema as confirmation authority or
   relax the failed matched-control gate. The event lane is stopped until an
   explicitly approved control estimand is frozen.
+- Do not rescue `STOP_T1_TREND_PERSISTENCE` by changing the lookback, deleting
+  frozen assets, replacing `BIL`, adding volatility scaling, or redefining its
+  confirmation window. T1 drawdown reduction is not production or live-advice
+  authority.

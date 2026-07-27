@@ -70,6 +70,9 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D46` | Accept exact E0 reconstruction and open only the initial-reaction theory gate | 5-9 | `This makes total sense. Proceed` | `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`; no predictive claim |
 | `D47` | Freeze a delayed-entry E1 estimand using unusual issuer information, two-stage positive SPY-adjusted reaction, and a matched zero-news price-pattern control | 2-9 | `I agree with this. Please suggest the appropriate reasoning level` | E1 timing, outcome, controls, support gates, and prospective boundary frozen |
 | `D48` | Preserve the E1 STOP after the same-issuer zero-news control matched only 26.2% of signals | 1-9 | `Proceed with E1` | `STOP_E1_DEVELOPMENT_MECHANICS`; control redesign returns to theory |
+| `D49` | Zoom out from E1 and reopen strategy selection around retail-deployable economic mechanisms rather than a favored model or data family | — | `approach this again with fresh eyes and zoom out` | Retail quant mechanism atlas opened; no POC implementation authority |
+| `D50` | Select multi-asset time-series trend as the first mechanism POC and draft its leakage-safe contract before coding | — | `bookmark these approaches... then get started on the T1 POC` | T1 contract and atlas deck opened; subsequently approved and frozen |
+| `D51` | Stop T1 after valid confirmation evidence distinguishes drawdown defense from asset-selection edge | 1-11 | `Approved—implement T1 as frozen` | `STOP_T1_TREND_PERSISTENCE`; no retuning or live authority |
 
 ## Compact Decision Records
 
@@ -730,6 +733,61 @@ tasks by the branch name above, the phrase, or the decision date.
   as confirmation. Return to theory to choose between same-issuer ordinary
   news and a predeclared economic-peer zero-news control.
 
+### D49 — Mechanism first, model second
+
+- **Question:** If the project is allowed to leave high-beta daily OHLCV and
+  the current event lane behind, which proven quantitative concepts are both
+  testable and deployable by a retail operator?
+- **Decision:** Open a theory detour around six sources of possible return:
+  compensated risk bearing, behavioral persistence, liquidity provision,
+  relative-value convergence, information processing, and implementation
+  discipline. Treat models and indicators as measurement tools, not economic
+  mechanisms.
+- **Why:** Public evidence is strongest for families such as multi-asset trend,
+  cross-sectional momentum, post-event drift, diversified statistical
+  arbitrage, conditional liquidity reversal, and volatility management.
+  However, their retail feasibility and failure modes differ sharply.
+- **Boundary:** Document and discuss only. Recommended first POC is T1
+  multi-asset trend persistence, followed by cross-sectional momentum and a
+  construction-first statistical-arbitrage admissibility test. No strategy,
+  provider, dependency, performance surface, or live behavior is authorized.
+
+### D50 — T1 starts with fixed sleeves, not model selection
+
+- **Question:** What is the smallest serious multi-asset trend POC that can be
+  tested and deployed with the existing retail data path?
+- **Decision:** Draft T1 around fourteen diversified liquid ETFs, `BIL` as the
+  executable cash proxy, one 12-month asset-minus-BIL trend sign, monthly
+  next-open rebalancing, equal fixed sleeves, no leverage, and no volatility
+  scaling.
+- **Why:** This isolates a documented persistence mechanism with low turnover
+  and minimal plumbing. An exposure-matched equal-weight control separates
+  trend-conditioned asset selection from the simpler benefit of holding less
+  risky exposure.
+- **Boundary:** Contract and deck only. Do not compute performance, refresh the
+  proposed universe, implement the portfolio, or change live behavior until
+  the operator accepts the universe, timing, costs, controls, and STOP gates.
+
+### D51 — Defense without selection edge stops T1
+
+- **Question:** Does the accepted T1 rule show a diversified, cost-aware
+  persistence edge in confirmation, or does it merely reduce aggregate risky
+  exposure?
+- **Decision:** Record `STOP_T1_TREND_PERSISTENCE`. The implementation matched
+  all fifteen symbol histories to the same `2,638` reference sessions and
+  passed all ten integrity checks, but only five of nine frozen research gates
+  passed.
+- **Why:** Confirmation `ON minus OFF` separation was `-29.71 bp`; only
+  `5 / 14` assets had positive full-history separation; and T1 trailed the
+  exposure-matched control by `0.59 percentage points` of CAGR. The `72.5%`
+  maximum-drawdown reduction versus static equal weight is real defense, but
+  it does not establish asset-specific trend-selection alpha.
+- **Boundary:** Do not rescue T1 by changing its lookback, deleting assets,
+  replacing `BIL`, adding volatility scaling, or redefining windows. Preserve
+  the fixed-sleeve and exposure-matched measurement lessons. The next
+  operator-owned theory discussion may define M1 cross-sectional momentum as
+  a distinct POC; no M1 implementation is yet authorized.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -747,6 +805,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Cross-sectional X2a linear-ranker contract](GEN5_4_CROSS_SECTIONAL_X2A_LINEAR_RANKER_CONTRACT.md)
 - [Event construction E0 contract](GEN5_4_EVENT_CONSTRUCTION_E0_CONTRACT.md)
 - [Event-reaction E1 contract](GEN5_4_EVENT_REACTION_E1_CONTRACT.md)
+- [Retail quant mechanism POC atlas](GEN5_RETAIL_QUANT_MECHANISM_POC_ATLAS.md)
+- [T1 multi-asset trend POC contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -764,6 +824,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_cross_sectional_x2a_linear_ranker_evidence.pptx`
 - `presentations/gen5_4_event_construction_e0_evidence.pptx`
 - `presentations/gen5_4_event_reaction_e1_evidence.pptx`
+- `presentations/gen5_retail_quant_mechanism_atlas_and_t1_design.pptx`
+- `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 
 ## Current Stop State
 
@@ -816,6 +878,12 @@ control against the frozen `70%` gate. Record
 zero-news, or treat the empty prospective-shadow schema as confirmation.
 Source-diversity, underreaction, direction, model, policy, and trading claims
 remain closed.
+The separate mechanism-first T1 lane then implemented its fully accepted
+fourteen-ETF monthly trend contract. All integrity checks passed, but
+confirmation state separation was negative, only `5 / 14` assets had positive
+full-history separation, and T1 trailed the exposure-matched control. Record
+`STOP_T1_TREND_PERSISTENCE`. Its drawdown reduction is retained as risk-shaping
+evidence only; do not retune T1 or treat the result as production authority.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
