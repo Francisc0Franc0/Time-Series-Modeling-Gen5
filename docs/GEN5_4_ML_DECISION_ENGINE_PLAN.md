@@ -521,6 +521,30 @@ has two distinct research primitives when group-relative momentum is included,
 but no accepted price-only exposure-permission condition. Do not drop C0 or
 reinterpret ranking quality as permission to hold long risk.
 
+## Cross-Sectional X2a Linear Ranker Readout
+
+The operator later opened one ranking-only confirmation model without reopening
+the failed C0 exposure lane. X2a used exactly group-relative 20-session momentum
+rank and intraday-minus-overnight 20-session rank. It compared the two raw
+scores, a fixed 50/50 composite, and a pooled two-slope OLS model across
+`2025Q1` through `2026Q2`, always fitting on the preceding eight quarters and
+purging labels that crossed TRAIN or OOS boundaries.
+
+The result is `STOP_X2A_MULTIVARIATE_RANKING`. The linear model produced mean
+daily OOS IC `-0.0485`, positive IC in `1 / 6` quarters, mean top-minus-bottom
+relative h5 outcome `-129.5 bp`, and positive ordering in `1 / 6`. Its mean IC
+lift versus the strongest frozen non-model comparator was `-0.0965`. All
+leakage and concentration gates passed, so the stop is about transported
+ranking quality rather than data integrity or single-name domination.
+
+Raw group-relative momentum was the best comparator at mean IC `0.0479` and
+mean top-minus-bottom `+72.3 bp`. The fixed composite did not earn retention:
+it was weaker than raw group momentum and narrowly exceeded the `50%`
+economic-group concentration cap. Do not rescue the inspected result with
+weight tuning, interactions, regularization, nonlinear ML, or a portfolio
+replay. The next design discussion must choose a genuinely different economic
+information mechanism or stop the cross-sectional ranking lane.
+
 ## C1 Risk-Forecasting Readout
 
 C1 separated alpha from risk. Rather than asking OHLCV internals to forecast the

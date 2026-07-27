@@ -64,6 +64,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D40` | Treat a near-ATM straddle first as a forward-risk measurement, not sentiment or return direction, and freeze reconstruction before outcomes | 2-3 | `What would a minimal POC look like for options` | O0/O1 theory and construction frozen |
 | `D41` | Narrow O0 to five recent sessions after the paper account exposed indicative-only access and no expired-contract catalog | 4 | `available timeframe from Alpaca is short` | Retail-accessible capability boundary recorded |
 | `D42` | Stop O0 because QQQ and IWM missed the 90% fixed-time matched-pair gate; keep O1 closed | 5-7 | `Proceed, then let's also document in a new slide deck` | `STOP_O0_RECONSTRUCTION`; no outcome join |
+| `D43` | Freeze one two-feature pooled linear ranker as a ranking-only confirmation gate, separate from exposure and portfolio semantics | 2-4 | `cut a path to a concrete minimal POC` | X2a contract frozen |
+| `D44` | Stop the multivariate ranking lane after the linear model reversed the frozen comparators on confirmation data | 5-8 | `Approved, proceed` | `STOP_X2A_MULTIVARIATE_RANKING`; no top-five proof |
 
 ## Compact Decision Records
 
@@ -633,6 +635,34 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Do not interpolate missing legs, mix timestamps, loosen the
   DTE window, or join future risk. O1 remains closed.
 
+### D43 — Freeze the smallest serious ranking model
+
+- **Question:** Can the two independently admitted OHLCV ranks add value when
+  combined without smuggling in a feature search, exposure rule, or portfolio
+  backtest?
+- **Decision:** Compare both raw ranks, one fixed 50/50 composite, and one
+  pooled two-slope OLS model on six quarterly confirmation folds from `2025Q1`
+  through `2026Q2`.
+- **Why:** This is the minimum model that can test whether conditional weighting
+  adds information beyond transparent primitives. Eight-quarter TRAIN windows,
+  label purges, same-date ranks, and nine promotion gates were frozen first.
+- **Boundary:** Ranking diagnostics only; no strategy PnL, costs, exposure,
+  allocation, top-five policy, or live behavior.
+
+### D44 — Unstable coefficients close the model-combination lane
+
+- **Question:** Did the TRAIN-only model transport better ranking than the best
+  frozen non-model comparator?
+- **Decision:** Record `STOP_X2A_MULTIVARIATE_RANKING`. Model mean IC was
+  `-0.0485`, positive in `1 / 6` quarters, with `-129.5 bp` mean top-minus-
+  bottom relative h5 outcome and IC lift `-0.0965`.
+- **Why:** The leakage and concentration gates passed, but coefficient signs
+  changed across TRAIN windows and the model underperformed raw group-relative
+  momentum. The fixed composite was weaker and breached the group cap at
+  `51.1%`.
+- **Boundary:** Do not tune weights, interactions, regularization, nonlinear
+  ML, or a top-five portfolio on these inspected outcomes.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -647,6 +677,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [News recency representation N1D contract](GEN5_4_NEWS_RECENCY_N1D_CONTRACT.md)
 - [News live feasibility N1L contract](GEN5_4_NEWS_LIVE_FEASIBILITY_N1L_CONTRACT.md)
 - [Options implied-move O0/O1 contract](GEN5_4_OPTIONS_IMPLIED_MOVE_O0_O1_CONTRACT.md)
+- [Cross-sectional X2a linear-ranker contract](GEN5_4_CROSS_SECTIONAL_X2A_LINEAR_RANKER_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -661,6 +692,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_news_nonredundancy_n1c_evidence_update.pptx`
 - `presentations/gen5_4_news_recency_n1d_evidence_update.pptx`
 - `presentations/gen5_4_options_implied_move_o0_evidence.pptx`
+- `presentations/gen5_4_cross_sectional_x2a_linear_ranker_evidence.pptx`
 
 ## Current Stop State
 
@@ -698,6 +730,12 @@ coherent fixed-time straddle construction where both legs existed, but QQQ
 covered only `4 / 5` sessions and IWM only `3 / 5` against the frozen `90%`
 per-ETF requirement. Record `STOP_O0_RECONSTRUCTION`; do not join O1 outcomes
 or rescue the missing legs on these inspected sessions.
+The ranking-only X2a lane subsequently fit the one authorized two-feature
+linear model on six confirmation quarters. It passed leakage and concentration
+checks but produced negative mean IC, negative top-bottom ordering, and
+`-0.0965` IC lift versus raw group-relative momentum. Record
+`STOP_X2A_MULTIVARIATE_RANKING`; do not tune the combination or open a top-five
+portfolio proof on these outcomes.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

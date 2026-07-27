@@ -4,6 +4,7 @@
 .Ruserdata
 .Rproj.user/
 .codex_r_libs/
+.tmp/
 
 # Local data and generated outputs
 data_cache/

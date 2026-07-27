@@ -189,6 +189,34 @@ momentum result is included, but the separately required exposure-permission
 layer did not pass. Do not implement the two-stage demonstrator by dropping C0
 after observing its OOS failure.
 
+## X2a Two-Feature Linear Ranker Confirmation
+
+A later theory session separated ranking combination from exposure permission
+and opened one minimal model test. X2a used only the two already admitted ranks:
+group-relative 20-session momentum and intraday-minus-overnight 20-session
+structure. It compared each raw rank, a fixed 50/50 composite, and one pooled
+ordinary least-squares ranker on six quarterly OOS folds from `2025Q1` through
+`2026Q2`. Each fold fit only on the preceding eight quarters, purged TRAIN
+labels crossing its boundary, and retained only OOS labels ending inside the
+quarter.
+
+The model failed decisively despite passing every integrity and concentration
+check. Mean daily OOS IC was `-0.0485`, only `1 / 6` quarters had positive IC,
+top-minus-bottom relative h5 outcome averaged `-129.5 bp`, and only `1 / 6`
+quarters ordered positively. Its IC lift versus the best frozen comparator was
+`-0.0965`.
+
+Raw group-relative momentum remained the strongest frozen comparator with mean
+IC `0.0479`, positive quarterly IC in `4 / 6`, and mean top-minus-bottom
+relative h5 outcome `+72.3 bp`, although its ordering was positive in only
+`3 / 6`. The fixed 50/50 composite was weaker and its maximum group share was
+`51.1%`, narrowly above the frozen cap.
+
+Record `STOP_X2A_MULTIVARIATE_RANKING`. The sign and magnitude instability in
+the TRAIN-only coefficients is evidence against adding model complexity here.
+Do not tune weights, interactions, regularization, nonlinear models, or a
+top-five portfolio on these inspected outcomes.
+
 ## C1 Portfolio-Risk Forecasting Audit
 
 The next theory session corrected the role of the exposure layer. C1 did not ask
@@ -268,11 +296,15 @@ allocation, replay, or live behavior.
 - C1 deck: `presentations/gen5_4_cross_sectional_c1_risk_evidence_update.pptx`
 - C2 authority packet: `runs/research_workbench/gen54_ml_decision_engine/g54_c2_vix_risk_20260721/`
 - C2 deck: `presentations/gen5_4_c2_option_implied_risk_evidence_update.pptx`
+- X2a contract: `docs/GEN5_4_CROSS_SECTIONAL_X2A_LINEAR_RANKER_CONTRACT.md`
+- X2a authority packet: `runs/research_workbench/gen54_ml_decision_engine/g54_xs_x2a_20260726/`
+- X2a deck: `presentations/gen5_4_cross_sectional_x2a_linear_ranker_evidence.pptx`
 
 ## Current Boundary
 
-No model, top-K portfolio, exposure scaler, allocation method, performance
-acceptance, or live behavior is authorized by X0/X1, X1b/C0, C1, or C2. The
-ranking architecture remains `STOP_BEFORE_TWO_STAGE_RULES_DESIGN`. The risk lane
-has multi-horizon continuous VIX evidence but remains stopped before scaler
-design because its frozen state conversion was unstable.
+X2a authorized and completed one ranking-only linear model, then stopped it.
+No top-K portfolio, exposure scaler, allocation method, performance acceptance,
+or live behavior is authorized by X0/X1, X1b/C0, X2a, C1, or C2. The ranking
+architecture is `STOP_X2A_MULTIVARIATE_RANKING`; the two-stage design remains
+closed. The risk lane has multi-horizon continuous VIX evidence but remains
+stopped before scaler design because its frozen state conversion was unstable.
