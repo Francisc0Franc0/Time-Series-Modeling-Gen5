@@ -308,7 +308,10 @@ or live behavior is authorized by X0/X1, X1b/C0, X2a, C1, or C2. The ranking
 architecture is `STOP_X2A_MULTIVARIATE_RANKING`; the two-stage design remains
 closed. The risk lane has multi-horizon continuous VIX evidence but remains
 stopped before scaler design because its frozen state conversion was unstable.
-The separate event-conditioned lane has passed E0 point-in-time information-
-cycle construction. That does not reopen X2a or authorize event-conditioned
-ranking: E1 remains theory-only until an initial-reaction measurement and a
-prospective confirmation rule are frozen.
+The separate event-conditioned lane passed E0 point-in-time information-cycle
+construction and then completed one frozen E1 development audit. E1 produced
+`465` non-overlapping signals across all issuers and quarters, but only `26.2%`
+received a same-issuer zero-news price-pattern control against the frozen `70%`
+minimum. Record `STOP_E1_DEVELOPMENT_MECHANICS`. This does not reopen X2a,
+authorize event-conditioned ranking, or permit post-result relaxation of the
+control design.

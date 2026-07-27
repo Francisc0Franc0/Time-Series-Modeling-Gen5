@@ -806,6 +806,55 @@ Artifacts:
 - Deck: `presentations/gen5_4_event_construction_e0_evidence.pptx`
 - Wrapper: `scripts/inspect/run_gen54_event_construction_e0.R`
 
+## Event-Reaction E1 Readout
+
+E1 froze one delayed-assimilation estimand before joining price response:
+
+```text
+issuer-local TRAIN p80 information cycle
++ positive SPY-adjusted overnight gap
++ positive SPY-adjusted next-session intraday return
+-> signal known after that next-session close
+-> earliest entry at the following open
+-> five-session SPY-relative entry-open to endpoint-open continuation
+```
+
+The development window was 2025Q1-2026Q2. Matching used same-issuer,
+same-fold, zero-news days with positive overnight and intraday reactions.
+Distances were measured in fold-TRAIN-frozen robust z scores with a `0.50`
+caliper on each reaction dimension. The outcome never entered matching, and
+overlapping issuer signals were embargoed.
+
+Signal construction had adequate support: `465` non-overlapping signals
+covered all `24` issuers and all `6` quarters. Every data, authority, timing,
+TRAIN-only calibration, outcome-boundary, overlap, and matching-integrity gate
+passed. The matched-control support gate did not: only `122 / 465` signals
+matched, or `26.2%`, versus the frozen `70%` minimum. Of the remaining signals,
+`160` had no same-issuer zero-news candidate and `183` had candidates only
+outside the frozen caliper.
+
+Record `STOP_E1_DEVELOPMENT_MECHANICS`. Do not widen the caliper or change the
+zero-news definition after seeing the result. The matched development subset
+had a pooled signal-minus-control difference of `-0.4 bp`, with large
+quarter-to-quarter sign changes, but that readout is descriptive only because
+the support gate failed. A prospective-shadow schema exists and contains no
+matured prospective signals; it is not confirmation authority.
+
+The next theory decision is whether to change the estimand openly. The
+recommended redesign is a same-issuer ordinary-news control below the
+issuer-local TRAIN p80 boundary, asking whether unusually intense information
+arrival differs from ordinary information arrival conditional on the initial
+price reaction. A real alternative is a predeclared economic-peer zero-news
+control, which preserves the zero-news comparison but weakens issuer
+comparability. Neither redesign is authorized until the operator agrees.
+
+Artifacts:
+
+- Contract: `docs/GEN5_4_EVENT_REACTION_E1_CONTRACT.md`
+- Packet: `runs/research_workbench/gen54_ml_decision_engine/g54_event_e1_20260727/`
+- Deck: `presentations/gen5_4_event_reaction_e1_evidence.pptx`
+- Wrapper: `scripts/inspect/run_gen54_event_reaction_e1.R`
+
 ## STOP Decisions
 
 The operator owns these decisions before promotion beyond POC:
@@ -843,7 +892,7 @@ The operator owns these decisions before promotion beyond POC:
   contract catalog and denser feed are available, or whether a genuinely new
   fixed-time/missing-data construction merits a separate theory gate. Do not
   open O1 on the incomplete five-session indicative O0 evidence.
-- whether the event-conditioned lane should advance from passing E0
-  construction to a frozen E1 initial-reaction and prospective-confirmation
-  design. Do not join price response, interpret headlines, or fit a model until
-  that theory contract is accepted.
+- whether the stopped E1 lane should be redesigned around same-issuer ordinary
+  news or a predeclared economic-peer zero-news control. Do not widen the
+  inspected caliper, change the existing zero-news definition, or treat the
+  empty shadow schema as confirmation.

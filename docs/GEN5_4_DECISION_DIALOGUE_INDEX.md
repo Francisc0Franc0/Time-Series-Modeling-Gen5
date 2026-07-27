@@ -68,6 +68,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D44` | Stop the multivariate ranking lane after the linear model reversed the frozen comparators on confirmation data | 5-8 | `Approved, proceed` | `STOP_X2A_MULTIVARIATE_RANKING`; no top-five proof |
 | `D45` | Define issuer information cycles as point-in-time observable units and freeze construction before any price-response join | 2-4 | `Okay, let's proceed with that discussion` | E0 contract frozen; no semantic-event claim |
 | `D46` | Accept exact E0 reconstruction and open only the initial-reaction theory gate | 5-9 | `This makes total sense. Proceed` | `PASS_E0_INFORMATION_CYCLES_READY_FOR_FEATURE_THEORY`; no predictive claim |
+| `D47` | Freeze a delayed-entry E1 estimand using unusual issuer information, two-stage positive SPY-adjusted reaction, and a matched zero-news price-pattern control | 2-9 | `I agree with this. Please suggest the appropriate reasoning level` | E1 timing, outcome, controls, support gates, and prospective boundary frozen |
+| `D48` | Preserve the E1 STOP after the same-issuer zero-news control matched only 26.2% of signals | 1-9 | `Proceed with E1` | `STOP_E1_DEVELOPMENT_MECHANICS`; control redesign returns to theory |
 
 ## Compact Decision Records
 
@@ -694,6 +696,40 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Open only theory for one initial-reaction measurement and one
   prospective confirmation rule. E1 price response remains closed.
 
+### D47 — A signal is actionable only after the second reaction is known
+
+- **Question:** What is the smallest leakage-safe event-reaction estimand that
+  could test delayed assimilation without pretending that news intensity alone
+  predicts direction?
+- **Decision:** Define unusual information with an issuer-local fold-TRAIN p80
+  equal-count percentile; require positive SPY-adjusted overnight and
+  next-session intraday reactions; make the signal known only after that close;
+  enter no earlier than the following open; measure five-session SPY-relative
+  continuation from entry open to endpoint open.
+- **Why:** The two-stage reaction makes price acceptance observable before the
+  trade, while the delayed entry prevents same-close execution. Same-issuer,
+  same-fold, zero-news controls matched on TRAIN-frozen reaction scales isolate
+  the information-cycle hypothesis from a visually similar price pattern.
+- **Boundary:** Development mechanics and an empty prospective-shadow schema
+  only. No sentiment, model, portfolio, PnL, exposure, or live behavior.
+
+### D48 — Sparse counterfactual support stops E1
+
+- **Question:** Does the frozen E1 design support a representative matched
+  comparison before prospective confirmation?
+- **Decision:** Record `STOP_E1_DEVELOPMENT_MECHANICS`. The panel produced
+  `465` non-overlapping signals across all `24` issuers and `6` quarters, but
+  only `122`, or `26.2%`, received a same-issuer zero-news match against the
+  frozen `70%` requirement.
+- **Why:** Fourteen of fifteen gates passed. The failed support gate is
+  substantive: `160` signals had no eligible same-issuer zero-news candidate
+  and `183` had candidates only outside the `0.50z` caliper. Widening the
+  caliper or redefining zero-news after inspection would change the experiment.
+- **Boundary:** The matched subset's pooled `-0.4 bp` difference and unstable
+  quarterly signs are descriptive only. Do not treat the empty shadow schema
+  as confirmation. Return to theory to choose between same-issuer ordinary
+  news and a predeclared economic-peer zero-news control.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -710,6 +746,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Options implied-move O0/O1 contract](GEN5_4_OPTIONS_IMPLIED_MOVE_O0_O1_CONTRACT.md)
 - [Cross-sectional X2a linear-ranker contract](GEN5_4_CROSS_SECTIONAL_X2A_LINEAR_RANKER_CONTRACT.md)
 - [Event construction E0 contract](GEN5_4_EVENT_CONSTRUCTION_E0_CONTRACT.md)
+- [Event-reaction E1 contract](GEN5_4_EVENT_REACTION_E1_CONTRACT.md)
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
@@ -726,6 +763,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_4_options_implied_move_o0_evidence.pptx`
 - `presentations/gen5_4_cross_sectional_x2a_linear_ranker_evidence.pptx`
 - `presentations/gen5_4_event_construction_e0_evidence.pptx`
+- `presentations/gen5_4_event_reaction_e1_evidence.pptx`
 
 ## Current Stop State
 
@@ -769,11 +807,15 @@ checks but produced negative mean IC, negative top-bottom ordering, and
 `-0.0965` IC lift versus raw group-relative momentum. Record
 `STOP_X2A_MULTIVARIATE_RANKING`; do not tune the combination or open a top-five
 portfolio proof on these outcomes.
-The event-conditioned lane separately passed E0 construction: accepted raw
-Alpaca pages exactly reproduce a fully supported issuer information-cycle tape.
-This opens only feature theory. Because the archive is Benzinga-only and no
-price response has been joined, source-diversity, underreaction, direction,
-model, policy, and trading claims remain closed.
+The event-conditioned lane separately passed E0 construction and completed one
+frozen E1 development audit. E1's point-in-time signal mechanics, outcome
+boundary, overlap embargo, and TRAIN-only transformations passed, but only
+`26.2%` of non-overlapping signals received the required same-issuer zero-news
+control against the frozen `70%` gate. Record
+`STOP_E1_DEVELOPMENT_MECHANICS`. Do not widen the inspected caliper, redefine
+zero-news, or treat the empty prospective-shadow schema as confirmation.
+Source-diversity, underreaction, direction, model, policy, and trading claims
+remain closed.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
