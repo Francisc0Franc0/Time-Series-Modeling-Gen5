@@ -882,6 +882,69 @@ tasks by the branch name above, the phrase, or the decision date.
   is opened. The handoff itself authorizes no strategy, provider expansion,
   outcome calculation, portfolio replay, or live change.
 
+### D57 — Start from mechanism, not inherited Gen5.4 architecture
+
+- **Question:** Must the literature-grounded phase force the books' ideas into
+  the earlier Gen5.4 decision-engine work?
+- **Decision:** No. Preserve Gen5's leakage, evidence, and operator-control
+  invariants, but allow a simpler literature-derived mechanism to stand on its
+  own. Keep the first POCs at swing or slower cadence and avoid scalping and
+  intraday execution.
+- **Why:** Architecture is useful only when it clarifies the economic
+  hypothesis. A formulaic rule with explicit timing, costs, and falsification
+  controls is easier to understand and reject than a prematurely generalized
+  engine.
+- **Boundary:** This independence does not reopen providers, live behavior,
+  allocation, or arbitrary strategy search. Each mechanism still requires an
+  exact contract and operator approval.
+
+### D58 — Relative profit and absolute direction are different questions
+
+- **Question:** If a long/short reversal spread makes or loses money, does that
+  establish that it predicts which selected assets rise and fall?
+- **Decision:** Measure both. The primary mechanism estimand is the
+  long-minus-short next-open-to-next-open spread after ordinary costs; absolute
+  selected-leg up/down accuracy, long-call precision, short-call precision,
+  balanced accuracy, and a confusion matrix are separate diagnostics.
+- **Why:** A profitable relative spread can arise while both legs rise, and an
+  apparently acceptable direction hit rate can coexist with economically
+  useless magnitudes or costs. The two questions should never be collapsed.
+- **Boundary:** Direction diagnostics are not a classifier-development license.
+  Do not tune thresholds or relabel the target after seeing their outcomes.
+
+### D59 — Structural tests precede portfolio performance
+
+- **Question:** Should the full 2016-2026 sample be backtested first, or should
+  an earlier subset establish whether the proposed reversal property exists?
+- **Decision:** Freeze L1 as a TRAIN-first structural gate over 2016-2020.
+  Use nine SPDR sector ETFs, a five-session formation rank, long bottom two and
+  short top two, five-session non-overlapping holds, after-close decisions,
+  next-open execution, fixed 5/10 bp costs, borrow-fee stress, block-bootstrap
+  uncertainty, and seeded random-policy falsification.
+- **Why:** Stationarity or unit-root tests characterize a series but do not by
+  themselves validate a trading rule. The closer test is whether the exact
+  signal repeatedly produces the hypothesized conditional reversal, survives
+  ordinary frictions, and beats a matched random selection process.
+- **Boundary:** Development/confirmation outcomes and bar-by-bar portfolio
+  replay, Sharpe, drawdown, and trade P&L stay structurally closed unless every
+  L1A gate passes.
+
+### D60 — L1 fails before a backtest exists
+
+- **Question:** Does the frozen five-session sector-reversal mechanism earn
+  permission to open later outcomes and portfolio replay?
+- **Decision:** Record `STOP_L1A_SECTOR_REVERSAL_MECHANISM`.
+- **Why:** All 12 integrity checks passed, but TRAIN mean rank IC was
+  `-0.018796`; primary-cost net return was `-10.47 bp` per cohort with 95%
+  block-bootstrap CI `[-26.91, +5.06] bp`; spread-direction hit rate was
+  `49.6%`; the observed return missed seeded random-policy p90 `-2.46 bp`; and
+  no TRAIN year was positive. Selected-leg absolute direction accuracy was
+  `48.7%`, Wilson 95% CI `[45.61%, 51.80%]`.
+- **Boundary:** Development and confirmation data remain sealed. No L1
+  portfolio replay, Sharpe, drawdown, trade P&L, live-short claim, or rescue
+  tuning exists. Any next POC must return to theory and freeze a genuinely
+  distinct mechanism.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -904,6 +967,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
 - [S0 statistical-arbitrage admissibility contract](GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md)
 - [Literature-grounded POC handoff](GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
+- [Literature source ledger](GEN5_LITERATURE_SOURCE_LEDGER.md)
+- [L1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -927,6 +992,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
+- `presentations/gen5_l1_sector_reversal_evidence.pptx`
 
 ## Current Stop State
 
@@ -992,6 +1058,14 @@ failed. Record `STOP_M1_RANKING_MECHANISM`. M1B was structurally not run, so no
 M1 portfolio performance exists to reinterpret. Do not retune its universe,
 formation horizon, quartile, group treatment, random percentile, or evidence
 window.
+The first literature-grounded L1 lane then tested an exact five-session
+long/short sector-reversal mechanism on TRAIN only. Integrity passed, but rank
+IC, cost-survival uncertainty, spread-direction accuracy, randomized-policy
+separation, and yearly stability all failed. Record
+`STOP_L1A_SECTOR_REVERSAL_MECHANISM`. Development and confirmation outcomes
+remain sealed, and bar-by-bar portfolio replay, Sharpe, drawdown, trade P&L,
+historical borrow executability, and live shorting were structurally not run.
+Do not rescue L1 on its inspected TRAIN sample.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
