@@ -51,3 +51,21 @@ renames an earlier outcome.
 |---|---|---|---|
 | `LIT-MR-01.1` | Five-Session Cross-Sectional Sector Reversal | `L1` | `STOP_L1A_SECTOR_REVERSAL_MECHANISM` |
 | `LIT-MR-02.1` | Adaptive GLD-USO Spread Bollinger Reversion | none | `STOP_LIT_MR_02_1_TRAIN_MECHANISM` |
+
+## Replication batches and instances
+
+A fixed set of asset substitutions under unchanged mechanics is a replication
+batch, not a decimal variant:
+
+`LIT-MR-02.1-PANEL-A / pair_id=P01_IVV_SPY`
+
+- `PANEL-A` names the predeclared batch.
+- `pair_id` names one immutable instance.
+- The canonical literature example remains `LIT-MR-02.1 / CANON_USO_GLD`.
+- A pair substitution does not become `02.2`; changing the transform, window,
+  thresholds, exit, or portfolio semantics would require a newly justified and
+  frozen variant.
+
+| Batch | Purpose | Status |
+|---|---|---|
+| `LIT-MR-02.1-PANEL-A` | Twelve positive-beta primary pairs plus two inverse semantic challengers, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS` |

@@ -57,6 +57,12 @@ Implementation clarification:
 - The source estimates an intercept in rolling OLS but omits the intercept
   from the traded unit-portfolio spread. The POC preserves that convention
   and records the intercept only as an audit diagnostic.
+- `LIT-MR-02.1-PANEL-A` is an operator/Codex-designed replication batch, not a
+  claim that Chan proposed its ETF pairs. It applies the source-derived
+  formula unchanged to a finite registry fixed before outcomes. The panel's
+  economic rationales, inverse semantic challengers, gates, and readout are
+  grounded in
+  [the separate panel contract](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md).
 
 Methodological correction:
 
@@ -120,3 +126,6 @@ operational information only; L1 must not backfill it into historical dates.
   reversal test across nine long-history U.S. sector ETFs.
 - `LIT-MR-02.1` is the adaptive GLD-USO raw-price-spread Bollinger test derived
   directly from Chan Examples 3.1 and 3.2.
+- `LIT-MR-02.1-PANEL-A` preserves that canonical example and records a
+  predeclared breadth replication separately; it produced
+  `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`.

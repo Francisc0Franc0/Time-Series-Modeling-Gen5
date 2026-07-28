@@ -9,6 +9,10 @@ g5_mr02_stop <- function(message) {
 g5_mr02_contract <- function() {
   list(
     literature_id = "LIT-MR-02.1",
+    instance_scope = "CANONICAL",
+    instance_id = "CANON_USO_GLD",
+    pair_category = "canonical_literature",
+    pair_rationale = "Chan Example 3.2 literature pair",
     symbol_x = "GLD",
     symbol_y = "USO",
     query_start = as.Date("2016-01-04"),
@@ -43,7 +47,8 @@ g5_mr02_contract <- function() {
 
 g5_mr02_validate_contract <- function(contract = g5_mr02_contract()) {
   required <- c(
-    "literature_id", "symbol_x", "symbol_y", "query_start", "query_end",
+    "literature_id", "instance_scope", "instance_id", "pair_category",
+    "pair_rationale", "symbol_x", "symbol_y", "query_start", "query_end",
     "as_of_timestamp", "train_start", "train_end", "development_start",
     "development_end", "confirmation_start", "confirmation_end",
     "lookback_sessions", "entry_z", "exit_z", "primary_cost_bps",
@@ -64,10 +69,26 @@ g5_mr02_validate_contract <- function(contract = g5_mr02_contract()) {
     contract$confirmation_start, contract$confirmation_end
   )
   if (any(is.na(dates))) g5_mr02_stop("Contract dates must be explicit.")
-  if (!identical(contract$literature_id, "LIT-MR-02.1") ||
-      !identical(contract$symbol_x, "GLD") ||
-      !identical(contract$symbol_y, "USO")) {
-    g5_mr02_stop("The frozen identifier and GLD-USO pair cannot change.")
+  if (!identical(contract$literature_id, "LIT-MR-02.1")) {
+    g5_mr02_stop("The frozen literature identifier cannot change.")
+  }
+  allowed_scopes <- c("CANONICAL", "PANEL_A_PRIMARY", "PANEL_A_DIAGNOSTIC")
+  if (!contract$instance_scope %in% allowed_scopes) {
+    g5_mr02_stop("The instance scope is not recognized.")
+  }
+  if (!nzchar(contract$instance_id) || !nzchar(contract$pair_category) ||
+      !nzchar(contract$pair_rationale)) {
+    g5_mr02_stop("Instance identity, category, and rationale must be explicit.")
+  }
+  if (!nzchar(contract$symbol_x) || !nzchar(contract$symbol_y) ||
+      identical(contract$symbol_x, contract$symbol_y)) {
+    g5_mr02_stop("Pair symbols must be explicit and distinct.")
+  }
+  if (identical(contract$instance_scope, "CANONICAL") &&
+      (!identical(contract$instance_id, "CANON_USO_GLD") ||
+       !identical(contract$symbol_x, "GLD") ||
+       !identical(contract$symbol_y, "USO"))) {
+    g5_mr02_stop("The canonical GLD-USO instance cannot change.")
   }
   if (!identical(as.integer(contract$lookback_sessions), 20L) ||
       !isTRUE(all.equal(as.numeric(contract$entry_z), 1)) ||
@@ -79,6 +100,31 @@ g5_mr02_validate_contract <- function(contract = g5_mr02_contract()) {
     g5_mr02_stop("Frozen resampling counts changed.")
   }
   contract
+}
+
+g5_mr02_pair_contract <- function(
+  symbol_y,
+  symbol_x,
+  instance_id,
+  pair_category,
+  pair_rationale,
+  instance_scope = "PANEL_A_PRIMARY",
+  pair_index = 0L
+) {
+  contract <- g5_mr02_contract()
+  contract$instance_scope <- as.character(instance_scope)
+  contract$instance_id <- as.character(instance_id)
+  contract$pair_category <- as.character(pair_category)
+  contract$pair_rationale <- as.character(pair_rationale)
+  contract$symbol_y <- toupper(as.character(symbol_y))
+  contract$symbol_x <- toupper(as.character(symbol_x))
+  contract$query_end <- contract$train_end
+  offset <- 1000L * as.integer(pair_index)
+  contract$bootstrap_seed <- contract$bootstrap_seed + offset
+  contract$random_seed <- contract$random_seed + offset
+  contract$convergence_bootstrap_seed <-
+    contract$convergence_bootstrap_seed + offset
+  g5_mr02_validate_contract(contract)
 }
 
 g5_mr02_required_symbols <- function(contract = g5_mr02_contract()) {
@@ -95,7 +141,11 @@ g5_mr02_validate_bars <- function(bars, contract = g5_mr02_contract()) {
   }
   bars <- bars[bars$symbol %in% g5_mr02_required_symbols(contract), required, drop = FALSE]
   bars$session_date <- as.Date(bars$session_date)
-  if (!nrow(bars)) g5_mr02_stop("No GLD-USO bars were supplied.")
+  if (!nrow(bars)) {
+    g5_mr02_stop(sprintf(
+      "No %s-%s bars were supplied.", contract$symbol_y, contract$symbol_x
+    ))
+  }
   if (any(is.na(bars$session_date))) g5_mr02_stop("Session dates must be valid.")
   if (anyDuplicated(bars[c("symbol", "session_date")])) {
     g5_mr02_stop("Duplicate symbol-session bars are prohibited.")
@@ -124,7 +174,11 @@ g5_mr02_common_panel <- function(bars, contract = g5_mr02_contract()) {
   panel <- merge(x, y, by = "session_date", all = FALSE)
   panel <- panel[order(panel$session_date), , drop = FALSE]
   rownames(panel) <- NULL
-  if (nrow(panel) < 100L) g5_mr02_stop("Too few common GLD-USO sessions.")
+  if (nrow(panel) < 100L) {
+    g5_mr02_stop(sprintf(
+      "Too few common %s-%s sessions.", contract$symbol_y, contract$symbol_x
+    ))
+  }
   panel
 }
 
@@ -265,6 +319,11 @@ g5_mr02_build_replay <- function(indicators, contract = g5_mr02_contract()) {
       target_state = state,
       trade_id = trade_id,
       is_exit_row = is_exit_row,
+      symbol_x = contract$symbol_x,
+      symbol_y = contract$symbol_y,
+      weight_x = w_x,
+      weight_y = w_y,
+      # Retained for compatibility with the canonical evidence packet.
       weight_gld = w_x,
       weight_uso = w_y,
       gross_exposure = abs(w_x) + abs(w_y),
@@ -617,7 +676,10 @@ g5_mr02_integrity_audit <- function(
   labels <- c(
     "Data health permits analysis",
     "No duplicate symbol-session bars",
-    "Exact frozen GLD-USO universe",
+    sprintf(
+      "Exact frozen %s-%s instance universe",
+      contract$symbol_y, contract$symbol_x
+    ),
     "Both assets cover common reference sessions",
     "No bars after explicit query end",
     "Indicators are session ordered",

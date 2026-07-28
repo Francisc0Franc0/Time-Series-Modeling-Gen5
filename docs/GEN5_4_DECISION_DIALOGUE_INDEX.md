@@ -87,6 +87,10 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D62` | Interpret Example 3.2 as Bollinger standardization of an adaptive two-asset raw-price spread | — | `z-score of the spread ... between two assets` | Raw adjusted prices selected; log price remains a distinct variant |
 | `D63` | Freeze LIT-MR-02.1 around the book's 20-session GLD-USO spread rule with leakage-safe execution and structural gates | — | `let's implement it` | Exact contract implemented without outcome-driven tuning |
 | `D64` | Stop LIT-MR-02.1 after its stationary-looking spread fails economic convergence and cost-aware performance | 1-9 | `let's implement it` | `STOP_LIT_MR_02_1_TRAIN_MECHANISM`; later partitions sealed |
+| `D65` | Expand the evidence deck with the hedge-ratio, spread, z-score, and executable-weight mathematics | 1-17 | `make the slide deck a little more detailed` | Canonical evidence preserved inside a theory-first 17-slide deck |
+| `D66` | Prefer positive-beta co-moving pairs for the relative-value strategy and isolate inverse relationships as diagnostics | 6, 13, 16 | `should we select pairs that are likely to move opposite ... or ... together?` | Negative beta recognized as different same-side portfolio semantics |
+| `D67` | Freeze a finite economically motivated panel before outcomes rather than search pair combinations | 13 | `We're not fishing ... just collecting more data` | `LIT-MR-02.1-PANEL-A` registered as a replication batch |
+| `D68` | Stop the fixed panel after no primary pair clears all eight gates | 14-17 | `test a panel of different pairs` | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`; no winner selected |
 
 ## Compact Decision Records
 
@@ -1018,6 +1022,58 @@ tasks by the branch name above, the phrase, or the decision date.
   and confirmation remain sealed; do not change the pair, transform, windows,
   thresholds, exit, rehedging, costs, or boundary after seeing TRAIN.
 
+### D65 — Explain the construction before presenting the verdict
+
+- **Question:** What additional theory is needed for the evidence deck to
+  explain why the test is constructed this way?
+- **Decision:** Add the rolling OLS formulas, distinguish beta from
+  correlation, derive the adaptive spread and z-score, and show how one spread
+  direction becomes two gross-normalized next-open dollar weights.
+- **Why:** A hedge ratio is a local price-unit conversion. A z-score is a
+  unitless description of how unusual the relationship is; neither is itself
+  proof of cointegration, convergence, or profitability.
+- **Boundary:** Preserve the canonical USO-GLD evidence and source references;
+  do not turn explanatory additions into new mechanics.
+
+### D66 — Co-movement preserves relative-value semantics
+
+- **Question:** Should candidate pairs move together or oppositely?
+- **Decision:** Use economically justified, generally positive-beta
+  co-moving pairs as primary trading instances. Keep negative-beta
+  relationships as diagnostic challengers only.
+- **Why:** With positive beta, `Y - beta X` produces opposite-leg relative
+  value. With negative beta it becomes `Y + |beta|X`, so a long spread can mean
+  long both assets. Beta-sign changes can even change the meaning inside one
+  replay.
+- **Boundary:** A tradable inverse-pair rule would be a substantive new
+  variant with separately frozen position semantics.
+
+### D67 — Breadth evidence is not pair mining
+
+- **Question:** Can the source template be tested more fairly without fishing?
+- **Decision:** Freeze `LIT-MR-02.1-PANEL-A`: five near substitutes, seven
+  related exposures, and two inverse semantic challengers, all on the same
+  2016-2020 TRAIN window and exact 20-session mechanics.
+- **Why:** A finite ex-ante registry provides breadth while keeping pair
+  choice, window, thresholds, costs, controls, and gates independent of
+  outcomes.
+- **Boundary:** Report registry order; do not rank or select a winner, scan a
+  larger universe, or vary the lookback after inspection.
+
+### D68 — The panel is informative even without a pass
+
+- **Question:** Does the frozen template generalize across the primary panel?
+- **Decision:** Record `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`.
+- **Why:** No primary pair passed all eight gates. Eleven of twelve had
+  negative mean net trade returns. The only positive point estimate,
+  `USO-XLE`, had a wide interval spanning zero and failed beta coverage,
+  random-sign separation, and forward convergence. Near substitutes exposed a
+  different weakness: small gross convergence was overwhelmed by turnover
+  costs.
+- **Boundary:** Retain USO-GLD as the canonical source example and Panel A as
+  replication evidence. Do not select `USO-XLE`, change the 20-session window,
+  or open later partitions.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1044,6 +1100,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Literature source ledger](GEN5_LITERATURE_SOURCE_LEDGER.md)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
+- [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -1151,6 +1208,13 @@ spread looked stationary under an ADF-style diagnostic while forward
 convergence had the wrong sign and the cost-aware strategy lost money. Record
 `STOP_LIT_MR_02_1_TRAIN_MECHANISM`. Development and confirmation remain sealed;
 do not rescue the inspected rule.
+The subsequent fixed replication batch, `LIT-MR-02.1-PANEL-A`, applied the
+same rule to 12 economically motivated primary pairs and treated two inverse
+relationships as non-trading semantic challengers. No primary pair passed all
+eight gates, and the only positive mean, `USO-XLE`, failed uncertainty,
+falsification, beta-coverage, and convergence requirements. Record
+`STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`; do not select a winner or vary the
+window after inspection.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
