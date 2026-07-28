@@ -77,6 +77,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D53` | Stop M1 at the ranking gate after repeated-ordering, randomized-control, and concentration failures | 1-9 | `Approved` | `STOP_M1_RANKING_MECHANISM`; M1B structurally not run |
 | `D54` | Freeze S0 conceptually as a daily ETF residual-convergence admissibility test with historical-borrow claims explicitly excluded | 1-8 | `Approved` | Exact S0A contract proposed and subsequently frozen |
 | `D55` | Stop S0A after the frozen evidence failed breadth, support, randomized-selection, control-match, contribution-breadth, and stability gates | 1-8 | `Approved—implement S0A as frozen` | `STOP_S0A_RELATIVE_VALUE_MECHANISM`; S0B remains closed |
+| `D56` | Replace free-form mechanism exploration with a literature-grounded hypothesis-extraction and minimal-POC workflow while preserving the established evidence and delivery conventions | — | `fresh discussion... folders where I've downloaded some literature` | New project-task handoff frozen; no POC implementation authority |
 
 ## Compact Decision Records
 
@@ -864,6 +865,23 @@ tasks by the branch name above, the phrase, or the decision date.
   horizon, matching rule, costs, caps, or confirmation window. The run makes no
   historical-borrow, portfolio-performance, or live-short claim.
 
+### D56 — Literature should constrain the search, not replace falsification
+
+- **Question:** How can the next phase make faster, more concrete progress
+  without losing the safeguards developed during the organic exploration?
+- **Decision:** Start a fresh project task from operator-supplied literature.
+  Inventory sources, extract precisely cited claims, translate distinct
+  mechanisms into comparable idea cards, and rank minimal POCs by
+  point-in-time integrity and retail feasibility before selecting one.
+- **Why:** Published and practitioner literature can provide concrete economic
+  hypotheses, implementation details, known controls, and failure modes. It
+  reduces unconstrained idea search, but published performance is still not
+  Gen5 evidence and may embed selection, data, execution, or crowding problems.
+- **Boundary:** Preserve automatic documentation, concise decks, dialogue
+  bookmarks, human-facing visuals, validation, commit, and push after a scope
+  is opened. The handoff itself authorizes no strategy, provider expansion,
+  outcome calculation, portfolio replay, or live change.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -885,6 +903,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [T1 multi-asset trend POC contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md)
 - [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
 - [S0 statistical-arbitrage admissibility contract](GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md)
+- [Literature-grounded POC handoff](GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
