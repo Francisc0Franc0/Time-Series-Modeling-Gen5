@@ -1,6 +1,6 @@
 # Gen5 Retail Quant Mechanism POC Atlas
 
-Status: `T1_STOP_M1_STOP_NEXT_MECHANISM_REQUIRES_THEORY`
+Status: `T1_STOP_M1_STOP_S0_STOP`
 
 ## Purpose
 
@@ -206,29 +206,68 @@ cost-adjusted convergence?
 
 ### Minimal design
 
-- Start with 50–100 highly liquid, mostly easy-to-borrow stocks.
-- Define economic groups point in time; do not hand-pick famous pairs.
-- In each TRAIN window, select multiple pairs by one frozen distance or
-  residual-stability rule.
-- Freeze hedge-ratio estimation, entry z score, exit rule, maximum holding
-  period, and no-reentry embargo inside TRAIN.
-- Trade dollar- or beta-neutral spreads at the next executable price.
-- Charge bid-ask spread, slippage, and borrow; reject unavailable shorts.
-- Compare selected pairs with random within-group pairs and a no-trade
-  benchmark.
-- Require breadth across many independent pairs and dates.
+- Begin with 37 liquid, unleveraged equity ETFs rather than hand-picked famous
+  stock pairs.
+- Freeze four economic groups and disclose that the panel is a current
+  survivor panel, not a reconstructed historical universe.
+- Use 504-session rolling TRAIN windows and quarterly OOS folds.
+- Select at most three non-overlapping pairs per group by one TRAIN-only
+  residual-stability score.
+- Define dislocations with a TRAIN-frozen residual z score.
+- Observe after the close and enter no earlier than the next regular open.
+- Make 10-session convergence primary; retain 5 and 20 sessions as fixed
+  diagnostics.
+- Compare selected pairs with seeded random within-group policies,
+  same-pair non-event dates, and no-trade.
+- Require breadth across pairs, groups, quarters, and years.
+
+The exact thresholds, universe, costs, controls, and nine gates are frozen in
+`docs/GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md`. The operator
+approved that exact contract, and S0A was implemented without changing it.
 
 ### Falsification
 
-Stop before a trading POC if pair membership is unstable, most apparent
-mean-reversion occurs inside the bid-ask spread, convergence is concentrated in
-one pair, or easy-to-borrow availability removes the result.
+Stop before a trading POC if pair membership is unstable, the result does not
+beat randomized relationship selection, controls do not support a distinct
+event effect, most apparent mean reversion occurs inside ordinary costs, or
+convergence is concentrated in one pair, group, or year.
 
 ### Professional caveat
 
 Real statistical arbitrage is a portfolio of many small residual bets with
 neutralization and cost control. “These two charts look cointegrated” is not a
 professional strategy.
+
+### Borrow and claim boundary
+
+Alpaca can report current shortability and borrow status, and hard-to-borrow
+locates can be checked prospectively. Its documented interface does not provide
+a general historical archive of borrow availability and fees. S0A therefore
+tests historical convergence after ordinary two-leg costs only. A pass can
+open an S0B prospective borrow-status shadow; it cannot retroactively establish
+historical short executability.
+
+### Frozen S0A readout
+
+The run used explicit as-of `2026-07-24 17:30:00` and the exact frozen
+37-ETF panel. All ETFs covered every actual reference session and all 12
+integrity rows passed. The raw cache-health WARN reflected only the requested
+weekend boundary before the first 2016 trading session, not a missing
+analytical session.
+
+Primary 10-session net convergence was `31.69 bp` and positive in `9 / 12`
+quarters. That attractive average was not admissible mechanism evidence:
+
+- breadth cleared in only `8 / 12` quarters;
+- the run produced 99 eligible events and only six pairs cleared support;
+- observed convergence missed the seeded random-policy p90 of `36.64 bp`;
+- only `47.5%` of events had a valid frozen quiet-date match;
+- one year supplied `65.5%` of positive contribution; and
+- the weakest quarter retained only `22.2%` of selected relationships.
+
+Only `3 / 9` gates passed. Record
+`STOP_S0A_RELATIVE_VALUE_MECHANISM`. S0B remains closed, and the result does
+not support historical-borrow, portfolio-performance, or live-short claims.
 
 ## Minimal POC 4 — E2 post-earnings drift
 
@@ -375,8 +414,8 @@ building a large architecture:
    mechanism; daily data; low plumbing.
 2. **M1 cross-sectional momentum** — relative ranking mechanism; monthly
    decisions; broader panel.
-3. **S0 statistical-arbitrage admissibility** — convergence and shorting
-   feasibility; construction first, not profit first.
+3. **S0 statistical-arbitrage admissibility** — stopped after convergence
+   failed the frozen breadth, controls, concentration, and stability standard.
 
 Only after those:
 
@@ -428,6 +467,7 @@ Decks:
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
+- `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 
 ## Research anchors
 

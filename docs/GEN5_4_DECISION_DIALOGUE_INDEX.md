@@ -75,6 +75,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D51` | Stop T1 after valid confirmation evidence distinguishes drawdown defense from asset-selection edge | 1-11 | `Approved—implement T1 as frozen` | `STOP_T1_TREND_PERSISTENCE`; no retuning or live authority |
 | `D52` | Draft M1 as an equity-only ranking test with a hard mechanism gate before portfolio replay | 1-10 | `Approved, proceed` | Exact M1 contract drafted; implementation awaits approval |
 | `D53` | Stop M1 at the ranking gate after repeated-ordering, randomized-control, and concentration failures | 1-9 | `Approved` | `STOP_M1_RANKING_MECHANISM`; M1B structurally not run |
+| `D54` | Freeze S0 conceptually as a daily ETF residual-convergence admissibility test with historical-borrow claims explicitly excluded | 1-8 | `Approved` | Exact S0A contract proposed and subsequently frozen |
+| `D55` | Stop S0A after the frozen evidence failed breadth, support, randomized-selection, control-match, contribution-breadth, and stability gates | 1-8 | `Approved—implement S0A as frozen` | `STOP_S0A_RELATIVE_VALUE_MECHANISM`; S0B remains closed |
 
 ## Compact Decision Records
 
@@ -828,6 +830,40 @@ tasks by the branch name above, the phrase, or the decision date.
   horizon, revised subset, group-neutral rank, weaker concentration gate, or
   altered confirmation window. Return to theory for a distinct mechanism.
 
+### D54 — Convergence evidence must be separated from borrow executability
+
+- **Question:** What is the smallest retail-feasible statistical-arbitrage POC
+  that tests a genuinely different mechanism without turning one attractive
+  pair chart into a strategy claim?
+- **Decision:** Freeze S0 conceptually around a 37-ETF survivor panel in four
+  economic groups, quarterly TRAIN-only residual relationships, next-open
+  entry, one 10-session primary convergence estimand, fixed 5/20 diagnostics,
+  seeded random-pair and same-pair non-event controls, and breadth/stability
+  gates before any portfolio or live-short surface.
+- **Why:** Correlation, a z score, or an in-sample cointegration result is not
+  an edge. Multiple pairs, OOS convergence, ordinary two-leg costs, controls,
+  and contribution breadth test the mechanism more honestly. Current Alpaca
+  borrow metadata cannot establish point-in-time historical shortability.
+- **Boundary:** The exact contract and design deck did not themselves authorize
+  implementation. The operator subsequently approved the exact universe,
+  thresholds, costs, controls, and nine gates in D55.
+
+### D55 — Positive averages do not override failed falsification gates
+
+- **Question:** Did the frozen ETF residual-convergence mechanism produce
+  evidence broad, distinct, and stable enough to justify prospective borrow
+  monitoring?
+- **Decision:** Record `STOP_S0A_RELATIVE_VALUE_MECHANISM` after only three of
+  nine gates passed; keep S0B closed.
+- **Why:** Net 10-session convergence was positive, but the relationship set
+  lacked adequate quarterly breadth and event support, missed the seeded
+  random-pair p90, matched quiet same-pair dates for only `47.5%` of events,
+  concentrated `65.5%` of positive contribution in one year, and retained only
+  `22.2%` of relationships in the weakest quarter.
+- **Boundary:** Do not retune the panel, pair score, z threshold, holding
+  horizon, matching rule, costs, caps, or confirmation window. The run makes no
+  historical-borrow, portfolio-performance, or live-short claim.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -848,6 +884,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Retail quant mechanism POC atlas](GEN5_RETAIL_QUANT_MECHANISM_POC_ATLAS.md)
 - [T1 multi-asset trend POC contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md)
 - [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
+- [S0 statistical-arbitrage admissibility contract](GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md)
+- `presentations/gen5_s0_statistical_arbitrage_design.pptx`
+- `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_evidence_update.pptx`
 - `presentations/gen5_4_cross_sectional_asset_selection_poc_plan_and_x1_evidence.pptx`
