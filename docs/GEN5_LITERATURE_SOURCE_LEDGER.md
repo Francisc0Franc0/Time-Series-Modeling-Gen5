@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_POC_L1_SELECTED`
+Status: `LITERATURE_INVENTORIED_LIT_MR_01_1_AND_02_1_SELECTED`
 
 ## Purpose
 
@@ -34,6 +34,29 @@ Grounded claims used by L1:
 | Cross-sectional mean reversion buys relative losers and shorts relative winners. | 102-106 | 120-124 | Direct strategy mechanism for L1. |
 | Direction-only prediction can be evaluated through correlation of past and future return signs. | 133-136 | 151-154 | Add absolute and relative directional scorecards. |
 | Nonoverlapping past/future windows are required for honest correlation inference. | 135-136 | 153-154 | Use nonoverlapping five-session cohorts and cohort-level inference. |
+
+Additional claims used by `LIT-MR-02.1`:
+
+| Claim or warning | Printed pages | PDF pages | LIT-MR-02.1 use |
+|---|---:|---:|---|
+| A price ratio can be more stable across changing nominal price levels, but there is no universal answer; in the GLD-USO comparison, the adaptive raw-price spread worked better than ratio or log-price spread. | 66-69 | 84-87 | Use the raw adjusted-price spread for source fidelity and report ratio/log-price as future concepts, not hidden alternatives. |
+| Example 3.1 estimates a rolling 20-session OLS hedge ratio for `USO ~ GLD`, then defines the unit-portfolio spread as `USO - beta * GLD`. | 67-68 | 85-86 | Freeze the pair, rolling estimator, lookback, and spread orientation. |
+| The published 20-session lookback was near-optimal with hindsight. | 67 | 85 | Treat 20 as a literature-fixed parameter, not new Gen5 optimization authority. |
+| The log-price version underperformed the raw-price version in the source example and required daily capital rebalancing. | 68-69 | 86-87 | Do not silently substitute log prices; account for adaptive-hedge turnover. |
+| Bollinger entry/exit thresholds bound position size and make risk allocation more practical than continuously scaling exposure with z-score magnitude. | 70-71 | 88-89 | Hold at most one normalized unit portfolio long or short. |
+| Example 3.2 uses `entryZscore = 1`, `exitZscore = 0`, and the same adaptive raw-price spread construction as Example 3.1. | 71-72 | 89-90 | Freeze the exact thresholds and signal family. |
+| The source reports 17.8% APR and 0.96 Sharpe for May 24, 2006-April 9, 2012. | 72 | 90 | Record as a published in-sample result only; do not treat it as Gen5 evidence or tune toward it. |
+
+Implementation clarification:
+
+- The printed Example 3.1 spread is `USO - beta * GLD`, while its displayed
+  position-weight line uses the opposite sign. `LIT-MR-02.1` uses the
+  economically consistent interpretation: a low spread is bought by going
+  long USO and short `beta` shares of GLD; a high spread is shorted with the
+  opposite legs.
+- The source estimates an intercept in rolling OLS but omits the intercept
+  from the traded unit-portfolio spread. The POC preserves that convention
+  and records the intercept only as an audit diagnostic.
 
 Methodological correction:
 
@@ -91,9 +114,9 @@ distinguishes easy-to-borrow from hard-to-borrow handling. The older
 `easy_to_borrow` field is scheduled for deprecation. This is prospective
 operational information only; L1 must not backfill it into historical dates.
 
-## Selected idea
+## Selected ideas
 
-The selected first POC is L1: five-session long-short cross-sectional reversal
-across nine long-history U.S. sector ETFs. It tests whether recent relative
-losers outperform recent relative winners before any portfolio-performance
-claim is admitted.
+- `LIT-MR-01.1` is the completed five-session long-short cross-sectional
+  reversal test across nine long-history U.S. sector ETFs.
+- `LIT-MR-02.1` is the adaptive GLD-USO raw-price-spread Bollinger test derived
+  directly from Chan Examples 3.1 and 3.2.

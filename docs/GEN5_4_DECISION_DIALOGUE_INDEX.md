@@ -79,6 +79,15 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D55` | Stop S0A after the frozen evidence failed breadth, support, randomized-selection, control-match, contribution-breadth, and stability gates | 1-8 | `Approved—implement S0A as frozen` | `STOP_S0A_RELATIVE_VALUE_MECHANISM`; S0B remains closed |
 | `D56` | Replace free-form mechanism exploration with a literature-grounded hypothesis-extraction and minimal-POC workflow while preserving the established evidence and delivery conventions | — | `fresh discussion... folders where I've downloaded some literature` | New project-task handoff frozen; no POC implementation authority |
 
+| `D57` | Start literature-grounded POCs from the source mechanism rather than inherited Gen5.4 architecture | — | `feel free ditch the prior Gen5.4 baggage` | Simpler swing-or-slower mechanisms admitted; Gen5 evidence invariants retained |
+| `D58` | Evaluate relative-spread performance separately from absolute up/down prediction | — | `how good the strategy is at predicting up vs down movements` | Economic and directional estimands remain distinct |
+| `D59` | Require TRAIN structural evidence before portfolio performance | — | `perform statistical tests on a subset ... first?` | LIT-MR-01.1 TRAIN gate frozen |
+| `D60` | Stop the first literature-grounded sector-reversal mechanism before portfolio replay | 1-9 | `let's roll` | `STOP_L1A_SECTOR_REVERSAL_MECHANISM`; later evidence sealed |
+| `D61` | Name the literature-grounded lane `LIT` and reserve decimal variants for substantive mechanic changes | — | `incremental decimal changes should be in response to substantive changes in mechanics` | `L1` permanently registered as `LIT-MR-01.1` |
+| `D62` | Interpret Example 3.2 as Bollinger standardization of an adaptive two-asset raw-price spread | — | `z-score of the spread ... between two assets` | Raw adjusted prices selected; log price remains a distinct variant |
+| `D63` | Freeze LIT-MR-02.1 around the book's 20-session GLD-USO spread rule with leakage-safe execution and structural gates | — | `let's implement it` | Exact contract implemented without outcome-driven tuning |
+| `D64` | Stop LIT-MR-02.1 after its stationary-looking spread fails economic convergence and cost-aware performance | 1-9 | `let's implement it` | `STOP_LIT_MR_02_1_TRAIN_MECHANISM`; later partitions sealed |
+
 ## Compact Decision Records
 
 ### D01 — Conditional high-beta continuation
@@ -945,6 +954,70 @@ tasks by the branch name above, the phrase, or the decision date.
   tuning exists. Any next POC must return to theory and freeze a genuinely
   distinct mechanism.
 
+### D61 — Literature-derived experiments need durable names
+
+- **Question:** How should the new literature-inspired avenue be distinguished
+  from earlier organically developed Gen5 work, and how should refinements be
+  versioned?
+- **Decision:** Use `LIT-[FAMILY]-[CONCEPT].[VARIANT]`. Register the completed
+  L1 sector-reversal test permanently as `LIT-MR-01.1`; retain `L1` only as a
+  legacy alias.
+- **Why:** The identifier records provenance, family, distinct concept, and
+  substantive variant without confusing a result status or a minor code fix
+  with a new economic hypothesis.
+- **Boundary:** Increment the decimal only for a meaningful mechanics change
+  that could change the estimand. A new mean-reversion concept receives the
+  next integer. Status and code-only corrections are recorded separately.
+
+### D62 — Example 3.2 standardizes a portfolio spread
+
+- **Question:** Is Chan's Example 3.2 applying Bollinger Bands to one ETF, or to
+  the price relationship between GLD and USO, and should the implementation use
+  price or log price?
+- **Decision:** Estimate a rolling raw-price hedge ratio, form
+  `USO - beta * GLD`, and standardize that adaptive two-asset spread. Use
+  adjusted price levels for `LIT-MR-02.1`.
+- **Why:** Example 3.2 explicitly reuses the price-spread construction from
+  Example 3.1. Log-price spread and price ratio are separate alternatives in
+  the source, not silent preprocessing choices.
+- **Boundary:** A log-price version would be a substantively different variant.
+  The rolling-beta spread is dynamic and must not be treated as a fixed
+  cointegrating residual merely because an ADF-style statistic is negative.
+
+### D63 — Preserve the book's core rule and test tradability
+
+- **Question:** What is the smallest leakage-safe implementation that retains
+  the interesting part of Example 3.2?
+- **Decision:** Freeze a 20-session rolling OLS beta and 20-session spread
+  z-score; enter long spread below `-1`, short spread above `+1`, exit at zero,
+  decide after close, execute next open, rehedge daily, normalize gross exposure
+  to one, and charge 5 bp per one-way weight change.
+- **Why:** This preserves the source mechanism while making timing, costs,
+  short direction, bar-by-bar accounting, trade aggregation, uncertainty,
+  random-sign falsification, and forward convergence explicit.
+- **Boundary:** Only TRAIN may open initially. A source-code sign ambiguity is
+  resolved economically: low spread means long USO/short beta GLD; high spread
+  means the reverse. No stop, target, max hold, parameter tuning, or
+  same-close reversal is admitted.
+
+### D64 — Stationary-looking is not synonymous with tradeable
+
+- **Question:** Does `LIT-MR-02.1` earn permission to open development and
+  confirmation evidence?
+- **Decision:** Record `STOP_LIT_MR_02_1_TRAIN_MECHANISM`.
+- **Why:** All 12 integrity checks passed and 55 completed trades gave adequate
+  support, but only 2/8 TRAIN gates passed. Mean net return was
+  `-17.68 bp/trade`, its 95% block-bootstrap interval was
+  `[-121.23, +83.49]`, hit rate was `49.1%`, random-sign p90 was
+  `+47.88 bp`, only 2/5 years were positive, and z versus forward-five return
+  correlation had the wrong sign at `+0.0954`. The bar replay returned
+  `-14.38%` with autocorrelation-adjusted Sharpe `-0.212` and maximum drawdown
+  `-33.31%`.
+- **Boundary:** The dynamic-spread ADF-style statistic of `-8.4319` and
+  16.68-session estimated half-life are descriptive, not a rescue. Development
+  and confirmation remain sealed; do not change the pair, transform, windows,
+  thresholds, exit, rehedging, costs, or boundary after seeing TRAIN.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -967,8 +1040,10 @@ tasks by the branch name above, the phrase, or the decision date.
 - [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
 - [S0 statistical-arbitrage admissibility contract](GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md)
 - [Literature-grounded POC handoff](GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
+- [Literature-grounded strategy research nomenclature](GEN5_LITERATURE_GROUNDED_STRATEGY_RESEARCH_NOMENCLATURE.md)
 - [Literature source ledger](GEN5_LITERATURE_SOURCE_LEDGER.md)
-- [L1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
+- [LIT-MR-01.1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
+- [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -993,6 +1068,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
 - `presentations/gen5_l1_sector_reversal_evidence.pptx`
+- `presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
 
 ## Current Stop State
 
@@ -1066,6 +1142,15 @@ separation, and yearly stability all failed. Record
 remain sealed, and bar-by-bar portfolio replay, Sharpe, drawdown, trade P&L,
 historical borrow executability, and live shorting were structurally not run.
 Do not rescue L1 on its inspected TRAIN sample.
+The second literature-grounded lane, `LIT-MR-02.1`, then implemented Chan's
+20-session adaptive GLD-USO raw-price spread Bollinger rule with both
+directions, next-open execution, daily rehedging, costs, trade aggregation,
+bar-by-bar performance, uncertainty, and falsification controls. Integrity and
+support passed, but six of eight TRAIN mechanism gates failed. The dynamic
+spread looked stationary under an ADF-style diagnostic while forward
+convergence had the wrong sign and the cost-aware strategy lost money. Record
+`STOP_LIT_MR_02_1_TRAIN_MECHANISM`. Development and confirmation remain sealed;
+do not rescue the inspected rule.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

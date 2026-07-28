@@ -1,6 +1,10 @@
-# Gen5 L1 Long-Short Sector-Reversal POC Contract
+# LIT-MR-01.1 Long-Short Sector-Reversal POC Contract
 
 Status: `FROZEN_APPROVED_FOR_IMPLEMENTATION`
+
+Permanent literature identifier: `LIT-MR-01.1`
+
+Legacy implementation alias: `L1`
 
 ## Decision authority
 
