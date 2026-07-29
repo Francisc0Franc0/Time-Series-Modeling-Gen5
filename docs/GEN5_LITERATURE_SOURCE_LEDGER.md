@@ -97,6 +97,12 @@ Implementation clarification:
   leading vector. Gen5 records the example but does not treat full rank as a
   minimal one-relation result; `LIT-MR-03.1` requires exactly rank one before
   nomination.
+- `LIT-MR-03.1 / TRIPLET_ATLAS_01` is a Gen5-designed seven-cell hypothesis
+  generator under the unchanged source-inspired triplet mechanics. Its 28
+  identities, categories, rationales, and order were frozen before outcomes.
+  `EWA-EWC-EWZ` cleared all eight TRAIN gates and retained a modest positive
+  primary-cost result in the one authorized OOS DEVELOPMENT replay. The atlas,
+  thresholds, and gates are project design and must not be attributed to Chan.
 
 Methodological correction:
 
@@ -177,3 +183,9 @@ operational information only; L1 must not backfill it into historical dates.
 - `LIT-MR-03.1` is the daily Johansen triplet POC across eight predeclared
   relationships. Five met the exact rank-one diagnostic, but none cleared all
   eight TRAIN gates, producing `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`.
+- `LIT-MR-03.1 / TRIPLET_ATLAS_01` adds 28 predeclared triplets across seven
+  economic categories. Ten met the exact-rank-one diagnostic and
+  `EWA-EWC-EWZ` alone cleared all eight TRAIN gates. Its frozen-vector
+  2021-2023 OOS replay returned `+3.73%` at primary costs and `-3.23%` at
+  stress costs, producing
+  `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`.

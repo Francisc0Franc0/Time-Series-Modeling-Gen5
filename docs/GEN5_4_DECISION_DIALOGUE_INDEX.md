@@ -100,6 +100,10 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D75` | Stop Relationship Atlas 01 after no pair clears all eight TRAIN gates | 36-39 | `proceed to the atlas` | `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`; no OOS pair claim |
 | `D76` | Register LIT-MR-03.1 as a daily exact-rank-one Johansen triplet concept with a TRAIN-frozen vector | 1-11 | `right after, move to the triplets ... include formulae` | Eight-triplet contract, formulas, base-R estimator, and conditional OOS sequence frozen |
 | `D77` | Stop LIT-MR-03.1 after no triplet clears the full TRAIN conjunction | 12-17 | `Proceed` | `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`; five rank-one diagnostics and two 7/8 near-misses retained |
+| `D78` | Freeze Triplet Atlas 01 as a seven-category, 28-instance generator under unchanged LIT-MR-03.1 mechanics | 18-20 | `add a high throughput hypotheses generator for triplets, rationally justified and categorized` | Registry, rationales, order, multiplicity warning, gates, and conditional OOS sequence frozen before outcomes |
+| `D79` | Treat refreshed bounded-history WARNs as provenance rather than missing-window evidence after all 78 TRAIN symbols pass requested coverage | 20 | `run many triplets through the triplet strategy` | Historical queries remain stale relative to 2026 as-of by design; TRAIN and selected DEVELOPMENT coverage pass |
+| `D80` | Nominate EWA-EWC-EWZ only after it clears all eight TRAIN gates, freeze its vector, and open one OOS DEVELOPMENT replay | 21-24 | `We always test on an OOS window after finding a seemingly promising cointegrated ... opportunity` | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`; primary-cost OOS positive, stress-cost OOS negative; confirmation sealed |
+| `D81` | Pause before any pair or triplet gate relaxation; preserve strict controls and document a graded-gate discussion brief | 25 | `pause and discuss whether it's worth making some of the gates ... less conservative in a measured way` | `DISCUSSION_ONLY_NO_GATE_CHANGE`; no `02.2` or `03.2` run authorized |
 
 ## Compact Decision Records
 
@@ -1216,6 +1220,53 @@ tasks by the branch name above, the phrase, or the decision date.
   vector, or query DEVELOPMENT for performance. Both OOS partitions remain
   sealed.
 
+### D78 — High throughput means finite categorized breadth, not an endless search
+
+- **Decision:** Freeze `LIT-MR-03.1 / TRIPLET_ATLAS_01` with 28 triplets,
+  four in each of seven economic categories.
+- **Why:** A topology-by-mechanism generator makes the rationale inspectable
+  while preserving a finite search surface. Country/macro triangles are
+  explicitly labeled as softer hypotheses.
+- **Boundary:** Candidate identities, order, categories, Johansen mechanics,
+  seeds, costs, and gates were fixed before outcomes. Multiple screening does
+  not turn a TRAIN pass into validation.
+
+### D79 — Historical staleness WARNs do not override requested-window coverage
+
+- **Decision:** Accept the refreshed packet for analysis because all 78
+  symbols cover every requested 2016-2020 TRAIN session and the nominated
+  triplet covers the requested 2021-2023 DEVELOPMENT window.
+- **Why:** The health WARN says the bounded cache ends before the explicit
+  2026 as-of date. It does not indicate missing bars inside either requested
+  historical interval.
+- **Boundary:** Any missing requested session would remain a stop. Provider and
+  adjusted-daily scope do not change.
+
+### D80 — One strict TRAIN pass earns one OOS replay
+
+- **Decision:** Nominate `A25_EWA_EWC_EWZ`, freeze
+  \([1,-0.6476169,-0.0628629]\), and replay it once in DEVELOPMENT.
+- **Why:** It alone cleared all eight TRAIN gates. DEVELOPMENT remained
+  positive at primary costs: `+3.73%` cumulative, `+8.50 bp/trade`, `71.9%`
+  hit rate, Sharpe `0.283`, and maximum drawdown `-5.88%`.
+- **Pushback:** The 10 bp stress-cost result was `-3.23%`. This is a modest,
+  cost-fragile OOS result, not deployment evidence.
+- **Boundary:** No replacement, refit, confirmation query, allocation, or live
+  behavior is authorized.
+
+### D81 — Gate relaxation is a new contract, not a rescue operation
+
+- **Decision:** Record `DISCUSSION_ONLY_NO_GATE_CHANGE`.
+- **Why:** Strict triplet gates already generated an OOS candidate; lowering
+  statistical standards does not solve its cost fragility. Repeated pair
+  failures should not be rescued after inspection.
+- **Discussion surface:** Preserve hard structural gates. A future graded
+  challenger could treat hit rate, annual-count stability, or a borderline
+  vector-cosine threshold as supporting diagnostics while retaining
+  cost-aware return and robust convergence uncertainty.
+- **Boundary:** Any change requires `LIT-MR-02.2` or `LIT-MR-03.2`, a fresh
+  predeclared surface, and explicit operator approval.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1247,6 +1298,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)
 - [LIT-MR-02.1 Relationship Atlas 01 contract and readout](GEN5_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_CONTRACT.md)
 - [LIT-MR-03.1 Johansen triplet POC contract and readout](GEN5_LIT_MR_03_1_JOHANSEN_TRIPLET_POC_CONTRACT.md)
+- [LIT-MR-03.1 Triplet Atlas 01 contract and readout](GEN5_LIT_MR_03_1_TRIPLET_ATLAS_01_CONTRACT.md)
+- [Literature-grounded mean-reversion gate-calibration discussion brief](GEN5_LIT_MR_GATE_CALIBRATION_DISCUSSION_BRIEF.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -1380,7 +1433,16 @@ Johansen triplet POC across eight predeclared relationships. Five passed the
 exact rank-one diagnostic, but no candidate cleared the full conjunction.
 `EWA-EWC-IGE` and `SHY-IEF-TLT` each passed seven gates for different reasons,
 so neither was nominated. Record `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`;
-DEVELOPMENT and confirmation remain sealed.
+that original batch's DEVELOPMENT and confirmation remain sealed.
+`LIT-MR-03.1 / TRIPLET_ATLAS_01` then froze 28 triplets across seven economic
+categories. Ten passed the exact-rank-one diagnostic and `EWA-EWC-EWZ` alone
+cleared all eight TRAIN gates. Its frozen vector retained a modest positive
+2021-2023 OOS result at primary costs (`+3.73%`) but failed the 10 bp
+stress-cost view (`-3.23%`). Record
+`OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`; keep 2024+
+confirmation sealed and preserve `DISCUSSION_ONLY_NO_GATE_CHANGE` until the
+operator decides whether a separately frozen `02.2` or `03.2` gate study is
+worthwhile.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

@@ -96,21 +96,118 @@ g5_mr03_registry <- function() {
   )
 }
 
-g5_mr03_validate_registry <- function(registry = g5_mr03_registry()) {
+g5_mr03_atlas_registry <- function() {
+  data.frame(
+    triplet_index = 101L:128L,
+    triplet_id = c(
+      "A01_GLD_IAU_SGOL", "A02_MDY_IJH_VO", "A03_IWM_IJR_VB",
+      "A04_EEM_IEMG_VWO", "A05_XLK_VGT_QQQ", "A06_XBI_IBB_BBH",
+      "A07_ITA_XAR_PPA", "A08_XLF_KBE_KRE", "A09_SHV_IEI_TLH",
+      "A10_VGSH_VGIT_VGLT", "A11_BIL_IEF_TLT", "A12_VCSH_VCIT_VCLT",
+      "A13_XLK_AAPL_MSFT", "A14_XLE_XOM_CVX", "A15_XLP_PG_KO",
+      "A16_XLY_AMZN_HD", "A17_GLD_GDX_GDXJ", "A18_SLV_SIL_GDX",
+      "A19_CPER_FCX_SCCO", "A20_USO_OIH_XES", "A21_V_MA_AXP",
+      "A22_KO_PEP_MNST", "A23_HD_LOW_TSCO", "A24_UPS_FDX_CHRW",
+      "A25_EWA_EWC_EWZ", "A26_EWG_EWI_EWP", "A27_EWJ_EWY_EWT",
+      "A28_EWW_EWZ_ECH"
+    ),
+    symbol_1 = c(
+      "GLD", "MDY", "IWM", "EEM", "XLK", "XBI", "ITA", "XLF",
+      "SHV", "VGSH", "BIL", "VCSH", "XLK", "XLE", "XLP", "XLY",
+      "GLD", "SLV", "CPER", "USO", "V", "KO", "HD", "UPS",
+      "EWA", "EWG", "EWJ", "EWW"
+    ),
+    symbol_2 = c(
+      "IAU", "IJH", "IJR", "IEMG", "VGT", "IBB", "XAR", "KBE",
+      "IEI", "VGIT", "IEF", "VCIT", "AAPL", "XOM", "PG", "AMZN",
+      "GDX", "SIL", "FCX", "OIH", "MA", "PEP", "LOW", "FDX",
+      "EWC", "EWI", "EWY", "EWZ"
+    ),
+    symbol_3 = c(
+      "SGOL", "VO", "VB", "VWO", "QQQ", "BBH", "PPA", "KRE",
+      "TLH", "VGLT", "TLT", "VCLT", "MSFT", "CVX", "KO", "HD",
+      "GDXJ", "GDX", "SCCO", "XES", "AXP", "MNST", "TSCO", "CHRW",
+      "EWZ", "EWP", "EWT", "ECH"
+    ),
+    triplet_category = rep(
+      c(
+        "etf_near_substitute", "sector_industry_triangle",
+        "term_credit_structure", "basket_components",
+        "commodity_production_chain", "stock_peer_triangle",
+        "country_macro_triangle"
+      ),
+      each = 4L
+    ),
+    rationale = c(
+      "Three physically backed gold exposures",
+      "Three broad US mid-cap implementations",
+      "Three broad US smaller-company implementations",
+      "Three broad emerging-market equity implementations",
+      "Technology and growth-heavy US equity baskets",
+      "Differently weighted biotechnology portfolios",
+      "Differently weighted aerospace and defense portfolios",
+      "Broad financials, banks, and regional banks",
+      "Short, intermediate, and long Treasury duration",
+      "Vanguard short, intermediate, and long Treasuries",
+      "Treasury bill, intermediate, and long Treasury exposures",
+      "Short, intermediate, and long corporate bonds",
+      "Technology basket and two longstanding technology leaders",
+      "Energy basket and two integrated oil majors",
+      "Staples basket and two longstanding consumer franchises",
+      "Consumer-discretionary basket and two major domain companies",
+      "Physical gold, large miners, and junior miners",
+      "Physical silver, silver miners, and precious-metal miners",
+      "Copper-futures proxy and two copper producers",
+      "Oil-futures proxy and two oil-service baskets",
+      "Three large payment networks and card franchises",
+      "Three non-alcoholic beverage companies",
+      "Three US home and rural-improvement retailers",
+      "Parcel delivery and freight-logistics peers",
+      "Commodity-sensitive Australian, Canadian, and Brazilian equities",
+      "Large euro-area country equity exposures",
+      "Asian manufacturing and export-oriented equity exposures",
+      "Large Latin American country equity exposures"
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
+g5_mr03_registry_for_scope <- function(
+  registry_scope = c("CORE", "TRIPLET_ATLAS_01")
+) {
+  registry_scope <- match.arg(registry_scope)
+  if (identical(registry_scope, "CORE")) {
+    g5_mr03_registry()
+  } else {
+    g5_mr03_atlas_registry()
+  }
+}
+
+g5_mr03_validate_registry <- function(
+  registry = g5_mr03_registry(),
+  registry_scope = c("CORE", "TRIPLET_ATLAS_01")
+) {
+  registry_scope <- match.arg(registry_scope)
   required <- names(g5_mr03_registry())
   missing <- setdiff(required, names(registry))
   if (length(missing)) {
     g5_mr03_stop(paste("Registry is missing:", paste(missing, collapse = ", ")))
   }
-  frozen <- g5_mr03_registry()
+  frozen <- g5_mr03_registry_for_scope(registry_scope)
   if (!identical(registry[, required], frozen[, required])) {
-    g5_mr03_stop("The frozen triplet registry changed.")
+    g5_mr03_stop(paste0(
+      "The frozen triplet registry changed for scope ", registry_scope, "."
+    ))
   }
   registry
 }
 
-g5_mr03_required_symbols <- function(registry = g5_mr03_registry()) {
-  registry <- g5_mr03_validate_registry(registry)
+g5_mr03_required_symbols <- function(
+  registry = g5_mr03_registry(),
+  registry_scope = c("CORE", "TRIPLET_ATLAS_01")
+) {
+  registry_scope <- match.arg(registry_scope)
+  registry <- g5_mr03_validate_registry(registry, registry_scope)
   sort(unique(unlist(registry[c("symbol_1", "symbol_2", "symbol_3")])))
 }
 
@@ -970,9 +1067,11 @@ g5_mr03_run_train_batch <- function(
   bars,
   registry = g5_mr03_registry(),
   data_health_status = "PASS",
-  contract = g5_mr03_contract()
+  contract = g5_mr03_contract(),
+  registry_scope = c("CORE", "TRIPLET_ATLAS_01")
 ) {
-  registry <- g5_mr03_validate_registry(registry)
+  registry_scope <- match.arg(registry_scope)
+  registry <- g5_mr03_validate_registry(registry, registry_scope)
   results <- lapply(seq_len(nrow(registry)), function(i) {
     row <- registry[i, , drop = FALSE]
     triplet_bars <- bars[
@@ -1001,11 +1100,20 @@ g5_mr03_run_train_batch <- function(
     summary = summary,
     gate_detail = gate_detail,
     nominated_triplet_id = nominated,
+    registry_scope = registry_scope,
     later_outcomes_opened = FALSE,
     overall_status = if (is.na(nominated)) {
-      "STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION"
+      if (identical(registry_scope, "CORE")) {
+        "STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION"
+      } else {
+        "STOP_LIT_MR_03_1_TRIPLET_ATLAS_01_NO_FULL_PASS"
+      }
     } else {
-      "TRAIN_NOMINATION_LIT_MR_03_1_DEVELOPMENT_AUTHORIZED"
+      paste0(
+        "TRAIN_NOMINATION_LIT_MR_03_1",
+        if (identical(registry_scope, "CORE")) "" else "_TRIPLET_ATLAS_01",
+        "_DEVELOPMENT_AUTHORIZED"
+      )
     }
   )
 }

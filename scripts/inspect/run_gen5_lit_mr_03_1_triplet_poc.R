@@ -71,7 +71,8 @@ plot_rank_diagnostics <- function(summary, path) {
   x <- summary[order(summary$triplet_index, decreasing = TRUE), , drop = FALSE]
   values <- cbind(x$p_rank_0, x$p_rank_at_most_1)
   values[!is.finite(values)] <- 1
-  png(path, width = 1900, height = 1200, res = 150)
+  height <- if (nrow(x) > 12L) 2100 else 1200
+  png(path, width = 1900, height = height, res = 150)
   old <- par(mar = c(7, 12, 4, 2))
   positions <- barplot(
     t(values),
@@ -110,7 +111,8 @@ plot_gate_heatmap <- function(batch, path) {
     ]
     matrix_values[i, gates$gate_id] <- as.integer(gates$status == "PASS")
   }
-  png(path, width = 1800, height = 1050, res = 150)
+  height <- if (nrow(summary) > 12L) 1900 else 1050
+  png(path, width = 1800, height = height, res = 150)
   old <- par(mar = c(8, 13, 4, 2))
   image(
     seq_len(ncol(matrix_values)),
@@ -142,7 +144,8 @@ plot_dollar_exposures <- function(batch, path) {
     dollar / sum(abs(dollar))
   }, numeric(3L)))
   rownames(exposures) <- summary$triplet_id
-  png(path, width = 1900, height = 1200, res = 150)
+  height <- if (nrow(summary) > 12L) 2100 else 1200
+  png(path, width = 1900, height = height, res = 150)
   old <- par(mar = c(8, 13, 4, 2))
   bars <- barplot(
     t(exposures[nrow(exposures):1L, , drop = FALSE]),
@@ -162,10 +165,19 @@ plot_dollar_exposures <- function(batch, path) {
 }
 
 plot_train_tapes <- function(batch, path) {
-  fixed_ids <- c(
-    "T01_EWA_EWC_IGE", "T02_GLD_GDX_USO",
-    "T03_SPY_IVV_VOO", "T04_SHY_IEF_TLT"
-  )
+  fixed_ids <- if (identical(batch$registry_scope, "CORE")) {
+    c(
+      "T01_EWA_EWC_IGE", "T02_GLD_GDX_USO",
+      "T03_SPY_IVV_VOO", "T04_SHY_IEF_TLT"
+    )
+  } else {
+    ordered <- batch$summary[
+      order(-batch$summary$gates_passed, batch$summary$triplet_index),
+      ,
+      drop = FALSE
+    ]
+    head(ordered$triplet_id, 4L)
+  }
   png(path, width = 2200, height = 1600, res = 150)
   old <- par(mfrow = c(2, 2), mar = c(5, 5, 4, 2))
   for (id in fixed_ids) {
@@ -201,7 +213,10 @@ plot_train_equity <- function(batch, path) {
         ylim = range(unlist(lapply(batch$results, function(x) {
           cumprod(1 + x$replay$primary_net_return)
         })), finite = TRUE),
-        main = "All eight TRAIN replays shown; this is not an OOS claim"
+        main = paste0(
+          "All ", length(batch$results),
+          " TRAIN replays shown; this is not an OOS claim"
+        )
       )
       first <- FALSE
     } else {
@@ -211,7 +226,63 @@ plot_train_equity <- function(batch, path) {
   abline(h = 1, col = colors$slate, lty = 2)
   legend(
     "bottomleft", names(batch$results),
-    col = palette, lwd = 2, bty = "n", cex = 0.72, ncol = 2
+    col = palette, lwd = 2, bty = "n",
+    cex = if (length(batch$results) > 12L) 0.48 else 0.72,
+    ncol = if (length(batch$results) > 12L) 4 else 2
+  )
+  par(old)
+}
+
+g5_mr03_category_summary <- function(batch) {
+  summary <- batch$summary
+  categories <- unique(summary$triplet_category)
+  do.call(rbind, lapply(categories, function(category) {
+    x <- summary[summary$triplet_category == category, , drop = FALSE]
+    data.frame(
+      triplet_category = category,
+      triplets = nrow(x),
+      rank_one_passes = sum(x$rank_one),
+      full_gate_passes = sum(x$full_gate_pass),
+      median_gates_passed = stats::median(x$gates_passed),
+      positive_mean_returns = sum(x$mean_net_trade_return > 0, na.rm = TRUE),
+      median_mean_net_trade_return = stats::median(
+        x$mean_net_trade_return, na.rm = TRUE
+      ),
+      robust_forward_convergence = sum(
+        x$forward_correlation < 0 & x$forward_upper_95 < 0,
+        na.rm = TRUE
+      ),
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+
+plot_category_summary <- function(category_summary, path) {
+  x <- category_summary[nrow(category_summary):1L, , drop = FALSE]
+  values <- rbind(
+    x$rank_one_passes,
+    x$positive_mean_returns,
+    x$robust_forward_convergence,
+    x$full_gate_passes
+  )
+  png(path, width = 1900, height = 1250, res = 150)
+  old <- par(mar = c(7, 17, 4, 2))
+  barplot(
+    values,
+    beside = TRUE,
+    horiz = TRUE,
+    names.arg = x$triplet_category,
+    las = 1,
+    col = c(colors$blue, colors$amber, colors$cyan, colors$green),
+    xlim = c(0, max(4, values, na.rm = TRUE)),
+    xlab = "Triplets within each four-candidate category",
+    main = "Category breadth separates diagnostics from full nominations"
+  )
+  legend(
+    "bottomright",
+    c("Exact rank one", "Positive mean", "Robust convergence", "All 8 gates"),
+    fill = c(colors$blue, colors$amber, colors$cyan, colors$green),
+    bty = "n"
   )
   par(old)
 }
@@ -252,13 +323,17 @@ write_report <- function(path, batch, run_spec, development, artifact_paths) {
   rank_one <- summary[summary$rank_one, , drop = FALSE]
   full_pass <- summary[summary$full_gate_pass, , drop = FALSE]
   lines <- c(
-    "# LIT-MR-03.1 Johansen Triplet POC Readout",
+    if (identical(batch$registry_scope, "CORE")) {
+      "# LIT-MR-03.1 Johansen Triplet POC Readout"
+    } else {
+      "# LIT-MR-03.1 Triplet Atlas 01 Readout"
+    },
     "",
     paste0("Status: `", run_spec$overall_status, "`."),
     "",
     "## Frozen design",
     "",
-    "- Eight daily triplets were predeclared before outcomes.",
+    paste0("- ", nrow(summary), " daily triplets were predeclared before outcomes."),
     "- Every triplet was estimated and evaluated on 2016-2020 TRAIN only.",
     "- Johansen rank uses price levels, one VAR lag, a constant, and 1,000",
     "  seeded null simulations.",
@@ -310,6 +385,7 @@ write_report <- function(path, batch, run_spec, development, artifact_paths) {
     paste0("- Gate detail: `", artifact_paths$gate_detail_csv, "`."),
     paste0("- Rank diagnostics: `", artifact_paths$rank_png, "`."),
     paste0("- Gate heatmap: `", artifact_paths$gate_png, "`."),
+    paste0("- Category summary: `", artifact_paths$category_summary_csv, "`."),
     paste0("- TRAIN tapes: `", artifact_paths$train_tapes_png, "`."),
     "",
     "## Run provenance",
@@ -325,11 +401,20 @@ write_report <- function(path, batch, run_spec, development, artifact_paths) {
 
 message("LIT-MR-03.1 starting.")
 contract <- g5_mr03_contract()
-registry <- g5_mr03_registry()
+registry_scope <- toupper(env_or("GEN5_MR03_SCOPE", "CORE"))
+if (!registry_scope %in% c("CORE", "TRIPLET_ATLAS_01")) {
+  stop("GEN5_MR03_SCOPE must be CORE or TRIPLET_ATLAS_01.", call. = FALSE)
+}
+registry <- g5_mr03_registry_for_scope(registry_scope)
 cfg <- g5_load_data_layer_config(repo_root)
 cfg$feed <- env_or("GEN5_MR03_FEED", as.character(cfg$feed))
 refresh <- env_bool("GEN5_MR03_REFRESH", FALSE)
-run_id <- env_or("GEN5_MR03_RUN_ID", "lit_mr_03_1_triplets_20260729")
+default_run_id <- if (identical(registry_scope, "CORE")) {
+  "lit_mr_03_1_triplets_20260729"
+} else {
+  "lit_mr_03_1_triplet_atlas_01_20260729"
+}
+run_id <- env_or("GEN5_MR03_RUN_ID", default_run_id)
 as_of_timestamp <- env_or("GEN5_MR03_AS_OF_TIMESTAMP", contract$as_of_timestamp)
 if (!identical(as_of_timestamp, contract$as_of_timestamp)) {
   stop("GEN5_MR03_AS_OF_TIMESTAMP must match the frozen contract.", call. = FALSE)
@@ -346,8 +431,10 @@ train_query <- g5_workbench_query_adjusted_daily_bars(
   start_date = contract$train_start,
   end_date = contract$train_end,
   as_of_timestamp = as_of_timestamp,
-  symbols = g5_mr03_required_symbols(registry),
-  universe_name = "lit_mr_03_1_triplet_train",
+  symbols = g5_mr03_required_symbols(registry, registry_scope),
+  universe_name = paste0(
+    "lit_mr_03_1_", tolower(registry_scope), "_train"
+  ),
   universe_roles = "predeclared_triplet_legs",
   refresh = refresh,
   repo_root = repo_root
@@ -355,7 +442,9 @@ train_query <- g5_workbench_query_adjusted_daily_bars(
 if (!nrow(train_query$bars)) stop("TRAIN query returned no bars.", call. = FALSE)
 
 reference_sessions <- sort(unique(train_query$bars$session_date))
-coverage <- do.call(rbind, lapply(g5_mr03_required_symbols(registry), function(symbol) {
+coverage <- do.call(rbind, lapply(
+  g5_mr03_required_symbols(registry, registry_scope),
+  function(symbol) {
   observed <- sort(unique(train_query$bars$session_date[train_query$bars$symbol == symbol]))
   missing <- setdiff(reference_sessions, observed)
   data.frame(
@@ -374,7 +463,8 @@ coverage <- do.call(rbind, lapply(g5_mr03_required_symbols(registry), function(s
     ),
     stringsAsFactors = FALSE
   )
-}))
+  }
+))
 health_max <- g5_health_max_severity(train_query$health)
 analysis_health <- if (
   !any(train_query$health$severity == "ERROR") &&
@@ -384,7 +474,10 @@ if (!identical(analysis_health, "PASS")) {
   stop(
     paste0(
       "TRAIN coverage or data health failed. Health=", health_max,
-      "; coverage failures=", sum(coverage$status != "PASS"), "."
+      "; coverage failures=", sum(coverage$status != "PASS"),
+      "; symbols=",
+      paste(coverage$symbol[coverage$status != "PASS"], collapse = ","),
+      "."
     ),
     call. = FALSE
   )
@@ -394,7 +487,8 @@ batch <- g5_mr03_run_train_batch(
   train_query$bars,
   registry,
   data_health_status = analysis_health,
-  contract = contract
+  contract = contract,
+  registry_scope = registry_scope
 )
 
 development <- NULL
@@ -427,7 +521,11 @@ if (!is.na(batch$nominated_triplet_id)) {
     development_query, output_dir, "mr03_development_workbench_query"
   )
   batch$later_outcomes_opened <- TRUE
-  batch$overall_status <- "OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1"
+  batch$overall_status <- if (identical(registry_scope, "CORE")) {
+    "OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1"
+  } else {
+    "OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01"
+  }
 }
 
 artifact_paths <- list(
@@ -443,6 +541,7 @@ artifact_paths <- list(
   trades_csv = file.path(output_dir, "mr03_train_trades.csv"),
   replay_csv = file.path(output_dir, "mr03_train_replay.csv"),
   convergence_csv = file.path(output_dir, "mr03_train_forward_convergence.csv"),
+  category_summary_csv = file.path(output_dir, "mr03_category_summary.csv"),
   development_summary_csv = file.path(output_dir, "mr03_development_summary.csv"),
   development_trades_csv = file.path(output_dir, "mr03_development_trades.csv"),
   development_replay_csv = file.path(output_dir, "mr03_development_replay.csv"),
@@ -452,6 +551,7 @@ artifact_paths <- list(
   exposure_png = file.path(visual_dir, "mr03_train_dollar_exposures.png"),
   train_tapes_png = file.path(visual_dir, "mr03_train_signal_tapes.png"),
   train_equity_png = file.path(visual_dir, "mr03_train_equity_curves.png"),
+  category_png = file.path(visual_dir, "mr03_category_summary.png"),
   oos_png = file.path(visual_dir, "mr03_development_strategy_anatomy.png")
 )
 
@@ -459,6 +559,7 @@ run_spec <- data.frame(
   schema_version = g5_mr03_schema_version(),
   literature_id = contract$literature_id,
   wrapper = "scripts/inspect/run_gen5_lit_mr_03_1_triplet_poc.R",
+  registry_scope = registry_scope,
   run_id = run_id,
   as_of_timestamp = as_of_timestamp,
   feed = cfg$feed,
@@ -511,6 +612,8 @@ write_csv(
   bind_results(batch, function(x) x$convergence),
   artifact_paths$convergence_csv
 )
+category_summary <- g5_mr03_category_summary(batch)
+write_csv(category_summary, artifact_paths$category_summary_csv)
 if (!is.null(development)) {
   write_csv(development$summary, artifact_paths$development_summary_csv)
   write_csv(development$trades, artifact_paths$development_trades_csv)
@@ -523,6 +626,7 @@ plot_gate_heatmap(batch, artifact_paths$gate_png)
 plot_dollar_exposures(batch, artifact_paths$exposure_png)
 plot_train_tapes(batch, artifact_paths$train_tapes_png)
 plot_train_equity(batch, artifact_paths$train_equity_png)
+plot_category_summary(category_summary, artifact_paths$category_png)
 write_report(
   artifact_paths$report_md,
   batch,

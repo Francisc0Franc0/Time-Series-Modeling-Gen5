@@ -51,6 +51,32 @@ testthat::test_that("triplet registry mutation fails loudly", {
   )
 })
 
+testthat::test_that("triplet atlas is finite, categorized, and frozen", {
+  atlas <- g5_mr03_atlas_registry()
+  testthat::expect_equal(nrow(atlas), 28L)
+  testthat::expect_equal(length(unique(atlas$triplet_category)), 7L)
+  testthat::expect_equal(
+    as.integer(table(atlas$triplet_category)),
+    rep(4L, 7L)
+  )
+  testthat::expect_equal(atlas$triplet_id[[1L]], "A01_GLD_IAU_SGOL")
+  testthat::expect_equal(atlas$triplet_id[[28L]], "A28_EWW_EWZ_ECH")
+  testthat::expect_false(any(atlas$triplet_id %in% g5_mr03_registry()$triplet_id))
+  testthat::expect_gt(
+    length(g5_mr03_required_symbols(atlas, "TRIPLET_ATLAS_01")),
+    40L
+  )
+})
+
+testthat::test_that("triplet atlas mutation fails loudly", {
+  atlas <- g5_mr03_atlas_registry()
+  atlas$symbol_3[[1L]] <- "SLV"
+  testthat::expect_error(
+    g5_mr03_validate_registry(atlas, "TRIPLET_ATLAS_01"),
+    "frozen triplet registry changed"
+  )
+})
+
 testthat::test_that("base-R Johansen fit recovers a finite mixed-sign vector", {
   panel <- mr03_synthetic_panel()
   fit <- g5_mr03_johansen_fit(as.matrix(panel[paste0("close_", 1:3)]))
