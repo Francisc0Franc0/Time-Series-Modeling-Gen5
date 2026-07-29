@@ -49,6 +49,36 @@ testthat::test_that("PANEL-A registry is finite, oriented, and role separated", 
   ) %in% g5_mr02_panel_required_symbols(registry)))
 })
 
+testthat::test_that("PANEL-B freezes 15 industry-diverse primary pairs", {
+  registry <- g5_mr02_panel_b_registry()
+  testthat::expect_equal(nrow(registry), 15L)
+  testthat::expect_true(all(registry$panel_id == "PANEL_B"))
+  testthat::expect_equal(registry$pair_index, 101L:115L)
+  testthat::expect_true(all(
+    registry$analysis_role == "PRIMARY_TRADING_TEMPLATE"
+  ))
+  testthat::expect_true(all(registry$instance_scope == "PANEL_B_PRIMARY"))
+  testthat::expect_equal(registry$pair_id[[1L]], "B01_XLP_VDC")
+  testthat::expect_equal(registry$pair_id[[15L]], "B15_GDX_GLD")
+  testthat::expect_equal(length(unique(registry$pair_category)), 3L)
+  testthat::expect_false(any(registry$symbol_y == registry$symbol_x))
+  testthat::expect_equal(
+    g5_mr02_panel_validate_registry(registry),
+    registry
+  )
+})
+
+testthat::test_that("PANEL-B uses distinct deterministic seeds", {
+  row <- g5_mr02_panel_b_registry()[1L, , drop = FALSE]
+  contract <- g5_mr02_panel_instance_contract(row)
+  testthat::expect_equal(contract$instance_scope, "PANEL_B_PRIMARY")
+  testthat::expect_equal(contract$symbol_y, "XLP")
+  testthat::expect_equal(contract$symbol_x, "VDC")
+  testthat::expect_equal(contract$bootstrap_seed, 106801L)
+  testthat::expect_equal(contract$random_seed, 106802L)
+  testthat::expect_equal(contract$convergence_bootstrap_seed, 106803L)
+})
+
 testthat::test_that("pair instances change assets without changing mechanics", {
   row <- g5_mr02_panel_registry()[1L, , drop = FALSE]
   contract <- g5_mr02_panel_instance_contract(row)

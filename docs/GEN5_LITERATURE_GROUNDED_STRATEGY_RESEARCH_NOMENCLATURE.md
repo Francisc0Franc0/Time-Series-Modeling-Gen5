@@ -69,3 +69,4 @@ batch, not a decimal variant:
 | Batch | Purpose | Status |
 |---|---|---|
 | `LIT-MR-02.1-PANEL-A` | Twelve positive-beta primary pairs plus two inverse semantic challengers, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS` |
+| `LIT-MR-02.1-PANEL-B` | Fifteen additional sector, industry, and producer/commodity relationships, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS` |

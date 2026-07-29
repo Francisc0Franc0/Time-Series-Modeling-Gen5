@@ -91,6 +91,9 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D66` | Prefer positive-beta co-moving pairs for the relative-value strategy and isolate inverse relationships as diagnostics | 6, 13, 16 | `should we select pairs that are likely to move opposite ... or ... together?` | Negative beta recognized as different same-side portfolio semantics |
 | `D67` | Freeze a finite economically motivated panel before outcomes rather than search pair combinations | 13 | `We're not fishing ... just collecting more data` | `LIT-MR-02.1-PANEL-A` registered as a replication batch |
 | `D68` | Stop the fixed panel after no primary pair clears all eight gates | 14-17 | `test a panel of different pairs` | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`; no winner selected |
+| `D69` | Retain all eight gates while making their literature provenance, project-designed thresholds, and firm-versus-soft roles explicit | 7-10 | `they're all useful. So let's keep them. Let's just be transparent about them` | Gate logic recorded in the contract and expanded evidence deck |
+| `D70` | Freeze a second 15-pair batch across ordinary sectors and industries before outcomes | 21 | `add, say 15 new pairs, from different sorts of industries` | `LIT-MR-02.1-PANEL-B` registered separately; Panel A immutable |
+| `D71` | Stop Panel B and the exact template after no diversified pair clears economics or forward convergence | 22-25 | `proceed with testing of new pairs` | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`; combined breadth is `0 / 27` full passes |
 
 ## Compact Decision Records
 
@@ -1074,6 +1077,47 @@ tasks by the branch name above, the phrase, or the decision date.
   replication evidence. Do not select `USO-XLE`, change the 20-session window,
   or open later partitions.
 
+### D69 — Transparent gates are more useful than pretending every threshold is a theorem
+
+- **Question:** Should the eight gates be retained even though some are firmer
+  than others, and where did they come from?
+- **Decision:** Keep the all-eight conjunction and document three roles:
+  firm admissibility (`G1-G3`), economic robustness (`G4-G7`), and direct
+  mechanism confirmation (`G8`).
+- **Why:** The books motivate the source mechanics, costs, trade/bar
+  evaluation, hit rate, stability, uncertainty, and statistical diagnostics.
+  The exact conjunction, thresholds, bootstrap definitions, random-sign
+  control, and Gen5 integrity rules are project-designed. `G5` and `G7` are
+  useful pragmatic diagnostics, not universal trading laws.
+- **Boundary:** A future concept may justify different gates ex ante. Do not
+  weaken one gate to rescue an inspected `LIT-MR-02.1` result.
+
+### D70 — Diversification is predeclared breadth, not a preference for exciting stocks
+
+- **Question:** Can the same template receive a broader test without
+  subconsciously concentrating on high-beta individual names?
+- **Decision:** Freeze `LIT-MR-02.1-PANEL-B`: nine sector near-substitute
+  pairs, five industry relationships, and one producer/commodity link.
+- **Why:** The fixed registry spans staples, utilities, real estate,
+  industrials, discretionary, energy, health care, financials, materials,
+  defense, devices, retail, homebuilders, biotech, and gold.
+- **Boundary:** Panel B is separate from immutable Panel A. It cannot add,
+  delete, reorient, or outcome-rank pairs after the run.
+
+### D71 — Adequate activity is not evidence of a tradeable convergence mechanism
+
+- **Question:** Does the diversified Panel B rescue the exact 20-session
+  adaptive raw-price spread rule?
+- **Decision:** Record `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`.
+- **Why:** All 15 pairs produced adequate two-sided trades, but every
+  primary-cost mean net trade return was negative. No pair beat matched
+  random-sign p90, exceeded 50% hit rate, or robustly confirmed negative
+  forward convergence. Across Panels A and B, the template has `0 / 27` full
+  passes and `0 / 27` robust `G8` passes.
+- **Boundary:** Keep the exact template as falsification evidence. Do not add a
+  third pair panel or change the window, transform, hedge model, thresholds,
+  exit, costs, or gates without a substantively justified new frozen variant.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1101,6 +1145,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-01.1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
+- [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -1215,6 +1260,13 @@ eight gates, and the only positive mean, `USO-XLE`, failed uncertainty,
 falsification, beta-coverage, and convergence requirements. Record
 `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`; do not select a winner or vary the
 window after inspection.
+The separately frozen `LIT-MR-02.1-PANEL-B` then broadened the same rule to 15
+sector, industry, and producer/commodity relationships. All pairs produced
+adequate two-sided trades, but every primary-cost mean was negative and none
+robustly confirmed forward convergence. Record
+`STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`. The combined `0 / 27` full-pass and
+`0 / 27` mechanism-pass result stops the exact template broadly on TRAIN; do
+not extend the pair search or reactively change mechanics.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

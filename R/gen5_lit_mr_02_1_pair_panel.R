@@ -1,9 +1,10 @@
-g5_mr02_panel_schema_version <- function() {
-  "gen5_lit_mr_02_1_panel_a_v1"
+g5_mr02_panel_schema_version <- function(panel_id = "PANEL_A") {
+  paste0("gen5_lit_mr_02_1_", tolower(panel_id), "_v1")
 }
 
 g5_mr02_panel_registry <- function() {
   data.frame(
+    panel_id = "PANEL_A",
     pair_index = seq_len(14L),
     pair_id = c(
       "P01_IVV_SPY", "P02_IAU_GLD", "P03_SOXX_SMH", "P04_VEA_EFA",
@@ -26,6 +27,7 @@ g5_mr02_panel_registry <- function() {
     ),
     expected_relation = c(rep("positive", 12L), rep("negative_or_unstable", 2L)),
     analysis_role = c(rep("PRIMARY_TRADING_TEMPLATE", 12L), rep("DIAGNOSTIC_ONLY", 2L)),
+    instance_scope = c(rep("PANEL_A_PRIMARY", 12L), rep("PANEL_A_DIAGNOSTIC", 2L)),
     rationale = c(
       "Two highly overlapping S&P 500 index ETFs",
       "Two physically backed gold exposure ETFs",
@@ -46,30 +48,102 @@ g5_mr02_panel_registry <- function() {
   )
 }
 
+g5_mr02_panel_b_registry <- function() {
+  data.frame(
+    panel_id = "PANEL_B",
+    pair_index = 101L:115L,
+    pair_id = c(
+      "B01_XLP_VDC", "B02_XLU_VPU", "B03_XLRE_VNQ", "B04_XLI_VIS",
+      "B05_XLY_VCR", "B06_XLE_VDE", "B07_XLV_VHT", "B08_XLF_VFH",
+      "B09_XLB_VAW", "B10_ITA_XAR", "B11_IHI_XLV", "B12_XRT_XLY",
+      "B13_XHB_ITB", "B14_XBI_IBB", "B15_GDX_GLD"
+    ),
+    symbol_y = c(
+      "XLP", "XLU", "XLRE", "XLI", "XLY", "XLE", "XLV", "XLF",
+      "XLB", "ITA", "IHI", "XRT", "XHB", "XBI", "GDX"
+    ),
+    symbol_x = c(
+      "VDC", "VPU", "VNQ", "VIS", "VCR", "VDE", "VHT", "VFH",
+      "VAW", "XAR", "XLV", "XLY", "ITB", "IBB", "GLD"
+    ),
+    pair_category = c(
+      rep("sector_near_substitute", 9L),
+      rep("industry_related_exposure", 5L),
+      "producer_commodity_link"
+    ),
+    expected_relation = rep("positive", 15L),
+    analysis_role = rep("PRIMARY_TRADING_TEMPLATE", 15L),
+    instance_scope = rep("PANEL_B_PRIMARY", 15L),
+    rationale = c(
+      "Consumer-staples Select Sector SPDR versus Vanguard consumer-staples exposure",
+      "Utilities Select Sector SPDR versus Vanguard utilities exposure",
+      "US real-estate Select Sector SPDR versus broad US REIT exposure",
+      "Industrials Select Sector SPDR versus Vanguard industrials exposure",
+      "Consumer-discretionary Select Sector SPDR versus Vanguard discretionary exposure",
+      "Energy Select Sector SPDR versus Vanguard energy exposure",
+      "Health-care Select Sector SPDR versus Vanguard health-care exposure",
+      "Financials Select Sector SPDR versus Vanguard financials exposure",
+      "Materials Select Sector SPDR versus Vanguard materials exposure",
+      "Market-cap-weighted versus modified-equal-weight US aerospace and defense exposure",
+      "US medical-device equities versus broad US health-care exposure",
+      "Retail-industry exposure versus broad consumer-discretionary exposure",
+      "Broad versus concentrated US homebuilder exposure",
+      "Equal-weighted versus market-cap-weighted US biotechnology exposure",
+      "Gold-miner equity exposure versus physical gold exposure"
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_mr02_panel_validate_registry <- function(
   registry = g5_mr02_panel_registry()
 ) {
   required <- c(
-    "pair_index", "pair_id", "symbol_y", "symbol_x", "pair_category",
-    "expected_relation", "analysis_role", "rationale"
+    "panel_id", "pair_index", "pair_id", "symbol_y", "symbol_x",
+    "pair_category", "expected_relation", "analysis_role", "instance_scope",
+    "rationale"
   )
   missing <- setdiff(required, names(registry))
   if (length(missing)) {
     g5_mr02_stop(paste(
-      "PANEL-A registry is missing:", paste(missing, collapse = ", ")
+      "Pair-panel registry is missing:", paste(missing, collapse = ", ")
     ))
   }
-  if (nrow(registry) != 14L ||
-      !identical(as.integer(registry$pair_index), seq_len(14L)) ||
+  panel_ids <- unique(as.character(registry$panel_id))
+  if (length(panel_ids) != 1L || !panel_ids %in% c("PANEL_A", "PANEL_B")) {
+    g5_mr02_stop("The pair-panel identifier is not recognized.")
+  }
+  panel_id <- panel_ids[[1L]]
+  expected_rows <- if (identical(panel_id, "PANEL_A")) 14L else 15L
+  expected_indices <- if (identical(panel_id, "PANEL_A")) {
+    seq_len(14L)
+  } else {
+    101L:115L
+  }
+  expected_roles <- if (identical(panel_id, "PANEL_A")) {
+    c(rep("PRIMARY_TRADING_TEMPLATE", 12L), rep("DIAGNOSTIC_ONLY", 2L))
+  } else {
+    rep("PRIMARY_TRADING_TEMPLATE", 15L)
+  }
+  expected_scopes <- if (identical(panel_id, "PANEL_A")) {
+    c(rep("PANEL_A_PRIMARY", 12L), rep("PANEL_A_DIAGNOSTIC", 2L))
+  } else {
+    rep("PANEL_B_PRIMARY", 15L)
+  }
+  if (nrow(registry) != expected_rows ||
+      !identical(as.integer(registry$pair_index), expected_indices) ||
       anyDuplicated(registry$pair_id) ||
       any(registry$symbol_y == registry$symbol_x)) {
-    g5_mr02_stop("The frozen PANEL-A identity or orientation changed.")
+    g5_mr02_stop(paste("The frozen", panel_id, "identity or orientation changed."))
   }
   if (!identical(
     as.character(registry$analysis_role),
-    c(rep("PRIMARY_TRADING_TEMPLATE", 12L), rep("DIAGNOSTIC_ONLY", 2L))
+    expected_roles
   )) {
-    g5_mr02_stop("The frozen PANEL-A primary and diagnostic roles changed.")
+    g5_mr02_stop(paste("The frozen", panel_id, "analysis roles changed."))
+  }
+  if (!identical(as.character(registry$instance_scope), expected_scopes)) {
+    g5_mr02_stop(paste("The frozen", panel_id, "instance scopes changed."))
   }
   registry
 }
@@ -89,11 +163,7 @@ g5_mr02_panel_instance_contract <- function(registry_row) {
     instance_id = registry_row$pair_id[[1L]],
     pair_category = registry_row$pair_category[[1L]],
     pair_rationale = registry_row$rationale[[1L]],
-    instance_scope = if (identical(role, "DIAGNOSTIC_ONLY")) {
-      "PANEL_A_DIAGNOSTIC"
-    } else {
-      "PANEL_A_PRIMARY"
-    },
+    instance_scope = registry_row$instance_scope[[1L]],
     pair_index = registry_row$pair_index[[1L]]
   )
 }
@@ -107,32 +177,32 @@ g5_mr02_panel_validate_bars <- function(
   missing <- setdiff(required, names(bars))
   if (length(missing)) {
     g5_mr02_stop(paste(
-      "PANEL-A bars are missing:", paste(missing, collapse = ", ")
+      "Pair-panel bars are missing:", paste(missing, collapse = ", ")
     ))
   }
   bars <- bars[bars$symbol %in% g5_mr02_panel_required_symbols(registry), required, drop = FALSE]
   bars$session_date <- as.Date(bars$session_date)
   if (anyDuplicated(bars[c("symbol", "session_date")])) {
-    g5_mr02_stop("PANEL-A duplicate symbol-session bars are prohibited.")
+    g5_mr02_stop("Pair-panel duplicate symbol-session bars are prohibited.")
   }
   observed <- sort(unique(bars$symbol))
   expected <- g5_mr02_panel_required_symbols(registry)
   if (!setequal(observed, expected)) {
     g5_mr02_stop(paste(
-      "PANEL-A exact symbol coverage failed; missing:",
+      "Pair-panel exact symbol coverage failed; missing:",
       paste(setdiff(expected, observed), collapse = ", ")
     ))
   }
   if (any(is.na(bars$session_date))) {
-    g5_mr02_stop("PANEL-A session dates must be valid.")
+    g5_mr02_stop("Pair-panel session dates must be valid.")
   }
   numeric_columns <- c("open", "high", "low", "close", "volume")
   if (any(!vapply(bars[numeric_columns], is.numeric, logical(1)))) {
-    g5_mr02_stop("PANEL-A OHLCV columns must be numeric.")
+    g5_mr02_stop("Pair-panel OHLCV columns must be numeric.")
   }
   prices <- as.matrix(bars[c("open", "high", "low", "close")])
   if (any(!is.finite(prices)) || any(prices <= 0)) {
-    g5_mr02_stop("PANEL-A prices must be finite and positive.")
+    g5_mr02_stop("Pair-panel prices must be finite and positive.")
   }
   bars[order(bars$session_date, bars$symbol), , drop = FALSE]
 }
@@ -325,6 +395,19 @@ g5_mr02_panel_category_summary <- function(pair_summary) {
   do.call(rbind, rows)
 }
 
+g5_mr02_panel_empty_inverse_summary <- function() {
+  data.frame(
+    pair_index = integer(), pair_id = character(), symbol_y = character(),
+    symbol_x = character(), pair_category = character(), rationale = character(),
+    data_health_status = character(), eligible_sessions = integer(),
+    positive_beta_coverage = numeric(), negative_beta_coverage = numeric(),
+    median_beta = numeric(), beta_sign_changes = integer(),
+    dynamic_spread_adf_t = numeric(), dynamic_spread_half_life = numeric(),
+    signed_forward_correlation = numeric(), trade_replay_status = character(),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_mr02_panel_run <- function(
   bars,
   registry = g5_mr02_panel_registry(),
@@ -372,11 +455,17 @@ g5_mr02_panel_run <- function(
   })
   pair_summary <- do.call(rbind, pair_summaries)
   gate_detail <- do.call(rbind, gate_details)
-  inverse_summary <- do.call(rbind, inverse)
+  inverse_summary <- if (length(inverse)) {
+    do.call(rbind, inverse)
+  } else {
+    g5_mr02_panel_empty_inverse_summary()
+  }
   category_summary <- g5_mr02_panel_category_summary(pair_summary)
   full_pass_count <- sum(pair_summary$full_gate_pass)
+  panel_id <- unique(as.character(registry$panel_id))[[1L]]
   list(
-    schema_version = g5_mr02_panel_schema_version(),
+    schema_version = g5_mr02_panel_schema_version(panel_id),
+    panel_id = panel_id,
     registry = registry,
     pair_results = pair_results,
     pair_summary = pair_summary,
@@ -385,9 +474,12 @@ g5_mr02_panel_run <- function(
     inverse_summary = inverse_summary,
     later_outcomes_opened = FALSE,
     overall_status = if (full_pass_count > 0L) {
-      "REVIEW_REQUIRED_LIT_MR_02_1_PANEL_A_PAIR_SPECIFIC_CONFIRMATION"
+      paste0(
+        "REVIEW_REQUIRED_LIT_MR_02_1_", panel_id,
+        "_PAIR_SPECIFIC_CONFIRMATION"
+      )
     } else {
-      "STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS"
+      paste0("STOP_LIT_MR_02_1_", panel_id, "_NO_FULL_PASS")
     }
   )
 }

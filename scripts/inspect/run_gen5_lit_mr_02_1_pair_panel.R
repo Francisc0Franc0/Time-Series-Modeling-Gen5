@@ -1,4 +1,4 @@
-# Run the frozen LIT-MR-02.1 PANEL-A replication batch.
+# Run a frozen LIT-MR-02.1 pair-panel replication batch.
 
 script_path <- tryCatch(
   normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE),
@@ -37,7 +37,7 @@ env_bool <- function(name, default = FALSE) {
 ensure_dir <- function(path) {
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
   if (!dir.exists(path)) {
-    stop("Could not create PANEL-A output directory.", call. = FALSE)
+    stop("Could not create pair-panel output directory.", call. = FALSE)
   }
 }
 
@@ -115,7 +115,7 @@ plot_pair_net_ci <- function(summary, path) {
   lower <- 10000 * x$trade_bootstrap_lower_95
   upper <- 10000 * x$trade_bootstrap_upper_95
   colors <- ifelse(
-    x$pair_category == "near_substitute",
+    grepl("near_substitute", x$pair_category, fixed = TRUE),
     panel_colors$blue,
     panel_colors$navy
   )
@@ -224,7 +224,7 @@ plot_category_summary <- function(panel, path) {
   old <- par(mar = c(7, 6, 4, 2))
   bars <- barplot(
     metrics,
-    beside = TRUE,
+    beside = TRUE, axisnames = FALSE,
     col = c(panel_colors$blue, panel_colors$green, panel_colors$amber),
     ylim = c(0, max(x$pairs) + 1),
     ylab = "Pairs",
@@ -244,7 +244,11 @@ plot_category_summary <- function(panel, path) {
 }
 
 plot_fixed_pair_tapes <- function(panel, bars, path) {
-  fixed_ids <- c("P02_IAU_GLD", "P08_KRE_XLF", "P10_USO_XLE", "D01_GLD_UUP")
+  fixed_ids <- if (identical(panel$panel_id, "PANEL_A")) {
+    c("P02_IAU_GLD", "P08_KRE_XLF", "P10_USO_XLE", "D01_GLD_UUP")
+  } else {
+    c("B02_XLU_VPU", "B10_ITA_XAR", "B12_XRT_XLY", "B15_GDX_GLD")
+  }
   registry <- panel$registry[match(fixed_ids, panel$registry$pair_id), , drop = FALSE]
   png(path, width = 2200, height = 1600, res = 150)
   old <- par(mfrow = c(2, 2), mar = c(5, 5, 4, 2))
@@ -281,16 +285,19 @@ write_report <- function(path, panel, run_spec, artifact_paths) {
   categories <- panel$category_summary
   inverse <- panel$inverse_summary
   full_pass <- summary[summary$full_gate_pass, , drop = FALSE]
+  panel_label <- gsub("_", "-", panel$panel_id)
   lines <- c(
-    "# LIT-MR-02.1 PANEL-A Readout",
+    paste0("# LIT-MR-02.1 ", panel_label, " Readout"),
     "",
     paste0("Status: `", panel$overall_status, "`."),
     "",
     "## What was frozen",
     "",
     "- The canonical USO-GLD literature instance remains separate and unchanged.",
-    "- Twelve positive-relationship primary pairs and two inverse diagnostics",
-    "  were fixed before outcomes.",
+    paste0(
+      "- ", nrow(summary), " positive-relationship primary pairs and ",
+      nrow(inverse), " inverse diagnostics were fixed before outcomes."
+    ),
     "- Every primary pair used raw adjusted prices, 20-session rolling OLS,",
     "  20-session spread z-score, +/-1 entry, zero exit, next-open execution,",
     "  daily rehedging, and the canonical costs and eight gates.",
@@ -329,10 +336,20 @@ write_report <- function(path, panel, run_spec, artifact_paths) {
   lines <- c(
     lines,
     "",
-    "## Inverse challengers",
+    if (nrow(inverse)) "## Inverse challengers" else "## Inverse boundary",
     "",
-    "Negative beta changes the trade from opposite legs to same-side positions.",
-    "The challengers therefore received diagnostics but no trading replay."
+    if (nrow(inverse)) {
+      paste(
+        "Negative beta changes the trade from opposite legs to same-side",
+        "positions. The challengers therefore received diagnostics but no",
+        "trading replay."
+      )
+    } else {
+      paste(
+        "No inverse challengers were included in this batch. Negative-beta",
+        "sessions still fail the positive-beta coverage gate."
+      )
+    }
   )
   for (i in seq_len(nrow(inverse))) {
     lines <- c(
@@ -384,13 +401,24 @@ write_report <- function(path, panel, run_spec, artifact_paths) {
   invisible(path)
 }
 
-message("LIT-MR-02.1 PANEL-A starting.")
-registry <- g5_mr02_panel_registry()
+panel_id <- toupper(env_or("GEN5_MR02_PANEL_ID", "PANEL_A"))
+if (!panel_id %in% c("PANEL_A", "PANEL_B")) {
+  stop("GEN5_MR02_PANEL_ID must be PANEL_A or PANEL_B.", call. = FALSE)
+}
+message("LIT-MR-02.1 ", panel_id, " starting.")
+registry <- if (identical(panel_id, "PANEL_A")) {
+  g5_mr02_panel_registry()
+} else {
+  g5_mr02_panel_b_registry()
+}
 base_contract <- g5_mr02_contract()
 cfg <- g5_load_data_layer_config(repo_root)
 cfg$feed <- env_or("GEN5_MR02_PANEL_FEED", as.character(cfg$feed))
 refresh <- env_bool("GEN5_MR02_PANEL_REFRESH", FALSE)
-run_id <- env_or("GEN5_MR02_PANEL_RUN_ID", "lit_mr_02_1_panel_a_20260728")
+run_id <- env_or(
+  "GEN5_MR02_PANEL_RUN_ID",
+  paste0("lit_mr_02_1_", tolower(panel_id), "_20260728")
+)
 as_of_timestamp <- env_or(
   "GEN5_MR02_PANEL_AS_OF_TIMESTAMP",
   base_contract$as_of_timestamp
@@ -414,13 +442,13 @@ query <- g5_workbench_query_adjusted_daily_bars(
   end_date = base_contract$train_end,
   as_of_timestamp = as_of_timestamp,
   symbols = g5_mr02_panel_required_symbols(registry),
-  universe_name = "lit_mr_02_1_panel_a",
+  universe_name = paste0("lit_mr_02_1_", tolower(panel_id)),
   universe_roles = "predeclared_pair_legs",
   refresh = refresh,
   repo_root = repo_root
 )
 if (!nrow(query$bars)) {
-  stop("PANEL-A workbench query returned no bars.", call. = FALSE)
+  stop(paste(panel_id, "workbench query returned no bars."), call. = FALSE)
 }
 
 coverage_rows <- lapply(seq_len(nrow(registry)), function(i) {
@@ -441,7 +469,7 @@ analysis_health <- if (
 if (!identical(analysis_health, "PASS")) {
   stop(
     paste0(
-      "PANEL-A coverage or data health failed. Health=", health_max,
+      panel_id, " coverage or data health failed. Health=", health_max,
       "; pair coverage failures=", sum(pair_coverage$status != "PASS"), "."
     ),
     call. = FALSE
@@ -477,9 +505,9 @@ artifact_paths <- list(
 )
 
 run_spec <- data.frame(
-  schema_version = g5_mr02_panel_schema_version(),
+  schema_version = g5_mr02_panel_schema_version(panel_id),
   literature_id = base_contract$literature_id,
-  instance_batch = "LIT-MR-02.1-PANEL-A",
+  instance_batch = paste0("LIT-MR-02.1-", gsub("_", "-", panel_id)),
   wrapper = "scripts/inspect/run_gen5_lit_mr_02_1_pair_panel.R",
   run_id = run_id,
   as_of_timestamp = as_of_timestamp,
@@ -534,7 +562,7 @@ write_report(
   c(artifact_paths, query_artifacts$paths)
 )
 
-message("LIT-MR-02.1 PANEL-A complete: ", panel$overall_status)
+message("LIT-MR-02.1 ", panel_id, " complete: ", panel$overall_status)
 message("Data health: ", health_max)
 message("Later outcomes opened: ", panel$later_outcomes_opened)
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))

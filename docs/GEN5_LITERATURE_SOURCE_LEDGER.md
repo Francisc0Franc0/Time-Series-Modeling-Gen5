@@ -57,12 +57,13 @@ Implementation clarification:
 - The source estimates an intercept in rolling OLS but omits the intercept
   from the traded unit-portfolio spread. The POC preserves that convention
   and records the intercept only as an audit diagnostic.
-- `LIT-MR-02.1-PANEL-A` is an operator/Codex-designed replication batch, not a
-  claim that Chan proposed its ETF pairs. It applies the source-derived
-  formula unchanged to a finite registry fixed before outcomes. The panel's
-  economic rationales, inverse semantic challengers, gates, and readout are
-  grounded in
-  [the separate panel contract](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md).
+- `LIT-MR-02.1-PANEL-A` and `LIT-MR-02.1-PANEL-B` are
+  operator/Codex-designed replication batches, not claims that Chan proposed
+  their ETF pairs. They apply the source-derived formula unchanged to finite
+  registries fixed before outcomes. Their economic rationales, gates, and
+  readouts are grounded in the separate
+  [Panel A contract](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md) and
+  [Panel B contract](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md).
 
 Methodological correction:
 
@@ -129,3 +130,6 @@ operational information only; L1 must not backfill it into historical dates.
 - `LIT-MR-02.1-PANEL-A` preserves that canonical example and records a
   predeclared breadth replication separately; it produced
   `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS`.
+- `LIT-MR-02.1-PANEL-B` adds a separately frozen 15-pair sector, industry, and
+  producer/commodity breadth replication; it produced
+  `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`.

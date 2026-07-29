@@ -72,7 +72,10 @@ g5_mr02_validate_contract <- function(contract = g5_mr02_contract()) {
   if (!identical(contract$literature_id, "LIT-MR-02.1")) {
     g5_mr02_stop("The frozen literature identifier cannot change.")
   }
-  allowed_scopes <- c("CANONICAL", "PANEL_A_PRIMARY", "PANEL_A_DIAGNOSTIC")
+  allowed_scopes <- c(
+    "CANONICAL", "PANEL_A_PRIMARY", "PANEL_A_DIAGNOSTIC",
+    "PANEL_B_PRIMARY"
+  )
   if (!contract$instance_scope %in% allowed_scopes) {
     g5_mr02_stop("The instance scope is not recognized.")
   }
