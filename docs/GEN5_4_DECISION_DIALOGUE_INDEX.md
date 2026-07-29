@@ -107,6 +107,10 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D82` | Open separately labeled `LIT-MR-02.2` and `LIT-MR-03.2` graded-gate challengers while preserving strict controls | 1 | `which ones can be quantitatively "eased" and which ones should remain` | Thresholds, mandatory-versus-diagnostic roles, and unchanged mechanics frozen before implementation |
 | `D83` | Separate retrospective curiosity from prospective fresh-candidate evidence | 1 | `re-examine some of the candidates ... without tricking ourselves` | All retrospective survivors receive descriptive DEVELOPMENT replays; no retrospective alpha claim |
 | `D84` | Freeze twenty fresh pairs and twenty fresh triplets before their TRAIN outcomes are read | 1 | `run fresh candidates in both of the relaxed strategies` | Registry order determines at most one fresh DEVELOPMENT replay per strategy; 2024+ remains sealed |
+| `D85` | Retain the pair caution from SIL-SLV: positive trade statistics can coexist with negative bar-level compounding | 2-5 | execution under D82-D84 | `RETROSPECTIVE_DESCRIPTIVE_COMPLETE_LIT_MR_02_2`; fresh pair atlas stops with no pass |
+| `D86` | Retain both retrospective triplet survivors without promoting either | 6-10 | execution under D82-D84 | Added EWA-EWC-IGE is nearly flat at primary costs and negative under stress |
+| `D87` | Record UNP-CSX-NSC as a fresh strict-and-relaxed TRAIN pass that fails materially OOS | 11-13 | execution under D82-D84 | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_2_FRESH_ATLAS_01`; confirmation sealed |
+| `D88` | Stop further admission-gate easing and move the next theory discussion toward temporal requalification | 14 | execution under D82-D84 | `RESEARCH_COMPLETE_NO_FURTHER_GATE_RELAXATION_RECOMMENDED`; no new strategy authorized |
 
 ## Compact Decision Records
 
@@ -1301,6 +1305,46 @@ tasks by the branch name above, the phrase, or the decision date.
   frozen order, run at most one DEVELOPMENT replay per strategy, and keep
   2024+ sealed.
 
+### D85 — A high hit rate does not guarantee positive bar-level compounding
+
+- **Decision:** Preserve `SIL-SLV` as the only retrospective `02.2` survivor.
+- **Why:** DEVELOPMENT showed `63.8%` winning completed trades and
+  `+7.70 bp/trade`, yet daily rehedging and costs compounded to `-1.36%`
+  primary and `-7.94%` stress return.
+- **Boundary:** This is a post-hoc counterfactual, not a candidate discovery.
+  Fresh Pair Atlas 01 produced no full pass.
+
+### D86 — The triplet relaxation adds breadth, not economic margin
+
+- **Decision:** Retain `EWA-EWC-IGE` and `EWA-EWC-EWZ` as the complete
+  retrospective survivor set.
+- **Why:** The newly admitted `EWA-EWC-IGE` produced only `+0.38%` primary and
+  `-6.13%` stress return OOS. The prior strict survivor remained stronger but
+  still stress-negative.
+- **Boundary:** Neither retrospective result opens confirmation or authority.
+
+### D87 — A strict TRAIN pass can still suffer a relationship break
+
+- **Decision:** Nominate fresh-order survivor `UNP-CSX-NSC`, freeze
+  \([1,1.9028871,-1.0922300]\), and retain its one authorized DEVELOPMENT
+  replay.
+- **Why:** It passed all eight relaxed gates and all eight original strict
+  gates. DEVELOPMENT then returned `-14.25%` primary and `-18.68%` stress,
+  with `-36.19 bp/trade` and adjusted Sharpe `-0.870`.
+- **Boundary:** Three coverage-ineligible frozen triplets remain recorded as
+  failures and were not replaced. Confirmation remains sealed.
+
+### D88 — More permissive admission does not solve temporal non-persistence
+
+- **Decision:** Record
+  `RESEARCH_COMPLETE_NO_FURTHER_GATE_RELAXATION_RECOMMENDED`.
+- **Why:** Easing admitted one weak retrospective triplet; the fresh failure
+  passed even the strict controls. Admission conservatism was not the dominant
+  problem.
+- **Discussion surface:** A future concept may study rolling structural
+  requalification, coefficient drift, rank breaks, or a no-trade state.
+- **Boundary:** No such strategy or risk-control revision is opened here.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1337,6 +1381,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Literature-grounded quantitative gate review](GEN5_LIT_MR_RELAXED_GATE_QUANTITATIVE_REVIEW.md)
 - [LIT-MR-02.2 graded-evidence pair contract](GEN5_LIT_MR_02_2_RELAXED_PAIR_CONTRACT.md)
 - [LIT-MR-03.2 graded-evidence triplet contract](GEN5_LIT_MR_03_2_RELAXED_TRIPLET_CONTRACT.md)
+- [LIT-MR-02.2 and LIT-MR-03.2 completed results](GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`

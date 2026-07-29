@@ -2,7 +2,17 @@
 
 ## Status
 
-`FROZEN_BEFORE_IMPLEMENTATION`
+`RESEARCH_COMPLETE`
+
+## Completed Readout
+
+- Retrospective: one of 44 unique prior pairs passed. `SIL-SLV` returned
+  `-1.36%` at primary costs and `-7.94%` at stress costs in 2021-2023.
+- Fresh Atlas 01: zero of 20 pairs passed all six mandatory rules. No
+  DEVELOPMENT replay was opened.
+- CONFIRMATION beginning 2024 remains sealed.
+
+See `GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md` for the complete result.
 
 ## Research Question
 

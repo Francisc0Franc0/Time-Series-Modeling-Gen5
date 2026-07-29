@@ -109,6 +109,11 @@ Implementation clarification:
   half-life ceiling, diagnostic roles, candidate registries, and
   retrospective-versus-fresh lane design are project decisions and must not be
   attributed to Chan.
+- Completed `02.2/03.2` evidence does not support further gate easing. The
+  sole fresh triplet survivor, `UNP-CSX-NSC`, also passed every original strict
+  gate and then returned `-14.25%` in 2021-2023 DEVELOPMENT. The interpretation
+  of this as a temporal relationship break and the proposed future
+  requalification discussion are Gen5 conclusions, not literature claims.
 
 Methodological correction:
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-`FROZEN_BEFORE_LIT_MR_02_2_AND_LIT_MR_03_2_IMPLEMENTATION`
+`COMPLETED_WITHOUT_FURTHER_GATE_RELAXATION`
 
 This review records the quantitative reasoning used to define the separately
 named `LIT-MR-02.2` pair and `LIT-MR-03.2` triplet challenger lanes. It does
@@ -149,3 +149,9 @@ No gate may be changed again after these challenger outcomes are inspected.
 Any further change requires a new decimal revision and a new predeclared
 surface. No portfolio, allocation, intraday, live-short, or deployment scope
 is opened.
+
+The completed readout is recorded in
+`GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md`. The fresh triplet result shows
+that a candidate can pass both the relaxed and original strict conjunctions
+and still fail materially OOS. Further admission-gate easing is therefore not
+recommended.

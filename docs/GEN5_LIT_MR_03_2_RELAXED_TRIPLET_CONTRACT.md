@@ -2,7 +2,21 @@
 
 ## Status
 
-`FROZEN_BEFORE_IMPLEMENTATION`
+`RESEARCH_COMPLETE`
+
+## Completed Readout
+
+- Retrospective: two of 36 prior triplets passed. The newly admitted
+  `EWA-EWC-IGE` returned only `+0.38%` at primary costs and `-6.13%` at stress
+  costs in 2021-2023.
+- Fresh Atlas 01: three frozen triplets were coverage-ineligible and retained
+  as failures. `UNP-CSX-NSC` was the sole pass among the full panel and also
+  passed all original strict gates.
+- Its frozen-vector DEVELOPMENT replay returned `-14.25%` at primary costs and
+  `-18.68%` at stress costs.
+- CONFIRMATION beginning 2024 remains sealed.
+
+See `GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md` for the complete result.
 
 ## Research Question
 
