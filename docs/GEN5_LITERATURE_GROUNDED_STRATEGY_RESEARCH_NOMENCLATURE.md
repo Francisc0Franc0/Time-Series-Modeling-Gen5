@@ -52,6 +52,8 @@ renames an earlier outcome.
 | `LIT-MR-01.1` | Five-Session Cross-Sectional Sector Reversal | `L1` | `STOP_L1A_SECTOR_REVERSAL_MECHANISM` |
 | `LIT-MR-02.1` | Adaptive GLD-USO Spread Bollinger Reversion | none | `STOP_LIT_MR_02_1_TRAIN_MECHANISM` |
 | `LIT-MR-03.1` | Johansen Triplet Bollinger Reversion | none | Core batch STOP; `TRIPLET_ATLAS_01` OOS DEVELOPMENT complete |
+| `LIT-MR-02.2` | Graded-Evidence Pair Bollinger Reversion | none | Gate review and fresh atlas frozen before implementation |
+| `LIT-MR-03.2` | Graded-Evidence Johansen Triplet Reversion | none | Gate review and fresh atlas frozen before implementation |
 
 ## Replication batches and instances
 

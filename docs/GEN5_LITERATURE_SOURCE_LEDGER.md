@@ -103,6 +103,12 @@ Implementation clarification:
   `EWA-EWC-EWZ` cleared all eight TRAIN gates and retained a modest positive
   primary-cost result in the one authorized OOS DEVELOPMENT replay. The atlas,
   thresholds, and gates are project design and must not be attributed to Chan.
+- `LIT-MR-02.2` and `LIT-MR-03.2` preserve the source-inspired pair and
+  triplet trading rules while changing Gen5-designed evidence gates. The
+  one-sided 90% bootstrap bounds, support thresholds, vector-cosine threshold,
+  half-life ceiling, diagnostic roles, candidate registries, and
+  retrospective-versus-fresh lane design are project decisions and must not be
+  attributed to Chan.
 
 Methodological correction:
 

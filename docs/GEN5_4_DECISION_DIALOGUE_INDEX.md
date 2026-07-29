@@ -104,6 +104,9 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D79` | Treat refreshed bounded-history WARNs as provenance rather than missing-window evidence after all 78 TRAIN symbols pass requested coverage | 20 | `run many triplets through the triplet strategy` | Historical queries remain stale relative to 2026 as-of by design; TRAIN and selected DEVELOPMENT coverage pass |
 | `D80` | Nominate EWA-EWC-EWZ only after it clears all eight TRAIN gates, freeze its vector, and open one OOS DEVELOPMENT replay | 21-24 | `We always test on an OOS window after finding a seemingly promising cointegrated ... opportunity` | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`; primary-cost OOS positive, stress-cost OOS negative; confirmation sealed |
 | `D81` | Pause before any pair or triplet gate relaxation; preserve strict controls and document a graded-gate discussion brief | 25 | `pause and discuss whether it's worth making some of the gates ... less conservative in a measured way` | `DISCUSSION_ONLY_NO_GATE_CHANGE`; no `02.2` or `03.2` run authorized |
+| `D82` | Open separately labeled `LIT-MR-02.2` and `LIT-MR-03.2` graded-gate challengers while preserving strict controls | 1 | `which ones can be quantitatively "eased" and which ones should remain` | Thresholds, mandatory-versus-diagnostic roles, and unchanged mechanics frozen before implementation |
+| `D83` | Separate retrospective curiosity from prospective fresh-candidate evidence | 1 | `re-examine some of the candidates ... without tricking ourselves` | All retrospective survivors receive descriptive DEVELOPMENT replays; no retrospective alpha claim |
+| `D84` | Freeze twenty fresh pairs and twenty fresh triplets before their TRAIN outcomes are read | 1 | `run fresh candidates in both of the relaxed strategies` | Registry order determines at most one fresh DEVELOPMENT replay per strategy; 2024+ remains sealed |
 
 ## Compact Decision Records
 
@@ -1267,6 +1270,37 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Boundary:** Any change requires `LIT-MR-02.2` or `LIT-MR-03.2`, a fresh
   predeclared surface, and explicit operator approval.
 
+### D82 — Ease uncertainty and conventional thresholds, not structural identity
+
+- **Decision:** Open `LIT-MR-02.2` and `LIT-MR-03.2` under the frozen
+  quantitative gate review.
+- **Why:** Pair return and convergence uncertainty passed `0 / 52` under the
+  effective 97.5% one-sided rules, while triplet cosine and half-life cutoffs
+  are partly conventional. One-sided 90% bootstrap bounds still require
+  uncertainty-aware evidence.
+- **Boundary:** Pair integrity, 95% positive-beta semantics, and random-sign
+  p90 remain mandatory. Triplet integrity, all-leg I(1), and exact rank one
+  remain mandatory. Trading mechanics and costs do not change.
+
+### D83 — Retrospective survivors answer a counterfactual, not a discovery question
+
+- **Decision:** Apply the frozen relaxed gates to 44 unique prior pairs and all
+  36 prior triplets, then replay every survivor through DEVELOPMENT.
+- **Why:** This transparently answers what the eased rules would have done.
+- **Boundary:** The gate design was informed by these families. Results are
+  descriptive, cannot nominate authority, and cannot support a live alpha
+  claim.
+
+### D84 — Fresh identities get one deterministic OOS opportunity
+
+- **Decision:** Freeze 20 new pairs and 20 new triplets across five balanced
+  categories per strategy.
+- **Why:** New identities separate prospective candidate generation from the
+  retrospective audit.
+- **Boundary:** Analyze TRAIN first, nominate only the first relaxed pass in
+  frozen order, run at most one DEVELOPMENT replay per strategy, and keep
+  2024+ sealed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1300,6 +1334,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-03.1 Johansen triplet POC contract and readout](GEN5_LIT_MR_03_1_JOHANSEN_TRIPLET_POC_CONTRACT.md)
 - [LIT-MR-03.1 Triplet Atlas 01 contract and readout](GEN5_LIT_MR_03_1_TRIPLET_ATLAS_01_CONTRACT.md)
 - [Literature-grounded mean-reversion gate-calibration discussion brief](GEN5_LIT_MR_GATE_CALIBRATION_DISCUSSION_BRIEF.md)
+- [Literature-grounded quantitative gate review](GEN5_LIT_MR_RELAXED_GATE_QUANTITATIVE_REVIEW.md)
+- [LIT-MR-02.2 graded-evidence pair contract](GEN5_LIT_MR_02_2_RELAXED_PAIR_CONTRACT.md)
+- [LIT-MR-03.2 graded-evidence triplet contract](GEN5_LIT_MR_03_2_RELAXED_TRIPLET_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
