@@ -70,3 +70,11 @@ batch, not a decimal variant:
 |---|---|---|
 | `LIT-MR-02.1-PANEL-A` | Twelve positive-beta primary pairs plus two inverse semantic challengers, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS` |
 | `LIT-MR-02.1-PANEL-B` | Fifteen additional sector, industry, and producer/commodity relationships, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS` |
+
+Retrospective or source-reproduction views use instance suffixes rather than
+decimal variants because the trading mechanics do not change:
+
+| Instance | Purpose | Status |
+|---|---|---|
+| `LIT-MR-02.1 / CASESTUDY_2018` | Ex-post pedagogical view of a positive calendar year inside opened canonical TRAIN | `POSITIVE_CONTROL_ONLY` |
+| `LIT-MR-02.1 / SOURCE_REPRO_2006_2012` | Chan Example 3.2 source-period reproduction using quarantined Yahoo reference bars | `POSITIVE_CONTROL_ONLY` |

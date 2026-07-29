@@ -94,6 +94,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D69` | Retain all eight gates while making their literature provenance, project-designed thresholds, and firm-versus-soft roles explicit | 7-10 | `they're all useful. So let's keep them. Let's just be transparent about them` | Gate logic recorded in the contract and expanded evidence deck |
 | `D70` | Freeze a second 15-pair batch across ordinary sectors and industries before outcomes | 21 | `add, say 15 new pairs, from different sorts of industries` | `LIT-MR-02.1-PANEL-B` registered separately; Panel A immutable |
 | `D71` | Stop Panel B and the exact template after no diversified pair clears economics or forward convergence | 22-25 | `proceed with testing of new pairs` | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`; combined breadth is `0 / 27` full passes |
+| `D72` | Document a real working regime and reproduce Chan's source interval without retuning or reversing the STOP | 26-33 | `Proceed with the 2018 case study ... Then proceed to Chan's original period` | `CASESTUDY_2018` and `SOURCE_REPRO_2006_2012` recorded as positive controls; Yahoo remains reference-only |
 
 ## Compact Decision Records
 
@@ -1118,6 +1119,27 @@ tasks by the branch name above, the phrase, or the decision date.
   third pair panel or change the window, transform, hedge model, thresholds,
   exit, costs, or gates without a substantively justified new frozen variant.
 
+### D72 — A positive control can teach the mechanism without erasing the STOP
+
+- **Question:** Can the operator receive a concrete, detailed example of
+  `LIT-MR-02.1` working before the strategy is set down, without reactively
+  changing mechanics or mining a new winner?
+- **Decision:** Record two unchanged-mechanics positive controls.
+  `CASESTUDY_2018` is an explicitly retrospective view inside already-open
+  canonical TRAIN. `SOURCE_REPRO_2006_2012` reproduces Chan's published
+  interval with quarantined Yahoo adjusted daily reference bars and reports
+  both author-style and Gen5 accounting.
+- **Why:** The 2018 Gen5 replay returned `+4.82%` after primary costs with
+  `0.736` naive Sharpe, `-7.64%` maximum drawdown, and 9 wins in 13 two-sided
+  trades. On the source interval, author-style accounting reproduced
+  `+15.07%` APR / `0.845` Sharpe against Chan's published `17.8% / 0.96`; the
+  next-open primary-cost Gen5 translation remained positive at `+12.93%` APR /
+  `0.933` Sharpe.
+- **Boundary:** These are pedagogical and source-reproduction examples, not
+  new independent validation. The five-year and pair-panel STOPs remain
+  immutable; sealed later partitions stay closed. Yahoo does not enter the
+  canonical Alpaca provider interface, cache, live path, or decision authority.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1146,6 +1168,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
+- [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`

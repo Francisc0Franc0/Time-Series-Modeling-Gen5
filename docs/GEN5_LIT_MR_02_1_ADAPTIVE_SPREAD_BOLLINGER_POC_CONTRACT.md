@@ -187,3 +187,19 @@ After inspection, do not change:
 - the TRAIN gates.
 
 Any such proposal needs a substantive new identifier and fresh contract.
+
+## Positive-control addendum
+
+The immutable STOP does not prohibit transparent explanatory views that leave
+the mechanics and original decision unchanged.
+
+- `LIT-MR-02.1 / CASESTUDY_2018` is an ex-post calendar-year case study inside
+  opened TRAIN.
+- `LIT-MR-02.1 / SOURCE_REPRO_2006_2012` reproduces Chan's published interval
+  with quarantined Yahoo adjusted daily reference bars, then applies both
+  author-style close-to-close accounting and the Gen5 next-open cost model.
+
+These views are governed by
+[the positive-control case-study addendum](GEN5_LIT_MR_02_1_CASE_STUDIES.md).
+They cannot select a new winner, alter a gate, open sealed later partitions, or
+reverse `STOP_LIT_MR_02_1_TRAIN_MECHANISM`.

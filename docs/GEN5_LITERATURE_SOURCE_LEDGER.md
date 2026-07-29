@@ -46,6 +46,7 @@ Additional claims used by `LIT-MR-02.1`:
 | Bollinger entry/exit thresholds bound position size and make risk allocation more practical than continuously scaling exposure with z-score magnitude. | 70-71 | 88-89 | Hold at most one normalized unit portfolio long or short. |
 | Example 3.2 uses `entryZscore = 1`, `exitZscore = 0`, and the same adaptive raw-price spread construction as Example 3.1. | 71-72 | 89-90 | Freeze the exact thresholds and signal family. |
 | The source reports 17.8% APR and 0.96 Sharpe for May 24, 2006-April 9, 2012. | 72 | 90 | Record as a published in-sample result only; do not treat it as Gen5 evidence or tune toward it. |
+| The displayed source P&L applies lagged positions to close-to-close price changes and does not include transaction or borrow costs. | 68, 71-72 | 86, 89-90 | Reproduce the author's accounting separately from the Gen5 next-open, cost-aware translation. |
 
 Implementation clarification:
 
@@ -64,6 +65,15 @@ Implementation clarification:
   readouts are grounded in the separate
   [Panel A contract](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md) and
   [Panel B contract](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md).
+- `LIT-MR-02.1 / CASESTUDY_2018` is an explicitly ex-post working-regime
+  explanation inside already-open TRAIN. It is not an independent test.
+- `LIT-MR-02.1 / SOURCE_REPRO_2006_2012` uses Yahoo chart adjusted daily bars
+  only because the canonical Alpaca path does not cover the published
+  interval. The Yahoo URLs, adjusted-OHLC reconstruction, retrieval timestamp,
+  and coverage audit are recorded in the ignored evidence packet. This
+  reference source does not enter canonical Gen5 provider or live scope.
+- The source-period reproduction is documented in
+  [the positive-control case-study addendum](GEN5_LIT_MR_02_1_CASE_STUDIES.md).
 
 Methodological correction:
 
