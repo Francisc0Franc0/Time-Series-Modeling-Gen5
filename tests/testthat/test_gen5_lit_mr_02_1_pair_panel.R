@@ -79,6 +79,44 @@ testthat::test_that("PANEL-B uses distinct deterministic seeds", {
   testthat::expect_equal(contract$convergence_bootstrap_seed, 106803L)
 })
 
+testthat::test_that("relationship atlas freezes five balanced hypothesis cells", {
+  registry <- g5_mr02_relationship_atlas_registry()
+  testthat::expect_equal(nrow(registry), 25L)
+  testthat::expect_true(all(registry$panel_id == "RELATIONSHIP_ATLAS_01"))
+  testthat::expect_equal(registry$pair_index, 201L:225L)
+  testthat::expect_equal(
+    as.integer(table(registry$pair_category)),
+    rep(5L, 5L)
+  )
+  testthat::expect_equal(length(unique(registry$instrument_topology)), 4L)
+  testthat::expect_equal(registry$pair_id[[1L]], "A01_SPY_IVV")
+  testthat::expect_equal(registry$pair_id[[25L]], "A25_XOP_USO")
+  testthat::expect_true(all(
+    registry$analysis_role == "PRIMARY_TRADING_TEMPLATE"
+  ))
+  testthat::expect_equal(
+    g5_mr02_panel_validate_registry(registry),
+    registry
+  )
+})
+
+testthat::test_that("relationship atlas identity cannot mutate after freeze", {
+  registry <- g5_mr02_relationship_atlas_registry()
+  registry$symbol_y[[1L]] <- "QQQ"
+  testthat::expect_error(
+    g5_mr02_panel_validate_registry(registry),
+    "frozen RELATIONSHIP_ATLAS_01 registry changed"
+  )
+})
+
+testthat::test_that("panel analysis keeps later outcomes sealed on a TRAIN pass", {
+  row <- g5_mr02_relationship_atlas_registry()[1L, , drop = FALSE]
+  contract <- g5_mr02_panel_instance_contract(row)
+  testthat::expect_equal(contract$instance_scope, "RELATIONSHIP_ATLAS_01_PRIMARY")
+  testthat::expect_equal(contract$bootstrap_seed, 206801L)
+  testthat::expect_equal(contract$query_end, contract$train_end)
+})
+
 testthat::test_that("pair instances change assets without changing mechanics", {
   row <- g5_mr02_panel_registry()[1L, , drop = FALSE]
   contract <- g5_mr02_panel_instance_contract(row)

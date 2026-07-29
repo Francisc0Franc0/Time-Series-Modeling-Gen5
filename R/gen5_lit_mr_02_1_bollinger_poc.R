@@ -74,7 +74,7 @@ g5_mr02_validate_contract <- function(contract = g5_mr02_contract()) {
   }
   allowed_scopes <- c(
     "CANONICAL", "PANEL_A_PRIMARY", "PANEL_A_DIAGNOSTIC",
-    "PANEL_B_PRIMARY"
+    "PANEL_B_PRIMARY", "RELATIONSHIP_ATLAS_01_PRIMARY"
   )
   if (!contract$instance_scope %in% allowed_scopes) {
     g5_mr02_stop("The instance scope is not recognized.")
@@ -873,7 +873,8 @@ g5_mr02_not_run_gates <- function() {
 g5_mr02_run_analysis <- function(
   bars,
   contract = g5_mr02_contract(),
-  data_health_status = "PASS"
+  data_health_status = "PASS",
+  allow_later_outcomes = TRUE
 ) {
   contract <- g5_mr02_validate_contract(contract)
   bars <- g5_mr02_validate_bars(bars, contract)
@@ -927,7 +928,7 @@ g5_mr02_run_analysis <- function(
     train_metrics = g5_mr02_performance_metrics(train_replay),
     train_gates = train_gates
   )
-  if (!pass) {
+  if (!pass || !isTRUE(allow_later_outcomes)) {
     return(c(base, list(
       later_outcomes_opened = FALSE,
       full_indicators = NULL,
@@ -935,7 +936,11 @@ g5_mr02_run_analysis <- function(
       full_trades = NULL,
       later_metrics = NULL,
       gates = rbind(train_gates, g5_mr02_not_run_gates()),
-      overall_status = "STOP_LIT_MR_02_1_TRAIN_MECHANISM"
+      overall_status = if (pass) {
+        "REVIEW_REQUIRED_LIT_MR_02_1_TRAIN_PASS_LATER_OUTCOMES_SEALED"
+      } else {
+        "STOP_LIT_MR_02_1_TRAIN_MECHANISM"
+      }
     )))
   }
   full_indicators <- g5_mr02_signal_states(

@@ -51,6 +51,7 @@ renames an earlier outcome.
 |---|---|---|---|
 | `LIT-MR-01.1` | Five-Session Cross-Sectional Sector Reversal | `L1` | `STOP_L1A_SECTOR_REVERSAL_MECHANISM` |
 | `LIT-MR-02.1` | Adaptive GLD-USO Spread Bollinger Reversion | none | `STOP_LIT_MR_02_1_TRAIN_MECHANISM` |
+| `LIT-MR-03.1` | Johansen Triplet Bollinger Reversion | none | `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION` |
 
 ## Replication batches and instances
 
@@ -70,6 +71,7 @@ batch, not a decimal variant:
 |---|---|---|
 | `LIT-MR-02.1-PANEL-A` | Twelve positive-beta primary pairs plus two inverse semantic challengers, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_A_NO_FULL_PASS` |
 | `LIT-MR-02.1-PANEL-B` | Fifteen additional sector, industry, and producer/commodity relationships, all fixed before outcomes | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS` |
+| `LIT-MR-02.1 / RELATIONSHIP_ATLAS_01` | Twenty-five category-balanced pair instances from a frozen topology-by-mechanism generator | `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS` |
 
 Retrospective or source-reproduction views use instance suffixes rather than
 decimal variants because the trading mechanics do not change:

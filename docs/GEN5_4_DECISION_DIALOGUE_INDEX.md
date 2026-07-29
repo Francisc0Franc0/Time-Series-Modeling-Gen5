@@ -95,6 +95,11 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D70` | Freeze a second 15-pair batch across ordinary sectors and industries before outcomes | 21 | `add, say 15 new pairs, from different sorts of industries` | `LIT-MR-02.1-PANEL-B` registered separately; Panel A immutable |
 | `D71` | Stop Panel B and the exact template after no diversified pair clears economics or forward convergence | 22-25 | `proceed with testing of new pairs` | `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`; combined breadth is `0 / 27` full passes |
 | `D72` | Document a real working regime and reproduce Chan's source interval without retuning or reversing the STOP | 26-33 | `Proceed with the 2018 case study ... Then proceed to Chan's original period` | `CASESTUDY_2018` and `SOURCE_REPRO_2006_2012` recorded as positive controls; Yahoo remains reference-only |
+| `D73` | Build a category-labeled relationship atlas as a finite hypothesis generator under unchanged LIT-MR-02.1 mechanics | 34-35 | `Conceptualize a high-throughput hypothesis generation mechanism ... explicitly label these categories` | `RELATIONSHIP_ATLAS_01` frozen across five cells and 25 pair instances |
+| `D74` | Drop intraday pairs and triplets; require TRAIN nomination, frozen coefficients, then only genuine OOS replay | 9, 16-17 | `let's let go of that idea ... We always test on an OOS window after finding a seemingly promising cointegrated pair/triplet` | Daily-only boundary preserved; DEVELOPMENT conditional; confirmation sealed |
+| `D75` | Stop Relationship Atlas 01 after no pair clears all eight TRAIN gates | 36-39 | `proceed to the atlas` | `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`; no OOS pair claim |
+| `D76` | Register LIT-MR-03.1 as a daily exact-rank-one Johansen triplet concept with a TRAIN-frozen vector | 1-11 | `right after, move to the triplets ... include formulae` | Eight-triplet contract, formulas, base-R estimator, and conditional OOS sequence frozen |
+| `D77` | Stop LIT-MR-03.1 after no triplet clears the full TRAIN conjunction | 12-17 | `Proceed` | `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`; five rank-one diagnostics and two 7/8 near-misses retained |
 
 ## Compact Decision Records
 
@@ -1140,6 +1145,77 @@ tasks by the branch name above, the phrase, or the decision date.
   immutable; sealed later partitions stay closed. Yahoo does not enter the
   canonical Alpaca provider interface, cache, live path, or decision authority.
 
+### D73 — Hypothesis throughput comes from a generator, not outcome search
+
+- **Question:** How can pair hypotheses be produced repeatedly without
+  returning to free-form relationship mining?
+- **Decision:** Freeze `RELATIONSHIP_ATLAS_01` across five cells:
+  ETF near substitutes, related ETFs, ETF-component containment, stock peers,
+  and producer/asset-proxy relationships. Fix five candidates per cell before
+  outcomes.
+- **Why:** Instrument topology and economic mechanism are observable ex-ante
+  reasons to test a relationship. They support throughput while keeping every
+  identity, orientation, rationale, and outcome auditable.
+- **Boundary:** The atlas is an instance batch under unchanged `LIT-MR-02.1`
+  mechanics, not a new decimal variant. Registry order is the only tie-break;
+  outcome-ranked pair generation is prohibited.
+
+### D74 — Daily OOS discipline applies equally to pairs and triplets
+
+- **Question:** Should local intraday cointegration be opened, and when may a
+  selected relationship be described as traded performance?
+- **Decision:** Drop the intraday idea for both pairs and triplets. On daily
+  data, let TRAIN diagnose and nominate, freeze the identity and coefficients,
+  then query and replay only the predeclared DEVELOPMENT window.
+- **Why:** Intraday data introduces session, microstructure, quote, and
+  execution questions that are not solved by changing bar frequency. More
+  importantly, an attractive TRAIN window is not OOS performance.
+- **Boundary:** No strategy claim may be made inside the window that selected
+  the relationship. Confirmation beginning 2024 remains sealed even after a
+  DEVELOPMENT replay.
+
+### D75 — A useful atlas can strengthen a STOP
+
+- **Question:** Did any of the 25 frozen relationship-atlas pairs earn OOS
+  evaluation?
+- **Decision:** Record
+  `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`.
+- **Why:** All 25 passed integrity and two-sided support, but only `SIL-SLV`
+  had a positive primary-cost mean. Its 95% trade interval crossed zero and
+  its forward-convergence upper bound remained slightly positive. No pair
+  cleared all eight gates.
+- **Boundary:** Do not select `SIL-SLV`, change the gates, add nearby
+  commodity pairs, or open DEVELOPMENT. The generator is retained; the exact
+  pair rule remains stopped.
+
+### D76 — Triplets are a new concept because the estimated object changes
+
+- **Question:** How should Chan's triplet examples become a minimal,
+  leakage-safe POC?
+- **Decision:** Register `LIT-MR-03.1`. Estimate a one-lag Johansen/VECM on
+  eight predeclared triplets, require exactly one relation, orient and freeze
+  the leading share vector, convert shares to gross-normalized dollar weights,
+  and apply the bounded 20-session +/-1z, zero-exit, next-open rule.
+- **Why:** Johansen jointly estimates rank and portfolio vectors; a third leg
+  can represent an omitted common driver. This is mechanically different from
+  substituting another pair into `LIT-MR-02.1`.
+- **Boundary:** The exact-rank rule, seeded bootstrap, vector cosine, bounded
+  trade rule, costs, and eight-gate conjunction are Gen5-designed. No package,
+  provider, intraday, live, allocation, or confirmation scope is opened.
+
+### D77 — Cointegration structure and a tradeable forecast are separate gates
+
+- **Question:** Did any triplet earn a frozen-vector OOS DEVELOPMENT replay?
+- **Decision:** Record `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`.
+- **Why:** Five of eight passed the exact rank-one diagnostic, but none cleared
+  all eight gates. `EWA-EWC-IGE` passed seven, including a +17.3 bp mean net
+  trade return with a barely positive bootstrap lower bound, but its
+  convergence interval crossed zero. `SHY-IEF-TLT` also passed seven and
+  robustly predicted convergence, but its mean net trade return was negative.
+- **Boundary:** Do not drop either failed gate, choose a near-miss, refit a
+  vector, or query DEVELOPMENT for performance. Both OOS partitions remain
+  sealed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1169,6 +1245,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)
+- [LIT-MR-02.1 Relationship Atlas 01 contract and readout](GEN5_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_CONTRACT.md)
+- [LIT-MR-03.1 Johansen triplet POC contract and readout](GEN5_LIT_MR_03_1_JOHANSEN_TRIPLET_POC_CONTRACT.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -1194,6 +1272,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
 - `presentations/gen5_l1_sector_reversal_evidence.pptx`
 - `presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
+- `presentations/gen5_lit_mr_03_1_johansen_triplets_evidence.pptx`
 
 ## Current Stop State
 
@@ -1290,6 +1369,18 @@ robustly confirmed forward convergence. Record
 `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`. The combined `0 / 27` full-pass and
 `0 / 27` mechanism-pass result stops the exact template broadly on TRAIN; do
 not extend the pair search or reactively change mechanics.
+`LIT-MR-02.1 / RELATIONSHIP_ATLAS_01` then demonstrated a frozen
+topology-by-mechanism generator across 25 pair instances. Only `SIL-SLV` had a
+positive primary-cost mean, its uncertainty and forward-convergence intervals
+did not clear, and no pair passed all eight gates. Record
+`STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`; do not select the
+near-miss or open DEVELOPMENT.
+The next literature concept, `LIT-MR-03.1`, implemented a daily base-R
+Johansen triplet POC across eight predeclared relationships. Five passed the
+exact rank-one diagnostic, but no candidate cleared the full conjunction.
+`EWA-EWC-IGE` and `SHY-IEF-TLT` each passed seven gates for different reasons,
+so neither was nominated. Record `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`;
+DEVELOPMENT and confirmation remain sealed.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.

@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_LIT_MR_01_1_AND_02_1_SELECTED`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_03_1`
 
 ## Purpose
 
@@ -48,6 +48,17 @@ Additional claims used by `LIT-MR-02.1`:
 | The source reports 17.8% APR and 0.96 Sharpe for May 24, 2006-April 9, 2012. | 72 | 90 | Record as a published in-sample result only; do not treat it as Gen5 evidence or tune toward it. |
 | The displayed source P&L applies lagged positions to close-to-close price changes and does not include transaction or borrow costs. | 68, 71-72 | 86, 89-90 | Reproduce the author's accounting separately from the Gen5 next-open, cost-aware translation. |
 
+Additional claims used by `LIT-MR-03.1`:
+
+| Claim or warning | Printed pages | PDF pages | LIT-MR-03.1 use |
+|---|---:|---:|---|
+| CADF is pair-specific and order-dependent; Johansen applies to any number of series and estimates cointegrating rank and vectors together. | 51-56 | 69-74 | Use a three-series Johansen/VECM estimator rather than three pairwise regressions. |
+| The rank of the long-run matrix is the number of independent cointegrating portfolios, and Johansen eigenvectors provide their share hedge ratios. | 54-58 | 72-76 | Require one unambiguous relation in the minimal POC and treat the leading eigenvector as shares. |
+| Chan's EWA-EWC-IGE example uses the leading eigenvector, computes portfolio market value as shares times prices, and estimates a 23-session half-life in the source sample. | 55-58 | 73-76 | Include the literature anchor, translate shares to gross-normalized dollar weights, and test half-life separately from trading performance. |
+| The source's linear triplet strategy scales portfolio units continuously by negative z-score and reports 12.6% APR / 1.4 Sharpe in-sample. | 58-60 | 76-78 | Preserve as context; Gen5 instead uses the already-frozen bounded +/-1z entry and zero-exit rule to keep capital finite and comparable. |
+| ETF relationships may persist better than single-company pairs because basket fundamentals change more slowly. | 91 | 109 | Prefer ETF-heavy, economically motivated triplets without treating ETF status as a pass condition. |
+| GLD-GDX may omit energy costs; adding USO is an empirical omitted-factor hypothesis, but USO's futures exposure is an imperfect spot-oil proxy. | 91-92 | 109-110 | Include GLD-GDX-USO as a direct scientific-hypothesis anchor and disclose the proxy limitation. |
+
 Implementation clarification:
 
 - The printed Example 3.1 spread is `USO - beta * GLD`, while its displayed
@@ -74,6 +85,18 @@ Implementation clarification:
   reference source does not enter canonical Gen5 provider or live scope.
 - The source-period reproduction is documented in
   [the positive-control case-study addendum](GEN5_LIT_MR_02_1_CASE_STUDIES.md).
+- `LIT-MR-02.1 / RELATIONSHIP_ATLAS_01` is a Gen5-designed, five-cell
+  hypothesis generator. Its 25 identities, topologies, mechanisms,
+  orientations, and rationales were frozen before outcomes. It produced
+  `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`.
+- `LIT-MR-03.1` is a Gen5 implementation of the source's Johansen triplet
+  concept. The exact-rank-one requirement, seeded null simulation, vector
+  stability gate, bounded Bollinger-style trade rule, costs, and eight-gate
+  conjunction are project-designed and must not be attributed to Chan.
+- Chan's Example 2.7 reports full rank for EWA-EWC-IGE and then uses the
+  leading vector. Gen5 records the example but does not treat full rank as a
+  minimal one-relation result; `LIT-MR-03.1` requires exactly rank one before
+  nomination.
 
 Methodological correction:
 
@@ -120,6 +143,11 @@ Grounded claims used by L1:
   Reserved for later use if the project searches many strategy variants. The
   minimal L1 POC instead prevents multiplicity by freezing one rule.
 
+- Johansen, S. (1991), "Estimation and Hypothesis Testing of Cointegration
+  Vectors in Gaussian Vector Autoregressive Models." Used to preserve the
+  rank interpretation and the distinction between eigenvectors, rank tests,
+  and a trading rule.
+
 ## Retail-data and borrow boundary
 
 Alpaca adjusted daily OHLCV is sufficient to reconstruct L1's historical price
@@ -143,3 +171,9 @@ operational information only; L1 must not backfill it into historical dates.
 - `LIT-MR-02.1-PANEL-B` adds a separately frozen 15-pair sector, industry, and
   producer/commodity breadth replication; it produced
   `STOP_LIT_MR_02_1_PANEL_B_NO_FULL_PASS`.
+- `LIT-MR-02.1 / RELATIONSHIP_ATLAS_01` adds a finite 25-instance,
+  category-labeled generator under unchanged mechanics; it produced
+  `STOP_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_NO_FULL_PASS`.
+- `LIT-MR-03.1` is the daily Johansen triplet POC across eight predeclared
+  relationships. Five met the exact rank-one diagnostic, but none cleared all
+  eight TRAIN gates, producing `STOP_LIT_MR_03_1_NO_TRAIN_NOMINATION`.

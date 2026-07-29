@@ -246,8 +246,10 @@ plot_category_summary <- function(panel, path) {
 plot_fixed_pair_tapes <- function(panel, bars, path) {
   fixed_ids <- if (identical(panel$panel_id, "PANEL_A")) {
     c("P02_IAU_GLD", "P08_KRE_XLF", "P10_USO_XLE", "D01_GLD_UUP")
-  } else {
+  } else if (identical(panel$panel_id, "PANEL_B")) {
     c("B02_XLU_VPU", "B10_ITA_XAR", "B12_XRT_XLY", "B15_GDX_GLD")
+  } else {
+    c("A02_GLD_IAU", "A12_XLF_JPM", "A17_V_MA", "A24_FCX_CPER")
   }
   registry <- panel$registry[match(fixed_ids, panel$registry$pair_id), , drop = FALSE]
   png(path, width = 2200, height = 1600, res = 150)
@@ -402,14 +404,20 @@ write_report <- function(path, panel, run_spec, artifact_paths) {
 }
 
 panel_id <- toupper(env_or("GEN5_MR02_PANEL_ID", "PANEL_A"))
-if (!panel_id %in% c("PANEL_A", "PANEL_B")) {
-  stop("GEN5_MR02_PANEL_ID must be PANEL_A or PANEL_B.", call. = FALSE)
+valid_panel_ids <- c("PANEL_A", "PANEL_B", "RELATIONSHIP_ATLAS_01")
+if (!panel_id %in% valid_panel_ids) {
+  stop(
+    paste("GEN5_MR02_PANEL_ID must be one of", paste(valid_panel_ids, collapse = ", ")),
+    call. = FALSE
+  )
 }
 message("LIT-MR-02.1 ", panel_id, " starting.")
 registry <- if (identical(panel_id, "PANEL_A")) {
   g5_mr02_panel_registry()
-} else {
+} else if (identical(panel_id, "PANEL_B")) {
   g5_mr02_panel_b_registry()
+} else {
+  g5_mr02_relationship_atlas_registry()
 }
 base_contract <- g5_mr02_contract()
 cfg <- g5_load_data_layer_config(repo_root)
@@ -417,7 +425,10 @@ cfg$feed <- env_or("GEN5_MR02_PANEL_FEED", as.character(cfg$feed))
 refresh <- env_bool("GEN5_MR02_PANEL_REFRESH", FALSE)
 run_id <- env_or(
   "GEN5_MR02_PANEL_RUN_ID",
-  paste0("lit_mr_02_1_", tolower(panel_id), "_20260728")
+  paste0(
+    "lit_mr_02_1_", tolower(panel_id), "_",
+    if (identical(panel_id, "RELATIONSHIP_ATLAS_01")) "20260729" else "20260728"
+  )
 )
 as_of_timestamp <- env_or(
   "GEN5_MR02_PANEL_AS_OF_TIMESTAMP",

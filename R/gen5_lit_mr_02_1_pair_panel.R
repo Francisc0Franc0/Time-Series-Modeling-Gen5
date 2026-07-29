@@ -95,6 +95,83 @@ g5_mr02_panel_b_registry <- function() {
   )
 }
 
+g5_mr02_relationship_atlas_registry <- function() {
+  data.frame(
+    panel_id = "RELATIONSHIP_ATLAS_01",
+    pair_index = 201L:225L,
+    pair_id = c(
+      "A01_SPY_IVV", "A02_GLD_IAU", "A03_XLK_VGT", "A04_VOO_SPY",
+      "A05_MDY_IJH", "A06_QQQ_XLK", "A07_TLT_IEF", "A08_HYG_LQD",
+      "A09_XBI_IBB", "A10_ITA_XAR", "A11_XLE_XOM", "A12_XLF_JPM",
+      "A13_XLV_JNJ", "A14_XLP_PG", "A15_SMH_NVDA", "A16_KO_PEP",
+      "A17_V_MA", "A18_HD_LOW", "A19_JPM_BAC", "A20_UPS_FDX",
+      "A21_GDX_GLD", "A22_XLE_USO", "A23_SIL_SLV", "A24_FCX_CPER",
+      "A25_XOP_USO"
+    ),
+    symbol_y = c(
+      "SPY", "GLD", "XLK", "VOO", "MDY", "QQQ", "TLT", "HYG",
+      "XBI", "ITA", "XLE", "XLF", "XLV", "XLP", "SMH", "KO", "V",
+      "HD", "JPM", "UPS", "GDX", "XLE", "SIL", "FCX", "XOP"
+    ),
+    symbol_x = c(
+      "IVV", "IAU", "VGT", "SPY", "IJH", "XLK", "IEF", "LQD",
+      "IBB", "XAR", "XOM", "JPM", "JNJ", "PG", "NVDA", "PEP", "MA",
+      "LOW", "BAC", "FDX", "GLD", "USO", "SLV", "CPER", "USO"
+    ),
+    pair_category = rep(c(
+      "etf_near_substitute",
+      "etf_related_exposure",
+      "etf_component_containment",
+      "stock_peer_economics",
+      "producer_asset_proxy"
+    ), each = 5L),
+    instrument_topology = rep(c(
+      "ETF_ETF", "ETF_ETF", "ETF_COMPONENT", "STOCK_STOCK",
+      "PRODUCER_ASSET_PROXY"
+    ), each = 5L),
+    economic_mechanism = c(
+      "duplicate_claim", "duplicate_claim", "overlapping_basket",
+      "duplicate_claim", "overlapping_basket",
+      "common_factor", "curve_linkage", "credit_linkage",
+      "overlapping_basket", "overlapping_basket",
+      rep("constituent_containment", 5L),
+      rep("peer_economics", 5L),
+      rep("shared_commodity_driver", 5L)
+    ),
+    expected_relation = rep("positive", 25L),
+    analysis_role = rep("PRIMARY_TRADING_TEMPLATE", 25L),
+    instance_scope = rep("RELATIONSHIP_ATLAS_01_PRIMARY", 25L),
+    rationale = c(
+      "Two S&P 500 index implementations",
+      "Two physically backed gold exposures",
+      "Two broad US technology-sector portfolios",
+      "Two S&P 500 index implementations with different sponsors",
+      "Two US mid-cap index implementations",
+      "Growth-heavy Nasdaq versus US technology",
+      "Long- versus intermediate-duration US Treasuries",
+      "High-yield versus investment-grade corporate credit",
+      "Differently weighted biotechnology portfolios",
+      "Differently weighted aerospace and defense portfolios",
+      "Energy-sector basket versus a large component",
+      "Financial-sector basket versus a large component",
+      "Health-care basket versus a diversified component",
+      "Staples basket versus a large component",
+      "Semiconductor basket versus a major component",
+      "Global non-alcoholic beverage peers",
+      "Global card-network peers",
+      "US home-improvement retail peers",
+      "Diversified US bank peers",
+      "Global parcel-delivery peers",
+      "Gold miners versus physical gold",
+      "Energy equities versus oil-futures proxy",
+      "Silver miners versus physical silver",
+      "Copper producer versus copper-futures proxy",
+      "Oil-and-gas producers versus oil-futures proxy"
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 g5_mr02_panel_validate_registry <- function(
   registry = g5_mr02_panel_registry()
 ) {
@@ -110,25 +187,35 @@ g5_mr02_panel_validate_registry <- function(
     ))
   }
   panel_ids <- unique(as.character(registry$panel_id))
-  if (length(panel_ids) != 1L || !panel_ids %in% c("PANEL_A", "PANEL_B")) {
+  recognized <- c("PANEL_A", "PANEL_B", "RELATIONSHIP_ATLAS_01")
+  if (length(panel_ids) != 1L || !panel_ids %in% recognized) {
     g5_mr02_stop("The pair-panel identifier is not recognized.")
   }
   panel_id <- panel_ids[[1L]]
-  expected_rows <- if (identical(panel_id, "PANEL_A")) 14L else 15L
+  expected_rows <- switch(
+    panel_id,
+    PANEL_A = 14L,
+    PANEL_B = 15L,
+    RELATIONSHIP_ATLAS_01 = 25L
+  )
   expected_indices <- if (identical(panel_id, "PANEL_A")) {
     seq_len(14L)
-  } else {
+  } else if (identical(panel_id, "PANEL_B")) {
     101L:115L
+  } else {
+    201L:225L
   }
   expected_roles <- if (identical(panel_id, "PANEL_A")) {
     c(rep("PRIMARY_TRADING_TEMPLATE", 12L), rep("DIAGNOSTIC_ONLY", 2L))
   } else {
-    rep("PRIMARY_TRADING_TEMPLATE", 15L)
+    rep("PRIMARY_TRADING_TEMPLATE", expected_rows)
   }
   expected_scopes <- if (identical(panel_id, "PANEL_A")) {
     c(rep("PANEL_A_PRIMARY", 12L), rep("PANEL_A_DIAGNOSTIC", 2L))
-  } else {
+  } else if (identical(panel_id, "PANEL_B")) {
     rep("PANEL_B_PRIMARY", 15L)
+  } else {
+    rep("RELATIONSHIP_ATLAS_01_PRIMARY", 25L)
   }
   if (nrow(registry) != expected_rows ||
       !identical(as.integer(registry$pair_index), expected_indices) ||
@@ -144,6 +231,19 @@ g5_mr02_panel_validate_registry <- function(
   }
   if (!identical(as.character(registry$instance_scope), expected_scopes)) {
     g5_mr02_stop(paste("The frozen", panel_id, "instance scopes changed."))
+  }
+  if (identical(panel_id, "RELATIONSHIP_ATLAS_01")) {
+    frozen <- g5_mr02_relationship_atlas_registry()
+    identity_columns <- c(
+      "panel_id", "pair_index", "pair_id", "symbol_y", "symbol_x",
+      "pair_category", "instrument_topology", "economic_mechanism",
+      "expected_relation", "analysis_role", "instance_scope", "rationale"
+    )
+    missing_atlas <- setdiff(identity_columns, names(registry))
+    if (length(missing_atlas) ||
+        !identical(registry[, identity_columns], frozen[, identity_columns])) {
+      g5_mr02_stop("The frozen RELATIONSHIP_ATLAS_01 registry changed.")
+    }
   }
   registry
 }
@@ -434,7 +534,8 @@ g5_mr02_panel_run <- function(
     result <- g5_mr02_run_analysis(
       bars = bars,
       contract = contract,
-      data_health_status = data_health_status
+      data_health_status = data_health_status,
+      allow_later_outcomes = FALSE
     )
     pair_results[[i]] <- result
     pair_summaries[[i]] <- g5_mr02_panel_pair_summary(result, row)
