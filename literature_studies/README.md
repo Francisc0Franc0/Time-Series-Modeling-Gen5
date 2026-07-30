@@ -11,7 +11,7 @@ human-facing evidence, and STOP decisions.
 
 ## Current scope
 
-The current lineage covers `LIT-MR-01.1` through `LIT-MR-05.1`, grounded
+The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, grounded
 primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
@@ -44,6 +44,10 @@ its historical `retail_quant_mechanisms/` location.
 Shared infrastructure remains at the repository root. Literature launchers
 may source canonical data, cache, calendar, and workbench helpers from `R/`
 and `scripts/lib/`, but literature-specific strategy mechanics must live here.
+
+`LIT-MR-06.1` is a narrowly approved research-only intraday exception. Its
+minute-entry helper and evidence remain literature-specific; it does not
+change the root adjusted-daily provider contract or any live-facing behavior.
 
 ## Running checks
 

@@ -56,6 +56,7 @@ renames an earlier outcome.
 | `LIT-MR-03.2` | Graded-Evidence Johansen Triplet Reversion | none | Retrospective descriptive and fresh OOS complete; no further easing recommended |
 | `LIT-MR-04.1` | Kalman Dynamic-Regression Pair | none | `STOP_LIT_MR_04_1_TRAIN_STRATEGY`; 7/8 TRAIN gates, support miss |
 | `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | `STOP_LIT_MR_05_1_TRAIN_STRATEGY`; 6/8 TRAIN gates |
+| `LIT-MR-06.1` | Causal Buy-on-Gap Intraday Reversion | none | Contract frozen; implementation authorized |
 
 ## Replication batches and instances
 
@@ -81,6 +82,7 @@ batch, not a decimal variant:
 | `LIT-MR-02.2 / FRESH_ATLAS_01` | Twenty frozen fresh pairs across five categories | `STOP_LIT_MR_02_2_FRESH_ATLAS_01_NO_PASS` |
 | `LIT-MR-03.2 / RETROSPECTIVE` | All thirty-six prior triplets under the frozen graded gates | `RETROSPECTIVE_DESCRIPTIVE_COMPLETE_LIT_MR_03_2` |
 | `LIT-MR-03.2 / FRESH_ATLAS_01` | Twenty frozen fresh triplets across five categories | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_2_FRESH_ATLAS_01` |
+| `LIT-MR-06.1 / BUY_ON_GAP_ATLAS_01` | Ten static survivor panels spanning broad US stocks and nine sectors | Contract frozen; TRAIN pending |
 
 Retrospective or source-reproduction views use instance suffixes rather than
 decimal variants because the trading mechanics do not change:

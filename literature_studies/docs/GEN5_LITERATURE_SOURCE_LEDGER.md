@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_05_1`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_06_1`
 
 ## Purpose
 
@@ -72,6 +72,17 @@ Additional claims used by `LIT-MR-04.1` and `LIT-MR-05.1`:
 | The source reports 26.2% APR and 2.4 Sharpe for the displayed in-sample example. | 81 | 99 | Record only as source context; do not tune toward or compare Gen5 periods as a replication claim. |
 | The filter supplies time-varying hedge ratios, intercept, and forecast-error variance, but convergence must be established from future returns rather than the post-update residual. | 81-82 | 99-100 | Report coefficient paths and calibration, while gating the trading interpretation on future fixed-vector convergence. |
 
+Additional claims used by `LIT-MR-06.1`:
+
+| Claim or warning | Printed pages | PDF pages | LIT-MR-06.1 use |
+|---|---:|---:|---|
+| Example 4.1 estimates each stock's trailing 90-session standard deviation of close-to-close returns, then looks for an opening gap below the prior low by more than one such standard deviation. | 93-94 | 111-112 | Freeze the lagged 90-session volatility-scaled gap threshold. |
+| The second rule requires the current open to remain above a trailing 20-session moving average, seeking a sharp gap inside a broader positive price context. | 93-94 | 111-112 | Freeze the lagged MA filter and isolate its incremental value with a labeled ablation. |
+| Eligible stocks are ranked by the most negative gap, at most ten are bought, each receives one tenth of capital, unused sleeves stay cash, and positions exit at the close. | 94 | 112 | Preserve top-ten ranking, fixed sleeve denominator, long-only direction, and same-day exit. |
+| The source reports 8.7% APR and 1.5 Sharpe from May 11, 2006 to April 24, 2012, while noting survivor bias and omitting transaction costs. | 94-95 | 112-113 | Record as published in-sample context only; add costs and quarantine static-survivor evidence. |
+| The official open cannot be both observed for signal formation and obtained as a subsequent fill; pre-open market data may differ across venues and from the consolidated opening price. | 95-96 | 113-114 | Keep the same-open result as `NONCAUSAL_REFERENCE`; make 09:31 observation and a strictly later 09:32 fill the primary estimand. |
+| A mirrored short-on-gap strategy is presented separately and has different drawdown and short-sale constraints. | 95 | 113 | Exclude the short mirror from `06.1`; it requires a separately frozen substantive variant. |
+
 Implementation clarification:
 
 - The printed Example 3.1 spread is `USO - beta * GLD`, while its displayed
@@ -140,6 +151,11 @@ Implementation clarification:
   `LIT-MR-05.1` stopped on return uncertainty and random-sign separation.
   These are Gen5 outcomes, not replications of Chan's reported in-sample
   performance. Neither DEVELOPMENT strategy interval was queried.
+- `LIT-MR-06.1` is a Gen5 causal translation of Chan's Example 4.1. The
+  09:31 signal timestamp, 09:32 adjusted-minute entry proxy, costs, static
+  ten-panel atlas, benchmarks, random-stock control, ablation, and eight TRAIN
+  gates are Gen5 design and must not be attributed to Chan. The source-style
+  official-open fill is retained only as a labeled noncausal diagnostic.
 
 Methodological correction:
 
