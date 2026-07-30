@@ -20,9 +20,9 @@ source(file.path(repo_root, "R", "cache_store.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "universe_registry.R"))
 source(file.path(repo_root, "R", "workbench_query.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_kalman_core.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_04_1_kalman_pair_poc.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_05_1_kalman_triplet_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_kalman_core.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_04_1_kalman_pair_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_05_1_kalman_triplet_poc.R"))
 g5_load_local_renviron(repo_root)
 
 env_or <- function(name, default) {
@@ -400,8 +400,8 @@ write_report <- function(path, run_spec, pair, triplet, development, artifacts) 
     "",
     "- Ernest P. Chan, *Algorithmic Trading* (2013), printed pp. 75-82, PDF",
     "  pp. 93-100.",
-    "- Frozen contracts: `docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md`",
-    "  and `docs/GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md`.",
+    "- Frozen contracts: `literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md`",
+    "  and `literature_studies/docs/GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md`.",
     "",
     "## Artifact surface",
     "",
@@ -527,7 +527,7 @@ overall_status <- paste(
 run_spec <- data.frame(
   schema_version = g5_kf_schema_version(),
   run_id = run_id,
-  wrapper = "scripts/inspect/run_gen5_lit_mr_kalman_textbook_pocs.R",
+  wrapper = "literature_studies/scripts/run_gen5_lit_mr_kalman_textbook_pocs.R",
   as_of_timestamp = as_of_timestamp,
   feed = cfg$feed,
   refresh = refresh,

@@ -142,13 +142,13 @@ interval; it is not a retrospective override of the eight-gate admission rule.
 ## Artifacts
 
 - Runner:
-  `scripts/inspect/run_gen5_lit_mr_02_1_case_studies.R`
+  `literature_studies/scripts/run_gen5_lit_mr_02_1_case_studies.R`
 - Reusable helpers:
-  `R/gen5_lit_mr_02_1_case_studies.R`
+  `literature_studies/R/gen5_lit_mr_02_1_case_studies.R`
 - Evidence packet:
   `runs/research_workbench/literature_grounded/lit_mr_02_1_case_studies_20260729`
 - Updated deck:
-  `presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
+  `literature_studies/presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
 
 ## Decision
 

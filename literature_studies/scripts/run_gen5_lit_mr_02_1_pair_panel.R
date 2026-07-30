@@ -20,8 +20,8 @@ source(file.path(repo_root, "R", "cache_store.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "universe_registry.R"))
 source(file.path(repo_root, "R", "workbench_query.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_pair_panel.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_pair_panel.R"))
 g5_load_local_renviron(repo_root)
 
 env_or <- function(name, default) {
@@ -519,7 +519,7 @@ run_spec <- data.frame(
   schema_version = g5_mr02_panel_schema_version(panel_id),
   literature_id = base_contract$literature_id,
   instance_batch = paste0("LIT-MR-02.1-", gsub("_", "-", panel_id)),
-  wrapper = "scripts/inspect/run_gen5_lit_mr_02_1_pair_panel.R",
+  wrapper = "literature_studies/scripts/run_gen5_lit_mr_02_1_pair_panel.R",
   run_id = run_id,
   as_of_timestamp = as_of_timestamp,
   feed = cfg$feed,

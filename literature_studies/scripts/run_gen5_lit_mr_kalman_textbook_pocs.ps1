@@ -14,7 +14,7 @@ if (-not $env:GEN5_KALMAN_REFRESH) {
 
 Push-Location $repoRoot
 try {
-  & $rscript "scripts/inspect/run_gen5_lit_mr_kalman_textbook_pocs.R"
+  & $rscript "literature_studies/scripts/run_gen5_lit_mr_kalman_textbook_pocs.R"
   if ($LASTEXITCODE -ne 0) {
     throw "Kalman textbook runner failed with exit code $LASTEXITCODE."
   }

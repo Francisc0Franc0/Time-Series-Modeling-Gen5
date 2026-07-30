@@ -12,6 +12,8 @@ data_cache/
 runs/
 outputs/
 presentations/
+literature_studies/presentations/*.inspect.ndjson
+literature_studies/presentations/*/
 artifacts/
 logs/
 Rplots.pdf

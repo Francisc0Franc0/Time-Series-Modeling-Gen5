@@ -113,6 +113,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D88` | Stop further admission-gate easing and move the next theory discussion toward temporal requalification | 14 | execution under D82-D84 | `RESEARCH_COMPLETE_NO_FURTHER_GATE_RELAXATION_RECOMMENDED`; no new strategy authorized |
 | `D89` | Treat Chan's Kalman pair and triplet as sequential textbook exercises rather than an alpha search | — | `work through this book as a student would work through exercises in a textbook` | `LIT-MR-04.1` and `LIT-MR-05.1` contracts frozen; implementation authorized |
 | `D90` | Complete both Kalman lessons without weakening gates or opening later outcomes | 1-13 | execution under D89 | Pair `7/8` and triplet `6/8`; both stop at TRAIN, filter lesson retained |
+| `D91` | Give literature studies their own repository phylogeny | repository-wide | `intellectually from a different "phylogeny"` | Move the complete `LIT` source lineage under top-level `literature_studies/` without changing evidence |
 
 ## Compact Decision Records
 
@@ -1382,6 +1383,21 @@ tasks by the branch name above, the phrase, or the decision date.
   orientation, tune `delta`, or inspect DEVELOPMENT strategy outcomes. The
   educational implementation and deck are retained; 2024+ remains sealed.
 
+### D91 — Literature studies receive a separate repository phylogeny
+
+- **Decision:** Move the complete `LIT-MR-01.1` through `LIT-MR-05.1`
+  implementation lineage into top-level `literature_studies/`, organized as
+  `R/`, `scripts/`, `tests/`, `presentations/`, and `docs/`.
+- **Why:** These exercises are worked from supplied books in the manner of a
+  textbook curriculum. Keeping them interleaved with organically developed
+  Gen5.x modules obscures their distinct hypothesis provenance.
+- **Boundary:** This is a path and ownership change only. Identifiers,
+  contracts, results, STOP decisions, generated evidence packets, provider
+  scope, and sealed outcome boundaries are unchanged. Shared data/workbench
+  infrastructure and the global progress/dialogue indices remain in place.
+- **Future convention:** Split `literature_studies/` by book or source set
+  only when a second genuinely distinct literature lineage is opened.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1403,25 +1419,26 @@ tasks by the branch name above, the phrase, or the decision date.
 - [T1 multi-asset trend POC contract](GEN5_T1_MULTI_ASSET_TREND_POC_CONTRACT.md)
 - [M1 cross-sectional momentum POC contract](GEN5_M1_CROSS_SECTIONAL_MOMENTUM_POC_CONTRACT.md)
 - [S0 statistical-arbitrage admissibility contract](GEN5_S0_STATISTICAL_ARBITRAGE_ADMISSIBILITY_CONTRACT.md)
-- [Literature-grounded POC handoff](GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
-- [Literature-grounded strategy research nomenclature](GEN5_LITERATURE_GROUNDED_STRATEGY_RESEARCH_NOMENCLATURE.md)
-- [Literature source ledger](GEN5_LITERATURE_SOURCE_LEDGER.md)
-- [LIT-MR-01.1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
-- [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
-- [LIT-MR-04.1 Kalman pair POC contract](GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
-- [LIT-MR-05.1 Kalman triplet POC contract](GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md)
-- [Kalman pair/triplet textbook deck](../presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx)
-- [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
-- [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
-- [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)
-- [LIT-MR-02.1 Relationship Atlas 01 contract and readout](GEN5_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_CONTRACT.md)
-- [LIT-MR-03.1 Johansen triplet POC contract and readout](GEN5_LIT_MR_03_1_JOHANSEN_TRIPLET_POC_CONTRACT.md)
-- [LIT-MR-03.1 Triplet Atlas 01 contract and readout](GEN5_LIT_MR_03_1_TRIPLET_ATLAS_01_CONTRACT.md)
-- [Literature-grounded mean-reversion gate-calibration discussion brief](GEN5_LIT_MR_GATE_CALIBRATION_DISCUSSION_BRIEF.md)
-- [Literature-grounded quantitative gate review](GEN5_LIT_MR_RELAXED_GATE_QUANTITATIVE_REVIEW.md)
-- [LIT-MR-02.2 graded-evidence pair contract](GEN5_LIT_MR_02_2_RELAXED_PAIR_CONTRACT.md)
-- [LIT-MR-03.2 graded-evidence triplet contract](GEN5_LIT_MR_03_2_RELAXED_TRIPLET_CONTRACT.md)
-- [LIT-MR-02.2 and LIT-MR-03.2 completed results](GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md)
+- [Literature studies index](../literature_studies/README.md)
+- [Literature-grounded POC handoff](../literature_studies/docs/GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
+- [Literature-grounded strategy research nomenclature](../literature_studies/docs/GEN5_LITERATURE_GROUNDED_STRATEGY_RESEARCH_NOMENCLATURE.md)
+- [Literature source ledger](../literature_studies/docs/GEN5_LITERATURE_SOURCE_LEDGER.md)
+- [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
+- [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
+- [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
+- [LIT-MR-05.1 Kalman triplet POC contract](../literature_studies/docs/GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md)
+- [Kalman pair/triplet textbook deck](../literature_studies/presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx)
+- [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
+- [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
+- [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)
+- [LIT-MR-02.1 Relationship Atlas 01 contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_RELATIONSHIP_ATLAS_01_CONTRACT.md)
+- [LIT-MR-03.1 Johansen triplet POC contract and readout](../literature_studies/docs/GEN5_LIT_MR_03_1_JOHANSEN_TRIPLET_POC_CONTRACT.md)
+- [LIT-MR-03.1 Triplet Atlas 01 contract and readout](../literature_studies/docs/GEN5_LIT_MR_03_1_TRIPLET_ATLAS_01_CONTRACT.md)
+- [Literature-grounded mean-reversion gate-calibration discussion brief](../literature_studies/docs/GEN5_LIT_MR_GATE_CALIBRATION_DISCUSSION_BRIEF.md)
+- [Literature-grounded quantitative gate review](../literature_studies/docs/GEN5_LIT_MR_RELAXED_GATE_QUANTITATIVE_REVIEW.md)
+- [LIT-MR-02.2 graded-evidence pair contract](../literature_studies/docs/GEN5_LIT_MR_02_2_RELAXED_PAIR_CONTRACT.md)
+- [LIT-MR-03.2 graded-evidence triplet contract](../literature_studies/docs/GEN5_LIT_MR_03_2_RELAXED_TRIPLET_CONTRACT.md)
+- [LIT-MR-02.2 and LIT-MR-03.2 completed results](../literature_studies/docs/GEN5_LIT_MR_02_2_03_2_RELAXED_GATE_RESULTS.md)
 - `presentations/gen5_s0_statistical_arbitrage_design.pptx`
 - `presentations/gen5_s0_statistical_arbitrage_evidence.pptx`
 - `presentations/gen5_4_quantitative_system_design_foundations_decision_update_annotated.pptx`
@@ -1445,9 +1462,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - `presentations/gen5_t1_multi_asset_trend_evidence.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_design.pptx`
 - `presentations/gen5_m1_cross_sectional_momentum_evidence.pptx`
-- `presentations/gen5_l1_sector_reversal_evidence.pptx`
-- `presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
-- `presentations/gen5_lit_mr_03_1_johansen_triplets_evidence.pptx`
+- `literature_studies/presentations/gen5_l1_sector_reversal_evidence.pptx`
+- `literature_studies/presentations/gen5_lit_mr_02_1_bollinger_evidence.pptx`
+- `literature_studies/presentations/gen5_lit_mr_03_1_johansen_triplets_evidence.pptx`
 
 ## Current Stop State
 

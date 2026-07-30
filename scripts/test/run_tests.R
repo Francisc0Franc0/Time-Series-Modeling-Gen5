@@ -51,5 +51,11 @@ run_step("testthat non-network tests", {
   testthat::test_dir(file.path(repo_root, "tests", "testthat"))
 })
 
+run_step("literature-study non-network tests", {
+  testthat::test_dir(
+    file.path(repo_root, "literature_studies", "tests", "testthat")
+  )
+})
+
 message("")
 message("Gen5 local tests passed.")

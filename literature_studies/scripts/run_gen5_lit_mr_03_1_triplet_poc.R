@@ -20,7 +20,7 @@ source(file.path(repo_root, "R", "cache_store.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "universe_registry.R"))
 source(file.path(repo_root, "R", "workbench_query.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_03_1_triplet_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_03_1_triplet_poc.R"))
 g5_load_local_renviron(repo_root)
 
 env_or <- function(name, default) {
@@ -558,7 +558,7 @@ artifact_paths <- list(
 run_spec <- data.frame(
   schema_version = g5_mr03_schema_version(),
   literature_id = contract$literature_id,
-  wrapper = "scripts/inspect/run_gen5_lit_mr_03_1_triplet_poc.R",
+  wrapper = "literature_studies/scripts/run_gen5_lit_mr_03_1_triplet_poc.R",
   registry_scope = registry_scope,
   run_id = run_id,
   as_of_timestamp = as_of_timestamp,

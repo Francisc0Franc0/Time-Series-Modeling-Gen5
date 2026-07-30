@@ -20,7 +20,7 @@ source(file.path(repo_root, "R", "cache_store.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "universe_registry.R"))
 source(file.path(repo_root, "R", "workbench_query.R"))
-source(file.path(repo_root, "R", "gen5_l1_sector_reversal_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_l1_sector_reversal_poc.R"))
 g5_load_local_renviron(repo_root)
 
 env_or <- function(name, default) {
@@ -454,7 +454,7 @@ if (analysis$l1b_run) {
 
 run_spec <- data.frame(
   schema_version = g5_l1_schema_version(),
-  wrapper = "scripts/inspect/run_gen5_l1_sector_reversal_poc.R",
+  wrapper = "literature_studies/scripts/run_gen5_l1_sector_reversal_poc.R",
   run_id = run_id,
   as_of_timestamp = as_of_timestamp,
   feed = cfg$feed,

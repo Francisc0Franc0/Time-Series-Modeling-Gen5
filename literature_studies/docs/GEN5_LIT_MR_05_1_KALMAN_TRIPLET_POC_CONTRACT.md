@@ -28,7 +28,7 @@ cleared `6 / 8` frozen TRAIN gates. Record
 The evidence packet and educational deck are shared with `LIT-MR-04.1`:
 
 - `runs/research_workbench/literature_grounded/lit_mr_04_1_05_1_kalman_textbook_20260729`
-- `presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`
+- `literature_studies/presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`
 
 `LIT-MR-05.1` is the textbook extension of `LIT-MR-04.1` from one regressor
 to two. It is a dynamic multiple regression, not a symmetric Johansen

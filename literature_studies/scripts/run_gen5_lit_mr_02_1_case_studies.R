@@ -7,8 +7,8 @@ local_library <- file.path(repo_root, ".codex_r_libs")
 if (dir.exists(local_library)) {
   .libPaths(c(normalizePath(local_library, winslash = "/"), .libPaths()))
 }
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_case_studies.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_case_studies.R"))
 
 args <- commandArgs(trailingOnly = TRUE)
 refresh_reference <- !any(tolower(args) == "--refresh-reference=false")

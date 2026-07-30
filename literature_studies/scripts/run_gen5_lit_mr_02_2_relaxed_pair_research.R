@@ -20,9 +20,9 @@ source(file.path(repo_root, "R", "cache_store.R"))
 source(file.path(repo_root, "R", "data_audit.R"))
 source(file.path(repo_root, "R", "universe_registry.R"))
 source(file.path(repo_root, "R", "workbench_query.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_1_pair_panel.R"))
-source(file.path(repo_root, "R", "gen5_lit_mr_02_2_relaxed_pair_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_bollinger_poc.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_1_pair_panel.R"))
+source(file.path(repo_root, "literature_studies", "R", "gen5_lit_mr_02_2_relaxed_pair_poc.R"))
 g5_load_local_renviron(repo_root)
 
 env_or <- function(name, default) {

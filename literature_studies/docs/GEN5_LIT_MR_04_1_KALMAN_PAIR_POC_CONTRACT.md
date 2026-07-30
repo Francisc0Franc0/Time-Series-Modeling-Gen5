@@ -28,7 +28,7 @@ The shared causal filter passed all structural gates and the pair cleared
 The evidence packet is
 `runs/research_workbench/literature_grounded/lit_mr_04_1_05_1_kalman_textbook_20260729`.
 The educational deck is
-`presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`.
+`literature_studies/presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`.
 
 `LIT-MR-04.1` is a new literature-grounded mean-reversion concept. It treats
 Chan's Kalman-filter example as a textbook exercise in causal, time-varying

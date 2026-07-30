@@ -1,4 +1,4 @@
-source(testthat::test_path("..", "..", "R", "data_contract.R"))
+source(testthat::test_path("..", "..", "..", "R", "data_contract.R"))
 source(testthat::test_path("..", "..", "R", "gen5_l1_sector_reversal_poc.R"))
 
 g5_test_l1_contract <- function() {
