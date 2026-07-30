@@ -161,6 +161,12 @@ Implementation clarification:
   point estimates, but both failed support and uncertainty. This
   `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS` verdict is a Gen5 outcome, not a
   replication or refutation of Chan's reported 2006-2012 result.
+- `LIT-MR-06.1 / RECENT_WIDE_ATLAS_02` is a fresh replication batch under
+  unchanged strategy mechanics. Its July 28, 2026 holdings inputs come from
+  the eleven official State Street Select Sector SPDR daily workbooks.
+  Provider-weight order, CUSIP6 issuer deduplication, top-40 coverage
+  screening, 30-stock sector caps, the 305-stock union, newer evidence
+  windows, and conditional OOS rule are Gen5 design—not claims from Chan.
 
 Methodological correction:
 
