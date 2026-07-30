@@ -1,6 +1,6 @@
 # LIT-MR-06.1 Recent Wide Stock Atlas 02 Contract
 
-Status: `FROZEN_APPROVED_IMPLEMENTATION`
+Status: `COMPLETE_STOP_NO_FULL_TRAIN_PASS`
 
 ## Place in the literature-study progression
 
@@ -154,3 +154,23 @@ The official State Street sector overview identifies the eleven sector funds:
 Each registry input uses the corresponding official daily holdings workbook:
 
 `https://www.ssga.com/library-content/products/fund-data/etfs/us/holdings-daily-us-en-{ticker}.xlsx`
+
+## Completed readout
+
+The frozen TRAIN run completed with:
+
+- `0 / 12` full passes;
+- `W01_WIDE_US` at `7 / 8` gates;
+- `190` selected stock-events across `121` portfolio days;
+- `+4.12%` primary and `+2.21%` stress cumulative return;
+- `56.2%` up/down accuracy; and
+- a failed uncertainty gate because the one-sided 90% bootstrap lower bound
+  was `-2.81 bp` per portfolio day.
+
+Financials and health care also reached `7 / 8`, but both failed the frozen
+support gate with only `19` and `21` portfolio days.
+
+Record
+`STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`.
+DEVELOPMENT was not queried. See the
+[completed results](GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_RESULTS.md).

@@ -24,6 +24,10 @@ source(file.path(
 ))
 source(file.path(
   repo_root, "literature_studies", "R",
+  "gen5_lit_mr_06_1_recent_wide_atlas.R"
+))
+source(file.path(
+  repo_root, "literature_studies", "R",
   "gen5_lit_mr_06_1_alpaca_intraday.R"
 ))
 g5_load_local_renviron(repo_root)
@@ -62,6 +66,22 @@ read_rds_or_fetch_daily <- function(
   if (file.exists(path) && !refresh) {
     message("Reusing daily evidence cache: ", path)
     return(readRDS(path))
+  }
+  seed_path <- Sys.getenv(
+    "GEN5_LIT_MR_06_1_SEED_DAILY_RDS", unset = ""
+  )
+  if (!refresh && nzchar(seed_path) && file.exists(seed_path)) {
+    message("Seeding daily evidence cache from: ", seed_path)
+    bars <- readRDS(seed_path)
+    bars <- bars[
+      bars$symbol %in% symbols &
+        bars$session_date >= as.Date(start_date) &
+        bars$session_date <= as.Date(end_date),
+      ,
+      drop = FALSE
+    ]
+    saveRDS(bars, path)
+    return(bars)
   }
   symbol_map <- g5_mr06_alpaca_symbol_map(symbols, end_date)
   request <- g5_alpaca_daily_adjusted_request(
@@ -301,7 +321,7 @@ plot_source_causal <- function(summary, path) {
   })
 }
 
-plot_canonical_equity <- function(result, path) {
+plot_primary_equity <- function(result, path) {
   x <- result$portfolio
   with_png(path, 1800, 950, {
     old <- par(mar = c(5, 5, 4, 5))
@@ -314,7 +334,7 @@ plot_canonical_equity <- function(result, path) {
     plot(
       x$session_date, source, type = "l", lwd = 3, col = "#94A3B8",
       xlab = "", ylab = "Growth of $1 on event days",
-      main = "Canonical broad panel: source reference versus delayed execution",
+      main = "Primary panel: source reference versus delayed execution",
       ylim = y_range + c(-y_padding, y_padding)
     )
     lines(x$session_date, causal, lwd = 3, col = "#3D8DFF")
@@ -329,9 +349,9 @@ plot_canonical_equity <- function(result, path) {
   })
 }
 
-plot_gap_response <- function(events, path) {
+plot_gap_response <- function(events, path, primary_instance_id) {
   x <- events[
-    events$instance_id == "G01_BROAD_US" & events$entry_available,
+    events$instance_id == primary_instance_id & events$entry_available,
     ,
     drop = FALSE
   ]
@@ -353,9 +373,9 @@ plot_gap_response <- function(events, path) {
   })
 }
 
-plot_representative_events <- function(events, path) {
+plot_representative_events <- function(events, path, primary_instance_id) {
   x <- events[
-    events$instance_id == "G01_BROAD_US" & events$entry_available,
+    events$instance_id == primary_instance_id & events$entry_available,
     ,
     drop = FALSE
   ]
@@ -395,7 +415,8 @@ write_report <- function(
   gates,
   artifact_paths
 ) {
-  canonical <- summary[summary$instance_id == "G01_BROAD_US", , drop = FALSE]
+  primary_id <- result$contract$registry$instance_id[[1L]]
+  primary <- summary[summary$instance_id == primary_id, , drop = FALSE]
   pass_count <- sum(summary$full_train_pass)
   lines <- c(
     "# LIT-MR-06.1 Causal Buy-on-Gap TRAIN Report",
@@ -419,22 +440,25 @@ write_report <- function(
     "",
     "## Readout",
     "",
-    paste0("- Atlas full TRAIN passes: **", pass_count, " / 10**."),
     paste0(
-      "- Canonical broad panel: ", canonical$gates_passed, "/8 gates; ",
-      canonical$stock_events, " stock-events across ",
-      canonical$portfolio_days, " portfolio days."
+      "- Atlas full TRAIN passes: **", pass_count, " / ",
+      nrow(summary), "**."
+    ),
+    paste0(
+      "- Primary panel `", primary_id, "`: ", primary$gates_passed,
+      "/8 gates; ", primary$stock_events, " stock-events across ",
+      primary$portfolio_days, " portfolio days."
     ),
     sprintf(
-      "- Canonical primary cumulative return %.2f%%; stress %.2f%%; maximum drawdown %.2f%%.",
-      100 * canonical$cumulative_return,
-      100 * canonical$stress_cumulative_return,
-      100 * canonical$maximum_drawdown
+      "- Primary-panel cumulative return %.2f%%; stress %.2f%%; maximum drawdown %.2f%%.",
+      100 * primary$cumulative_return,
+      100 * primary$stress_cumulative_return,
+      100 * primary$maximum_drawdown
     ),
     sprintf(
-      "- Canonical stock-event hit rate %.1f%%; up/down accuracy %.1f%%.",
-      100 * canonical$stock_event_hit_rate,
-      100 * canonical$up_down_accuracy
+      "- Primary-panel stock-event hit rate %.1f%%; up/down accuracy %.1f%%.",
+      100 * primary$stock_event_hit_rate,
+      100 * primary$up_down_accuracy
     ),
     "",
     "No instance may enter DEVELOPMENT unless every frozen TRAIN gate passes.",
@@ -464,14 +488,25 @@ write_report <- function(
   writeLines(lines, path, useBytes = TRUE)
 }
 
-contract <- g5_mr06_contract()
+atlas_id <- env_or(
+  "GEN5_LIT_MR_06_1_ATLAS_ID", "BUY_ON_GAP_ATLAS_01"
+)
+contract <- if (identical(atlas_id, "RECENT_WIDE_ATLAS_02")) {
+  g5_mr06_recent_wide_contract(repo_root)
+} else {
+  g5_mr06_contract()
+}
 g5_mr06_validate_contract(contract)
 config <- g5_alpaca_config_from_env()
 g5_alpaca_preflight_live_fetch(config)
 
 run_id <- env_or(
   "GEN5_LIT_MR_06_1_RUN_ID",
-  "lit_mr_06_1_buy_on_gap_20260730_v2"
+  if (identical(contract$atlas_id, "RECENT_WIDE_ATLAS_02")) {
+    "lit_mr_06_1_recent_wide_atlas_02_20260730"
+  } else {
+    "lit_mr_06_1_buy_on_gap_20260730_v2"
+  }
 )
 output_root <- normalizePath(
   env_or(
@@ -511,6 +546,13 @@ entries <- read_rds_or_fetch_entries(
   entries_path, manifest, contract, config, contract$train_end, refresh_entries
 )
 result <- g5_mr06_run_train(daily, entries, contract)
+if (identical(contract$atlas_id, "RECENT_WIDE_ATLAS_02")) {
+  result$status <- if (length(result$nominated_instances)) {
+    "TRAIN_PASS_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_HAS_NOMINEE"
+  } else {
+    "STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS"
+  }
+}
 
 summary <- do.call(rbind, lapply(result$results, summary_row))
 gates <- gate_table(result$results)
@@ -561,11 +603,17 @@ visuals <- c(
 plot_gate_heatmap(gates, summary, visuals[["gate_heatmap"]])
 plot_return_intervals(summary, visuals[["return_intervals"]])
 plot_source_causal(summary, visuals[["source_causal"]])
-plot_canonical_equity(
-  result$results[["G01_BROAD_US"]], visuals[["canonical_equity"]]
+primary_instance_id <- contract$registry$instance_id[[1L]]
+plot_primary_equity(
+  result$results[[contract$registry$instance_id[[1L]]]],
+  visuals[["canonical_equity"]]
 )
-plot_gap_response(events, visuals[["gap_response"]])
-plot_representative_events(events, visuals[["representative_events"]])
+plot_gap_response(
+  events, visuals[["gap_response"]], primary_instance_id
+)
+plot_representative_events(
+  events, visuals[["representative_events"]], primary_instance_id
+)
 
 report_path <- file.path(output_root, "lit_mr_06_1_train_report.md")
 write_report(

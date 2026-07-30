@@ -168,6 +168,12 @@ Implementation clarification:
   screening, 30-stock sector caps, the 305-stock union, newer evidence
   windows, and conditional OOS rule are Gen5 design—not claims from Chan.
 
+- The completed recent-wide batch produced `0 / 12` full TRAIN passes.
+  `W01_WIDE_US` passed seven gates with `+4.12%` primary return and `56.2%`
+  up/down accuracy, but its one-sided 90% lower bound was `-2.81 bp/day`.
+  Financials and health care also reached seven gates but failed frozen
+  support. These are Gen5 outcomes; DEVELOPMENT was not queried.
+
 Methodological correction:
 
 - Printed page 46 and printed page 134 describe a p-value as the probability

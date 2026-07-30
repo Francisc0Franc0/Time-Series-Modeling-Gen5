@@ -1420,6 +1420,32 @@ tasks by the branch name above, the phrase, or the decision date.
   adjusted-daily provider contract, open a short mirror, or authorize live
   orders.
 
+### D93 — Broader recent evidence can be promising without becoming a pass
+
+- **Question:** Would the unchanged causal buy-on-gap rule become assessable
+  on newer data if the small static atlas were replaced by a much wider,
+  rationally justified stock panel?
+- **Decision:** Keep `LIT-MR-06.1` mechanics and all eight gates unchanged.
+  Treat the new work as replication batch `RECENT_WIDE_ATLAS_02`, not a
+  decimal strategy variant.
+- **Universe:** Freeze an outcome-blind registry from the eleven official
+  State Street Select Sector SPDR holdings workbooks. Apply provider-weight
+  order, CUSIP6 issuer deduplication, top-40 coverage screening, and a
+  30-stock sector cap before strategy outcomes. The resulting union contains
+  305 stocks; ETFs remain benchmarks only.
+- **Readout:** `W01_WIDE_US` produced 190 selected stock-events across 121
+  portfolio days, +4.12% primary return, +2.21% stress return, 56.2% up/down
+  accuracy, and 7/8 gates. Its one-sided 90% bootstrap lower bound remained
+  negative at -2.81 bp/day. Financials and health care also reached 7/8 but
+  failed support.
+- **Decision:** Record
+  `STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`. Broadness solved
+  support for the combined panel; it did not satisfy uncertainty. Do not
+  reinterpret a near-pass as a weighted pass or query DEVELOPMENT.
+- **Boundary:** Current July 2026 holdings are survivor- and
+  membership-biased for 2023-2024. The comparison with Atlas 01 also changes
+  dates and breadth, so it does not isolate the source of improvement.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1453,6 +1479,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-06.1 causal buy-on-gap contract](../literature_studies/docs/GEN5_LIT_MR_06_1_CAUSAL_BUY_ON_GAP_POC_CONTRACT.md)
 - [LIT-MR-06.1 results](../literature_studies/docs/GEN5_LIT_MR_06_1_BUY_ON_GAP_RESULTS.md)
 - [LIT-MR-06.1 evidence deck](../literature_studies/presentations/gen5_lit_mr_06_1_buy_on_gap_evidence.pptx)
+- [LIT-MR-06.1 recent-wide contract](../literature_studies/docs/GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_CONTRACT.md)
+- [LIT-MR-06.1 recent-wide results](../literature_studies/docs/GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_RESULTS.md)
+- [LIT-MR-06.1 recent-wide evidence deck](../literature_studies/presentations/gen5_lit_mr_06_1_recent_wide_atlas_02_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)

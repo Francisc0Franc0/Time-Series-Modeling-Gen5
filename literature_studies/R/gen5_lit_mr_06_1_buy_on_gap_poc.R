@@ -75,7 +75,14 @@ g5_mr06_stop <- function(message) {
 }
 
 g5_mr06_validate_contract <- function(contract = g5_mr06_contract()) {
-  frozen <- g5_mr06_contract()
+  frozen <- if (identical(contract$atlas_id, "BUY_ON_GAP_ATLAS_01")) {
+    g5_mr06_contract()
+  } else if (identical(contract$atlas_id, "RECENT_WIDE_ATLAS_02") &&
+             exists("g5_mr06_recent_wide_contract", mode = "function")) {
+    g5_mr06_recent_wide_contract()
+  } else {
+    g5_mr06_stop(paste("Unknown frozen atlas:", contract$atlas_id))
+  }
   scalar_fields <- setdiff(names(frozen), "registry")
   for (field in scalar_fields) {
     if (!identical(contract[[field]], frozen[[field]])) {

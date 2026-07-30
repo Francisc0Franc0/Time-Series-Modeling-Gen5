@@ -52,6 +52,16 @@ The completed ten-panel TRAIN atlas produced no full pass, so DEVELOPMENT was
 not queried. See the [results note](docs/GEN5_LIT_MR_06_1_BUY_ON_GAP_RESULTS.md)
 and [evidence deck](presentations/gen5_lit_mr_06_1_buy_on_gap_evidence.pptx).
 
+The subsequent
+[recent-wide replication](docs/GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_RESULTS.md)
+kept those mechanics unchanged and tested a frozen 305-stock union plus all
+eleven sector panels on 2023-2024 TRAIN. The combined panel improved to 7/8
+gates, +4.12% primary return, and 56.2% up/down accuracy, but its uncertainty
+lower bound remained negative. Record
+`STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`; 2025-June 2026
+DEVELOPMENT was not queried. See the
+[evidence deck](presentations/gen5_lit_mr_06_1_recent_wide_atlas_02_evidence.pptx).
+
 ## Running checks
 
 Run only the literature-study tests with:
