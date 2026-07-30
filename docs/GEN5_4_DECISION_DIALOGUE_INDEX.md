@@ -111,6 +111,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D86` | Retain both retrospective triplet survivors without promoting either | 6-10 | execution under D82-D84 | Added EWA-EWC-IGE is nearly flat at primary costs and negative under stress |
 | `D87` | Record UNP-CSX-NSC as a fresh strict-and-relaxed TRAIN pass that fails materially OOS | 11-13 | execution under D82-D84 | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_2_FRESH_ATLAS_01`; confirmation sealed |
 | `D88` | Stop further admission-gate easing and move the next theory discussion toward temporal requalification | 14 | execution under D82-D84 | `RESEARCH_COMPLETE_NO_FURTHER_GATE_RELAXATION_RECOMMENDED`; no new strategy authorized |
+| `D89` | Treat Chan's Kalman pair and triplet as sequential textbook exercises rather than an alpha search | — | `work through this book as a student would work through exercises in a textbook` | `LIT-MR-04.1` and `LIT-MR-05.1` contracts frozen; implementation authorized |
 
 ## Compact Decision Records
 
@@ -1345,6 +1346,24 @@ tasks by the branch name above, the phrase, or the decision date.
   requalification, coefficient drift, rank breaks, or a no-trade state.
 - **Boundary:** No such strategy or risk-control revision is opened here.
 
+### D89 — Kalman filtering is a learning lane before it is an alpha claim
+
+- **Question:** Can Chan's shorter Kalman-filter treatment be made concrete for
+  both pairs and triplets without implying that a more adaptive hedge ratio
+  necessarily creates a profitable strategy?
+- **Decision:** Register `LIT-MR-04.1` as the EWC-on-EWA dynamic-regression
+  pair and `LIT-MR-05.1` as the fixed-orientation EWC-on-EWA-and-IGE dynamic
+  multiple-regression triplet. Implement them sequentially around one shared
+  causal filter.
+- **Why:** The operator explicitly wants to work the book as a student works
+  exercises. The estimator, pre-update innovation, uncertainty, and dynamic
+  hedge ratios are useful material even if the strategy gates stop.
+- **Boundary:** Freeze TRAIN-only scale initialization, next-open execution,
+  costs, diagnostics, and conditional OOS before code. Pair profitability is
+  not required to run the triplet lesson; shared filter structure and
+  causality must pass. No atlas, alternate orientation, confirmation, or live
+  scope is opened.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1371,6 +1390,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Literature source ledger](GEN5_LITERATURE_SOURCE_LEDGER.md)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
+- [LIT-MR-04.1 Kalman pair POC contract](GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
+- [LIT-MR-05.1 Kalman triplet POC contract](GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)

@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_03_1`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_05_1`
 
 ## Purpose
 
@@ -59,6 +59,19 @@ Additional claims used by `LIT-MR-03.1`:
 | ETF relationships may persist better than single-company pairs because basket fundamentals change more slowly. | 91 | 109 | Prefer ETF-heavy, economically motivated triplets without treating ETF status as a pass condition. |
 | GLD-GDX may omit energy costs; adding USO is an empirical omitted-factor hypothesis, but USO's futures exposure is an imperfect spot-oil proxy. | 91-92 | 109-110 | Include GLD-GDX-USO as a direct scientific-hypothesis anchor and disclose the proxy limitation. |
 
+Additional claims used by `LIT-MR-04.1` and `LIT-MR-05.1`:
+
+| Claim or warning | Printed pages | PDF pages | Kalman POC use |
+|---|---:|---:|---|
+| A moving-window regression imposes an abrupt cutoff, whereas a Kalman filter recursively downweights older information without choosing a hard window boundary. | 75 | 93 | Compare a dynamic state path with a trailing 20-session OLS diagnostic. |
+| Dynamic regression can be written as an observation equation with time-varying slope/intercept and a random-walk state equation. | 76 | 94 | Use `[slope(s), intercept]` as the state and identity transition. |
+| The signal is the pre-update forecast error (innovation), standardized by its predicted variance; the Kalman gain then updates the state. | 76-77 | 94-95 | Generate signals from the causal pre-update innovation, never the mechanically shrunken post-update residual. |
+| Chan parameterizes state noise as `delta/(1-delta) I`; zero delta gives fixed regression while values near one make coefficients very volatile. | 77 | 95 | Freeze `delta=0.0001`, but scale the diagonal by warm-up state uncertainty for price-scale invariance. |
+| Example 3.3 uses EWA to explain EWC, initializes the displayed filter at zero, and uses `delta=0.0001` and `Ve=0.001`; the text says the latter constants were chosen with hindsight. | 78 | 96 | Keep EWC-on-EWA orientation and source delta, but estimate observation scale from TRAIN warm-up and do not treat the reported constants as validated authority. |
+| The example enters long below minus one predicted standard deviation, short above plus one, and exits on the zero crossing. | 80-81 | 98-99 | Freeze the bounded two-sided trading rule with next-open execution and costs. |
+| The source reports 26.2% APR and 2.4 Sharpe for the displayed in-sample example. | 81 | 99 | Record only as source context; do not tune toward or compare Gen5 periods as a replication claim. |
+| The filter supplies time-varying hedge ratios, intercept, and forecast-error variance, but convergence must be established from future returns rather than the post-update residual. | 81-82 | 99-100 | Report coefficient paths and calibration, while gating the trading interpretation on future fixed-vector convergence. |
+
 Implementation clarification:
 
 - The printed Example 3.1 spread is `USO - beta * GLD`, while its displayed
@@ -114,6 +127,14 @@ Implementation clarification:
   gate and then returned `-14.25%` in 2021-2023 DEVELOPMENT. The interpretation
   of this as a temporal relationship break and the proposed future
   requalification discussion are Gen5 conclusions, not literature claims.
+- `LIT-MR-04.1` is the single-pair EWC-on-EWA causal Kalman exercise.
+  Warm-up OLS scale initialization, scale-aware process covariance, next-open
+  accounting, costs, comparator diagnostics, and eight TRAIN gates are Gen5
+  translations; they must not be attributed to Chan.
+- `LIT-MR-05.1` adds IGE as a second regressor in one fixed orientation. It is
+  an asymmetric dynamic multiple regression, not a Johansen rank estimator.
+  The chosen triplet, orientation, gross normalization, and gates are Gen5
+  design.
 
 Methodological correction:
 
@@ -200,3 +221,7 @@ operational information only; L1 must not backfill it into historical dates.
   2021-2023 OOS replay returned `+3.73%` at primary costs and `-3.23%` at
   stress costs, producing
   `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`.
+- `LIT-MR-04.1` is the frozen EWC-on-EWA Kalman dynamic-regression pair
+  textbook exercise.
+- `LIT-MR-05.1` is the frozen EWC-on-EWA-and-IGE asymmetric Kalman triplet
+  textbook extension.
