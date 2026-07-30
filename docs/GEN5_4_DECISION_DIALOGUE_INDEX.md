@@ -1446,6 +1446,43 @@ tasks by the branch name above, the phrase, or the decision date.
   membership-biased for 2023-2024. The comparison with Atlas 01 also changes
   dates and breadth, so it does not isolate the source of improvement.
 
+### D94 — Chapter 6 momentum begins with horizon screening, not 250/25 by fiat
+
+- **Correction:** Chan does not choose `250/25` from thin air. He first
+  compares past/future return correlations over the 49 combinations of
+  `L,H in {1,5,10,25,60,120,250}`, narrows the plausible rows, and then uses
+  `250/25` in Example 6.1.
+- **Decision:** Rebuild `LIT-MOM-01.1` as that full two-stage workflow. Freeze
+  a deterministic TRAIN-only horizon selection rule before inspecting the
+  table; retain `250/25` as a canonical literature reference rather than
+  forcing it onto the SHY proxy.
+- **Inference clarification:** Use Chan's prose/Figure 6.1 `min(L,H)` anchor
+  spacing as the source-faithful screen, disclose the conflicting
+  `max(L,H)` printed loop, and add an `L+H` strict sensitivity. Daily
+  overlapping sleeves remain valid trading mechanics but are not daily
+  independent statistical observations.
+- **Implementation:** Use SHY adjusted daily bars, require a swing hold of at
+  least five sessions, select inside 2017-2020 TRAIN, enter one `1/H` sleeve
+  at the next open each day, and evaluate prediction direction, sleeves,
+  daily P&L, costs, Sharpe, drawdown, and calendar stability.
+- **TRAIN readout:** The frozen selector chose `60/5` with 201 sparse pairs,
+  correlation `0.2084`, nominal `p=0.0030`, and 60.2% sign accuracy. All six
+  gates passed; primary return was `+6.55%`, adjusted Sharpe `1.55`, maximum
+  drawdown `-0.84%`, and stress return `+4.29%`.
+- **OOS readout:** The authorized 2021-2023 replay weakened to correlation
+  `0.0846`, nominal `p=0.3032`, 44.0% sign accuracy, `+0.09%` primary return,
+  `0.03` adjusted Sharpe, `-4.84%` maximum drawdown, and `-3.56%` stress
+  return.
+- **Decision:** Record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1` and recommend
+  STOP before sealed 2024+ CONFIRMATION. The reconstruction is a successful
+  textbook exercise; the SHY edge did not persist. Do not reselect a horizon,
+  replace SHY, or modify costs, sleeves, direction, or evidence windows after
+  seeing DEVELOPMENT.
+- **Data boundary:** The generic cache health file warns that the deliberately
+  bounded 2016-2023 cache is stale relative to the July 2026 as-of date. All
+  requested SHY/SPY sessions and six custom coverage checks pass, so this is
+  not a requested-window coverage defect.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1482,6 +1519,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-06.1 recent-wide contract](../literature_studies/docs/GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_CONTRACT.md)
 - [LIT-MR-06.1 recent-wide results](../literature_studies/docs/GEN5_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_RESULTS.md)
 - [LIT-MR-06.1 recent-wide evidence deck](../literature_studies/presentations/gen5_lit_mr_06_1_recent_wide_atlas_02_evidence.pptx)
+- [LIT-MOM-01.1 interday momentum contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_INTERDAY_TIME_SERIES_MOMENTUM_POC_CONTRACT.md)
+- [LIT-MOM-01.1 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md)
+- [LIT-MOM-01.1 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)
@@ -1639,3 +1679,11 @@ worthwhile.
 Do not reinterpret relative ranking evidence as long-entry permission, rescue
 C0 by reversing failed signs, rescue C1 by deleting its failed horizon, or
 rescue C2 by tuning a threshold or calibration on its inspected folds.
+The first literature-grounded momentum lane, `LIT-MOM-01.1`, then
+reconstructed Chan's upstream 49-cell horizon screen before trading. The
+frozen SHY selector chose `60/5` and passed all six TRAIN gates, but the one
+authorized 2021-2023 OOS replay was essentially flat after ordinary costs and
+negative under stress. Record
+`OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; recommend STOP before sealed 2024+
+CONFIRMATION. Keep `250/25` as the canonical literature reference and do not
+rescue SHY by selecting a different horizon on the inspected OOS outcomes.

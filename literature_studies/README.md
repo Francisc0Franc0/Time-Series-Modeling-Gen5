@@ -11,8 +11,8 @@ human-facing evidence, and STOP decisions.
 
 ## Current scope
 
-The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, grounded
-primarily in:
+The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1` and the first
+momentum concept, `LIT-MOM-01.1`, grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
   Rationale*; and
@@ -61,6 +61,18 @@ lower bound remained negative. Record
 `STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`; 2025-June 2026
 DEVELOPMENT was not queried. See the
 [evidence deck](presentations/gen5_lit_mr_06_1_recent_wide_atlas_02_evidence.pptx).
+
+`LIT-MOM-01.1` reconstructs Chan's Chapter 6 interday time-series-momentum
+workflow. It first evaluates the frozen 49-cell lookback/holding table on
+TRAIN, then trades exactly one selected rule with daily overlapping swing
+sleeves. The SHY screen selected `60/5`; all six TRAIN gates passed, but the
+frozen 2021-2023 DEVELOPMENT replay finished essentially flat after ordinary
+costs and negative under stress. Keep `250/25` as the canonical literature
+reference, record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`, and stop before
+2024+ CONFIRMATION. See the
+[contract](docs/GEN5_LIT_MOM_01_1_INTERDAY_TIME_SERIES_MOMENTUM_POC_CONTRACT.md),
+[results](docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md), and
+[evidence deck](presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx).
 
 ## Running checks
 

@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MR_06_1`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MOM_01_1`
 
 ## Purpose
 
@@ -82,6 +82,20 @@ Additional claims used by `LIT-MR-06.1`:
 | The source reports 8.7% APR and 1.5 Sharpe from May 11, 2006 to April 24, 2012, while noting survivor bias and omitting transaction costs. | 94-95 | 112-113 | Record as published in-sample context only; add costs and quarantine static-survivor evidence. |
 | The official open cannot be both observed for signal formation and obtained as a subsequent fill; pre-open market data may differ across venues and from the consolidated opening price. | 95-96 | 113-114 | Keep the same-open result as `NONCAUSAL_REFERENCE`; make 09:31 observation and a strictly later 09:32 fill the primary estimand. |
 | A mirrored short-on-gap strategy is presented separately and has different drawdown and short-sale constraints. | 95 | 113 | Exclude the short mirror from `06.1`; it requires a separately frozen substantive variant. |
+
+Additional claims used by `LIT-MOM-01.1`:
+
+| Claim or warning | Printed pages | PDF pages | LIT-MOM-01.1 use |
+|---|---:|---:|---|
+| Time-series momentum predicts an asset's own future return from its own past return, unlike cross-sectional momentum, which ranks assets against one another. | 133-135 | 151-153 | Use one instrument and score absolute up/down direction separately from P&L. |
+| Past and future return horizons should be compared across a finite grid before selecting the worked strategy horizon. | 135-137 | 153-155 | Reconstruct the complete 49-cell `L,H` screen on TRAIN before freezing the SHY rule. |
+| Figure 6.1 and the surrounding prose advance the correlation anchors by the shorter return interval to reduce overlapping observations. | 135-136 | 153-154 | Use `min(L,H)` as the source-faithful sparse screen, while disclosing that the longer return interval can still overlap. |
+| The printed MATLAB loop advances by the larger interval, in tension with the prose and figure. | 136 | 154 | Preserve the inconsistency in the ledger and add a strict `L+H` sensitivity rather than pretending either convention creates fully independent raw intervals. |
+| The TU table leaves multiple plausible positive-correlation candidates; `250/25` is selected after that table and reflects a reasonably short holding-period preference. | 137-138 | 155-156 | Keep `250/25` as the canonical informed source choice, not an arbitrary constant or the automatic SHY rule. |
+| Example 6.1 starts one `1/25` position each day from the sign of the past 250-session return and holds each position for 25 sessions. | 138-139 | 156-157 | Implement causal daily `1/H` sleeves with next-open entry and bounded aggregate long/short exposure. |
+| The source reports about 1.0 Sharpe, 1.7% APR on notional capital, and 2.5% maximum drawdown for TU from June 1, 2004 to May 11, 2012. | 139 | 157 | Record as source in-sample context only; do not tune SHY toward it or import futures leverage assumptions. |
+| Futures rolls require special continuous-price treatment, and leverage changes the interpretation of return on capital. | 138-140 | 156-158 | Disclose that adjusted SHY ETF bars do not reproduce TU roll, margin, financing, tax, or capital-efficiency mechanics. |
+| Momentum strategies can suffer infrequent but severe reversals and often provide fewer independent signals than their daily trading frequency suggests. | 142-145 | 160-163 | Report sleeve and bar evidence, drawdown, autocorrelation-adjusted Sharpe, strict-spacing sensitivity, and cost stress. |
 
 Implementation clarification:
 
@@ -173,6 +187,18 @@ Implementation clarification:
   up/down accuracy, but its one-sided 90% lower bound was `-2.81 bp/day`.
   Financials and health care also reached seven gates but failed frozen
   support. These are Gen5 outcomes; DEVELOPMENT was not queried.
+- `LIT-MOM-01.1` reconstructs Chan's full Chapter 6 sequence rather than
+  treating `250/25` as an arbitrary starting rule. The source supplies the
+  horizon grid, sparse-correlation idea, canonical `250/25` reference, and
+  daily overlapping-sleeve mechanism. The SHY proxy, deterministic
+  TRAIN-only selection rule, minimum five-session swing hold, costs,
+  dependence sensitivities, six gates, and evidence windows are Gen5 design.
+- The frozen SHY screen selected `60/5`, which passed all six TRAIN gates.
+  Its one authorized 2021-2023 DEVELOPMENT replay weakened to 44.0%
+  directional accuracy, +0.09% primary cumulative return, 0.03 adjusted
+  Sharpe, and -3.56% stress return. Record
+  `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1` and recommend STOP before sealed
+  CONFIRMATION. This is a Gen5 outcome, not a refutation of Chan's TU result.
 
 Methodological correction:
 
@@ -181,6 +207,10 @@ Methodological correction:
   probability, under the null, of observing a statistic at least as extreme as
   the one observed. L1 therefore reports effect sizes, confidence intervals,
   and randomized controls rather than treating a p-value as posterior belief.
+  `LIT-MOM-01.1` similarly labels the horizon-table p-values as nominal,
+  exposes the 49 related comparisons, adds dependence-aware spacing
+  sensitivities, and treats the sealed OOS replay as the real falsification
+  surface.
 
 ### Michael L. Halls-Moore
 
@@ -265,3 +295,8 @@ operational information only; L1 must not backfill it into historical dates.
 - `LIT-MR-05.1` is the frozen EWC-on-EWA-and-IGE asymmetric Kalman triplet
   textbook extension; it completed at
   `STOP_LIT_MR_05_1_TRAIN_STRATEGY`.
+- `LIT-MOM-01.1` is the first literature-grounded momentum concept. Its
+  full 49-cell TRAIN screen selected `60/5` for SHY, all six TRAIN gates
+  passed, and the frozen 2021-2023 OOS replay completed essentially flat
+  after ordinary costs and negative under stress. Preserve
+  `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1` and stop before CONFIRMATION.

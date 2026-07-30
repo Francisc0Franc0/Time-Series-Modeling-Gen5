@@ -57,6 +57,7 @@ renames an earlier outcome.
 | `LIT-MR-04.1` | Kalman Dynamic-Regression Pair | none | `STOP_LIT_MR_04_1_TRAIN_STRATEGY`; 7/8 TRAIN gates, support miss |
 | `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | `STOP_LIT_MR_05_1_TRAIN_STRATEGY`; 6/8 TRAIN gates |
 | `LIT-MR-06.1` | Causal Buy-on-Gap Intraday Reversion | none | Atlas 01 STOP at 0/10; recent-wide Atlas 02 STOP at 0/12 |
+| `LIT-MOM-01.1` | Interday Time-Series Momentum | none | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; STOP recommended before CONFIRMATION |
 
 ## Replication batches and instances
 
@@ -92,3 +93,5 @@ decimal variants because the trading mechanics do not change:
 |---|---|---|
 | `LIT-MR-02.1 / CASESTUDY_2018` | Ex-post pedagogical view of a positive calendar year inside opened canonical TRAIN | `POSITIVE_CONTROL_ONLY` |
 | `LIT-MR-02.1 / SOURCE_REPRO_2006_2012` | Chan Example 3.2 source-period reproduction using quarantined Yahoo reference bars | `POSITIVE_CONTROL_ONLY` |
+| `LIT-MOM-01.1 / CANON_250_25` | Chan Example 6.1's literature-selected 250-session lookback and 25-session holding reference, evaluated beside but never substituted for the frozen SHY selector | `CANONICAL_REFERENCE_ONLY` |
+| `LIT-MOM-01.1 / SHY_SELECTED_60_5` | Frozen TRAIN-selected SHY rule under the predeclared 49-cell horizon screen | `OOS_DEVELOPMENT_COMPLETE_STOP_RECOMMENDED` |
