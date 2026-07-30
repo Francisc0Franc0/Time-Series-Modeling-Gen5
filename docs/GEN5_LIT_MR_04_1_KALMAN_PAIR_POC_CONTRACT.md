@@ -2,7 +2,33 @@
 
 ## Status
 
-`FROZEN_BEFORE_IMPLEMENTATION`
+`COMPLETED_STOP`
+
+## Completed Readout
+
+The shared causal filter passed all structural gates and the pair cleared
+`7 / 8` frozen TRAIN gates. Record
+`STOP_LIT_MR_04_1_TRAIN_STRATEGY`.
+
+- The pair completed 21 trades: 12 long spread and 9 short spread, below the
+  frozen 24-trade support minimum.
+- Mean primary-cost return was `+67.76 bp/trade`; its 90% bootstrap lower
+  bound was `+42.27 bp`.
+- The observed mean exceeded the random-sign 90th percentile
+  (`+17.91 bp`).
+- Forward-five convergence correlation was `-0.1572`, with 90% upper bound
+  `-0.0436`.
+- Bar-level primary-cost cumulative return was `+14.21%`, maximum drawdown
+  `-5.41%`, and autocorrelation-adjusted Sharpe `0.716`.
+- Spread-direction hit rate was `53.5%`; EWC absolute up/down accuracy was
+  `47.6%`, confirming those are different estimands.
+- The support miss stops strategy evaluation before DEVELOPMENT. The
+  2021-2023 strategy interval was not queried; 2024+ remains sealed.
+
+The evidence packet is
+`runs/research_workbench/literature_grounded/lit_mr_04_1_05_1_kalman_textbook_20260729`.
+The educational deck is
+`presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`.
 
 `LIT-MR-04.1` is a new literature-grounded mean-reversion concept. It treats
 Chan's Kalman-filter example as a textbook exercise in causal, time-varying

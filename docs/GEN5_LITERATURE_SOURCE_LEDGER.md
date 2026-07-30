@@ -135,6 +135,11 @@ Implementation clarification:
   an asymmetric dynamic multiple regression, not a Johansen rank estimator.
   The chosen triplet, orientation, gross normalization, and gates are Gen5
   design.
+- Both Kalman filters passed their structural TRAIN gates. `LIT-MR-04.1`
+  stopped only on the frozen 24-trade support minimum (`21` completed), while
+  `LIT-MR-05.1` stopped on return uncertainty and random-sign separation.
+  These are Gen5 outcomes, not replications of Chan's reported in-sample
+  performance. Neither DEVELOPMENT strategy interval was queried.
 
 Methodological correction:
 
@@ -222,6 +227,8 @@ operational information only; L1 must not backfill it into historical dates.
   stress costs, producing
   `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_1_TRIPLET_ATLAS_01`.
 - `LIT-MR-04.1` is the frozen EWC-on-EWA Kalman dynamic-regression pair
-  textbook exercise.
+  textbook exercise; it completed at
+  `STOP_LIT_MR_04_1_TRAIN_STRATEGY`.
 - `LIT-MR-05.1` is the frozen EWC-on-EWA-and-IGE asymmetric Kalman triplet
-  textbook extension.
+  textbook extension; it completed at
+  `STOP_LIT_MR_05_1_TRAIN_STRATEGY`.

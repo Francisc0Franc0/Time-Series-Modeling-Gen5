@@ -54,8 +54,8 @@ renames an earlier outcome.
 | `LIT-MR-03.1` | Johansen Triplet Bollinger Reversion | none | Core batch STOP; `TRIPLET_ATLAS_01` OOS DEVELOPMENT complete |
 | `LIT-MR-02.2` | Graded-Evidence Pair Bollinger Reversion | none | Retrospective OOS descriptive; fresh atlas STOP with no TRAIN pass |
 | `LIT-MR-03.2` | Graded-Evidence Johansen Triplet Reversion | none | Retrospective descriptive and fresh OOS complete; no further easing recommended |
-| `LIT-MR-04.1` | Kalman Dynamic-Regression Pair | none | Frozen textbook exercise; implementation authorized |
-| `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | Frozen textbook extension; implementation authorized |
+| `LIT-MR-04.1` | Kalman Dynamic-Regression Pair | none | `STOP_LIT_MR_04_1_TRAIN_STRATEGY`; 7/8 TRAIN gates, support miss |
+| `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | `STOP_LIT_MR_05_1_TRAIN_STRATEGY`; 6/8 TRAIN gates |
 
 ## Replication batches and instances
 

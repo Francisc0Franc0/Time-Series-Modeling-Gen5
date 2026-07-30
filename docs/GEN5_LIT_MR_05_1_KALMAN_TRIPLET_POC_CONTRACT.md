@@ -2,7 +2,33 @@
 
 ## Status
 
-`FROZEN_BEFORE_IMPLEMENTATION`
+`COMPLETED_STOP`
+
+## Completed Readout
+
+The asymmetric triplet reused the structurally validated causal filter and
+cleared `6 / 8` frozen TRAIN gates. Record
+`STOP_LIT_MR_05_1_TRAIN_STRATEGY`.
+
+- The triplet completed 31 trades: 12 long spread and 19 short spread.
+- Mean primary-cost return was `+3.57 bp/trade`, but the 90% bootstrap lower
+  bound was `-20.26 bp`.
+- The observed mean did not exceed the random-sign 90th percentile
+  (`+9.65 bp`).
+- Forward-five convergence correlation was `-0.0932`, with 90% upper bound
+  `-0.0034`; convergence passed even though return robustness did not.
+- Bar-level primary-cost cumulative return was `+0.71%`, stress return
+  `-3.79%`, maximum drawdown `-4.94%`, and autocorrelation-adjusted Sharpe
+  `0.083`.
+- Spread-direction hit rate was `48.8%`; EWC absolute up/down accuracy was
+  `45.9%`.
+- DEVELOPMENT was not queried for strategy evaluation. The 2021-2023 and
+  2024+ strategy outcomes remain sealed.
+
+The evidence packet and educational deck are shared with `LIT-MR-04.1`:
+
+- `runs/research_workbench/literature_grounded/lit_mr_04_1_05_1_kalman_textbook_20260729`
+- `presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx`
 
 `LIT-MR-05.1` is the textbook extension of `LIT-MR-04.1` from one regressor
 to two. It is a dynamic multiple regression, not a symmetric Johansen

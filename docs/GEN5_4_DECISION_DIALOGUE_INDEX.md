@@ -112,6 +112,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D87` | Record UNP-CSX-NSC as a fresh strict-and-relaxed TRAIN pass that fails materially OOS | 11-13 | execution under D82-D84 | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_2_FRESH_ATLAS_01`; confirmation sealed |
 | `D88` | Stop further admission-gate easing and move the next theory discussion toward temporal requalification | 14 | execution under D82-D84 | `RESEARCH_COMPLETE_NO_FURTHER_GATE_RELAXATION_RECOMMENDED`; no new strategy authorized |
 | `D89` | Treat Chan's Kalman pair and triplet as sequential textbook exercises rather than an alpha search | — | `work through this book as a student would work through exercises in a textbook` | `LIT-MR-04.1` and `LIT-MR-05.1` contracts frozen; implementation authorized |
+| `D90` | Complete both Kalman lessons without weakening gates or opening later outcomes | 1-13 | execution under D89 | Pair `7/8` and triplet `6/8`; both stop at TRAIN, filter lesson retained |
 
 ## Compact Decision Records
 
@@ -1364,6 +1365,23 @@ tasks by the branch name above, the phrase, or the decision date.
   causality must pass. No atlas, alternate orientation, confirmation, or live
   scope is opened.
 
+### D90 — The filter worked; neither trading interpretation earned OOS
+
+- **Decision:** Record `STOP_LIT_MR_04_1_TRAIN_STRATEGY` and
+  `STOP_LIT_MR_05_1_TRAIN_STRATEGY`.
+- **Why:** The pair passed seven gates, including return uncertainty,
+  random-sign separation, and robust convergence, but completed 21 trades
+  against the frozen 24 minimum. The triplet passed six gates, including
+  support and robust convergence, but its return interval crossed zero and its
+  mean did not beat randomized directions.
+- **Learning:** Kalman filtering produced a causal, finite, smoothly evolving
+  state for both equations. Rolling OLS nevertheless had lower one-step RMSE,
+  and Kalman innovations retained high lag-one autocorrelation. Estimator
+  smoothness is not evidence of alpha.
+- **Boundary:** Do not ease the pair support gate, change the triplet
+  orientation, tune `delta`, or inspect DEVELOPMENT strategy outcomes. The
+  educational implementation and deck are retained; 2024+ remains sealed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1392,6 +1410,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
 - [LIT-MR-05.1 Kalman triplet POC contract](GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md)
+- [Kalman pair/triplet textbook deck](../presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](GEN5_LIT_MR_02_1_CASE_STUDIES.md)
