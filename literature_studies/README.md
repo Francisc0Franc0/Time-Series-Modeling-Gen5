@@ -48,6 +48,9 @@ and `scripts/lib/`, but literature-specific strategy mechanics must live here.
 `LIT-MR-06.1` is a narrowly approved research-only intraday exception. Its
 minute-entry helper and evidence remain literature-specific; it does not
 change the root adjusted-daily provider contract or any live-facing behavior.
+The completed ten-panel TRAIN atlas produced no full pass, so DEVELOPMENT was
+not queried. See the [results note](docs/GEN5_LIT_MR_06_1_BUY_ON_GAP_RESULTS.md)
+and [evidence deck](presentations/gen5_lit_mr_06_1_buy_on_gap_evidence.pptx).
 
 ## Running checks
 

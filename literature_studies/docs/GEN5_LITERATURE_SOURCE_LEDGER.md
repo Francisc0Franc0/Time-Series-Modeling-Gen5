@@ -156,6 +156,11 @@ Implementation clarification:
   ten-panel atlas, benchmarks, random-stock control, ablation, and eight TRAIN
   gates are Gen5 design and must not be attributed to Chan. The source-style
   official-open fill is retained only as a labeled noncausal diagnostic.
+- The completed `LIT-MR-06.1` atlas produced `0 / 10` full TRAIN passes.
+  Consumer staples and discretionary each passed six gates and had positive
+  point estimates, but both failed support and uncertainty. This
+  `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS` verdict is a Gen5 outcome, not a
+  replication or refutation of Chan's reported 2006-2012 result.
 
 Methodological correction:
 

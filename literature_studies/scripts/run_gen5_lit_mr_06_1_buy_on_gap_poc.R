@@ -309,10 +309,13 @@ plot_canonical_equity <- function(result, path) {
     causal <- cumprod(1 + x$primary_net_return)
     source <- cumprod(1 + x$source_noncausal_return)
     stress <- cumprod(1 + x$stress_net_return)
+    y_range <- range(c(1, source, causal, stress), finite = TRUE)
+    y_padding <- max(diff(y_range) * 0.08, 0.0005)
     plot(
       x$session_date, source, type = "l", lwd = 3, col = "#94A3B8",
       xlab = "", ylab = "Growth of $1 on event days",
-      main = "Canonical broad panel: source reference versus delayed execution"
+      main = "Canonical broad panel: source reference versus delayed execution",
+      ylim = y_range + c(-y_padding, y_padding)
     )
     lines(x$session_date, causal, lwd = 3, col = "#3D8DFF")
     lines(x$session_date, stress, lwd = 3, col = "#F59E0B")

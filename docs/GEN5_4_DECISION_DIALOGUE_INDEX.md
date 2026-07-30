@@ -1398,6 +1398,28 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Future convention:** Split `literature_studies/` by book or source set
   only when a second genuinely distinct literature lineage is opened.
 
+### D92 — The buy-on-gap lesson must be causal before it can be favorable
+
+- **Question:** Should Chan's same-open Example 4.1 be recapitulated literally,
+  or should the primary POC wait until the opening information is actually
+  observable and accept the resulting execution delay?
+- **Decision:** Make the delayed-entry lane primary. Preserve the source-style
+  official-open fill only as `NONCAUSAL_REFERENCE`; rank at 09:31 and use the
+  adjusted 09:32 minute-bar open as the historical entry proxy.
+- **Implementation:** Freeze one broad control and nine sector panels, fixed
+  ten-sleeve cash accounting, 10/20 bp costs, benchmark and random-stock
+  controls, directional accuracy, and eight conjunctive TRAIN gates.
+- **Readout:** No panel passed all eight gates. Every panel lacked frozen
+  support. The broad control lost 1.21% at primary costs with 42.1% up/down
+  accuracy. Consumer staples and discretionary reached 6/8 with positive
+  point estimates but uncertainty bounds below zero.
+- **Decision:** Record `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS`. Do not query
+  DEVELOPMENT, select a near-miss, relax the gates, or rescue the result by
+  changing the entry minute or source mechanics. Keep 2024+ sealed.
+- **Boundary:** This research-only intraday exception does not alter the root
+  adjusted-daily provider contract, open a short mirror, or authorize live
+  orders.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1428,6 +1450,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
 - [LIT-MR-05.1 Kalman triplet POC contract](../literature_studies/docs/GEN5_LIT_MR_05_1_KALMAN_TRIPLET_POC_CONTRACT.md)
 - [Kalman pair/triplet textbook deck](../literature_studies/presentations/gen5_lit_mr_04_1_05_1_kalman_textbook_exercises.pptx)
+- [LIT-MR-06.1 causal buy-on-gap contract](../literature_studies/docs/GEN5_LIT_MR_06_1_CAUSAL_BUY_ON_GAP_POC_CONTRACT.md)
+- [LIT-MR-06.1 results](../literature_studies/docs/GEN5_LIT_MR_06_1_BUY_ON_GAP_RESULTS.md)
+- [LIT-MR-06.1 evidence deck](../literature_studies/presentations/gen5_lit_mr_06_1_buy_on_gap_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)

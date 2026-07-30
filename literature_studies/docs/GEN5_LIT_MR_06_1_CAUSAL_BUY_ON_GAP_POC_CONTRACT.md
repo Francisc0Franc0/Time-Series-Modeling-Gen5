@@ -1,6 +1,6 @@
 # LIT-MR-06.1 Causal Buy-on-Gap Intraday Reversion POC Contract
 
-Status: `FROZEN_APPROVED_IMPLEMENTATION`
+Status: `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS`
 
 ## Place in the literature-study progression
 
@@ -196,3 +196,21 @@ top-ten rule, entry minute, costs, panel membership, random seed, or gates.
 
 Do not open the short mirror, swing adaptation, another provider, production
 order path, or live behavior from this contract.
+
+## Completed TRAIN readout
+
+The authoritative corrected packet is
+`runs/research_workbench/literature_grounded/lit_mr_06_1_buy_on_gap_20260730_v2`.
+All 145 research identities passed daily coverage, but no atlas panel passed
+all eight gates. Every panel missed the frozen support minimum; industrials
+also missed the 95% selected-entry coverage gate.
+
+The canonical broad panel passed 2/8 gates, completed 19 stock-events over 12
+portfolio days, returned -1.21% at primary costs and -1.39% under stress, and
+had 42.1% up/down accuracy. Consumer staples and discretionary each passed
+6/8 and had positive point estimates, but both failed support and had
+one-sided 90% lower bounds below zero.
+
+Record `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS`. DEVELOPMENT was not queried and
+2024+ remains sealed. The detailed readout is in
+[the results note](GEN5_LIT_MR_06_1_BUY_ON_GAP_RESULTS.md).
