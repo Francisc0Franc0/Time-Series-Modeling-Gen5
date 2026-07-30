@@ -128,6 +128,16 @@ The atlas tests sector breadth, not ten statistically independent
 hypotheses. Every result is published. No panel may be hidden, substituted,
 or redefined after outcomes.
 
+### Same-issuer ticker continuity
+
+The static research identity `META` maps to Alpaca provider ticker `FB` through
+June 8, 2022 and to `META` afterward. This post-freeze data-health
+clarification was required when the preliminary TRAIN retrieval returned zero
+2019-2020 rows for the anachronistic `META` ticker. It preserves the same
+issuer and panel identity; no outcome, strategy, threshold, cost, gate, or
+selection rule changed. The preliminary packet remains untouched and the
+corrected packet uses a new run ID.
+
 ## Fixed diagnostics and controls
 
 Each instance reports:
