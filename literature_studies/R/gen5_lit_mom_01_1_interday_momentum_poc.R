@@ -41,7 +41,11 @@ g5_mom01_validate_contract <- function(contract = g5_mom01_contract()) {
   fields <- names(frozen)
   replication_batch <- attr(contract, "g5_mom01_replication_batch", exact = TRUE)
   if (!is.null(replication_batch)) {
-    if (!identical(replication_batch, "STOCK_ATLAS_01")) {
+    allowed_replication_batches <- c(
+      "STOCK_ATLAS_01",
+      "STOCK_ATLAS_02_HIGH_BETA_2016"
+    )
+    if (!replication_batch %in% allowed_replication_batches) {
       g5_mom01_stop("Unknown LIT-MOM-01.1 replication batch.")
     }
     if (!identical(names(contract), fields)) {

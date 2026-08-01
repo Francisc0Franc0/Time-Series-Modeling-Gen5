@@ -86,6 +86,21 @@ or portfolio authority. See the
 [contract](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_CONTRACT.md) and
 [evidence deck](presentations/gen5_lit_mom_01_1_stock_atlas_01_evidence.pptx).
 
+The point-in-time
+[2016 high-beta replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_RESULTS.md)
+then froze all 99 common-equity constituents from SPHB's October 31, 2016 SEC
+Schedule of Investments. Eighty-four had exact TRAIN coverage and 11 passed
+all six gates; XEC then received an OOS coverage STOP after its acquisition.
+Every one of the ten complete 2021-2023 replays lost money. Pooled long sleeves
+were 54.3% directionally correct with positive mean net return, while short
+sleeves were only 43.0% correct with negative mean net return. Record
+`OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016` and stop
+before CONFIRMATION. The asymmetry is a useful lesson, not post-hoc authority
+to remove shorts. See the
+[contract](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_CONTRACT.md)
+and
+[evidence deck](presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx).
+
 ## Running checks
 
 Run only the literature-study tests with:

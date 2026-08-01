@@ -1517,6 +1517,42 @@ tasks by the branch name above, the phrase, or the decision date.
   this intentional historical cap with the 2026 as-of date and does not affect
   the requested window.
 
+### D96 — A point-in-time high-beta panel separates beta from momentum
+
+- **Operator direction:** Add substantially more stocks and emphasize names
+  that would have been known as high beta at the time, while preserving the
+  exact Chapter 6 entry, exit, horizon-screen, and gate mechanics.
+- **Causal universe decision:** Freeze all 99 common-equity constituents in
+  SPHB's SEC Schedule of Investments dated October 31, 2016. Do not construct
+  the panel from later fame, realized volatility, or current survival. Retain
+  historical tickers and make acquisition, delisting, and provider-history
+  failures explicit coverage STOPs.
+- **Conceptual distinction:** Beta is market sensitivity,
+  `Cov(r_i,r_SPY)/Var(r_SPY)`; momentum is persistence in the stock's own
+  return sign. High beta can amplify both trending and reversing paths. A
+  pre-TRAIN 2016 beta estimate is descriptive only and cannot select or delete
+  filing members.
+- **Coverage:** `84 / 99` names had exact warm-up-plus-TRAIN coverage. Fifteen
+  historical-symbol paths stopped visibly. Eleven of 84 analyzable names
+  passed all six TRAIN gates; XEC then received
+  `DEVELOPMENT_COVERAGE_STOP` because its history ended after acquisition.
+- **OOS readout:** All ten complete 2021-2023 replays had negative primary and
+  stress cumulative returns. Mean primary return was `-27.25%`, median was
+  `-19.87%`, and median direction accuracy was `48.7%`. None cleared all four
+  descriptive continuity flags.
+- **Up/down diagnosis:** Pooled long sleeves numbered 4,066, achieved 54.28%
+  directional accuracy, and averaged `+0.53%` after primary costs. Pooled
+  short sleeves numbered 3,362, achieved only 43.04% accuracy, and averaged
+  `-1.28%`. Nine of ten stocks had above-chance long accuracy; zero of ten had
+  above-chance short accuracy.
+- **Decision:** Record
+  `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016` and
+  recommend STOP before sealed 2024+ CONFIRMATION. Do not rescue the inspected
+  result by deleting shorts, selecting the least-negative OOS path, mapping
+  acquired names to successors, changing horizons, or pooling strategies.
+  A long-only translation would be a new substantive variant requiring a
+  fresh contract and untouched evidence.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1559,6 +1595,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.1 Stock Atlas 01 contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_CONTRACT.md)
 - [LIT-MOM-01.1 Stock Atlas 01 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 - [LIT-MOM-01.1 Stock Atlas 01 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_01_evidence.pptx)
+- [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_CONTRACT.md)
+- [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_RESULTS.md)
+- [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)
@@ -1724,3 +1763,12 @@ negative under stress. Record
 `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; recommend STOP before sealed 2024+
 CONFIRMATION. Keep `250/25` as the canonical literature reference and do not
 rescue SHY by selecting a different horizon on the inspected OOS outcomes.
+The later point-in-time `STOCK_ATLAS_02_HIGH_BETA_2016` froze all 99 common
+equity holdings from SPHB's October 31, 2016 SEC filing. Eleven of 84
+coverage-eligible stocks passed TRAIN, but XEC lacked a complete OOS window
+and all ten complete 2021-2023 replays lost money. The signal's long sleeves
+retained above-chance direction accuracy and positive mean return while every
+stock's short accuracy was below chance. Record
+`OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016` and
+recommend STOP before CONFIRMATION. Do not convert the observed directional
+asymmetry into a post-hoc long-only rescue.
