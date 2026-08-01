@@ -199,6 +199,14 @@ Implementation clarification:
   Sharpe, and -3.56% stress return. Record
   `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1` and recommend STOP before sealed
   CONFIRMATION. This is a Gen5 outcome, not a refutation of Chan's TU result.
+- `LIT-MOM-01.1 / STOCK_ATLAS_01` is a Gen5-designed breadth replication,
+  not a panel proposed by Chan. Its 22-stock, eleven-sector static registry,
+  per-stock repetition of the 49-cell selector, conditional OOS rule, costs,
+  six gates, and survivor-bias disclosure are project design. `HD` was the
+  sole full TRAIN passer with a frozen `10/10` rule. Its 2021-2023 replay
+  retained 58.7% direction accuracy but returned -5.86% after primary costs
+  and -9.82% under stress. This is evidence about the frozen retail
+  translation, not a refutation of Example 6.1 or Chan's `TU` result.
 
 Methodological correction:
 

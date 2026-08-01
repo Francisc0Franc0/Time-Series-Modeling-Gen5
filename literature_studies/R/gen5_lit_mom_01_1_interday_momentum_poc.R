@@ -39,6 +39,34 @@ g5_mom01_contract <- function() {
 g5_mom01_validate_contract <- function(contract = g5_mom01_contract()) {
   frozen <- g5_mom01_contract()
   fields <- names(frozen)
+  replication_batch <- attr(contract, "g5_mom01_replication_batch", exact = TRUE)
+  if (!is.null(replication_batch)) {
+    if (!identical(replication_batch, "STOCK_ATLAS_01")) {
+      g5_mom01_stop("Unknown LIT-MOM-01.1 replication batch.")
+    }
+    if (!identical(names(contract), fields)) {
+      g5_mom01_stop("Replication contracts must preserve the frozen field set.")
+    }
+    symbol <- contract$symbol
+    if (!is.character(symbol) || length(symbol) != 1L ||
+        is.na(symbol) || !grepl("^[A-Z][A-Z0-9.]{0,9}$", symbol)) {
+      g5_mom01_stop("Replication symbol must be one uppercase US equity ticker.")
+    }
+    contract_for_comparison <- contract
+    contract_for_comparison$symbol <- frozen$symbol
+    same <- vapply(
+      fields,
+      function(field) identical(contract_for_comparison[[field]], frozen[[field]]),
+      logical(1)
+    )
+    if (!all(same)) {
+      g5_mom01_stop(paste(
+        "Frozen LIT-MOM-01.1 replication contract changed:",
+        paste(fields[!same], collapse = ", ")
+      ))
+    }
+    return(contract)
+  }
   same <- vapply(fields, function(field) identical(contract[[field]], frozen[[field]]), logical(1))
   if (!all(same)) {
     g5_mom01_stop(paste(
@@ -49,6 +77,16 @@ g5_mom01_validate_contract <- function(contract = g5_mom01_contract()) {
   contract
 }
 
+g5_mom01_replication_contract <- function(
+  symbol,
+  replication_batch = "STOCK_ATLAS_01"
+) {
+  contract <- g5_mom01_contract()
+  contract$symbol <- as.character(symbol)
+  attr(contract, "g5_mom01_replication_batch") <- replication_batch
+  g5_mom01_validate_contract(contract)
+}
+
 g5_mom01_validate_bars <- function(bars, contract = g5_mom01_contract()) {
   contract <- g5_mom01_validate_contract(contract)
   required <- c("symbol", "session_date", "open", "close", "adjusted", "timeframe")
@@ -57,7 +95,9 @@ g5_mom01_validate_bars <- function(bars, contract = g5_mom01_contract()) {
     g5_mom01_stop(paste("Missing required bar columns:", paste(missing, collapse = ", ")))
   }
   out <- bars[bars$symbol == contract$symbol, , drop = FALSE]
-  if (!nrow(out)) g5_mom01_stop("No SHY bars were supplied.")
+  if (!nrow(out)) {
+    g5_mom01_stop(paste("No", contract$symbol, "bars were supplied."))
+  }
   out$session_date <- as.Date(out$session_date)
   out <- out[order(out$session_date), , drop = FALSE]
   checks <- data.frame(
@@ -390,8 +430,8 @@ g5_mom01_completed_sleeves <- function(
       exit_date = x$session_date[[exit_i]],
       direction = direction,
       direction_label = ifelse(direction > 0, "LONG", "SHORT"),
-      past_250_return = signal_panel$past_return[[i]],
-      underlying_25_open_return = x$open[[exit_i]] / x$open[[entry_i]] - 1,
+      past_lookback_return = signal_panel$past_return[[i]],
+      underlying_holding_open_return = x$open[[exit_i]] / x$open[[entry_i]] - 1,
       gross_sleeve_return = gross,
       primary_net_sleeve_return = gross - 2 * contract$primary_cost_bps / 10000,
       stress_net_sleeve_return = gross -
@@ -410,8 +450,8 @@ g5_mom01_completed_sleeves <- function(
       exit_date = as.Date(character()),
       direction = integer(),
       direction_label = character(),
-      past_250_return = numeric(),
-      underlying_25_open_return = numeric(),
+      past_lookback_return = numeric(),
+      underlying_holding_open_return = numeric(),
       gross_sleeve_return = numeric(),
       primary_net_sleeve_return = numeric(),
       stress_net_sleeve_return = numeric(),

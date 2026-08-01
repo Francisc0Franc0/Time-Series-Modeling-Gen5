@@ -74,6 +74,18 @@ reference, record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`, and stop before
 [results](docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md), and
 [evidence deck](presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx).
 
+The subsequent
+[stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
+kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.
+Only `HD` passed all six TRAIN gates with a selected `10/10` rule. Its sole
+authorized 2021-2023 replay retained 58.7% directional accuracy and positive
+past/future correlation but lost 5.86% after primary costs and 9.82% under
+stress. Record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_01` and
+stop before CONFIRMATION; the atlas is breadth evidence, not stock-selection
+or portfolio authority. See the
+[contract](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_CONTRACT.md) and
+[evidence deck](presentations/gen5_lit_mom_01_1_stock_atlas_01_evidence.pptx).
+
 ## Running checks
 
 Run only the literature-study tests with:

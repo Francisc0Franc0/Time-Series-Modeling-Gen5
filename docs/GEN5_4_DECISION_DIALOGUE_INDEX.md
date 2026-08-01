@@ -1483,6 +1483,40 @@ tasks by the branch name above, the phrase, or the decision date.
   requested SHY/SPY sessions and six custom coverage checks pass, so this is
   not a requested-window coverage defect.
 
+### D95 â€” Breadth replication tests the mechanism, not the best stock
+
+- **Operator direction:** Widen the Chapter 6 exercise to a diverse set of
+  individual stocks and test every stock in the same manner as the SHY POC.
+- **Frozen interpretation:** Treat this as `LIT-MOM-01.1 / STOCK_ATLAS_01`,
+  a replication batch under unchanged mechanics rather than a new decimal
+  variant. Freeze 22 large, liquid stocksâ€”exactly two from each of eleven
+  sectorsâ€”before outcomes. The static July 2026 panel is explicitly
+  survivor- and membership-biased.
+- **Method:** Run the complete 49-cell TRAIN screen independently for every
+  stock, preserve `250/25` as a canonical comparator, and apply all six gates.
+  Only full TRAIN passers may enter 2021-2023 DEVELOPMENT, and every passer
+  must be displayed. Do not select one common horizon, best TRAIN curve, or
+  best OOS stock; do not form a portfolio.
+- **TRAIN readout:** `1 / 22` stocks passed all six gates. The dominant stop
+  was G2 horizon-screen admissibility (`3 / 22` passed), showing why a strong
+  equity curve alone is not proof of the proposed momentum mechanism. `HD`
+  selected `10/10`, with correlation `0.1833`, nominal `p=0.0679`, 61.0%
+  direction accuracy, +41.00% primary return, and +33.44% stress return.
+- **OOS readout:** The sole authorized HD replay retained correlation
+  `0.1830` and 58.7% direction accuracy, but primary return was `-5.86%`,
+  stress return `-9.82%`, adjusted Sharpe `-0.03`, and maximum drawdown
+  `-29.94%`. The short sleeves had negative average P&L and sub-50% direction
+  accuracy.
+- **Decision:** Record
+  `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_01` and recommend STOP
+  before sealed CONFIRMATION. Do not rescue the inspected atlas by dropping
+  shorts, choosing an attractive failed-gate stock, changing horizons, or
+  pooling paths. Those would be new substantive hypotheses.
+- **Data boundary:** All 22 stocks and SPY have exact 2,012-session requested
+  coverage through December 29, 2023. The generic stale-cache WARN compares
+  this intentional historical cap with the 2026 as-of date and does not affect
+  the requested window.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1522,6 +1556,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.1 interday momentum contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_INTERDAY_TIME_SERIES_MOMENTUM_POC_CONTRACT.md)
 - [LIT-MOM-01.1 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md)
 - [LIT-MOM-01.1 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx)
+- [LIT-MOM-01.1 Stock Atlas 01 contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_CONTRACT.md)
+- [LIT-MOM-01.1 Stock Atlas 01 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
+- [LIT-MOM-01.1 Stock Atlas 01 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_01_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)

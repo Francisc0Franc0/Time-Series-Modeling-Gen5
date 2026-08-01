@@ -29,6 +29,18 @@ testthat::test_that("frozen contract rejects mechanical changes", {
   )
 })
 
+testthat::test_that("stock-atlas replication changes only the symbol", {
+  replicated <- g5_mom01_replication_contract("MSFT")
+  testthat::expect_equal(replicated$symbol, "MSFT")
+  testthat::expect_equal(replicated$holding_sessions, 25L)
+  changed <- replicated
+  changed$primary_cost_bps <- 0
+  testthat::expect_error(
+    g5_mom01_validate_contract(changed),
+    "replication contract changed"
+  )
+})
+
 testthat::test_that("correlation views preserve source and strict spacing", {
   contract <- g5_mom01_contract()
   bars <- mom01_fixture()
@@ -114,6 +126,21 @@ testthat::test_that("turnover costs reduce returns and final exposure is liquida
   )
   testthat::expect_true(sum(net$net_return) < sum(gross$net_return))
   testthat::expect_true(net$turnover[[nrow(net)]] >= abs(net$position[[nrow(net)]]))
+})
+
+testthat::test_that("completed-sleeve schema is horizon-generic", {
+  contract <- g5_mom01_contract()
+  sleeves <- g5_mom01_completed_sleeves(
+    mom01_fixture(),
+    as.Date("2017-01-03"),
+    as.Date("2017-06-30"),
+    contract,
+    lookback_sessions = 60L,
+    holding_sessions = 5L
+  )
+  testthat::expect_true("past_lookback_return" %in% names(sleeves))
+  testthat::expect_true("underlying_holding_open_return" %in% names(sleeves))
+  testthat::expect_false("past_250_return" %in% names(sleeves))
 })
 
 testthat::test_that("development remains sealed after a failed TRAIN result", {

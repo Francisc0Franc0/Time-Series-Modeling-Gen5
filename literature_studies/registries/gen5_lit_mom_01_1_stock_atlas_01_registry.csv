@@ -1,0 +1,23 @@
+instance_id,symbol,sector,subindustry,panel_role,rationale
+S01_MSFT,MSFT,Information Technology,Systems software,stable_compounder,Large liquid software platform with recurring enterprise demand
+S02_TXN,TXN,Information Technology,Analog semiconductors,cyclical_complement,Long-history semiconductor exposure tied to broad industrial demand
+S03_JPM,JPM,Financials,Diversified banks,stable_compounder,Large liquid bank spanning consumer and institutional credit cycles
+S04_AXP,AXP,Financials,Consumer finance,cyclical_complement,Payments and credit exposure with a different earnings cycle from a bank
+S05_JNJ,JNJ,Health Care,Pharmaceuticals and medical products,stable_compounder,Defensive diversified health-care cash flows with long public history
+S06_UNH,UNH,Health Care,Managed health care,cyclical_complement,Insurance and care-delivery exposure distinct from pharmaceuticals
+S07_XOM,XOM,Energy,Integrated oil and gas,stable_compounder,Large integrated producer with upstream downstream and chemical exposure
+S08_SLB,SLB,Energy,Oilfield services,cyclical_complement,Service-cycle exposure that differs from integrated producer economics
+S09_PG,PG,Consumer Staples,Household products,stable_compounder,Defensive global branded-products demand with long adjusted history
+S10_KO,KO,Consumer Staples,Beverages,cyclical_complement,Global beverage franchise with a distinct demand and currency mix
+S11_HD,HD,Consumer Discretionary,Home improvement retail,stable_compounder,Large liquid housing-linked retailer with long public history
+S12_MCD,MCD,Consumer Discretionary,Restaurants,cyclical_complement,Global franchised restaurant economics distinct from housing retail
+S13_CAT,CAT,Industrials,Construction machinery,cyclical_complement,Capital-goods cycle exposure across construction mining and energy
+S14_UNP,UNP,Industrials,Rail transportation,stable_compounder,Network freight exposure with long history and different operating leverage
+S15_NEE,NEE,Utilities,Electric utilities,cyclical_complement,Regulated utility plus renewable-development sensitivity
+S16_DUK,DUK,Utilities,Electric utilities,stable_compounder,Predominantly regulated utility cash flows and rate sensitivity
+S17_APD,APD,Materials,Industrial gases,stable_compounder,Contracted industrial-gas demand with long liquid history
+S18_SHW,SHW,Materials,Specialty chemicals,cyclical_complement,Coatings exposure tied to construction industrial and consumer demand
+S19_AMT,AMT,Real Estate,Telecom tower REIT,cyclical_complement,Rate-sensitive infrastructure landlord with communications-linked demand
+S20_PLD,PLD,Real Estate,Industrial REIT,stable_compounder,Large logistics-property landlord with diversified tenant exposure
+S21_GOOGL,GOOGL,Communication Services,Interactive media,cyclical_complement,Advertising and digital-platform economics with long liquid history
+S22_CMCSA,CMCSA,Communication Services,Cable and media,stable_compounder,Connectivity and media cash flows distinct from digital advertising

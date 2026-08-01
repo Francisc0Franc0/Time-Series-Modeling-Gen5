@@ -85,6 +85,7 @@ batch, not a decimal variant:
 | `LIT-MR-03.2 / FRESH_ATLAS_01` | Twenty frozen fresh triplets across five categories | `OOS_DEVELOPMENT_COMPLETE_LIT_MR_03_2_FRESH_ATLAS_01` |
 | `LIT-MR-06.1 / BUY_ON_GAP_ATLAS_01` | Ten static survivor panels spanning broad US stocks and nine sectors | `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS`; DEVELOPMENT not queried |
 | `LIT-MR-06.1 / RECENT_WIDE_ATLAS_02` | 305-stock combined panel plus eleven official-sector-derived panels on 2023-2024 TRAIN | `STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`; WIDE_US 7/8; DEVELOPMENT not queried |
+| `LIT-MOM-01.1 / STOCK_ATLAS_01` | Twenty-two stocks, exactly two from each of eleven sectors, under the unchanged per-stock Chapter 6 horizon screen and sleeve mechanics | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_01`; HD was the sole TRAIN passer and lost money OOS |
 
 Retrospective or source-reproduction views use instance suffixes rather than
 decimal variants because the trading mechanics do not change:
@@ -95,3 +96,4 @@ decimal variants because the trading mechanics do not change:
 | `LIT-MR-02.1 / SOURCE_REPRO_2006_2012` | Chan Example 3.2 source-period reproduction using quarantined Yahoo reference bars | `POSITIVE_CONTROL_ONLY` |
 | `LIT-MOM-01.1 / CANON_250_25` | Chan Example 6.1's literature-selected 250-session lookback and 25-session holding reference, evaluated beside but never substituted for the frozen SHY selector | `CANONICAL_REFERENCE_ONLY` |
 | `LIT-MOM-01.1 / SHY_SELECTED_60_5` | Frozen TRAIN-selected SHY rule under the predeclared 49-cell horizon screen | `OOS_DEVELOPMENT_COMPLETE_STOP_RECOMMENDED` |
+| `LIT-MOM-01.1 / STOCK_ATLAS_01 / S11_HD` | Sole six-gate TRAIN passer in the fixed stock breadth panel; frozen 10/10 rule | `OOS_DEVELOPMENT_COMPLETE_STOP_RECOMMENDED` |
