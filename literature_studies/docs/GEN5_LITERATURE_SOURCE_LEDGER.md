@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MOM_01_1`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MOM_02_1`
 
 ## Purpose
 
@@ -96,6 +96,16 @@ Additional claims used by `LIT-MOM-01.1`:
 | The source reports about 1.0 Sharpe, 1.7% APR on notional capital, and 2.5% maximum drawdown for TU from June 1, 2004 to May 11, 2012. | 139 | 157 | Record as source in-sample context only; do not tune SHY toward it or import futures leverage assumptions. |
 | Futures rolls require special continuous-price treatment, and leverage changes the interpretation of return on capital. | 138-140 | 156-158 | Disclose that adjusted SHY ETF bars do not reproduce TU roll, margin, financing, tax, or capital-efficiency mechanics. |
 | Momentum strategies can suffer infrequent but severe reversals and often provide fewer independent signals than their daily trading frequency suggests. | 142-145 | 160-163 | Report sleeve and bar evidence, drawdown, autocorrelation-adjusted Sharpe, strict-spacing sensitivity, and cost stress. |
+
+Additional claims used by `LIT-MOM-02.1`:
+
+| Claim or warning | Printed pages | PDF pages | LIT-MOM-02.1 use |
+|---|---:|---:|---|
+| The opening-gap momentum rule is presented as the opposite of the stock buy-on-gap mean-reversion rule and is said to work on some futures and currencies. | 155-157 | 173-175 | Treat futures/currencies as the source domain and label US-listed ETFs and stocks as a retail-domain translation. |
+| Example 7.1 buys when the open exceeds the prior high by `0.1` times lagged 90-session close-return volatility and shorts below the mirrored prior-low threshold. | 156 | 174 | Freeze the 90-session estimator, `0.1` multiple, two-sided direction, and same-close exit. |
+| FSTX is reported as the best result after testing multiple futures, with 13% APR and 1.4 Sharpe from July 16, 2004 through May 17, 2012. | 156 | 174 | Record the headline as selected in-sample source context, not Gen5 evidence or an exact replication. |
+| The source attributes possible continuation to clustered stops triggered at the open and to overnight information. | 157 | 175 | Use same-day signed continuation as the estimand and randomize the signal direction as a falsification control. |
+| The printed return line is `positions.*(op-cl)./op`, which reverses the P&L sign implied by the prose, position labels, and rising equity figure. | 156-157 | 174-175 | Preserve the literal sign as an audit diagnostic and implement the narrative-consistent `position*(close-open)/open` direction. |
 
 Implementation clarification:
 
@@ -207,6 +217,15 @@ Implementation clarification:
   retained 58.7% direction accuracy but returned -5.86% after primary costs
   and -9.82% under stress. This is evidence about the frozen retail
   translation, not a refutation of Example 6.1 or Chan's `TU` result.
+- `LIT-MOM-02.1` recapitulates Chan's FSTX Example 7.1 as
+  `SOURCE_REFERENCE_ONLY`; the source's continuous-contract series and roll
+  construction were not supplied, so no exact source-period reproduction is
+  claimed. The 09:31 observation, 09:32 adjusted-minute entry, 10/20 bp costs,
+  92-instrument registry, eight TRAIN gates, bootstrap, sign control, and STOP
+  decision are Gen5 design. None of the eight anchors or 92 atlas instruments
+  passed all eight gates. XLP reached 7/8 but failed the frozen stress gate.
+  Record `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; DEVELOPMENT was not
+  queried and this is not a refutation of Chan's selected FSTX result.
 
 Methodological correction:
 

@@ -1,0 +1,93 @@
+order,instance_id,symbol,category,instrument_type,poc_anchor,rationale
+1,OG001_FEZ,FEZ,International equity,ETF,TRUE,Closest liquid US-traded proxy to the source's European equity-index exposure; not FSTX futures
+2,OG002_SPY,SPY,Broad US equity,ETF,TRUE,Liquid S&P 500 benchmark with a well-defined US opening auction
+3,OG003_QQQ,QQQ,Broad US equity,ETF,TRUE,Liquid growth-heavy index proxy with different overnight-news sensitivity
+4,OG004_IWM,IWM,Broad US equity,ETF,TRUE,Liquid small-cap index proxy with distinct liquidity and beta
+5,OG005_TLT,TLT,Fixed income,ETF,TRUE,Long-duration Treasury proxy sensitive to overnight macro information
+6,OG006_GLD,GLD,Commodity,ETF,TRUE,Gold proxy with a global underlying market trading before the US open
+7,OG007_USO,USO,Commodity,ETF,TRUE,Oil-futures proxy with overnight price discovery and roll limitations
+8,OG008_UUP,UUP,Currency,ETF,TRUE,US-dollar futures basket proxy with around-the-clock underlying markets
+9,OG009_DIA,DIA,Broad US equity,ETF,FALSE,Dow Jones Industrial Average proxy complements SPY and QQQ
+10,OG010_MDY,MDY,Broad US equity,ETF,FALSE,Mid-cap equity proxy between large- and small-cap exposures
+11,OG011_XLB,XLB,US sector,ETF,FALSE,Materials-sector exposure with commodity and cyclical sensitivity
+12,OG012_XLE,XLE,US sector,ETF,FALSE,Energy-sector basket linked to global oil price discovery
+13,OG013_XLF,XLF,US sector,ETF,FALSE,Financial-sector basket sensitive to rates and macro news
+14,OG014_XLI,XLI,US sector,ETF,FALSE,Industrial-sector basket with cyclical global exposure
+15,OG015_XLK,XLK,US sector,ETF,FALSE,Technology-sector basket with concentrated overnight company news
+16,OG016_XLP,XLP,US sector,ETF,FALSE,Defensive consumer-staples sector control
+17,OG017_XLRE,XLRE,US sector,ETF,FALSE,Real-estate sector exposure sensitive to rates
+18,OG018_XLU,XLU,US sector,ETF,FALSE,Defensive rate-sensitive utilities basket
+19,OG019_XLV,XLV,US sector,ETF,FALSE,Health-care sector basket with regulatory and drug-event gaps
+20,OG020_XLY,XLY,US sector,ETF,FALSE,Consumer-discretionary basket with cyclical sensitivity
+21,OG021_SMH,SMH,US industry,ETF,FALSE,Semiconductor industry basket with global overnight supply-chain news
+22,OG022_XBI,XBI,US industry,ETF,FALSE,Equal-weight biotechnology basket with frequent event-driven gaps
+23,OG023_KRE,KRE,US industry,ETF,FALSE,Regional-bank basket sensitive to rate and credit news
+24,OG024_XRT,XRT,US industry,ETF,FALSE,Retail basket with dispersed company and macro catalysts
+25,OG025_ITB,ITB,US industry,ETF,FALSE,Homebuilder basket sensitive to rates and housing data
+26,OG026_IYR,IYR,US industry,ETF,FALSE,US real-estate basket and rate-sensitivity challenger
+27,OG027_GDX,GDX,US industry,ETF,FALSE,Gold-miner basket combines equity and commodity information
+28,OG028_GDXJ,GDXJ,US industry,ETF,FALSE,Junior gold-miner basket supplies a higher-beta mining challenger
+29,OG029_XME,XME,US industry,ETF,FALSE,Metals-and-mining basket linked to global commodity price discovery
+30,OG030_XOP,XOP,US industry,ETF,FALSE,Oil-and-gas producer basket differs from the USO futures proxy
+31,OG031_IYT,IYT,US industry,ETF,FALSE,Transportation basket sensitive to growth and fuel information
+32,OG032_IBB,IBB,US industry,ETF,FALSE,Market-cap biotechnology basket complements XBI
+33,OG033_TAN,TAN,US industry,ETF,FALSE,Solar-industry basket with policy and commodity sensitivity
+34,OG034_KWEB,KWEB,US industry,ETF,FALSE,China internet basket incorporates overseas-session price discovery
+35,OG035_VGK,VGK,International equity,ETF,FALSE,Broad European equity exposure with hours of trading before the US open
+36,OG036_EFA,EFA,International equity,ETF,FALSE,Developed ex-US basket with asynchronous local-market closes
+37,OG037_EEM,EEM,International equity,ETF,FALSE,Emerging-market basket with broad overnight information flow
+38,OG038_EWJ,EWJ,International equity,ETF,FALSE,Japan equity proxy after the Tokyo session closes
+39,OG039_EWG,EWG,International equity,ETF,FALSE,Germany equity proxy with overlapping European trading hours
+40,OG040_EWU,EWU,International equity,ETF,FALSE,United Kingdom equity proxy with overlapping London trading
+41,OG041_EWC,EWC,International equity,ETF,FALSE,Canada equity proxy with resource exposure and aligned hours
+42,OG042_EWA,EWA,International equity,ETF,FALSE,Australia equity proxy after its local session
+43,OG043_EWZ,EWZ,International equity,ETF,FALSE,Brazil equity proxy with commodity and currency sensitivity
+44,OG044_FXI,FXI,International equity,ETF,FALSE,China large-cap proxy after Asian trading
+45,OG045_INDA,INDA,International equity,ETF,FALSE,India equity proxy after local-market price discovery
+46,OG046_EWW,EWW,International equity,ETF,FALSE,Mexico equity proxy with US economic linkage
+47,OG047_EWT,EWT,International equity,ETF,FALSE,Taiwan equity proxy with semiconductor concentration
+48,OG048_SHY,SHY,Fixed income,ETF,FALSE,Short Treasury maturity control with low daily volatility
+49,OG049_IEI,IEI,Fixed income,ETF,FALSE,Intermediate-short Treasury exposure
+50,OG050_IEF,IEF,Fixed income,ETF,FALSE,Seven-to-ten-year Treasury exposure
+51,OG051_TLH,TLH,Fixed income,ETF,FALSE,Long Treasury maturity between IEF and TLT
+52,OG052_TIP,TIP,Fixed income,ETF,FALSE,Inflation-protected Treasury exposure
+53,OG053_LQD,LQD,Fixed income,ETF,FALSE,Investment-grade corporate credit exposure
+54,OG054_HYG,HYG,Fixed income,ETF,FALSE,High-yield credit exposure with equity-like risk sensitivity
+55,OG055_EMB,EMB,Fixed income,ETF,FALSE,US-dollar emerging-market sovereign credit exposure
+56,OG056_BND,BND,Fixed income,ETF,FALSE,Broad US investment-grade bond-market proxy
+57,OG057_AGG,AGG,Fixed income,ETF,FALSE,Broad aggregate-bond benchmark complements BND
+58,OG058_SLV,SLV,Commodity,ETF,FALSE,Silver proxy with precious-metal and industrial demand
+59,OG059_DBA,DBA,Commodity,ETF,FALSE,Diversified agriculture-futures basket
+60,OG060_DBC,DBC,Commodity,ETF,FALSE,Diversified commodity-futures basket
+61,OG061_UNG,UNG,Commodity,ETF,FALSE,Natural-gas futures proxy with strong overnight price discovery
+62,OG062_PPLT,PPLT,Commodity,ETF,FALSE,Platinum proxy broadens precious-metal behavior
+63,OG063_CORN,CORN,Commodity,ETF,FALSE,Corn-futures proxy with weather and overnight market information
+64,OG064_FXE,FXE,Currency,ETF,FALSE,Euro currency proxy and direct European macro challenger
+65,OG065_FXY,FXY,Currency,ETF,FALSE,Japanese-yen currency proxy
+66,OG066_FXB,FXB,Currency,ETF,FALSE,British-pound currency proxy
+67,OG067_FXA,FXA,Currency,ETF,FALSE,Australian-dollar currency proxy
+68,OG068_FXC,FXC,Currency,ETF,FALSE,Canadian-dollar currency proxy
+69,OG069_UPRO,UPRO,Leveraged or inverse ETF,ETF,FALSE,Three-times S&P 500 exposure tests leverage-induced gap scaling
+70,OG070_TQQQ,TQQQ,Leveraged or inverse ETF,ETF,FALSE,Three-times Nasdaq-100 exposure
+71,OG071_TNA,TNA,Leveraged or inverse ETF,ETF,FALSE,Three-times small-cap exposure
+72,OG072_SPXU,SPXU,Leveraged or inverse ETF,ETF,FALSE,Inverse three-times S&P 500 semantic challenger
+73,OG073_SQQQ,SQQQ,Leveraged or inverse ETF,ETF,FALSE,Inverse three-times Nasdaq-100 semantic challenger
+74,OG074_TMF,TMF,Leveraged or inverse ETF,ETF,FALSE,Three-times long-duration Treasury exposure
+75,OG075_MSFT,MSFT,Individual-stock challenger,Stock,FALSE,Liquid software platform from the prior stock atlas
+76,OG076_TXN,TXN,Individual-stock challenger,Stock,FALSE,Long-history analog-semiconductor exposure
+77,OG077_JPM,JPM,Individual-stock challenger,Stock,FALSE,Large diversified bank
+78,OG078_AXP,AXP,Individual-stock challenger,Stock,FALSE,Payments and consumer-credit exposure
+79,OG079_JNJ,JNJ,Individual-stock challenger,Stock,FALSE,Defensive diversified health-care company
+80,OG080_UNH,UNH,Individual-stock challenger,Stock,FALSE,Managed-care exposure distinct from pharmaceuticals
+81,OG081_XOM,XOM,Individual-stock challenger,Stock,FALSE,Integrated energy company
+82,OG082_SLB,SLB,Individual-stock challenger,Stock,FALSE,Oilfield-services company with cyclical operating leverage
+83,OG083_PG,PG,Individual-stock challenger,Stock,FALSE,Defensive consumer-products company
+84,OG084_KO,KO,Individual-stock challenger,Stock,FALSE,Global beverage franchise
+85,OG085_HD,HD,Individual-stock challenger,Stock,FALSE,Housing-linked home-improvement retailer
+86,OG086_MCD,MCD,Individual-stock challenger,Stock,FALSE,Global restaurant franchise
+87,OG087_CAT,CAT,Individual-stock challenger,Stock,FALSE,Construction and mining machinery cycle
+88,OG088_UNP,UNP,Individual-stock challenger,Stock,FALSE,North American rail network
+89,OG089_NEE,NEE,Individual-stock challenger,Stock,FALSE,Utility and renewable-development exposure
+90,OG090_DUK,DUK,Individual-stock challenger,Stock,FALSE,Regulated utility exposure
+91,OG091_APD,APD,Individual-stock challenger,Stock,FALSE,Industrial-gas company with long-history liquidity
+92,OG092_SHW,SHW,Individual-stock challenger,Stock,FALSE,Coatings company tied to construction and industrial demand

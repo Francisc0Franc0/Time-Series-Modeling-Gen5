@@ -1553,6 +1553,43 @@ tasks by the branch name above, the phrase, or the decision date.
   A long-only translation would be a new substantive variant requiring a
   fresh contract and untouched evidence.
 
+### D97 - Opening-gap momentum must separate the opening signal from the fill
+
+- **Operator direction:** Briefly discuss and implement Chan's Example 7.1,
+  first as a small POC that recapitulates the original example and then as a
+  wide atlas.
+- **Source reconstruction:** Freeze the lagged 90-session close-return
+  volatility, `0.1` threshold, gap beyond the prior high/low, two-sided
+  direction, and same-close exit. Record FSTX's reported 13% APR / 1.4 Sharpe
+  over July 2004-May 2012 as `SOURCE_REFERENCE_ONLY`; the source's continuous
+  contract is unavailable for exact reconstruction.
+- **Sign correction:** Chan's printed return line uses `(open-close)/open`,
+  the negative of the prose, long/short labels, and Figure 7.1 interpretation.
+  Preserve that literal line as an audit diagnostic and implement the
+  narrative-consistent momentum sign.
+- **Causal decision:** The official open finishes the signal and cannot also
+  be a subsequent fill. Observe at 09:31 ET, enter at the adjusted 09:32 SIP
+  minute-bar open, exit at the close, and charge 10/20 bp round trip. The
+  source-style same-open path is noncausal reference evidence only.
+- **Frozen breadth:** Use eight cross-asset POC anchors, then the same rule on
+  a 92-instrument, nine-category atlas spanning ETFs and a labeled stock
+  challenger. TRAIN is 2017-2020; only full passers may enter 2021-2023
+  DEVELOPMENT; 2024+ remains sealed.
+- **Readout:** `0 / 8` small-POC anchors and `0 / 92` atlas instruments passed
+  all eight gates. All instruments passed integrity and support, but only
+  `7 / 92` had positive primary-cost means, `1 / 92` had a positive
+  one-sided uncertainty bound, and `0 / 92` passed stress plus stability.
+  Across 28,189 valid events, gross continuation averaged only `+0.48 bp`,
+  versus `-9.52 bp` after primary costs.
+- **Near-miss discipline:** XLP reached 7/8 with 54.7% direction accuracy,
+  +7.61 bp primary mean, a +0.71 bp lower bound, and +15.54% primary return,
+  but its 20 bp stress result was -5.49%. Do not query its OOS outcome or
+  relax costs on the inspected evidence.
+- **Decision:** Record
+  `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`. DEVELOPMENT was not
+  queried and CONFIRMATION remains sealed. A futures-native reconstruction
+  would require a new data/execution contract, not a reactive decimal tweak.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1598,6 +1635,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_CONTRACT.md)
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_RESULTS.md)
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx)
+- [LIT-MOM-02.1 opening-gap momentum contract](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_CONTRACT.md)
+- [LIT-MOM-02.1 opening-gap momentum results](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_RESULTS.md)
+- [LIT-MOM-02.1 opening-gap momentum evidence deck](../literature_studies/presentations/gen5_lit_mom_02_1_opening_gap_evidence.pptx)
 - [LIT-MR-02.1 fixed pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_A_CONTRACT.md)
 - [LIT-MR-02.1 diversified pair-panel contract and readout](../literature_studies/docs/GEN5_LIT_MR_02_1_PANEL_B_CONTRACT.md)
 - [LIT-MR-02.1 positive-control case studies](../literature_studies/docs/GEN5_LIT_MR_02_1_CASE_STUDIES.md)
@@ -1772,3 +1812,12 @@ stock's short accuracy was below chance. Record
 `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016` and
 recommend STOP before CONFIRMATION. Do not convert the observed directional
 asymmetry into a post-hoc long-only rescue.
+The next textbook lane, `LIT-MOM-02.1`, recapitulated Chan's FSTX opening-gap
+momentum rule, corrected the printed P&L-sign inconsistency, and translated
+the source's same-open assumption into a causal 09:31 observation and 09:32
+entry. None of eight small-POC anchors or 92 wide-atlas instruments passed all
+eight TRAIN gates. The pooled gross continuation was only +0.48 bp per event,
+far below frozen retail friction. XLP reached seven gates but failed the 20 bp
+stress test. Record `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; do not
+query DEVELOPMENT, select XLP, substitute same-open fills, change costs, or
+open 2024+ CONFIRMATION.

@@ -11,8 +11,8 @@ human-facing evidence, and STOP decisions.
 
 ## Current scope
 
-The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1` and the first
-momentum concept, `LIT-MOM-01.1`, grounded primarily in:
+The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1` and momentum
+concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
   Rationale*; and
@@ -100,6 +100,19 @@ to remove shorts. See the
 [contract](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_CONTRACT.md)
 and
 [evidence deck](presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx).
+
+`LIT-MOM-02.1` recapitulates Chan's Example 7.1 opening-gap momentum rule and
+then translates it causally: observe the opening auction at 09:31 ET, enter at
+the 09:32 adjusted minute-bar open, and exit at the close. None of the eight
+small-POC anchors or 92 wide-atlas instruments passed all eight TRAIN gates.
+`XLP` reached 7/8 with a positive uncertainty bound and +15.54% primary return,
+but its 20 bp stress path was -5.49%; it was not promoted. Record
+`STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; DEVELOPMENT was not queried
+and 2024+ CONFIRMATION remains sealed. See the
+[contract](docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_CONTRACT.md) and
+[results](docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_RESULTS.md), with the
+[evidence deck](presentations/gen5_lit_mom_02_1_opening_gap_evidence.pptx) as
+the concise human-facing review surface.
 
 ## Running checks
 

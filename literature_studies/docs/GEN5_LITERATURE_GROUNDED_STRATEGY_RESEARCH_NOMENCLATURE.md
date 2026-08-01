@@ -58,6 +58,7 @@ renames an earlier outcome.
 | `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | `STOP_LIT_MR_05_1_TRAIN_STRATEGY`; 6/8 TRAIN gates |
 | `LIT-MR-06.1` | Causal Buy-on-Gap Intraday Reversion | none | Atlas 01 STOP at 0/10; recent-wide Atlas 02 STOP at 0/12 |
 | `LIT-MOM-01.1` | Interday Time-Series Momentum | none | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; STOP recommended before CONFIRMATION |
+| `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
 
 ## Replication batches and instances
 
@@ -86,6 +87,7 @@ batch, not a decimal variant:
 | `LIT-MR-06.1 / BUY_ON_GAP_ATLAS_01` | Ten static survivor panels spanning broad US stocks and nine sectors | `STOP_LIT_MR_06_1_ATLAS_NO_FULL_PASS`; DEVELOPMENT not queried |
 | `LIT-MR-06.1 / RECENT_WIDE_ATLAS_02` | 305-stock combined panel plus eleven official-sector-derived panels on 2023-2024 TRAIN | `STOP_LIT_MR_06_1_RECENT_WIDE_ATLAS_02_NO_FULL_PASS`; WIDE_US 7/8; DEVELOPMENT not queried |
 | `LIT-MOM-01.1 / STOCK_ATLAS_01` | Twenty-two stocks, exactly two from each of eleven sectors, under the unchanged per-stock Chapter 6 horizon screen and sleeve mechanics | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_01`; HD was the sole TRAIN passer and lost money OOS |
+| `LIT-MOM-02.1 / OPENING_GAP_ATLAS_01` | Eight-anchor causal POC followed by a 92-instrument, nine-category atlas under unchanged Example 7.1 mechanics | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; XLP 7/8; DEVELOPMENT not queried |
 
 Retrospective or source-reproduction views use instance suffixes rather than
 decimal variants because the trading mechanics do not change:
@@ -97,3 +99,4 @@ decimal variants because the trading mechanics do not change:
 | `LIT-MOM-01.1 / CANON_250_25` | Chan Example 6.1's literature-selected 250-session lookback and 25-session holding reference, evaluated beside but never substituted for the frozen SHY selector | `CANONICAL_REFERENCE_ONLY` |
 | `LIT-MOM-01.1 / SHY_SELECTED_60_5` | Frozen TRAIN-selected SHY rule under the predeclared 49-cell horizon screen | `OOS_DEVELOPMENT_COMPLETE_STOP_RECOMMENDED` |
 | `LIT-MOM-01.1 / STOCK_ATLAS_01 / S11_HD` | Sole six-gate TRAIN passer in the fixed stock breadth panel; frozen 10/10 rule | `OOS_DEVELOPMENT_COMPLETE_STOP_RECOMMENDED` |
+| `LIT-MOM-02.1 / SOURCE_FSTX_2004_2012` | Chan's published FSTX Example 7.1 period and headline, without an available continuous-contract reconstruction | `SOURCE_REFERENCE_ONLY` |
