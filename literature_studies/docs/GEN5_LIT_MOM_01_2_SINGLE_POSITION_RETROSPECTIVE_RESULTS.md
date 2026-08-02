@@ -103,6 +103,25 @@ Every completed trade was long, total borrow was zero, and all integrity checks
 passed. The cohort contrast is descriptive only: the core sample is
 survivor-prone and the eligible attention cohort is small.
 
+## Research significance bookmark
+
+The operator identifies this lane as one of the most encouraging Gen5.x
+research results so far for two reasons:
+
+1. It presents a plausible surface for disciplined refinement and further
+   inquiry rather than an unambiguous mechanism null.
+2. It combines a rigorous literature-derived horizon-selection framework with
+   an operator-origin long-only, full-capital swing-trading hypothesis.
+
+Codex concurs with that characterization at the **research-program** level.
+The breadth of positive retrospective paths, above-chance average long-call
+accuracy, and meaningful differences between frozen cohorts justify careful
+auditing and theory-led follow-up. They do not yet establish deployable alpha.
+The evidence remains exposed to a known retrospective window, per-asset
+horizon selection, correlated market exposure, survivor-prone universes, and
+large path-level drawdowns. This bookmark therefore means
+`PROMISING_FOR_AUDIT_AND_REFINEMENT`, not `STRATEGY_CONFIRMED`.
+
 ## Interpretation and decision
 
 The corrected lane now answers the operator's intended question cleanly:

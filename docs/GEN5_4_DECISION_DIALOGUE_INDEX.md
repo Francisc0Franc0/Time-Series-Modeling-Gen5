@@ -115,6 +115,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D90` | Complete both Kalman lessons without weakening gates or opening later outcomes | 1-13 | execution under D89 | Pair `7/8` and triplet `6/8`; both stop at TRAIN, filter lesson retained |
 | `D91` | Give literature studies their own repository phylogeny | repository-wide | `intellectually from a different "phylogeny"` | Move the complete `LIT` source lineage under top-level `literature_studies/` without changing evidence |
 | `D101` | Correct LIT-MOM-01.2 to authoritative long-only execution and add a 100-name breadth-attention replication | current continuation | `not interested in short exposure at all ... preserve the 1.2 nomenclature` | Positive signal or cash; SHY and Atlas 01 rerun; Atlas 02 frozen and run; prior long/short result archived only |
+| `D102` | Bookmark LIT-MOM-01.2 as promising for audit and refinement without promoting it to alpha | current continuation | `one of the most encouraging ... potential for refinement ... literature based concept + my own original hypothesis` | Priority research direction retained; retrospective, selection, beta, survivor, dependence, and drawdown audits remain mandatory |
 
 ## Compact Decision Records
 
@@ -1702,6 +1703,27 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Decision:** Record all three retrospective-complete statuses. The known
   2021-2023 window remains descriptive; do not nominate assets, build a
   portfolio, infer cohort causality, or query sealed 2024+ data.
+
+### D102 — Bookmark the lane as promising, not confirmed
+
+- **Operator interpretation:** LIT-MOM-01.2 is unusually encouraging within
+  Gen5.x because it shows a plausible refinement surface rather than a clear
+  null and fuses a rigorous literature framework with an original long-only
+  swing-trading hypothesis.
+- **Codex concurrence:** Concur at the research-program level. Positive-path
+  breadth, average long-call accuracy above 50%, and frozen-cohort differences
+  make this a legitimate priority for structured audit and theory-led
+  refinement.
+- **Professional boundary:** Do not equate that promise with demonstrated
+  alpha. The current record reuses a known window, chooses one horizon per
+  asset from 49 TRAIN candidates, contains correlated market exposure, uses
+  survivor-prone panels, and includes severe drawdowns. Those are audit
+  questions, not cosmetic caveats.
+- **Decision:** Record `PROMISING_FOR_AUDIT_AND_REFINEMENT`. Before proposing
+  filters, first separate raw market participation from incremental signal
+  value, quantify selection and dependence uncertainty, and define a fresh
+  validation sequence. No filter, factor, portfolio, or live rule is opened by
+  this bookmark alone.
 
 ## Related Artifacts
 
