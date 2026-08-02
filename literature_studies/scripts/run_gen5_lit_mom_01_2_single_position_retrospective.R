@@ -275,7 +275,7 @@ plot_direction_audit <- function(train, retrospective, path) {
     font = 2
   )
   mtext(
-    "LIT-MOM-01.2 | non-overlapping full-capital trades",
+    "LIT-MOM-01.2 | long-only, non-overlapping full-capital trades",
     side = 3,
     outer = TRUE,
     font = 2,
@@ -349,7 +349,7 @@ build_variant_comparison <- function(result, old_packet) {
   )
   current <- result$retrospective$metrics
   current <- data.frame(
-    variant = "LIT-MOM-01.2 single position",
+    variant = "LIT-MOM-01.2 long-only single position",
     regime_id = current$regime_id,
     cumulative_return = current$cumulative_return,
     maximum_drawdown = current$maximum_drawdown,
@@ -364,7 +364,7 @@ build_variant_comparison <- function(result, old_packet) {
 plot_variant_comparison <- function(comparison, path) {
   primary <- comparison[comparison$regime_id == "PRIMARY", , drop = FALSE]
   stress <- comparison[comparison$regime_id == "STRESS", , drop = FALSE]
-  labels <- c("01.1\nrolling sleeves", "01.2\nsingle position")
+  labels <- c("01.1\nrolling sleeves", "01.2\nlong-only block")
   png(path, width = 2200, height = 1050, res = 150)
   old <- par(mfrow = c(1, 3), mar = c(8, 7, 5, 2))
   values <- 100 * rbind(primary$cumulative_return, stress$cumulative_return)
@@ -374,7 +374,7 @@ plot_variant_comparison <- function(comparison, path) {
     names.arg = labels,
     col = c("#3D8DFF", "#F59E0B"),
     ylab = "Cumulative return (%)",
-    main = "Same signal, different capital deployment"
+    main = "Archived parent versus corrected long-only lane"
   )
   abline(h = 0, col = "#0F172A")
   legend("topright", legend = c("Primary", "Stress"), fill = c("#3D8DFF", "#F59E0B"), bty = "n")
@@ -426,7 +426,7 @@ write_report <- function(path, result, comparison, output_dir) {
     drop = FALSE
   ]
   lines <- c(
-    "# LIT-MOM-01.2 Single-Position Momentum Retrospective",
+    "# LIT-MOM-01.2 Long-Only Single-Position Momentum Retrospective",
     "",
     paste0("Status: `", result$overall_status, "`"),
     "",
@@ -439,7 +439,9 @@ write_report <- function(path, result, comparison, output_dir) {
     "## Frozen change",
     "",
     "- Keep the 49-cell TRAIN horizon selector.",
-    "- Replace daily 1/H sleeves with one fixed-quantity, fully invested trade.",
+    "- Replace daily 1/H sleeves with one fixed-quantity, fully invested long trade.",
+    "- A positive lookback return permits entry; zero or negative means cash.",
+    "- Preserve the symmetric TRAIN correlation selector; do not trade its short calls.",
     "- Hold exactly H open-to-open intervals with no pyramiding or rebalance.",
     "- Compound the next trade from current equity.",
     "",
@@ -467,8 +469,8 @@ write_report <- function(path, result, comparison, output_dir) {
     "",
     "## Interpretation",
     "",
-    "The mechanical comparison asks whether concentrating the same sign signal",
-    "into sequential full-capital blocks changes the observed path. It cannot",
+    "The mechanical comparison asks how sequential full-capital long blocks",
+    "behave when the symmetric selector is retained but short calls are ignored. It cannot",
     "establish fresh alpha because the replay window was already known.",
     "",
     "## Packet",
@@ -485,7 +487,7 @@ output_dir <- Sys.getenv(
   "GEN5_LIT_MOM_01_2_OUTPUT_DIR",
   unset = file.path(
     "runs", "research_workbench", "literature_grounded",
-    "lit_mom_01_2_single_position_retrospective_20260802"
+    "lit_mom_01_2_long_only_single_position_retrospective_20260802"
   )
 )
 visual_dir <- ensure_dir(file.path(output_dir, "visuals"))
@@ -509,6 +511,7 @@ run_spec <- data.frame(
   literature_id = contract$literature_id,
   parent_literature_id = contract$parent_literature_id,
   evidence_label = contract$evidence_label,
+  position_scope = contract$position_scope,
   source_packet = source_packet,
   as_of_timestamp = contract$as_of_timestamp,
   selected_lookback_sessions = result$selected_candidate$lookback_sessions,

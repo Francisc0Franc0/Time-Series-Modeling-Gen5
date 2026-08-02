@@ -114,6 +114,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D89` | Treat Chan's Kalman pair and triplet as sequential textbook exercises rather than an alpha search | — | `work through this book as a student would work through exercises in a textbook` | `LIT-MR-04.1` and `LIT-MR-05.1` contracts frozen; implementation authorized |
 | `D90` | Complete both Kalman lessons without weakening gates or opening later outcomes | 1-13 | execution under D89 | Pair `7/8` and triplet `6/8`; both stop at TRAIN, filter lesson retained |
 | `D91` | Give literature studies their own repository phylogeny | repository-wide | `intellectually from a different "phylogeny"` | Move the complete `LIT` source lineage under top-level `literature_studies/` without changing evidence |
+| `D101` | Correct LIT-MOM-01.2 to authoritative long-only execution and add a 100-name breadth-attention replication | current continuation | `not interested in short exposure at all ... preserve the 1.2 nomenclature` | Positive signal or cash; SHY and Atlas 01 rerun; Atlas 02 frozen and run; prior long/short result archived only |
 
 ## Compact Decision Records
 
@@ -1621,7 +1622,7 @@ tasks by the branch name above, the phrase, or the decision date.
   2021-2023 is permitted for learning but must be labeled
   `RETROSPECTIVE_EXPLORATION`, not OOS confirmation.
 
-### D99 — Full-capital block execution clarifies compounding and turnover
+### D99 — Pre-correction full-capital long/short diagnostic
 
 - **Operator decision:** Freeze and run `LIT-MOM-01.2` as a simpler execution
   variant. Keep horizon selection open, use the recommended three inference
@@ -1649,8 +1650,11 @@ tasks by the branch name above, the phrase, or the decision date.
   demonstrates causal fixed-H compounding but does not establish cost-robust
   alpha or revise the `01.1` STOP. Do not query 2024+, net same-direction
   re-entry, or change the horizon/cost contract without a new operator gate.
+- **Supersession note:** D101 replaces the executable direction rule while
+  preserving the `01.2` identifier. These figures are archival diagnostics,
+  not the authoritative `01.2` result.
 
-### D100 — SHY is the tutorial; per-asset horizon selection is the experiment
+### D100 — Pre-correction breadth diagnostic
 
 - **Operator clarification:** A SHY `60/5` replay under `01.2` is a useful
   minimal POC, but the true goal is breadth: for every asset, test the full
@@ -1673,6 +1677,31 @@ tasks by the branch name above, the phrase, or the decision date.
   experiment fulfilled the requested selection process but did not establish
   generalizable cost-robust alpha. Do not rank the five positive names, form a
   portfolio, remove shorts or weak assets, or query sealed 2024+ data.
+- **Supersession note:** D101 reruns this frozen panel long-only. The panel
+  design and TRAIN selector remain valid; the long/short outcomes above are
+  archival only.
+
+### D101 — LIT-MOM-01.2 is long-only; negative signals mean cash
+
+- **Operator decision:** Preserve the `LIT-MOM-01.2` nomenclature and all
+  relevant horizon-selection, entry, hold, reinvestment, cost, and evidence
+  mechanics, but remove short exposure entirely.
+- **Frozen translation:** The full signed TRAIN sample remains in the 49-cell
+  correlation calculation. In execution, only `lookback_return > 0` starts a
+  trade; `lookback_return <= 0` means cash. Every trade direction is LONG and
+  every borrow charge is zero.
+- **Audit treatment:** Commit `70f1c20` and its evidence deck are retained as
+  `PRE_CORRECTION_LONG_SHORT_DIAGNOSTIC`, never as current `01.2` evidence.
+- **SHY result:** The unchanged TRAIN selector retained `60/5`. Sixty-nine
+  retrospective long trades returned +0.22% gross, -6.46% primary, and
+  -12.70% stress; long-call accuracy was 44.93%.
+- **Breadth result:** Corrected Atlas 01 had 16/22 primary-positive paths and
+  +17.96% median primary return. Atlas 02 froze 100 new names in a 75-name
+  diversified core and 25-name 2020 retail-attention cohort; 91 were eligible,
+  50 were primary-positive, and overall median primary return was +6.92%.
+- **Decision:** Record all three retrospective-complete statuses. The known
+  2021-2023 window remains descriptive; do not nominate assets, build a
+  portfolio, infer cohort causality, or query sealed 2024+ data.
 
 ## Related Artifacts
 
@@ -1721,8 +1750,10 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx)
 - [LIT-MOM-01.2 single-position contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_CONTRACT.md)
 - [LIT-MOM-01.2 Stock Atlas 01 retrospective contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_01_RETROSPECTIVE_CONTRACT.md)
+- [LIT-MOM-01.2 Stock Atlas 02 breadth-attention contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_02_2020_BREADTH_ATTENTION_CONTRACT.md)
 - [LIT-MOM-01.2 combined results](../literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_RESULTS.md)
-- [LIT-MOM-01.2 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx)
+- [LIT-MOM-01.2 authoritative long-only evidence deck](../literature_studies/presentations/gen5_lit_mom_01_2_long_only_retrospective_evidence.pptx)
+- [LIT-MOM-01.2 archived pre-correction long/short deck](../literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx)
 - [LIT-MOM-02.1 opening-gap momentum contract](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_CONTRACT.md)
 - [LIT-MOM-02.1 opening-gap momentum results](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_RESULTS.md)
 - [LIT-MOM-02.1 opening-gap momentum evidence deck](../literature_studies/presentations/gen5_lit_mom_02_1_opening_gap_evidence.pptx)
@@ -1909,3 +1940,25 @@ far below frozen retail friction. XLP reached seven gates but failed the 20 bp
 stress test. Record `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; do not
 query DEVELOPMENT, select XLP, substitute same-open fills, change costs, or
 open 2024+ CONFIRMATION.
+The operator then clarified that the authoritative `LIT-MOM-01.2` lane must be
+long-only while retaining the `01.2` nomenclature and every other frozen
+mechanic. Negative or zero signals now mean cash; positive signals alone enter
+one fully invested, fixed-quantity long position for `H` open-to-open
+intervals, with proceeds reinvested. The symmetric 49-cell TRAIN correlation
+screen remains intact because negative observations still carry inference
+information. The prior long/short implementation at commit `70f1c20` is
+preserved only as `PRE_CORRECTION_LONG_SHORT_DIAGNOSTIC`.
+The corrected SHY replay retained the TRAIN-selected `60/5` horizon and
+completed 69 long trades, returning +0.22% gross, -6.46% primary, and -12.70%
+stress. Corrected Stock Atlas 01 produced 16/22 primary-positive paths, a
++17.96% median primary return, and -49.73% worst drawdown. A separately frozen
+100-name Atlas 02 added a 75-name 2020 sector-diversified core and 25-name
+contemporaneous retail-attention cohort with no overlap to Atlas 01. Ninety-one
+names were coverage-eligible; 50 were primary-positive and 47 stress-positive,
+with +6.92% median primary return overall. The eligible core's +11.69% median
+contrasted with -19.95% for the smaller attention cohort, but this is
+descriptive and survivor-prone rather than causal evidence. All completed
+trades were long, borrow was zero, integrity passed, and sealed 2024+ data were
+not queried. Record the three `RETROSPECTIVE_EXPLORATION_COMPLETE` statuses;
+do not promote assets, form a portfolio, or convert the known window into
+confirmation authority.

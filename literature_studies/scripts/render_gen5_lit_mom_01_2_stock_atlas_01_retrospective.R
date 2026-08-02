@@ -2,7 +2,7 @@ options(stringsAsFactors = FALSE)
 
 packet <- file.path(
   "runs", "research_workbench", "literature_grounded",
-  "lit_mom_01_2_stock_atlas_01_retrospective_20260802"
+  "lit_mom_01_2_long_only_stock_atlas_01_retrospective_20260802"
 )
 visual_dir <- file.path(packet, "visuals")
 summary <- utils::read.csv(
@@ -95,7 +95,7 @@ bp <- barplot(
   col = ifelse(s$retrospective_primary_return > 0, "#197447", "#B42318"),
   border = NA,
   xlim = xr,
-  main = "Only 5 of 22 were primary-positive",
+  main = "16 of 22 were primary-positive",
   xlab = "2021-2023 cumulative return (%)"
 )
 points(
@@ -115,29 +115,26 @@ legend(
   pt.bg = c("#64748B", "white", NA),
   bty = "n", cex = 0.75
 )
-ord <- order(rowMeans(cbind(
-  summary$retrospective_long_accuracy,
-  summary$retrospective_short_accuracy
-), na.rm = TRUE))
+ord <- order(summary$retrospective_long_accuracy)
 s <- summary[ord, , drop = FALSE]
 y <- seq_len(nrow(s))
 plot(
-  100 * s$retrospective_long_accuracy, y,
-  pch = 19, col = "#197447", xlim = c(0, 100),
+  100 * s$train_long_accuracy, y,
+  pch = 1, col = "#64748B", xlim = c(0, 100),
   ylim = c(0.5, nrow(s) + 0.5), yaxt = "n",
   xlab = "Direction accuracy (%)", ylab = "",
-  main = "Long and short calls diverged"
+  main = "Only positive calls were traded"
 )
-points(100 * s$retrospective_short_accuracy, y, pch = 17, col = "#B42318")
+points(100 * s$retrospective_long_accuracy, y, pch = 19, col = "#197447")
 segments(
+  100 * s$train_long_accuracy, y,
   100 * s$retrospective_long_accuracy, y,
-  100 * s$retrospective_short_accuracy, y,
   col = "#CBD5E1"
 )
 axis(2, y, s$symbol, las = 1, cex.axis = 0.7)
 abline(v = 50, col = "#111827", lty = 2)
 legend(
-  "bottomright", c("Long", "Short"), pch = c(19, 17),
-  col = c("#197447", "#B42318"), bty = "n", cex = 0.8
+  "bottomright", c("TRAIN long", "Retrospective long"), pch = c(1, 19),
+  col = c("#64748B", "#197447"), bty = "n", cex = 0.8
 )
 dev.off()

@@ -1,17 +1,28 @@
-# LIT-MOM-01.2 Single-Position Momentum Retrospective Contract
+# LIT-MOM-01.2 Long-Only Single-Position Momentum Retrospective Contract
 
 Status: `FROZEN_RETROSPECTIVE_EXPLORATION`
 
 ## Place in the literature-study progression
 
 `LIT-MOM-01.2` is a substantive execution variant of Chan's Chapter 6
-interday time-series-momentum proposition. It preserves the `01.1` signal,
-horizon grid, causal timing, SHY proxy, costs, and long/short direction, but
+interday time-series-momentum proposition. It preserves the `01.1` statistical
+signal, horizon grid, causal timing, SHY proxy, and transaction-cost assumptions, but
 replaces rolling `1/H` sleeves with one fully invested, non-pyramiding
-position at a time.
+long position at a time. Negative and zero signals hold cash.
 
 This lane exists to answer the operator's simpler swing-trading question. It
 does not revise, rescue, or supersede the `LIT-MOM-01.1` result.
+
+## Operator scope correction and audit trail
+
+The first committed `01.2` diagnostic permitted both long and short blocks.
+The operator then clarified that short exposure is outside their current
+interest and explicitly directed that the `01.2` nomenclature be preserved.
+The authoritative contract is therefore long-only. The earlier long/short
+implementation and results remain recoverable in git at commit `70f1c20` and
+must be described as `PRE_CORRECTION_LONG_SHORT_DIAGNOSTIC`, not as current
+`01.2` evidence. This is an exposure-preference correction, not a reaction to
+which assets won or lost.
 
 ## Evidence label and window boundary
 
@@ -64,9 +75,10 @@ After close (t):
 
 `s_t = sign(C_t / C_(t-L) - 1)`.
 
-The position enters at the next adjusted open. A positive signal enters long;
-a negative signal enters short. A zero or unavailable signal remains flat
-until the next eligible close.
+The position enters at the next adjusted open only when `s_t=+1`. A negative,
+zero, or unavailable signal remains in cash until the next eligible close.
+Negative TRAIN observations remain part of the symmetric correlation screen;
+they are statistical evidence but cannot create short exposure.
 
 ## Single-position execution
 
@@ -79,7 +91,7 @@ until the next eligible close.
 - Re-entry: at an exit open, the strategy may immediately enter the next
   position using the signal known from the preceding close.
 - Compounding: the next trade uses all equity remaining after the prior
-  trade's P&L, entry/exit costs, and applicable borrow cost.
+  trade's P&L and entry/exit costs.
 - Gross leverage: one-times entry notional; no additional leverage.
 
 For current equity (E), one-way cost rate (c), and entry open (P_0):
@@ -88,16 +100,15 @@ For current equity (E), one-way cost rate (c), and entry open (P_0):
 
 `units = entry_notional / P_0`.
 
-Long and short quantities remain fixed until exit. Effective exposure may
+Long quantity remains fixed until exit. Effective exposure may
 drift away from exactly one as price and equity change; that drift is reported
 rather than rebalanced away.
 
 ## Costs
 
-- Gross: zero transaction and borrow costs.
+- Gross: zero transaction costs.
 - Primary: 5 bp per one-way traded notional.
-- Stress: 10 bp per one-way traded notional plus 100 bp annualized borrow on
-  the daily market value of a short position.
+- Stress: 10 bp per one-way traded notional.
 
 Cash interest, margin interest, taxes, slippage beyond the stated cost, and
 historical borrow availability are unavailable and excluded.
@@ -112,7 +123,8 @@ historical borrow availability are unavailable and excluded.
 - one row per non-overlapping trade;
 - one row per open-to-open portfolio interval;
 - gross, primary, and stress performance;
-- long/short accuracy and trade-return audit;
+- executed-long accuracy and trade-return audit, alongside the symmetric
+  all-sign inference diagnostics;
 - calendar returns;
 - representative trade tapes;
 - direct `01.1` versus `01.2` comparison; and
@@ -122,6 +134,6 @@ historical borrow availability are unavailable and excluded.
 ## Interpretation boundary
 
 No result from this replay may authorize live advice, execution, leverage,
-capital allocation, removal of shorts, horizon retuning on 2021-2023, or a
+capital allocation, addition of shorts, horizon retuning on 2021-2023, or a
 claim of fresh OOS alpha. A later confirmation exercise would require a newly
 approved untouched evidence window.

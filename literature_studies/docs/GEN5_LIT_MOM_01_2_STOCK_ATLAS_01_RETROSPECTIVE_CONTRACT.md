@@ -50,19 +50,17 @@ process across breadth, not to nominate a winner or claim a fresh test.
 Reuse the frozen `LIT-MOM-01.2` mechanics:
 
 - signal after close `t`: sign of the selected `L`-session close return;
-- enter at the next open;
+- enter long at the next open only after a positive signal; otherwise hold cash;
 - invest all current equity after reserving entry cost;
-- freeze quantity and direction within the trade;
+- freeze long quantity within the trade;
 - hold exactly selected `H` open-to-open intervals;
 - no pyramiding and no intra-trade rebalance;
 - allow a new trade at the same open as the prior exit using the preceding
   close signal;
 - compound the next trade from current equity;
-- report gross, 5 bp-per-side primary, and 10 bp-per-side plus 100 bp annual
-  short-borrow stress regimes.
+- report gross, 5 bp-per-side primary, and 10 bp-per-side stress regimes.
 
-Historical short availability, margin terms, cash interest, taxes, and
-instrument-specific slippage remain unavailable.
+Cash interest, taxes, and instrument-specific slippage remain unavailable.
 
 ## Required evidence
 
@@ -81,7 +79,7 @@ instrument-specific slippage remain unavailable.
 - Do not select the best retrospective stock.
 - Do not pool the 22 assets into a portfolio.
 - Do not replace per-asset horizons with a post-hoc common horizon.
-- Do not remove weak assets or short trades after inspection.
+- Do not remove weak assets or add short trades after inspection.
 - Do not query 2024+ CONFIRMATION.
 - Do not treat repeated use of the known 2021-2023 window as independent OOS
   evidence.

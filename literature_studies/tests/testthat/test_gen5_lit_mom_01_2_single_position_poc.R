@@ -33,6 +33,8 @@ testthat::test_that("01.2 contract is immutable and explicitly retrospective", {
   )
   testthat::expect_false(contract$allow_pyramiding)
   testthat::expect_false(contract$rebalance_within_trade)
+  testthat::expect_identical(contract$position_scope, "LONG_ONLY")
+  testthat::expect_equal(contract$stress_borrow_bps_annual, 0)
   changed <- contract
   changed$primary_cost_bps <- 0
   testthat::expect_error(
@@ -94,6 +96,9 @@ testthat::test_that("single-position schedule is causal and nonoverlapping", {
   testthat::expect_true(any(
     schedule$entry_index[-1L] == schedule$exit_index[-nrow(schedule)]
   ))
+  testthat::expect_true(all(schedule$direction == 1L))
+  testthat::expect_true(all(schedule$direction_label == "LONG"))
+  testthat::expect_true(all(schedule$past_lookback_return > 0))
 })
 
 testthat::test_that("fixed units compound equity without intra-trade rebalance", {
@@ -146,9 +151,7 @@ testthat::test_that("ordinary and stress costs reduce fully compounded wealth", 
   primary <- g5_mom012_replay_regime(
     bars, schedule, 5, 0, "PRIMARY"
   )
-  stress <- g5_mom012_replay_regime(
-    bars, schedule, 10, 100, "STRESS"
-  )
+  stress <- g5_mom012_replay_regime(bars, schedule, 10, 0, "STRESS")
   testthat::expect_gt(
     tail(gross$replay$wealth, 1),
     tail(primary$replay$wealth, 1)
@@ -158,4 +161,71 @@ testthat::test_that("ordinary and stress costs reduce fully compounded wealth", 
     tail(stress$replay$wealth, 1)
   )
   testthat::expect_true(all(is.finite(stress$replay$effective_exposure)))
+  testthat::expect_equal(sum(stress$replay$borrow_cost), 0)
+})
+
+testthat::test_that("Stock Atlas 02 registry freezes 100 new point-in-time names", {
+  registry_path <- testthat::test_path(
+    "..", "..", "registries",
+    "gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv"
+  )
+  prior_path <- testthat::test_path(
+    "..", "..", "registries",
+    "gen5_lit_mom_01_1_stock_atlas_01_registry.csv"
+  )
+  registry <- utils::read.csv(registry_path, stringsAsFactors = FALSE)
+  prior <- utils::read.csv(prior_path, stringsAsFactors = FALSE)
+  validated <- g5_mom012_validate_atlas02_registry(registry, prior$symbol)
+  testthat::expect_equal(nrow(validated$registry), 100L)
+  testthat::expect_equal(
+    as.integer(table(validated$registry$cohort)),
+    c(75L, 25L)
+  )
+  testthat::expect_true(all(validated$checks$passed))
+})
+
+testthat::test_that("Stock Atlas 02 registry rejects overlap and late sources", {
+  registry <- utils::read.csv(
+    testthat::test_path(
+      "..", "..", "registries",
+      "gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv"
+    ),
+    stringsAsFactors = FALSE
+  )
+  testthat::expect_error(
+    g5_mom012_validate_atlas02_registry(registry, registry$symbol[[1L]]),
+    "must not overlap"
+  )
+  late <- registry
+  late$source_date[[1L]] <- "2021-01-01"
+  testthat::expect_error(
+    g5_mom012_validate_atlas02_registry(late),
+    "known by TRAIN end"
+  )
+})
+
+testthat::test_that("the defensive replay floor handles an externally supplied short", {
+  bars <- mom012_fixture()
+  schedule <- g5_mom012_trade_schedule(
+    bars,
+    as.Date("2016-01-04"),
+    as.Date("2018-01-31"),
+    lookback_sessions = 60L,
+    holding_sessions = 5L
+  )
+  one_trade <- schedule[1L, , drop = FALSE]
+  one_trade$trade_id <- 1L
+  one_trade$direction <- -1L
+  one_trade$direction_label <- "SHORT"
+  shock_i <- one_trade$entry_index + 1L
+  bars$open[[shock_i]] <- bars$open[[one_trade$entry_index]] * 2.5
+  bars$high[[shock_i]] <- max(bars$high[[shock_i]], bars$open[[shock_i]])
+  bars$low[[shock_i]] <- min(bars$low[[shock_i]], bars$open[[shock_i]])
+  replayed <- g5_mom012_replay_regime(
+    bars, one_trade, 5, 0, "PRIMARY"
+  )
+  testthat::expect_true(any(replayed$replay$bankruptcy_event))
+  testthat::expect_equal(tail(replayed$replay$wealth, 1), 0)
+  testthat::expect_gte(min(replayed$replay$wealth), 0)
+  testthat::expect_equal(replayed$trade_results$trade_return, -1)
 })

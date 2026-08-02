@@ -1,39 +1,46 @@
-# LIT-MOM-01.2 Single-Position Retrospective Results
+# LIT-MOM-01.2 Long-Only Single-Position Retrospective Results
 
-Status: `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`;
-`RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`
+Status:
 
-## Question
+- `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`
+- `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`
+- `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_02`
 
-What happens if the `LIT-MOM-01.1` signal and TRAIN-only horizon selector are
-preserved, but Chan's daily rolling `1/H` sleeves are replaced by one fully
-invested, fixed-quantity position held for exactly `H` open-to-open intervals?
+## Operator correction and evidence boundary
 
-## Evidence boundary
+`LIT-MOM-01.2` is now authoritatively long-only. Negative and zero rolling
+lookback returns mean cash; only a positive lookback return can start a trade.
+The operator explicitly preserved the `01.2` identifier and every other
+mechanic rather than creating a new decimal variant.
 
-The replay uses the already inspected 2021-2023 SHY window. It is therefore a
-retrospective execution experiment, not fresh OOS confirmation. It does not
-revise the `LIT-MOM-01.1` recommendation to stop before sealed 2024+
-CONFIRMATION.
+The prior long/short implementation at commit `70f1c20` is retained only as
+`PRE_CORRECTION_LONG_SHORT_DIAGNOSTIC`. It is not the definition or current
+performance record of `01.2`.
+
+All results below reuse the already inspected 2021-2023 retrospective window.
+They teach how the hypothesis behaves; they are not fresh OOS confirmation,
+asset-selection evidence, or portfolio authority. Sealed 2024+ data were not
+queried.
 
 ## Frozen mechanics
 
-- The 49-cell `L/H` grid remained open on TRAIN.
-- `CHAN_MIN_STEP=min(L,H)` remained the primary selection view.
-- `STEP_L=L` was reported as a distinct-formation diagnostic across every
-  phase offset.
-- `STRICT_L_PLUS_H=L+H` remained the strongest, sparsest sensitivity.
-- The selected signal entered at the next open, used all current equity after
-  reserving entry cost, froze quantity, held exactly `H` open-to-open
-  intervals, and then exited.
-- A new signal could enter at the same open as the prior exit.
-- Each next trade compounded from current equity.
-- Gross, 5 bp-per-side primary, and 10 bp-per-side plus short-borrow stress
-  regimes were preserved.
+- Every asset evaluates all 49 predeclared `L/H` cells on TRAIN.
+- `CHAN_MIN_STEP=min(L,H)` remains the primary selector; `STEP_L=L` and
+  `STRICT_L_PLUS_H=L+H` remain sensitivity views.
+- The correlation screen retains both positive and negative TRAIN outcomes.
+  Long-only applies to the executable policy, not to selection-data filtering.
+- A positive selected-`L` return at the decision close enters at the next open.
+- One fixed-quantity position uses all current equity after entry cost, holds
+  exactly `H` open-to-open intervals, exits, and reinvests the resulting equity.
+- While invested, new signals are ignored. After exit, a new qualifying signal
+  may enter at that same open.
+- Gross, 5 bp-per-side primary, and 10 bp-per-side stress regimes are reported.
+  Short borrow is exactly zero in every regime.
 
-## Selected horizon
+## SHY worked example
 
-TRAIN again selected `L=60`, `H=5`.
+TRAIN again selected `L=60`, `H=5`; the selector was unchanged by the
+long-only correction.
 
 | TRAIN inference view | Pairs | Correlation | Sign consistency |
 |---|---:|---:|---:|
@@ -41,109 +48,91 @@ TRAIN again selected `L=60`, `H=5`.
 | `STEP_L` | 17 | 0.2449 | 58.8% |
 | `STRICT_L_PLUS_H` | 16 | 0.1995 | 68.8% |
 
-The two sparse diagnostics remained positive in TRAIN, but their small sample
-sizes are support context, not independent confirmation.
+The retrospective policy completed 69 long trades. No short trade or borrow
+charge was generated.
 
-## Retrospective 2021-2023 result
+| Cost regime | Cumulative return | Maximum drawdown |
+|---|---:|---:|
+| Gross | +0.22% | -3.11% |
+| Primary | -6.46% | -7.87% |
+| Stress | -12.70% | -13.35% |
 
-The replay completed 149 non-overlapping block trades across 745 open-to-open
-intervals.
+The 69 long calls were correct about direction 44.93% of the time. Mean
+primary trade return was -0.0965%. This is a useful reminder that the positive
+TRAIN correlation was not a guarantee of positive retrospective direction
+accuracy or implementable P&L.
 
-| Cost regime | Cumulative return | Naive Sharpe | Maximum drawdown |
-|---|---:|---:|---:|
-| Gross | +2.60% | 0.42 | -3.99% |
-| Primary | -11.61% | -1.95 | -12.94% |
-| Stress | -25.15% | -4.39 | -25.70% |
+## Stock Atlas 01
 
-Primary-cost calendar returns were negative in 2021, 2022, and 2023. The
-literal primary round trips accumulated approximately 13.98% of starting
-equity in transaction costs over the replay.
+The frozen 22-stock, eleven-sector panel independently searched all 49 TRAIN
+cells for each asset, for 1,078 TRAIN evaluations. Each selected rule was then
+replayed long-only in the known window.
 
-## Direction audit
-
-The sequential trade replay separated sign prediction from implementable
-returns:
-
-| Direction | Trades | Direction accuracy | Mean primary trade return |
-|---|---:|---:|---:|
-| Long | 62 | 56.5% | -0.084% |
-| Short | 87 | 50.6% | -0.081% |
-
-The long side predicted direction more often than chance, but neither side
-earned a positive mean return after ordinary costs. This is a concrete example
-of why hit rate is not a substitute for P&L.
-
-## Comparison nuance
-
-`LIT-MOM-01.2` is not a pure leverage comparison with `01.1`:
-
-- `01.2` holds one full position and applies the frozen one-way cost to every
-  literal entry and exit, including same-direction exit/re-entry boundaries.
-- `01.1` forms rolling sleeves but charges changes in aggregate net exposure;
-  unchanged same-direction replacement exposure can therefore roll without a
-  fresh round trip.
-
-The comparison demonstrates the joint effect of concentrated block execution
-and the literal turnover convention. It should not be described as proof that
-full allocation alone caused the net-return gap.
-
-## Decision
-
-Record `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`.
-
-The lane is a successful textbook-style implementation exercise and a useful
-negative result about execution economics. It is not cost-robust strategy
-evidence. Do not query sealed 2024+ data, net same-direction re-entry, change
-the horizon grid, or revise the parent STOP without a separate operator gate.
-
-## Stock Atlas 01: the substantive breadth experiment
-
-The SHY `60/5` replay above is the minimal worked example, not the endpoint of
-`01.2`. The substantive experiment reused the already frozen, outcome-blind
-`LIT-MOM-01.1 / STOCK_ATLAS_01` panel: 22 large, liquid stocks, exactly two
-from each of eleven broad sectors. Every stock independently evaluated all 49
-TRAIN `L/H` cells, selected its own maximum TRAIN correlation t-statistic
-subject to the frozen support and tie-break rules, and then replayed only that
-frozen rule in the already inspected 2021-2023 window.
-
-This produced 1,078 TRAIN horizon evaluations and ten distinct selected
-`L/H` combinations. The most common selections were `25/25` for five stocks,
-`10/10` for four, and `5/5` for four. Thus the atlas did not impose or inherit
-SHY's `60/5` rule.
-
-| Atlas breadth readout | Result |
+| Atlas 01 breadth readout | Result |
 |---|---:|
 | Assets replayed | 22 |
-| Positive gross / primary / stress paths | 5 / 5 / 3 |
-| Median primary return | -29.31% |
-| Mean primary return | -26.09% |
-| Worst primary maximum drawdown | -80.77% |
-| Positive selected-row TRAIN correlation | 16 / 22 |
-| Positive retrospective correlation | 4 / 22 |
-| Above-50% TRAIN sign consistency | 18 / 22 |
-| Above-50% retrospective sign consistency | 8 / 22 |
+| Positive gross / primary / stress paths | 17 / 16 / 15 |
+| Median primary return | +17.96% |
+| Mean primary return | +23.82% |
+| Worst primary maximum drawdown | -49.73% |
+| Mean retrospective long-call accuracy | 54.54% |
 
-Five individual paths were positive after primary costs, but they are
-descriptive outcomes, not nominees: `SHW`, `HD`, `CMCSA`, `JPM`, and `MCD`.
-Selecting any of them after seeing this window would convert the exercise into
-outcome mining. The broad result is instead that per-asset TRAIN horizon
-selection plus full-capital block execution transferred poorly as a general
-process in this known window.
+The long-only correction materially changed the descriptive result, but it did
+not create authority to nominate the strongest names. All 22 outcomes were
+already known when this correction was requested.
 
-Record
-`RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`. Do not form
-a portfolio, rank or promote retrospective winners, remove weak assets or
-short trades, or query sealed 2024+ data.
+## Stock Atlas 02: 2020 breadth + attention
+
+Atlas 02 froze 100 additional names with zero overlap to Atlas 01: 75
+sector-diversified stocks drawn from SPY's June 30, 2020 SEC filing and 25
+stocks documented in contemporaneous 2020 Robinhood/Robintrack coverage.
+Coverage rules stopped nine names before strategy interpretation, leaving 91
+eligible replays and 4,459 TRAIN horizon evaluations.
+
+| Atlas 02 breadth readout | All eligible | Diversified core | Retail attention 2020 |
+|---|---:|---:|---:|
+| Eligible assets | 91 | 74 | 17 |
+| Positive primary paths | 50 | 45 | 5 |
+| Positive stress paths | 47 | 42 | 5 |
+| Median primary return | +6.92% | +11.69% | -19.95% |
+| Mean primary return | +17.01% | +21.60% | -3.00% |
+| Worst primary maximum drawdown | -86.30% | -- | -- |
+
+Across eligible assets, mean retrospective long-call accuracy was 53.69%.
+Every completed trade was long, total borrow was zero, and all integrity checks
+passed. The cohort contrast is descriptive only: the core sample is
+survivor-prone and the eligible attention cohort is small.
+
+## Interpretation and decision
+
+The corrected lane now answers the operator's intended question cleanly:
+positive momentum can authorize a concentrated long swing; negative momentum
+means cash, not a short. In this known sample, that asymmetry produced much
+stronger breadth results than the archived long/short diagnostic, while SHY
+itself remained cost-negative.
+
+Record the three retrospective-complete statuses above. Do not promote names,
+form a portfolio, tune the 49-cell grid from these outcomes, reinterpret cohort
+differences causally, or query sealed 2024+ data without a separate operator
+gate.
 
 ## Artifacts
 
-- Contract:
+- Base contract:
   `literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_CONTRACT.md`
-- Evidence packet:
-  `runs/research_workbench/literature_grounded/lit_mom_01_2_single_position_retrospective_20260802`
-- Stock-atlas contract:
+- Atlas 01 contract:
   `literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_01_RETROSPECTIVE_CONTRACT.md`
-- Stock-atlas packet:
-  `runs/research_workbench/literature_grounded/lit_mom_01_2_stock_atlas_01_retrospective_20260802`
-- Deck:
+- Atlas 02 contract:
+  `literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_02_2020_BREADTH_ATTENTION_CONTRACT.md`
+- Atlas 02 registry:
+  `literature_studies/registries/gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv`
+- SHY evidence packet:
+  `runs/research_workbench/literature_grounded/lit_mom_01_2_long_only_single_position_retrospective_20260802`
+- Atlas 01 evidence packet:
+  `runs/research_workbench/literature_grounded/lit_mom_01_2_long_only_stock_atlas_01_retrospective_20260802`
+- Atlas 02 evidence packet:
+  `runs/research_workbench/literature_grounded/lit_mom_01_2_long_only_stock_atlas_02_2020_breadth_attention_20260802`
+- Authoritative deck:
+  `literature_studies/presentations/gen5_lit_mom_01_2_long_only_retrospective_evidence.pptx`
+- Archived pre-correction deck:
   `literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx`

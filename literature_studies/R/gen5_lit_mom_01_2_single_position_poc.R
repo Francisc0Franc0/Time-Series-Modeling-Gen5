@@ -27,8 +27,9 @@ g5_mom012_contract <- function() {
   list(
     literature_id = "LIT-MOM-01.2",
     parent_literature_id = "LIT-MOM-01.1",
-    descriptive_name = "Single-Position Open-Horizon Momentum",
+    descriptive_name = "Long-Only Single-Position Open-Horizon Momentum",
     evidence_label = "RETROSPECTIVE_EXPLORATION",
+    position_scope = "LONG_ONLY",
     symbol = "SHY",
     as_of_timestamp = "2026-07-30 17:30:00 America/New_York",
     source_packet = file.path(
@@ -47,7 +48,7 @@ g5_mom012_contract <- function() {
     screen_p_value_maximum = 0.10,
     primary_cost_bps = 5,
     stress_cost_bps = 10,
-    stress_borrow_bps_annual = 100,
+    stress_borrow_bps_annual = 0,
     initial_wealth = 1,
     entry_equity_fraction = 1,
     allow_pyramiding = FALSE,
@@ -67,7 +68,11 @@ g5_mom012_validate_contract <- function(contract = g5_mom012_contract()) {
     g5_mom012_stop("Frozen LIT-MOM-01.2 contract field set changed.")
   }
   if (!is.null(replication_batch)) {
-    if (!identical(replication_batch, "STOCK_ATLAS_01_RETROSPECTIVE")) {
+    allowed_batches <- c(
+      "STOCK_ATLAS_01_RETROSPECTIVE",
+      "STOCK_ATLAS_02_2020_BREADTH_ATTENTION"
+    )
+    if (!replication_batch %in% allowed_batches) {
       g5_mom012_stop("Unknown LIT-MOM-01.2 replication batch.")
     }
     if (
@@ -106,12 +111,79 @@ g5_mom012_validate_contract <- function(contract = g5_mom012_contract()) {
   contract
 }
 
-g5_mom012_replication_contract <- function(symbol) {
+g5_mom012_replication_contract <- function(
+  symbol,
+  batch_id = "STOCK_ATLAS_01_RETROSPECTIVE"
+) {
+  allowed_batches <- c(
+    "STOCK_ATLAS_01_RETROSPECTIVE",
+    "STOCK_ATLAS_02_2020_BREADTH_ATTENTION"
+  )
+  if (length(batch_id) != 1L || !batch_id %in% allowed_batches) {
+    g5_mom012_stop("Unknown LIT-MOM-01.2 replication batch.")
+  }
   contract <- g5_mom012_contract()
   contract$symbol <- as.character(symbol)
-  attr(contract, "g5_mom012_replication_batch") <-
-    "STOCK_ATLAS_01_RETROSPECTIVE"
+  attr(contract, "g5_mom012_replication_batch") <- batch_id
   g5_mom012_validate_contract(contract)
+}
+
+g5_mom012_validate_atlas02_registry <- function(
+  registry,
+  prior_symbols = character()
+) {
+  required <- c(
+    "instance_id", "symbol", "source_symbol", "cohort", "sector",
+    "selection_basis", "source_id", "source_date", "documented_rank",
+    "history_note"
+  )
+  missing <- setdiff(required, names(registry))
+  if (length(missing)) {
+    g5_mom012_stop(paste(
+      "Stock Atlas 02 registry missing columns:",
+      paste(missing, collapse = ", ")
+    ))
+  }
+  if (nrow(registry) != 100L) {
+    g5_mom012_stop("Stock Atlas 02 registry must contain exactly 100 rows.")
+  }
+  if (any(!nzchar(registry$instance_id)) || anyDuplicated(registry$instance_id)) {
+    g5_mom012_stop("Stock Atlas 02 instance IDs must be non-empty and unique.")
+  }
+  if (any(!nzchar(registry$symbol)) || anyDuplicated(registry$symbol)) {
+    g5_mom012_stop("Stock Atlas 02 symbols must be non-empty and unique.")
+  }
+  if (length(intersect(registry$symbol, prior_symbols))) {
+    g5_mom012_stop("Stock Atlas 02 must not overlap Stock Atlas 01 symbols.")
+  }
+  cohort_counts <- table(registry$cohort)
+  expected <- c(DIVERSIFIED_CORE = 75L, RETAIL_ATTENTION_2020 = 25L)
+  observed_counts <- as.integer(cohort_counts[names(expected)])
+  if (anyNA(observed_counts) || !identical(observed_counts, unname(expected))) {
+    g5_mom012_stop("Stock Atlas 02 cohort counts must be 75 core and 25 attention.")
+  }
+  expected_sectors <- c(
+    "Communication Services", "Consumer Discretionary", "Consumer Staples",
+    "Energy", "Financials", "Health Care", "Industrials",
+    "Information Technology", "Materials", "Real Estate", "Utilities"
+  )
+  core_sectors <- sort(unique(registry$sector[registry$cohort == "DIVERSIFIED_CORE"]))
+  if (!identical(core_sectors, sort(expected_sectors))) {
+    g5_mom012_stop("Diversified core must cover all eleven broad sectors.")
+  }
+  source_dates <- as.Date(registry$source_date)
+  if (anyNA(source_dates) || any(source_dates > as.Date("2020-12-31"))) {
+    g5_mom012_stop("Every Stock Atlas 02 source date must be known by TRAIN end.")
+  }
+  checks <- data.frame(
+    check_id = c(
+      "ROW_COUNT_100", "UNIQUE_IDS", "UNIQUE_SYMBOLS", "NO_ATLAS01_OVERLAP",
+      "COHORT_COUNTS_75_25", "CORE_ELEVEN_SECTORS", "SOURCES_KNOWN_BY_TRAIN_END"
+    ),
+    passed = TRUE,
+    stringsAsFactors = FALSE
+  )
+  list(registry = registry, checks = checks)
 }
 
 g5_mom012_parent_contract <- function(contract = g5_mom012_contract()) {
@@ -350,10 +422,10 @@ g5_mom012_trade_schedule <- function(
     panel$signal_date >= period_start &
       panel$signal_date < period_end &
       !is.na(panel$signal) &
-      panel$signal != 0L
+      panel$signal == 1L
   )
   if (!length(signal_i)) {
-    g5_mom012_stop("No eligible nonzero signal exists in the requested period.")
+    g5_mom012_stop("No eligible positive signal exists in the requested period.")
   }
   signal_i <- signal_i[[1L]]
   rows <- list()
@@ -361,7 +433,7 @@ g5_mom012_trade_schedule <- function(
   repeat {
     while (
       signal_i <= nrow(panel) &&
-        (is.na(panel$signal[[signal_i]]) || panel$signal[[signal_i]] == 0L)
+        (is.na(panel$signal[[signal_i]]) || panel$signal[[signal_i]] != 1L)
     ) {
       signal_i <- signal_i + 1L
     }
@@ -373,7 +445,7 @@ g5_mom012_trade_schedule <- function(
         x$session_date[[entry_i]] > period_end ||
         x$session_date[[exit_i]] > period_end
     ) break
-    direction <- as.integer(panel$signal[[signal_i]])
+    direction <- 1L
     rows[[trade_id]] <- data.frame(
       trade_id = trade_id,
       signal_index = signal_i,
@@ -383,7 +455,7 @@ g5_mom012_trade_schedule <- function(
       entry_date = x$session_date[[entry_i]],
       exit_date = x$session_date[[exit_i]],
       direction = direction,
-      direction_label = ifelse(direction > 0, "LONG", "SHORT"),
+      direction_label = "LONG",
       past_lookback_return = panel$past_return[[signal_i]],
       entry_open = x$open[[entry_i]],
       exit_open = x$open[[exit_i]],
@@ -425,8 +497,11 @@ g5_mom012_replay_regime <- function(
   rows <- list()
   row_i <- 1L
   trade_returns <- numeric(nrow(schedule))
+  executed_trades <- 0L
   for (trade_i in seq_len(nrow(schedule))) {
+    if (wealth <= 0) break
     trade <- schedule[trade_i, , drop = FALSE]
+    executed_trades <- trade_i
     start_wealth <- wealth
     entry_notional <- start_wealth * contract$entry_equity_fraction / (1 + cost_rate)
     entry_cost <- entry_notional * cost_rate
@@ -447,7 +522,9 @@ g5_mom012_replay_regime <- function(
       exit_cost <- if (is_exit) units * x$open[[bar_i + 1L]] * cost_rate else 0
       transaction_cost <- if (is_entry) entry_cost else 0
       transaction_cost <- transaction_cost + exit_cost
-      wealth <- wealth + price_pnl - borrow_cost - exit_cost
+      raw_wealth <- wealth + price_pnl - borrow_cost - exit_cost
+      bankruptcy_event <- raw_wealth <= 0
+      wealth <- max(raw_wealth, 0)
       peak <- max(peak, wealth)
       rows[[row_i]] <- data.frame(
         regime_id = regime_id,
@@ -469,23 +546,26 @@ g5_mom012_replay_regime <- function(
         price_pnl = price_pnl,
         transaction_cost = transaction_cost,
         borrow_cost = borrow_cost,
-        net_pnl = price_pnl - borrow_cost - exit_cost -
-          ifelse(bar_i == trade$entry_index, entry_cost, 0),
+        net_pnl = wealth - wealth_before,
         net_return = wealth / wealth_before - 1,
         wealth = wealth,
         drawdown = wealth / peak - 1,
+        bankruptcy_event = bankruptcy_event,
         is_trade_entry_interval = is_entry,
         is_trade_exit_interval = is_exit,
         stringsAsFactors = FALSE
       )
       row_i <- row_i + 1L
+      if (bankruptcy_event) break
     }
     trade_returns[[trade_i]] <- wealth / start_wealth - 1
+    if (wealth <= 0) break
   }
   replay <- do.call(rbind, rows)
-  trade_results <- schedule
+  trade_results <- schedule[seq_len(executed_trades), , drop = FALSE]
   trade_results$regime_id <- regime_id
-  trade_results$trade_return <- trade_returns
+  trade_results$trade_return <- trade_returns[seq_len(executed_trades)]
+  trade_results$bankruptcy_trade <- trade_results$trade_return <= -1
   list(replay = replay, trade_results = trade_results)
 }
 
@@ -510,6 +590,12 @@ g5_mom012_metrics <- function(replay, regime_id) {
     average_gross_exposure = mean(abs(replay$effective_exposure)),
     total_transaction_cost = sum(replay$transaction_cost),
     total_borrow_cost = sum(replay$borrow_cost),
+    bankruptcy_occurred = any(replay$bankruptcy_event),
+    bankruptcy_date = if (any(replay$bankruptcy_event)) {
+      as.character(min(replay$outcome_date[replay$bankruptcy_event]))
+    } else {
+      NA_character_
+    },
     stringsAsFactors = FALSE
   )
 }
@@ -529,7 +615,7 @@ g5_mom012_calendar_years <- function(replay) {
 g5_mom012_direction_audit <- function(trade_results, period_id) {
   primary <- trade_results[trade_results$regime_id == "PRIMARY", , drop = FALSE]
   groups <- split(primary, primary$direction_label)
-  do.call(rbind, lapply(c("LONG", "SHORT"), function(direction) {
+  do.call(rbind, lapply("LONG", function(direction) {
     x <- groups[[direction]]
     if (is.null(x) || !nrow(x)) {
       return(data.frame(
@@ -588,7 +674,7 @@ g5_mom012_analyze_period <- function(
     ),
     STRESS = c(
       cost_bps = contract$stress_cost_bps,
-      borrow_bps_annual = contract$stress_borrow_bps_annual
+      borrow_bps_annual = 0
     )
   )
   replayed <- lapply(names(regimes), function(regime_id) {
@@ -648,7 +734,8 @@ g5_mom012_integrity_audit <- function(
   }
   compounded <- function(analysis) {
     all(vapply(split(analysis$replay, analysis$replay$regime_id), function(x) {
-      all(is.finite(x$wealth)) && tail(x$wealth, 1) > 0
+      all(is.finite(x$wealth)) && all(x$wealth >= 0) &&
+        (tail(x$wealth, 1) > 0 || any(x$bankruptcy_event))
     }, logical(1)))
   }
   rows <- data.frame(
@@ -661,7 +748,8 @@ g5_mom012_integrity_audit <- function(
       "train_trades_nonoverlapping",
       "retrospective_trades_nonoverlapping",
       "fixed_units_within_trade",
-      "fully_compounded_positive_wealth",
+      "long_only_schedule_and_zero_borrow",
+      "fully_compounded_nonnegative_or_bankruptcy_stopped",
       "retrospective_label_explicit"
     ),
     passed = c(
@@ -677,6 +765,10 @@ g5_mom012_integrity_audit <- function(
       nonoverlap(train$schedule),
       nonoverlap(retrospective$schedule),
       fixed_units(train$replay) && fixed_units(retrospective$replay),
+      all(train$schedule$direction == 1L) &&
+        all(retrospective$schedule$direction == 1L) &&
+        sum(train$replay$borrow_cost) == 0 &&
+        sum(retrospective$replay$borrow_cost) == 0,
       compounded(train) && compounded(retrospective),
       identical(contract$evidence_label, "RETROSPECTIVE_EXPLORATION")
     ),

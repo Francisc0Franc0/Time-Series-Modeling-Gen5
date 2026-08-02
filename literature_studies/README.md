@@ -74,32 +74,48 @@ reference, record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`, and stop before
 [results](docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md), and
 [evidence deck](presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx).
 
-`LIT-MOM-01.2` is the operator-origin execution variant of that same SHY
-signal. It keeps the open TRAIN horizon search and causal next-open timing but
-replaces rolling `1/H` sleeves with one fully invested, fixed-quantity trade
-held for exactly `H` open-to-open intervals; each next trade compounds from
+`LIT-MOM-01.2` is the operator-origin, long-only execution variant of that
+same signal. It keeps the open TRAIN horizon search and causal next-open
+timing, but only a positive selected-lookback return may enter one fully
+invested, fixed-quantity long trade held for exactly `H` open-to-open
+intervals; negative or zero signals mean cash. Each next trade compounds from
 current equity. TRAIN again selected `60/5`. In the explicitly retrospective
-2021-2023 replay, 149 block trades earned +2.60% gross but lost 11.61% after
-literal 5 bp-per-side round trips and 25.15% under stress. Record
+2021-2023 SHY replay, 69 long trades earned +0.22% gross but lost 6.46% after
+literal 5 bp-per-side round trips and 12.70% under stress. Record
 `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`; this is an implementation
-lesson, not fresh confirmation or a rescue of `01.1`. See the
+lesson, not fresh confirmation. See the
 [contract](docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_CONTRACT.md),
 [results](docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_RESULTS.md), and
-[evidence deck](presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx).
+[authoritative evidence deck](presentations/gen5_lit_mom_01_2_long_only_retrospective_evidence.pptx).
+The earlier same-named long/short implementation and its deck are archived as
+`PRE_CORRECTION_LONG_SHORT_DIAGNOSTIC`, not current `01.2` evidence.
 
 SHY is only the worked mechanics example. The substantive
 `LIT-MOM-01.2 / STOCK_ATLAS_01_RETROSPECTIVE` exercise reused the frozen
 22-stock, eleven-sector panel and independently searched all 49 TRAIN `L/H`
 cells for every asset before replaying its own winner. The 1,078-cell search
 produced ten distinct selected horizons, so `60/5` was not imposed on the
-panel. Only five of 22 retrospective paths were positive after primary costs;
-median primary return was -29.31% and the worst drawdown was -80.77%.
+panel. Sixteen of 22 long-only retrospective paths were positive after primary
+costs; median primary return was +17.96%, mean return was +23.82%, and the
+worst drawdown was -49.73%.
 Record
 `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`; do not
-promote the five positive names, form a portfolio, or treat the known
+promote the strongest names, form a portfolio, or treat the known
 2021-2023 window as fresh OOS evidence. See the
 [atlas contract](docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_01_RETROSPECTIVE_CONTRACT.md)
 and the combined results and evidence deck above.
+
+`LIT-MOM-01.2 / STOCK_ATLAS_02_2020_BREADTH_ATTENTION` added 100 frozen,
+non-overlapping names: a 75-name sector-diversified core from SPY's June 30,
+2020 SEC filing and 25 names documented in contemporaneous retail-attention
+sources. Ninety-one names had eligible coverage; 50 were primary-positive and
+47 stress-positive. Median primary return was +6.92% overall, +11.69% in the
+eligible diversified core, and -19.95% in the smaller attention cohort.
+These are retrospective cohort descriptions, not asset-selection or causal
+evidence. See the
+[Atlas 02 contract](docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_02_2020_BREADTH_ATTENTION_CONTRACT.md),
+[registry](registries/gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv),
+and combined results and authoritative deck above.
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)

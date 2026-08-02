@@ -23,7 +23,7 @@ registry_path <- file.path(
 )
 output_dir <- file.path(
   "runs", "research_workbench", "literature_grounded",
-  "lit_mom_01_2_stock_atlas_01_retrospective_20260802"
+  "lit_mom_01_2_long_only_stock_atlas_01_retrospective_20260802"
 )
 visual_dir <- file.path(output_dir, "visuals")
 dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
@@ -163,7 +163,7 @@ for (i in seq_len(nrow(registry))) {
     drop = FALSE
   ]
   long <- retro$direction_audit[retro$direction_audit$direction == "LONG", , drop = FALSE]
-  short <- retro$direction_audit[retro$direction_audit$direction == "SHORT", , drop = FALSE]
+  train_long <- train$direction_audit[train$direction_audit$direction == "LONG", , drop = FALSE]
   summary_rows[[i]] <- data.frame(
     instance_id = reg$instance_id,
     symbol = symbol,
@@ -174,6 +174,7 @@ for (i in seq_len(nrow(registry))) {
     train_return_correlation = selected$return_correlation,
     train_naive_p_value = selected$naive_pearson_p_value,
     train_direction_accuracy = selected$direction_accuracy,
+    train_long_accuracy = train_long$direction_accuracy,
     train_primary_return = train_primary,
     retrospective_pair_count = retro_primary_inference$pair_count,
     retrospective_return_correlation = retro_primary_inference$return_correlation,
@@ -185,7 +186,6 @@ for (i in seq_len(nrow(registry))) {
     retrospective_primary_maximum_drawdown = retro_primary_dd,
     retrospective_trade_count = retro_primary_trades,
     retrospective_long_accuracy = long$direction_accuracy,
-    retrospective_short_accuracy = short$direction_accuracy,
     integrity_passed = all(integrity$passed),
     evidence_label = contract$evidence_label,
     stringsAsFactors = FALSE
@@ -210,6 +210,7 @@ batch <- data.frame(
   literature_id = "LIT-MOM-01.2",
   instance_id = "STOCK_ATLAS_01_RETROSPECTIVE",
   evidence_label = contract$evidence_label,
+  position_scope = contract$position_scope,
   asset_count = nrow(summary),
   horizon_cells_per_asset = length(contract$horizon_grid)^2,
   total_train_horizon_cells = nrow(horizon_screen),
@@ -275,7 +276,7 @@ bp <- barplot(100 * s$retrospective_primary_return, names.arg = s$symbol,
 points(100 * s$retrospective_gross_return, bp, pch = 21, bg = "white", col = "#111827", cex = 1.1)
 points(100 * s$retrospective_stress_return, bp, pch = 4, col = "#F59E0B", cex = 1.1, lwd = 1.5)
 abline(v = 0, col = "#111827")
-legend("bottomright", c("Primary (signed bar)", "Gross", "Stress"),
+legend("bottomright", c("Primary (long-only bar)", "Gross", "Stress"),
        pch = c(15, 21, 4), col = c("#64748B", "#111827", "#F59E0B"),
        pt.bg = c("#64748B", "white", NA), bty = "n", horiz = TRUE)
 dev.off()
@@ -307,20 +308,20 @@ dev.off()
 # Direction audit.
 png(file.path(visual_dir, "stock_atlas_01_direction_audit.png"), 1900, 1050, res = 150)
 par(mar = c(5, 8, 4, 2))
-ord <- order(rowMeans(cbind(summary$retrospective_long_accuracy, summary$retrospective_short_accuracy), na.rm = TRUE))
+ord <- order(summary$retrospective_long_accuracy)
 s <- summary[ord, , drop = FALSE]
 y <- seq_len(nrow(s))
-plot(s$retrospective_long_accuracy * 100, y, pch = 19, col = "#197447",
+plot(s$train_long_accuracy * 100, y, pch = 1, col = "#64748B",
      xlim = c(0, 100), ylim = c(0.5, nrow(s) + 0.5), yaxt = "n",
      xlab = "Direction accuracy (%)", ylab = "",
-     main = "Long and short calls are audited separately")
-points(s$retrospective_short_accuracy * 100, y, pch = 17, col = "#B42318")
-segments(s$retrospective_long_accuracy * 100, y,
-         s$retrospective_short_accuracy * 100, y, col = "#CBD5E1")
+     main = "Only executed long calls: TRAIN versus retrospective")
+points(s$retrospective_long_accuracy * 100, y, pch = 19, col = "#197447")
+segments(s$train_long_accuracy * 100, y,
+         s$retrospective_long_accuracy * 100, y, col = "#CBD5E1")
 axis(2, y, s$symbol, las = 1, cex.axis = 0.8)
 abline(v = 50, col = "#111827", lty = 2)
-legend("bottomright", c("Long", "Short"), pch = c(19, 17),
-       col = c("#197447", "#B42318"), bty = "n")
+legend("bottomright", c("TRAIN long", "Retrospective long"), pch = c(1, 19),
+       col = c("#64748B", "#197447"), bty = "n")
 dev.off()
 
 # Primary equity small multiples.
@@ -366,7 +367,7 @@ report_lines <- c(
   "## Interpretation",
   "",
   "Report every asset. Do not select the best retrospective name, form a",
-  "portfolio, remove shorts, or query 2024+ confirmation.",
+  "portfolio, alter the long-only exposure rule, or query 2024+ confirmation.",
   "",
   "## Packet",
   "",
