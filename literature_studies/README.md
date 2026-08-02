@@ -130,6 +130,16 @@ descriptive and may not be converted into filters on 2021-2023. See the
 [audit results](docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_RESULTS.md),
 and [audit deck](presentations/gen5_lit_mom_01_2_audit_01_exposure_selection_evidence.pptx).
 
+The frozen representative-tape addendum then selected eight deliberately
+contrasting paths before inspecting them: `SHY`, `HD`, `UNP`, `F`, `TJX`,
+`META`, `AAL`, and `NKE`. The tapes distinguish cost erosion, ordinary
+exposure, missed recovery, concentrated winners, severe drawdown dependence,
+cyclicality, and possible selective loss avoidance. Record
+`RETROSPECTIVE_DESCRIPTIVE_TRADE_TAPE_REVIEW_COMPLETE` without changing the
+Audit 01 STOP or nominating a filter. See the
+[trade-tape results](docs/GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
+and [review deck](presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx).
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.

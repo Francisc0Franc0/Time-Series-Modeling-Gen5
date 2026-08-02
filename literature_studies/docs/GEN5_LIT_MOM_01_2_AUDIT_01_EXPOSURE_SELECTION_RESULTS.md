@@ -132,6 +132,22 @@ Do not use the 2021-2023 environment cells to tune filters. Reopen only through
 a separately justified hypothesis and operator-approved contract that
 preserves untouched confirmation evidence.
 
+## Representative trade-tape addendum
+
+The subsequent frozen visual audit selected eight outcome-aware archetypes
+before inspecting their individual paths. `SHY`, `HD`, `UNP`, `F`, `TJX`,
+`META`, `AAL`, and `NKE` show visibly different mechanisms: cost erosion,
+ordinary exposure, missed recovery, concentrated large winners, severe
+drawdown-and-rebound dependence, cyclicality, and possible selective loss
+avoidance. The heterogeneity argues against one generic momentum-refinement
+story.
+
+Record `RETROSPECTIVE_DESCRIPTIVE_TRADE_TAPE_REVIEW_COMPLETE`. The addendum is
+not a frequency estimate, asset nomination, filter screen, or change to the
+governing STOP. See the
+[trade-tape results](GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
+and the representative-tape deck listed below.
+
 ## Artifacts
 
 - Contract:
@@ -146,3 +162,5 @@ preserves untouched confirmation evidence.
   `runs/research_workbench/literature_grounded/lit_mom_01_2_audit_01_exposure_selection_20260802`
 - Evidence deck:
   `literature_studies/presentations/gen5_lit_mom_01_2_audit_01_exposure_selection_evidence.pptx`
+- Representative-tape deck:
+  `literature_studies/presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx`

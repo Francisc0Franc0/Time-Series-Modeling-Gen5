@@ -117,6 +117,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D101` | Correct LIT-MOM-01.2 to authoritative long-only execution and add a 100-name breadth-attention replication | current continuation | `not interested in short exposure at all ... preserve the 1.2 nomenclature` | Positive signal or cash; SHY and Atlas 01 rerun; Atlas 02 frozen and run; prior long/short result archived only |
 | `D102` | Bookmark LIT-MOM-01.2 as promising for audit and refinement without promoting it to alpha | current continuation | `one of the most encouraging ... potential for refinement ... literature based concept + my own original hypothesis` | Priority research direction retained; retrospective, selection, beta, survivor, dependence, and drawdown audits remain mandatory |
 | `D103` | Attribute LIT-MOM-01.2 raw returns before considering factors or filters | current continuation | `compare against basic stuff like "What would've happened had we simply done buy and hold?" ... quantify what "environment" this type of strategy is likely to do well in` | Freeze and complete exposure, matched-random, horizon-selection, SPY-beta, and environment audit; stop at 2/11 with no incremental timing evidence; environment remains descriptive only |
+| `D104` | Audit representative LIT-MOM-01.2 trade tapes before proposing refinements | current continuation | `select some representative trade tapes that show the mix of behaviors this strategy exhibited` | Freeze eight outcome-aware archetypes before individual inspection; complete visual review; preserve Audit 01 STOP and sealed 2024+ data; retain only narrower diagnostic questions |
 
 ## Compact Decision Records
 
@@ -1750,6 +1751,31 @@ tasks by the branch name above, the phrase, or the decision date.
   historically correct as the reason for auditing, but it is superseded as a
   forward strategy status. Do not mine 2021-2023 or query confirmation.
 
+### D104 — Representative tapes expose multiple path mechanisms
+
+- **Operator direction:** Select representative trade tapes that show the mix
+  of observed behavior so the strategy can be audited intuitively and new
+  questions can arise organically.
+- **Frozen design:** Before viewing any individual tape, select eight unique,
+  deterministic archetypes: the SHY tutorial, robust stock-path medoid,
+  positive exposure-dominated path, attribution survivor, matched-random
+  disappointment, deep-drawdown positive finish, retail-attention medoid, and
+  countercyclical trade mix. Make the sample explicitly outcome-aware and
+  non-incidence-estimating.
+- **Result:** `SHY`, `HD`, `UNP`, `F`, `TJX`, `META`, `AAL`, and `NKE` show
+  cost erosion, ordinary exposure, missed recovery, concentrated large
+  winners, severe drawdown-and-rebound dependence, cyclicality, and possible
+  selective loss avoidance. Positive endpoint return is visibly not one
+  stable mechanism.
+- **Research lesson:** The highest-signal follow-up questions concern
+  top-trade contribution concentration, crash avoidance versus rebound
+  capture, and predeclared cross-asset state asymmetry. The tapes do not
+  authorize a generic momentum filter or asset nomination.
+- **Decision:** Record
+  `RETROSPECTIVE_DESCRIPTIVE_TRADE_TAPE_REVIEW_COMPLETE`; preserve
+  `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`, leave 2024+ sealed, and
+  discuss before freezing any new diagnostic.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1775,6 +1801,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Literature-grounded POC handoff](../literature_studies/docs/GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md)
 - [Literature-grounded strategy research nomenclature](../literature_studies/docs/GEN5_LITERATURE_GROUNDED_STRATEGY_RESEARCH_NOMENCLATURE.md)
 - [Literature source ledger](../literature_studies/docs/GEN5_LITERATURE_SOURCE_LEDGER.md)
+- [LIT-MOM-01.2 representative trade-tape review](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
+- [LIT-MOM-01.2 representative trade-tape deck](../literature_studies/presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
