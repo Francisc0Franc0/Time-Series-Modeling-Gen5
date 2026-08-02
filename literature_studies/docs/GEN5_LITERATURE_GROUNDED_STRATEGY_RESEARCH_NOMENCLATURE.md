@@ -58,7 +58,7 @@ renames an earlier outcome.
 | `LIT-MR-05.1` | Kalman Dynamic-Regression Triplet | none | `STOP_LIT_MR_05_1_TRAIN_STRATEGY`; 6/8 TRAIN gates |
 | `LIT-MR-06.1` | Causal Buy-on-Gap Intraday Reversion | none | Atlas 01 STOP at 0/10; recent-wide Atlas 02 STOP at 0/12 |
 | `LIT-MOM-01.1` | Interday Time-Series Momentum | none | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; STOP recommended before CONFIRMATION |
-| `LIT-MOM-01.2` | Long-Only Single-Position Interday Time-Series Momentum | none | Authoritative mechanics corrected to long-only by operator while preserving `01.2`; retrospective SHY and two stock atlases complete; no confirmation authority |
+| `LIT-MOM-01.2` | Long-Only Single-Position Interday Time-Series Momentum | none | `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`; raw retrospective breadth did not survive exposure, random-timing, canonical-horizon, or beta attribution; no confirmation authority |
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
 
 ## Replication batches and instances
@@ -90,6 +90,7 @@ batch, not a decimal variant:
 | `LIT-MOM-01.1 / STOCK_ATLAS_01` | Twenty-two stocks, exactly two from each of eleven sectors, under the unchanged per-stock Chapter 6 horizon screen and sleeve mechanics | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1_STOCK_ATLAS_01`; HD was the sole TRAIN passer and lost money OOS |
 | `LIT-MOM-01.2 / STOCK_ATLAS_01_RETROSPECTIVE` | The same frozen 22-stock panel; every stock searches all 49 TRAIN horizons independently and replays positive signals only with one full-capital fixed-H long position | `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`; known 2021-2023 window, no winner-selection or confirmation authority |
 | `LIT-MOM-01.2 / STOCK_ATLAS_02_2020_BREADTH_ATTENTION` | One hundred additional, non-overlapping stocks frozen as a 75-name sector-diversified core plus 25 names documented in contemporaneous 2020 retail-attention sources | `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_02`; 91 coverage-eligible long-only replays, known 2021-2023 window, no selection or confirmation authority |
+| `LIT-MOM-01.2 / AUDIT_01_EXPOSURE_AND_SELECTION` | Frozen attribution of 113 stock paths against buy-and-hold, matched exposure, always-long blocks, 1,000 matched random schedules, fixed `250/25`, fixed `60/5`, SPY regression, and supported environment cells | `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`; 2/11 diagnostics passed; environment descriptive only |
 | `LIT-MOM-02.1 / OPENING_GAP_ATLAS_01` | Eight-anchor causal POC followed by a 92-instrument, nine-category atlas under unchanged Example 7.1 mechanics | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; XLP 7/8; DEVELOPMENT not queried |
 
 Retrospective or source-reproduction views use instance suffixes rather than

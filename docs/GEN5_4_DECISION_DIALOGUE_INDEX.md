@@ -116,6 +116,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D91` | Give literature studies their own repository phylogeny | repository-wide | `intellectually from a different "phylogeny"` | Move the complete `LIT` source lineage under top-level `literature_studies/` without changing evidence |
 | `D101` | Correct LIT-MOM-01.2 to authoritative long-only execution and add a 100-name breadth-attention replication | current continuation | `not interested in short exposure at all ... preserve the 1.2 nomenclature` | Positive signal or cash; SHY and Atlas 01 rerun; Atlas 02 frozen and run; prior long/short result archived only |
 | `D102` | Bookmark LIT-MOM-01.2 as promising for audit and refinement without promoting it to alpha | current continuation | `one of the most encouraging ... potential for refinement ... literature based concept + my own original hypothesis` | Priority research direction retained; retrospective, selection, beta, survivor, dependence, and drawdown audits remain mandatory |
+| `D103` | Attribute LIT-MOM-01.2 raw returns before considering factors or filters | current continuation | `compare against basic stuff like "What would've happened had we simply done buy and hold?" ... quantify what "environment" this type of strategy is likely to do well in` | Freeze and complete exposure, matched-random, horizon-selection, SPY-beta, and environment audit; stop at 2/11 with no incremental timing evidence; environment remains descriptive only |
 
 ## Compact Decision Records
 
@@ -1725,6 +1726,30 @@ tasks by the branch name above, the phrase, or the decision date.
   validation sequence. No filter, factor, portfolio, or live rule is opened by
   this bookmark alone.
 
+### D103 — Audit 01 rejects incremental timing in the inspected window
+
+- **Operator direction:** Before adding alpha factors or filters, compare the
+  positive `LIT-MOM-01.2` paths with buy-and-hold and identify the environment
+  in which the policy appeared to work.
+- **Frozen design:** Preserve the strategy and 2021-2023 retrospective window;
+  compare it with buy-and-hold, matched constant exposure, consecutive
+  always-long `H` blocks, 1,000 matched random calendars, fixed `250/25`, and
+  fixed `60/5`; add SPY regression, sector-cluster intervals, and four causal
+  environment descriptors. Keep 2024+ sealed.
+- **Result:** Only 2 of 11 diagnostics passed. Median selected return was
+  +9.59%, but buy-and-hold was +23.46%; median excess versus matched constant
+  exposure was -11.81 percentage points; median random percentile was 48.6%;
+  selected horizons did not beat canonical `250/25`; and positive SPY
+  intercepts were not a majority.
+- **Environment lesson:** Executed trades were descriptively stronger when
+  market and sector 60-session trends were non-positive. This is a useful
+  behavioral clue, not a validated filter, because the same inspected policy
+  failed exposure-matched and random-timing attribution.
+- **Decision:** Record
+  `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`. The D102 bookmark remains
+  historically correct as the reason for auditing, but it is superseded as a
+  forward strategy status. Do not mine 2021-2023 or query confirmation.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1775,6 +1800,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.2 Stock Atlas 02 breadth-attention contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_02_2020_BREADTH_ATTENTION_CONTRACT.md)
 - [LIT-MOM-01.2 combined results](../literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_RESULTS.md)
 - [LIT-MOM-01.2 authoritative long-only evidence deck](../literature_studies/presentations/gen5_lit_mom_01_2_long_only_retrospective_evidence.pptx)
+- [LIT-MOM-01.2 Audit 01 contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_CONTRACT.md)
+- [LIT-MOM-01.2 Audit 01 results](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_RESULTS.md)
+- [LIT-MOM-01.2 Audit 01 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_2_audit_01_exposure_selection_evidence.pptx)
 - [LIT-MOM-01.2 archived pre-correction long/short deck](../literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx)
 - [LIT-MOM-02.1 opening-gap momentum contract](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_CONTRACT.md)
 - [LIT-MOM-02.1 opening-gap momentum results](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_RESULTS.md)

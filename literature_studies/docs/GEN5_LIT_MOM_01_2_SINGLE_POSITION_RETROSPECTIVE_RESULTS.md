@@ -122,6 +122,14 @@ horizon selection, correlated market exposure, survivor-prone universes, and
 large path-level drawdowns. This bookmark therefore means
 `PROMISING_FOR_AUDIT_AND_REFINEMENT`, not `STRATEGY_CONFIRMED`.
 
+**Subsequent evidence:** Audit 01 completed the predeclared exposure,
+matched-random-timing, fixed-horizon, SPY-regression, and environment
+attribution. The audit passed only 2 of 11 diagnostics and found no incremental
+timing evidence in the inspected window. This bookmark remains historically
+correct as the reason the audit was warranted, but its forward status is
+superseded by `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`. See the
+[Audit 01 results](GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_RESULTS.md).
+
 ## Interpretation and decision
 
 The corrected lane now answers the operator's intended question cleanly:
@@ -153,5 +161,9 @@ gate.
   `runs/research_workbench/literature_grounded/lit_mom_01_2_long_only_stock_atlas_02_2020_breadth_attention_20260802`
 - Authoritative deck:
   `literature_studies/presentations/gen5_lit_mom_01_2_long_only_retrospective_evidence.pptx`
+- Attribution-audit results:
+  `literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_RESULTS.md`
+- Attribution-audit deck:
+  `literature_studies/presentations/gen5_lit_mom_01_2_audit_01_exposure_selection_evidence.pptx`
 - Archived pre-correction deck:
   `literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx`

@@ -117,6 +117,19 @@ evidence. See the
 [registry](registries/gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv),
 and combined results and authoritative deck above.
 
+`LIT-MOM-01.2 / AUDIT_01_EXPOSURE_AND_SELECTION` then tested whether those
+positive raw paths reflected incremental timing value. Across 113 stocks, only
+30 beat buy-and-hold and 29 beat an exposure-matched constant policy. Median
+excess versus buy-and-hold was -13.31 percentage points; median matched-random
+percentile was 48.6%; selected horizons beat fixed `60/5` but not canonical
+`250/25`; and only 54/113 SPY-regression intercepts were positive. The frozen
+scorecard passed 2/11. Record
+`STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`. Environment cells remain
+descriptive and may not be converted into filters on 2021-2023. See the
+[audit contract](docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_CONTRACT.md),
+[audit results](docs/GEN5_LIT_MOM_01_2_AUDIT_01_EXPOSURE_SELECTION_RESULTS.md),
+and [audit deck](presentations/gen5_lit_mom_01_2_audit_01_exposure_selection_evidence.pptx).
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.
