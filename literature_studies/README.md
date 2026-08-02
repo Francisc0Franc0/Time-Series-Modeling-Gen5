@@ -74,6 +74,33 @@ reference, record `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`, and stop before
 [results](docs/GEN5_LIT_MOM_01_1_INTERDAY_MOMENTUM_RESULTS.md), and
 [evidence deck](presentations/gen5_lit_mom_01_1_interday_momentum_evidence.pptx).
 
+`LIT-MOM-01.2` is the operator-origin execution variant of that same SHY
+signal. It keeps the open TRAIN horizon search and causal next-open timing but
+replaces rolling `1/H` sleeves with one fully invested, fixed-quantity trade
+held for exactly `H` open-to-open intervals; each next trade compounds from
+current equity. TRAIN again selected `60/5`. In the explicitly retrospective
+2021-2023 replay, 149 block trades earned +2.60% gross but lost 11.61% after
+literal 5 bp-per-side round trips and 25.15% under stress. Record
+`RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`; this is an implementation
+lesson, not fresh confirmation or a rescue of `01.1`. See the
+[contract](docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_CONTRACT.md),
+[results](docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_RESULTS.md), and
+[evidence deck](presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx).
+
+SHY is only the worked mechanics example. The substantive
+`LIT-MOM-01.2 / STOCK_ATLAS_01_RETROSPECTIVE` exercise reused the frozen
+22-stock, eleven-sector panel and independently searched all 49 TRAIN `L/H`
+cells for every asset before replaying its own winner. The 1,078-cell search
+produced ten distinct selected horizons, so `60/5` was not imposed on the
+panel. Only five of 22 retrospective paths were positive after primary costs;
+median primary return was -29.31% and the worst drawdown was -80.77%.
+Record
+`RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`; do not
+promote the five positive names, form a portfolio, or treat the known
+2021-2023 window as fresh OOS evidence. See the
+[atlas contract](docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_01_RETROSPECTIVE_CONTRACT.md)
+and the combined results and evidence deck above.
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.

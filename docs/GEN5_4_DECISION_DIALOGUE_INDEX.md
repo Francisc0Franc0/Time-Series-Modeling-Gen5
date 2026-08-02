@@ -1621,6 +1621,59 @@ tasks by the branch name above, the phrase, or the decision date.
   2021-2023 is permitted for learning but must be labeled
   `RETROSPECTIVE_EXPLORATION`, not OOS confirmation.
 
+### D99 — Full-capital block execution clarifies compounding and turnover
+
+- **Operator decision:** Freeze and run `LIT-MOM-01.2` as a simpler execution
+  variant. Keep horizon selection open, use the recommended three inference
+  views, put all current equity into one fixed-quantity position, hold exactly
+  `H` open-to-open intervals, and reinvest the resulting equity in the next
+  trade. Reuse the known 2021-2023 window for learning rather than evidential
+  promotion.
+- **Frozen distinction:** `LIT-MOM-01.2` keeps the `01.1` signal, 49-cell
+  TRAIN selector, causal next-open timing, SHY proxy, long/short direction,
+  and cost schedule. It replaces rolling `1/H` sleeves with one non-pyramiding
+  full-capital trade at a time. `CHAN_MIN_STEP=min(L,H)` remains primary;
+  `STEP_L` and `L+H` remain diagnostics rather than alternate strategies.
+- **Result:** TRAIN again selected `60/5`. The retrospective 2021-2023 replay
+  completed 149 trades and returned +2.60% gross, -11.61% after 5 bp-per-side
+  literal round trips, and -25.15% under stress. Primary maximum drawdown was
+  -12.94%. Long and short direction accuracy was 56.5% and 50.6%, but both
+  directions averaged a net loss after ordinary costs.
+- **Comparison caveat:** This is not a pure capital-concentration comparison.
+  `01.2` pays the frozen one-way cost at every literal entry and exit, while
+  `01.1` costs changes in aggregate net exposure, allowing unchanged
+  same-direction replacement exposure to net. The deck and results note must
+  keep this accounting difference visible.
+- **Decision:** Record
+  `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2`. The exercise successfully
+  demonstrates causal fixed-H compounding but does not establish cost-robust
+  alpha or revise the `01.1` STOP. Do not query 2024+, net same-direction
+  re-entry, or change the horizon/cost contract without a new operator gate.
+
+### D100 — SHY is the tutorial; per-asset horizon selection is the experiment
+
+- **Operator clarification:** A SHY `60/5` replay under `01.2` is a useful
+  minimal POC, but the true goal is breadth: for every asset, test the full
+  `L/H` grid in TRAIN, freeze that asset's winner, and only then replay it in
+  the later window across a diverse panel.
+- **Frozen translation:** Reuse the outcome-blind 22-stock, eleven-sector
+  `LIT-MOM-01.1 / STOCK_ATLAS_01` registry. Independently evaluate all 49
+  cells per stock, select by the frozen TRAIN t-statistic and tie breaks, and
+  replay every selected rule with the `01.2` full-capital fixed-H mechanics.
+  Because 2021-2023 was already inspected, every replay is labeled
+  `RETROSPECTIVE_EXPLORATION`; this lane cannot promote a winner.
+- **Result:** The atlas evaluated 1,078 TRAIN rows and selected ten distinct
+  `L/H` combinations. Only 5/22 paths were positive after primary costs and
+  3/22 under stress. Median primary return was -29.31%, mean was -26.09%, and
+  the worst primary drawdown was -80.77%. Positive selected-row correlation
+  fell from 16/22 in TRAIN to 4/22 retrospectively; above-50% sign consistency
+  fell from 18/22 to 8/22.
+- **Decision:** Record
+  `RETROSPECTIVE_EXPLORATION_COMPLETE_LIT_MOM_01_2_STOCK_ATLAS_01`. The
+  experiment fulfilled the requested selection process but did not establish
+  generalizable cost-robust alpha. Do not rank the five positive names, form a
+  portfolio, remove shorts or weak assets, or query sealed 2024+ data.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1666,6 +1719,10 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 contract](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_CONTRACT.md)
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 results](../literature_studies/docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_02_HIGH_BETA_2016_RESULTS.md)
 - [LIT-MOM-01.1 Stock Atlas 02 High-Beta 2016 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_1_stock_atlas_02_high_beta_2016_evidence.pptx)
+- [LIT-MOM-01.2 single-position contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_CONTRACT.md)
+- [LIT-MOM-01.2 Stock Atlas 01 retrospective contract](../literature_studies/docs/GEN5_LIT_MOM_01_2_STOCK_ATLAS_01_RETROSPECTIVE_CONTRACT.md)
+- [LIT-MOM-01.2 combined results](../literature_studies/docs/GEN5_LIT_MOM_01_2_SINGLE_POSITION_RETROSPECTIVE_RESULTS.md)
+- [LIT-MOM-01.2 evidence deck](../literature_studies/presentations/gen5_lit_mom_01_2_single_position_retrospective_evidence.pptx)
 - [LIT-MOM-02.1 opening-gap momentum contract](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_CONTRACT.md)
 - [LIT-MOM-02.1 opening-gap momentum results](../literature_studies/docs/GEN5_LIT_MOM_02_1_OPENING_GAP_MOMENTUM_RESULTS.md)
 - [LIT-MOM-02.1 opening-gap momentum evidence deck](../literature_studies/presentations/gen5_lit_mom_02_1_opening_gap_evidence.pptx)
