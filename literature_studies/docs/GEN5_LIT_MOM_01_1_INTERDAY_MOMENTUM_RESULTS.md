@@ -58,6 +58,36 @@ starts one `1/H` sleeve per session and holds each sleeve for `H` sessions.
 Daily sleeves create a smooth implementable position path; they do not create
 daily independent statistical evidence.
 
+### Revisit: a distinct-formation `STEP_L` view
+
+The operator subsequently proposed a different, intuitive estimand: partition
+the history into nonoverlapping `L`-session formation chunks and ask how
+often each chunk's return sign agrees with the following `H`-session return.
+This is a valid diagnostic and is labeled `STEP_L`.
+
+`STEP_L` answers a clearer “distinct formation episodes” question than
+daily-overlapping rows because one fixed phase does not reuse an `L`-session
+lookback. It does **not** make the observations fully independent:
+
+- when `H > L`, adjacent future outcomes can overlap;
+- when `H < L`, one pair's future outcome can fall inside the next pair's
+  formation interval; and
+- a fixed partition has an arbitrary starting phase, so an apparent result can
+  depend on which of the `L` possible offsets is used.
+
+It is also sparse for long lookbacks. Roughly 1,000 sessions provide only about
+16 distinct `L=60` chunks and four `L=250` chunks before warm-up and endpoint
+losses. `STEP_L` is therefore a strong teaching and robustness view, but it
+should not automatically replace the source-faithful `CHAN_MIN_STEP` selector
+or be given an ordinary independent-sample Pearson p-value.
+
+The per-chunk question is most directly reported as sign consistency:
+
+`sign_consistency = count(sign(R_past_i) = sign(R_future_i)) / N`
+
+Pearson correlation remains one statistic estimated across the full set of
+return pairs; an individual chunk is not itself “correlated.”
+
 ## Frozen retail translation
 
 - Instrument: `SHY`, the closest Alpaca-tradable adjusted-daily ETF maturity
@@ -135,6 +165,46 @@ Calendar results were `-1.38%` in 2021, `+1.35%` in 2022, and `+0.13%` in
 The strong-looking TRAIN relationship did not persist statistically or
 economically. Ordinary costs consumed almost all gross progress; stress costs
 made the result negative.
+
+## Explicit long/short sleeve audit
+
+The strategy's directional prediction and its implementable economics are
+separate questions:
+
+| Evidence window | Direction | Completed sleeves | Direction accuracy | Mean gross per sleeve | Mean primary net per sleeve |
+|---|---|---:|---:|---:|---:|
+| TRAIN 2017-2020 | Long | 770 | 60.3% | +5.1 bp | -4.9 bp |
+| TRAIN 2017-2020 | Short | 212 | 44.8% | -0.4 bp | -10.4 bp |
+| OOS 2021-2023 | Long | 299 | 47.2% | +1.3 bp | -8.7 bp |
+| OOS 2021-2023 | Short | 442 | 51.1% | +1.6 bp | -8.4 bp |
+
+The TRAIN relationship was primarily a long-side phenomenon. It did not
+survive OOS: long accuracy fell below 50%. OOS short calls were slightly above
+50% and both directions were mildly positive gross, but neither direction
+covered the frozen ordinary round-trip cost. This makes clear why hit rate,
+gross predictive direction, and net strategy P&L must all be reported.
+
+The deck now includes:
+
+- an actual OOS opening sequence showing each separately recalculated daily
+  signal and the net of still-active sleeves; and
+- a TRAIN-versus-OOS long/short scorecard showing support, accuracy, and gross
+  versus primary-cost mean return.
+
+Both visuals are reproducible from the frozen packet with:
+
+`literature_studies/scripts/render_gen5_lit_mom_01_1_revisit_audit.R`.
+
+## Boundary for the proposed simplified variant
+
+No all-capital, single-position variant is implemented in this revision.
+The operator has opened discussion of a possible `LIT-MOM-01.2` whose
+horizon remains selected from a grid and whose execution enters the full
+position on one signal, holds for `H` sessions, and then exits. Reusing the
+2021-2023 window is acceptable for that learning exercise, but it must be
+labeled `RETROSPECTIVE_EXPLORATION`, not fresh OOS confirmation. The
+selection/inference convention remains the last freeze decision before that
+lane is built.
 
 ## Decision
 

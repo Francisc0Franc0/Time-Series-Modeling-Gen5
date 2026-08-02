@@ -1590,6 +1590,37 @@ tasks by the branch name above, the phrase, or the decision date.
   queried and CONFIRMATION remains sealed. A futures-native reconstruction
   would require a new data/execution contract, not a reactive decimal tweak.
 
+### D98 — Distinct formation chunks are useful without becoming independent proof
+
+- **Operator clarification:** Separate Chan's non-overlap discussion during
+  horizon screening from the rolling-sleeve execution rule. Audit the existing
+  strategy by long and short calls, clarify the current deck, and discuss a
+  later all-capital, one-position variant with horizon selection still open.
+- **Execution correction:** Each close creates a new forecast from the newest
+  rolling `L`-session window. The next-open `1/H` sleeve is not another
+  installment of the prior forecast. It is a new, highly correlated forecast
+  with its own `H`-session life. Repeated signs accumulate exposure; opposing
+  signs net against sleeves that have not yet expired.
+- **Inference clarification:** `CHAN_MIN_STEP=min(L,H)` remains the
+  source-faithful primary view for `LIT-MOM-01.1`. The operator's proposed
+  `STEP_L` is a valid distinct-formation-episode diagnostic because a fixed
+  phase does not reuse `L`-session lookbacks. It is not fully independent:
+  `H` outcomes can overlap, a future outcome can enter the next formation
+  window when `H < L`, and results can depend on the partition offset.
+  `L+H` remains the strongest raw-interval separation and the sparsest view.
+- **Directional audit:** For the selected 60/5 rule, TRAIN long sleeves were
+  60.3% correct and +5.1 bp gross, while TRAIN shorts were 44.8% correct and
+  -0.4 bp gross. In 2021-2023 OOS, longs were 47.2% correct and shorts 51.1%;
+  both directions were mildly positive gross but averaged about -8 to -9 bp
+  after primary costs.
+- **Deck decision:** Revise the `LIT-MOM-01.1` deck in place with the three
+  spacing choices, an actual rolling-cohort sequence, and an explicit
+  TRAIN/OOS long-short scorecard.
+- **Open boundary:** A possible `LIT-MOM-01.2` all-capital variant remains
+  unfrozen and unimplemented. Horizon selection may remain open. Reusing
+  2021-2023 is permitted for learning but must be labeled
+  `RETROSPECTIVE_EXPLORATION`, not OOS confirmation.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
