@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-07-27
+Index date: 2026-08-04
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -120,6 +120,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D104` | Audit representative LIT-MOM-01.2 trade tapes before proposing refinements | current continuation | `select some representative trade tapes that show the mix of behaviors this strategy exhibited` | Freeze eight outcome-aware archetypes before individual inspection; complete visual review; preserve Audit 01 STOP and sealed 2024+ data; retain only narrower diagnostic questions |
 | `D105` | Create a separate operator-origin hypothesis lab and run its first causal momentum discovery | current continuation | `if there are two consecutive green gap ups, enter` | Register `HYP-MOM-01.1`; freeze a next-open five-session long-only reused-window POC; complete with no promotion authority after unfavorable ownership and random-timing controls |
 | `D106` | Diagnose which observable conditions matter for HYP-MOM-01.1 before proposing a variant | current continuation | `Does adding requirements about the properties of the green candles matter?` | Freeze `DIAGNOSTIC_ATLAS_01`; measure volatility-scaled pattern strength, asset and market trend context, prior return, secondary confirmation, and within-trade paths; retain SPY-above-SMA200 only as a future distinct-data replication question |
+| `D107` | Widen HYP-MOM-01.1 before further follow-ups and require its diagnostic hints to survive a frozen stock atlas | current continuation | `this test needs more breadth` | Reuse the prior frozen 100-name breadth-attention registry; merge 94 eligible additions with the original 22; preserve the 116-asset null and withdraw the earlier SPY-SMA200 replication preference |
 
 ## Compact Decision Records
 
@@ -1828,6 +1829,37 @@ tasks by the branch name above, the phrase, or the decision date.
   prefer one frozen `HYP-MOM-01.2` question asking whether SPY-above-SMA200
   market permission replicates on distinct data. Keep 2024+ sealed.
 
+### D107 — Breadth must arbitrate the HYP-MOM-01.1 diagnostic hints
+
+- **Operator direction:** Before pursuing any more feature or exit follow-ups,
+  apply the unchanged rule and complete audit to the roughly 100-stock atlas
+  already used elsewhere, then merge it with the original 22-asset evidence.
+- **Frozen scope:** Reuse the previously registered 75-name diversified-core
+  and 25-name 2020 retail-attention universe with zero original-panel overlap.
+  Preserve the 2021-2023 discovery window, causal next-open entry, fixed
+  five-session exit, costs, nonoverlap, ownership and random controls, every
+  diagnostic definition, and equal-asset primary contrasts. Require exact
+  discovery coverage and 220 prior sessions; keep failures and do not replace
+  them.
+- **Coverage:** Ninety-four additions passed, producing 116 combined assets
+  and 4,015 trades. DOW, NIO, and ADT failed valid adjusted OHLCV; APHA and SNE
+  lacked the full discovery history; LI lacked prehistory. Refreshed bounded
+  provider warnings remain visible but do not affect the exact required window
+  for eligible assets.
+- **Result:** Combined hit rate was `52.40%` and median trade `+0.181%`, but
+  mean trade remained `-0.030%`; only `34 / 116` assets beat buy-and-hold and
+  the median matched-random percentile was `43.05%`. The original normalized
+  gap contrast fell from `+0.477` points to `-0.038` in Atlas 02, while the
+  SPY-SMA200 contrast fell from `+0.571` to `+0.061`. Every combined
+  equal-asset bootstrap interval crossed zero. Checkpoint, cohort, sector, and
+  continuous-correlation views supplied description but no promotion rule.
+- **Decision:** Record
+  `DISCOVERY_BREADTH_EXTENSION_COMPLETE_NO_STRATEGY_AUTHORITY`. Breadth
+  supersedes the earlier recommendation to prioritize a SPY-SMA200
+  replication. Preserve the null; do not mine a heatmap cell, cohort, sector,
+  market state, or exit checkpoint. Keep 2024+ sealed and require a new
+  economic question plus distinct evidence before another lane.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1862,6 +1894,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-01.1 Diagnostic Atlas 01 contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_CONTRACT.md)
 - [HYP-MOM-01.1 Diagnostic Atlas 01 results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_RESULTS.md)
 - [HYP-MOM-01.1 Diagnostic Atlas 01 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_diagnostic_atlas_01_evidence.pptx)
+- [HYP-MOM-01.1 Stock Atlas 02 breadth contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_CONTRACT.md)
+- [HYP-MOM-01.1 Stock Atlas 02 breadth results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_RESULTS.md)
+- [HYP-MOM-01.1 Stock Atlas 02 breadth evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_stock_atlas_02_breadth_extension_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
@@ -2109,3 +2144,14 @@ but its bootstrap interval crossed zero and the result remains entangled with
 2022. Record `DIAGNOSTIC_ATLAS_COMPLETE_NO_STRATEGY_AUTHORITY`; do not stack filters,
 choose the best inspected cell, query 2024+, or open `HYP-MOM-01.2` without a
 separately frozen distinct-data replication decision.
+The subsequent `STOCK_ATLAS_02_BREADTH_EXTENSION` reused a previously frozen
+100-name registry and admitted 94 additions, producing 116 assets and 4,015
+trades combined. The wider pool retained a `52.40%` hit rate and `+0.181%`
+median trade but a `-0.030%` mean trade; only `34 / 116` assets beat
+buy-and-hold and the median matched-random percentile was `43.05%`. The
+original normalized-gap and SPY-SMA200 hints both shrank sharply in the new
+panel, and every combined equal-asset interval crossed zero. Record
+`DISCOVERY_BREADTH_EXTENSION_COMPLETE_NO_STRATEGY_AUTHORITY`; breadth
+supersedes the earlier SPY-SMA200 replication preference. Preserve the null,
+keep 2024+ sealed, and do not promote any filter, cohort, sector, checkpoint,
+portfolio, or live behavior.

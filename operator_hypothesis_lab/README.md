@@ -50,6 +50,19 @@ records the scaling formulae, complete conditional atlas, representative trend
 state tapes, and the boundary between observed discovery behavior and any
 future replication hypothesis.
 
+The [Stock Atlas 02 breadth contract](docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_CONTRACT.md)
+reuses a previously frozen 100-name stock registry and applies the unchanged
+strategy plus Diagnostic Atlas 01 to every symbol that passes explicit history
+and OHLCV coverage. The completed [breadth results](docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_RESULTS.md)
+merge 94 eligible additions with the original panel for 116 assets and 4,015
+trades. The wider sample preserves the positive median and slight-majority hit
+rate but also preserves negative mean expectancy and unfavorable ownership and
+random-timing controls. The original normalized-gap and SPY-trend candidates
+shrink materially in the added assets; no diagnostic is promoted. The
+[breadth evidence deck](presentations/hyp_mom_01_1_stock_atlas_02_breadth_extension_evidence.pptx)
+records the design, coverage, panel comparisons, diagnostic persistence,
+path audit, and representative tapes.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
