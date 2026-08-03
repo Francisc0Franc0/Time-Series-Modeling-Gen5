@@ -119,6 +119,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D103` | Attribute LIT-MOM-01.2 raw returns before considering factors or filters | current continuation | `compare against basic stuff like "What would've happened had we simply done buy and hold?" ... quantify what "environment" this type of strategy is likely to do well in` | Freeze and complete exposure, matched-random, horizon-selection, SPY-beta, and environment audit; stop at 2/11 with no incremental timing evidence; environment remains descriptive only |
 | `D104` | Audit representative LIT-MOM-01.2 trade tapes before proposing refinements | current continuation | `select some representative trade tapes that show the mix of behaviors this strategy exhibited` | Freeze eight outcome-aware archetypes before individual inspection; complete visual review; preserve Audit 01 STOP and sealed 2024+ data; retain only narrower diagnostic questions |
 | `D105` | Create a separate operator-origin hypothesis lab and run its first causal momentum discovery | current continuation | `if there are two consecutive green gap ups, enter` | Register `HYP-MOM-01.1`; freeze a next-open five-session long-only reused-window POC; complete with no promotion authority after unfavorable ownership and random-timing controls |
+| `D106` | Diagnose which observable conditions matter for HYP-MOM-01.1 before proposing a variant | current continuation | `Does adding requirements about the properties of the green candles matter?` | Freeze `DIAGNOSTIC_ATLAS_01`; measure volatility-scaled pattern strength, asset and market trend context, prior return, secondary confirmation, and within-trade paths; retain SPY-above-SMA200 only as a future distinct-data replication question |
 
 ## Compact Decision Records
 
@@ -1803,6 +1804,30 @@ tasks by the branch name above, the phrase, or the decision date.
   exit-path, environment, or pattern-strength question before freezing a
   substantive `HYP-MOM-01.2` variant; keep NEE and year differences anecdotal.
 
+### D106 — HYP-MOM-01.1 receives a frozen diagnostic atlas before any variant
+
+- **Operator direction:** Merge questions about volatility-scaled gap and
+  candle size, stock location versus SMA200, and positive 20/60/120-session
+  return with the prior exit-path and environment questions. Add only strong,
+  interpretable diagnostics and run them on the same exploratory dataset.
+- **Frozen scope:** Preserve all `HYP-MOM-01.1` mechanics and the reused
+  2021-2023 evidence label. Add strictly lagged 20-session volatility scaling,
+  asset-SMA200 states, three prior-return horizons, run length, relative
+  volume, 60-session-high proximity, SPY context, and day-one through day-four
+  checkpoints. Keep every cell visible and give assets equal weight in the
+  primary contrasts.
+- **Result:** No asset-level condition showed stable cross-asset separation.
+  Gap high-minus-low was `+0.477` percentage points but only `11 / 22` assets
+  agreed; asset-SMA200 and prior-return filters were unsupported. SPY above
+  SMA200 gave the clearest coherent contrast (`+0.571` points, `13 / 22`
+  assets) and a milder loss tail, but its interval crossed zero and the result
+  is entangled with 2022. Early losers recovered partially but still exited
+  with negative average returns.
+- **Decision:** Record `DIAGNOSTIC_ATLAS_COMPLETE_NO_STRATEGY_AUTHORITY`. Do not
+  stack inspected filters or choose the best gap/body cell. If opened later,
+  prefer one frozen `HYP-MOM-01.2` question asking whether SPY-above-SMA200
+  market permission replicates on distinct data. Keep 2024+ sealed.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1834,6 +1859,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
+- [HYP-MOM-01.1 Diagnostic Atlas 01 contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_CONTRACT.md)
+- [HYP-MOM-01.1 Diagnostic Atlas 01 results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_RESULTS.md)
+- [HYP-MOM-01.1 Diagnostic Atlas 01 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_diagnostic_atlas_01_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
@@ -2071,3 +2099,13 @@ trades were long, borrow was zero, integrity passed, and sealed 2024+ data were
 not queried. Record the three `RETROSPECTIVE_EXPLORATION_COMPLETE` statuses;
 do not promote assets, form a portfolio, or convert the known window into
 confirmation authority.
+The operator-origin `HYP-MOM-01.1 / DIAGNOSTIC_ATLAS_01` then preserved the
+unchanged two-green-gap-up mechanics and audited the same 821 discovery trades
+for volatility-scaled pattern strength, asset and market SMA200 state,
+20/60/120-session prior return, secondary confirmation, and within-trade path
+behavior. No asset-level filter showed stable separation. SPY above SMA200 was
+the clearest coherent contrast (`+0.571` percentage points, `13 / 22` assets)
+but its bootstrap interval crossed zero and the result remains entangled with
+2022. Record `DIAGNOSTIC_ATLAS_COMPLETE_NO_STRATEGY_AUTHORITY`; do not stack filters,
+choose the best inspected cell, query 2024+, or open `HYP-MOM-01.2` without a
+separately frozen distinct-data replication decision.

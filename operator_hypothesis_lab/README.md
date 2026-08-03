@@ -38,6 +38,18 @@ records `DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`: the rule produced a
 slight majority of winning trades, but its losing tail made mean expectancy
 negative and ordinary ownership/random-timing controls were unfavorable.
 
+The follow-up [Diagnostic Atlas 01 contract](docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_CONTRACT.md)
+and [results](docs/HYP_MOM_01_1_DIAGNOSTIC_ATLAS_01_RESULTS.md) test
+volatility-scaled gap/body properties, SMA200 location, 20/60/120-session
+momentum, pattern maturity, volume, 60-session-high proximity, SPY context,
+and within-trade checkpoints without changing the parent strategy. No entry
+filter showed stable cross-asset separation. SPY-above-SMA200 is retained only
+as the strongest candidate for a distinct frozen replication question.
+The [diagnostic evidence deck](presentations/hyp_mom_01_1_diagnostic_atlas_01_evidence.pptx)
+records the scaling formulae, complete conditional atlas, representative trend
+state tapes, and the boundary between observed discovery behavior and any
+future replication hypothesis.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

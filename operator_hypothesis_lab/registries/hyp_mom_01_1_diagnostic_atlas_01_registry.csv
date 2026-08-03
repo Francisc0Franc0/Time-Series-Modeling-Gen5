@@ -1,0 +1,14 @@
+diagnostic_id,family,feature_or_state,predeclared_comparison,priority,interpretation
+DA01_PATTERN_GAP,pattern_strength,gap_strength_z,HIGH minus LOW pooled rank tercile,PRIMARY,Volatility-scaled opening-gap strength
+DA02_PATTERN_BODY,pattern_strength,body_strength_z,HIGH minus LOW pooled rank tercile,PRIMARY,Volatility-scaled green-candle body strength
+DA03_PATTERN_GRID,pattern_strength,gap_strength_tercile x body_strength_tercile,All nine cells with support,PRIMARY,Joint shape map without selecting the best cell
+DA04_SMA200,trend_location,anchor_state,ESTABLISHED_ABOVE and RECENT_RECLAIM versus BELOW_ANCHOR,PRIMARY,Established momentum versus upward pivot versus below-anchor state
+DA05_MOM20,prior_momentum,momentum_20,POSITIVE minus NONPOSITIVE,PRIMARY,Short swing lookback
+DA06_MOM60,prior_momentum,momentum_60,POSITIVE minus NONPOSITIVE,PRIMARY,Intermediate swing lookback
+DA07_MOM120,prior_momentum,momentum_120,POSITIVE minus NONPOSITIVE,PRIMARY,Slow lookback
+DA08_STREAK,pattern_maturity,qualifying_streak,THREE_OR_MORE minus EXACTLY_TWO,SECONDARY,Fresh versus extended qualifying run
+DA09_VOLUME,participation,volume_ratio20,AT_OR_ABOVE_ONE minus BELOW_ONE,SECONDARY,Signal-day volume relative to lagged median
+DA10_HIGH60,price_location,high60_state,NEAR_HIGH minus FAR_BELOW_HIGH,SECONDARY,Breakout proximity versus rebound location
+DA11_SPY_SMA200,market_context,spy_above_sma200,ABOVE minus BELOW,SECONDARY,Broad-market slow-anchor state
+DA12_SPY_MOM60,market_context,spy_momentum_60,POSITIVE minus NONPOSITIVE,SECONDARY,Broad-market intermediate trend
+DA13_CHECKPOINT,path_behavior,checkpoint_cumulative_sign,POSITIVE minus NONPOSITIVE remaining return at checkpoints one through four,PRIMARY,Early failure recovery and giveback diagnostic without changing the exit
