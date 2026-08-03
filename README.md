@@ -25,6 +25,7 @@ tests/              Lightweight smoke tests plus future testthat tests
 docs/               System design and architecture decision records
 config/             Example configuration files
 literature_studies/ Book-grounded strategy exercises, tests, docs, and decks
+operator_hypothesis_lab/ Minimal operator-origin hypotheses and evidence
 ```
 
 ## First Smoke Test
@@ -57,13 +58,18 @@ powershell -ExecutionPolicy Bypass -File scripts/test/run_tests.ps1 -RscriptPath
 
 The R runner adds ignored `.codex_r_libs/` to `.libPaths()` when present, then
 runs the scaffold smoke test, data-layer validation, the core non-network
-testthat suite, and the separate
-`literature_studies/tests/testthat/` suite.
+testthat suite, and the separate `literature_studies/tests/testthat/` and
+`operator_hypothesis_lab/tests/testthat/` suites.
 
 Book-grounded strategy exercises are indexed in
 [`literature_studies/README.md`](literature_studies/README.md). That top-level
 area keeps their hypothesis lineage separate from the organically developed
 Gen5.x system while reusing shared data and workbench infrastructure.
+
+Minimal hypotheses originating in operator observations are indexed in
+[`operator_hypothesis_lab/README.md`](operator_hypothesis_lab/README.md).
+That lane permits explicit reused-window discovery while keeping replication
+and untouched validation claims separate.
 
 For the full local operator setup sequence, including config overlays, credentials, local cache roots, repo-local R libraries, validation order, and the credentialed Alpaca refresh smoke, see `docs/GEN5_V0_OPERATOR_RUNBOOK.md`.
 

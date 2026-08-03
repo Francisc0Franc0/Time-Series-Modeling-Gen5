@@ -57,5 +57,11 @@ run_step("literature-study non-network tests", {
   )
 })
 
+run_step("operator-hypothesis-lab non-network tests", {
+  testthat::test_dir(
+    file.path(repo_root, "operator_hypothesis_lab", "tests", "testthat")
+  )
+})
+
 message("")
 message("Gen5 local tests passed.")

@@ -118,6 +118,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D102` | Bookmark LIT-MOM-01.2 as promising for audit and refinement without promoting it to alpha | current continuation | `one of the most encouraging ... potential for refinement ... literature based concept + my own original hypothesis` | Priority research direction retained; retrospective, selection, beta, survivor, dependence, and drawdown audits remain mandatory |
 | `D103` | Attribute LIT-MOM-01.2 raw returns before considering factors or filters | current continuation | `compare against basic stuff like "What would've happened had we simply done buy and hold?" ... quantify what "environment" this type of strategy is likely to do well in` | Freeze and complete exposure, matched-random, horizon-selection, SPY-beta, and environment audit; stop at 2/11 with no incremental timing evidence; environment remains descriptive only |
 | `D104` | Audit representative LIT-MOM-01.2 trade tapes before proposing refinements | current continuation | `select some representative trade tapes that show the mix of behaviors this strategy exhibited` | Freeze eight outcome-aware archetypes before individual inspection; complete visual review; preserve Audit 01 STOP and sealed 2024+ data; retain only narrower diagnostic questions |
+| `D105` | Create a separate operator-origin hypothesis lab and run its first causal momentum discovery | current continuation | `if there are two consecutive green gap ups, enter` | Register `HYP-MOM-01.1`; freeze a next-open five-session long-only reused-window POC; complete with no promotion authority after unfavorable ownership and random-timing controls |
 
 ## Compact Decision Records
 
@@ -1776,6 +1777,32 @@ tasks by the branch name above, the phrase, or the decision date.
   `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`, leave 2024+ sealed, and
   discuss before freezing any new diagnostic.
 
+### D105 — Operator-origin hypotheses receive a separate evidence lane
+
+- **Operator direction:** Create a separate folder for minimal, sometimes
+  technical hypotheses that originate in the operator's own observations;
+  permit freeform discovery while later pivoting to wider fresh data for
+  validation. Begin with: after two consecutive green gap-ups, enter long.
+- **Architecture:** Register the third lineage as `operator_hypothesis_lab/`
+  and use `HYP-[FAMILY]-[CONCEPT].[VARIANT]`. Keep
+  `DISCOVERY_REUSED_WINDOW`, `FROZEN_REPLICATION`, and
+  `UNTOUCHED_VALIDATION` distinct so inspected data never acquires fresh
+  evidentiary status through reuse.
+- **Frozen POC:** `HYP-MOM-01.1` requires two consecutive completed sessions
+  that each gap above the prior close and finish green. Observe after the
+  second close, enter long next open, exit after five open-to-open intervals,
+  charge 5 bp per side, reinvest, and forbid within-asset overlap. Evaluate 22
+  stocks independently over 2021-2023; do not form a portfolio or query 2024+.
+- **Result:** 821 executed trades had a `52.62%` hit rate but a `-0.0178%`
+  mean primary-cost return. Only `1 / 22` asset paths beat buy-and-hold and the
+  median matched-random percentile was `34.25%`. The negative mean alongside
+  the positive median exposes loss-tail asymmetry rather than validated
+  continuation.
+- **Decision:** Record `DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`. The raw
+  rule should not advance directly to validation. Discuss one narrow
+  exit-path, environment, or pattern-strength question before freezing a
+  substantive `HYP-MOM-01.2` variant; keep NEE and year differences anecdotal.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1803,6 +1830,10 @@ tasks by the branch name above, the phrase, or the decision date.
 - [Literature source ledger](../literature_studies/docs/GEN5_LITERATURE_SOURCE_LEDGER.md)
 - [LIT-MOM-01.2 representative trade-tape review](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
 - [LIT-MOM-01.2 representative trade-tape deck](../literature_studies/presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx)
+- [Operator Hypothesis Lab index](../operator_hypothesis_lab/README.md)
+- [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
+- [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
+- [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
