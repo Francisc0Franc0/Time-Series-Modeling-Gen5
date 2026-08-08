@@ -13,10 +13,23 @@ hyp_mom021_fixture <- function(symbol = "TEST") {
   )
 }
 
+hyp_mom021_no_in_window_cross_fixture <- function(symbol = "NO_CROSS") {
+  dates <- seq(as.Date("2019-01-02"), as.Date("2023-12-29"), by = "day")
+  dates <- dates[as.POSIXlt(dates)$wday %in% 1:5]
+  k <- seq_along(dates)
+  close <- 100 + 0.05 * k
+  data.frame(
+    symbol = symbol, session_date = dates, open = close,
+    high = close * 1.002, low = close * 0.998,
+    close = close, volume = 1e6 + k, stringsAsFactors = FALSE
+  )
+}
+
 testthat::test_that("contract fixes the 200-session causal rule", {
   contract <- hyp_mom021_contract()
   testthat::expect_equal(contract$sma_sessions, 200L)
   testthat::expect_equal(contract$discovery_end, as.Date("2023-12-29"))
+  testthat::expect_identical(contract$entry_initialization, "CASH_UNTIL_IN_WINDOW_CROSS_ABOVE")
   contract$sma_sessions <- 150L
   testthat::expect_error(hyp_mom021_validate_contract(contract), "contract changed")
 })
@@ -34,18 +47,20 @@ testthat::test_that("cross signals execute at the following open", {
   bars <- hyp_mom021_fixture()
   state <- hyp_mom021_state(bars)
   replay <- hyp_mom021_replay(bars, 5)
-  signal_dates <- state$session_date[state$cross_above & state$session_date >= as.Date("2021-01-01")]
-  signal_dates <- signal_dates[signal_dates < as.Date("2023-12-29")]
-  entries <- replay$trades$entry_date[replay$trades$entry_reason == "CROSS_ABOVE"]
+  entries <- replay$trades$entry_date
   testthat::expect_true(length(entries) > 0)
+  testthat::expect_true(all(replay$trades$entry_reason == "CROSS_ABOVE"))
   for (entry in entries) {
     i <- match(as.Date(entry, origin = "1970-01-01"), state$session_date)
     testthat::expect_true(state$cross_above[[i - 1L]])
+    testthat::expect_gte(state$session_date[[i - 1L]], hyp_mom021_contract()$discovery_start)
   }
 })
 
 testthat::test_that("finite-window replay charges costs and records boundaries", {
   replay <- hyp_mom021_replay(hyp_mom021_fixture(), 5)
+  testthat::expect_false(replay$path$cross_triggered_long_state[[1L]])
+  testthat::expect_identical(replay$path$signal_type[[1L]], "PRE_WINDOW_STATE_IGNORED")
   testthat::expect_true(all(is.finite(replay$path$strategy_wealth_open)))
   testthat::expect_true(all(replay$trades$net_trade_return < replay$trades$gross_trade_return))
   testthat::expect_true(all(replay$trades$holding_sessions > 0))
@@ -55,8 +70,9 @@ testthat::test_that("finite-window replay charges costs and records boundaries",
 testthat::test_that("circular timing controls are deterministic and matched in count", {
   bars <- hyp_mom021_fixture()
   replay <- hyp_mom021_replay(bars, 5)
-  a <- hyp_mom021_random_controls(bars, replay$path$target_from_prior_close, 5, seed_offset = 7L)
-  b <- hyp_mom021_random_controls(bars, replay$path$target_from_prior_close, 5, seed_offset = 7L)
+  state <- head(replay$path$cross_triggered_long_state, -1L)
+  a <- hyp_mom021_random_controls(bars, state, 5, seed_offset = 7L)
+  b <- hyp_mom021_random_controls(bars, state, 5, seed_offset = 7L)
   testthat::expect_equal(a, b)
   testthat::expect_length(a, hyp_mom021_contract()$random_simulations)
   testthat::expect_true(all(is.finite(a)))
@@ -72,6 +88,17 @@ testthat::test_that("asset analysis reports return, risk, exposure, and controls
   testthat::expect_true(result$summary$exposure_fraction < 1)
   testthat::expect_true(result$summary$observed_random_percentile >= 0)
   testthat::expect_true(result$summary$observed_random_percentile <= 1)
+})
+
+testthat::test_that("assets already above SMA200 wait for a fresh in-window cross", {
+  result <- hyp_mom021_analyze_asset(hyp_mom021_no_in_window_cross_fixture())
+  testthat::expect_equal(result$summary$trade_count, 0L)
+  testthat::expect_equal(result$summary$exposure_fraction, 0)
+  testthat::expect_equal(result$summary$primary_return, 0)
+  testthat::expect_equal(result$summary$maximum_drawdown, 0)
+  testthat::expect_true(is.na(result$summary$observed_random_percentile))
+  testthat::expect_false(any(result$path$cross_triggered_long_state))
+  testthat::expect_equal(nrow(result$trades), 0L)
 })
 
 testthat::test_that("confirmation observations fail loudly", {

@@ -22,11 +22,16 @@ env_or <- function(name, default) { value <- Sys.getenv(name, unset = ""); if (n
 env_bool <- function(name, default = FALSE) tolower(env_or(name, if (default) "true" else "false")) %in% c("1", "true", "yes", "y")
 write_csv <- function(x, path) { utils::write.csv(as.data.frame(x), path, row.names = FALSE, na = ""); invisible(path) }
 add_identity <- function(x, reg) {
-  if (is.null(x) || !nrow(x)) return(x)
+  if (is.null(x)) return(x)
+  if (!nrow(x)) {
+    identity <- reg[FALSE, c("instance_id", "symbol", "cohort", "sector", "source_registry"), drop = FALSE]
+    return(cbind(identity, x[, setdiff(names(x), "symbol"), drop = FALSE]))
+  }
   identity <- reg[rep(1L, nrow(x)), c("instance_id", "symbol", "cohort", "sector", "source_registry"), drop = FALSE]
   cbind(identity, x[, setdiff(names(x), "symbol"), drop = FALSE])
 }
 percent <- function(x, digits = 1L) paste0(formatC(100 * x, digits = digits, format = "f"), "%")
+median_na <- function(x) if (all(is.na(x))) NA_real_ else stats::median(x, na.rm = TRUE)
 
 contract <- hyp_mom021_validate_contract()
 original_path <- file.path(repo_root, "operator_hypothesis_lab", "registries", "hyp_mom_01_1_discovery_registry.csv")
@@ -116,16 +121,16 @@ panel_summary <- function(x, label) data.frame(
   median_excess_vs_buy_hold = stats::median(x$excess_vs_buy_hold),
   assets_beating_buy_hold = sum(x$excess_vs_buy_hold > 0),
   median_exposure_fraction = stats::median(x$exposure_fraction),
-  median_primary_sharpe = stats::median(x$primary_sharpe, na.rm = TRUE),
+  median_primary_sharpe = median_na(x$primary_sharpe),
   median_maximum_drawdown = stats::median(x$maximum_drawdown),
   median_buy_hold_maximum_drawdown = stats::median(x$buy_hold_maximum_drawdown),
   median_drawdown_improvement = stats::median(x$drawdown_improvement),
-  median_random_percentile = stats::median(x$observed_random_percentile),
-  assets_above_random_50 = sum(x$observed_random_percentile > 0.5),
-  assets_above_random_80 = sum(x$observed_random_percentile > 0.8),
+  median_random_percentile = median_na(x$observed_random_percentile),
+  assets_above_random_50 = sum(x$observed_random_percentile > 0.5, na.rm = TRUE),
+  assets_above_random_80 = sum(x$observed_random_percentile > 0.8, na.rm = TRUE),
   median_trade_count = stats::median(x$trade_count),
-  median_holding_sessions = stats::median(x$median_holding_sessions),
-  median_whipsaw_fraction = stats::median(x$whipsaw_20_fraction),
+  median_holding_sessions = median_na(x$median_holding_sessions),
+  median_whipsaw_fraction = median_na(x$whipsaw_20_fraction),
   stringsAsFactors = FALSE
 )
 panels <- rbind(
@@ -185,7 +190,7 @@ dev.off()
 
 png(file.path(visual_dir, "timing_controls_and_exposure.png"), 1800, 1000, res = 150)
 par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))
-hist(asset_summary$observed_random_percentile, breaks = seq(0, 1, .1), col = blue, border = "white", xlab = "Percentile vs circular state shifts", main = "Matched timing control")
+hist(stats::na.omit(asset_summary$observed_random_percentile), breaks = seq(0, 1, .1), col = blue, border = "white", xlab = "Percentile vs circular state shifts", main = "Matched timing control")
 abline(v = .5, lty = 2)
 plot(asset_summary$exposure_fraction, asset_summary$excess_vs_buy_hold, pch = 19, col = ifelse(asset_summary$excess_vs_buy_hold > 0, green, red), xlab = "Fraction of sessions invested", ylab = "Excess return vs buy-and-hold", main = "Return tradeoff versus time in market")
 abline(h = 0, lty = 2)
@@ -194,8 +199,8 @@ dev.off()
 png(file.path(visual_dir, "trade_mechanics_distribution.png"), 1800, 1000, res = 150)
 par(mfrow = c(1, 3), mar = c(5, 5, 4, 1))
 hist(asset_summary$trade_count, col = blue, border = "white", main = "Round trips per asset", xlab = "Trade count")
-hist(asset_summary$median_holding_sessions, col = green, border = "white", main = "Median holding duration", xlab = "Sessions")
-hist(asset_summary$whipsaw_20_fraction, col = purple, border = "white", main = "Short-hold diagnostic", xlab = "Fraction <= 20 sessions")
+hist(stats::na.omit(asset_summary$median_holding_sessions), col = green, border = "white", main = "Median holding duration", xlab = "Sessions")
+hist(stats::na.omit(asset_summary$whipsaw_20_fraction), col = purple, border = "white", main = "Short-hold diagnostic", xlab = "Fraction <= 20 sessions")
 dev.off()
 
 o <- order(sector_summary$median_excess_vs_buy_hold)
@@ -213,7 +218,7 @@ plot_tape <- function(symbol, role, file) {
   par(mar = c(2, 6, 4, 2))
   plot(p$session_date, p$close, type = "l", col = ink, lwd = 1.4, xlab = "", ylab = "Adjusted close", main = paste(role, "|", symbol, "| price and long/cash state"))
   lines(p$session_date, p$sma200, col = blue, lwd = 2)
-  usr <- par("usr"); long <- which(p$target_from_prior_close)
+  usr <- par("usr"); long <- which(p$cross_triggered_long_state)
   if (length(long)) segments(p$session_date[long], usr[[3L]], p$session_date[long], usr[[3L]] + .035 * diff(usr[3:4]), col = adjustcolor(green, .35), lwd = 3)
   legend("topleft", c("Close", "SMA200", "Long state"), col = c(ink, blue, green), lty = c(1, 1, 1), lwd = c(1.4, 2, 3), bty = "n")
   par(mar = c(6, 6, 3, 2))
@@ -229,12 +234,16 @@ for (i in seq_len(nrow(manifest))) {
 }
 
 integrity <- data.frame(
-  check = c("registered_122", "unique_symbols", "eleven_sectors", "explicit_as_of", "confirmation_excluded", "eligible_have_full_calendar", "eligible_have_prehistory", "no_replacements", "primary_cost_5bp", "stress_cost_10bp"),
+  check = c("registered_122", "unique_symbols", "eleven_sectors", "explicit_as_of", "confirmation_excluded",
+            "eligible_have_full_calendar", "eligible_have_prehistory", "no_replacements", "primary_cost_5bp", "stress_cost_10bp",
+            "cash_until_in_window_cross", "all_entries_cross_triggered"),
   passed = c(nrow(registry) == 122L, !anyDuplicated(registry$symbol), length(unique(registry$sector)) == 11L,
              nzchar(contract$as_of_timestamp), !any(bars_all$session_date >= contract$confirmation_start),
              all(coverage$discovery_missing_sessions[coverage$analysis_eligible] == 0L),
              all(coverage$prehistory_sessions[coverage$analysis_eligible] >= contract$prehistory_sessions),
-             nrow(eligible) == sum(coverage$analysis_eligible), contract$primary_cost_bps == 5, contract$stress_cost_bps == 10)
+             nrow(eligible) == sum(coverage$analysis_eligible), contract$primary_cost_bps == 5, contract$stress_cost_bps == 10,
+             identical(contract$entry_initialization, "CASH_UNTIL_IN_WINDOW_CROSS_ABOVE"),
+             all(trades$entry_reason == "CROSS_ABOVE"))
 )
 if (!all(integrity$passed)) stop("HYP-MOM-02.1 integrity check failed.", call. = FALSE)
 
@@ -243,7 +252,8 @@ run_spec <- data.frame(
   evidence_stage = contract$evidence_stage, as_of_timestamp = contract$as_of_timestamp,
   discovery_start = contract$discovery_start, discovery_end = contract$discovery_end,
   registered_assets = nrow(registry), eligible_assets = nrow(eligible),
-  trade_count = nrow(trades), refresh = refresh, stringsAsFactors = FALSE
+  trade_count = nrow(trades), correction = "CROSS_TRIGGERED_ONLY_NO_WARM_START",
+  refresh = refresh, stringsAsFactors = FALSE
 )
 write_csv(run_spec, file.path(output_dir, "hyp_mom_02_1_run_spec.csv"))
 write_csv(integrity, file.path(output_dir, "hyp_mom_02_1_integrity.csv"))

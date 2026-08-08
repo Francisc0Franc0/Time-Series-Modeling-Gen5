@@ -122,6 +122,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D106` | Diagnose which observable conditions matter for HYP-MOM-01.1 before proposing a variant | current continuation | `Does adding requirements about the properties of the green candles matter?` | Freeze `DIAGNOSTIC_ATLAS_01`; measure volatility-scaled pattern strength, asset and market trend context, prior return, secondary confirmation, and within-trade paths; retain SPY-above-SMA200 only as a future distinct-data replication question |
 | `D107` | Widen HYP-MOM-01.1 before further follow-ups and require its diagnostic hints to survive a frozen stock atlas | current continuation | `this test needs more breadth` | Reuse the prior frozen 100-name breadth-attention registry; merge 94 eligible additions with the original 22; preserve the 116-asset null and withdraw the earlier SPY-SMA200 replication preference |
 | `D108` | Open HYP-MOM-02.1 as an immediate wide-breadth SMA200 long/cash path study | current continuation | `buying when the price crosses above the 200 SMA, and exiting when it crosses below` | Freeze causal next-open state changes across the combined 122-name registry; complete 119 eligible replays; retain drawdown-defense evidence but no generic return-timing or promotion authority |
+| `D109` | Correct HYP-MOM-02.1 to the operator's narrow fresh-cross event question | current continuation | `only include trades in the window that were triggered after a cross` | Start every asset in cash; permit entry only after a fresh in-window cross above SMA200; rerun every path and control; preserve `02.1` because this corrects rather than changes the stated mechanics |
 
 ## Compact Decision Records
 
@@ -1867,22 +1868,24 @@ tasks by the branch name above, the phrase, or the decision date.
   the consequence of buying after price crosses above the 200-session moving
   average and exiting after it crosses below.
 - **Frozen scope:** Use the completed adjusted close and inclusive SMA200 after
-  each session; set the next-open state to long when close is above SMA200 and
-  cash otherwise. Replay each asset independently with full-capital long/cash
+  each session; enter at the next open only after a fresh in-window cross above
+  and exit at the next open after a fresh cross below. Replay each asset
+  independently with full-capital long/cash
   accounting, reinvestment, 5 bp primary and 10 bp stress costs per side,
-  warm-start state, final liquidation, buy-and-hold ownership, 500 circular
-  state shifts, and six mechanically selected tapes. Reuse the combined 122
+  cash-until-cross initialization, final liquidation, buy-and-hold ownership,
+  500 circular state shifts, and six mechanically selected tapes. Reuse the combined 122
   registered identities, require exact 2021-2023 coverage plus 220 sessions of
   prehistory, keep failures, and exclude 2024+.
 - **Coverage:** After a bounded provider refresh, 119 assets were eligible.
   APHA and SNE lacked full discovery history and LI lacked prehistory; no names
-  were substituted. The run completed 1,729 round trips.
-- **Result:** Median primary return was `+6.24%`, versus `+20.79%` for
-  buy-and-hold, and only `30 / 119` assets beat ownership. Maximum drawdown
-  improved in `79 / 119`, with median improvement `+4.31` percentage points.
-  Pooled trades were only `25.0%` positive and had a `-1.35%` median but
-  `+0.86%` mean, revealing many short whipsaws paid for by a few long trends.
-  Median actual timing ranked at the `33.8th` percentile of exposure-matched
+  were substituted. The corrected run completed 1,624 cross-triggered round trips.
+- **Result:** Median primary return was `-2.73%`, versus `+20.79%` for
+  buy-and-hold, and only `26 / 119` assets beat ownership. Maximum drawdown
+  improved in `88 / 119`, with median improvement `+5.98` percentage points.
+  Pooled trades were only `23.15%` positive and had a `-1.35%` median but
+  `+0.15%` mean, revealing right-skewed outcomes: many short whipsaws paid for
+  by a few longer trends, without establishing mathematical convexity.
+  Median actual timing ranked at the `27.4th` percentile of exposure-matched
   circular shifts, so favorable asset examples do not establish alignment
   skill.
 - **Decision:** Record
@@ -1890,6 +1893,32 @@ tasks by the branch name above, the phrase, or the decision date.
   defensive exposure-filter lesson, not a demonstrated generic timing edge.
   Do not tune SMA length, add buffers, select sectors or cohorts, alter exits,
   form a portfolio, inspect 2024+, or open live behavior from this discovery.
+
+### D109 — Fresh in-window crosses are the authoritative HYP-MOM-02.1 trigger
+
+- **Operator correction:** A causal warm start for an asset already above
+  SMA200 at the discovery boundary still taints the narrow question because no
+  cross above occurred inside the measured window. Include only trades
+  triggered after a fresh cross.
+- **Implementation:** Keep `HYP-MOM-02.1`, but supersede the initial replay with
+  `CROSS_TRIGGERED_ONLY_NO_WARM_START`. Every asset begins in cash. A completed
+  in-window cross above generates a next-open entry; a completed cross below
+  generates a next-open exit. Assets with no qualifying cross remain valid
+  zero-participation observations. Recompute all wealth paths, costs,
+  drawdowns, exposure, controls, summaries, and tapes rather than filtering the
+  old trade table.
+- **Audit:** The correction removed 105 boundary-initialized trades: round
+  trips fell from `1,729` to `1,624`, median exposure from `60.82%` to `43.48%`,
+  median strategy return from `+6.24%` to `-2.73%`, and the matched-shift timing
+  percentile from `33.8%` to `27.4%`. Drawdown improvement became more common
+  (`88 / 119`) while ownership outperformance became less common (`26 / 119`).
+- **Terminology:** The pooled distribution is right-skewed because its
+  `-1.35%` median and `+0.15%` mean reflect many small losses plus fewer larger
+  gains. That asymmetry is not, by itself, proof of formal convexity, which
+  requires a payoff whose slope increases with the underlying driver.
+- **Decision:** This is a contract correction, not a substantive new variant,
+  so preserve `02.1`. Retain the defensive-filter lesson and the same no-tuning,
+  no-promotion, no-portfolio, no-live-authority boundary.
 
 ## Related Artifacts
 
@@ -2190,12 +2219,13 @@ supersedes the earlier SPY-SMA200 replication preference. Preserve the null,
 keep 2024+ sealed, and do not promote any filter, cohort, sector, checkpoint,
 portfolio, or live behavior.
 The new `HYP-MOM-02.1` lane then tested SMA200 as the strategy itself rather
-than as a filter on another setup. Across 119 eligible assets and 1,729 round
-trips, the causal long/cash path reduced maximum drawdown in 79 assets but beat
-buy-and-hold in only 30. Its 25.0% pooled hit rate, negative median trade,
-positive mean trade, and short median holding duration reveal the asymmetric
+than as a filter on another setup. Under the corrected cross-only replay,
+across 119 eligible assets and 1,624 round trips, the causal long/cash path
+reduced maximum drawdown in 88 assets but beat buy-and-hold in only 26. Its
+23.15% pooled hit rate, negative median trade, positive mean trade, and short
+median holding duration reveal the right-skewed
 trend-following bargain: frequent false starts in exchange for occasional long
 winners and some crash avoidance. Actual state alignment ranked at only the
-33.8th median percentile of exposure-matched circular shifts. Record
+27.4th median percentile of exposure-matched circular shifts. Record
 `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`; retain the risk-filter lesson
 without claiming generic alpha or tuning the inspected rule.

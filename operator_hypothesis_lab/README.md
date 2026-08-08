@@ -63,20 +63,21 @@ shrink materially in the added assets; no diagnostic is promoted. The
 records the design, coverage, panel comparisons, diagnostic persistence,
 path audit, and representative tapes.
 
-`HYP-MOM-02.1` asks the deliberately simpler path question: what happens when
-an asset is held long whenever its last completed adjusted close is above its
-200-session simple moving average, and otherwise held in cash? The completed
+`HYP-MOM-02.1` asks the deliberately narrow event question: what happens when
+an asset starts in cash, enters only after a fresh adjusted-close cross above
+its 200-session simple moving average inside the study window, and exits after
+a fresh cross below? The completed
 [wide discovery contract](docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_CONTRACT.md)
 freezes causal next-open state changes, long-only full-capital accounting,
 5/10 bp per-side costs, buy-and-hold ownership, circular state-shift controls,
 and the combined 122-name registered universe before interpreting outcomes.
 The [results](docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_RESULTS.md) cover
-119 eligible assets and 1,729 round trips. The rule reduced maximum drawdown in
-79 assets but beat ownership in only 30; its median actual timing ranked at the
-33.8th percentile of exposure-matched circular shifts. It is therefore
+119 eligible assets and 1,624 round trips. The rule reduced maximum drawdown in
+88 assets but beat ownership in only 26; its median actual timing ranked at the
+27.4th percentile of exposure-matched circular shifts. It is therefore
 recorded as a defensible defensive exposure filter, not a demonstrated generic
 timing edge. The [evidence deck](presentations/hyp_mom_02_1_sma200_cross_wide_discovery_evidence.pptx)
-explains the rule, return/protection tradeoff, convex trade mechanics, matched
+explains the rule, return/protection tradeoff, right-skewed trade outcomes, matched
 controls, and six representative path tapes.
 
 Generated packets live under
