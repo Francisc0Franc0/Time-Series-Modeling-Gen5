@@ -23,7 +23,7 @@ only in `DISCOVERY`; it never becomes fresh validation through repetition.
 Every result must name its evidence stage. Exploratory variants and failed
 questions remain part of the record.
 
-## Current lane
+## Current lanes
 
 `HYP-MOM-01.1` asks what happens after two consecutive completed daily candles
 both gap above the prior close and finish green. The discovery rule observes
@@ -62,6 +62,22 @@ shrink materially in the added assets; no diagnostic is promoted. The
 [breadth evidence deck](presentations/hyp_mom_01_1_stock_atlas_02_breadth_extension_evidence.pptx)
 records the design, coverage, panel comparisons, diagnostic persistence,
 path audit, and representative tapes.
+
+`HYP-MOM-02.1` asks the deliberately simpler path question: what happens when
+an asset is held long whenever its last completed adjusted close is above its
+200-session simple moving average, and otherwise held in cash? The completed
+[wide discovery contract](docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_CONTRACT.md)
+freezes causal next-open state changes, long-only full-capital accounting,
+5/10 bp per-side costs, buy-and-hold ownership, circular state-shift controls,
+and the combined 122-name registered universe before interpreting outcomes.
+The [results](docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_RESULTS.md) cover
+119 eligible assets and 1,729 round trips. The rule reduced maximum drawdown in
+79 assets but beat ownership in only 30; its median actual timing ranked at the
+33.8th percentile of exposure-matched circular shifts. It is therefore
+recorded as a defensible defensive exposure filter, not a demonstrated generic
+timing edge. The [evidence deck](presentations/hyp_mom_02_1_sma200_cross_wide_discovery_evidence.pptx)
+explains the rule, return/protection tradeoff, convex trade mechanics, matched
+controls, and six representative path tapes.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

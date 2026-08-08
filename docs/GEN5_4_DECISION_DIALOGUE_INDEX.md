@@ -1,7 +1,7 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-08-04
+Index date: 2026-08-08
 Branch: `codex/Gen5.4-ml-decision-engine-plan`
 
 ## Purpose
@@ -121,6 +121,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D105` | Create a separate operator-origin hypothesis lab and run its first causal momentum discovery | current continuation | `if there are two consecutive green gap ups, enter` | Register `HYP-MOM-01.1`; freeze a next-open five-session long-only reused-window POC; complete with no promotion authority after unfavorable ownership and random-timing controls |
 | `D106` | Diagnose which observable conditions matter for HYP-MOM-01.1 before proposing a variant | current continuation | `Does adding requirements about the properties of the green candles matter?` | Freeze `DIAGNOSTIC_ATLAS_01`; measure volatility-scaled pattern strength, asset and market trend context, prior return, secondary confirmation, and within-trade paths; retain SPY-above-SMA200 only as a future distinct-data replication question |
 | `D107` | Widen HYP-MOM-01.1 before further follow-ups and require its diagnostic hints to survive a frozen stock atlas | current continuation | `this test needs more breadth` | Reuse the prior frozen 100-name breadth-attention registry; merge 94 eligible additions with the original 22; preserve the 116-asset null and withdraw the earlier SPY-SMA200 replication preference |
+| `D108` | Open HYP-MOM-02.1 as an immediate wide-breadth SMA200 long/cash path study | current continuation | `buying when the price crosses above the 200 SMA, and exiting when it crosses below` | Freeze causal next-open state changes across the combined 122-name registry; complete 119 eligible replays; retain drawdown-defense evidence but no generic return-timing or promotion authority |
 
 ## Compact Decision Records
 
@@ -1860,6 +1861,36 @@ tasks by the branch name above, the phrase, or the decision date.
   market state, or exit checkpoint. Keep 2024+ sealed and require a new
   economic question plus distinct evidence before another lane.
 
+### D108 — HYP-MOM-02.1 tests the whole SMA200 long/cash path at wide breadth
+
+- **Operator direction:** Open a new, simple lane at wide breadth and measure
+  the consequence of buying after price crosses above the 200-session moving
+  average and exiting after it crosses below.
+- **Frozen scope:** Use the completed adjusted close and inclusive SMA200 after
+  each session; set the next-open state to long when close is above SMA200 and
+  cash otherwise. Replay each asset independently with full-capital long/cash
+  accounting, reinvestment, 5 bp primary and 10 bp stress costs per side,
+  warm-start state, final liquidation, buy-and-hold ownership, 500 circular
+  state shifts, and six mechanically selected tapes. Reuse the combined 122
+  registered identities, require exact 2021-2023 coverage plus 220 sessions of
+  prehistory, keep failures, and exclude 2024+.
+- **Coverage:** After a bounded provider refresh, 119 assets were eligible.
+  APHA and SNE lacked full discovery history and LI lacked prehistory; no names
+  were substituted. The run completed 1,729 round trips.
+- **Result:** Median primary return was `+6.24%`, versus `+20.79%` for
+  buy-and-hold, and only `30 / 119` assets beat ownership. Maximum drawdown
+  improved in `79 / 119`, with median improvement `+4.31` percentage points.
+  Pooled trades were only `25.0%` positive and had a `-1.35%` median but
+  `+0.86%` mean, revealing many short whipsaws paid for by a few long trends.
+  Median actual timing ranked at the `33.8th` percentile of exposure-matched
+  circular shifts, so favorable asset examples do not establish alignment
+  skill.
+- **Decision:** Record
+  `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`. The lane supplies a useful
+  defensive exposure-filter lesson, not a demonstrated generic timing edge.
+  Do not tune SMA length, add buffers, select sectors or cohorts, alter exits,
+  form a portfolio, inspect 2024+, or open live behavior from this discovery.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1897,6 +1928,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-01.1 Stock Atlas 02 breadth contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_CONTRACT.md)
 - [HYP-MOM-01.1 Stock Atlas 02 breadth results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_STOCK_ATLAS_02_BREADTH_EXTENSION_RESULTS.md)
 - [HYP-MOM-01.1 Stock Atlas 02 breadth evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_stock_atlas_02_breadth_extension_evidence.pptx)
+- [HYP-MOM-02.1 wide discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_CONTRACT.md)
+- [HYP-MOM-02.1 wide discovery results](../operator_hypothesis_lab/docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_RESULTS.md)
+- [HYP-MOM-02.1 wide discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_1_sma200_cross_wide_discovery_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
@@ -2155,3 +2189,13 @@ panel, and every combined equal-asset interval crossed zero. Record
 supersedes the earlier SPY-SMA200 replication preference. Preserve the null,
 keep 2024+ sealed, and do not promote any filter, cohort, sector, checkpoint,
 portfolio, or live behavior.
+The new `HYP-MOM-02.1` lane then tested SMA200 as the strategy itself rather
+than as a filter on another setup. Across 119 eligible assets and 1,729 round
+trips, the causal long/cash path reduced maximum drawdown in 79 assets but beat
+buy-and-hold in only 30. Its 25.0% pooled hit rate, negative median trade,
+positive mean trade, and short median holding duration reveal the asymmetric
+trend-following bargain: frequent false starts in exchange for occasional long
+winners and some crash avoidance. Actual state alignment ranked at only the
+33.8th median percentile of exposure-matched circular shifts. Record
+`WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`; retain the risk-filter lesson
+without claiming generic alpha or tuning the inspected rule.
