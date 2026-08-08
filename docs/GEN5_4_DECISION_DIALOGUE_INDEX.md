@@ -123,6 +123,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D107` | Widen HYP-MOM-01.1 before further follow-ups and require its diagnostic hints to survive a frozen stock atlas | current continuation | `this test needs more breadth` | Reuse the prior frozen 100-name breadth-attention registry; merge 94 eligible additions with the original 22; preserve the 116-asset null and withdraw the earlier SPY-SMA200 replication preference |
 | `D108` | Open HYP-MOM-02.1 as an immediate wide-breadth SMA200 long/cash path study | current continuation | `buying when the price crosses above the 200 SMA, and exiting when it crosses below` | Freeze causal next-open state changes across the combined 122-name registry; complete 119 eligible replays; retain drawdown-defense evidence but no generic return-timing or promotion authority |
 | `D109` | Correct HYP-MOM-02.1 to the operator's narrow fresh-cross event question | current continuation | `only include trades in the window that were triggered after a cross` | Start every asset in cash; permit entry only after a fresh in-window cross above SMA200; rerun every path and control; preserve `02.1` because this corrects rather than changes the stated mechanics |
+| `D110` | Open HYP-MOM-02.2 as a qualified SMA200-entry, SMA50-exit composite | current continuation | `enter when price crosses above 200 SMA, then exit when the price crosses crosses below 50 SMA` | Require the entry close above both averages, execute next open, exit next open after close at/below SMA50, and require a new qualified SMA200 cross before re-entry; compare directly with authoritative fresh-cross 02.1 on the reused discovery panel |
 
 ## Compact Decision Records
 
@@ -1920,6 +1921,36 @@ tasks by the branch name above, the phrase, or the decision date.
   so preserve `02.1`. Retain the defensive-filter lesson and the same no-tuning,
   no-promotion, no-portfolio, no-live-authority boundary.
 
+### D110 — Qualified SMA200 entry, SMA50 exit, and strict re-entry
+
+- **Question:** Does an SMA200 cross identify a strong enough uptrend while a
+  faster SMA50 exit preserves more gains before the slow anchor breaks?
+- **Freeze:** Register `HYP-MOM-02.2` because entry confirmation, exit family,
+  and re-entry semantics all change. Every path starts cash. A fresh completed
+  close above SMA200 qualifies only when that close is also above SMA50; entry
+  occurs next open. The first completed close at or below SMA50 exits next
+  open. Recovery above SMA50 does not re-enter: another qualified SMA200 cross
+  is required.
+- **Comparison:** Reuse the exact 2021-2023 panel and recompute fresh-cross
+  `02.1` rather than treating the inspected window as fresh validation. Keep
+  warm-start state ownership as a separate descriptive estimand.
+- **Result:** Across 119 eligible assets, `02.2` completed `637` trades, skipped
+  `656` SMA200 crosses below SMA50, and had `16.76%` median exposure. Median
+  return was `+0.38%`; the median asset-level change versus fresh-cross `02.1`
+  was `+3.57` percentage points, while maximum drawdown improved in `105 / 119`
+  assets by a median `+11.09` points. Only `32 / 119` beat ownership, and the
+  actual schedule ranked at the `42.9th` percentile of exposure-matched shifts.
+- **Exit nuance:** SMA50 was earlier in only `155 / 637` matched entries, the
+  same in `176`, and later in `306`. “Faster” means more responsive, not always
+  vertically higher; after weakness SMA50 can sit below SMA200. Among genuinely
+  earlier exits, `123` avoided further downside and `31` forfeited upside, but
+  this retrospective decomposition cannot isolate exit causality from entry
+  confirmation and strict lockout.
+- **Decision:** Record `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`. Preserve
+  the defensive tradeoff and opportunity-cost lesson; do not tune average
+  lengths, alter lockout, select names, inspect 2024+, form a portfolio, or open
+  live authority from this reused-window study.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1960,6 +1991,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-02.1 wide discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-02.1 wide discovery results](../operator_hypothesis_lab/docs/HYP_MOM_02_1_SMA200_CROSS_WIDE_DISCOVERY_RESULTS.md)
 - [HYP-MOM-02.1 wide discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_1_sma200_cross_wide_discovery_evidence.pptx)
+- [HYP-MOM-02.2 wide discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_CONTRACT.md)
+- [HYP-MOM-02.2 wide discovery results](../operator_hypothesis_lab/docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_RESULTS.md)
+- [HYP-MOM-02.2 wide discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_2_sma200_entry_sma50_exit_wide_discovery_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
@@ -2229,3 +2263,13 @@ winners and some crash avoidance. Actual state alignment ranked at only the
 27.4th median percentile of exposure-matched circular shifts. Record
 `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`; retain the risk-filter lesson
 without claiming generic alpha or tuning the inspected rule.
+The substantive `HYP-MOM-02.2` revision then required a fresh SMA200 cross to
+close above SMA50, exited next open after close at or below SMA50, and imposed
+strict new-cross re-entry. Across the same 119 eligible assets it raised median
+return to `+0.38%` and improved drawdown versus fresh-cross `02.1` in
+`105 / 119`, but median exposure collapsed to `16.76%`, only `32 / 119` beat
+ownership, and the actual schedule ranked at the `42.9th` percentile of
+exposure-matched shifts. The matched-entry audit also corrected the intuition
+that SMA50 must exit first: it was earlier in only `155 / 637` entries and later
+in `306`. Record the same no-promotion status; retain the stronger defensive
+tradeoff and severe opportunity cost without tuning the inspected composite.

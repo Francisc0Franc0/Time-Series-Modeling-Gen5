@@ -38,9 +38,17 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-01.1 / DIAGNOSTIC_ATLAS_01` | Causal Condition and Path Atlas | `DISCOVERY_REUSED_WINDOW` | `DIAGNOSTIC_ATLAS_COMPLETE_NO_STRATEGY_AUTHORITY` |
 | `HYP-MOM-01.1 / STOCK_ATLAS_02_BREADTH_EXTENSION` | Frozen 100-Name Breadth Extension | `DISCOVERY_REUSED_WINDOW` | `DISCOVERY_BREADTH_EXTENSION_COMPLETE_NO_STRATEGY_AUTHORITY` |
 | `HYP-MOM-02.1` | SMA200 Cross Long/Cash | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-MOM-02.2` | Qualified SMA200 Entry / SMA50 Exit | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
 starts in cash and can enter only after a fresh in-window cross above SMA200.
 This correction restores the originally stated event question, so it does not
 create a substantive-mechanics decimal revision such as `02.2`.
+
+`HYP-MOM-02.2` is the substantive revision: entry requires both a fresh
+in-window SMA200 cross and close above SMA50; exit occurs after the first close
+at or below SMA50; and re-entry requires a new qualified SMA200 cross. The
+warm-start and fresh-cross `02.1` views remain valuable estimands inside the
+same investigation, but the composite entry, exit, and lockout change warrants
+the decimal increment.

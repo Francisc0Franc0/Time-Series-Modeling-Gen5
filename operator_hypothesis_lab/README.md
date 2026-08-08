@@ -80,6 +80,20 @@ timing edge. The [evidence deck](presentations/hyp_mom_02_1_sma200_cross_wide_di
 explains the rule, return/protection tradeoff, right-skewed trade outcomes, matched
 controls, and six representative path tapes.
 
+`HYP-MOM-02.2` keeps the fresh SMA200 cross as the entry event but makes three
+substantive changes: the signal close must also be above SMA50, the first close
+at or below SMA50 triggers a next-open exit, and re-entry requires another
+qualified SMA200 cross. The [frozen contract](docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_CONTRACT.md)
+and [wide discovery results](docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_RESULTS.md)
+retain the same 119 eligible assets and reused 2021-2023 window so the result is
+a direct discovery comparison, not fresh validation. Relative to authoritative
+fresh-cross `02.1`, median asset return changed by `+3.57` percentage points and
+maximum drawdown improved by `+11.09` points, but median exposure fell to
+`16.76%`, only `32 / 119` assets beat ownership, and exposure-matched timing
+ranked at the `42.9th` percentile. The [evidence deck](presentations/hyp_mom_02_2_sma200_entry_sma50_exit_wide_discovery_evidence.pptx)
+also shows why SMA50 was the earlier exit in only `155 / 637` matched entries.
+The lane remains `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
