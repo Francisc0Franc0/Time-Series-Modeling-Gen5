@@ -129,6 +129,19 @@ shows the frozen formulas, evidence boundary, pooled-fit temptation,
 chronological failure, gate conjunction, and the one comparator worth a future
 separately frozen discussion.
 
+The proposed S&P 500 sub-lane then stopped at its point-in-time data gate before
+any model fit. Its [frozen audit contract](docs/HYP_MOM_04_1_SP500_PIT_DATA_AUDIT_CONTRACT.md)
+cross-checked a pinned public membership ledger against 15 contemporaneous
+Wikipedia revisions and audited Alpaca coverage through 2020 only. The
+[results](docs/HYP_MOM_04_1_SP500_PIT_DATA_AUDIT_RESULTS.md) cover 591 source
+identities and 7,580 member-quarter rows. Ordinary bar coverage passed, but
+early later-alias mismatches reduced roster agreement to `0.9555`, sector
+coverage fell to `97.63%`, and `39` frozen target-quarter exits lacked a
+defensible terminal return. The
+[audit deck](presentations/hyp_mom_04_1_sp500_pit_data_audit_evidence.pptx)
+records `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN`; no Ridge model
+or 2021+ outcome was queried.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

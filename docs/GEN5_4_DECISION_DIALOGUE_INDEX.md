@@ -2058,6 +2058,38 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Source references:** [S&P DJI index-literacy explanation](https://www.spglobal.com/spdji/en/research-insights/index-literacy/the-sp-500-and-the-dow/);
   [fja05680/sp500 historical-membership notes](https://github.com/fja05680/sp500).
 
+### D115 — Point-in-time data must pass before the S&P 500 model exists
+
+- **Operator decision:** Reject a current-survivor S&P 500 panel and proceed
+  only through a point-in-time membership audit before fitting the unchanged
+  `HYP-MOM-04.1` model.
+- **Frozen audit:** `SP500-PIT-DATA-AUDIT-01` bounded all bars and outcomes at
+  `2020-12-31`, pinned `fja05680/sp500` commit
+  `c31ac3cc56f28cf9a02b4e694eff7ceab596a0ff`, resolved 15 contemporaneous
+  Wikipedia revisions, preserved source tickers, audited removed names, and
+  required defensible target-quarter exits. The audit contained no model fit
+  or OOS code.
+- **Evidence:** The primary rosters contained 505-506 names and Alpaca ordinary
+  coverage exceeded `97.63%` in every quarter. `184 / 185` non-current source
+  identities had some provider history. However, 2017Q1 roster Jaccard fell to
+  `0.9555` because the primary history used later aliases such as `BKNG/PCLN`,
+  `TPR/COH`, and `WELL/HCN`; contemporaneous sector coverage fell to `97.63%`;
+  and `39 / 92` target-quarter index departures lacked both frozen opens and a
+  defensible event settlement return.
+- **Decision:** Record
+  `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN`. Six of nine data gates
+  passing is insufficient because the gates are conjunctive. No Ridge fit,
+  lambda selection, quartile score, or 2021+ outcome was queried. Reopening
+  requires a new data-source decision for original historical identifiers,
+  contemporaneous sectors, and merger/delisting/spin-off returns—not a relaxed
+  gate or model tweak.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_SP500_PIT_DATA_AUDIT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_SP500_PIT_DATA_AUDIT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_1_sp500_pit_data_audit_evidence.pptx`,
+  and ignored packet
+  `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_1_sp500_pit_data_audit_20260810`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)

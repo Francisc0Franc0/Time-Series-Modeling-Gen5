@@ -43,6 +43,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-02.3` | Qualified SMA200 Entry / SMA50 Exit / SMA50-Reclaim Re-entry | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
 | `HYP-MOM-03.1` | Rising-SMA200 Regime / SMA50 Pullback Reclaim | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
 | `HYP-MOM-04.1` | Regularized Trend-State Quartile | `TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
+| `HYP-MOM-04.1 / SP500-PIT-DATA-AUDIT-01` | Point-in-Time S&P 500 Replication Feasibility | `DATA_FEASIBILITY_AUDIT` | `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -69,3 +70,9 @@ with a six-feature cross-sectional quarterly ranker. Its pooled TRAIN fit was
 strong, but the expanding-validation rank IC was negative. The frozen OOS lock
 therefore held: 2021-2023 was not queried, and no pooled-fit feature or
 comparator may be promoted under this identifier.
+
+`HYP-MOM-04.1 / SP500-PIT-DATA-AUDIT-01` changes no model mechanic. It is a
+pre-replication data-feasibility sub-lane. Six of nine hard data gates passed,
+but public-roster identity agreement, contemporaneous sector coverage, and
+terminal-outcome completeness failed. No `SP500-PIT-REPLICATION-01` strategy
+lane was therefore frozen or run.
