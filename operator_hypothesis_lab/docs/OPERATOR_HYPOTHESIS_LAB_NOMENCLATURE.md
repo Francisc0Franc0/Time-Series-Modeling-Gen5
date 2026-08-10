@@ -42,6 +42,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-02 / ATTRIBUTION_ATLAS_01` | Entry / Exit / Re-entry Attribution | `DISCOVERY_REUSED_WINDOW` | `REUSED_WINDOW_ATTRIBUTION_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-02.3` | Qualified SMA200 Entry / SMA50 Exit / SMA50-Reclaim Re-entry | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
 | `HYP-MOM-03.1` | Rising-SMA200 Regime / SMA50 Pullback Reclaim | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
+| `HYP-MOM-04.1` | Regularized Trend-State Quartile | `TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -62,3 +63,9 @@ without waiting for another SMA200 cross. `HYP-MOM-03.1` is a new concept,
 because the rising SMA200 becomes regime permission and the SMA50 reclaim—not
 the SMA200 cross—becomes the entry setup. Both stopped on their predeclared
 2016-2020 development gates; neither opened a context variant or confirmation.
+
+`HYP-MOM-04.1` is a new concept because it replaces a single formulaic signal
+with a six-feature cross-sectional quarterly ranker. Its pooled TRAIN fit was
+strong, but the expanding-validation rank IC was negative. The frozen OOS lock
+therefore held: 2021-2023 was not queried, and no pooled-fit feature or
+comparator may be promoted under this identifier.

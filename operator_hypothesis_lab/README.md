@@ -114,6 +114,21 @@ records the frozen gate matrix and six tapes. Neither candidate advanced, so
 the context atlas and 2024-2025 confirmation were structurally not run and
 2026+ remained sealed.
 
+`HYP-MOM-04.1` then opened the lab's first deliberately small supervised
+quarterly ranker. The [frozen contract](docs/HYP_MOM_04_1_REGULARIZED_TREND_STATE_QUARTILE_CONTRACT.md)
+predeclared six trend-state features, relative next-quarter return, a
+time-ordered ridge search, seven TRAIN gates, and a structural OOS lock. The
+[TRAIN results](docs/HYP_MOM_04_1_REGULARIZED_TREND_STATE_QUARTILE_RESULTS.md)
+cover 114 eligible identities and 1,693 asset-quarters. The pooled fit showed a
+`+2.98` point top-quartile excess and ranked at the `98.8th` permutation
+percentile, but expanding-validation rank IC was `-0.0176` and positive in only
+`5 / 9` quarters. The lane records `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`;
+2021-2023 remained inaccessible. The
+[evidence deck](presentations/hyp_mom_04_1_regularized_trend_state_quartile_evidence.pptx)
+shows the frozen formulas, evidence boundary, pooled-fit temptation,
+chronological failure, gate conjunction, and the one comparator worth a future
+separately frozen discussion.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

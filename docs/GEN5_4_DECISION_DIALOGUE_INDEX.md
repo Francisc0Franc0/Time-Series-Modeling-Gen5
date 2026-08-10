@@ -1998,6 +1998,32 @@ tasks by the branch name above, the phrase, or the decision date.
   not queried. Do not soften these gates or tune the inspected moving-average
   mechanics. A future lane requires a genuinely new causal hypothesis.
 
+### D113 — Prefer an interpretable regularized ranker to PCA for this question
+
+- **Operator question:** What minimal technical and statistical features could
+  support a TRAIN-to-OOS next-quarter selection experiment, and is PCA the
+  right method?
+- **Method decision:** PCA is not the primary tool because it explains feature
+  variance rather than target return and its component sign/meaning can drift.
+  Freeze `HYP-MOM-04.1` as a six-feature, long-only, quarterly ridge ranker of
+  relative next-quarter return. Keep a theory-signed equal-weight composite,
+  univariate quartile sorts, Fama-MacBeth coefficients, and within-quarter
+  permutations as diagnostics. Use expanding chronological CV and the
+  one-standard-error rule for lambda; do not open nonlinear learners,
+  portfolio optimization, leverage, shorting, or live behavior.
+- **Evidence result:** A refreshed 2016-2020 TRAIN panel contained 114 complete
+  identities and 1,693 asset-quarter rows. The pooled fit produced `+2.98`
+  points of mean top-quartile excess, a `+3.64` point Q4-Q1 spread, and a
+  `98.8th` permutation percentile. Yet all lambdas had negative chronological
+  validation mean IC. Selected `lambda = 100` produced `-0.0176` mean IC and
+  only `5 / 9` positive validation quarters.
+- **Decision:** Record `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Pooled association
+  does not override failed temporal transport. The nomination file is false;
+  no 2021-2023 bar, OOS portfolio, or trade tape was queried. The predeclared
+  fixed-sign composite looked directionally better inside pooled TRAIN, but it
+  remains a comparator and requires a new frozen lane before any later-data
+  test.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2335,3 +2361,10 @@ also narrowly missed parent-improvement breadth and worsened drawdown, while
 `HYP-MOM-03.1` improved drawdown but surrendered nine median return points.
 Record `STOP_NO_DEVELOPMENT_NOMINEE_CONFIRMATION_UNOPENED`. The conditional
 context atlas was not run, 2024-2025 was not queried, and 2026+ remains sealed.
+The first minimal supervised Operator Hypothesis Lab lane, `HYP-MOM-04.1`,
+then froze six trend-state features and a ridge top-quartile policy before
+accessing TRAIN outcomes. Its pooled fit looked strong, but chronological
+validation did not: mean rank IC was `-0.0176` and positive in only `5 / 9`
+quarters. Record `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Do not replace temporal
+transport with pooled permutation evidence, tune the inspected feature set, or
+query 2021-2023 under this identifier.
