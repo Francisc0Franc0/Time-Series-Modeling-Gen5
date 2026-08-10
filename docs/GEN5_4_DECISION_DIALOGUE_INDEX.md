@@ -2024,6 +2024,40 @@ tasks by the branch name above, the phrase, or the decision date.
   remains a comparator and requires a new frozen lane before any later-data
   test.
 
+### D114 — Teach the Ridge evidence ladder; separate any S&P 500 replication
+
+- **Operator request:** Add a plain-English explanation of Ridge, the test
+  structure, and the failed OOS-promotion gate near the beginning of the
+  `HYP-MOM-04.1` deck, with a precise chat reference; then consider repeating
+  the unchanged test across S&P 500 components as a broad classic universe.
+- **Teaching action:** The evidence deck now adds two early slides. The first
+  describes Ridge as a restrained six-feature stock score. The second separates
+  pooled TRAIN association, expanding chronological validation, and the sealed
+  OOS period. Speaker notes point back to this task and D113. The inherited
+  clipped feature-slide title was also repaired, all 16 slides were rendered
+  individually, template fidelity passed, and no overflow remained.
+- **Methodology clarification:** `HYP-MOM-04.1` predicts return relative to the
+  entire contemporaneous eligible universe. Only one of the six inputs is
+  sector-relative. Moving to the S&P 500 therefore changes the universe, not
+  the target into a within-sector target.
+- **Pushback:** A present-day constituent list applied to 2016-2020 would use
+  future survivors. A rigorous replication needs point-in-time membership,
+  contemporaneous sector labels for the sector-relative feature, and defensible
+  returns for removals, ticker changes, mergers, and delistings. S&P DJI states
+  that constituents can change as corporate actions and market developments
+  occur. The inspected public historical-membership repository explicitly
+  warns that Wikipedia's change table is incomplete and that survivorship-safe
+  price histories normally require a provider that retains removed securities.
+- **Current decision:** Record
+  `DECK_REVISED_SP500_REPLICATION_NOT_FROZEN`. Recommended future identifier:
+  `HYP-MOM-04.1 / SP500-PIT-REPLICATION-01`, with every model mechanic and gate
+  unchanged and only the point-in-time universe plumbing replaced. If suitable
+  historical membership, sector, and dead-security data cannot be approved, a
+  fixed 2016 constituent-cohort atlas may be run only as a clearly
+  survivor-affected descriptive exercise with no promotion authority.
+- **Source references:** [S&P DJI index-literacy explanation](https://www.spglobal.com/spdji/en/research-insights/index-literacy/the-sp-500-and-the-dow/);
+  [fja05680/sp500 historical-membership notes](https://github.com/fja05680/sp500).
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
