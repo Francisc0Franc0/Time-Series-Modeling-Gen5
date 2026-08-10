@@ -124,6 +124,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D108` | Open HYP-MOM-02.1 as an immediate wide-breadth SMA200 long/cash path study | current continuation | `buying when the price crosses above the 200 SMA, and exiting when it crosses below` | Freeze causal next-open state changes across the combined 122-name registry; complete 119 eligible replays; retain drawdown-defense evidence but no generic return-timing or promotion authority |
 | `D109` | Correct HYP-MOM-02.1 to the operator's narrow fresh-cross event question | current continuation | `only include trades in the window that were triggered after a cross` | Start every asset in cash; permit entry only after a fresh in-window cross above SMA200; rerun every path and control; preserve `02.1` because this corrects rather than changes the stated mechanics |
 | `D110` | Open HYP-MOM-02.2 as a qualified SMA200-entry, SMA50-exit composite | current continuation | `enter when price crosses above 200 SMA, then exit when the price crosses crosses below 50 SMA` | Require the entry close above both averages, execute next open, exit next open after close at/below SMA50, and require a new qualified SMA200 cross before re-entry; compare directly with authoritative fresh-cross 02.1 on the reused discovery panel |
+| `D111` | Approve a staged SMA follow-up program with attribution before distinct-data candidates | current continuation | `make a plan for a series of these follow-up tests, then after approval, run and document them autonomously` | Freeze one-change-at-a-time attribution, two named candidate mechanics with declared parents, conjunctive development gates, a conditional context atlas, at most one later confirmation, and sealed 2026+ evidence |
+| `D112` | Stop HYP-MOM-02.3 and HYP-MOM-03.1 after distinct-history gates | current continuation | `Approved, proceed` | Attribute the reused window; apply the documented pre-outcome warm-up amendment; run 114 complete 2016-2020 assets; nominate neither candidate; do not run context or query 2024-2025 confirmation |
 
 ## Compact Decision Records
 
@@ -1951,6 +1953,51 @@ tasks by the branch name above, the phrase, or the decision date.
   lengths, alter lockout, select names, inspect 2024+, form a portfolio, or open
   live authority from this reused-window study.
 
+### D111 — Attribute the SMA mechanics before asking a new strategy question
+
+- **Operator direction:** Treat the 200/200 and 200/50 minimal rules as
+  promising enough for a disciplined follow-up series, then run and document
+  the approved series autonomously.
+- **Program freeze:** First factorize the reused 2021-2023 result into entry
+  confirmation, exit/lockout, and re-entry effects. Then test only two named
+  candidates on distinct 2016-2020 history: `HYP-MOM-02.3`, which repairs
+  strict lockout with an SMA50-reclaim re-entry, and `HYP-MOM-03.1`, which uses
+  a rising SMA200 as permission and an SMA50 reclaim as setup/exit.
+- **Promotion discipline:** Declare a parent for each candidate and require all
+  nine development gates together: causality, positive primary/stress return,
+  matched-control excess and percentile, asset breadth, parent-improvement
+  breadth, calendar breadth, trade/sector support, and drawdown preservation.
+- **Later evidence:** A context atlas is conditional on a development pass.
+  At most one completely frozen nominee may query 2024-2025. Data from 2026+
+  remain sealed, and no portfolio or live behavior is opened.
+
+### D112 — Positive raw returns do not override failed timing controls
+
+- **Attribution result:** Across 119 reused-window assets, changing from the
+  SMA200 exit to SMA50 exit/lockout produced the main paired effect: `+3.85`
+  median return points and `+9.94` median drawdown points. Adding the SMA50
+  entry check after fixing that exit added only `+0.24` points. The simple
+  reclaim repair changed median return `-2.07` points versus strict `02.2`.
+  Fixed-horizon cross returns were mildly positive absolutely but negative to
+  SPY on average.
+- **Pre-outcome feasibility amendment:** Alpaca returned 114 complete
+  2016-2020 histories but no pre-2016 observations after refresh. Before any
+  development strategy result, reserve the first 220 sessions of each eligible
+  history as causal warm-up, start cash on the next session, retain the full
+  end boundary, and exclude eight incomplete assets without replacement.
+- **Development result:** `02.3` was positive at the median and in `72 / 114`
+  assets, but had `-11.68` percentage points of median excess versus matched
+  circular controls, improved only `54.39%` versus its parent, concentrated
+  `46.0%` of positive contribution in one sector, and worsened drawdown by
+  `4.40` points. `03.1` improved drawdown by `9.42` points but sacrificed
+  `9.02` median return points and likewise failed timing controls and
+  parent-improvement breadth.
+- **Decision:** Record
+  `STOP_NO_DEVELOPMENT_NOMINEE_CONFIRMATION_UNOPENED`. The context atlas was
+  structurally not run; 2024-2025 confirmation and sealed 2026+ outcomes were
+  not queried. Do not soften these gates or tune the inspected moving-average
+  mechanics. A future lane requires a genuinely new causal hypothesis.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -1994,6 +2041,11 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-02.2 wide discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-02.2 wide discovery results](../operator_hypothesis_lab/docs/HYP_MOM_02_2_SMA200_ENTRY_SMA50_EXIT_DISCOVERY_RESULTS.md)
 - [HYP-MOM-02.2 wide discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_2_sma200_entry_sma50_exit_wide_discovery_evidence.pptx)
+- [HYP-MOM SMA follow-up series contract](../operator_hypothesis_lab/docs/HYP_MOM_SMA_FOLLOWUP_SERIES_CONTRACT.md)
+- [HYP-MOM-02 Attribution Atlas 01 results](../operator_hypothesis_lab/docs/HYP_MOM_02_ATTRIBUTION_ATLAS_01_RESULTS.md)
+- [HYP-MOM-02 Attribution Atlas 01 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_attribution_atlas_01_evidence.pptx)
+- [HYP-MOM-02.3 / 03.1 development results](../operator_hypothesis_lab/docs/HYP_MOM_02_3_03_1_DEVELOPMENT_RESULTS.md)
+- [HYP-MOM-02.3 / 03.1 development evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_02_3_03_1_development_evidence.pptx)
 - [LIT-MR-01.1 long/short sector-reversal POC contract](../literature_studies/docs/GEN5_L1_LONG_SHORT_SECTOR_REVERSAL_POC_CONTRACT.md)
 - [LIT-MR-02.1 adaptive-spread Bollinger POC contract](../literature_studies/docs/GEN5_LIT_MR_02_1_ADAPTIVE_SPREAD_BOLLINGER_POC_CONTRACT.md)
 - [LIT-MR-04.1 Kalman pair POC contract](../literature_studies/docs/GEN5_LIT_MR_04_1_KALMAN_PAIR_POC_CONTRACT.md)
@@ -2273,3 +2325,13 @@ exposure-matched shifts. The matched-entry audit also corrected the intuition
 that SMA50 must exit first: it was earlier in only `155 / 637` entries and later
 in `306`. Record the same no-promotion status; retain the stronger defensive
 tradeoff and severe opportunity cost without tuning the inspected composite.
+The approved SMA follow-up series then factorized that composite before asking
+new strategy questions. Reused-window attribution showed that the SMA50
+exit/lockout—not the SMA50 entry confirmation—produced most of the defensive
+change; the first SMA50-reclaim repair deteriorated at the median. On distinct
+2016-2020 history, both predeclared candidates had positive raw median returns
+but negative excess versus exposure-matched circular controls. `HYP-MOM-02.3`
+also narrowly missed parent-improvement breadth and worsened drawdown, while
+`HYP-MOM-03.1` improved drawdown but surrendered nine median return points.
+Record `STOP_NO_DEVELOPMENT_NOMINEE_CONFIRMATION_UNOPENED`. The conditional
+context atlas was not run, 2024-2025 was not queried, and 2026+ remains sealed.

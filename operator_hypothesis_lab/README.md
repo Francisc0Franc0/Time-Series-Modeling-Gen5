@@ -94,6 +94,26 @@ ranked at the `42.9th` percentile. The [evidence deck](presentations/hyp_mom_02_
 also shows why SMA50 was the earlier exit in only `155 / 637` matched entries.
 The lane remains `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`.
 
+The approved [SMA follow-up series contract](docs/HYP_MOM_SMA_FOLLOWUP_SERIES_CONTRACT.md)
+then separated entry confirmation, exit/lockout, and re-entry on the reused
+2021-2023 panel before testing two fully predeclared ideas on distinct
+2016-2020 history. The [Attribution Atlas 01 results](docs/HYP_MOM_02_ATTRIBUTION_ATLAS_01_RESULTS.md)
+show that the faster SMA50 exit/lockout produced most of `02.2`'s defensive
+change; the SMA50 entry check added little, and the simple reclaim re-entry
+deteriorated at the median. The [attribution deck](presentations/hyp_mom_02_attribution_atlas_01_evidence.pptx)
+also records fixed-horizon event behavior and three representative repair
+paths.
+
+The companion [development results](docs/HYP_MOM_02_3_03_1_DEVELOPMENT_RESULTS.md)
+compare `HYP-MOM-02.3` with strict `02.2` and `HYP-MOM-03.1` with fresh
+`02.1` across 114 complete historical names. Both candidates had positive raw
+median returns but negative exposure-matched timing excess. `02.3` also missed
+parent-improvement breadth and worsened drawdown; `03.1` improved drawdown but
+gave up nine median return points versus its parent. The [development deck](presentations/hyp_mom_02_3_03_1_development_evidence.pptx)
+records the frozen gate matrix and six tapes. Neither candidate advanced, so
+the context atlas and 2024-2025 confirmation were structurally not run and
+2026+ remained sealed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

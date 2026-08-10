@@ -39,6 +39,9 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-01.1 / STOCK_ATLAS_02_BREADTH_EXTENSION` | Frozen 100-Name Breadth Extension | `DISCOVERY_REUSED_WINDOW` | `DISCOVERY_BREADTH_EXTENSION_COMPLETE_NO_STRATEGY_AUTHORITY` |
 | `HYP-MOM-02.1` | SMA200 Cross Long/Cash | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-02.2` | Qualified SMA200 Entry / SMA50 Exit | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-MOM-02 / ATTRIBUTION_ATLAS_01` | Entry / Exit / Re-entry Attribution | `DISCOVERY_REUSED_WINDOW` | `REUSED_WINDOW_ATTRIBUTION_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-MOM-02.3` | Qualified SMA200 Entry / SMA50 Exit / SMA50-Reclaim Re-entry | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
+| `HYP-MOM-03.1` | Rising-SMA200 Regime / SMA50 Pullback Reclaim | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -52,3 +55,10 @@ at or below SMA50; and re-entry requires a new qualified SMA200 cross. The
 warm-start and fresh-cross `02.1` views remain valuable estimands inside the
 same investigation, but the composite entry, exit, and lockout change warrants
 the decimal increment.
+
+`HYP-MOM-02.3` is a substantive repair to the strict `02.2` lockout: after the
+first qualified trade exits, a fresh SMA50 reclaim above SMA200 may re-enter
+without waiting for another SMA200 cross. `HYP-MOM-03.1` is a new concept,
+because the rising SMA200 becomes regime permission and the SMA50 reclaim—not
+the SMA200 cross—becomes the entry setup. Both stopped on their predeclared
+2016-2020 development gates; neither opened a context variant or confirmation.
