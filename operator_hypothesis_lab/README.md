@@ -147,10 +147,20 @@ queried Alpaca's official corporate-actions endpoint for the 39 unresolved
 identities. It returned relevant records for only eight, leaving at least 31
 terminal targets unresolved even under the most favorable interpretation. No
 S&P DJI, WRDS/CRSP, Norgate, or EODHD entitlement was present locally. The S&P
-replication therefore remains stopped. The recommended discussion fallback is
-a complete, SEC-filed `2020-12-31` SPY holdings snapshot, explicitly labeled a
-deployment-date-conditioned universe rather than historical point-in-time S&P
-500 membership.
+replication therefore remains stopped.
+
+The approved deployment-universe fallback required a point-in-time correction:
+SPY's `2020-12-31` holdings were filed only in February 2021, so the
+[frozen contract](docs/HYP_MOM_04_1_DEPLOYMENT_UNIVERSE_DATA_AUDIT_CONTRACT.md)
+instead used the September 2020 SPY Form N-PORT cohort filed in November 2020.
+The [results](docs/HYP_MOM_04_1_DEPLOYMENT_UNIVERSE_RESULTS.md) reconcile
+`502/505` identities without a later roster and retain `481/505` exact
+2016-2020 histories; all nine data gates passed. The unchanged Ridge TRAIN then
+produced `+1.45` pp pooled top-quartile excess and a 100th-percentile
+permutation result, but expanding-validation IC was `-0.0623` and positive in
+only `4/9` held-out quarters. The
+[evidence deck](presentations/hyp_mom_04_1_deployment_universe_evidence.pptx)
+records `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`; no 2021-2023 bar was queried.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

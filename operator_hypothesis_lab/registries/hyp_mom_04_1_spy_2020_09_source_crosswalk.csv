@@ -1,0 +1,38 @@
+filing_issuer_title,filing_cusip,wikipedia_symbol,wikipedia_security,mapping_basis
+Alphabet Inc,02079K107,GOOGL,Alphabet Inc. (Class A),contemporaneous_name_and_share_class_cusip
+Alphabet Inc,02079K305,GOOG,Alphabet Inc. (Class C),contemporaneous_name_and_share_class_cusip
+Becton Dickinson and Co,075887109,BDX,Becton Dickinson,contemporaneous_name_alias
+CenturyLink Inc,156700106,LUMN,Lumen Technologies,pre_cutoff_company_ticker_change_same_cusip
+Cooper Cos Inc/The,216648402,COO,The Cooper Companies,contemporaneous_name_alias
+Discovery Inc,25470F104,DISCA,"Discovery, Inc. (Class A)",contemporaneous_name_and_share_class_cusip
+Discovery Inc,25470F302,DISCK,"Discovery, Inc. (Class C)",contemporaneous_name_and_share_class_cusip
+E*TRADE Financial Corp,269246401,ETFC,E*Trade,contemporaneous_name_alias
+Edison International,281020107,EIX,Edison Int'l,contemporaneous_name_alias
+Eli Lilly and Co,532457108,LLY,Lilly (Eli) & Co.,contemporaneous_name_alias
+Estee Lauder Cos Inc/The,518439104,EL,Estée Lauder Companies,contemporaneous_name_alias
+Expeditors International of Washington Inc,302130109,EXPD,Expeditors,contemporaneous_name_alias
+Fox Corp,35137L105,FOXA,Fox Corporation (Class A),contemporaneous_name_and_share_class_cusip
+Fox Corp,35137L204,FOX,Fox Corporation (Class B),contemporaneous_name_and_share_class_cusip
+Hartford Financial Services Group Inc/The,416515104,HIG,Hartford Financial Svc.Gp.,contemporaneous_name_alias
+Honeywell International Inc,438516106,HON,Honeywell Int'l Inc.,contemporaneous_name_alias
+Interpublic Group of Cos Inc/The,460690100,IPG,Interpublic Group,contemporaneous_name_alias
+LyondellBasell Industries NV,000000000,LYB,LyondellBasell,contemporaneous_name_alias
+Marriott International Inc/MD,571903202,MAR,Marriott Int'l.,contemporaneous_name_alias
+Marsh & McLennan Cos Inc,571748102,MMC,Marsh & McLennan,contemporaneous_name_alias
+Mettler-Toledo International Inc,592688105,MTD,Mettler Toledo,contemporaneous_name_alias
+Mid-America Apartment Communities Inc,59522J103,MAA,Mid-America Apartments,contemporaneous_name_alias
+Mylan NV,000000000,MYL,Mylan N.V.,contemporaneous_name_alias
+News Corp,65249B109,NWSA,News Corp. Class A,contemporaneous_name_and_share_class_cusip
+News Corp,65249B208,NWS,News Corp. Class B,contemporaneous_name_and_share_class_cusip
+Paycom Software Inc,70432V102,PAYC,Paycom,contemporaneous_name_alias
+Public Service Enterprise Group Inc,744573106,PEG,Public Service Enterprise Group (PSEG),contemporaneous_name_alias
+Royal Caribbean Cruises Ltd,000000000,RCL,Royal Caribbean Group,contemporaneous_name_alias
+Take-Two Interactive Software Inc,874054109,TTWO,Take-Two Interactive,contemporaneous_name_alias
+TJX Cos Inc/The,872540109,TJX,TJX Companies Inc.,contemporaneous_name_alias
+Travelers Cos Inc/The,89417E109,TRV,The Travelers Companies Inc.,contemporaneous_name_alias
+Under Armour Inc,904311107,UAA,Under Armour (Class A),contemporaneous_name_and_share_class_cusip
+Under Armour Inc,904311206,UA,Under Armour (Class C),contemporaneous_name_and_share_class_cusip
+Wells Fargo & Co,949746101,WFC,Wells Fargo,contemporaneous_name_alias
+Westinghouse Air Brake Technologies Corp,929740108,WAB,Wabtec Corporation,contemporaneous_name_alias
+Williams Cos Inc/The,969457100,WMB,Williams Companies,contemporaneous_name_alias
+WW Grainger Inc,384802104,GWW,Grainger (W.W.) Inc.,contemporaneous_name_alias

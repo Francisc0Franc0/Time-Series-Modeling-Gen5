@@ -45,6 +45,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.1` | Regularized Trend-State Quartile | `TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 | `HYP-MOM-04.1 / SP500-PIT-DATA-AUDIT-01` | Point-in-Time S&P 500 Replication Feasibility | `DATA_FEASIBILITY_AUDIT` | `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN` |
 | `HYP-MOM-04.1 / SP500-PIT-SOURCE-REPAIR-01` | Accessible Source Repair | `DATA_SOURCE_FEASIBILITY` | `STOP_SP500_PIT_SOURCE_REPAIR_INCOMPLETE_FALLBACK_DISCUSSION_OPEN` |
+| `HYP-MOM-04.1 / DEPLOYMENT-UNIVERSE-DATA-AUDIT-01` | September 2020 SPY Fixed Deployment Cohort | `DATA_FEASIBILITY_AND_TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -82,5 +83,13 @@ lane was therefore frozen or run.
 whether existing entitlements could repair the failed data audit. Alpaca
 returned relevant corporate-action records for only 8 of 39 unresolved
 identities, while no licensed point-in-time membership/delisting authority was
-available locally. `DEPLOYMENT_UNIVERSE_REPLICATION_01` remains a provisional
-discussion identifier, not a frozen or executed lane.
+available locally.
+
+`HYP-MOM-04.1 / DEPLOYMENT-UNIVERSE-DATA-AUDIT-01` keeps every model mechanic
+unchanged while replacing the unusable historical-membership plumbing with a
+fixed SPY cohort publicly knowable before OOS. The corrected September 2020
+filing passed all nine data gates and authorized the unchanged Ridge TRAIN on
+481 complete identities. Expanding-validation IC was nevertheless `-0.0623`
+and positive in only `4 / 9` quarters. G3 failed, so the shared
+`STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` remains authoritative and no 2021-2023
+outcome was queried.

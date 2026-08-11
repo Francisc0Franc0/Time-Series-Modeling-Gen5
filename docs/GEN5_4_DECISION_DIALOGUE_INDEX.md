@@ -2117,10 +2117,47 @@ tasks by the branch name above, the phrase, or the decision date.
   label it deployment-date-conditioned rather than a historical point-in-time
   S&P 500 panel. An ETF breadth alternative changes the sector-relative feature
   and therefore needs new concept nomenclature.
+- **Subsequent correction:** D117 rejects that December cohort because the
+  filing was not public until February 2021 and uses the September 2020 filing
+  instead.
 - **Artifacts:**
   `operator_hypothesis_lab/docs/HYP_MOM_04_1_SP500_PIT_SOURCE_REPAIR_RESULTS.md`
   and
   `operator_hypothesis_lab/registries/hyp_mom_04_1_alpaca_corporate_action_probe_2017_2020.csv`.
+
+### D117 — A valid fixed deployment cohort passes data gates; Ridge still fails temporal transport
+
+- **Operator decision:** Proceed with the broad deployment-universe fallback;
+  if a point-in-time S&P source cannot be completed, use a clearly defined
+  wide cohort without weakening the original model gates.
+- **Point-in-time correction:** The previously proposed `2020-12-31` SPY
+  holdings report was accepted only in February 2021 and would leak into the
+  `2021-2023` OOS boundary. The lane instead froze SPY Form N-PORT accession
+  `0001752724-20-236128`, reporting `2020-09-30` holdings and filed in November
+  2020. This is a fixed deployment cohort, not historical S&P membership.
+- **Source evidence:** The SEC filing contained 505 equities. Deterministic
+  name normalization resolved 465; a pinned filing-title/CUSIP to
+  contemporaneous-Wikipedia crosswalk resolved 37; three late-September
+  additions remained unresolved and visible. Identity and sector completeness
+  were `502/505`, roster Jaccard was `0.9882`, provider history was `502/505`,
+  and exact 2016-2020 coverage was `481/505`. All nine data gates passed.
+- **Unchanged TRAIN evidence:** The original six features, relative target,
+  lambda grid, expanding folds, one-standard-error rule, permutation control,
+  and seven TRAIN gates ran on 481 eligible identities and 7,208 rows. The
+  pooled fit produced `+1.45` pp Q4 excess, `+3.01` pp Q4-Q1, and a `100%`
+  permutation percentile. Yet selected-lambda expanding-validation IC averaged
+  `-0.0623` and was positive in only `4/9` quarters.
+- **Decision:** Record `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. G3 failed even
+  though the other six gates passed. Pooled association and permutation rank
+  do not override chronological transport. No `2021-2023` bar, score,
+  portfolio, return, Sharpe, drawdown, or tape was queried. Any simpler
+  composite or model revision requires a new pre-outcome lane.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_DEPLOYMENT_UNIVERSE_DATA_AUDIT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_DEPLOYMENT_UNIVERSE_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_1_deployment_universe_evidence.pptx`,
+  and the ignored audit/TRAIN packets under
+  `runs/research_workbench/operator_hypothesis_lab/`.
 
 ## Related Artifacts
 

@@ -84,9 +84,10 @@ h04_validate_registry <- function(registry, expected_count = 122L) {
   registry
 }
 
-h04_coverage <- function(bars, registry, calendar_dates, authorized_end, contract = h04_contract()) {
+h04_coverage <- function(bars, registry, calendar_dates, authorized_end, contract = h04_contract(),
+                         expected_registry_count = 122L) {
   x <- h04_validate_bars(bars, authorized_end, contract)
-  registry <- h04_validate_registry(registry)
+  registry <- h04_validate_registry(registry, expected_count = expected_registry_count)
   calendar_dates <- sort(unique(as.Date(calendar_dates)))
   do.call(rbind, lapply(seq_len(nrow(registry)), function(i) {
     reg <- registry[i, , drop = FALSE]

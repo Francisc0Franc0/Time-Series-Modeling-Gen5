@@ -3,6 +3,19 @@ library(testthat)
 repo_root <- normalizePath(file.path(testthat::test_path(), "..", "..", ".."), winslash = "/", mustWork = TRUE)
 source(file.path(repo_root, "operator_hypothesis_lab", "R", "hyp_mom_04_1_engine.R"))
 
+test_that("coverage can validate an explicitly audited non-122 registry", {
+  dates <- as.Date(c("2020-12-30", "2020-12-31"))
+  bars <- data.frame(
+    symbol = rep("AAA", 2), session_date = dates,
+    open = 1, high = 1, low = 1, close = 1, volume = 1,
+    stringsAsFactors = FALSE
+  )
+  registry <- data.frame(instance_id = "AAA_1", symbol = "AAA", sector = "Industrials", cohort = "AUDITED")
+  coverage <- h04_coverage(bars, registry, dates, max(dates), expected_registry_count = NULL)
+  expect_true(coverage$analysis_eligible)
+  expect_error(h04_coverage(bars, registry, dates, max(dates)), "expected 122 identities")
+})
+
 test_that("HYP-MOM-04.1 contract freezes windows and features", {
   contract <- h04_validate_contract()
   expect_equal(contract$train_signal_quarters[[1L]], "2017Q1")

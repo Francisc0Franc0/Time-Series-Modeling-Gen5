@@ -34,15 +34,42 @@ output_dir <- file.path(repo_root, "runs", "research_workbench", "operator_hypot
 visual_dir <- file.path(output_dir, "visuals")
 dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
 
-original <- utils::read.csv(file.path(repo_root, "operator_hypothesis_lab", "registries", "hyp_mom_01_1_discovery_registry.csv"), stringsAsFactors = FALSE)
-original$cohort <- "ORIGINAL_22"
-wide <- utils::read.csv(file.path(repo_root, "literature_studies", "registries", "gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv"), stringsAsFactors = FALSE)
-registry <- rbind(
-  original[c("instance_id", "symbol", "sector", "cohort")],
-  wide[c("instance_id", "symbol", "sector", "cohort")]
-)
-registry <- h04_validate_registry(registry)
-if (length(intersect(original$symbol, wide$symbol))) stop("Frozen registry sources overlap.", call. = FALSE)
+deployment_audit_dir <- env_or("GEN5_HYP_MOM_041_TRAIN_AUDIT_DIR", "")
+deployment_mode <- nzchar(deployment_audit_dir)
+if (deployment_mode) {
+  deployment_audit_dir <- normalizePath(deployment_audit_dir, winslash = "/", mustWork = TRUE)
+  audit_status <- trimws(readLines(file.path(deployment_audit_dir, "status.txt"), warn = FALSE)[[1L]])
+  audit_gates <- utils::read.csv(file.path(deployment_audit_dir, "universe_gate_matrix.csv"), stringsAsFactors = FALSE)
+  if (audit_status != "DEPLOYMENT_UNIVERSE_DATA_AUDIT_PASS_TRAIN_AUTHORIZED" || !all(audit_gates$passed)) {
+    stop("Deployment-universe TRAIN requires a passing frozen data audit.", call. = FALSE)
+  }
+  audit_coverage <- utils::read.csv(file.path(deployment_audit_dir, "train_coverage_ledger.csv"), stringsAsFactors = FALSE)
+  audit_coverage <- audit_coverage[audit_coverage$complete_train, , drop = FALSE]
+  registry <- data.frame(
+    instance_id = paste0("SPY_202009_", audit_coverage$source_symbol),
+    symbol = audit_coverage$provider_symbol,
+    sector = audit_coverage$sector,
+    cohort = "SPY_2020_09_DEPLOYMENT",
+    stringsAsFactors = FALSE
+  )
+  registry_origin <- "PASSING_DEPLOYMENT_UNIVERSE_DATA_AUDIT"
+  registry_source_integrity <- nrow(registry) == sum(audit_coverage$complete_train) && all(audit_gates$passed)
+  sector_breadth_integrity <- length(unique(registry$sector)) >= 10L
+  expected_registry_count <- NULL
+} else {
+  original <- utils::read.csv(file.path(repo_root, "operator_hypothesis_lab", "registries", "hyp_mom_01_1_discovery_registry.csv"), stringsAsFactors = FALSE)
+  original$cohort <- "ORIGINAL_22"
+  wide <- utils::read.csv(file.path(repo_root, "literature_studies", "registries", "gen5_lit_mom_01_2_stock_atlas_02_2020_breadth_attention_registry.csv"), stringsAsFactors = FALSE)
+  registry <- rbind(
+    original[c("instance_id", "symbol", "sector", "cohort")],
+    wide[c("instance_id", "symbol", "sector", "cohort")]
+  )
+  registry_origin <- "FROZEN_122_CROSS_SECTION"
+  registry_source_integrity <- !length(intersect(original$symbol, wide$symbol))
+  sector_breadth_integrity <- length(unique(registry$sector)) == 11L
+  expected_registry_count <- 122L
+}
+registry <- h04_validate_registry(registry, expected_count = expected_registry_count)
 
 cfg <- g5_load_data_layer_config(repo_root)
 refresh <- env_bool("GEN5_HYP_MOM_041_TRAIN_REFRESH", FALSE)
@@ -52,8 +79,8 @@ query <- g5_workbench_query_adjusted_daily_bars(
   end_date = contract$train_query_end,
   as_of_timestamp = contract$as_of_timestamp,
   symbols = c(registry$symbol, "SPY"),
-  universe_name = "hyp_mom_04_1_train",
-  universe_roles = "frozen_122_cross_section,spy_calendar",
+  universe_name = if (deployment_mode) "hyp_mom_04_1_deployment_universe_train" else "hyp_mom_04_1_train",
+  universe_roles = if (deployment_mode) "fixed_pre_oos_spy_cohort,spy_calendar" else "frozen_122_cross_section,spy_calendar",
   refresh = refresh,
   repo_root = repo_root
 )
@@ -61,7 +88,8 @@ bars_all <- h04_validate_bars(query$bars, contract$train_query_end, contract)
 spy <- bars_all[bars_all$symbol == "SPY", , drop = FALSE]
 calendar_dates <- spy$session_date
 coverage <- h04_coverage(bars_all[bars_all$symbol != "SPY", , drop = FALSE], registry,
-                         calendar_dates, contract$train_query_end, contract)
+                         calendar_dates, contract$train_query_end, contract,
+                         expected_registry_count = expected_registry_count)
 eligible_registry <- registry[registry$symbol %in% coverage$symbol[coverage$analysis_eligible], , drop = FALSE]
 if (nrow(eligible_registry) < contract$minimum_assets_per_quarter) stop("Too few TRAIN identities passed complete coverage.", call. = FALSE)
 
@@ -78,16 +106,18 @@ quarter_counts <- as.data.frame(table(panel$signal_quarter), stringsAsFactors = 
 names(quarter_counts) <- c("signal_quarter", "asset_count")
 integrity <- data.frame(
   check_id = c(
-    "FROZEN_REGISTRY_122", "REGISTRY_SOURCES_NONOVERLAPPING", "ELEVEN_REGISTERED_SECTORS",
+    if (deployment_mode) "FROZEN_DEPLOYMENT_REGISTRY" else "FROZEN_REGISTRY_122",
+    if (deployment_mode) "DEPLOYMENT_DATA_AUDIT_PASSED" else "REGISTRY_SOURCES_NONOVERLAPPING",
+    if (deployment_mode) "AT_LEAST_TEN_REGISTERED_SECTORS" else "ELEVEN_REGISTERED_SECTORS",
     "ALPACA_ADJUSTED_DAILY", "EXPLICIT_AS_OF_TIMESTAMP", "TRAIN_QUERY_BOUNDARY",
     "NO_DUPLICATE_BARS", "SPY_CALENDAR_AVAILABLE", "ALL_15_TRAIN_QUARTERS",
     "MINIMUM_ASSETS_PER_QUARTER", "FEATURES_FINITE", "SIGNAL_PRECEDES_ENTRY",
     "ENTRY_PRECEDES_EXIT", "RELATIVE_TARGET_CENTERED", "NO_2024_PLUS"
   ),
   passed = c(
-    nrow(registry) == 122L,
-    !length(intersect(original$symbol, wide$symbol)),
-    length(unique(registry$sector)) == 11L,
+    if (deployment_mode) nrow(registry) > 0L else nrow(registry) == 122L,
+    registry_source_integrity,
+    sector_breadth_integrity,
     all(bars_all$provider == "alpaca" & bars_all$adjusted %in% c(TRUE, "TRUE") & bars_all$timeframe == "1D"),
     all(nzchar(as.character(bars_all$as_of_timestamp))),
     max(bars_all$session_date) <= contract$train_query_end,
@@ -207,6 +237,7 @@ dev.off()
 status <- if (nominated) "TRAIN_NOMINATED_FOR_RETROSPECTIVE_OOS" else "STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN"
 run_spec <- data.frame(
   program_id = contract$program_id, stage = "TRAIN", evidence_status = status,
+  registry_origin = registry_origin,
   as_of_timestamp = contract$as_of_timestamp, query_start = as.character(contract$query_start),
   query_end = as.character(contract$train_query_end), frozen_registry_count = nrow(registry),
   eligible_identity_count = nrow(eligible_registry), panel_row_count = nrow(panel),
@@ -247,7 +278,7 @@ saveRDS(nomination, file.path(output_dir, "hyp_mom_04_1_train_nomination.rds"))
 report <- c(
   "# HYP-MOM-04.1 TRAIN readout", "",
   paste0("Status: `", status, "`."), "",
-  paste0("Eligible identities: ", nrow(eligible_registry), " / 122; TRAIN rows: ", nrow(panel),
+  paste0("Eligible identities: ", nrow(eligible_registry), " / ", nrow(registry), "; TRAIN rows: ", nrow(panel),
          "; selected ridge lambda: ", cv$selected_lambda, "."), "",
   paste0("Expanding-CV mean rank IC: ", formatC(mean(cv$selected_details$rank_ic), digits = 4, format = "f"),
          "; positive-quarter fraction: ", formatC(mean(cv$selected_details$rank_ic > 0), digits = 3, format = "f"), "."), "",
