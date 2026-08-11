@@ -1,0 +1,9 @@
+action_group,event_id,old_or_acquiree_symbol,new_or_acquirer_symbol,old_or_acquiree_cusip,new_or_acquirer_cusip,process_date,effective_date,acquirer_rate,cash_rate,source_endpoint,query_start,query_end,probe_date
+name_change,d4dde794-26c7-4ca1-9e52-cde5cbc869f6,CBS,VIAC,92556H206,92556H206,2020-02-13,,,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+name_change,342e093c-84c1-493f-a79c-30a042b62c6e,CTL,LUMN,550241103,550241103,2020-09-18,,,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+name_change,ce26610a-5a0c-42e4-b596-20b9cba60131,JEC,J,46982L108,46982L108,2019-12-10,,,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+name_change,083b2000-6c87-4ab7-9e58-3ca5253eae36,UTX,RTX,75513E101,75513E101,2020-04-03,,,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+stock_and_cash_merger,dfd703bf-adad-46e4-bd18-c4fcbc6ed81d,AGN,ABBV,G0177J108,00287Y109,2020-05-08,2020-05-08,0.866,120.3,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+stock_merger,8950d3c8-33a7-46a9-95cb-2dcdff516642,ETFC,MS,269246401,617446448,2020-10-02,2020-10-02,1.0432,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+stock_merger,319a05b7-8c4e-4e9f-98b6-ed57b5576479,MYL,VTRSV,N59465109,92556V106,2020-11-16,2020-11-16,1,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11
+stock_merger,4e5e7f2a-875c-42f1-a33d-f46fbee1c254,NBL,CVX,655044105,166764100,2020-10-05,2020-10-05,0.1191,,https://data.alpaca.markets/v1/corporate-actions,2017-01-01,2020-12-31,2026-08-11

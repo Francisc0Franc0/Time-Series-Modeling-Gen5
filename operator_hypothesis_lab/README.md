@@ -142,6 +142,16 @@ defensible terminal return. The
 records `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN`; no Ridge model
 or 2021+ outcome was queried.
 
+The follow-up [source-repair audit](docs/HYP_MOM_04_1_SP500_PIT_SOURCE_REPAIR_RESULTS.md)
+queried Alpaca's official corporate-actions endpoint for the 39 unresolved
+identities. It returned relevant records for only eight, leaving at least 31
+terminal targets unresolved even under the most favorable interpretation. No
+S&P DJI, WRDS/CRSP, Norgate, or EODHD entitlement was present locally. The S&P
+replication therefore remains stopped. The recommended discussion fallback is
+a complete, SEC-filed `2020-12-31` SPY holdings snapshot, explicitly labeled a
+deployment-date-conditioned universe rather than historical point-in-time S&P
+500 membership.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

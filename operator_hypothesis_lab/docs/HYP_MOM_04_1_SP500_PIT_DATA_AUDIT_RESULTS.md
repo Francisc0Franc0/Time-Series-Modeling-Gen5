@@ -116,6 +116,14 @@ not a model change. The recommended minimum is:
 Only after a separately frozen data audit passes should the unchanged Ridge
 replication be authorized.
 
+A subsequent accessible-source repair attempt is documented in
+`HYP_MOM_04_1_SP500_PIT_SOURCE_REPAIR_RESULTS.md`. Alpaca's official
+corporate-actions endpoint returned relevant records for only `8 / 39`
+unresolved identities. Even if every returned event were valued successfully,
+at least 31 targets would remain unresolved. No available local entitlement
+closed the identity, sector, and terminal-return gaps, so this STOP remains
+authoritative.
+
 ## Artifacts
 
 - Contract:
@@ -126,3 +134,5 @@ replication be authorized.
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_1_sp500_pit_data_audit_20260810`
 - Evidence deck:
   `operator_hypothesis_lab/presentations/hyp_mom_04_1_sp500_pit_data_audit_evidence.pptx`
+- Source-repair results:
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_SP500_PIT_SOURCE_REPAIR_RESULTS.md`

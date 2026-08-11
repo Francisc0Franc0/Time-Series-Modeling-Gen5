@@ -2090,6 +2090,38 @@ tasks by the branch name above, the phrase, or the decision date.
   and ignored packet
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_1_sp500_pit_data_audit_20260810`.
 
+### D116 — Accessible source repair is insufficient; open a broad-universe fallback discussion
+
+- **Operator decision:** Attempt to repair the point-in-time S&P 500 data
+  failures, but move to a different wide-breadth basket if the repair cannot
+  be completed cleanly.
+- **Repair evidence:** A read-only query to Alpaca's official corporate-actions
+  endpoint covered all 39 unresolved 2017-2020 audit identities and requested
+  name changes, mergers, spin-offs, redemptions, worthless removals, and rights
+  distributions. It returned relevant records for only eight identities: four
+  name changes and four mergers. At least 31 frozen targets therefore remain
+  unresolved even before successor-price validation.
+- **Access audit:** S&P DJI SPICE/Data Services and CRSP can conceptually supply
+  the strongest membership/sector and delisting authorities, respectively,
+  but require licensed access. Norgate and EODHD are possible research-vendor
+  challengers. No entitlement, credential, or installed client for those
+  sources was found locally; no trial, purchase, installation, or provider
+  change was inferred.
+- **Decision:** Retain
+  `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN` and add
+  `STOP_SP500_PIT_SOURCE_REPAIR_INCOMPLETE_FALLBACK_DISCUSSION_OPEN`. No Ridge
+  or 2021+ outcome was run.
+- **Recommended fallback:** Discuss a complete `2020-12-31` SPY holdings
+  universe from SEC Form N-PORT accession `0001752724-21-043869`. Freeze it
+  before 2021 outcomes and preserve the six features and all model gates, but
+  label it deployment-date-conditioned rather than a historical point-in-time
+  S&P 500 panel. An ETF breadth alternative changes the sector-relative feature
+  and therefore needs new concept nomenclature.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_1_SP500_PIT_SOURCE_REPAIR_RESULTS.md`
+  and
+  `operator_hypothesis_lab/registries/hyp_mom_04_1_alpaca_corporate_action_probe_2017_2020.csv`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)

@@ -44,6 +44,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-03.1` | Rising-SMA200 Regime / SMA50 Pullback Reclaim | `HISTORICAL_DEVELOPMENT` | `STOP_NO_DEVELOPMENT_NOMINEE` |
 | `HYP-MOM-04.1` | Regularized Trend-State Quartile | `TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 | `HYP-MOM-04.1 / SP500-PIT-DATA-AUDIT-01` | Point-in-Time S&P 500 Replication Feasibility | `DATA_FEASIBILITY_AUDIT` | `STOP_SP500_PIT_DATA_GATES_FAILED_REPLICATION_NOT_RUN` |
+| `HYP-MOM-04.1 / SP500-PIT-SOURCE-REPAIR-01` | Accessible Source Repair | `DATA_SOURCE_FEASIBILITY` | `STOP_SP500_PIT_SOURCE_REPAIR_INCOMPLETE_FALLBACK_DISCUSSION_OPEN` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -76,3 +77,10 @@ pre-replication data-feasibility sub-lane. Six of nine hard data gates passed,
 but public-roster identity agreement, contemporaneous sector coverage, and
 terminal-outcome completeness failed. No `SP500-PIT-REPLICATION-01` strategy
 lane was therefore frozen or run.
+
+`HYP-MOM-04.1 / SP500-PIT-SOURCE-REPAIR-01` changes no model or gate. It tested
+whether existing entitlements could repair the failed data audit. Alpaca
+returned relevant corporate-action records for only 8 of 39 unresolved
+identities, while no licensed point-in-time membership/delisting authority was
+available locally. `DEPLOYMENT_UNIVERSE_REPLICATION_01` remains a provisional
+discussion identifier, not a frozen or executed lane.
