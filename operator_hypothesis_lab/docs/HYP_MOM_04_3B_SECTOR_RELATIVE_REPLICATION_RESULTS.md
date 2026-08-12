@@ -85,3 +85,8 @@ Record `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`. Do not:
 - Engine: `operator_hypothesis_lab/R/hyp_mom_04_3b_engine.R`
 - Ignored packet: `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3b_sector_relative_replication_20260811/`
 - Evidence deck: `operator_hypothesis_lab/presentations/hyp_mom_04_3b_sector_relative_replication_evidence.pptx`
+
+Subsequent diagnostic: `HYP-MOM-04.3C` found that three of four frozen TRAIN
+coefficient signs disagreed with DEVELOPMENT marginal IC signs and that no
+single feature combined stable rank, tail, temporal, and sector evidence. It
+preserves this STOP and opens no confirmation authority.

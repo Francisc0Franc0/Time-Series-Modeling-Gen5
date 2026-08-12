@@ -49,6 +49,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.2` | Causal Feature Atlas + Nested Basket Search | `TRAIN_FEATURE_DIAGNOSTICS_AND_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 | `HYP-MOM-04.3A` | Target Structure Audit | `TRAIN_TARGET_DIAGNOSTICS` | `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN` |
 | `HYP-MOM-04.3B` | Sector-Relative Temporal Replication | `HISTORICAL_DEVELOPMENT` | `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN` |
+| `HYP-MOM-04.3C` | Frozen-Feature Transport Audit | `RETROSPECTIVE_DEVELOPMENT_DIAGNOSTIC` | `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -118,3 +119,10 @@ increment distinguishes target audit (`A`) from target-specific temporal
 replication (`B`) without pretending it is a new strategy family. The model
 failed five of six replication gates and underperformed both frozen
 comparators. Preserve the STOP and keep 2024+ confirmation sealed.
+
+`HYP-MOM-04.3C` is a diagnostic derivative of the failed `04.3B` replication.
+It changes no target, feature, model, or evidence boundary and fits nothing.
+The `C` suffix marks a retrospective explanation of feature transport: full-
+rank IC, quartile and decile shape, temporal breadth, sector breadth, frozen-
+coefficient direction, and terminal sensitivity. It nominates no feature and
+does not authorize a sign flip or confirmation run.

@@ -208,6 +208,20 @@ momentum alone was less negative but still insufficient. The
 records `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`; 2024+
 confirmation remains sealed.
 
+`HYP-MOM-04.3C` then explained that failure without fitting another model. Its
+[diagnostic contract](docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_CONTRACT.md)
+reused the same 5,124 DEVELOPMENT rows and audited only the four frozen inputs.
+The [results](docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_RESULTS.md) show no
+coherent feature: sector momentum's upper quartile averaged `+0.302%` but its
+top decile averaged `-0.665%`; positive-month fraction was broad across sectors
+but economically tiny and non-monotonic; and trend R2 transported with a
+negative sign. Three of four frozen TRAIN coefficient signs disagreed with
+DEVELOPMENT marginal IC signs. Terminal-row exclusions did not change the
+answer. The
+[evidence deck](presentations/hyp_mom_04_3c_feature_transport_audit_evidence.pptx)
+records `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY`; no 2024+
+observation was accessed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

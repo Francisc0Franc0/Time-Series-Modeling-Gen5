@@ -2263,6 +2263,38 @@ tasks by the branch name above, the phrase, or the decision date.
   and ignored packet
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3b_sector_relative_replication_20260811/`.
 
+### D121 — Explain feature transport before asking another predictive question
+
+- **Operator decision:** Open `HYP-MOM-04.3C` as a retrospective explanation
+  of H04.3B. Audit only the four frozen features, distinguish whole-ranking
+  from upper-tail evidence, test sector breadth and terminal sensitivity, and
+  do not fit, select, or access 2024+.
+- **Evidence:** No feature aligned magnitude, monotonic shape, time breadth,
+  extreme-tail confirmation, and sector breadth. Sector momentum had
+  `+0.0042` mean IC and `+0.302%` Q4 target but `-0.665%` D10 and positive mean
+  IC in only `5 / 11` sectors. Positive-month fraction reached `9 / 11`
+  positive sectors but only `+0.0072` mean IC; Q2, not Q4, was best and D10 was
+  `-0.199%`.
+- **Failure mechanism:** Trend R2 was the clearest adverse input: `-0.0220`
+  mean IC, `-0.944` pp Q4-Q1, negative spread in `8 / 11` quarters, and only
+  three positive sectors. Three of four frozen TRAIN coefficient signs
+  disagreed with DEVELOPMENT marginal IC signs. This is mechanical evidence,
+  not causal permission to reverse signs.
+- **Robustness:** Excluding all 26 terminal rows or only FRC/SIVB barely
+  changed feature signs or interpretations. Corporate-action handling did not
+  produce the null.
+- **Decision:** Record
+  `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY`. Preserve H04.3B's
+  STOP and keep 2024+ sealed. The next discussion may ask whether inverse trend
+  quality has independent economic rationale for a new minimal hypothesis;
+  the audit itself nominates nothing.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_3c_feature_transport_audit_evidence.pptx`,
+  and ignored packet
+  `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3c_feature_transport_audit_20260811/`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2300,6 +2332,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-04.3B replication contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_CONTRACT.md)
 - [HYP-MOM-04.3B replication results](../operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_RESULTS.md)
 - [HYP-MOM-04.3B evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3b_sector_relative_replication_evidence.pptx)
+- [HYP-MOM-04.3C audit contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_CONTRACT.md)
+- [HYP-MOM-04.3C audit results](../operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_RESULTS.md)
+- [HYP-MOM-04.3C evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3c_feature_transport_audit_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
@@ -2640,3 +2675,10 @@ gates: mean IC was `-0.0342`, only `3 / 11` IC quarters were positive, and mean
 top-quartile sector-relative return was `-0.582%`. Record
 `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`; do not tune the
 inspected model, promote the comparator, or access 2024+ confirmation.
+The `HYP-MOM-04.3C` retrospective audit then showed why: no frozen input had a
+coherent rank, tail, time, and sector profile, and three of four TRAIN
+coefficient signs disagreed with DEVELOPMENT marginal IC signs. Trend R2 had
+the cleanest inverse curve (`-0.944` pp Q4-Q1), but reversing it after
+inspection is not authorized. Record
+`FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY`; keep 2024+ sealed
+until a separately justified hypothesis is discussed and frozen.
