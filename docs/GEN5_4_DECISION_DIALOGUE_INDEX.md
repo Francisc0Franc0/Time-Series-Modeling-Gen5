@@ -2231,6 +2231,38 @@ tasks by the branch name above, the phrase, or the decision date.
   and ignored packet
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3a_target_structure_audit_20260811/`.
 
+### D120 — Freeze sector-relative return, then demand later transport
+
+- **Operator decision:** Accept the H04.3A recommendation, document it, and
+  proceed. Freeze sector-relative next-quarter return as the primary target;
+  do not reopen the broad feature search.
+- **Frozen design:** Retain `2017Q1-2020Q3` as TRAIN. Use only prior sector-
+  relative 126-session return, 63-session trend R2, 252-session recovery from
+  low, and positive-month fraction in one Ridge model. Select lambda inside
+  TRAIN, compare with equal-weight and sector momentum, open only
+  `2021Q1-2023Q3`, and keep 2024+ sealed.
+- **Data gate:** The bounded refresh retained 479 eligible identities and all
+  11 DEVELOPMENT quarters. All 5,124 eligible rows were realized. Twenty-six
+  terminal cases were ledgered before scoring: 24 used final available
+  adjusted close and FRC/SIVB used zero recovery.
+- **Evidence:** TRAIN-only selection chose lambda `10`. DEVELOPMENT mean IC
+  was `-0.0342`, only `3 / 11` IC quarters were positive, mean top-quartile
+  sector-relative return was `-0.582%`, and only `5 / 11` top-quartile quarters
+  were positive. Ridge underperformed both comparators. Simple sector momentum
+  was least weak at `+0.0042` mean IC and `6 / 11` positive quarters, still
+  short of the frozen standard.
+- **Decision:** Record
+  `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`. Keep sector-
+  relative return as the cleaner economic question, but do not claim the
+  target itself creates alpha. Do not tune H04.3B, promote its comparator, or
+  access 2024+ confirmation.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_3b_sector_relative_replication_evidence.pptx`,
+  and ignored packet
+  `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3b_sector_relative_replication_20260811/`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2265,6 +2297,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-04.3A target-audit contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_CONTRACT.md)
 - [HYP-MOM-04.3A target-audit results](../operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_RESULTS.md)
 - [HYP-MOM-04.3A target-audit evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3a_target_structure_audit_evidence.pptx)
+- [HYP-MOM-04.3B replication contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_CONTRACT.md)
+- [HYP-MOM-04.3B replication results](../operator_hypothesis_lab/docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_RESULTS.md)
+- [HYP-MOM-04.3B evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3b_sector_relative_replication_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
@@ -2599,3 +2634,9 @@ to `16.7%`, and materially weakened the apparent beta/volatility relationships.
 Record `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`. Prefer sector-relative
 return for the next discussion, retain beta residualization as a challenger,
 and do not fit or open OOS until a new target is explicitly frozen.
+The operator subsequently froze sector-relative return in `HYP-MOM-04.3B`.
+That compact four-feature Ridge replication failed five of six DEVELOPMENT
+gates: mean IC was `-0.0342`, only `3 / 11` IC quarters were positive, and mean
+top-quartile sector-relative return was `-0.582%`. Record
+`STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`; do not tune the
+inspected model, promote the comparator, or access 2024+ confirmation.

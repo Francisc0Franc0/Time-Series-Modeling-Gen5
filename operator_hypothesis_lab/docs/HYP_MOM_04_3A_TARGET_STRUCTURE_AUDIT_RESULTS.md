@@ -1,6 +1,10 @@
 # HYP-MOM-04.3A Target Structure Audit Results
 
-Status: `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`
+Status at completion: `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`
+
+Subsequent decision: the operator later froze `SECTOR_RELATIVE` in
+`HYP-MOM-04.3B`; that later decision does not retroactively alter this audit's
+evidence boundary or original stop state.
 
 ## Question
 

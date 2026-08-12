@@ -194,6 +194,20 @@ records `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`; it recommends
 sector-relative return for the next target-selection discussion but does not
 freeze a target, fit a model, or open OOS.
 
+The operator then froze that recommendation in `HYP-MOM-04.3B`. The
+[replication contract](docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_CONTRACT.md)
+kept the 2017Q1-2020Q3 TRAIN panel, fixed one four-feature Ridge model and two
+comparators, opened only 2021Q1-2023Q3 DEVELOPMENT, and sealed 2024+. A bounded
+refresh retained 479 signal-eligible identities and reconciled all 5,124 rows,
+including a documented 26-row terminal policy. The
+[results](docs/HYP_MOM_04_3B_SECTOR_RELATIVE_REPLICATION_RESULTS.md) are a clean
+negative replication: mean IC `-0.0342`, only `3 / 11` positive IC quarters,
+and mean top-quartile sector-relative return `-0.582%`. Prior sector-relative
+momentum alone was less negative but still insufficient. The
+[evidence deck](presentations/hyp_mom_04_3b_sector_relative_replication_evidence.pptx)
+records `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN`; 2024+
+confirmation remains sealed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
