@@ -222,6 +222,20 @@ answer. The
 records `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY`; no 2024+
 observation was accessed.
 
+`HYP-ALT-01.1` opens a separate alternative-data measurement lane: a forward
+daily ticker-attention tape from approved `r/wallstreetbets` comment access.
+The [collection contract](docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_CONTRACT.md)
+freezes official OAuth access, two-minute overlap-based polling, a current
+Alpaca active-US-equity/ETF registry, cashtag and constrained bare-symbol
+recognition, no durable raw text or usernames, deletion reconciliation, and
+visible coverage states. The
+[readiness report](docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_READINESS.md)
+records `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED`: 14,227 active
+symbols were registered and the fixture suite passes, but no Reddit approval
+attestation or OAuth credentials are present, so no live Reddit request or
+attention database has been claimed. This lane contains no sentiment, return,
+strategy, portfolio, or live-advice authority.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

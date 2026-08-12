@@ -10,8 +10,8 @@ Operator-origin hypotheses use:
 
 - `HYP` distinguishes operator-origin questions from `LIT` literature-derived
   questions and mainline Gen5.x research.
-- `FAMILY` identifies the proposed economic behavior, such as `MOM`, `MR`,
-  `EVT`, `VOL`, or `TA`.
+- `FAMILY` identifies the proposed economic behavior or measurement source,
+  such as `MOM`, `MR`, `EVT`, `VOL`, `TA`, or `ALT` for alternative data.
 - `CONCEPT` changes when the trading proposition changes.
 - `VARIANT` changes only when a substantive mechanic changes.
 
@@ -50,6 +50,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.3A` | Target Structure Audit | `TRAIN_TARGET_DIAGNOSTICS` | `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN` |
 | `HYP-MOM-04.3B` | Sector-Relative Temporal Replication | `HISTORICAL_DEVELOPMENT` | `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN` |
 | `HYP-MOM-04.3C` | Frozen-Feature Transport Audit | `RETROSPECTIVE_DEVELOPMENT_DIAGNOSTIC` | `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-ALT-01.1` | WSB Daily Ticker Attention Tape | `FORWARD_COLLECTION_POC` | `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -126,3 +127,11 @@ The `C` suffix marks a retrospective explanation of feature transport: full-
 rank IC, quartile and decile shape, temporal breadth, sector breadth, frozen-
 coefficient direction, and terminal sensitivity. It nominates no feature and
 does not authorize a sign flip or confirmation run.
+
+`HYP-ALT-01.1` is a measurement lane rather than a trading strategy. `ALT`
+marks an alternative-data source, while `01.1` freezes the first approved WSB
+comment-collection and ticker-recognition design. Provider access, coverage,
+privacy, deletion, and symbol-classification evidence must pass before any
+separate hypothesis may ask whether the resulting attention measure predicts
+prices. Changes to sentiment, source communities, day cutoffs, ticker parsing,
+or predictive targets require a separately discussed contract.

@@ -2295,6 +2295,39 @@ tasks by the branch name above, the phrase, or the decision date.
   and ignored packet
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3c_feature_transport_audit_20260811/`.
 
+### D122 — Build the WSB attention tape before asking whether it predicts
+
+- **Operator decision:** Set down the failed supervised momentum concept and
+  open `HYP-ALT-01.1` as a forward alternative-data collection POC. Measure
+  daily ticker mentions in `r/wallstreetbets`; do not begin with sentiment,
+  returns, or a trading rule.
+- **Access boundary:** Use only Reddit's approved OAuth API. Do not scrape HTML,
+  bypass rate limits, or describe a recent listing as historical completeness.
+  Reddit approval must be explicitly attested before any live request.
+- **Measurement freeze:** Poll every two minutes, page until a known-comment
+  overlap or ten-page cap, count distinct mentioning comments as primary, and
+  report occurrence counts separately. Recognize validated cashtags plus exact
+  uppercase tokens admitted by a current Alpaca active-US-equity/ETF registry
+  and frozen ambiguity denylist.
+- **Privacy and integrity:** Persist no raw comment body, username, flair, or
+  profile. Retain a reversible comment-to-ticker ledger, purge contributions
+  when reconciliation no longer finds active content, and mark bootstrap,
+  late, no-overlap, and page-cap intervals visibly.
+- **Implementation result:** The collector, poll loop, reconciliation path,
+  daily attention/health tables, preflight, and fixture tests are complete.
+  Alpaca's official paper endpoint generated 14,227 active symbols. Reddit
+  approval and OAuth credentials are absent, so no Reddit request was made.
+- **Decision:** Record
+  `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED`. The next gate is an
+  approved credential smoke test: bootstrap once, then prove timely overlap.
+  Do not claim a healthy database or open predictive research until that gate
+  passes.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_READINESS.md`,
+  `operator_hypothesis_lab/R/hyp_alt_01_1_reddit_attention.R`, and
+  `operator_hypothesis_lab/scripts/run_hyp_alt_01_1_wsb_collection.R`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2335,6 +2368,8 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-04.3C audit contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_CONTRACT.md)
 - [HYP-MOM-04.3C audit results](../operator_hypothesis_lab/docs/HYP_MOM_04_3C_FEATURE_TRANSPORT_AUDIT_RESULTS.md)
 - [HYP-MOM-04.3C evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3c_feature_transport_audit_evidence.pptx)
+- [HYP-ALT-01.1 WSB collection contract](../operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_CONTRACT.md)
+- [HYP-ALT-01.1 readiness report](../operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_READINESS.md)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)

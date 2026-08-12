@@ -1,0 +1,21 @@
+options(stringsAsFactors = FALSE)
+
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+if (length(script_arg) != 1L) stop("Expected exactly one --file argument.", call. = FALSE)
+script_path <- normalizePath(sub("^--file=", "", script_arg), winslash = "/", mustWork = TRUE)
+repo_root <- normalizePath(file.path(dirname(script_path), "..", ".."), winslash = "/", mustWork = TRUE)
+
+source(file.path(repo_root, "scripts", "lib", "repo_local_libs.R"))
+g5_use_repo_local_libs(repo_root)
+source(file.path(repo_root, "R", "config_loader.R"))
+source(file.path(repo_root, "operator_hypothesis_lab", "R", "hyp_alt_01_1_reddit_attention.R"))
+g5_load_local_renviron(repo_root)
+
+result <- ha011_collect_once(ha011_config_from_env(repo_root))
+cat("Collection status:", result$status, "\n")
+cat("Pages fetched:", result$run$pages_fetched, "\n")
+cat("Comments received:", result$run$comments_received, "\n")
+cat("New comments:", result$run$new_comments, "\n")
+cat("Rate-limit remaining:", result$run$rate_remaining, "\n")
+cat("Daily attention:", normalizePath(result$paths$attention, winslash = "/", mustWork = TRUE), "\n")
+cat("Coverage health:", normalizePath(result$paths$health, winslash = "/", mustWork = TRUE), "\n")
