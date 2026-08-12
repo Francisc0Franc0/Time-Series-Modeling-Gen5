@@ -162,6 +162,22 @@ only `4/9` held-out quarters. The
 [evidence deck](presentations/hyp_mom_04_1_deployment_universe_evidence.pptx)
 records `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`; no 2021-2023 bar was queried.
 
+`HYP-MOM-04.2` then froze a derivative feature-atlas question on the same 481
+eligible identities and unchanged TRAIN/OOS boundary. The
+[contract](docs/HYP_MOM_04_2_FEATURE_ATLAS_CONTRACT.md) registered 33 causal
+OHLCV features across seven economic families, nine predefined candidates,
+two nested outer blocks, and a 200-draw full-search permutation control before
+outcomes. The [results](docs/HYP_MOM_04_2_FEATURE_ATLAS_RESULTS.md) show why
+scatterplots are useful but insufficient: pooled beta and realized-volatility
+deciles looked mildly attractive, while classic 12-to-1 momentum was flat;
+quarter-aware signs nevertheless reversed repeatedly. Every candidate's best
+inner-validation mean IC was negative. Nested outer mean IC was `-0.1071`,
+top-quartile excess was `-2.23` pp, and the search-adjusted p-value was `1.000`.
+The [evidence deck](presentations/hyp_mom_04_2_feature_atlas_evidence.pptx)
+records `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`; no 2021+ observation was
+queried. Rebuild human-facing visuals from retained CSVs with
+`scripts/render_hyp_mom_04_2_feature_atlas_evidence.R`.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

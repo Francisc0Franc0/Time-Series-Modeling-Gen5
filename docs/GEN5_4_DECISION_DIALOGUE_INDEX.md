@@ -2159,6 +2159,39 @@ tasks by the branch name above, the phrase, or the decision date.
   and the ignored audit/TRAIN packets under
   `runs/research_workbench/operator_hypothesis_lab/`.
 
+### D118 — Feature scatterplots inform hypotheses; nested transport still governs promotion
+
+- **Operator decision:** Open a derivative `HYP-MOM-04.2` lane to study a
+  broader but controlled feature atlas. Add human-facing feature-versus-return
+  scatterplots, decile curves, and quarter-aware diagnostics without scanning
+  arbitrary subsets until something works.
+- **Frozen design:** Preserve the 481-name September 2020 SPY deployment
+  cohort, `2017Q1-2020Q3` TRAIN signal quarters, next-quarter relative-return
+  target, and untouched `2021-2023` OOS boundary. Register 33 causal OHLCV
+  features, nine predefined baskets, two nested three-quarter outer blocks,
+  and 200 permutations that repeat the complete candidate/lambda search.
+- **Feature lesson:** Pooled plots made `beta126`, `rv126`, trend quality, and
+  recovery look mildly interesting, while `momentum12_1` was essentially
+  flat. The quarter heatmap showed frequent sign reversal, and 21 feature
+  pairs exceeded `0.85` absolute rank correlation. The 7,208 stock-quarter
+  rows remain only 15 independent market quarters.
+- **Nested evidence:** Every candidate's best inner-validation mean IC was
+  negative. Fold 1 selected trend quality at lambda 100; fold 2 selected
+  relative strength at lambda 10. Mean outer IC was `-0.1071`, only `3/6`
+  quarters were positive, mean top-quartile excess was `-2.23` pp, and the
+  selected search underperformed the original-six challenger by `-0.0448` IC.
+  The full-search p-value was `1.000`.
+- **Decision:** Record `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Six of nine
+  gates failed. Preserve the scatter atlas as a feature-education surface, not
+  a promotion device. Do not rescue a feature, sign, threshold, basket, or
+  lambda under this identifier; no `2021+` observation was queried.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_2_feature_atlas_evidence.pptx`,
+  and ignored packet
+  `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_2_feature_atlas_train_20260811/`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2187,6 +2220,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.2 representative trade-tape review](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
 - [LIT-MOM-01.2 representative trade-tape deck](../literature_studies/presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx)
 - [Operator Hypothesis Lab index](../operator_hypothesis_lab/README.md)
+- [HYP-MOM-04.2 feature-atlas contract](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_CONTRACT.md)
+- [HYP-MOM-04.2 feature-atlas results](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_RESULTS.md)
+- [HYP-MOM-04.2 feature-atlas evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_2_feature_atlas_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
@@ -2503,3 +2539,12 @@ validation did not: mean rank IC was `-0.0176` and positive in only `5 / 9`
 quarters. Record `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Do not replace temporal
 transport with pooled permutation evidence, tune the inspected feature set, or
 query 2021-2023 under this identifier.
+The derivative `HYP-MOM-04.2` feature atlas then froze 33 causal features and
+nine predefined candidates on the valid 481-name deployment cohort. Pooled
+scatter and decile plots exposed mildly attractive beta, volatility, and
+recovery shapes, but every basket's best inner mean IC was negative. The two
+outer folds selected different baskets; mean outer IC was `-0.1071`, mean
+top-quartile excess was `-2.23` pp, and full-search p was `1.000`. Record the
+same `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Scatterplots remain useful for
+understanding shape, not as a substitute for temporal transport; no 2021+
+observation was queried.
