@@ -2192,6 +2192,45 @@ tasks by the branch name above, the phrase, or the decision date.
   and ignored packet
   `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_2_feature_atlas_train_20260811/`.
 
+### D119 — Audit the economic target before searching for more features
+
+- **Operator decision:** Accept the diagnosis that feature scarcity was not
+  the main demonstrated problem and open `HYP-MOM-04.3A` as a target-structure
+  audit. Compare economically distinct next-quarter targets, document the
+  reasoning in a dedicated deck, and do not combine target and feature search.
+- **Terminology correction:** H04.2 implemented eligible-universe-relative
+  return, not literal SPY-relative return. Subtracting SPY would preserve the
+  cross-sectional rank but change numerical excess-return levels.
+- **Frozen design:** Reuse only the retained 481-name, 7,208-row H04.2 TRAIN
+  panel. Compare universe-relative, sector-relative, and quarter-specific
+  sector-plus-prior-beta residual targets. Audit dispersion, tails, target
+  agreement, sector concentration, return decomposition, five simple
+  baselines, and all 33 feature ICs. Make zero provider calls and keep every
+  2021+ observation sealed.
+- **Evidence:** Sector alone explained `16.7%` of next-quarter cross-sectional
+  variation on average; sector plus beta explained `21.4%` and reached `46.2%`
+  in `2020Q3`. Universe-versus-sector mean rank agreement was `0.887`, but
+  realized top-quartile Jaccard overlap was only `0.657`. Sector-relative
+  targeting reduced the average largest-sector winner share from `22.7%` to
+  `16.7%`.
+- **Feature lesson:** The H04.2 pooled risk signal was exposure-sensitive.
+  `beta126` mean IC moved from `+0.0609` universe-relative to `+0.0254` sector-
+  relative and `-0.0124` residualized; `rv126` moved from `+0.0512` to `+0.0218`
+  and `-0.0162`. Target definition can also reverse a feature conclusion:
+  momentum acceleration changed by `0.0715` IC from reference to residual.
+- **Decision surface:** Record
+  `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`. Recommend sector-relative
+  return for the next target-selection discussion because it is interpretable
+  and removes material sector confounding. Retain beta residualization as a
+  diagnostic challenger, especially in beta-dominated quarters. Do not freeze
+  a target, fit a model, form a portfolio, or open OOS without a new decision.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_mom_04_3a_target_structure_audit_evidence.pptx`,
+  and ignored packet
+  `runs/research_workbench/operator_hypothesis_lab/hyp_mom_04_3a_target_structure_audit_20260811/`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2223,6 +2262,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-04.2 feature-atlas contract](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_CONTRACT.md)
 - [HYP-MOM-04.2 feature-atlas results](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_RESULTS.md)
 - [HYP-MOM-04.2 feature-atlas evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_2_feature_atlas_evidence.pptx)
+- [HYP-MOM-04.3A target-audit contract](../operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_CONTRACT.md)
+- [HYP-MOM-04.3A target-audit results](../operator_hypothesis_lab/docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_RESULTS.md)
+- [HYP-MOM-04.3A target-audit evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3a_target_structure_audit_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
@@ -2548,3 +2590,12 @@ top-quartile excess was `-2.23` pp, and full-search p was `1.000`. Record the
 same `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`. Scatterplots remain useful for
 understanding shape, not as a substitute for temporal transport; no 2021+
 observation was queried.
+The `HYP-MOM-04.3A` target audit then reused that retained TRAIN panel without
+provider calls. Sector explained `16.7%` of cross-sectional next-quarter
+variation on average, while sector plus prior beta explained `21.4%` and
+`46.2%` in `2020Q3`. Sector neutralization changed roughly one-third of the
+realized winner set, reduced average largest-sector concentration from `22.7%`
+to `16.7%`, and materially weakened the apparent beta/volatility relationships.
+Record `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`. Prefer sector-relative
+return for the next discussion, retain beta residualization as a challenger,
+and do not fit or open OOS until a new target is explicitly frozen.

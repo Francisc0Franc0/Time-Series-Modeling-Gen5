@@ -47,6 +47,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.1 / SP500-PIT-SOURCE-REPAIR-01` | Accessible Source Repair | `DATA_SOURCE_FEASIBILITY` | `STOP_SP500_PIT_SOURCE_REPAIR_INCOMPLETE_FALLBACK_DISCUSSION_OPEN` |
 | `HYP-MOM-04.1 / DEPLOYMENT-UNIVERSE-DATA-AUDIT-01` | September 2020 SPY Fixed Deployment Cohort | `DATA_FEASIBILITY_AND_TRAIN_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
 | `HYP-MOM-04.2` | Causal Feature Atlas + Nested Basket Search | `TRAIN_FEATURE_DIAGNOSTICS_AND_SELECTION` | `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN` |
+| `HYP-MOM-04.3A` | Target Structure Audit | `TRAIN_TARGET_DIAGNOSTICS` | `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN` |
 
 `HYP-MOM-02.1` is authoritative under the
 `CROSS_TRIGGERED_ONLY_NO_WARM_START` initialization. Every discovery path
@@ -102,3 +103,10 @@ time-ordered validation, and makes the complete candidate search part of a
 permutation null. It is not permission to enumerate arbitrary subsets. Pooled
 scatter and decile shapes remain descriptive; outer transport and the
 search-adjusted null govern promotion. Both failed, so OOS remained sealed.
+
+`HYP-MOM-04.3A` is a diagnostic derivative because it changes no feature,
+model, portfolio, or data boundary. It decomposes the H04.2 target into three
+predeclared economic questions and measures how sector and prior beta alter
+the evidence. The `A` suffix distinguishes this audit from a future, separately
+approved target-specific model lane. The audit recommends sector-relative
+return for discussion but leaves target selection explicitly unfrozen.

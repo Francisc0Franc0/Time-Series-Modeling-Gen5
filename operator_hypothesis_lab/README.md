@@ -178,6 +178,22 @@ records `STOP_TRAIN_GATES_FAILED_OOS_NOT_RUN`; no 2021+ observation was
 queried. Rebuild human-facing visuals from retained CSVs with
 `scripts/render_hyp_mom_04_2_feature_atlas_evidence.R`.
 
+`HYP-MOM-04.3A` then audited the prediction target itself rather than adding
+features. Its [frozen contract](docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_CONTRACT.md)
+compared the implemented universe-relative target with sector-relative and
+sector-plus-beta-residual targets using only the retained H04.2 TRAIN panel.
+The [results](docs/HYP_MOM_04_3A_TARGET_STRUCTURE_AUDIT_RESULTS.md) show that
+sector alone explained `16.7%` of next-quarter cross-sectional variation on
+average, while sector plus prior beta explained `21.4%` and `46.2%` in the
+beta-dominated `2020Q3` quarter. Sector neutralization changed about one-third
+of realized top-quartile membership and reduced the average largest-sector
+share from `22.7%` to `16.7%`. Several apparent risk relationships shrank or
+reversed after neutralization. The dedicated
+[evidence deck](presentations/hyp_mom_04_3a_target_structure_audit_evidence.pptx)
+records `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN`; it recommends
+sector-relative return for the next target-selection discussion but does not
+freeze a target, fit a model, or open OOS.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
