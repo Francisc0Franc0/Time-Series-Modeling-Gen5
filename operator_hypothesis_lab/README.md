@@ -251,6 +251,21 @@ a three-session median hold. The
 records `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`; keep 2024+ sealed and
 do not tune the inspected mechanics or promote leverage.
 
+`HYP-MOM-05.2` asks whether a training-only selector can rescue that family
+without expanding its mechanics. Its
+[contract](docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_CONTRACT.md) freezes 27
+`fast / medium / slow` triplets, six half-year blocks, four expanding outer
+tests, a five-component rank score, a one-standard-error plateau, and a
+low-turnover tie-break. The
+[results](docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_RESULTS.md) retain 119 assets
+and show a stronger negative result: selected horizons progressed from
+`15/30/90` to `20/50/120`, but all four test blocks had non-positive median
+return. The 1x median compounded return was `-7.25%`, only `34 / 119` assets
+were positive, and the median matched-shift percentile was `15%`. Only the
+integrity gate passed. The evidence deck records
+`STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN`; keep 2024+ sealed and do
+not widen the grid or select favorable cells, assets, sectors, or cohorts.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

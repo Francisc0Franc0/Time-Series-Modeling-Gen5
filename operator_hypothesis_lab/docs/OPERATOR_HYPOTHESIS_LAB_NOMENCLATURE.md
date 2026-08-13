@@ -51,6 +51,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.3B` | Sector-Relative Temporal Replication | `HISTORICAL_DEVELOPMENT` | `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN` |
 | `HYP-MOM-04.3C` | Frozen-Feature Transport Audit | `RETROSPECTIVE_DEVELOPMENT_DIAGNOSTIC` | `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-05.1` | Ordered Triple-SMA Pullback/Reclaim | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-MOM-05.2` | Triple-SMA Grid Walk-Forward | `REUSED_WINDOW_WALK_FORWARD_DEVELOPMENT` | `STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN` |
 | `HYP-ALT-01.1` | WSB Daily Ticker Attention Tape | `FORWARD_COLLECTION_POC` | `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED` |
 
 `HYP-MOM-02.1` is authoritative under the
@@ -137,6 +138,15 @@ is the only post-exit re-entry. Losing stack order alone does not exit. Its
 trade count and behaving as short-lived whipsaws. Preserve the no-promotion
 status and treat any reclaim delay, confirmation, slope, volatility, average,
 asset, or sector change as a separately frozen hypothesis.
+
+`HYP-MOM-05.2` is a substantive same-family variant because parameter
+selection becomes part of the model. It freezes a 27-triplet horizon family,
+global expanding half-year selection, a five-component rank score, and a
+one-standard-error low-turnover tie-break. The selector moved toward slower,
+more separated horizons but produced negative median return in every outer
+block and weak matched-timing percentiles. Preserve the development STOP and
+treat any grid expansion or mechanism filter as a distinct hypothesis rather
+than an H05.2 retry.
 
 `HYP-ALT-01.1` is a measurement lane rather than a trading strategy. `ALT`
 marks an alternative-data source, while `01.1` freezes the first approved WSB

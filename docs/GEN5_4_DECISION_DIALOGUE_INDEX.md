@@ -2363,6 +2363,42 @@ tasks by the branch name above, the phrase, or the decision date.
   and
   `operator_hypothesis_lab/presentations/hyp_mom_05_1_triple_sma_pullback_wide_discovery_evidence.pptx`.
 
+### D124 — Test a frozen triple-SMA parameter-selection policy
+
+- **Operator decision:** Follow HYP-MOM-05.1 with a compact grid rather than
+  assuming the original `15/30/45` spacing was representative. Test whether a
+  training-only selector can choose portable horizons without opening new
+  entry, exit, filter, asset-selection, portfolio, or confirmation scope.
+- **Frozen design:** Search 27 combinations from fast `10/15/20`, medium
+  `30/40/50`, and slow `60/90/120`. Use six independent half-year blocks and
+  four expanding outer tests. Score candidates by equal-weight fractional
+  ranks of return, positive breadth, Sharpe, drawdown, and excess return versus
+  the stronger candidate-specific trend baseline. Select the lowest-turnover
+  candidate inside the best candidate's one-standard-error tolerance set.
+- **Coverage:** Retain 119 of 122 registered assets. APHA and SNE remain
+  historically incomplete; LI lacks the 130-session prehistory required by
+  the longest slow average. Exclude all three without replacement.
+- **Result:** The selector chose `15/30/90`, `15/40/90`, then `20/50/120`
+  twice. No outer test block had a positive median asset return. Compounded 1x
+  median return was `-7.25%`, only `34 / 119` assets were positive, and the
+  matched-timing median percentile was `15%` with `0 / 119` above the 80th
+  percentile. Fixed-quantity 1.8x worsened median return to `-15.17%`.
+- **Interpretation:** Wider horizon separation reduced reclaim dominance but
+  did not repair entry quality. Initial activations and reclaims both had about
+  a 27% hit rate and negative median trade return. Only the integrity gate
+  passed (`1 / 7`).
+- **Decision:** Record
+  `STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN`. Keep 2024+ sealed. Do not
+  widen the grid, select favorable cells, assets, sectors, or cohorts, or add
+  confirmation, persistence, slope, or volatility filters under this ID.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_RESULTS.md`,
+  `operator_hypothesis_lab/R/hyp_mom_05_2_triple_sma_grid_wfa.R`,
+  `operator_hypothesis_lab/scripts/run_hyp_mom_05_2_triple_sma_grid_wfa.R`,
+  and
+  `operator_hypothesis_lab/presentations/hyp_mom_05_2_triple_sma_grid_wfa_evidence.pptx`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2408,6 +2444,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-05.1 contract](../operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_CONTRACT.md)
 - [HYP-MOM-05.1 results](../operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_RESULTS.md)
 - [HYP-MOM-05.1 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_05_1_triple_sma_pullback_wide_discovery_evidence.pptx)
+- [HYP-MOM-05.2 contract](../operator_hypothesis_lab/docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_CONTRACT.md)
+- [HYP-MOM-05.2 results](../operator_hypothesis_lab/docs/HYP_MOM_05_2_TRIPLE_SMA_GRID_WFA_RESULTS.md)
+- [HYP-MOM-05.2 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_05_2_triple_sma_grid_wfa_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
