@@ -236,6 +236,21 @@ attestation or OAuth credentials are present, so no live Reddit request or
 attention database has been claimed. This lane contains no sentiment, return,
 strategy, portfolio, or live-advice authority.
 
+`HYP-MOM-05.1` returns to a minimal formulaic trend question: fresh
+`SMA15 > SMA30 > SMA45` activation enters, close at or below SMA30 exits, and
+only a fresh SMA30 reclaim while ordered can re-enter. Its
+[contract](docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_CONTRACT.md) freezes causal
+next-open execution, a 122-stock registry, 1x and fixed-quantity 1.8x debt,
+frictions, four economic baselines, and 500 exposure-matched circular shifts.
+The [results](docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_RESULTS.md) retain 120
+eligible assets after refresh and show a broad negative result: 1x median
+return `-3.44%`, median hit rate `29.29%`, and only `10 / 120` assets above the
+80th timing-control percentile. Reclaims supplied `979 / 1,099` trades and had
+a three-session median hold. The
+[evidence deck](presentations/hyp_mom_05_1_triple_sma_pullback_wide_discovery_evidence.pptx)
+records `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`; keep 2024+ sealed and
+do not tune the inspected mechanics or promote leverage.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

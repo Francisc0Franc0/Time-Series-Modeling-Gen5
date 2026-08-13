@@ -50,6 +50,7 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.3A` | Target Structure Audit | `TRAIN_TARGET_DIAGNOSTICS` | `TARGET_AUDIT_COMPLETE_SELECTION_NOT_FROZEN` |
 | `HYP-MOM-04.3B` | Sector-Relative Temporal Replication | `HISTORICAL_DEVELOPMENT` | `STOP_DEVELOPMENT_REPLICATION_FAILED_CONFIRMATION_NOT_RUN` |
 | `HYP-MOM-04.3C` | Frozen-Feature Transport Audit | `RETROSPECTIVE_DEVELOPMENT_DIAGNOSTIC` | `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY` |
+| `HYP-MOM-05.1` | Ordered Triple-SMA Pullback/Reclaim | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-ALT-01.1` | WSB Daily Ticker Attention Tape | `FORWARD_COLLECTION_POC` | `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED` |
 
 `HYP-MOM-02.1` is authoritative under the
@@ -127,6 +128,15 @@ The `C` suffix marks a retrospective explanation of feature transport: full-
 rank IC, quartile and decile shape, temporal breadth, sector breadth, frozen-
 coefficient direction, and terminal sensitivity. It nominates no feature and
 does not authorize a sign flip or confirmation run.
+
+`HYP-MOM-05.1` is a new minimal formulaic concept. The ordered 15/30/45 stack
+provides trend permission; a fresh stack activation creates the first entry;
+close at or below SMA30 exits; and a fresh SMA30 reclaim while still ordered
+is the only post-exit re-entry. Losing stack order alone does not exit. Its
+1x/1.8x wide discovery was broadly negative, with reclaims dominating the
+trade count and behaving as short-lived whipsaws. Preserve the no-promotion
+status and treat any reclaim delay, confirmation, slope, volatility, average,
+asset, or sector change as a separately frozen hypothesis.
 
 `HYP-ALT-01.1` is a measurement lane rather than a trading strategy. `ALT`
 marks an alternative-data source, while `01.1` freezes the first approved WSB

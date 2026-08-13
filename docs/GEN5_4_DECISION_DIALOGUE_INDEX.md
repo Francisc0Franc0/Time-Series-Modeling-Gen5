@@ -2328,6 +2328,41 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/R/hyp_alt_01_1_reddit_attention.R`, and
   `operator_hypothesis_lab/scripts/run_hyp_alt_01_1_wsb_collection.R`.
 
+### D123 — Test the triple-SMA pullback/reclaim rule with explicit leverage
+
+- **Operator decision:** Set the WSB collection lane down temporarily and open
+  a wide-breadth minimal momentum strategy using fast, medium, and slow moving
+  averages. Test both 1x and 1.8x and compare against appropriate baselines.
+- **Frozen mechanics:** Use 15/30/45 SMAs. Enter next open after a fresh
+  ordered-stack activation and close above SMA30. Exit next open after close at
+  or below SMA30. After the first exit, re-enter only on a fresh SMA30 reclaim
+  while the stack remains ordered. Losing order alone does not exit. Start in
+  cash, reinvest trade equity, and liquidate at the final discovery open.
+- **Leverage and controls:** Model 1.8x as fixed shares financed by fixed debt,
+  not a daily-reset return series. Charge 5 bp/6% primary and 10 bp/10% stress;
+  report a 30% maintenance proxy. Compare cash, buy-and-hold, SMA30-only,
+  ordered-stack-only, and 500 exposure-matched circular shifts.
+- **Coverage:** Reuse the frozen 122-stock atlas over 2021-2023 and seal 2024+.
+  The authorized refresh retained 120 eligible names. APHA and SNE remained
+  incomplete and were excluded without replacement.
+- **Result:** At 1x, median return was `-3.44%`, median hit rate `29.29%`, and
+  median max drawdown `-15.11%`; only `10 / 120` assets ranked above the 80th
+  matched-shift percentile. At 1.8x, median return fell to `-7.76%` and median
+  drawdown to `-25.60%`. Reclaims generated `979 / 1,099` trades with a
+  three-session median hold and `-0.932%` median return.
+- **Decision:** Record
+  `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY`. The exercise identifies
+  immediate reclaim quality as the likely failure mechanism but does not
+  authorize a delay, confirmation filter, parameter change, asset or sector
+  selection, confirmation access, leverage policy, portfolio, or live action.
+- **Artifacts:**
+  `operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_RESULTS.md`,
+  `operator_hypothesis_lab/R/hyp_mom_05_1_triple_sma_pullback.R`,
+  `operator_hypothesis_lab/scripts/run_hyp_mom_05_1_triple_sma_pullback_wide_discovery.R`,
+  and
+  `operator_hypothesis_lab/presentations/hyp_mom_05_1_triple_sma_pullback_wide_discovery_evidence.pptx`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2370,6 +2405,9 @@ tasks by the branch name above, the phrase, or the decision date.
 - [HYP-MOM-04.3C evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_3c_feature_transport_audit_evidence.pptx)
 - [HYP-ALT-01.1 WSB collection contract](../operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_CONTRACT.md)
 - [HYP-ALT-01.1 readiness report](../operator_hypothesis_lab/docs/HYP_ALT_01_1_WSB_FORWARD_COLLECTION_READINESS.md)
+- [HYP-MOM-05.1 contract](../operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_CONTRACT.md)
+- [HYP-MOM-05.1 results](../operator_hypothesis_lab/docs/HYP_MOM_05_1_TRIPLE_SMA_PULLBACK_RESULTS.md)
+- [HYP-MOM-05.1 evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_05_1_triple_sma_pullback_wide_discovery_evidence.pptx)
 - [HYP-MOM-01.1 discovery contract](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_CONTRACT.md)
 - [HYP-MOM-01.1 discovery results](../operator_hypothesis_lab/docs/HYP_MOM_01_1_TWO_GREEN_GAP_UPS_DISCOVERY_RESULTS.md)
 - [HYP-MOM-01.1 discovery evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_01_1_two_green_gap_ups_discovery_evidence.pptx)
