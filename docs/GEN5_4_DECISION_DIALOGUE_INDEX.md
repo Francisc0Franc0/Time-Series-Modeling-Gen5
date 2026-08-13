@@ -126,6 +126,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D110` | Open HYP-MOM-02.2 as a qualified SMA200-entry, SMA50-exit composite | current continuation | `enter when price crosses above 200 SMA, then exit when the price crosses crosses below 50 SMA` | Require the entry close above both averages, execute next open, exit next open after close at/below SMA50, and require a new qualified SMA200 cross before re-entry; compare directly with authoritative fresh-cross 02.1 on the reused discovery panel |
 | `D111` | Approve a staged SMA follow-up program with attribution before distinct-data candidates | current continuation | `make a plan for a series of these follow-up tests, then after approval, run and document them autonomously` | Freeze one-change-at-a-time attribution, two named candidate mechanics with declared parents, conjunctive development gates, a conditional context atlas, at most one later confirmation, and sealed 2026+ evidence |
 | `D112` | Stop HYP-MOM-02.3 and HYP-MOM-03.1 after distinct-history gates | current continuation | `Approved, proceed` | Attribute the reused window; apply the documented pre-outcome warm-up amendment; run 114 complete 2016-2020 assets; nominate neither candidate; do not run context or query 2024-2025 confirmation |
+| `D125` | Freeze a three-family daily/30-minute momentum roadmap with 1x and 1.8x attribution | current continuation | `Let's lock in this plan, but not execute yet` | Document the data-admission, SMA8/14, price/SMA, Chan momentum, leverage-baseline, and later regime-audit sequence; preserve `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
 
 ## Compact Decision Records
 
@@ -2399,6 +2400,40 @@ tasks by the branch name above, the phrase, or the decision date.
   and
   `operator_hypothesis_lab/presentations/hyp_mom_05_2_triple_sma_grid_wfa_evidence.pptx`.
 
+### D125 — Freeze an intraday momentum roadmap with explicit leverage attribution
+
+- **Operator decision:** Plan, but do not yet execute, three related research
+  families: a daily and 30-minute reconstruction of the operator's SMA8/SMA14
+  TSLA/AMD experience, a session-scaled 30-minute price/SMA-cross family, and a
+  30-minute adaptation of Chan's momentum framework. Run every eventual policy
+  at 1x and 1.8x, then pause for a regime-filter design discussion.
+- **Context:** The operator's remembered TSLA/AMD success used approximately
+  1.8x leverage and produced meaningful absolute wealth, despite the reasonable
+  expectation that risk-adjusted performance may be less exceptional. Preserve
+  both facts rather than retroactively judging the experience through only
+  terminal return or only Sharpe.
+- **Frozen sequence:** Admit and audit isolated Alpaca 30-minute plumbing;
+  reconstruct fixed SMA8/SMA14 daily and M30 policies; test session-scaled
+  price/SMA anchors; then adapt Chan's TRAIN-only `L/H` selection. All lanes are
+  long-only and unfiltered before any regime research.
+- **Leverage decision:** Select all parameters using 1x primary-cost TRAIN
+  evidence. Apply fixed-quantity 1.8x only as a frozen implementation overlay,
+  with reinvestment at later entries, explicit financing, costs, drawdown,
+  underwater time, minimum equity, and maintenance-risk diagnostics. Compare
+  it with 1.8x fixed-quantity ownership and same-leverage exposure-matched
+  timing controls. Leverage cannot rescue failed 1x timing evidence.
+- **Regime boundary:** After the unfiltered lanes, known successful TSLA/AMD
+  periods may support a transparently retrospective mechanism audit. Any
+  proposed regime gate must later be frozen, causal, scale-normalized, shared
+  across a predeclared eligible domain, and tested on distinct temporal and
+  cross-asset evidence. Do not require universal asset applicability.
+- **Stop:** Record `FROZEN_PLAN_EXECUTION_NOT_OPEN`. Do not download intraday
+  data, implement, inspect outcomes, construct the regime filter, or change
+  provider, portfolio, advice, or live behavior until the operator explicitly
+  resumes this roadmap.
+- **Artifact:**
+  `docs/GEN5_INTRADAY_MOMENTUM_RESEARCH_ROADMAP.md`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
@@ -2427,6 +2462,7 @@ tasks by the branch name above, the phrase, or the decision date.
 - [LIT-MOM-01.2 representative trade-tape review](../literature_studies/docs/GEN5_LIT_MOM_01_2_AUDIT_01_TRADE_TAPE_REVIEW_RESULTS.md)
 - [LIT-MOM-01.2 representative trade-tape deck](../literature_studies/presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx)
 - [Operator Hypothesis Lab index](../operator_hypothesis_lab/README.md)
+- [Intraday momentum research roadmap](GEN5_INTRADAY_MOMENTUM_RESEARCH_ROADMAP.md)
 - [HYP-MOM-04.2 feature-atlas contract](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_CONTRACT.md)
 - [HYP-MOM-04.2 feature-atlas results](../operator_hypothesis_lab/docs/HYP_MOM_04_2_FEATURE_ATLAS_RESULTS.md)
 - [HYP-MOM-04.2 feature-atlas evidence deck](../operator_hypothesis_lab/presentations/hyp_mom_04_2_feature_atlas_evidence.pptx)

@@ -21,6 +21,7 @@ concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, grounded primarily in:
 Start with:
 
 - [research nomenclature](docs/GEN5_LITERATURE_GROUNDED_STRATEGY_RESEARCH_NOMENCLATURE.md);
+- [shared intraday momentum roadmap](../docs/GEN5_INTRADAY_MOMENTUM_RESEARCH_ROADMAP.md);
 - [source ledger](docs/GEN5_LITERATURE_SOURCE_LEDGER.md);
 - [workflow handoff](docs/GEN5_LITERATURE_GROUNDED_POC_HANDOFF.md); and
 - the concept-specific contracts under [docs](docs/).

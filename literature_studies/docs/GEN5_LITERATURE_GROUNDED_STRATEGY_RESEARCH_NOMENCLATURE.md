@@ -18,8 +18,8 @@ Every test uses:
 
 `LIT-[FAMILY]-[CONCEPT].[VARIANT]`
 
-- `FAMILY` identifies the economic mechanism, such as `MR` for mean reversion
-  or `MOM` for momentum.
+- `FAMILY` identifies the economic mechanism, such as `MR` for mean reversion,
+  `MOM` for momentum, or `IMOM` for an intraday-bar momentum derivative.
 - `CONCEPT` increments when the underlying trading proposition changes.
 - `VARIANT` increments only for a substantive, theoretically justified change
   to the same proposition.
@@ -60,6 +60,7 @@ renames an earlier outcome.
 | `LIT-MOM-01.1` | Interday Time-Series Momentum | none | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; STOP recommended before CONFIRMATION |
 | `LIT-MOM-01.2` | Long-Only Single-Position Interday Time-Series Momentum | none | `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`; raw retrospective breadth did not survive exposure, random-timing, canonical-horizon, or beta attribution; no confirmation authority |
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
+| `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `FROZEN_PLAN_EXECUTION_NOT_OPEN`; shared intraday roadmap only |
 
 ## Replication batches and instances
 

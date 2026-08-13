@@ -11,7 +11,8 @@ Operator-origin hypotheses use:
 - `HYP` distinguishes operator-origin questions from `LIT` literature-derived
   questions and mainline Gen5.x research.
 - `FAMILY` identifies the proposed economic behavior or measurement source,
-  such as `MOM`, `MR`, `EVT`, `VOL`, `TA`, or `ALT` for alternative data.
+  such as `MOM`, `IMOM` for intraday-bar momentum, `MR`, `EVT`, `VOL`, `TA`,
+  or `ALT` for alternative data.
 - `CONCEPT` changes when the trading proposition changes.
 - `VARIANT` changes only when a substantive mechanic changes.
 
@@ -52,6 +53,9 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-04.3C` | Frozen-Feature Transport Audit | `RETROSPECTIVE_DEVELOPMENT_DIAGNOSTIC` | `FEATURE_TRANSPORT_AUDIT_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-05.1` | Ordered Triple-SMA Pullback/Reclaim | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-05.2` | Triple-SMA Grid Walk-Forward | `REUSED_WINDOW_WALK_FORWARD_DEVELOPMENT` | `STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN` |
+| `HYP-MOM-06.1` | Daily SMA8/SMA14 Crossover Reconstruction | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
+| `HYP-IMOM-01.1` | 30-Minute SMA8/SMA14 Crossover Reconstruction | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
+| `HYP-IMOM-02.1` | Session-Scaled 30-Minute Price/SMA Cross | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
 | `HYP-ALT-01.1` | WSB Daily Ticker Attention Tape | `FORWARD_COLLECTION_POC` | `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED` |
 
 `HYP-MOM-02.1` is authoritative under the
@@ -147,6 +151,16 @@ more separated horizons but produced negative median return in every outer
 block and weak matched-timing percentiles. Preserve the development STOP and
 treat any grid expansion or mechanism filter as a distinct hypothesis rather
 than an H05.2 retry.
+
+`HYP-MOM-06.1`, `HYP-IMOM-01.1`, and `HYP-IMOM-02.1` are planned identifiers,
+not executable contracts. `HYP-MOM-06.1` reconstructs the operator's daily
+SMA8/SMA14 question. `HYP-IMOM-01.1` asks the economically distinct question
+on 30-minute bars, where the same numeric averages cover roughly one session.
+`HYP-IMOM-02.1` ports the price/slow-anchor question using session-equivalent
+30-minute horizons. The related Chan adaptation remains `LIT-IMOM-01.1` under
+the literature-study phylogeny. Their shared roadmap freezes sequence,
+attribution principles, and 1x/1.8x comparison policy while leaving data
+collection and implementation closed.
 
 `HYP-ALT-01.1` is a measurement lane rather than a trading strategy. `ALT`
 marks an alternative-data source, while `01.1` freezes the first approved WSB
