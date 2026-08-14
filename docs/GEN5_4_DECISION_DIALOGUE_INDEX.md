@@ -1,8 +1,8 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-08-08
-Branch: `codex/Gen5.4-ml-decision-engine-plan`
+Index date: 2026-08-14
+Branch: `codex/intraday-momentum-poc-series`
 
 ## Purpose
 
@@ -127,6 +127,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D111` | Approve a staged SMA follow-up program with attribution before distinct-data candidates | current continuation | `make a plan for a series of these follow-up tests, then after approval, run and document them autonomously` | Freeze one-change-at-a-time attribution, two named candidate mechanics with declared parents, conjunctive development gates, a conditional context atlas, at most one later confirmation, and sealed 2026+ evidence |
 | `D112` | Stop HYP-MOM-02.3 and HYP-MOM-03.1 after distinct-history gates | current continuation | `Approved, proceed` | Attribute the reused window; apply the documented pre-outcome warm-up amendment; run 114 complete 2016-2020 assets; nominate neither candidate; do not run context or query 2024-2025 confirmation |
 | `D125` | Freeze a three-family daily/30-minute momentum roadmap with 1x and 1.8x attribution | current continuation | `Let's lock in this plan, but not execute yet` | Document the data-admission, SMA8/14, price/SMA, Chan momentum, leverage-baseline, and later regime-audit sequence; preserve `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
+| `D126` | Complete the unfiltered daily/30-minute momentum series after provider-gap triangulation | current continuation | `Perfect, proceed` | Exclude ten common SIP archive-gap sessions globally after IEX fills zero and Yahoo historical 30m is unavailable; run all four frozen lanes, controls, sensitivities, tapes, and 1x/1.8x views; record `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
 
 ## Compact Decision Records
 
@@ -2433,6 +2434,37 @@ tasks by the branch name above, the phrase, or the decision date.
   resumes this roadmap.
 - **Artifact:**
   `docs/GEN5_INTRADAY_MOMENTUM_RESEARCH_ROADMAP.md`.
+
+### D126 — Complete the unfiltered intraday momentum POC series
+
+- **Operator decision:** Resume the frozen roadmap, compare Alpaca SIP and IEX,
+  make one final Yahoo Finance historical-intraday sanity check, then use the
+  documented common-session fallback if neither source repairs the SIP gaps.
+- **Data decision:** Correct early-close interpretation before outcomes. IEX
+  filled zero missing SIP bars. Yahoo returned HTTP 422 because historical
+  30-minute bars were outside its 60-day window. Exclude the same ten archive-
+  gap sessions globally without imputation. All 26 frozen assets then pass
+  exact 19,415-bar development-calendar parity.
+- **Execution:** Run fixed daily and 30-minute SMA8/SMA14, expanding-TRAIN
+  price/SMA selection, and per-asset Chan `L/H` selection with canonical
+  overlapping sleeves. Preserve next-open execution, 1x selection authority,
+  fixed-quantity 1.8x overlays, primary/stress costs, delay sensitivity, 200
+  whole-session timing shifts, buy-and-hold, and cash.
+- **Result:** Daily SMA8/SMA14 is the only positive median-return lane at 1x
+  (+8.95%) and ranks at the 95.0th timing-shift percentile, but trails
+  buy-and-hold by 5.83 pp at the median. The 30-minute 8/14 rule loses 14.47%
+  at the median after high turnover; price/SMA loses 0.86% and ranks below all
+  shifts; Chan admission varies from 9 to 12 of 26 assets per quarter and
+  active stock-quarters lose 2.79% at the median. Leverage amplifies outcomes
+  and does not rescue any lane.
+- **Decision:** Record
+  `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER`. Keep 2024+ sealed. Do not
+  tune horizons, select favorable tapes/assets, construct a regime filter,
+  form a portfolio, or change advice/live behavior under these identifiers.
+- **Artifacts:**
+  `docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_RESULTS.md`,
+  and the three lane decks under `operator_hypothesis_lab/presentations/`.
 
 ## Related Artifacts
 

@@ -266,17 +266,20 @@ integrity gate passed. The evidence deck records
 `STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN`; keep 2024+ sealed and do
 not widen the grid or select favorable cells, assets, sectors, or cohorts.
 
-The approved, documentation-only
+The completed
 [intraday momentum roadmap](../docs/GEN5_INTRADAY_MOMENTUM_RESEARCH_ROADMAP.md)
-records the next planned series without opening execution. It preserves four
+preserves four
 separate estimands: daily SMA8/SMA14 reconstruction (`HYP-MOM-06.1`), its
 30-minute counterpart (`HYP-IMOM-01.1`), a session-scaled 30-minute price/SMA
 cross (`HYP-IMOM-02.1`), and a literature-derived 30-minute Chan momentum lane
-(`LIT-IMOM-01.1`). Every policy is planned at 1x and fixed-quantity 1.8x, but
+(`LIT-IMOM-01.1`). Every policy is evaluated at 1x and fixed-quantity 1.8x, but
 only 1x TRAIN evidence may select parameters. The 1.8x layer must be compared
 with same-leverage ownership and timing controls under explicit financing and
-margin-risk accounting. Intraday data collection, implementation, outcomes,
-and regime-filter construction remain closed until a later explicit command.
+margin-risk accounting. The
+[series results](docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_RESULTS.md) retain the
+daily rule as the only positive absolute-return baseline, stop all three
+intraday lanes before confirmation, and pause before any regime-filter design.
+The 2024+ interval remains sealed.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

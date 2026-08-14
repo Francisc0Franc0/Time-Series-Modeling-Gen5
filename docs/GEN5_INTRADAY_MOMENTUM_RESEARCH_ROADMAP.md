@@ -1,15 +1,15 @@
 # Gen5 Intraday Momentum Research Roadmap
 
-Status: `FROZEN_PLAN_EXECUTION_NOT_OPEN`
+Status: `DEVELOPMENT_SERIES_COMPLETE_REGIME_DISCUSSION_REQUIRED`
 
 Decision reference: `D125`
 
 ## Purpose
 
-This roadmap records an approved future research sequence for testing simple
-momentum and moving-average ideas on daily and 30-minute stock bars. It does
-not authorize data collection, implementation, parameter fitting, outcome
-inspection, portfolio construction, or live behavior yet.
+This roadmap records the approved and now completed unfiltered research
+sequence for testing simple momentum and moving-average ideas on daily and
+30-minute stock bars. The completed evidence does not authorize portfolio
+construction, a regime filter, confirmation access, or live behavior.
 
 The immediate objective is educational and diagnostic: reconstruct a simple
 strategy that the operator previously traded successfully in TSLA and AMD,
@@ -32,8 +32,9 @@ The roadmap crosses two existing research phylogenies without merging them:
 closed intraday. The initial designs may hold across sessions and remain
 long-only.
 
-Each identifier remains only planned. Its own contract must freeze dates,
-universe, data feed, costs, and exact gates immediately before implementation.
+The identifiers were frozen and implemented together under
+`docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_CONTRACT.md`. Results are recorded in
+`operator_hypothesis_lab/docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_RESULTS.md`.
 
 ## Research order
 
