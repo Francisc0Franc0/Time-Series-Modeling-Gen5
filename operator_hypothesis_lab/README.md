@@ -329,6 +329,23 @@ records `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`. Only integrity
 passed; the ATR complementarity audit did not run, no sign was reversed after
 inspection, and 2024+ remains sealed.
 
+`HYP-REG-03.1` then asks whether market breadth can supply information that the
+rejected single-asset direction score missed. The
+[contract](../docs/GEN5_HYP_REG_03_CROSS_SECTIONAL_BREADTH_TREND_CONTRACT.md)
+uses ten long-lived sector ETFs as a transparent, survivorship-safe proxy for
+point-in-time constituent breadth. Median sector `log(close/SMA20)` is the
+continuous score, fraction above SMA20 is the literal diffusion companion,
+and its 20-session change measures decay. The
+[results](docs/HYP_REG_03_1_CROSS_SECTIONAL_BREADTH_RESULTS.md) retain one
+interesting H20 clue: 19/26 targets had positive association, the median Q5-Q1
+spread was +1.783%, and weakening breadth inside a positive SPY price trend
+preceded a -0.936 pp return gap. But actual H20 timing ranked only at the 56th
+control percentile, while H63 reversed to -0.382 with 0/26 positive targets.
+Only integrity passed. The
+[evidence deck](presentations/hyp_reg_03_1_cross_sectional_breadth_evidence.pptx)
+records `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`; no ATR
+join, strategy overlay, 2024+ access, or post-hoc inversion was allowed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

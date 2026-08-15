@@ -131,6 +131,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D127` | Freeze and execute a strategy-independent ATR% volatility-regime diagnostic | current continuation | `Excellent. Let's document this plan and proceed to execution` | Run `HYP-REG-01.1` on 26 assets using causal ATR14/close percentiles, hysteretic states, future directionless normalized range, non-overlapping inference, fixed comparators, and sealed 2024+; record `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY` |
 | `D128` | Test the accepted ATR% state on one unchanged, intuitively aligned momentum strategy | current continuation | `Agreed. Minimal first, with a well characterized strategy that intuitively overlaps with what the volatility filter is characterizing. Proceed` | Freeze `HYP-REG-01.2` as `ATR_LOW_OFF` on daily SMA8/SMA14 with exact parent reproduction, unchanged exits, exposure-near circular-state controls, and sealed 2024+; record `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN` |
 | `D129` | Validate a standalone trend-direction axis before combining it with ATR% | current continuation | `Cool cool cool. Looking at the charts at a high level, it seems like it would be helpful to quantify trend direction as an orthogonal metric to volatility.` / `Thank you for this insight. Agreed. Document and proceed` | Freeze `HYP-REG-02.1` as `log(SMA20/SMA60)` on the unchanged 26-asset development panel with next-open direction targets, non-overlapping inference, two fixed comparators, and circular controls. Only integrity passed; record `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`, preserve ATR% acceptance, and do not run the conditional joint audit or reverse the score after inspection. |
+| `D130` | Test market breadth as a causal cross-sectional trend sensor | current continuation | `Instead of determining trend direction using single-asset data... can we construct a cross-sectional method of inferring trend?` / operator-provided verbatim Reddit comment | Freeze `HYP-REG-03.1` as a ten-sector ETF diffusion proxy using median sector `log(close/SMA20)`, fraction above SMA20, and 20-session breadth decay. The H20 clue did not survive the full timing, directional, calendar, and multi-horizon gates; record `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`, leave VIX structure and intraday persistence unopened, and do not combine with ATR% or access 2024+. |
 
 ## Compact Decision Records
 
@@ -2560,6 +2561,39 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_02_1_TREND_DIRECTION_DIAGNOSTIC_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_02_1_trend_direction_diagnostic_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_02_1_trend_direction_20260814`.
+
+### D130 — Test market breadth as a causal cross-sectional trend sensor
+
+- **Operator decision:** Replace fragile single-asset trend direction with a
+  minimal cross-sectional participation POC inspired by an operator-provided
+  Reddit comment. Preserve causal lagging and validate the sensor before any
+  strategy use.
+- **Professional translation:** The idea is conventionally called market
+  breadth, participation, or a diffusion index. Exact point-in-time S&P 500
+  membership was unavailable, so current-constituent breadth was rejected as
+  survivor-leaked. Ten long-lived sector ETFs supplied a transparent proxy;
+  XLC was excluded because of its 2018 structural break.
+- **Frozen design:** Median sector `log(close/SMA20)` is the continuous breadth
+  score; fraction of sectors above SMA20 is the literal diffusion companion;
+  and the 20-session change measures decay. All values are known after close,
+  targets begin next open, inference uses horizon-spaced samples and 200 common
+  within-year circular shifts, and 2024+ stays sealed.
+- **Result:** H20 was positive across `19 / 26` targets with a `+1.783%` median
+  Q5-Q1 spread. Inside a positive SPY price trend, decaying breadth preceded a
+  `-0.936 pp` H20 median-return gap in `4 / 6` years. But H20 median Spearman
+  was only `0.039`, balanced accuracy `0.502`, and actual timing ranked at the
+  `56th` control percentile. H63 reversed to `-0.382`, `0 / 26` positive
+  targets, and the `0th` control percentile. Only integrity passed (`1 / 8`).
+- **Decision:** Record
+  `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`. Preserve the H20
+  clue for education, but do not tune or invert the score, join ATR%, run a
+  strategy overlay, or open 2024+. VIX term structure and intraday persistence
+  remain separate, unopened hypotheses.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_03_CROSS_SECTIONAL_BREADTH_TREND_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_03_1_CROSS_SECTIONAL_BREADTH_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_03_1_cross_sectional_breadth_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_03_1_cross_sectional_breadth_20260814`.
 
 ## Related Artifacts
 
