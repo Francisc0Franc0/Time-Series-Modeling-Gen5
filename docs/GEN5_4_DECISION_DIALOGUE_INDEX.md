@@ -130,6 +130,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D126` | Complete the unfiltered daily/30-minute momentum series after provider-gap triangulation | current continuation | `Perfect, proceed` | Exclude ten common SIP archive-gap sessions globally after IEX fills zero and Yahoo historical 30m is unavailable; run all four frozen lanes, controls, sensitivities, tapes, and 1x/1.8x views; record `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
 | `D127` | Freeze and execute a strategy-independent ATR% volatility-regime diagnostic | current continuation | `Excellent. Let's document this plan and proceed to execution` | Run `HYP-REG-01.1` on 26 assets using causal ATR14/close percentiles, hysteretic states, future directionless normalized range, non-overlapping inference, fixed comparators, and sealed 2024+; record `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY` |
 | `D128` | Test the accepted ATR% state on one unchanged, intuitively aligned momentum strategy | current continuation | `Agreed. Minimal first, with a well characterized strategy that intuitively overlaps with what the volatility filter is characterizing. Proceed` | Freeze `HYP-REG-01.2` as `ATR_LOW_OFF` on daily SMA8/SMA14 with exact parent reproduction, unchanged exits, exposure-near circular-state controls, and sealed 2024+; record `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN` |
+| `D129` | Validate a standalone trend-direction axis before combining it with ATR% | current continuation | `Cool cool cool. Looking at the charts at a high level, it seems like it would be helpful to quantify trend direction as an orthogonal metric to volatility.` / `Thank you for this insight. Agreed. Document and proceed` | Freeze `HYP-REG-02.1` as `log(SMA20/SMA60)` on the unchanged 26-asset development panel with next-open direction targets, non-overlapping inference, two fixed comparators, and circular controls. Only integrity passed; record `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`, preserve ATR% acceptance, and do not run the conditional joint audit or reverse the score after inspection. |
 
 ## Compact Decision Records
 
@@ -2529,6 +2530,36 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_01_2_atr_percent_strategy_overlay_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_2_strategy_overlay_20260814`.
+
+### D129 — Validate trend direction before combining it with volatility
+
+- **Operator decision:** Treat trend direction as a potentially orthogonal
+  regime axis, validate it without a strategy first, and only then ask whether
+  it complements the accepted ATR% magnitude sensor.
+- **Frozen design:** `HYP-REG-02.1` uses one signed scale-free score,
+  `log(SMA20/SMA60)`, plus two fixed descriptive comparators. Signals are
+  known after close; H5/H20/H63 open-to-open targets begin next open. Inference
+  uses horizon-spaced non-overlap, asset/year stability, directional recall,
+  quintile ordering, and 200 within-asset/year circular timing controls.
+- **Conditional design:** `HYP-REG-02.2` may reuse the accepted ATR% state
+  ledger only if every standalone gate passes. It must measure sensor
+  correlation and the fixed trend-sign by ATR-state map; it cannot select a
+  strategy or state combination.
+- **Result:** All 26 assets and exact accepted-state OHLC parity passed
+  integrity, but the score's median Spearman was `-0.048`, `-0.166`, and
+  `-0.155` at H5/H20/H63. Only `3 / 26` and `6 / 26` assets were positive at
+  H20/H63; balanced accuracy was `0.452`, down recall was `0.304` and `0.354`,
+  every long-horizon calendar-year panel median was negative, and both actual
+  alignments ranked at the `0th` circular-control percentile.
+- **Decision:** Record
+  `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`. Preserve the accepted
+  ATR% magnitude diagnostic, do not run the joint audit, and do not rescue the
+  inspected direction score by flipping its sign or tuning its averages.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_02_TREND_DIRECTION_DIAGNOSTIC_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_02_1_TREND_DIRECTION_DIAGNOSTIC_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_02_1_trend_direction_diagnostic_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_02_1_trend_direction_20260814`.
 
 ## Related Artifacts
 

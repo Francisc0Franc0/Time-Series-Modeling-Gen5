@@ -312,6 +312,23 @@ records `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN`. This does
 not reverse the successful diagnostic; it rejects `ATR_LOW_OFF` for this one
 momentum policy.
 
+`HYP-REG-02.1` then tests a separate direction axis before allowing any joint
+state map. The
+[contract](../docs/GEN5_HYP_REG_02_TREND_DIRECTION_DIAGNOSTIC_CONTRACT.md)
+freezes `log(SMA20/SMA60)`, next-open H5/H20/H63 direction targets,
+horizon-spaced non-overlap, two descriptive comparators, seven gates, 200
+within-asset/year circular controls, and a conditional exact join to the
+accepted ATR% ledger. The
+[results](docs/HYP_REG_02_1_TREND_DIRECTION_DIAGNOSTIC_RESULTS.md) reject the
+score cleanly: panel-median Spearman was `-0.048`, `-0.166`, and `-0.155`,
+H20/H63 balanced accuracy was `0.452`, every long-horizon calendar-year median
+was negative, and both actual alignments ranked at the `0th` control
+percentile. The
+[evidence deck](presentations/hyp_reg_02_1_trend_direction_diagnostic_evidence.pptx)
+records `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`. Only integrity
+passed; the ATR complementarity audit did not run, no sign was reversed after
+inspection, and 2024+ remains sealed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
