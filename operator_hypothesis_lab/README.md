@@ -363,6 +363,24 @@ records `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`; only integrity
 passed and no leadership-only selection, threshold tuning, ATR join, strategy,
 or 2024+ access was allowed.
 
+`HYP-REG-04.1` opens a new market-context measurement family rather than
+rescuing either breadth implementation. The
+[candidate map](../docs/GEN5_CROSS_SECTIONAL_MARKET_CONTEXT_CANDIDATE_MAP.md)
+explains how a future market field could sit beside per-asset ATR% and an
+unchanged TSLA/AMD-style strategy, and records latent-market-mode,
+economic-confirmation-network, and point-in-time constituent-breadth
+alternatives without opening them. The
+[contract](../docs/GEN5_HYP_REG_04_1_CROSS_SECTIONAL_TREND_FIELD_CONTRACT.md)
+freezes equal-group direction, participation, 20/60 agreement, and five-session
+flow across 24 diverse ETFs, with future field semantics primary and SPY only a
+secondary external check. The
+[results](docs/HYP_REG_04_1_CROSS_SECTIONAL_TREND_FIELD_RESULTS.md) show a
+strong contrarian H20 result: broad-up minus broad-down future field return was
+-1.575 pp, participation -17.5 pp, and SPY return -1.083 pp. Only integrity
+passed (1/9). The evidence records
+`STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; no inversion, ATR join,
+asset-strategy overlay, threshold rescue, or 2024+ access is allowed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

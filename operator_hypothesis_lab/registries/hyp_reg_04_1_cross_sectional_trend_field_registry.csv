@@ -1,0 +1,26 @@
+instance_id,symbol,role,group,exposure,asset_type,panel_role
+TF01_RSP,RSP,field_signal,broad_style_size,S&P 500 Equal Weight,ETF,equal_weight_breadth
+TF02_QQQ,QQQ,field_signal,broad_style_size,Nasdaq 100,ETF,growth_large_cap
+TF03_IWM,IWM,field_signal,broad_style_size,Russell 2000,ETF,small_cap
+TF04_MDY,MDY,field_signal,broad_style_size,S&P MidCap 400,ETF,mid_cap
+TF05_IWD,IWD,field_signal,broad_style_size,Russell 1000 Value,ETF,value
+TF06_IWF,IWF,field_signal,broad_style_size,Russell 1000 Growth,ETF,growth
+TF07_XLB,XLB,field_signal,sector_real_assets,Materials,ETF,sector
+TF08_XLE,XLE,field_signal,sector_real_assets,Energy,ETF,sector
+TF09_XLF,XLF,field_signal,sector_real_assets,Financials,ETF,sector
+TF10_XLI,XLI,field_signal,sector_real_assets,Industrials,ETF,sector
+TF11_XLK,XLK,field_signal,sector_real_assets,Information Technology,ETF,sector
+TF12_XLP,XLP,field_signal,sector_real_assets,Consumer Staples,ETF,sector
+TF13_XLU,XLU,field_signal,sector_real_assets,Utilities,ETF,sector
+TF14_XLV,XLV,field_signal,sector_real_assets,Health Care,ETF,sector
+TF15_XLY,XLY,field_signal,sector_real_assets,Consumer Discretionary,ETF,sector
+TF16_VNQ,VNQ,field_signal,sector_real_assets,Real Estate,ETF,sector_proxy
+TF17_SMH,SMH,field_signal,industry_cyclical,Semiconductors,ETF,industry
+TF18_XBI,XBI,field_signal,industry_cyclical,Biotechnology,ETF,industry
+TF19_IYT,IYT,field_signal,industry_cyclical,Transportation,ETF,industry
+TF20_XHB,XHB,field_signal,industry_cyclical,Homebuilders,ETF,industry
+TF21_XRT,XRT,field_signal,industry_cyclical,Retail,ETF,industry
+TF22_KRE,KRE,field_signal,industry_cyclical,Regional Banking,ETF,industry
+TF23_EFA,EFA,field_signal,international,Developed ex-US,ETF,international
+TF24_EEM,EEM,field_signal,international,Emerging Markets,ETF,international
+TF25_SPY,SPY,context_target,external_target,S&P 500,ETF,secondary_external_target

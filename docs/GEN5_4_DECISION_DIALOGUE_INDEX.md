@@ -133,6 +133,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D129` | Validate a standalone trend-direction axis before combining it with ATR% | current continuation | `Cool cool cool. Looking at the charts at a high level, it seems like it would be helpful to quantify trend direction as an orthogonal metric to volatility.` / `Thank you for this insight. Agreed. Document and proceed` | Freeze `HYP-REG-02.1` as `log(SMA20/SMA60)` on the unchanged 26-asset development panel with next-open direction targets, non-overlapping inference, two fixed comparators, and circular controls. Only integrity passed; record `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`, preserve ATR% acceptance, and do not run the conditional joint audit or reverse the score after inspection. |
 | `D130` | Test market breadth as a causal cross-sectional trend sensor | current continuation | `Instead of determining trend direction using single-asset data... can we construct a cross-sectional method of inferring trend?` / operator-provided verbatim Reddit comment | Freeze `HYP-REG-03.1` as a ten-sector ETF diffusion proxy using median sector `log(close/SMA20)`, fraction above SMA20, and 20-session breadth decay. The H20 clue did not survive the full timing, directional, calendar, and multi-horizon gates; record `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`, leave VIX structure and intraday persistence unopened, and do not combine with ATR% or access 2024+. |
 | `D131` | Narrow breadth to transition and equal-weight leadership divergence | current continuation | `Agree with this. Document and proceed` | Freeze `HYP-REG-03.2` on positive-SPY-trend dates using ten-sector breadth change, RSP/SPY leadership change, continuous dispersion, one unfitted risk score, a single H20 target, 20 non-overlapping offsets, temporal and semantic checks, and circular controls. Only integrity passed; record `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`. Preserve the leadership-only clue as theory input but do not select it, join ATR%, tune, or access 2024+. |
+| `D132` | Clarify asset-level regime use and test a new cross-sectional trend field | current continuation | `We often mention predicting SPY... how does this indicator ultimately translate to being part of a regime filter alongside ATR%, for the asset of interest` / `Document them all and proceed to testing` | Document the eventual architecture as `market field x per-asset ATR% x unchanged asset signal`; reserve latent market mode, economic confirmation network, and point-in-time constituent breadth without opening them. Freeze only `HYP-REG-04.1` as a four-group, 24-ETF direction/participation/agreement/flow diagnostic with future field semantics primary and SPY secondary. Only integrity passed; record `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY` and prohibit inversion, ATR joining, asset overlays, and 2024+ access. |
 
 ## Compact Decision Records
 
@@ -2631,6 +2632,49 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_03_2_BREADTH_TRANSITION_DIVERGENCE_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_03_2_breadth_transition_divergence_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_03_2_breadth_transition_20260814`.
+
+### D132 — Clarify asset-level regime use and test a new cross-sectional trend field
+
+- **Operator decision:** Clarify why SPY appears in market-sensor diagnostics,
+  explain how a promoted market field would eventually govern an asset such as
+  TSLA or AMD beside ATR%, document all serious candidate families, and execute
+  the recommended trend-field POC.
+- **Architecture boundary:** The intended future relationship is
+  `market direction/health x per-asset ATR% magnitude x unchanged asset signal`.
+  The market field supplies context, ATR% supplies asset-relative movement
+  magnitude, and the asset strategy still supplies entries and exits. SPY is a
+  liquid external validation target, not the final operating asset. No join or
+  strategy policy was opened.
+- **Candidate map:** Documented the cross-sectional trend field, latent market
+  mode, economic confirmation network, and a future point-in-time constituent-
+  breadth data upgrade. Only `HYP-REG-04.1` was opened.
+- **Frozen design:** Twenty-four ETFs were balanced across four economic groups.
+  The field retained volatility-normalized 20/60 direction, positive
+  participation, multi-horizon sign agreement, and five-session flow as
+  separate measurements. Future cross-sectional return and participation were
+  primary semantics; causal next-open SPY H20 direction was secondary. Nine
+  conjunctive gates, 20 non-overlapping offsets, temporal/year transport, and
+  200 within-year circular controls were fixed before outcomes.
+- **Data admission:** The initial run stopped before analysis for absent/partial
+  IYT, XHB, XRT, and KRE histories. A bounded adjusted-daily Alpaca refresh
+  restored complete 25/25 coverage for 2016-2023; 2024+ remained sealed.
+- **Result:** `BROAD_UP` minus `BROAD_DOWN` future-field return was `-1.575 pp`,
+  future participation `-17.500 pp`, and next-open SPY return `-1.083 pp`.
+  Continuous direction/participation associations were `-0.134/-0.099`; SPY
+  UP AUC was `0.505`. Only `6 / 20` offsets and `1 / 6` calendar years had
+  jointly positive direction gaps. Actual direction gaps ranked at the `2.5th`
+  and `3.0th` circular-control percentiles. Synthetic sign and timing audits
+  passed, so the reversal was empirical rather than a coding inversion.
+- **Decision:** Record
+  `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`. Do not invert the
+  field, tune its horizons or thresholds, join ATR%, run TSLA/AMD overlays, or
+  inspect 2024+ under this identifier.
+- **Artifacts:**
+  `docs/GEN5_CROSS_SECTIONAL_MARKET_CONTEXT_CANDIDATE_MAP.md`,
+  `docs/GEN5_HYP_REG_04_1_CROSS_SECTIONAL_TREND_FIELD_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_04_1_CROSS_SECTIONAL_TREND_FIELD_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_04_1_cross_sectional_trend_field_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_04_1_cross_sectional_trend_field_20260814`.
 
 ## Related Artifacts
 
