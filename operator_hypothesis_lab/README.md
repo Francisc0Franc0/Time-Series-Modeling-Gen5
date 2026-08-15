@@ -381,6 +381,21 @@ passed (1/9). The evidence records
 `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; no inversion, ATR join,
 asset-strategy overlay, threshold rescue, or 2024+ access is allowed.
 
+`HYP-REG-04.2` is the separately frozen fast derivative of that failed field.
+Its [contract](../docs/GEN5_HYP_REG_04_2_FAST_CROSS_SECTIONAL_TREND_IMPULSE_CONTRACT.md)
+uses equal-group volatility-normalized five-session direction, five-session
+participation and participation change, with 20-session direction only as a
+continuation/reversal label. The
+[results](docs/HYP_REG_04_2_FAST_CROSS_SECTIONAL_TREND_IMPULSE_RESULTS.md) show
+that faster measurement did not restore continuity: H5 direction return and
+participation gaps were only +0.058 pp/+0.833 pp, H10 reversed to
+-0.247 pp/-8.750 pp, direction-return Spearman was -0.024, and only 2/5 H5
+plus 2/10 H10 offsets were jointly positive. Only integrity passed (1/10).
+Record
+`STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`;
+do not shorten again, select the favorable local impulse slice, join ATR%, run
+a strategy, or access 2024+ under this family.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

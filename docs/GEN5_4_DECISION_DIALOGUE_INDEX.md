@@ -134,6 +134,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D130` | Test market breadth as a causal cross-sectional trend sensor | current continuation | `Instead of determining trend direction using single-asset data... can we construct a cross-sectional method of inferring trend?` / operator-provided verbatim Reddit comment | Freeze `HYP-REG-03.1` as a ten-sector ETF diffusion proxy using median sector `log(close/SMA20)`, fraction above SMA20, and 20-session breadth decay. The H20 clue did not survive the full timing, directional, calendar, and multi-horizon gates; record `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`, leave VIX structure and intraday persistence unopened, and do not combine with ATR% or access 2024+. |
 | `D131` | Narrow breadth to transition and equal-weight leadership divergence | current continuation | `Agree with this. Document and proceed` | Freeze `HYP-REG-03.2` on positive-SPY-trend dates using ten-sector breadth change, RSP/SPY leadership change, continuous dispersion, one unfitted risk score, a single H20 target, 20 non-overlapping offsets, temporal and semantic checks, and circular controls. Only integrity passed; record `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`. Preserve the leadership-only clue as theory input but do not select it, join ATR%, tune, or access 2024+. |
 | `D132` | Clarify asset-level regime use and test a new cross-sectional trend field | current continuation | `We often mention predicting SPY... how does this indicator ultimately translate to being part of a regime filter alongside ATR%, for the asset of interest` / `Document them all and proceed to testing` | Document the eventual architecture as `market field x per-asset ATR% x unchanged asset signal`; reserve latent market mode, economic confirmation network, and point-in-time constituent breadth without opening them. Freeze only `HYP-REG-04.1` as a four-group, 24-ETF direction/participation/agreement/flow diagnostic with future field semantics primary and SPY secondary. Only integrity passed; record `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY` and prohibit inversion, ATR joining, asset overlays, and 2024+ access. |
+| `D133` | Test whether one faster cross-sectional impulse fixes the recent indicators' continuity problem | current continuation | `Could it be that the 20/60 type of horizon is too slow?` / `Agree on all your recommendations. Proceed` | Freeze `HYP-REG-04.2` as one five-session direction/participation-impulse construction with 20-session context, H5 primary semantics, H10 durability, H20 decay reporting, no speed grid, and derivative-development labeling. Faster measurement did not restore continuity; record `STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`, set down additional window shortening, and prohibit selection, inversion, ATR joining, strategy work, and 2024+ access. |
 
 ## Compact Decision Records
 
@@ -2675,6 +2676,38 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_04_1_CROSS_SECTIONAL_TREND_FIELD_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_04_1_cross_sectional_trend_field_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_04_1_cross_sectional_trend_field_20260814`.
+
+### D133 — Test whether faster cross-sectional impulse restores continuity
+
+- **Operator decision:** Treat the recent regime candidates as potentially
+  descriptive but temporally discontinuous, ask whether 20/60-session inputs
+  were too slow, and approve one faster derivative diagnostic.
+- **Research boundary:** Freeze `HYP-REG-04.2` after inspecting the earlier
+  development results. Reuse 2018-2023 only as derivative development, keep
+  2024+ sealed, and prohibit a speed grid, ATR join, strategy overlay, or
+  promotion claim.
+- **Frozen construction:** Retain the same 24 ETFs and four equal economic
+  groups. Measure volatility-normalized H5 direction, H5 positive
+  participation, the five-session change in participation, and H20 direction
+  only as a continuation/reversal label. Test H5 semantics, H10 durability,
+  H20 decay, five/ten horizon offsets, temporal halves, calendar years, 200
+  within-year circular controls, and secondary next-open SPY direction.
+- **Result:** Broad-up minus broad-down H5 field return was only `+0.058 pp`
+  with `+0.833 pp` future participation; H10 reversed to `-0.247 pp` and
+  `-8.750 pp`. Fast-direction H5 return Spearman was `-0.024`; SPY AUC was
+  `0.525`; only `2 / 5` H5 and `2 / 10` H10 offsets were jointly positive.
+  Broad-up impulse versus other-up supplied a small H5 clue (`+0.198 pp`
+  return and `+5.833 pp` participation), but its negative-rate, year,
+  durability, and complete-gate requirements failed.
+- **Decision:** Only integrity passed (`1 / 10`). Record
+  `STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`.
+  Do not shorten again, select the inspected clue, invert participation
+  mean-reversion, tune, join ATR%, run an asset strategy, or inspect 2024+.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_04_2_FAST_CROSS_SECTIONAL_TREND_IMPULSE_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_04_2_FAST_CROSS_SECTIONAL_TREND_IMPULSE_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_04_2_fast_cross_sectional_trend_impulse_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_04_2_fast_cross_sectional_trend_impulse_20260815`.
 
 ## Related Artifacts
 

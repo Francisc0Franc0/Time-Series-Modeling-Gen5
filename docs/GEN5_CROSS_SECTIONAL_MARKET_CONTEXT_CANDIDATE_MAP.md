@@ -47,6 +47,22 @@ linear score is allowed. This differs from `HYP-REG-03.2`: it measures the
 current cross-sectional configuration and its flow rather than assuming that
 an accumulated 20-session breadth decline must continue.
 
+### Derivative speed test — HYP-REG-04.2
+
+After `HYP-REG-04.1` failed, the operator explicitly opened one separately
+frozen derivative question: whether five-session direction plus five-session
+participation impulse could detect a move early enough to persist over H5 and
+H10. The 20-session direction was retained only as a continuation-versus-
+reversal label; no speed grid was searched.
+
+The derivative result also stopped. Fast direction had H5/H10 return
+Spearman values of `-0.024/-0.025`; the broad-up minus broad-down field-return
+gap was only `+0.058 pp` at H5 and reversed to `-0.247 pp` at H10. Only `2/5`
+H5 offsets and `2/10` H10 offsets were jointly positive. A localized broad-up
+impulse clue did not survive the complete gates. Record
+`STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`.
+Simple window shortening is now set down as a direction-filter path.
+
 ## Candidate 2 — Latent Market Mode
 
 Reserved lane: `HYP-REG-05.1`; not open.
@@ -96,20 +112,21 @@ today's constituents historically. Constituent breadth should not be opened
 until a trustworthy membership and delisting source is available. It is a data
 authority upgrade, not permission to rescue a failed ETF specification.
 
-## Frozen Sequence
+## Recorded Sequence
 
-1. Execute only `HYP-REG-04.1` as a strategy-independent diagnostic.
-2. Validate future cross-sectional semantics before treating SPY direction as
-   consequential evidence.
-3. Stop after the diagnostic regardless of outcome.
-4. If it passes, discuss—but do not automatically run—a separate join with the
-   accepted asset-relative ATR% state.
-5. Only a later unchanged-strategy overlay across a diverse asset panel can
-   determine whether the joint regime map helps TSLA, AMD, or another asset.
+1. `HYP-REG-04.1` tested the slow 20/60-session trend field and stopped.
+2. `HYP-REG-04.2` tested one predeclared five-session impulse derivative and
+   stopped; no additional speed search is authorized.
+3. Neither result may be joined to ATR%, routed to an asset strategy, inverted,
+   or carried into 2024+ confirmation.
+4. Latent market mode, the economic confirmation network, and point-in-time
+   constituent breadth remain documented but unopened.
+5. Only a future candidate that passes standalone semantics could earn a
+   separately frozen ATR% complementarity and unchanged-strategy overlay.
 
 ## Source and Decision Grounding
 
-- Operator dialogue decisions `D130` through `D132`.
+- Operator dialogue decisions `D130` through `D133`.
 - S&P Dow Jones Indices, *Worth the Weight*, on equal weighting and index
   concentration as distinct market views.
 - Paulo Maio, *Cross-sectional return dispersion and the equity premium*,

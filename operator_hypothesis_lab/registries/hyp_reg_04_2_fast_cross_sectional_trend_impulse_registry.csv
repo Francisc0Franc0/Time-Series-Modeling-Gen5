@@ -1,0 +1,26 @@
+instance_id,symbol,role,group,exposure,asset_type,panel_role
+FTI01_RSP,RSP,field_signal,broad_style_size,S&P 500 Equal Weight,ETF,equal_weight_breadth
+FTI02_QQQ,QQQ,field_signal,broad_style_size,Nasdaq 100,ETF,growth_large_cap
+FTI03_IWM,IWM,field_signal,broad_style_size,Russell 2000,ETF,small_cap
+FTI04_MDY,MDY,field_signal,broad_style_size,S&P MidCap 400,ETF,mid_cap
+FTI05_IWD,IWD,field_signal,broad_style_size,Russell 1000 Value,ETF,value
+FTI06_IWF,IWF,field_signal,broad_style_size,Russell 1000 Growth,ETF,growth
+FTI07_XLB,XLB,field_signal,sector_real_assets,Materials,ETF,sector
+FTI08_XLE,XLE,field_signal,sector_real_assets,Energy,ETF,sector
+FTI09_XLF,XLF,field_signal,sector_real_assets,Financials,ETF,sector
+FTI10_XLI,XLI,field_signal,sector_real_assets,Industrials,ETF,sector
+FTI11_XLK,XLK,field_signal,sector_real_assets,Information Technology,ETF,sector
+FTI12_XLP,XLP,field_signal,sector_real_assets,Consumer Staples,ETF,sector
+FTI13_XLU,XLU,field_signal,sector_real_assets,Utilities,ETF,sector
+FTI14_XLV,XLV,field_signal,sector_real_assets,Health Care,ETF,sector
+FTI15_XLY,XLY,field_signal,sector_real_assets,Consumer Discretionary,ETF,sector
+FTI16_VNQ,VNQ,field_signal,sector_real_assets,Real Estate,ETF,sector_proxy
+FTI17_SMH,SMH,field_signal,industry_cyclical,Semiconductors,ETF,industry
+FTI18_XBI,XBI,field_signal,industry_cyclical,Biotechnology,ETF,industry
+FTI19_IYT,IYT,field_signal,industry_cyclical,Transportation,ETF,industry
+FTI20_XHB,XHB,field_signal,industry_cyclical,Homebuilders,ETF,industry
+FTI21_XRT,XRT,field_signal,industry_cyclical,Retail,ETF,industry
+FTI22_KRE,KRE,field_signal,industry_cyclical,Regional Banking,ETF,industry
+FTI23_EFA,EFA,field_signal,international,Developed ex-US,ETF,international
+FTI24_EEM,EEM,field_signal,international,Emerging Markets,ETF,international
+FTI25_SPY,SPY,context_target,external_target,S&P 500,ETF,secondary_external_target
