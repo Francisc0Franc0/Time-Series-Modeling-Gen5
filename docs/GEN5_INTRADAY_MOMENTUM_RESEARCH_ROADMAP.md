@@ -1,8 +1,8 @@
 # Gen5 Intraday Momentum Research Roadmap
 
-Status: `DEVELOPMENT_SERIES_COMPLETE_REGIME_DISCUSSION_REQUIRED`
+Status: `ATR_REGIME_DIAGNOSTIC_COMPLETE_STRATEGY_OVERLAY_DISCUSSION_REQUIRED`
 
-Decision reference: `D125`
+Decision references: `D125`, `D126`, `D127`
 
 ## Purpose
 
@@ -268,18 +268,22 @@ transport across a predeclared eligible domain without asset-specific tuning.
 
 ## Current stop state
 
-`FROZEN_PLAN_EXECUTION_NOT_OPEN`
+`ATR_REGIME_DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY`
+
+The unfiltered momentum series is complete. The separately frozen
+`HYP-REG-01.1` daily ATR%-percentile diagnostic also completed without using
+strategy outcomes: all 26 assets showed higher future directionless range in
+`HIGH` than `LOW` at 1-, 5-, and 20-session horizons, while hysteresis created
+durable but non-permanent states. This validates a volatility sensor, not a
+trading rule.
 
 Do not yet:
 
-- download or cache intraday data;
-- change provider or stable daily-data behavior;
-- implement a 30-minute replay engine;
-- query strategy outcomes;
-- freeze exact calendar dates or financing values without the data audit;
-- select parameters, assets, sectors, or favorable periods;
-- construct a regime filter;
-- form a portfolio or change live/advice behavior.
+- use the labels to gate any daily or intraday strategy;
+- inspect strategy return, P&L, Sharpe, drawdown, or hit rate by state;
+- search ATR length, memory, thresholds, assets, or allowed-state combinations;
+- access the sealed 2024+ interval;
+- form a portfolio or change advice/live behavior.
 
-Execution may begin later only after an explicit operator instruction to
-proceed.
+A strategy-overlay test requires a new, separately frozen operator decision
+with unchanged-strategy and exposure-matched placebo controls.

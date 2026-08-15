@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; multi-asset regime context is implemented for the routed WFA POC with both date-aligned and pooled asset-day PCA panel modes; remaining regime methods are planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; the separate `HYP-REG-01.1` asset-relative ATR% diagnostic is complete and stops before strategy overlay; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -139,6 +139,19 @@ Possible state rule:
 - optional `no_trade` routing in hostile states.
 
 Why it matters: if a simple frozen percentile rule works about as well as a complex model, it may be preferable.
+
+Implemented diagnostic: [HYP-REG-01.1](GEN5_HYP_REG_01_1_ATR_PERCENT_VOLATILITY_POC_CONTRACT.md)
+freezes Wilder ATR(14) as a percentage of close, ranks it against the preceding
+252 completed observations, and applies 30/40 and 60/70 hysteresis to create
+causal low/medium/high labels. Across 26 assets in 2018-2023, every asset had
+higher future normalized range in `HIGH` than `LOW` at 1-, 5-, and 20-session
+horizons. Median non-overlapping Spearman association rose from `0.409` at H1
+to `0.514` at H20, stronger than both fixed diagnostic comparators. The result
+records `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY`: no return, P&L,
+Sharpe, drawdown, hit-rate, entry, exit, sizing, leverage, allocation, or
+strategy-switching result was calculated, and 2024+ remained sealed. See the
+[results](../operator_hypothesis_lab/docs/HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md)
+and [evidence deck](../operator_hypothesis_lab/presentations/hyp_reg_01_1_atr_percent_volatility_evidence.pptx).
 
 ### 2. PCA Quantile Grid
 

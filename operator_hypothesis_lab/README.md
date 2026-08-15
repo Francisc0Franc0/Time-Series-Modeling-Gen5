@@ -281,6 +281,22 @@ daily rule as the only positive absolute-return baseline, stop all three
 intraday lanes before confirmation, and pause before any regime-filter design.
 The 2024+ interval remains sealed.
 
+`HYP-REG-01.1` opens the lab's first strategy-independent volatility-regime
+diagnostic after that momentum series. The
+[frozen contract](../docs/GEN5_HYP_REG_01_1_ATR_PERCENT_VOLATILITY_POC_CONTRACT.md)
+defines causal Wilder ATR(14) as a percentage of close, a prior-252-session
+percentile, and 30/40 plus 60/70 hysteresis. The
+[results](docs/HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md) retain all 26
+assets over 2018-2023. Every asset had higher future normalized range in
+`HIGH` than `LOW` at 1-, 5-, and 20-session horizons; median non-overlapping
+Spearman association increased from `0.409` at H1 to `0.514` at H20. The
+[evidence deck](presentations/hyp_reg_01_1_atr_percent_volatility_evidence.pptx)
+records the causal timing, formulas, state dynamics, fixed benchmark
+comparison, sensitivity, and representative state tapes. The lane records
+`DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY`: no strategy outcome was
+calculated, 2024+ remains sealed, and any momentum gate requires a separately
+frozen test.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

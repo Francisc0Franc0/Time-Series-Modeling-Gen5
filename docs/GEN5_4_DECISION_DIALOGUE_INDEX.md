@@ -2,7 +2,7 @@
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
 Index date: 2026-08-14
-Branch: `codex/intraday-momentum-poc-series`
+Branch: `codex/atr-percent-volatility-regime-poc`
 
 ## Purpose
 
@@ -128,6 +128,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D112` | Stop HYP-MOM-02.3 and HYP-MOM-03.1 after distinct-history gates | current continuation | `Approved, proceed` | Attribute the reused window; apply the documented pre-outcome warm-up amendment; run 114 complete 2016-2020 assets; nominate neither candidate; do not run context or query 2024-2025 confirmation |
 | `D125` | Freeze a three-family daily/30-minute momentum roadmap with 1x and 1.8x attribution | current continuation | `Let's lock in this plan, but not execute yet` | Document the data-admission, SMA8/14, price/SMA, Chan momentum, leverage-baseline, and later regime-audit sequence; preserve `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
 | `D126` | Complete the unfiltered daily/30-minute momentum series after provider-gap triangulation | current continuation | `Perfect, proceed` | Exclude ten common SIP archive-gap sessions globally after IEX fills zero and Yahoo historical 30m is unavailable; run all four frozen lanes, controls, sensitivities, tapes, and 1x/1.8x views; record `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
+| `D127` | Freeze and execute a strategy-independent ATR% volatility-regime diagnostic | current continuation | `Excellent. Let's document this plan and proceed to execution` | Run `HYP-REG-01.1` on 26 assets using causal ATR14/close percentiles, hysteretic states, future directionless normalized range, non-overlapping inference, fixed comparators, and sealed 2024+; record `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY` |
 
 ## Compact Decision Records
 
@@ -2465,6 +2466,39 @@ tasks by the branch name above, the phrase, or the decision date.
   `docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_CONTRACT.md`,
   `operator_hypothesis_lab/docs/GEN5_INTRADAY_MOMENTUM_POC_SERIES_RESULTS.md`,
   and the three lane decks under `operator_hypothesis_lab/presentations/`.
+
+### D127 — Freeze and execute the ATR% volatility-regime diagnostic
+
+- **Operator question:** Open a volatility-regime-filter discussion, including
+  ATR% low/medium/high switches, and ask how to validate the filter's own
+  predictive capacity before attaching strategy returns.
+- **Operator decision:** Accept ATR% as the first simple baseline while keeping
+  an open mind about other filters; document the plan and proceed to execution.
+- **Frozen design:** `HYP-REG-01.1` uses Wilder ATR(14) divided by close, ranked
+  against the preceding 252 completed observations excluding today. Apply
+  30/40 and 60/70 hysteresis, label state only after close, and assess mean
+  normalized True Range beginning at the next session over H1/H5/H20. Use
+  horizon-spaced non-overlapping inference, current-range and EWMA-percentile
+  comparators, and four predeclared sensitivity variants.
+- **Boundary:** Use 26 predeclared stocks/ETFs over 2018-2023 development only.
+  Do not calculate return, P&L, Sharpe, drawdown, hit rate, direction, entries,
+  exits, allocation, leverage, or strategy switching. Keep 2024+ sealed.
+- **Result:** All 26 assets show positive ATR%-to-future-range association and
+  `HIGH > LOW` at all horizons. Median Spearman is `0.409`, `0.477`, and
+  `0.514` at H1/H5/H20. Median state duration is 11 sessions, median switches
+  are 10.4 per year, and one-session reversals are 2.5%. ATR10/ATR20 label
+  agreement is about 92%; changing the historical memory reduces agreement to
+  about 67%.
+- **Decision:** Record
+  `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY`. The sensor predicts
+  future movement magnitude, but no result establishes that any state is good
+  or bad for a strategy. Any overlay requires a separately frozen question
+  with unchanged-strategy and exposure-matched placebo controls.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_01_1_ATR_PERCENT_VOLATILITY_POC_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_01_1_atr_percent_volatility_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814`.
 
 ## Related Artifacts
 
