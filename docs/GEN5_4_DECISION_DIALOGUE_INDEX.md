@@ -132,6 +132,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D128` | Test the accepted ATR% state on one unchanged, intuitively aligned momentum strategy | current continuation | `Agreed. Minimal first, with a well characterized strategy that intuitively overlaps with what the volatility filter is characterizing. Proceed` | Freeze `HYP-REG-01.2` as `ATR_LOW_OFF` on daily SMA8/SMA14 with exact parent reproduction, unchanged exits, exposure-near circular-state controls, and sealed 2024+; record `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN` |
 | `D129` | Validate a standalone trend-direction axis before combining it with ATR% | current continuation | `Cool cool cool. Looking at the charts at a high level, it seems like it would be helpful to quantify trend direction as an orthogonal metric to volatility.` / `Thank you for this insight. Agreed. Document and proceed` | Freeze `HYP-REG-02.1` as `log(SMA20/SMA60)` on the unchanged 26-asset development panel with next-open direction targets, non-overlapping inference, two fixed comparators, and circular controls. Only integrity passed; record `STOP_TREND_DIRECTION_GATES_FAILED_JOINT_NOT_RUN`, preserve ATR% acceptance, and do not run the conditional joint audit or reverse the score after inspection. |
 | `D130` | Test market breadth as a causal cross-sectional trend sensor | current continuation | `Instead of determining trend direction using single-asset data... can we construct a cross-sectional method of inferring trend?` / operator-provided verbatim Reddit comment | Freeze `HYP-REG-03.1` as a ten-sector ETF diffusion proxy using median sector `log(close/SMA20)`, fraction above SMA20, and 20-session breadth decay. The H20 clue did not survive the full timing, directional, calendar, and multi-horizon gates; record `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`, leave VIX structure and intraday persistence unopened, and do not combine with ATR% or access 2024+. |
+| `D131` | Narrow breadth to transition and equal-weight leadership divergence | current continuation | `Agree with this. Document and proceed` | Freeze `HYP-REG-03.2` on positive-SPY-trend dates using ten-sector breadth change, RSP/SPY leadership change, continuous dispersion, one unfitted risk score, a single H20 target, 20 non-overlapping offsets, temporal and semantic checks, and circular controls. Only integrity passed; record `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`. Preserve the leadership-only clue as theory input but do not select it, join ATR%, tune, or access 2024+. |
 
 ## Compact Decision Records
 
@@ -2594,6 +2595,42 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_03_1_CROSS_SECTIONAL_BREADTH_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_03_1_cross_sectional_breadth_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_03_1_cross_sectional_breadth_20260814`.
+
+### D131 — Narrow breadth to transition and equal-weight leadership divergence
+
+- **Operator decision:** Refine the broad HYP-REG-03.1 question around the
+  original mechanism: while SPY still looks positive, ask whether simultaneous
+  sector-breadth decay and equal-weight underperformance warn of a one-month
+  decline.
+- **Frozen design:** `D(t)` is the 20-session change in median ten-sector
+  `log(close/SMA20)`; `G(t)` is the 20-session change in `log(RSP/SPY)`.
+  `NARROWING` requires both negative and `HEALTHY` both non-negative. Sector
+  dispersion stays continuous and diagnostic-only. The sole return target is
+  next-open H20 SPY direction. Twenty non-overlapping offsets, two temporal
+  halves, calendar years, future state semantics, and 200 circular timing
+  controls guard the all-daily effect sizes. No ATR join or strategy is open.
+- **Data admission:** RSP was absent locally, so the initial run stopped before
+  analysis. A bounded adjusted-daily Alpaca refresh restored complete 12/12
+  coverage for 2016-2023; 2024+ was not accessed.
+- **Result:** `401` narrowing versus `174` healthy rows produced only a
+  `-0.152 pp` median-return gap and `+3.802 pp` DOWN-rate gap. The unfitted risk
+  score had `0.527` AUC. Only `7 / 20` starting offsets and `2 / 6` years were
+  jointly directional; actual gaps ranked at the `42.5th` and `71.0th`
+  circular-control percentiles. Temporal halves contradicted.
+- **Mechanistic finding:** Narrowing was followed by `+2.474 pp` more sector
+  breadth improvement than healthy, so the sign rule frequently marked
+  rebound/exhaustion rather than persistent deterioration. The mixed
+  leadership-weak state looked descriptively worse, but selecting it now would
+  be post-hoc.
+- **Decision:** Record
+  `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`. Do not select the
+  leadership-only clue, add thresholds, tune lookbacks, join ATR%, run a
+  strategy overlay, or open 2024+ under this identifier.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_03_2_BREADTH_TRANSITION_DIVERGENCE_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_03_2_BREADTH_TRANSITION_DIVERGENCE_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_03_2_breadth_transition_divergence_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_03_2_breadth_transition_20260814`.
 
 ## Related Artifacts
 

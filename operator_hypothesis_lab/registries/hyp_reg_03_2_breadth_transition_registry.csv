@@ -1,0 +1,13 @@
+instance_id,symbol,role,sector,asset_type,panel_role,source
+BT01_XLB,XLB,sector_signal,Materials,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT02_XLE,XLE,sector_signal,Energy,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT03_XLF,XLF,sector_signal,Financials,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT04_XLI,XLI,sector_signal,Industrials,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT05_XLK,XLK,sector_signal,Information Technology,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT06_XLP,XLP,sector_signal,Consumer Staples,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT07_XLRE,XLRE,sector_signal,Real Estate,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT08_XLU,XLU,sector_signal,Utilities,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT09_XLV,XLV,sector_signal,Health Care,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT10_XLY,XLY,sector_signal,Consumer Discretionary,ETF,sector_diffusion_proxy,HYP-REG-03.1
+BT11_RSP,RSP,leadership_signal,S&P 500 Equal Weight,ETF,equal_weight_leadership,new_frozen_signal
+BT12_SPY,SPY,context_target,S&P 500,ETF,cap_weight_context_and_target,new_frozen_context

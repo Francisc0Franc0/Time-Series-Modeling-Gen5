@@ -346,6 +346,23 @@ Only integrity passed. The
 records `STOP_CROSS_SECTIONAL_BREADTH_GATES_FAILED_NO_JOINT_FILTER`; no ATR
 join, strategy overlay, 2024+ access, or post-hoc inversion was allowed.
 
+`HYP-REG-03.2` narrows that idea to the motivating divergence mechanism. The
+[contract](../docs/GEN5_HYP_REG_03_2_BREADTH_TRANSITION_DIVERGENCE_CONTRACT.md)
+defines `NARROWING` on positive-SPY-trend dates as both 20-session sector
+breadth change and RSP/SPY leadership change below zero, with one unfitted
+prior-relative score, continuous dispersion, a single causal H20 target, all
+20 non-overlapping offsets, temporal and semantic audits, and circular timing
+controls. A bounded RSP refresh produced complete 12-asset coverage. The
+[results](docs/HYP_REG_03_2_BREADTH_TRANSITION_DIVERGENCE_RESULTS.md) show only
+a -0.152 pp return gap, +3.802 pp DOWN-rate gap, 0.527 AUC, 7/20 stable offsets,
+and ordinary circular-control timing. Narrowing was followed by +2.474 pp more
+future breadth improvement, revealing rebound rather than persistent decay.
+The
+[evidence deck](presentations/hyp_reg_03_2_breadth_transition_divergence_evidence.pptx)
+records `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`; only integrity
+passed and no leadership-only selection, threshold tuning, ATR join, strategy,
+or 2024+ access was allowed.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
