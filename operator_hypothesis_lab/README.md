@@ -297,6 +297,21 @@ comparison, sensitivity, and representative state tapes. The lane records
 calculated, 2024+ remains sealed, and any momentum gate requires a separately
 frozen test.
 
+`HYP-REG-01.2` is that separately frozen first overlay. The
+[contract](../docs/GEN5_HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_CONTRACT.md)
+keeps the accepted ATR14/P252/hysteresis classifier and the accepted daily
+SMA8/SMA14 parent strategy unchanged. It skips only fresh entries whose
+signal-close state is `LOW`, compares against the unfiltered rule and 40
+exposure-nearest circular-state controls, and keeps 2024+ sealed. The
+[results](docs/HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_RESULTS.md) show a
+drawdown improvement but a median return reduction from `8.95%` to `4.44%`,
+only `9 / 24` assets improved, `0 / 6` positive-excess years, lower Sharpe,
+and a `37.5th`-percentile placebo result. The
+[evidence deck](presentations/hyp_reg_01_2_atr_percent_strategy_overlay_evidence.pptx)
+records `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN`. This does
+not reverse the successful diagnostic; it rejects `ATR_LOW_OFF` for this one
+momentum policy.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

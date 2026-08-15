@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; the separate `HYP-REG-01.1` asset-relative ATR% diagnostic is complete and stops before strategy overlay; remaining regime methods are planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; `HYP-REG-01.1` passed as an asset-relative ATR% diagnostic, while its separately frozen `HYP-REG-01.2` low-state momentum overlay failed DEVELOPMENT gates and did not open confirmation; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -152,6 +152,21 @@ Sharpe, drawdown, hit-rate, entry, exit, sizing, leverage, allocation, or
 strategy-switching result was calculated, and 2024+ remained sealed. See the
 [results](../operator_hypothesis_lab/docs/HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md)
 and [evidence deck](../operator_hypothesis_lab/presentations/hyp_reg_01_1_atr_percent_volatility_evidence.pptx).
+
+The separately frozen [HYP-REG-01.2 overlay](GEN5_HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_CONTRACT.md)
+then applied that accepted state to one unchanged, well-characterized strategy:
+fresh daily SMA8/SMA14 entries were skipped only when the causal signal-close
+state was `LOW`. Across 144 stock asset-years, median annual return fell from
+`8.95%` to `4.44%`; median drawdown improved from `-14.59%` to `-11.85%`, but
+median Sharpe fell from `0.642` to `0.485`. Only `9 / 24` stocks improved
+six-year compounded return, `0 / 6` years had positive panel-median excess,
+and the actual gate ranked at only the `37.5th` percentile of exposure-near
+circular-state controls. Record
+`STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN`. The sensor remains
+valid; the proposition that `LOW` volatility is a bad entry state for this
+strategy does not. See the
+[results](../operator_hypothesis_lab/docs/HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_RESULTS.md)
+and [evidence deck](../operator_hypothesis_lab/presentations/hyp_reg_01_2_atr_percent_strategy_overlay_evidence.pptx).
 
 ### 2. PCA Quantile Grid
 

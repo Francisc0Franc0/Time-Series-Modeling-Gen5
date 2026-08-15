@@ -2,7 +2,7 @@
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
 Index date: 2026-08-14
-Branch: `codex/atr-percent-volatility-regime-poc`
+Branch: `codex/atr-percent-volatility-strategy-overlay-poc`
 
 ## Purpose
 
@@ -129,6 +129,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D125` | Freeze a three-family daily/30-minute momentum roadmap with 1x and 1.8x attribution | current continuation | `Let's lock in this plan, but not execute yet` | Document the data-admission, SMA8/14, price/SMA, Chan momentum, leverage-baseline, and later regime-audit sequence; preserve `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
 | `D126` | Complete the unfiltered daily/30-minute momentum series after provider-gap triangulation | current continuation | `Perfect, proceed` | Exclude ten common SIP archive-gap sessions globally after IEX fills zero and Yahoo historical 30m is unavailable; run all four frozen lanes, controls, sensitivities, tapes, and 1x/1.8x views; record `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
 | `D127` | Freeze and execute a strategy-independent ATR% volatility-regime diagnostic | current continuation | `Excellent. Let's document this plan and proceed to execution` | Run `HYP-REG-01.1` on 26 assets using causal ATR14/close percentiles, hysteretic states, future directionless normalized range, non-overlapping inference, fixed comparators, and sealed 2024+; record `DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY` |
+| `D128` | Test the accepted ATR% state on one unchanged, intuitively aligned momentum strategy | current continuation | `Agreed. Minimal first, with a well characterized strategy that intuitively overlaps with what the volatility filter is characterizing. Proceed` | Freeze `HYP-REG-01.2` as `ATR_LOW_OFF` on daily SMA8/SMA14 with exact parent reproduction, unchanged exits, exposure-near circular-state controls, and sealed 2024+; record `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN` |
 
 ## Compact Decision Records
 
@@ -2499,6 +2500,35 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_01_1_atr_percent_volatility_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814`.
+
+### D128 — Test the ATR% low-state entry overlay
+
+- **Operator decision:** Begin with a minimal, well-characterized strategy
+  whose momentum mechanics plausibly overlap with the volatility classifier.
+- **Frozen design:** `HYP-REG-01.2` preserves the accepted ATR14/close,
+  prior-252 percentile, and hysteresis state ledger and the accepted daily
+  SMA8/SMA14 parent strategy. Skip only fresh entries whose signal-close state
+  is `LOW`; do not defer them, change exits, or respond to later state changes.
+  Compare 144 stock asset-years with the unchanged strategy, buy-and-hold, and
+  40 exposure-nearest controls selected from 200 circular state shifts.
+- **Boundary:** Reuse 2018-2023 only as DEVELOPMENT evidence, reconstruct the
+  parent execution surface from the accepted SIP archive, keep 2024+ sealed,
+  and prohibit alternate state combinations or parameter search.
+- **Result:** Exact parent reproduction passes. Median annual return falls
+  from `8.95%` to `4.44%`; median drawdown improves from `-14.59%` to `-11.85%`,
+  but Sharpe falls from `0.642` to `0.485`. Only `9 / 24` assets and `0 / 6`
+  years improve. The actual policy ranks at the `37.5th` percentile of the
+  exposure-near circular-state controls.
+- **Decision:** Record
+  `STOP_DEVELOPMENT_OVERLAY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Preserve
+  `HYP-REG-01.1` as a successful directionless-volatility diagnostic; reject
+  the stronger proposition that `LOW` is a harmful entry state for this fast
+  daily trend rule. Do not access confirmation or try a reactive state search.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_01_2_ATR_PERCENT_STRATEGY_OVERLAY_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_01_2_atr_percent_strategy_overlay_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_2_strategy_overlay_20260814`.
 
 ## Related Artifacts
 

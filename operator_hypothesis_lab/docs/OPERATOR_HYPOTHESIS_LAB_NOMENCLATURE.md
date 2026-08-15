@@ -152,15 +152,25 @@ block and weak matched-timing percentiles. Preserve the development STOP and
 treat any grid expansion or mechanism filter as a distinct hypothesis rather
 than an H05.2 retry.
 
-`HYP-MOM-06.1`, `HYP-IMOM-01.1`, and `HYP-IMOM-02.1` are planned identifiers,
-not executable contracts. `HYP-MOM-06.1` reconstructs the operator's daily
-SMA8/SMA14 question. `HYP-IMOM-01.1` asks the economically distinct question
-on 30-minute bars, where the same numeric averages cover roughly one session.
-`HYP-IMOM-02.1` ports the price/slow-anchor question using session-equivalent
-30-minute horizons. The related Chan adaptation remains `LIT-IMOM-01.1` under
-the literature-study phylogeny. Their shared roadmap freezes sequence,
-attribution principles, and 1x/1.8x comparison policy while leaving data
-collection and implementation closed.
+`HYP-MOM-06.1`, `HYP-IMOM-01.1`, and `HYP-IMOM-02.1` are completed DEVELOPMENT
+identifiers. `HYP-MOM-06.1` reconstructs the operator's daily SMA8/SMA14
+question and remains the accepted positive absolute-return parent baseline.
+`HYP-IMOM-01.1` asks the economically distinct question on 30-minute bars,
+where the same numeric averages cover roughly one session. `HYP-IMOM-02.1`
+ports the price/slow-anchor question using session-equivalent 30-minute
+horizons. The related Chan adaptation remains `LIT-IMOM-01.1` under the
+literature-study phylogeny. The shared series is complete and stops before any
+confirmation or live authority.
+
+`HYP-REG-01.1` is a strategy-independent measurement lane: causal ATR14/close
+percentiles with a prior-252-session memory and hysteretic low/medium/high
+states. Its pass establishes volatility-magnitude classification only.
+`HYP-REG-01.2` is a substantive decimal variant because the accepted state is
+allowed to control entry permission for the unchanged `HYP-MOM-06.1` strategy.
+It freezes `ATR_LOW_OFF` as one specific overlay and permanently records its
+DEVELOPMENT failure. Trying another state combination, transition rule,
+threshold, strategy, or asset subset requires a new predeclared variant; it is
+not a reactive repair of `01.2`.
 
 `HYP-ALT-01.1` is a measurement lane rather than a trading strategy. `ALT`
 marks an alternative-data source, while `01.1` freezes the first approved WSB

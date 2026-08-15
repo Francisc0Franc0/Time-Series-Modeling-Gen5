@@ -1,8 +1,8 @@
 # Gen5 Intraday Momentum Research Roadmap
 
-Status: `ATR_REGIME_DIAGNOSTIC_COMPLETE_STRATEGY_OVERLAY_DISCUSSION_REQUIRED`
+Status: `ATR_LOW_ENTRY_OVERLAY_DEVELOPMENT_FAILED_CONFIRMATION_NOT_RUN`
 
-Decision references: `D125`, `D126`, `D127`
+Decision references: `D125`, `D126`, `D127`, `D128`
 
 ## Purpose
 
@@ -268,7 +268,7 @@ transport across a predeclared eligible domain without asset-specific tuning.
 
 ## Current stop state
 
-`ATR_REGIME_DIAGNOSTIC_COMPLETE_STOP_BEFORE_STRATEGY_OVERLAY`
+`ATR_LOW_ENTRY_OVERLAY_DEVELOPMENT_FAILED_CONFIRMATION_NOT_RUN`
 
 The unfiltered momentum series is complete. The separately frozen
 `HYP-REG-01.1` daily ATR%-percentile diagnostic also completed without using
@@ -277,13 +277,21 @@ strategy outcomes: all 26 assets showed higher future directionless range in
 durable but non-permanent states. This validates a volatility sensor, not a
 trading rule.
 
-Do not yet:
+Do not now:
 
-- use the labels to gate any daily or intraday strategy;
-- inspect strategy return, P&L, Sharpe, drawdown, or hit rate by state;
-- search ATR length, memory, thresholds, assets, or allowed-state combinations;
+- treat the failed `ATR_LOW_OFF` overlay as a strategy improvement;
+- search ATR length, memory, thresholds, assets, years, or allowed-state
+  combinations on the same evidence;
+- attach the state to an intraday strategy without a separately frozen causal
+  hypothesis and controls;
 - access the sealed 2024+ interval;
 - form a portfolio or change advice/live behavior.
 
-A strategy-overlay test requires a new, separately frozen operator decision
-with unchanged-strategy and exposure-matched placebo controls.
+The separately frozen `HYP-REG-01.2` test supplied that first strategy overlay.
+It suppressed only fresh daily SMA8/SMA14 entries whose causal signal-close
+state was `LOW`, while preserving every exit and all parent mechanics. Median
+annual return fell from `8.95%` to `4.44%`; drawdown improved, but Sharpe,
+asset breadth, calendar breadth, and exposure-near placebo specificity failed.
+Do not run confirmation or search alternate allowed-state combinations on the
+same evidence. Preserve the daily ATR% classifier as a diagnostic and reject
+this particular permission rule.
