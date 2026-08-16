@@ -1,6 +1,6 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; `HYP-REG-01.1` passed as an asset-relative ATR% diagnostic, while separately frozen strategy overlays `HYP-REG-01.2` and `HYP-REG-05.2` failed DEVELOPMENT gates and did not open confirmation; remaining regime methods are planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; `HYP-REG-01.1` passed as an asset-relative ATR% diagnostic, while separately frozen strategy overlays `HYP-REG-01.2` and `HYP-REG-05.2` failed DEVELOPMENT gates and did not open confirmation; the five-candidate trend-indicator roadmap is documented with no new lane open; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
 
@@ -13,6 +13,13 @@ better individual parent entries and beat most exposure-near timing controls,
 but its binary gate reduced return, Sharpe, asset breadth, and calendar
 breadth. Accurate present description was therefore informative but not
 sufficient policy authority.
+
+The [trend-indicator POC roadmap](GEN5_TREND_INDICATOR_POC_ROADMAP.md)
+preserves five distinct next concepts: rolling variance ratio, robust
+volatility-normalized slope/fit, multi-horizon agreement, causal change-point
+detection, and breakout persistence. It freezes neither parameters nor outcome
+access. Each candidate requires a separate contract, standalone measurement
+audit, and unchanged-strategy replay before any ATR% combination is discussed.
 
 ## Where This Fits
 

@@ -137,6 +137,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D133` | Test whether one faster cross-sectional impulse fixes the recent indicators' continuity problem | current continuation | `Could it be that the 20/60 type of horizon is too slow?` / `Agree on all your recommendations. Proceed` | Freeze `HYP-REG-04.2` as one five-session direction/participation-impulse construction with 20-session context, H5 primary semantics, H10 durability, H20 decay reporting, no speed grid, and derivative-development labeling. Faster measurement did not restore continuity; record `STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`, set down additional window shortening, and prohibit selection, inversion, ATR joining, strategy work, and 2024+ access. |
 | `D134` | Test ADX and Kaufman ER as path-trendability diagnostics | current continuation | `What about the concept of ADX? Is it worth investigating?` / `Agree with your recommendations... Proceed.` | Freeze `HYP-REG-05.1` with ER(20) primary and ADX(14) benchmark, causal prior-relative states, next-open future-path efficiency, direction-survival and turn-rate semantics, H10 primary, H20 durability, non-overlapping offsets, temporal transport, circular controls, and no strategy or ATR join. ER passed 1/9 gates and ADX 2/9. Record `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; retain ADX's usable-state and ER's direction-survival observations as descriptive learning only. |
 | `D135` | Reframe regime utility as causal present-state routing and test ADX on one unchanged strategy | current continuation | `How important is it that the concepts we implement actually predict future states well?` / `Is it worth revisiting any of the concepts we tested under this approach, paired with a minimal strategy?` / `Approved. Proceed.` | Accept that state persistence prediction is not universally required: a causally observed state may instead be judged by whether it improves a specific next decision. Freeze `HYP-REG-05.2` on the unchanged daily SMA8/SMA14 parent with HIGH-only fresh-entry admission and one predeclared reactive-exit challenger. Entry-only showed genuine timing specificity (85th exposure-near control percentile) but cut return and Sharpe and improved only 8/24 assets; reactive was worse and ranked at the 15th timing percentile. Record `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the conceptual distinction, not either policy. |
+| `D136` | Bookmark and sequence the next trend-indicator concepts | current continuation | `What other trend indicator concepts should we test?` / `Let's bookmark all of these suggestions, then come up with a plan to test them all` | Record five distinct candidates without opening them: variance ratio/return persistence, robust volatility-normalized slope and fit, multi-horizon agreement, causal change-point onset, and breakout persistence. Use separate construction audits followed by unchanged SMA8/SMA14 entry-only overlays, common causal controls and gates, reused-development labeling, and sealed 2024+. Deprioritize raw Hurst/R-S, ADX/Aroon/VHF variants, breadth rescue, and premature ATR% stacking. Recommend variance ratio as the first contract discussion. |
 
 ## Compact Decision Records
 
@@ -2782,11 +2783,46 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_05_2_adx_strategy_relative_overlay_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_05_2_adx_strategy_overlay_20260815`.
 
+### D136 — Bookmark and sequence the next trend-indicator concepts
+
+- **Operator decision:** Preserve all five proposed trend concepts and create a
+  plan to test them rather than choosing only one from the discussion.
+- **Nomenclature boundary:** Existing `HYP-REG-06.1` and `HYP-REG-07.1`
+  reservations remain attached to latent market mode and the economic
+  confirmation network. The roadmap uses neutral `T1` through `T5` labels;
+  each actual identifier is assigned only when the candidate is separately
+  discussed and frozen.
+- **Recorded candidates:** T1 rolling variance ratio/return persistence; T2
+  volatility-normalized robust slope and fit; T3 multi-horizon direction
+  agreement; T4 causal sequential change-point/trend-onset detection; and T5
+  range-position/breakout persistence, whose regime-versus-strategy taxonomy
+  must be settled before freezing.
+- **Common protocol:** Run a causal construction and synthetic/semantic audit
+  first. If usable, replay one unchanged daily SMA8/SMA14 entry-only overlay,
+  with skipped entries not deferred, parent exits unchanged, 1x, 5/10 bp,
+  exact parent reproduction, exposure-nearest circular timing controls, asset
+  and calendar breadth, and representative tapes. Do not add candidate-driven
+  reactive exits to the first versions.
+- **Evidence boundary:** Treat 2018-2023 as a reused educational development
+  atlas. Do not retrospectively rank five results and call the best confirmed.
+  Keep 2024+ sealed per candidate until every frozen development gate passes
+  and the operator separately opens confirmation. No ATR% combination,
+  leverage, allocation, portfolio, or live behavior is authorized.
+- **Deprioritized:** Raw Hurst/classical R-S, ADX threshold or length variants,
+  Aroon/VHF repackagings, further breadth-window rescue, favorable-slice
+  selection, and premature filter stacking.
+- **Next gate:** Discuss and freeze T1 variance ratio only, including one
+  robust primary scale, at most one durability scale, estimation history,
+  state representation, synthetic validation, and exact entry rule before
+  reading outcomes.
+- **Artifact:** `docs/GEN5_TREND_INDICATOR_POC_ROADMAP.md`.
+
 ## Related Artifacts
 
 - [Conditional-exposure feature hypothesis contract](GEN5_4_CONDITIONAL_EXPOSURE_FEATURE_HYPOTHESIS_CONTRACT.md)
 - [Gen5.4 ML decision-engine plan](GEN5_4_ML_DECISION_ENGINE_PLAN.md)
 - [POC progress log](GEN5_1_POC_PROGRESS_LOG.md)
+- [Trend-indicator POC roadmap](GEN5_TREND_INDICATOR_POC_ROADMAP.md)
 - [Cross-sectional asset-selection POC plan](GEN5_4_CROSS_SECTIONAL_ASSET_SELECTION_POC_PLAN.md)
 - [Point-in-time fundamentals admission gate](GEN5_4_POINT_IN_TIME_FUNDAMENTALS_ADMISSION_GATE.md)
 - [Alpaca context capability POC](GEN5_4_ALPACA_CONTEXT_CAPABILITY_POC.md)

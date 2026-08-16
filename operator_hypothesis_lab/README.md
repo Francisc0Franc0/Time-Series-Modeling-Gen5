@@ -431,6 +431,15 @@ assets. Reactive exit was weaker and ranked at the 15th timing percentile. The
 records `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; do not
 soften, tune, stack another filter, select favorable slices, or access 2024+.
 
+The next trend-measurement sequence is bookmarked in the
+[trend-indicator POC roadmap](../docs/GEN5_TREND_INDICATOR_POC_ROADMAP.md).
+It preserves five genuinely different questions—return persistence, robust
+slope/fit, multi-horizon agreement, causal trend onset, and range-break
+persistence—under one common causal and strategy-relative protocol. No
+candidate parameters, outcome run, ATR% join, confirmation access, or new lane
+is opened by that planning document. Rolling variance ratio is the recommended
+first discussion.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
