@@ -135,6 +135,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D131` | Narrow breadth to transition and equal-weight leadership divergence | current continuation | `Agree with this. Document and proceed` | Freeze `HYP-REG-03.2` on positive-SPY-trend dates using ten-sector breadth change, RSP/SPY leadership change, continuous dispersion, one unfitted risk score, a single H20 target, 20 non-overlapping offsets, temporal and semantic checks, and circular controls. Only integrity passed; record `STOP_BREADTH_TRANSITION_GATES_FAILED_NO_JOINT_FILTER`. Preserve the leadership-only clue as theory input but do not select it, join ATR%, tune, or access 2024+. |
 | `D132` | Clarify asset-level regime use and test a new cross-sectional trend field | current continuation | `We often mention predicting SPY... how does this indicator ultimately translate to being part of a regime filter alongside ATR%, for the asset of interest` / `Document them all and proceed to testing` | Document the eventual architecture as `market field x per-asset ATR% x unchanged asset signal`; reserve latent market mode, economic confirmation network, and point-in-time constituent breadth without opening them. Freeze only `HYP-REG-04.1` as a four-group, 24-ETF direction/participation/agreement/flow diagnostic with future field semantics primary and SPY secondary. Only integrity passed; record `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY` and prohibit inversion, ATR joining, asset overlays, and 2024+ access. |
 | `D133` | Test whether one faster cross-sectional impulse fixes the recent indicators' continuity problem | current continuation | `Could it be that the 20/60 type of horizon is too slow?` / `Agree on all your recommendations. Proceed` | Freeze `HYP-REG-04.2` as one five-session direction/participation-impulse construction with 20-session context, H5 primary semantics, H10 durability, H20 decay reporting, no speed grid, and derivative-development labeling. Faster measurement did not restore continuity; record `STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`, set down additional window shortening, and prohibit selection, inversion, ATR joining, strategy work, and 2024+ access. |
+| `D134` | Test ADX and Kaufman ER as path-trendability diagnostics | current continuation | `What about the concept of ADX? Is it worth investigating?` / `Agree with your recommendations... Proceed.` | Freeze `HYP-REG-05.1` with ER(20) primary and ADX(14) benchmark, causal prior-relative states, next-open future-path efficiency, direction-survival and turn-rate semantics, H10 primary, H20 durability, non-overlapping offsets, temporal transport, circular controls, and no strategy or ATR join. ER passed 1/9 gates and ADX 2/9. Record `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; retain ADX's usable-state and ER's direction-survival observations as descriptive learning only. |
 
 ## Compact Decision Records
 
@@ -2708,6 +2709,41 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_04_2_FAST_CROSS_SECTIONAL_TREND_IMPULSE_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_04_2_fast_cross_sectional_trend_impulse_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_04_2_fast_cross_sectional_trend_impulse_20260815`.
+
+### D134 — Test ADX and Kaufman ER as path-trendability diagnostics
+
+- **Operator decision:** Set down the failed cross-sectional direction lane and
+  open a minimal investigation of ADX plus quantitatively motivated trend
+  diagnostics, with Kaufman Efficiency Ratio as the recommended primary
+  candidate.
+- **Research boundary:** Freeze `HYP-REG-05.1` on the same 26-asset,
+  2018-2023 development panel as the accepted ATR% diagnostic. Keep 2024+
+  sealed; do not join ATR%, fit thresholds, run a strategy, or compute strategy
+  performance.
+- **Frozen construction:** Compare causal prior-252-session percentiles of
+  ER(20) and ADX(14), applying the already established 30/40/60/70 hysteresis.
+  Predict next-open future-path efficiency at H10, with H5 onset and H20
+  durability plus direction survival and turn rate. Require asset breadth,
+  every non-overlapping offset, temporal halves, calendar years, 200
+  within-asset/year circular controls, and usable state dynamics.
+- **Result:** ER H10 median per-asset rho was `-0.023`, positive in `6 / 26`
+  assets, with a `0.956x` HIGH/LOW future-efficiency ratio. ADX was `-0.049`,
+  positive in `8 / 26`, with a `0.966x` ratio. ER's HIGH state did show a
+  `+5.5 pp` direction-survival gap across `20 / 26` assets, but no straighter
+  future path, offset stability, or temporal transport. ADX produced the more
+  usable state machine but no forward ordering. Neither candidate had a
+  jointly favorable H10 offset, and both actual timings ranked near the bottom
+  of their circular controls.
+- **Decision:** ER passed `1 / 9` gates and ADX `2 / 9`. Record
+  `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`. Do not invert,
+  tune lengths or thresholds, select assets or years, join ATR%, run a strategy,
+  or inspect 2024+ under this identifier. Treat variance ratio as a distinct
+  future diagnostic, not a rescue.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_05_1_PATH_TRENDABILITY_DIAGNOSTIC_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_05_1_PATH_TRENDABILITY_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_05_1_path_trendability_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_05_1_path_trendability_20260815`.
 
 ## Related Artifacts
 

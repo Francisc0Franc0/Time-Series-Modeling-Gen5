@@ -396,6 +396,24 @@ Record
 do not shorten again, select the favorable local impulse slice, join ATR%, run
 a strategy, or access 2024+ under this family.
 
+`HYP-REG-05.1` changes the question from signed direction to path
+trendability. Its
+[contract](../docs/GEN5_HYP_REG_05_1_PATH_TRENDABILITY_DIAGNOSTIC_CONTRACT.md)
+freezes Kaufman ER(20) as the primary candidate and Wilder ADX(14) as the
+canonical benchmark, both expressed as causal prior-252-session
+asset-relative percentiles. The
+[results](docs/HYP_REG_05_1_PATH_TRENDABILITY_RESULTS.md) show that neither
+candidate predicted a straighter next-open H10/H20 path: H10 median
+per-asset rho was `-0.023` for ER and `-0.049` for ADX, with HIGH/LOW future
+efficiency ratios of `0.956x` and `0.966x`. ER did retain a `+5.5 pp`
+direction-survival clue across `20 / 26` assets, while ADX alone formed usable
+states (about 14 switches/year and an 11.5-session median run), but those
+properties did not survive the complete path, offset, time, and circular
+gates. The
+[evidence deck](presentations/hyp_reg_05_1_path_trendability_evidence.pptx)
+records `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; do not
+tune, invert, join ATR%, run a strategy, or access 2024+ under this lane.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

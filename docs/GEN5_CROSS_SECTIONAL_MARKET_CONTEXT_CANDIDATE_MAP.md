@@ -65,7 +65,9 @@ Simple window shortening is now set down as a direction-filter path.
 
 ## Candidate 2 — Latent Market Mode
 
-Reserved lane: `HYP-REG-05.1`; not open.
+Reserved lane: `HYP-REG-06.1`; not open. The reservation moved from `05.1`
+when that identifier was assigned to the separately approved path-trendability
+diagnostic; no latent-mode scope was opened by the bookkeeping change.
 
 A rolling robust common factor or first principal component could separate:
 
@@ -83,7 +85,9 @@ transparent than the trend field.
 
 ## Candidate 3 — Economic Confirmation Network
 
-Reserved lane: `HYP-REG-06.1`; not open.
+Reserved lane: `HYP-REG-07.1`; not open. The reservation moved from `06.1`
+to preserve the latent-mode ordering after `HYP-REG-05.1` was assigned; no
+network scope was opened.
 
 Economically distinct relative-strength channels could vote on risk appetite:
 
@@ -117,16 +121,19 @@ authority upgrade, not permission to rescue a failed ETF specification.
 1. `HYP-REG-04.1` tested the slow 20/60-session trend field and stopped.
 2. `HYP-REG-04.2` tested one predeclared five-session impulse derivative and
    stopped; no additional speed search is authorized.
-3. Neither result may be joined to ATR%, routed to an asset strategy, inverted,
+3. `HYP-REG-05.1` then asked a separate single-asset path-trendability question
+   with ER(20) and ADX(14). It also stopped; ADX supplied usable descriptive
+   states but neither candidate forecast a straighter future path.
+4. None of these results may be joined to ATR%, routed to an asset strategy, inverted,
    or carried into 2024+ confirmation.
-4. Latent market mode, the economic confirmation network, and point-in-time
+5. Latent market mode, the economic confirmation network, and point-in-time
    constituent breadth remain documented but unopened.
-5. Only a future candidate that passes standalone semantics could earn a
+6. Only a future candidate that passes standalone semantics could earn a
    separately frozen ATR% complementarity and unchanged-strategy overlay.
 
 ## Source and Decision Grounding
 
-- Operator dialogue decisions `D130` through `D133`.
+- Operator dialogue decisions `D130` through `D134`.
 - S&P Dow Jones Indices, *Worth the Weight*, on equal weighting and index
   concentration as distinct market views.
 - Paulo Maio, *Cross-sectional return dispersion and the equity premium*,
