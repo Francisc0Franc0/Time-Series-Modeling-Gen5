@@ -139,6 +139,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D135` | Reframe regime utility as causal present-state routing and test ADX on one unchanged strategy | current continuation | `How important is it that the concepts we implement actually predict future states well?` / `Is it worth revisiting any of the concepts we tested under this approach, paired with a minimal strategy?` / `Approved. Proceed.` | Accept that state persistence prediction is not universally required: a causally observed state may instead be judged by whether it improves a specific next decision. Freeze `HYP-REG-05.2` on the unchanged daily SMA8/SMA14 parent with HIGH-only fresh-entry admission and one predeclared reactive-exit challenger. Entry-only showed genuine timing specificity (85th exposure-near control percentile) but cut return and Sharpe and improved only 8/24 assets; reactive was worse and ranked at the 15th timing percentile. Record `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the conceptual distinction, not either policy. |
 | `D136` | Bookmark and sequence the next trend-indicator concepts | current continuation | `What other trend indicator concepts should we test?` / `Let's bookmark all of these suggestions, then come up with a plan to test them all` | Record five distinct candidates without opening them: variance ratio/return persistence, robust volatility-normalized slope and fit, multi-horizon agreement, causal change-point onset, and breakout persistence. Use separate construction audits followed by unchanged SMA8/SMA14 entry-only overlays, common causal controls and gates, reused-development labeling, and sealed 2024+. Deprioritize raw Hurst/R-S, ADX/Aroon/VHF variants, breadth rescue, and premature ATR% stacking. Recommend variance ratio as the first contract discussion. |
 | `D137` | Freeze and execute the first roadmap candidate: rolling variance ratio | current continuation | `Perfect. Let's proceed` / `Approved. Proceed` | Freeze `HYP-REG-08.1` with robust overlapping Lo–MacKinlay VR(5), VR(10) durability only, 252-return estimation, prior-252-score causal ranking, signed hysteresis, synthetic/null calibration, and a HIGH-only fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median return/exposure were zero, 1/24 assets and 1/6 years improved, HIGH did not rank parent trades, and timing was 50th percentile. Record `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, and keep 2024+ sealed. |
+| `D138` | Freeze and execute robust slope and fit as the second trend-roadmap candidate | current continuation | `Okay, what's next?` / `Agreed, let's proceed with your recommendations` | Freeze `HYP-REG-09.1` with 60-session Theil-Sen log-price slope, volatility-normalized strength, absolute Spearman path quality, causal prior-252 quality states, 120-session durability only, and one positive-slope HIGH-quality fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median annual return was -0.11% versus 8.95%, 2/24 assets and 1/6 years improved, Sharpe was negative, and actual timing ranked at the 26.2nd percentile. Record `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T3 discussion. |
 
 ## Compact Decision Records
 
@@ -2854,6 +2855,38 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_08_1_variance_ratio_persistence_evidence.pptx`,
   and
   `runs/research_workbench/operator_hypothesis_lab/hyp_reg_08_1_variance_ratio_20260816`.
+
+### D138 — Freeze and execute volatility-normalized robust slope and fit
+
+- **Operator decision:** Proceed with the second roadmap concept using the same
+  two-stage protocol and unchanged minimal SMA8/SMA14 strategy.
+- **Frozen measurement:** `HYP-REG-09.1` uses a 60-session Theil-Sen slope on
+  log price, slope displacement divided by realized log-return volatility,
+  absolute Spearman(time, log price) as separate path quality, and a causal
+  rank against the prior 252 completed quality observations. Quality uses
+  30/40 and 60/70 hysteresis; 120 sessions are durability-only.
+- **Stage A readout:** All 7/7 gates passed. Synthetic slopes had the expected
+  direction, path quality ordered clean rise/decline above noisy rise, random
+  walk, and reversal, scale and append invariance were exact, and all 24
+  stocks had usable two-sided states and eligible sessions.
+- **Stage B readout:** Exact parent reproduction passed 156/156 cells. The
+  positive-slope HIGH-quality entry gate reduced median exposure from 53.88%
+  to 6.02%, but median annual return fell from 8.95% to -0.11% and Sharpe from
+  0.642 to -0.278. Only 2/24 stocks and 1/6 years improved. ORDERLY_UP parent
+  entries had a 43.96% hit rate and -0.57% median trade; actual timing ranked
+  at the 26.2nd percentile of exposure-nearest controls. Only 3/9 gates passed.
+- **Decision boundary:** Record
+  `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain
+  the descriptive measurement but do not tune windows, quality thresholds,
+  strength magnitude, assets, ATR combinations, parent mechanics, leverage,
+  or confirmation after seeing this result. Keep 2024+ sealed.
+- **Next gate:** Discuss T3 multi-horizon direction agreement as a genuinely
+  different construct; do not implement it from this result alone.
+- **Artifacts:** `docs/GEN5_HYP_REG_09_1_ROBUST_SLOPE_FIT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_09_1_ROBUST_SLOPE_FIT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_09_1_robust_slope_fit_evidence.pptx`,
+  and
+  `runs/research_workbench/operator_hypothesis_lab/hyp_reg_09_1_robust_slope_fit_20260816`.
 
 ## Related Artifacts
 

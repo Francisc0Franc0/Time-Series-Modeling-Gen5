@@ -451,8 +451,26 @@ parent trades, and timing ranked at the 50th percentile. The
 records
 `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`.
 Retain the measurement, do not rescue the hard gate, and keep 2024+ sealed.
-The next roadmap gate is discussion of T2 robust slope/fit; it is not yet
-opened.
+That STOP opened the separately frozen T2 robust slope/fit discussion; the
+completed T2 readout follows.
+
+`HYP-REG-09.1` completed the second roadmap candidate. Its
+[contract](../docs/GEN5_HYP_REG_09_1_ROBUST_SLOPE_FIT_CONTRACT.md) freezes a
+60-session Theil-Sen log-price slope, volatility-normalized strength,
+independent absolute-Spearman path quality, a causal prior-252 quality state,
+and a 120-session durability view. The
+[results](docs/HYP_REG_09_1_ROBUST_SLOPE_FIT_RESULTS.md) separate another clean
+measurement pass from a policy failure: all 7/7 construction gates passed,
+but only 3/9 strategy gates passed. The positive-slope HIGH-quality entry gate
+cut median annual return from 8.95% to -0.11%, improved only 2/24 stocks and
+1/6 years, produced negative Sharpe, and ranked at the 26.2nd percentile of
+exposure-nearest controls. The
+[evidence deck](presentations/hyp_reg_09_1_robust_slope_fit_evidence.pptx)
+records
+`STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain the
+descriptive measurement, do not rescue the binary gate, and keep 2024+
+sealed. The next roadmap gate is discussion of T3 multi-horizon agreement; it
+is not yet opened.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

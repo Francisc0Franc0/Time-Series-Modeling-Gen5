@@ -1,6 +1,6 @@
 # Gen5 Trend-Indicator POC Roadmap
 
-Status: `T1_COMPLETE_STOP_BEFORE_T2_DISCUSSION`
+Status: `T2_COMPLETE_STOP_BEFORE_T3_DISCUSSION`
 
 ## Where This Fits
 
@@ -109,6 +109,17 @@ This candidate overlaps partially with ER but is not identical: ER compares
 net displacement with total path length, whereas slope/fit asks how well a
 directional linear representation describes the observed path after
 volatility normalization.
+
+**Completed readout:** `HYP-REG-09.1` froze a 60-session Theil-Sen slope,
+volatility-normalized strength, absolute Spearman path quality, causal
+prior-252 quality states, and a 120-session durability view. All 7/7
+construction gates passed. The positive-slope HIGH-quality entry gate then
+passed only 3/9 strategy gates: median annual return was -0.11% versus 8.95%
+for the unchanged parent, only 2/24 stocks and 1/6 years improved, Sharpe was
+negative, and timing ranked at the 26.2nd percentile of exposure-nearest
+controls. Record
+`STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain the
+measurement, do not rescue the binary policy, and keep 2024+ sealed.
 
 ## Candidate T3 — Multi-Horizon Direction Agreement
 
@@ -274,8 +285,8 @@ evidence.
 
 1. **T1 variance ratio:** completed as `HYP-REG-08.1`; measurement passed and
    the hard entry-policy use stopped.
-2. **T2 robust slope/fit:** direct direction, normalized strength, and linear
-   path quality.
+2. **T2 robust slope/fit:** completed as `HYP-REG-09.1`; measurement passed and
+   the positive-slope HIGH-quality entry policy stopped.
 3. **T3 multi-horizon agreement:** cross-scale consensus without lookback
    selection.
 4. **T4 causal change point:** transition/onset detection after synthetic
@@ -305,7 +316,7 @@ claim that later candidates have lower economic potential.
 
 ## Next Gate
 
-Discuss T2 robust slope and fit only. No T2 parameters, outcomes, strategy
-contact, or confirmation are authorized by completion of T1. Preserve the T1
-measurement artifact and its policy STOP without using either result to tune
-T2 after the fact.
+Discuss T3 multi-horizon direction agreement only. No T3 horizons, agreement
+rule, transition interpretation, strategy contact, or confirmation are
+authorized by completion of T2. Preserve the T1 and T2 measurement artifacts
+and their policy STOPs without using either result to tune T3 after the fact.
