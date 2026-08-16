@@ -414,6 +414,23 @@ gates. The
 records `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; do not
 tune, invert, join ATR%, run a strategy, or access 2024+ under this lane.
 
+`HYP-REG-05.2` then tests the operator's broader conceptual correction: a
+state need not forecast its own future if its causal present value usefully
+changes the next strategy decision. Its
+[contract](../docs/GEN5_HYP_REG_05_2_ADX_STRATEGY_RELATIVE_OVERLAY_CONTRACT.md)
+joins the accepted ADX state to the unchanged daily SMA8/SMA14 parent, with
+HIGH-only fresh entry as primary and exit-on-leaving-HIGH as a predeclared
+challenger. The
+[results](docs/HYP_REG_05_2_ADX_STRATEGY_RELATIVE_OVERLAY_RESULTS.md) show a
+real but insufficient entry clue: HIGH parent entries had a 2.01% mean trade,
+and actual entry-only timing ranked at the 85th percentile of exposure-near
+controls. The hard gate nevertheless reduced 1,394 parent trades to 347, cut
+median return from 8.95% to 1.95%, lowered Sharpe, and improved only 8/24
+assets. Reactive exit was weaker and ranked at the 15th timing percentile. The
+[evidence deck](presentations/hyp_reg_05_2_adx_strategy_relative_overlay_evidence.pptx)
+records `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; do not
+soften, tune, stack another filter, select favorable slices, or access 2024+.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.

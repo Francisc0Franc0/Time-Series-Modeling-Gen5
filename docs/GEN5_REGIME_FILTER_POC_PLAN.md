@@ -1,8 +1,18 @@
 # Gen5 Regime Filter POC Plan
 
-Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; `HYP-REG-01.1` passed as an asset-relative ATR% diagnostic, while its separately frozen `HYP-REG-01.2` low-state momentum overlay failed DEVELOPMENT gates and did not open confirmation; remaining regime methods are planning memory.
+Status: PCA quantile-grid, PCA k-means, and PCA-routed WFA Option A POCs implemented; `HYP-REG-01.1` passed as an asset-relative ATR% diagnostic, while separately frozen strategy overlays `HYP-REG-01.2` and `HYP-REG-05.2` failed DEVELOPMENT gates and did not open confirmation; remaining regime methods are planning memory.
 
 This note preserves the current regime/state-model brainstorm so the operator and Codex can return to it across separate POC branches.
+
+`HYP-REG-05.2` adds one important validation distinction. A state does not
+always need to predict its own future label; it may instead be evaluated as a
+causal routing variable for a named strategy and decision cadence. That claim
+still requires strategy-relative evidence, matched exposure controls, costs,
+and temporal breadth. In the frozen ADX/SMA8-SMA14 test, HIGH ADX selected
+better individual parent entries and beat most exposure-near timing controls,
+but its binary gate reduced return, Sharpe, asset breadth, and calendar
+breadth. Accurate present description was therefore informative but not
+sufficient policy authority.
 
 ## Where This Fits
 

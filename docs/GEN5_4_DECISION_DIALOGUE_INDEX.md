@@ -136,6 +136,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D132` | Clarify asset-level regime use and test a new cross-sectional trend field | current continuation | `We often mention predicting SPY... how does this indicator ultimately translate to being part of a regime filter alongside ATR%, for the asset of interest` / `Document them all and proceed to testing` | Document the eventual architecture as `market field x per-asset ATR% x unchanged asset signal`; reserve latent market mode, economic confirmation network, and point-in-time constituent breadth without opening them. Freeze only `HYP-REG-04.1` as a four-group, 24-ETF direction/participation/agreement/flow diagnostic with future field semantics primary and SPY secondary. Only integrity passed; record `STOP_TREND_FIELD_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY` and prohibit inversion, ATR joining, asset overlays, and 2024+ access. |
 | `D133` | Test whether one faster cross-sectional impulse fixes the recent indicators' continuity problem | current continuation | `Could it be that the 20/60 type of horizon is too slow?` / `Agree on all your recommendations. Proceed` | Freeze `HYP-REG-04.2` as one five-session direction/participation-impulse construction with 20-session context, H5 primary semantics, H10 durability, H20 decay reporting, no speed grid, and derivative-development labeling. Faster measurement did not restore continuity; record `STOP_FAST_TREND_IMPULSE_GATES_FAILED_NO_CONFIRMATION_ATR_JOIN_OR_STRATEGY`, set down additional window shortening, and prohibit selection, inversion, ATR joining, strategy work, and 2024+ access. |
 | `D134` | Test ADX and Kaufman ER as path-trendability diagnostics | current continuation | `What about the concept of ADX? Is it worth investigating?` / `Agree with your recommendations... Proceed.` | Freeze `HYP-REG-05.1` with ER(20) primary and ADX(14) benchmark, causal prior-relative states, next-open future-path efficiency, direction-survival and turn-rate semantics, H10 primary, H20 durability, non-overlapping offsets, temporal transport, circular controls, and no strategy or ATR join. ER passed 1/9 gates and ADX 2/9. Record `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; retain ADX's usable-state and ER's direction-survival observations as descriptive learning only. |
+| `D135` | Reframe regime utility as causal present-state routing and test ADX on one unchanged strategy | current continuation | `How important is it that the concepts we implement actually predict future states well?` / `Is it worth revisiting any of the concepts we tested under this approach, paired with a minimal strategy?` / `Approved. Proceed.` | Accept that state persistence prediction is not universally required: a causally observed state may instead be judged by whether it improves a specific next decision. Freeze `HYP-REG-05.2` on the unchanged daily SMA8/SMA14 parent with HIGH-only fresh-entry admission and one predeclared reactive-exit challenger. Entry-only showed genuine timing specificity (85th exposure-near control percentile) but cut return and Sharpe and improved only 8/24 assets; reactive was worse and ranked at the 15th timing percentile. Record `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the conceptual distinction, not either policy. |
 
 ## Compact Decision Records
 
@@ -2744,6 +2745,42 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/docs/HYP_REG_05_1_PATH_TRENDABILITY_RESULTS.md`,
   `operator_hypothesis_lab/presentations/hyp_reg_05_1_path_trendability_evidence.pptx`,
   and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_05_1_path_trendability_20260815`.
+
+### D135 — Reframe regime utility as causal present-state routing
+
+- **Operator decision:** Question the assumption that every useful regime
+  state must predict its own future. A state may instead describe the present
+  accurately enough to route a strategy until the next causal update; if it
+  changes, the policy may react at the next executable decision.
+- **Research boundary:** Freeze `HYP-REG-05.2` as a strategy-relative
+  derivative, not a rescue of the failed `05.1` forward-path forecast. Reuse
+  the accepted ADX(14) prior-252 percentile state and the unchanged daily
+  SMA8/SMA14 parent across the 24-stock 2018-2023 development panel. Keep
+  2024+ sealed, use 1x and 5 bp per side, and prohibit threshold, state,
+  strategy, asset, or exit searches.
+- **Frozen policies:** `ENTRY_HIGH_ONLY` admits a fresh parent cross-up only
+  when signal-close ADX is HIGH and otherwise preserves the parent exit.
+  `REACTIVE_HIGH_ONLY` additionally exits next open when ADX leaves HIGH and
+  requires another fresh parent crossover before re-entry. Compare both with
+  200 within-asset/year circular state rotations and 40 exposure-nearest
+  controls.
+- **Result:** Parent reproduction passed in 156/156 cells with maximum
+  difference `4.44e-15`. HIGH parent entries had a 48.70% hit rate and 2.01%
+  mean trade versus 44.05%/0.64% in LOW. Entry-only ranked at the 85th
+  exposure-near control percentile, but retained only 347/1,394 trades, cut
+  median return from 8.95% to 1.95%, lowered Sharpe from 0.642 to 0.378, and
+  improved only 8/24 assets plus 1/6 years. Reactive returned 0.06%, lowered
+  Sharpe to 0.166, and ranked at the 15th control percentile.
+- **Decision:** Entry-only passed `4 / 8` gates and reactive `3 / 8`. Record
+  `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`. Present-state
+  information can exist without making an all-or-nothing state gate useful.
+  Do not soften the inspected rule, tune, select 2018 or favorable assets,
+  stack another state, or inspect confirmation under this identifier.
+- **Artifacts:**
+  `docs/GEN5_HYP_REG_05_2_ADX_STRATEGY_RELATIVE_OVERLAY_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_05_2_ADX_STRATEGY_RELATIVE_OVERLAY_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_05_2_adx_strategy_relative_overlay_evidence.pptx`,
+  and `runs/research_workbench/operator_hypothesis_lab/hyp_reg_05_2_adx_strategy_overlay_20260815`.
 
 ## Related Artifacts
 
