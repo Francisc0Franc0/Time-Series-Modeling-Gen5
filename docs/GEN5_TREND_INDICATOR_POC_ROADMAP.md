@@ -1,6 +1,6 @@
 # Gen5 Trend-Indicator POC Roadmap
 
-Status: `ROADMAP_DOCUMENTED_NO_NEW_LANE_OPEN`
+Status: `T1_COMPLETE_STOP_BEFORE_T2_DISCUSSION`
 
 ## Where This Fits
 
@@ -73,6 +73,15 @@ strategy outcomes.
   <https://web.mit.edu/Alo/www/Papers/lo-mackinlay-89.html>
 - Chow and Denning, joint inference for multiple variance ratios:
   <https://doi.org/10.1016/0304-4076(93)90051-6>
+
+**Completed readout:** `HYP-REG-08.1` implemented robust rolling VR(5) with
+VR(10) durability. All 7/7 measurement gates passed, but the approved
+`HIGH`-only SMA8/SMA14 entry gate passed only 3/9 strategy gates. Median annual
+return and exposure both fell to zero; only 1/24 stocks and 1/6 years improved,
+and timing ranked at the 50th percentile of exposure-nearest controls. Record
+`STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+Retain the measurement implementation; do not rescue the policy or inspect
+2024+.
 
 ## Candidate T2 — Volatility-Normalized Robust Slope and Fit
 
@@ -263,8 +272,8 @@ evidence.
 
 ## Recorded Test Order
 
-1. **T1 variance ratio:** statistically distinct return persistence; recommended
-   next lane.
+1. **T1 variance ratio:** completed as `HYP-REG-08.1`; measurement passed and
+   the hard entry-policy use stopped.
 2. **T2 robust slope/fit:** direct direction, normalized strength, and linear
    path quality.
 3. **T3 multi-horizon agreement:** cross-scale consensus without lookback
@@ -296,7 +305,7 @@ claim that later candidates have lower economic potential.
 
 ## Next Gate
 
-Discuss and freeze T1 only. Its contract must settle the robust variance-ratio
-formula, one primary aggregation scale, at most one durability scale, rolling
-estimation history, state representation, synthetic tests, and exact Stage B
-entry rule before any T1 outcome is read.
+Discuss T2 robust slope and fit only. No T2 parameters, outcomes, strategy
+contact, or confirmation are authorized by completion of T1. Preserve the T1
+measurement artifact and its policy STOP without using either result to tune
+T2 after the fact.

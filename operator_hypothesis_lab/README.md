@@ -435,10 +435,24 @@ The next trend-measurement sequence is bookmarked in the
 [trend-indicator POC roadmap](../docs/GEN5_TREND_INDICATOR_POC_ROADMAP.md).
 It preserves five genuinely different questions—return persistence, robust
 slope/fit, multi-horizon agreement, causal trend onset, and range-break
-persistence—under one common causal and strategy-relative protocol. No
-candidate parameters, outcome run, ATR% join, confirmation access, or new lane
-is opened by that planning document. Rolling variance ratio is the recommended
-first discussion.
+persistence—under one common causal and strategy-relative protocol.
+
+`HYP-REG-08.1` completed the first roadmap candidate. Its
+[contract](../docs/GEN5_HYP_REG_08_1_VARIANCE_RATIO_CONTRACT.md) freezes robust
+overlapping Lo–MacKinlay VR(5), VR(10) durability, two causal 252-session
+windows, signed hysteresis, synthetic calibration, and one HIGH-only fresh
+entry gate on the unchanged SMA8/SMA14 parent. The
+[results](docs/HYP_REG_08_1_VARIANCE_RATIO_RESULTS.md) distinguish a clean
+measurement pass from a policy failure: all 7/7 construction gates passed,
+but only 3/9 strategy gates passed. Median annual return and exposure were
+both zero, only 1/24 stocks and 1/6 years improved, HIGH did not select better
+parent trades, and timing ranked at the 50th percentile. The
+[evidence deck](presentations/hyp_reg_08_1_variance_ratio_persistence_evidence.pptx)
+records
+`STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+Retain the measurement, do not rescue the hard gate, and keep 2024+ sealed.
+The next roadmap gate is discussion of T2 robust slope/fit; it is not yet
+opened.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

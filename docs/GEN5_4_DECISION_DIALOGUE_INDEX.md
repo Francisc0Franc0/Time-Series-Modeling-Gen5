@@ -138,6 +138,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D134` | Test ADX and Kaufman ER as path-trendability diagnostics | current continuation | `What about the concept of ADX? Is it worth investigating?` / `Agree with your recommendations... Proceed.` | Freeze `HYP-REG-05.1` with ER(20) primary and ADX(14) benchmark, causal prior-relative states, next-open future-path efficiency, direction-survival and turn-rate semantics, H10 primary, H20 durability, non-overlapping offsets, temporal transport, circular controls, and no strategy or ATR join. ER passed 1/9 gates and ADX 2/9. Record `STOP_PATH_TRENDABILITY_GATES_FAILED_NO_ATR_JOIN_OR_STRATEGY`; retain ADX's usable-state and ER's direction-survival observations as descriptive learning only. |
 | `D135` | Reframe regime utility as causal present-state routing and test ADX on one unchanged strategy | current continuation | `How important is it that the concepts we implement actually predict future states well?` / `Is it worth revisiting any of the concepts we tested under this approach, paired with a minimal strategy?` / `Approved. Proceed.` | Accept that state persistence prediction is not universally required: a causally observed state may instead be judged by whether it improves a specific next decision. Freeze `HYP-REG-05.2` on the unchanged daily SMA8/SMA14 parent with HIGH-only fresh-entry admission and one predeclared reactive-exit challenger. Entry-only showed genuine timing specificity (85th exposure-near control percentile) but cut return and Sharpe and improved only 8/24 assets; reactive was worse and ranked at the 15th timing percentile. Record `STOP_ADX_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the conceptual distinction, not either policy. |
 | `D136` | Bookmark and sequence the next trend-indicator concepts | current continuation | `What other trend indicator concepts should we test?` / `Let's bookmark all of these suggestions, then come up with a plan to test them all` | Record five distinct candidates without opening them: variance ratio/return persistence, robust volatility-normalized slope and fit, multi-horizon agreement, causal change-point onset, and breakout persistence. Use separate construction audits followed by unchanged SMA8/SMA14 entry-only overlays, common causal controls and gates, reused-development labeling, and sealed 2024+. Deprioritize raw Hurst/R-S, ADX/Aroon/VHF variants, breadth rescue, and premature ATR% stacking. Recommend variance ratio as the first contract discussion. |
+| `D137` | Freeze and execute the first roadmap candidate: rolling variance ratio | current continuation | `Perfect. Let's proceed` / `Approved. Proceed` | Freeze `HYP-REG-08.1` with robust overlapping Lo–MacKinlay VR(5), VR(10) durability only, 252-return estimation, prior-252-score causal ranking, signed hysteresis, synthetic/null calibration, and a HIGH-only fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median return/exposure were zero, 1/24 assets and 1/6 years improved, HIGH did not rank parent trades, and timing was 50th percentile. Record `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, and keep 2024+ sealed. |
 
 ## Compact Decision Records
 
@@ -2816,6 +2817,43 @@ tasks by the branch name above, the phrase, or the decision date.
   state representation, synthetic validation, and exact entry rule before
   reading outcomes.
 - **Artifact:** `docs/GEN5_TREND_INDICATOR_POC_ROADMAP.md`.
+
+### D137 — Freeze and execute rolling variance-ratio persistence
+
+- **Operator decision:** Proceed with the first roadmap concept using the
+  predeclared two-stage protocol and the unchanged minimal SMA8/SMA14 strategy.
+- **Frozen measurement:** `HYP-REG-08.1` uses adjusted daily log-close returns,
+  a finite-sample-adjusted overlapping heteroskedasticity-robust Lo–MacKinlay
+  VR(5), VR(10) as durability only, 252 completed returns, and a causal rank
+  against the prior 252 completed z-scores. Signed 30/40 and 60/70 hysteresis
+  defines LOW/MEDIUM/HIGH; p-values are reported but never gate capital.
+- **Prehistory boundary:** The same provider supplied 503 sessions rather than
+  the preferred 550-session buffer. Preserve both exact 252-session windows,
+  retain early `NA` states, and do not backfill from another provider or
+  shorten either window.
+- **Stage A readout:** All 7/7 gates passed. IID and heteroskedastic-IID median
+  VR values were 1.000 and 0.993 with 4.7% and 5.9% rejection. AR− and AR+
+  medians were 0.779 and 1.277; append invariance and signed-state semantics
+  were exact; 22/24 stocks had at least 5% occupancy in HIGH and LOW.
+- **Stage B readout:** Exact parent reproduction passed 156/156 cells. The
+  HIGH-only fresh-entry policy reduced median annual return from 8.95% to zero
+  and median exposure to zero; only 1/24 stocks and 1/6 years improved. HIGH
+  parent trades had a 44.1% hit rate and −0.43% median return, and the actual
+  timing ranked at the 50th percentile of exposure-nearest circular controls.
+  Only 3/9 strategy gates passed.
+- **Decision boundary:** Record
+  `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+  Retain the causal measurement implementation but do not tune thresholds,
+  select VR(10), choose favorable assets/years, soften the gate, stack ATR%,
+  change strategy mechanics, or inspect 2024+.
+- **Next gate:** Discuss T2 volatility-normalized robust slope and fit as a
+  genuinely different trend-quality question; do not implement it from this
+  result alone.
+- **Artifacts:** `docs/GEN5_HYP_REG_08_1_VARIANCE_RATIO_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_08_1_VARIANCE_RATIO_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_08_1_variance_ratio_persistence_evidence.pptx`,
+  and
+  `runs/research_workbench/operator_hypothesis_lab/hyp_reg_08_1_variance_ratio_20260816`.
 
 ## Related Artifacts
 
