@@ -142,6 +142,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D138` | Freeze and execute robust slope and fit as the second trend-roadmap candidate | current continuation | `Okay, what's next?` / `Agreed, let's proceed with your recommendations` | Freeze `HYP-REG-09.1` with 60-session Theil-Sen log-price slope, volatility-normalized strength, absolute Spearman path quality, causal prior-252 quality states, 120-session durability only, and one positive-slope HIGH-quality fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median annual return was -0.11% versus 8.95%, 2/24 assets and 1/6 years improved, Sharpe was negative, and actual timing ranked at the 26.2nd percentile. Record `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T3 discussion. |
 | `D139` | Freeze and execute multi-horizon agreement; bookmark HMM after the series | current continuation | `Proceed. And bookmark this so I don't forget later: After we finish this series of tests, if nothing makes it to promotion, let's explore Hidden Markov Models.` | Freeze `HYP-REG-10.1` with fixed 20/60/120 volatility-normalized direction signs, five agreement/opposition states, descriptive join events, and one `FULL_UP` fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: return fell to -0.68% from 8.95%, 1/24 assets and 1/6 years improved, Sharpe was negative, and timing ranked at the 12.5th percentile. Record `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T4 discussion. Separately bookmark a literature-first HMM lane only after T1–T5 if nothing promotes; no HMM implementation is opened. |
 | `D140` | Freeze causal CUSUM onset and honor the Stage A stop | current continuation | `Okay, let's move on` / `Proceed` | Freeze `HYP-REG-11.1` as a positive Page-style CUSUM on prior-20 volatility-standardized, three-sigma-clipped daily returns. Select `h` only from seeded null paths under a 20% 504-session false-alarm ceiling, reset into one non-extending ten-session event window, and permit strategy contact only after sensitivity and real-panel usability pass. The full calibration selected `h = 20.25`; five of seven Stage A gates passed, but only 40.7% of strong positive shifts were detected within 60 sessions, median timely delay was 45 sessions, only 2/24 stocks had three alarms, and 0/24 had an eligible fresh SMA cross. Record `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`; do not read strategy outcomes, rescue the boundary/window, or access 2024+. Move next to T5 taxonomy discussion; HMM remains post-series only. |
+| `D141` | Classify T5 as context, execute upper-range persistence, and close the trend series | current continuation | `Okay, proceed` / `Approved` | Keep T5 in `HYP-REG` rather than turning it into a direct breakout strategy. Freeze `HYP-REG-12.1` with a 63-session prior-close range, uncapped range position, three-of-five upper-quartile persistence, a symmetric lower construction state, and a separate ten-session fixed-boundary breakout ledger. Stage A passed 7/7 with 24/24 usable stocks, but the entry-only overlay passed 3/9: median annual return fell from 8.95% to 0.00%, only 1/24 assets and 1/6 years improved, Sharpe became negative, and timing ranked at the 61.3rd percentile. Record `STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue or direct-breakout reinterpretation, and keep 2024+ sealed. T1-T5 are complete without promotion, so the bookmarked literature-first HMM discussion becomes the next gate; implementation remains unopened. |
 
 ## Compact Decision Records
 
@@ -2965,6 +2966,41 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_11_1_causal_change_point_evidence.pptx`,
   and
   `runs/research_workbench/operator_hypothesis_lab/hyp_reg_11_1_causal_change_point_20260816`.
+
+### D141 — Classify T5 as context, execute upper-range persistence, and close the trend series
+
+- **Operator decision:** Treat range persistence as contextual `HYP-REG`, not
+  a direct breakout-entry strategy, and execute the final roadmap candidate.
+- **Frozen measurement:** `HYP-REG-12.1` uses an uncapped current-close
+  location in the preceding 63-session close range. `UPPER_PERSISTENT`
+  requires a current value of at least 0.75 and at least three qualifying
+  observations among the latest five. A symmetric lower state supports
+  falsification. A separate event ledger freezes each prior range-high
+  boundary for ten non-extending sessions.
+- **Construction readout:** All 7/7 gates passed. Synthetic direction and
+  hold/failure semantics were exact; append causality and scale invariance
+  passed; event boundaries never reset; 24/24 stocks had usable occupancy and
+  at least three eligible parent crosses. Median upper-state occupancy was
+  38.3%.
+- **Strategy readout:** The unchanged parent reproduced 156/156 annual cells.
+  The hard entry gate passed 3/9 gates: median annual return was 0.00% versus
+  8.95%, only 1/24 assets and 1/6 years improved, median Sharpe fell to
+  -0.132, and timing ranked at the 61.3rd percentile. Parent trades admitted
+  by the state had a 43.1% hit rate and -0.68% median return.
+- **Decision boundary:** Record
+  `STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain
+  the descriptive state and breakout ledgers. Do not alter 63 sessions,
+  thresholds, persistence, parent, assets, costs, ATR%, or 2024+; do not call
+  this authority for a direct breakout strategy.
+- **Next gate:** T1-T5 are complete without a promoted trend filter. Begin a
+  literature-first HMM discussion with explicit causal-filtering, state-label,
+  identifiability, and trading-authority boundaries. No HMM implementation is
+  opened by this decision.
+- **Artifacts:** `docs/GEN5_HYP_REG_12_1_RANGE_PERSISTENCE_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_12_1_RANGE_PERSISTENCE_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_12_1_range_persistence_evidence.pptx`,
+  and
+  `runs/research_workbench/operator_hypothesis_lab/hyp_reg_12_1_range_persistence_20260817`.
 
 ## Related Artifacts
 

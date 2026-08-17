@@ -1,6 +1,6 @@
 # Gen5 Trend-Indicator POC Roadmap
 
-Status: `T4_COMPLETE_STOP_BEFORE_T5_TAXONOMY_DISCUSSION`
+Status: `T5_COMPLETE_SERIES_ENDED_HMM_LITERATURE_DISCUSSION_NEXT`
 
 ## Where This Fits
 
@@ -214,6 +214,18 @@ range-escape state or in `HYP-MOM` as a direct entry family. The label must
 follow the action. Existing Gen5 breakout code does not authorize reusing or
 selecting an already favorable specification for this roadmap.
 
+**Completed readout:** The operator selected the contextual `HYP-REG` route.
+`HYP-REG-12.1` froze a 63-session prior-close range, uncapped range position,
+three-of-five upper-quartile persistence, and a separate ten-session
+fixed-boundary breakout ledger. All 7/7 construction gates passed, including
+24/24 usable stocks. The hard fresh-SMA-entry gate passed only 3/9 strategy
+gates: median annual return fell from 8.95% to 0.00%, only 1/24 stocks and 1/6
+years improved, Sharpe became negative, and actual timing ranked at the 61.3rd
+percentile. Record
+`STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain the
+measurement, do not reinterpret the result as permission for a direct breakout
+strategy, and keep 2024+ sealed.
+
 ## Common Sequential Protocol
 
 Each candidate receives a separate operator discussion and frozen contract.
@@ -313,8 +325,8 @@ evidence.
 4. **T4 causal change point:** completed as `HYP-REG-11.1`; specificity passed,
    but synthetic sensitivity and real-panel usability stopped the lane before
    strategy contact.
-5. **T5 breakout persistence:** range escape, with taxonomy decided before
-   freezing because it may be a strategy rather than a regime filter.
+5. **T5 breakout persistence:** completed as contextual `HYP-REG-12.1`;
+   measurement passed and the upper-persistence fresh-entry policy stopped.
 
 The order controls implementation complexity and interpretability. It is not a
 claim that later candidates have lower economic potential.
@@ -352,12 +364,11 @@ this bookmark.
 
 ## Next Gate
 
-Discuss T5 range position and breakout persistence only. Before freezing it,
-decide whether the primary action is a contextual `HYP-REG` measurement or a
-direct `HYP-MOM` entry family. No lookback, persistence rule, strategy,
-confirmation, ATR join, leverage, or live behavior is authorized by completion
-of T4. Preserve the T1–T4 artifacts and STOPs without using their outcomes to
-tune T5 after the fact.
-
-The post-series HMM bookmark remains discussion-only. It becomes eligible for
-a literature-first gate only after T1–T5 conclude without promotion.
+The T1-T5 series is complete without a promoted trend entry filter. Discuss
+the bookmarked HMM concept next as a new literature-first gate. Begin with
+source inventory, beginner-accessible theory, identifiability and state-label
+stability, causal filtering versus smoothed hindsight states, and the boundary
+between a descriptive regime model and trading authority. No HMM state count,
+features, covariance structure, training window, strategy contact,
+confirmation, ATR join, leverage, live behavior, or implementation is opened
+by completion of T5.

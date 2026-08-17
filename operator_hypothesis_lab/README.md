@@ -506,6 +506,22 @@ discussion gate; its `HYP-REG` versus `HYP-MOM` taxonomy must be decided before
 freezing. If the full T1–T5 series produces no promotion, a separate
 literature-first HMM discussion remains bookmarked but not opened.
 
+`HYP-REG-12.1` completed the fifth and final candidate in that roadmap. Its
+[contract](../docs/GEN5_HYP_REG_12_1_RANGE_PERSISTENCE_CONTRACT.md) classifies
+the current close in the preceding 63-session range and requires three of five
+upper-quartile observations for `UPPER_PERSISTENT`. A separate fixed-boundary
+event ledger audits breakout hold and failure without creating entries. The
+[results](docs/HYP_REG_12_1_RANGE_PERSISTENCE_RESULTS.md) show a clean 7/7
+measurement pass but a 3/9 strategy result: median annual return fell from
+8.95% to 0.00%, only 1/24 stocks and 1/6 years improved, Sharpe became
+negative, and timing ranked at the 61.3rd percentile. The
+[evidence deck](presentations/hyp_reg_12_1_range_persistence_evidence.pptx)
+records `STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+Retain the measurement, do not rescue the hard gate or reinterpret it as a
+direct breakout strategy, and keep 2024+ sealed. With T1-T5 complete and no
+promotion, the literature-first HMM discussion is now the next gate; HMM
+implementation remains unopened.
+
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
