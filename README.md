@@ -562,6 +562,16 @@ The packet is written under ignored `runs/research_workbench/regime_wfa_pocs/`. 
 
 ## Generated Local Files
 
+The current trend-indicator concept series is tracked in
+`docs/GEN5_TREND_INDICATOR_POC_ROADMAP.md`. T1 variance ratio, T2 robust
+slope/fit, and T3 multi-horizon agreement each produced a valid causal
+measurement and a stopped SMA8/SMA14 entry policy. The latest T3 readout is in
+`operator_hypothesis_lab/docs/HYP_REG_10_1_MULTI_HORIZON_AGREEMENT_RESULTS.md`
+with its evidence deck under `operator_hypothesis_lab/presentations/`. T4
+causal change-point onset remains discussion-only. A literature-first Hidden
+Markov Model lane is bookmarked only after T1–T5 if nothing promotes; no HMM
+implementation or confirmation access is currently authorized.
+
 Generated caches, audit outputs, validation artifacts, local R libraries, local config overlays, and credential files are intentionally kept out of source control. The checked-in ignore rules cover `data_cache/`, `runs/`, `artifacts/`, `logs/`, `.codex_r_libs/`, `config/*.local.yml`, `.Renviron`, `.env`, and heavyweight data file formats such as `*.parquet`, `*.duckdb`, and `*.rds`.
 
 ## Gen5 v0 Freeze Evidence

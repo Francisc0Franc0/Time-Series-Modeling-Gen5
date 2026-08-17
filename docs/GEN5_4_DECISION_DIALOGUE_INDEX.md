@@ -140,6 +140,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D136` | Bookmark and sequence the next trend-indicator concepts | current continuation | `What other trend indicator concepts should we test?` / `Let's bookmark all of these suggestions, then come up with a plan to test them all` | Record five distinct candidates without opening them: variance ratio/return persistence, robust volatility-normalized slope and fit, multi-horizon agreement, causal change-point onset, and breakout persistence. Use separate construction audits followed by unchanged SMA8/SMA14 entry-only overlays, common causal controls and gates, reused-development labeling, and sealed 2024+. Deprioritize raw Hurst/R-S, ADX/Aroon/VHF variants, breadth rescue, and premature ATR% stacking. Recommend variance ratio as the first contract discussion. |
 | `D137` | Freeze and execute the first roadmap candidate: rolling variance ratio | current continuation | `Perfect. Let's proceed` / `Approved. Proceed` | Freeze `HYP-REG-08.1` with robust overlapping Lo–MacKinlay VR(5), VR(10) durability only, 252-return estimation, prior-252-score causal ranking, signed hysteresis, synthetic/null calibration, and a HIGH-only fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median return/exposure were zero, 1/24 assets and 1/6 years improved, HIGH did not rank parent trades, and timing was 50th percentile. Record `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, and keep 2024+ sealed. |
 | `D138` | Freeze and execute robust slope and fit as the second trend-roadmap candidate | current continuation | `Okay, what's next?` / `Agreed, let's proceed with your recommendations` | Freeze `HYP-REG-09.1` with 60-session Theil-Sen log-price slope, volatility-normalized strength, absolute Spearman path quality, causal prior-252 quality states, 120-session durability only, and one positive-slope HIGH-quality fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median annual return was -0.11% versus 8.95%, 2/24 assets and 1/6 years improved, Sharpe was negative, and actual timing ranked at the 26.2nd percentile. Record `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T3 discussion. |
+| `D139` | Freeze and execute multi-horizon agreement; bookmark HMM after the series | current continuation | `Proceed. And bookmark this so I don't forget later: After we finish this series of tests, if nothing makes it to promotion, let's explore Hidden Markov Models.` | Freeze `HYP-REG-10.1` with fixed 20/60/120 volatility-normalized direction signs, five agreement/opposition states, descriptive join events, and one `FULL_UP` fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: return fell to -0.68% from 8.95%, 1/24 assets and 1/6 years improved, Sharpe was negative, and timing ranked at the 12.5th percentile. Record `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T4 discussion. Separately bookmark a literature-first HMM lane only after T1–T5 if nothing promotes; no HMM implementation is opened. |
 
 ## Compact Decision Records
 
@@ -2887,6 +2888,46 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_09_1_robust_slope_fit_evidence.pptx`,
   and
   `runs/research_workbench/operator_hypothesis_lab/hyp_reg_09_1_robust_slope_fit_20260816`.
+
+### D139 — Freeze and execute multi-horizon agreement; bookmark HMM
+
+- **Operator decision:** Proceed with the third roadmap candidate and record a
+  future Hidden Markov Model discussion if the full trend-indicator series
+  concludes without promotion.
+- **Frozen measurement:** `HYP-REG-10.1` uses volatility-normalized log-price
+  displacement signs over exactly 20, 60, and 120 completed sessions. It
+  preserves `FULL_UP`, `FULL_DOWN`, two short-opposition states, `MIXED`, and
+  descriptive short-joins events. The nested horizons are correlated lenses,
+  not independent votes. Only `FULL_UP` can admit a fresh parent entry.
+- **Stage A readout:** All 7/7 gates passed. Seeded clean and opposition paths
+  recovered their intended states 100% of the time, price-scale and append
+  invariance held, state and join semantics were exact, and all 24 primary
+  stocks had usable state and eligibility occupancy.
+- **Stage B readout:** Exact parent reproduction passed 156/156 cells. The
+  `FULL_UP` gate cut median exposure from 53.88% to 17.50% and improved median
+  drawdown from -14.59% to -7.69%, but median annual return fell from 8.95% to
+  -0.68% and Sharpe from 0.642 to -0.203. Only 1/24 stocks and 1/6 years
+  improved. FULL_UP parent entries had a 42.4% hit rate and -0.71% median
+  trade; actual timing ranked at the 12.5th percentile of exposure-nearest
+  controls. Only 3/9 strategy gates passed.
+- **Decision boundary:** Record
+  `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+  Retain the causal state ledger but do not tune horizons, magnitude,
+  agreement rules, join events, assets, ATR combinations, parent mechanics,
+  leverage, or confirmation. Keep 2024+ sealed.
+- **HMM bookmark:** After T1–T5, and only if none promotes, inventory
+  operator-provided PDFs and primary sources before deciding whether a new HMM
+  lane belongs in Literature Studies or Operator Hypothesis Lab. Freeze
+  observables, state count, causal filtered probabilities, label semantics,
+  and held-out validation. Never present retrospective smoothed states as
+  live-known regimes or label states by their realized returns.
+- **Next gate:** Discuss T4 causal change-point onset only; no T4 or HMM
+  implementation is opened by this result.
+- **Artifacts:** `docs/GEN5_HYP_REG_10_1_MULTI_HORIZON_AGREEMENT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_10_1_MULTI_HORIZON_AGREEMENT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_10_1_multi_horizon_agreement_evidence.pptx`,
+  and
+  `runs/research_workbench/operator_hypothesis_lab/hyp_reg_10_1_multi_horizon_agreement_20260816`.
 
 ## Related Artifacts
 

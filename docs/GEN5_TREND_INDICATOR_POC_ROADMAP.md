@@ -287,8 +287,8 @@ evidence.
    the hard entry-policy use stopped.
 2. **T2 robust slope/fit:** completed as `HYP-REG-09.1`; measurement passed and
    the positive-slope HIGH-quality entry policy stopped.
-3. **T3 multi-horizon agreement:** cross-scale consensus without lookback
-   selection.
+3. **T3 multi-horizon agreement:** completed as `HYP-REG-10.1`; measurement
+   passed and the `FULL_UP` fresh-entry policy stopped.
 4. **T4 causal change point:** transition/onset detection after synthetic
    false-alarm calibration.
 5. **T5 breakout persistence:** range escape, with taxonomy decided before
@@ -314,9 +314,26 @@ claim that later candidates have lower economic potential.
 - using future-smoothed, full-sample, or retrospective state assignments for
   causal policy evidence.
 
+## Post-Series Literature-Grounded HMM Bookmark
+
+After T1–T5 are complete, if none earns promotion, discuss Hidden Markov
+Models as a distinct lane. The preferred sequence is literature-first:
+inventory operator-provided PDFs and primary sources, decide whether the lane
+belongs under Literature Studies or Operator Hypothesis Lab, then freeze its
+observable inputs, state-count discipline, causal filtered probabilities,
+label interpretation, and held-out validation before implementation.
+
+Retrospective smoothed states must never be presented as live-known regimes.
+State labels must not be assigned by whichever state had the best return, and
+no HMM strategy, data query, state count, or confirmation access is opened by
+this bookmark.
+
 ## Next Gate
 
-Discuss T3 multi-horizon direction agreement only. No T3 horizons, agreement
-rule, transition interpretation, strategy contact, or confirmation are
-authorized by completion of T2. Preserve the T1 and T2 measurement artifacts
-and their policy STOPs without using either result to tune T3 after the fact.
+Discuss T4 causal change-point onset only. No T4 detector, calibration,
+false-alarm budget, state definition, strategy contact, or confirmation is
+authorized by completion of T3. Preserve the T1–T3 measurement artifacts and
+their policy STOPs without using those results to tune T4 after the fact.
+
+The post-series HMM bookmark remains discussion-only. It becomes eligible for
+a literature-first gate only after T1–T5 conclude without promotion.

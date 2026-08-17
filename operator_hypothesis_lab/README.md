@@ -469,8 +469,27 @@ exposure-nearest controls. The
 records
 `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`. Retain the
 descriptive measurement, do not rescue the binary gate, and keep 2024+
-sealed. The next roadmap gate is discussion of T3 multi-horizon agreement; it
-is not yet opened.
+sealed.
+
+`HYP-REG-10.1` completed the third roadmap candidate. Its
+[contract](../docs/GEN5_HYP_REG_10_1_MULTI_HORIZON_AGREEMENT_CONTRACT.md)
+freezes volatility-normalized log-price displacement signs over 20, 60, and
+120 sessions, a five-state agreement/opposition taxonomy, descriptive
+short-joins events, and one `FULL_UP` fresh-entry gate on the unchanged
+SMA8/SMA14 parent. The
+[results](docs/HYP_REG_10_1_MULTI_HORIZON_AGREEMENT_RESULTS.md) show another
+clean measurement pass but a decisive policy failure: all 7/7 construction
+gates passed, while only 3/9 strategy gates passed. Median annual return fell
+from 8.95% to -0.68%, only 1/24 stocks and 1/6 years improved, Sharpe became
+negative, and actual timing ranked at the 12.5th percentile of exposure-near
+controls. The
+[evidence deck](presentations/hyp_reg_10_1_multi_horizon_agreement_evidence.pptx)
+records
+`STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+Retain the state ledger, do not rescue the policy, and keep 2024+ sealed. The
+next roadmap gate is T4 causal change-point discussion. If the full T1–T5
+series produces no promotion, a separate literature-first HMM discussion is
+bookmarked but not opened.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
