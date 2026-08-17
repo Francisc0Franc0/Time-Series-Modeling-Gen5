@@ -1,6 +1,6 @@
 # Gen5 Trend-Indicator POC Roadmap
 
-Status: `T2_COMPLETE_STOP_BEFORE_T3_DISCUSSION`
+Status: `T4_COMPLETE_STOP_BEFORE_T5_TAXONOMY_DISCUSSION`
 
 ## Where This Fits
 
@@ -143,6 +143,15 @@ intermediate-horizon time-series momentum across diversified futures, while
 also showing that persistence and longer-horizon reversal can coexist:
 <https://w4.stern.nyu.edu/facdir/lpederse/papers/TimeSeriesMomentum.pdf>.
 
+**Completed readout:** `HYP-REG-10.1` froze 20/60/120-session
+volatility-normalized direction signs, five agreement/opposition states, and
+one `FULL_UP` fresh-entry condition. All 7/7 construction gates passed, but
+the strategy passed only 3/9 gates: median annual return fell from 8.95% to
+-0.68%, only 1/24 stocks and 1/6 years improved, Sharpe was negative, and
+timing ranked at the 12.5th percentile of exposure-nearest controls. Record
+`STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`.
+Retain the measurement, do not rescue the policy, and keep 2024+ sealed.
+
 ## Candidate T4 — Causal Change-Point / Trend-Onset Detection
 
 **Priority:** fourth because it is methodologically more delicate.
@@ -167,6 +176,18 @@ force it into a persistent LOW/MEDIUM/HIGH state.
 later sequential financial-surveillance work motivate the family; a bounded
 source review is required before freezing the exact statistic. No threshold
 is frozen by this roadmap.
+
+**Completed readout:** `HYP-REG-11.1` used prior-20 volatility-standardized
+returns, three-sigma clipping, a Page allowance of 0.10, and a threshold
+selected only from seeded null paths. The null budget selected `h = 20.25` and
+specificity, falsification, causality, scale invariance, and event semantics
+passed. Sensitivity and real-panel usability did not: only 40.7% of sustained
+`+0.30` shifts were caught within 60 sessions, timely detections had a
+45-session median delay, only 2/24 primary stocks produced three alarms, and
+0/24 had an eligible fresh SMA cross. Record
+`STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`. Strategy outcomes
+were not accessed. Do not lower the boundary or extend event windows after
+seeing sparsity.
 
 ## Candidate T5 — Range Position and Breakout Persistence
 
@@ -289,8 +310,9 @@ evidence.
    the positive-slope HIGH-quality entry policy stopped.
 3. **T3 multi-horizon agreement:** completed as `HYP-REG-10.1`; measurement
    passed and the `FULL_UP` fresh-entry policy stopped.
-4. **T4 causal change point:** transition/onset detection after synthetic
-   false-alarm calibration.
+4. **T4 causal change point:** completed as `HYP-REG-11.1`; specificity passed,
+   but synthetic sensitivity and real-panel usability stopped the lane before
+   strategy contact.
 5. **T5 breakout persistence:** range escape, with taxonomy decided before
    freezing because it may be a strategy rather than a regime filter.
 
@@ -330,10 +352,12 @@ this bookmark.
 
 ## Next Gate
 
-Discuss T4 causal change-point onset only. No T4 detector, calibration,
-false-alarm budget, state definition, strategy contact, or confirmation is
-authorized by completion of T3. Preserve the T1–T3 measurement artifacts and
-their policy STOPs without using those results to tune T4 after the fact.
+Discuss T5 range position and breakout persistence only. Before freezing it,
+decide whether the primary action is a contextual `HYP-REG` measurement or a
+direct `HYP-MOM` entry family. No lookback, persistence rule, strategy,
+confirmation, ATR join, leverage, or live behavior is authorized by completion
+of T4. Preserve the T1–T4 artifacts and STOPs without using their outcomes to
+tune T5 after the fact.
 
 The post-series HMM bookmark remains discussion-only. It becomes eligible for
 a literature-first gate only after T1–T5 conclude without promotion.

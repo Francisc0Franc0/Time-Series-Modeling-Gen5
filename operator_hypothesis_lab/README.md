@@ -487,9 +487,24 @@ controls. The
 records
 `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`.
 Retain the state ledger, do not rescue the policy, and keep 2024+ sealed. The
-next roadmap gate is T4 causal change-point discussion. If the full T1–T5
-series produces no promotion, a separate literature-first HMM discussion is
-bookmarked but not opened.
+next roadmap gate was T4 causal change-point discussion.
+
+`HYP-REG-11.1` completed that fourth candidate. Its
+[contract](../docs/GEN5_HYP_REG_11_1_CAUSAL_CHANGE_POINT_CONTRACT.md) freezes
+prior-20 volatility standardization, three-sigma clipping, a Page-style
+positive CUSUM allowance of 0.10, a synthetic-only false-alarm calibration,
+and one fixed ten-session post-alarm entry-eligibility window. The
+[results](docs/HYP_REG_11_1_CAUSAL_CHANGE_POINT_RESULTS.md) document a Stage A
+STOP: null specificity, falsification, causality, scale invariance, and event
+semantics passed, but only 40.7% of strong positive shifts were detected
+within 60 sessions, the median timely delay was 45 sessions, only 2/24 stocks
+had three alarms, and no stock had an eligible fresh SMA cross. The
+[evidence deck](presentations/hyp_reg_11_1_causal_change_point_evidence.pptx)
+records `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`. Strategy
+performance and 2024+ were not accessed. T5 breakout persistence is the next
+discussion gate; its `HYP-REG` versus `HYP-MOM` taxonomy must be decided before
+freezing. If the full T1–T5 series produces no promotion, a separate
+literature-first HMM discussion remains bookmarked but not opened.
 
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research

@@ -141,6 +141,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D137` | Freeze and execute the first roadmap candidate: rolling variance ratio | current continuation | `Perfect. Let's proceed` / `Approved. Proceed` | Freeze `HYP-REG-08.1` with robust overlapping Lo–MacKinlay VR(5), VR(10) durability only, 252-return estimation, prior-252-score causal ranking, signed hysteresis, synthetic/null calibration, and a HIGH-only fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median return/exposure were zero, 1/24 assets and 1/6 years improved, HIGH did not rank parent trades, and timing was 50th percentile. Record `STOP_VARIANCE_RATIO_STRATEGY_RELATIVE_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, and keep 2024+ sealed. |
 | `D138` | Freeze and execute robust slope and fit as the second trend-roadmap candidate | current continuation | `Okay, what's next?` / `Agreed, let's proceed with your recommendations` | Freeze `HYP-REG-09.1` with 60-session Theil-Sen log-price slope, volatility-normalized strength, absolute Spearman path quality, causal prior-252 quality states, 120-session durability only, and one positive-slope HIGH-quality fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: median annual return was -0.11% versus 8.95%, 2/24 assets and 1/6 years improved, Sharpe was negative, and actual timing ranked at the 26.2nd percentile. Record `STOP_ROBUST_SLOPE_FIT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T3 discussion. |
 | `D139` | Freeze and execute multi-horizon agreement; bookmark HMM after the series | current continuation | `Proceed. And bookmark this so I don't forget later: After we finish this series of tests, if nothing makes it to promotion, let's explore Hidden Markov Models.` | Freeze `HYP-REG-10.1` with fixed 20/60/120 volatility-normalized direction signs, five agreement/opposition states, descriptive join events, and one `FULL_UP` fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: return fell to -0.68% from 8.95%, 1/24 assets and 1/6 years improved, Sharpe was negative, and timing ranked at the 12.5th percentile. Record `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T4 discussion. Separately bookmark a literature-first HMM lane only after T1–T5 if nothing promotes; no HMM implementation is opened. |
+| `D140` | Freeze causal CUSUM onset and honor the Stage A stop | current continuation | `Okay, let's move on` / `Proceed` | Freeze `HYP-REG-11.1` as a positive Page-style CUSUM on prior-20 volatility-standardized, three-sigma-clipped daily returns. Select `h` only from seeded null paths under a 20% 504-session false-alarm ceiling, reset into one non-extending ten-session event window, and permit strategy contact only after sensitivity and real-panel usability pass. The full calibration selected `h = 20.25`; five of seven Stage A gates passed, but only 40.7% of strong positive shifts were detected within 60 sessions, median timely delay was 45 sessions, only 2/24 stocks had three alarms, and 0/24 had an eligible fresh SMA cross. Record `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`; do not read strategy outcomes, rescue the boundary/window, or access 2024+. Move next to T5 taxonomy discussion; HMM remains post-series only. |
 
 ## Compact Decision Records
 
@@ -2928,6 +2929,42 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_10_1_multi_horizon_agreement_evidence.pptx`,
   and
   `runs/research_workbench/operator_hypothesis_lab/hyp_reg_10_1_multi_horizon_agreement_20260816`.
+
+### D140 — Freeze causal CUSUM onset and honor the Stage A stop
+
+- **Operator decision:** Proceed with the fourth trend-indicator candidate
+  after a bounded primary-source review of sequential monitoring.
+- **Frozen measurement:** `HYP-REG-11.1` uses today's log return divided by
+  the volatility of the prior 20 completed returns, clipped to three standard
+  deviations. A one-sided Page-style score subtracts a 0.10 reference
+  allowance. The smallest threshold satisfying a 20% alarm ceiling in each
+  seeded 504-session Gaussian, Student-t5, and volatility-step null is used.
+  An alarm resets the score and creates one non-extending ten-session event
+  window.
+- **Synthetic readout:** Calibration selected `h = 20.25`. Null alarm
+  probabilities were 14.4%, 16.0%, and 19.3%; negative-drift and isolated-jump
+  falsification passed. A sustained `+0.30` standardized shift was detected
+  within 60 sessions on only 40.7% of paths, with 45-session median delay among
+  timely detections. This failed the frozen 70% and 40-session sensitivity
+  requirements.
+- **Real-panel readout:** Append causality, price-scale invariance, alarm
+  resets, and eligibility-window semantics were exact. Only AMD and TSLA
+  produced at least three alarms over six years, median eligibility occupied
+  0.3% of sessions, and no primary stock had a fresh SMA8/SMA14 cross inside
+  an eligible window.
+- **Decision boundary:** Record
+  `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`. Stage A passed
+  5/7 gates. Do not read strategy returns, lower the boundary, extend the
+  event window, change the false-alarm bargain, stack ATR%, or inspect 2024+.
+- **Next gate:** Discuss T5 range position and breakout persistence and decide
+  whether it belongs in `HYP-REG` as context or `HYP-MOM` as direct entry
+  before freezing anything. HMM remains a post-series literature-first
+  bookmark only.
+- **Artifacts:** `docs/GEN5_HYP_REG_11_1_CAUSAL_CHANGE_POINT_CONTRACT.md`,
+  `operator_hypothesis_lab/docs/HYP_REG_11_1_CAUSAL_CHANGE_POINT_RESULTS.md`,
+  `operator_hypothesis_lab/presentations/hyp_reg_11_1_causal_change_point_evidence.pptx`,
+  and
+  `runs/research_workbench/operator_hypothesis_lab/hyp_reg_11_1_causal_change_point_20260816`.
 
 ## Related Artifacts
 
