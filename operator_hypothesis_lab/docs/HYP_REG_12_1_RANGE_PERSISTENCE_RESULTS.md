@@ -101,6 +101,13 @@ identifiability and state-stability cautions, a minimal frozen question, and a
 fresh decision about whether an HMM is a descriptive state model or a trading
 authority. No HMM implementation is authorized by this result alone.
 
+This closeout is scoped to the common validation design. The SMA8/SMA14 parent
+was one controlled test of whether the candidate measurement improved a
+specific causal decision on the tested daily or 30-minute surface. Failure
+does not establish that range persistence or any other T1-T5 concept is
+categorically useless. Reuse would require a genuinely new, predeclared
+question and validation design rather than a reactive rescue of this result.
+
 ## Evidence Packet
 
 `runs/research_workbench/operator_hypothesis_lab/hyp_reg_12_1_range_persistence_20260817`

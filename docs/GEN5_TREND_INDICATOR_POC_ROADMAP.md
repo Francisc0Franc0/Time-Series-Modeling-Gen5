@@ -1,6 +1,6 @@
 # Gen5 Trend-Indicator POC Roadmap
 
-Status: `T5_COMPLETE_SERIES_ENDED_HMM_LITERATURE_DISCUSSION_NEXT`
+Status: `SERIES_CLOSED_WITH_VALIDATION_SCOPE_CAVEAT_HMM_DISCUSSION_OPEN`
 
 ## Where This Fits
 
@@ -350,6 +350,17 @@ claim that later candidates have lower economic potential.
 
 ## Post-Series Literature-Grounded HMM Bookmark
 
+### Closeout interpretation
+
+The common SMA8/SMA14 validation parent was one intentionally stable way to
+ask whether each candidate improved a specific trading decision. A failed
+overlay is evidence against that candidate-policy-parent combination on the
+tested daily or 30-minute surface. It is not proof that the underlying
+measurement is useless for every strategy, horizon, asset, or research
+purpose. The measurements and their construction audits remain available as
+descriptive research artifacts, but they must not be reactively recycled into
+new policies merely to rescue this series.
+
 After T1–T5 are complete, if none earns promotion, discuss Hidden Markov
 Models as a distinct lane. The preferred sequence is literature-first:
 inventory operator-provided PDFs and primary sources, decide whether the lane
@@ -362,10 +373,17 @@ State labels must not be assigned by whichever state had the best return, and
 no HMM strategy, data query, state count, or confirmation access is opened by
 this bookmark.
 
+The literature discussion is now open in
+[GEN5_HMM_LITERATURE_DISCUSSION_KICKOFF.md](GEN5_HMM_LITERATURE_DISCUSSION_KICKOFF.md).
+It recommends Rabiner and Zucchini for foundations, Hamilton and
+Ang--Timmermann for financial regime switching, and Pohle et al. for
+state-count discipline. It opens theory and source review only.
+
 ## Next Gate
 
-The T1-T5 series is complete without a promoted trend entry filter. Discuss
-the bookmarked HMM concept next as a new literature-first gate. Begin with
+The T1-T5 series is closed without a promoted trend entry filter, subject to
+the validation-scope caveat above. Discuss the HMM concept next as a new
+literature-first gate. Begin with
 source inventory, beginner-accessible theory, identifiability and state-label
 stability, causal filtering versus smoothed hindsight states, and the boundary
 between a descriptive regime model and trading authority. No HMM state count,

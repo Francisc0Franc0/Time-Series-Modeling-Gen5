@@ -143,6 +143,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D139` | Freeze and execute multi-horizon agreement; bookmark HMM after the series | current continuation | `Proceed. And bookmark this so I don't forget later: After we finish this series of tests, if nothing makes it to promotion, let's explore Hidden Markov Models.` | Freeze `HYP-REG-10.1` with fixed 20/60/120 volatility-normalized direction signs, five agreement/opposition states, descriptive join events, and one `FULL_UP` fresh-entry gate on the unchanged SMA8/SMA14 parent. Stage A passed 7/7, but the strategy passed only 3/9: return fell to -0.68% from 8.95%, 1/24 assets and 1/6 years improved, Sharpe was negative, and timing ranked at the 12.5th percentile. Record `STOP_MULTI_HORIZON_AGREEMENT_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue, keep 2024+ sealed, and stop before T4 discussion. Separately bookmark a literature-first HMM lane only after T1–T5 if nothing promotes; no HMM implementation is opened. |
 | `D140` | Freeze causal CUSUM onset and honor the Stage A stop | current continuation | `Okay, let's move on` / `Proceed` | Freeze `HYP-REG-11.1` as a positive Page-style CUSUM on prior-20 volatility-standardized, three-sigma-clipped daily returns. Select `h` only from seeded null paths under a 20% 504-session false-alarm ceiling, reset into one non-extending ten-session event window, and permit strategy contact only after sensitivity and real-panel usability pass. The full calibration selected `h = 20.25`; five of seven Stage A gates passed, but only 40.7% of strong positive shifts were detected within 60 sessions, median timely delay was 45 sessions, only 2/24 stocks had three alarms, and 0/24 had an eligible fresh SMA cross. Record `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`; do not read strategy outcomes, rescue the boundary/window, or access 2024+. Move next to T5 taxonomy discussion; HMM remains post-series only. |
 | `D141` | Classify T5 as context, execute upper-range persistence, and close the trend series | current continuation | `Okay, proceed` / `Approved` | Keep T5 in `HYP-REG` rather than turning it into a direct breakout strategy. Freeze `HYP-REG-12.1` with a 63-session prior-close range, uncapped range position, three-of-five upper-quartile persistence, a symmetric lower construction state, and a separate ten-session fixed-boundary breakout ledger. Stage A passed 7/7 with 24/24 usable stocks, but the entry-only overlay passed 3/9: median annual return fell from 8.95% to 0.00%, only 1/24 assets and 1/6 years improved, Sharpe became negative, and timing ranked at the 61.3rd percentile. Record `STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue or direct-breakout reinterpretation, and keep 2024+ sealed. T1-T5 are complete without promotion, so the bookmarked literature-first HMM discussion becomes the next gate; implementation remains unopened. |
+| `D142` | Close the trend series with a scoped inference and open HMM literature discussion | current continuation | `Yes, let's close this chapter, but also with the understanding that perhaps ... the 8/14 system is only one way of validating these different things we tried.` | State explicitly that the common SMA8/SMA14 overlays reject the tested candidate-policy-parent combinations on their daily or 30-minute surfaces, not the concepts categorically. Preserve the measurements without reactive rescue. Open a distinct literature-grounded HMM discussion using Rabiner, Zucchini, Hamilton, Ang--Timmermann, and Pohle et al.; recommend high or xhigh reasoning and a descriptive, causal-filtering-first POC question. Do not freeze an HMM state count, features, data window, package, strategy, confirmation, or implementation. |
 
 ## Compact Decision Records
 
@@ -3001,6 +3002,33 @@ tasks by the branch name above, the phrase, or the decision date.
   `operator_hypothesis_lab/presentations/hyp_reg_12_1_range_persistence_evidence.pptx`,
   and
   `runs/research_workbench/operator_hypothesis_lab/hyp_reg_12_1_range_persistence_20260817`.
+
+### D142 — Close the trend series with a scoped inference and open HMM literature discussion
+
+- **Operator clarification:** The SMA8/SMA14 system is one controlled
+  validation surface. A failed daily or 30-minute overlay does not establish
+  that the underlying indicator or state concept is categorically invalid.
+- **Closeout boundary:** Interpret the series as evidence against the frozen
+  candidate-policy-parent combinations. Retain valid construction artifacts,
+  but require a genuinely new predeclared question before any concept is
+  reused; do not rescue the stopped lanes reactively.
+- **New discussion lane:** Open source review and beginner-accessible theory
+  for Hidden Markov Models as a distinct literature-grounded regime-model
+  question. Recommend high or xhigh reasoning for the synthesis.
+- **Source hierarchy:** Use Rabiner (1989) and Zucchini, MacDonald, and
+  Langrock (2016) for HMM mechanics; Hamilton (1989) and Ang and Timmermann
+  (2012) for financial regime switching; Pohle et al. (2017) for state-count
+  discipline; and Nystrup et al. or Ang--Bekaert only as applied examples.
+- **Preliminary recommendation:** Discuss a descriptive finite-state daily HMM
+  before any strategy. Require causal filtered probabilities, quarantine
+  smoothed/Viterbi hindsight, compare held-out likelihood with a one-state
+  baseline, and audit emission separation, occupancy, dwell, transition count,
+  residuals, and state identity across refits.
+- **Stop state:** `DISCUSSION_OPEN_IMPLEMENTATION_NOT_AUTHORIZED`. No package,
+  state count, feature set, universe, provider query, training window,
+  strategy contact, ATR join, leverage, allocation, live behavior, or
+  confirmation access is opened.
+- **Artifact:** `docs/GEN5_HMM_LITERATURE_DISCUSSION_KICKOFF.md`.
 
 ## Related Artifacts
 
