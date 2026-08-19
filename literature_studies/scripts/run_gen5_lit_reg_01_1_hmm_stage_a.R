@@ -30,8 +30,26 @@ visual_dir <- file.path(run_dir, "visuals")
 dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
 if (!dir.exists(visual_dir)) stop("Could not create LIT-REG-01.1 Stage A output directory.", call. = FALSE)
 
-message("LIT-REG-01.1 Stage A: running frozen engine and synthetic gates.")
-result <- g5_reg011_stage_a()
+workers <- as.integer(env_or("GEN5_LIT_REG_011_STAGE_A_WORKERS", "4"))
+if (!is.finite(workers) || workers < 1L) stop("Stage A worker count must be a positive integer.", call. = FALSE)
+case_map <- lapply
+cluster <- NULL
+if (workers > 1L) {
+  cluster <- parallel::makePSOCKcluster(workers)
+  on.exit(parallel::stopCluster(cluster), add = TRUE)
+  engine_path <- file.path(repo_root, "literature_studies", "R", "gen5_lit_reg_01_1_hmm_engine.R")
+  poc_path <- file.path(repo_root, "literature_studies", "R", "gen5_lit_reg_01_1_hmm_poc.R")
+  parallel::clusterExport(cluster, c("engine_path", "poc_path"), envir = environment())
+  parallel::clusterEvalQ(cluster, {
+    source(engine_path)
+    source(poc_path)
+    NULL
+  })
+  case_map <- function(x, fun) parallel::parLapply(cluster, x, fun)
+}
+
+message("LIT-REG-01.1 Stage A: running frozen engine and synthetic gates with ", workers, " worker(s).")
+result <- g5_reg011_stage_a(case_map = case_map)
 write_csv(result$gates, file.path(run_dir, "stage_a_gates.csv"))
 write_csv(result$simulations, file.path(run_dir, "synthetic_recovery.csv"))
 write_csv(result$replay_diagnostics, file.path(run_dir, "deterministic_replay_diagnostics.csv"))
@@ -62,7 +80,7 @@ write_csv(fixture_ledger, file.path(run_dir, "synthetic_fixture_ledger.csv"))
 run_spec <- data.frame(
   field = c(
     "literature_id", "schema_version", "fixture_version", "run_id", "run_date",
-    "sequence_length", "strong_seed_range", "weak_seed_range", "stage_a_verdict"
+    "sequence_length", "strong_seed_range", "weak_seed_range", "worker_count", "stage_a_verdict"
   ),
   value = c(
     result$contract$literature_id,
@@ -73,6 +91,7 @@ run_spec <- data.frame(
     as.character(result$fixtures$sequence_length),
     paste(range(result$fixtures$strong_seeds), collapse = ":"),
     paste(range(result$fixtures$weak_seeds), collapse = ":"),
+    as.character(workers),
     result$verdict
   ),
   stringsAsFactors = FALSE

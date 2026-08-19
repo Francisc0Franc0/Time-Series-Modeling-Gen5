@@ -218,7 +218,8 @@ g5_reg011_fit_synthetic_case <- function(parameters, seed, fixtures, contract) {
 g5_reg011_stage_a <- function(
   contract = g5_reg011_contract(),
   fixtures = g5_reg011_synthetic_fixtures(),
-  simulation_limit = NULL
+  simulation_limit = NULL,
+  case_map = lapply
 ) {
   contract <- g5_reg011_validate_contract(contract)
   strong_seeds <- fixtures$strong_seeds
@@ -300,11 +301,11 @@ g5_reg011_stage_a <- function(
   append_difference <- max(abs(prefix_filtered - full_filtered[seq_len(nrow(prefix_filtered)), ]))
   smoothing_revision <- max(abs(repeated_a$selected$filtered - repeated_a$selected$smoothed))
 
-  strong <- do.call(rbind, lapply(strong_seeds, function(seed) {
+  strong <- do.call(rbind, case_map(strong_seeds, function(seed) {
     g5_reg011_fit_synthetic_case(fixtures$strong, seed, fixtures, contract)
   }))
   strong$fixture <- "STRONG"
-  weak <- do.call(rbind, lapply(weak_seeds, function(seed) {
+  weak <- do.call(rbind, case_map(weak_seeds, function(seed) {
     g5_reg011_fit_synthetic_case(fixtures$weak, seed, fixtures, contract)
   }))
   weak$fixture <- "WEAK"
