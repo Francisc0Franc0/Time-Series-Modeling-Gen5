@@ -198,6 +198,11 @@ g5_hmm_weighted_covariance <- function(x, weights, mean, eigen_floor = 1e-4) {
   g5_hmm_floor_covariance(sigma, eigen_floor = eigen_floor)
 }
 
+g5_hmm_bind_state_means <- function(state_count, mean_function) {
+  means <- do.call(rbind, lapply(seq_len(state_count), mean_function))
+  matrix(means, nrow = state_count)
+}
+
 g5_hmm_kmeans_initialization <- function(
   x,
   state_count,
@@ -210,9 +215,9 @@ g5_hmm_kmeans_initialization <- function(
   set.seed(as.integer(seed))
   clustered <- stats::kmeans(x, centers = state_count, iter.max = 100L, nstart = 1L)
   membership <- clustered$cluster
-  means <- t(vapply(seq_len(state_count), function(k) {
+  means <- g5_hmm_bind_state_means(state_count, function(k) {
     colMeans(x[membership == k, , drop = FALSE])
-  }, numeric(ncol(x))))
+  })
   covariances <- lapply(seq_len(state_count), function(k) {
     rows <- x[membership == k, , drop = FALSE]
     if (nrow(rows) <= ncol(x)) rows <- x
@@ -283,9 +288,9 @@ g5_hmm_fit_gmm_once <- function(
     previous <- log_likelihood
     mass <- colSums(responsibilities)
     weights <- g5_hmm_normalize(mass / sum(mass), floor = probability_floor)
-    means <- t(vapply(seq_len(state_count), function(k) {
+    means <- g5_hmm_bind_state_means(state_count, function(k) {
       colSums(x * responsibilities[, k]) / mass[[k]]
-    }, numeric(ncol(x))))
+    })
     covariances <- lapply(seq_len(state_count), function(k) {
       g5_hmm_weighted_covariance(x, responsibilities[, k], means[k, ], eigen_floor)
     })
@@ -356,9 +361,9 @@ g5_hmm_fit_hmm_once <- function(
     previous <- fb$log_likelihood
     gamma <- fb$smoothed
     mass <- colSums(gamma)
-    means <- t(vapply(seq_len(state_count), function(k) {
+    means <- g5_hmm_bind_state_means(state_count, function(k) {
       colSums(x * gamma[, k]) / mass[[k]]
-    }, numeric(ncol(x))))
+    })
     covariances <- lapply(seq_len(state_count), function(k) {
       g5_hmm_weighted_covariance(x, gamma[, k], means[k, ], eigen_floor)
     })
@@ -389,6 +394,7 @@ g5_hmm_fit_hmm_once <- function(
 }
 
 g5_hmm_order_fit <- function(fit, observation_index = 2L) {
+  observation_index <- min(as.integer(observation_index), ncol(fit$means))
   order_index <- order(fit$means[, observation_index], seq_len(nrow(fit$means)))
   fit$means <- fit$means[order_index, , drop = FALSE]
   fit$covariances <- fit$covariances[order_index]
