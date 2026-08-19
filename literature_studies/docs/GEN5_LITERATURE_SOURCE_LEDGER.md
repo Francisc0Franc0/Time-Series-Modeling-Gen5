@@ -1,6 +1,6 @@
 # Gen5 Literature Source Ledger
 
-Status: `LITERATURE_INVENTORIED_THROUGH_LIT_MOM_02_1`
+Status: `LITERATURE_INVENTORIED_THROUGH_LIT_REG_01_1`
 
 ## Purpose
 
@@ -106,6 +106,26 @@ Additional claims used by `LIT-MOM-02.1`:
 | FSTX is reported as the best result after testing multiple futures, with 13% APR and 1.4 Sharpe from July 16, 2004 through May 17, 2012. | 156 | 174 | Record the headline as selected in-sample source context, not Gen5 evidence or an exact replication. |
 | The source attributes possible continuation to clustered stops triggered at the open and to overnight information. | 157 | 175 | Use same-day signed continuation as the estimand and randomize the signal direction as a falsification control. |
 | The printed return line is `positions.*(op-cl)./op`, which reverses the P&L sign implied by the prose, position labels, and rising equity figure. | 156-157 | 174-175 | Preserve the literal sign as an audit diagnostic and implement the narrative-consistent `position*(close-open)/open` direction. |
+
+## External HMM and Regime-Switching Sources
+
+These sources open `LIT-REG-01.1`. They were not part of the operator's
+original Chan/Halls-Moore PDF folder, so the source boundary remains explicit.
+
+| Source | Grounded section or pages | LIT-REG-01.1 use | Not imported |
+|---|---|---|---|
+| Rabiner (1989), *A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition*, Proceedings of the IEEE 77(2), DOI `10.1109/5.18626` | Published pp. 257-261: model elements and three basic problems; pp. 261-267: forward, Viterbi, and Baum-Welch solutions | Define emissions, transition probabilities, scaled forward filtering, retrospective decoding, EM estimation, and synthetic algorithm checks | Speech topology, speech features, or application-specific state meaning |
+| Zucchini, MacDonald, and Langrock (2016), *Hidden Markov Models for Time Series: An Introduction Using R*, 2nd ed. | Chapters titled “Hidden Markov models: definition and properties,” “Estimation,” “Forecasting, decoding and state prediction,” “Model selection and checking,” and “Models for financial series” | Separate filtering, prediction, decoding, model checking, state-count judgment, and R implementation concerns | Any package dependency or a preselected financial feature/state recipe |
+| Hamilton (1989), *A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle*, Econometrica 57(2) | pp. 357-384 | Ground probabilistic inference and forecasting when time-series parameters depend on an unobserved Markov state | GNP variables, autoregressive order, or recession labels |
+| Ang and Timmermann (2012), *Regime Changes and Financial Markets*, Annual Review of Financial Economics 4 | pp. 313-337 | Treat regimes as potentially differing in means, volatilities, autocorrelations, and cross-covariances; avoid reducing regime to direction alone | Portfolio rules, state count, or evidence that a regime model is tradable |
+| Pohle, Langrock, van Beest, and Schmidt (2017), *Selecting the Number of States in Hidden Markov Models*, DOI `10.1007/s13253-017-0283-8` | Sections 2-4: HMM basics, simulation pitfalls, and pragmatic order selection | Keep H2 primary, make H3 diagnostic, and require occupancy, recurrence, semantic distinction, stability, and held-out value beyond information criteria | Animal-movement emissions or biological labels |
+| Visser and Speekenbrink (2010), *depmixS4: An R Package for Hidden Markov Models*, Journal of Statistical Software 36(7) | pp. 1-21 | Implementation reference for EM, multivariate emissions, constraints, and posterior probabilities | Automatic authorization to add `depmixS4` or any dependency |
+| Nystrup, Madsen, and Lindstrom (2017), *Dynamic Portfolio Optimization Across Hidden Market Regimes*, Quantitative Finance 18(1) | pp. 83-95 | Applied example of delayed causal decisions and transaction-aware regime use after state modeling | Model-predictive control, allocation, strategy switching, or claimed performance |
+
+Project-designed elements that must not be attributed to the sources include
+SPY, log return plus log normalized true range, the B0/B1/H2/H3 registry, the
+2016-2023 folds, 20 deterministic starts, covariance floor, block bootstrap,
+temporal-order controls, every quantitative gate, and the 2024+ seal.
 
 Implementation clarification:
 

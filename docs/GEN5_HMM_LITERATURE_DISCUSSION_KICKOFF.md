@@ -239,3 +239,12 @@ feature set, provider query, training window, strategy, allocation rule,
 leverage policy, live behavior, or confirmation access is authorized by this
 document. The next gate is operator discussion of the source hierarchy and
 the preliminary descriptive POC question.
+
+The first concrete proposal is documented in
+[GEN5_LIT_REG_01_1_HMM_POC_DESIGN_DISCUSSION.md](GEN5_LIT_REG_01_1_HMM_POC_DESIGN_DISCUSSION.md).
+It recommends a two-observation SPY daily HMM, a static-mixture baseline, four
+expanding development folds, causal filtered probabilities, and no strategy
+contact. The operator approved those principal choices. The exact contract is
+now frozen at
+[GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md](../literature_studies/docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md),
+with implementation still unopened.

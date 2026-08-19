@@ -144,6 +144,8 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D140` | Freeze causal CUSUM onset and honor the Stage A stop | current continuation | `Okay, let's move on` / `Proceed` | Freeze `HYP-REG-11.1` as a positive Page-style CUSUM on prior-20 volatility-standardized, three-sigma-clipped daily returns. Select `h` only from seeded null paths under a 20% 504-session false-alarm ceiling, reset into one non-extending ten-session event window, and permit strategy contact only after sensitivity and real-panel usability pass. The full calibration selected `h = 20.25`; five of seven Stage A gates passed, but only 40.7% of strong positive shifts were detected within 60 sessions, median timely delay was 45 sessions, only 2/24 stocks had three alarms, and 0/24 had an eligible fresh SMA cross. Record `STOP_CAUSAL_CHANGE_POINT_STAGE_A_FAILED_STRATEGY_NOT_RUN`; do not read strategy outcomes, rescue the boundary/window, or access 2024+. Move next to T5 taxonomy discussion; HMM remains post-series only. |
 | `D141` | Classify T5 as context, execute upper-range persistence, and close the trend series | current continuation | `Okay, proceed` / `Approved` | Keep T5 in `HYP-REG` rather than turning it into a direct breakout strategy. Freeze `HYP-REG-12.1` with a 63-session prior-close range, uncapped range position, three-of-five upper-quartile persistence, a symmetric lower construction state, and a separate ten-session fixed-boundary breakout ledger. Stage A passed 7/7 with 24/24 usable stocks, but the entry-only overlay passed 3/9: median annual return fell from 8.95% to 0.00%, only 1/24 assets and 1/6 years improved, Sharpe became negative, and timing ranked at the 61.3rd percentile. Record `STOP_RANGE_PERSISTENCE_STRATEGY_GATES_FAILED_CONFIRMATION_NOT_RUN`; retain the measurement, prohibit rescue or direct-breakout reinterpretation, and keep 2024+ sealed. T1-T5 are complete without promotion, so the bookmarked literature-first HMM discussion becomes the next gate; implementation remains unopened. |
 | `D142` | Close the trend series with a scoped inference and open HMM literature discussion | current continuation | `Yes, let's close this chapter, but also with the understanding that perhaps ... the 8/14 system is only one way of validating these different things we tried.` | State explicitly that the common SMA8/SMA14 overlays reject the tested candidate-policy-parent combinations on their daily or 30-minute surfaces, not the concepts categorically. Preserve the measurements without reactive rescue. Open a distinct literature-grounded HMM discussion using Rabiner, Zucchini, Hamilton, Ang--Timmermann, and Pohle et al.; recommend high or xhigh reasoning and a descriptive, causal-filtering-first POC question. Do not freeze an HMM state count, features, data window, package, strategy, confirmation, or implementation. |
+| `D143` | Propose the minimal literature-grounded HMM POC | current continuation | `Okay, let's proceed with ironing out what an HMM POC would look like for us` | Propose, but do not freeze, `LIT-REG-01.1`: one SPY daily context timeline using TRAIN-standardized log return and log normalized true range; one-state Gaussian and static two-component mixture baselines; a two-state Gaussian HMM primary; a three-state diagnostic challenger; expanding 2020-2023 development folds; causal filtered probabilities; volatility-ordered labels; synthetic, optimizer, held-out log-score, temporal-value, occupancy/transition, and refit-stability evidence. Keep 2024+ sealed and stop before package choice, exact gates, strategy contact, or implementation. |
+| `D144` | Approve the HMM design and freeze exact LIT-REG-01.1 gates | current continuation | `Approved` | Freeze `LIT-REG-01.1` under Literature Studies with SPY, `[log return, log normalized true range]`, B0/B1/H2/H3, expanding 2020-2023 OOS development folds, causal filtering, 20 deterministic starts, eight engine/synthetic gates, nine H2 gates, and a separate H3 complexity gate. Require incremental held-out log score beyond the static mixture in at least three years, a positive block-bootstrap lower bound, and 90th-percentile temporal-order specificity. Keep 2024+ sealed and stop before implementation, packages, strategy contact, or performance calculations. |
 
 ## Compact Decision Records
 
@@ -3029,6 +3031,71 @@ tasks by the branch name above, the phrase, or the decision date.
   strategy contact, ATR join, leverage, allocation, live behavior, or
   confirmation access is opened.
 - **Artifact:** `docs/GEN5_HMM_LITERATURE_DISCUSSION_KICKOFF.md`.
+
+### D143 — Propose the minimal literature-grounded HMM POC
+
+- **Question:** What is the smallest serious HMM exercise that can distinguish
+  temporal regime information from a static multi-component description of
+  fat-tailed daily observations?
+- **Proposed lane:** `LIT-REG-01.1` under `literature_studies/`, because the
+  primary mechanism and safeguards come from the new literature ledger rather
+  than the prior operator-origin trend-indicator series.
+- **Proposed data:** One SPY adjusted-daily context series. Each completed bar
+  emits TRAIN-standardized daily log return and log normalized true range.
+  Do not use rolling ATR% in the primary model because overlapping smoothing
+  can manufacture apparent persistence.
+- **Proposed comparison:** B0 one-state bivariate Gaussian; B1 static
+  two-component Gaussian mixture; H2 two-state Gaussian HMM primary; H3
+  three-state diagnostic challenger only. B1 is essential because H2 must
+  demonstrate time-order value rather than merely approximate heavy tails.
+- **Proposed validation:** Expanding TRAIN folds with 2020, 2021, 2022, and
+  2023 as separate OOS development years; fixed parameters within each OOS
+  year; causal forward filtering; next-observation sequential log scores;
+  moving-block uncertainty; state occupancy, transition/dwell, emission
+  separation, local-optimum, label-identity, refit-stability, and synthetic
+  recovery audits.
+- **State semantics:** Order states by TRAIN expected log normalized range and
+  use `CALMER`/`TURBULENT`, not return-selected `bull`/`bear` names. Report
+  return means without granting them naming or trading authority.
+- **Alternatives:** A univariate-return HMM is the cleaner textbook exercise
+  but may mostly separate tails. A synchronized cross-sectional market HMM is
+  more systemically expressive but changes too many dimensions for the first
+  POC. Defer asset-specific HMM atlases.
+- **Stop state:** `PROPOSED_NOT_FROZEN_IMPLEMENTATION_NOT_AUTHORIZED`. Keep
+  2024+ sealed; no dependency, exact gate, data query, strategy, PnL, ATR join,
+  allocation, leverage, live behavior, or implementation is opened.
+- **Artifact:** `docs/GEN5_LIT_REG_01_1_HMM_POC_DESIGN_DISCUSSION.md`.
+
+### D144 — Approve the HMM design and freeze exact LIT-REG-01.1 gates
+
+- **Operator decision:** Approve the six principal design choices: the
+  `LIT-REG-01.1` literature-study placement, SPY context, daily log return plus
+  log normalized true range, B0/B1/H2/H3 comparison, four expanding OOS
+  development years, and continued 2024+ seal.
+- **Fitting freeze:** Use full-covariance bivariate Gaussian emissions, 20
+  deterministic starts, TRAIN-only standardization, deterministic state
+  ordering, scaled/log-space forward recursion, covariance and probability
+  floors, and TRAIN likelihood alone to select a converged fit. Do not add a
+  package dependency.
+- **Stage A:** Require all eight engine and synthetic gates, including
+  brute-force likelihood agreement, deterministic replay, append causality,
+  strong-state classification/transition recovery, weak-state uncertainty,
+  duration recovery, and zero invalid fits.
+- **Stage B:** Require all nine H2 gates. H2 must beat the static B1 mixture in
+  aggregate and at least three of four OOS years, have a strictly positive
+  95% moving-block lower bound, rank at or above the 90th percentile of
+  whole-block temporal-order controls, and pass occupancy, recurrence,
+  transition, emission, persistence, and adjacent-refit stability gates.
+- **Complexity boundary:** H3 remains diagnostic and is retained only if every
+  state is populated/recurrent/stable and it incrementally beats H2 under the
+  same held-out uncertainty and temporal-order logic. AIC, BIC, or TRAIN
+  likelihood alone is insufficient.
+- **Stop state:** `FROZEN_IMPLEMENTATION_NOT_OPEN`. No engine, test, data run,
+  deck, strategy, PnL, ATR join, 2024+ access, allocation, leverage, or live
+  behavior is authorized without the next explicit approval.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md` and
+  `literature_studies/registries/gen5_lit_reg_01_1_hmm_model_registry.csv`.
 
 ## Related Artifacts
 
