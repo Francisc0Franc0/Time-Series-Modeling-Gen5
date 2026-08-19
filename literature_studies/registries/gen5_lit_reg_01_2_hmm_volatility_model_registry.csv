@@ -1,0 +1,5 @@
+model_id,model_name,observation,temporal_memory,role,estimator
+B0,One-state Gaussian,TRAIN-standardized log normalized true range,no,No-regime density baseline,closed form
+B1,Static two-component Gaussian mixture,TRAIN-standardized log normalized true range,no,Static-clustering baseline,Gen5 deterministic multistart EM
+B2,Gaussian AR(1),TRAIN-standardized log normalized true range,continuous,Continuous-persistence baseline,TRAIN OLS with frozen phi clamp
+H2,Two-state Gaussian HMM,TRAIN-standardized log normalized true range,discrete Markov,Primary candidate,HiddenMarkov 1.8-14 with Gen5 causal cross-check

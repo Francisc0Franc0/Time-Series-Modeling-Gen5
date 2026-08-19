@@ -147,6 +147,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D143` | Propose the minimal literature-grounded HMM POC | current continuation | `Okay, let's proceed with ironing out what an HMM POC would look like for us` | Propose, but do not freeze, `LIT-REG-01.1`: one SPY daily context timeline using TRAIN-standardized log return and log normalized true range; one-state Gaussian and static two-component mixture baselines; a two-state Gaussian HMM primary; a three-state diagnostic challenger; expanding 2020-2023 development folds; causal filtered probabilities; volatility-ordered labels; synthetic, optimizer, held-out log-score, temporal-value, occupancy/transition, and refit-stability evidence. Keep 2024+ sealed and stop before package choice, exact gates, strategy contact, or implementation. |
 | `D144` | Approve the HMM design and freeze exact LIT-REG-01.1 gates | current continuation | `Approved` | Freeze `LIT-REG-01.1` under Literature Studies with SPY, `[log return, log normalized true range]`, B0/B1/H2/H3, expanding 2020-2023 OOS development folds, causal filtering, 20 deterministic starts, eight engine/synthetic gates, nine H2 gates, and a separate H3 complexity gate. Require incremental held-out log score beyond the static mixture in at least three years, a positive block-bootstrap lower bound, and 90th-percentile temporal-order specificity. Keep 2024+ sealed and stop before implementation, packages, strategy contact, or performance calculations. |
 | `D145` | Execute HMM Stage A and honor the numerical-reliability STOP | current continuation | `Proceed` | Implement and test the dependency-free Gaussian/GMM/HMM engine, commit the frozen synthetic fixtures before execution, and run all eight Stage A gates. A1-A7 passed, including exact likelihood/replay/append invariants, 99.9% median strong-state classification, transition and duration recovery, and calibrated weak-state uncertainty. A8 failed with 77/100 valid fits: 49/50 strong and 28/50 weak, including 10 likelihood-decrease and 13 maximum-iteration codes. Record `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; do not query SPY, read Stage B/H3 evidence, relax A8, alter weak fixtures, or claim a market/strategy result. |
+| `D146` | Split HMM volatility and direction tracks; freeze the volatility-only variant | current continuation | `Good idea. Perhaps we can bookmark two different tracks ...` / `Okay, let's proceed with your recommendation` / `Approved` | Preserve stopped `LIT-REG-01.1`. Bookmark `LIT-REG-02.1` as a later directional-state lane without frozen mechanics. Freeze and approve `LIT-REG-01.2` as the volatility-first lane using only log single-session normalized true range, a two-state Gaussian HMM, explicit no-regime abstention, B0/B1/AR(1) baselines, causal next-session density and high-range forecasts, SPY then conditional four-asset replication, and a 2024+ seal. Approve `HiddenMarkov` 1.8-14 as the independent numerical reference after rejecting archived `depmixS4` and disproportionate `hmmTMB`; no strategy or directional result is opened. |
 
 ## Compact Decision Records
 
@@ -3128,6 +3129,36 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/presentations/gen5_lit_reg_01_1_hmm_stage_a_evidence.pptx`,
   and
   `runs/research_workbench/literature_studies/lit_reg_01_1_hmm_stage_a_20260819`.
+
+### D146 — Split HMM volatility and direction tracks; freeze LIT-REG-01.2
+
+- **Reflection:** `01.1` was an engine-qualification STOP before market data,
+  not a financial HMM null. Clear synthetic states were recovered well; weak
+  identification exposed numerical and statistical ambiguity.
+- **Track split:** Reserve `LIT-REG-01.x` for volatility-state inference and
+  `LIT-REG-02.x` for a later swing-horizon directional-state question. Do not
+  combine the dimensions before each earns independent validation.
+- **Directional bookmark:** `LIT-REG-02.1` has no frozen cadence, features,
+  target, model, data, or gates. Up/down labels must be supported by stable
+  TRAIN-defined conditional drift and cannot be imposed on arbitrary states.
+- **Frozen volatility question:** Ask whether a two-state univariate Gaussian
+  HMM on TRAIN-standardized log single-session normalized true range improves
+  causal next-session density and TRAIN-threshold high-range forecasts beyond
+  a one-state Gaussian, static two-component mixture, and Gaussian AR(1).
+- **Numerical correction:** Use CRAN `HiddenMarkov` 1.8-14 as an independently
+  maintained estimation authority and the explicit Gen5 recursion as a
+  likelihood/filter cross-check. Allow a valid weak fit to abstain as
+  `TWO_STATES_NOT_IDENTIFIABLE_USE_BASELINE`; numerical errors remain failures.
+- **Package decision:** The operator explicitly approved `HiddenMarkov` after
+  the audit found `depmixS4` archived on 2026-07-04 and `hmmTMB` unnecessarily
+  dependency-heavy for this minimal univariate POC.
+- **Evidence sequence:** All eight reference/synthetic gates must pass before
+  market data. All nine SPY gates must pass before unchanged QQQ/IWM/EFA/TLT
+  replication. Keep 2024+ and every strategy/performance surface sealed.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_REG_01_2_HMM_VOLATILITY_STATE_POC_CONTRACT.md`
+  and
+  `literature_studies/registries/gen5_lit_reg_01_2_hmm_volatility_model_registry.csv`.
 
 ## Related Artifacts
 

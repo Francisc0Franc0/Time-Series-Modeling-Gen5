@@ -62,6 +62,24 @@ renames an earlier outcome.
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
 | `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `FROZEN_PLAN_EXECUTION_NOT_OPEN`; shared intraday roadmap only |
 | `LIT-REG-01.1` | Two-State Hidden Markov Market Regime | none | `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; Stage A passed 7/8 but only 77/100 synthetic fits were valid; SPY not read |
+| `LIT-REG-01.2` | Two-State HMM Volatility-State Forecast | none | `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`; volatility-only, formal abstention, independent reference estimator |
+| `LIT-REG-02.1` | HMM Directional-State Forecast | none | `BOOKMARKED_DISCUSSION_NOT_FROZEN`; positive/negative drift interpretation must be earned, not imposed |
+
+### HMM track split
+
+The operator opened two separate HMM research tracks on 2026-08-19:
+
+- `LIT-REG-01.x` asks whether a latent Markov state adds causal predictive
+  information about volatility amplitude. `01.2` is the first pure-volatility
+  implementation and does not use return direction.
+- `LIT-REG-02.x` is reserved for a later swing-horizon directional-state
+  hypothesis. No cadence, observations, target, model, baseline, data window,
+  or gate is frozen. A future model may label states `UP`/`DOWN` only if stable
+  TRAIN-defined conditional means earn those semantics across folds.
+
+The tracks must validate independently before any combined direction-by-
+volatility regime grid is discussed. `LIT-REG-02.1` is a bookmark, not
+implementation authority.
 
 ## Replication batches and instances
 

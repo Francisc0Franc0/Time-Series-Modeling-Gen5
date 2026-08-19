@@ -12,8 +12,10 @@ human-facing evidence, and STOP decisions.
 ## Current scope
 
 The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, momentum
-concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and the Stage-A-stopped
-regime-model concept `LIT-REG-01.1`. The earlier lanes are grounded primarily in:
+concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and HMM regime concepts
+`LIT-REG-01.1` through the frozen volatility-only `LIT-REG-01.2`. A separate
+directional HMM track, `LIT-REG-02.1`, is bookmarked but not frozen. The
+earlier lanes are grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
   Rationale*; and
@@ -38,6 +40,20 @@ SPY was not read. See the
 [contract](docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md),
 [results](docs/GEN5_LIT_REG_01_1_HMM_STAGE_A_RESULTS.md), and
 [model registry](registries/gen5_lit_reg_01_1_hmm_model_registry.csv).
+
+`LIT-REG-01.2` preserves that STOP and narrows the next exercise to one
+volatility observation: TRAIN-standardized log single-session normalized true
+range. It compares a two-state Gaussian HMM against a one-state Gaussian, a
+static two-component mixture, and a Gaussian AR(1). The approved
+`HiddenMarkov` 1.8-14 package is an independent local numerical authority;
+Gen5 separately recomputes causal likelihoods and probabilities. Weak or
+one-state evidence may produce an explicit `TWO_STATES_NOT_IDENTIFIABLE`
+abstention rather than a forced regime. See the
+[frozen contract](docs/GEN5_LIT_REG_01_2_HMM_VOLATILITY_STATE_POC_CONTRACT.md)
+and [model registry](registries/gen5_lit_reg_01_2_hmm_volatility_model_registry.csv).
+
+The directional `LIT-REG-02.1` bookmark remains discussion-only. It does not
+authorize return-sign labels, a directional model, or a strategy test.
 
 ## Layout
 

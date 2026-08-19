@@ -109,7 +109,7 @@ Additional claims used by `LIT-MOM-02.1`:
 
 ## External HMM and Regime-Switching Sources
 
-These sources open `LIT-REG-01.1`. They were not part of the operator's
+These sources open `LIT-REG-01.1` and its volatility-only `01.2` variant. They were not part of the operator's
 original Chan/Halls-Moore PDF folder, so the source boundary remains explicit.
 
 | Source | Grounded section or pages | LIT-REG-01.1 use | Not imported |
@@ -121,11 +121,21 @@ original Chan/Halls-Moore PDF folder, so the source boundary remains explicit.
 | Pohle, Langrock, van Beest, and Schmidt (2017), *Selecting the Number of States in Hidden Markov Models*, DOI `10.1007/s13253-017-0283-8` | Sections 2-4: HMM basics, simulation pitfalls, and pragmatic order selection | Keep H2 primary, make H3 diagnostic, and require occupancy, recurrence, semantic distinction, stability, and held-out value beyond information criteria | Animal-movement emissions or biological labels |
 | Visser and Speekenbrink (2010), *depmixS4: An R Package for Hidden Markov Models*, Journal of Statistical Software 36(7) | pp. 1-21 | Implementation reference for EM, multivariate emissions, constraints, and posterior probabilities | Automatic authorization to add `depmixS4` or any dependency |
 | Nystrup, Madsen, and Lindstrom (2017), *Dynamic Portfolio Optimization Across Hidden Market Regimes*, Quantitative Finance 18(1) | pp. 83-95 | Applied example of delayed causal decisions and transaction-aware regime use after state modeling | Model-predictive control, allocation, strategy switching, or claimed performance |
+| Rydén, Teräsvirta, and Åsbrink (1998), *Stylized Facts of Daily Return Series and the Hidden Markov Model*, Journal of Applied Econometrics 13(3) | Abstract and empirical S&P 500 sections | Ground the narrower claim that hidden-state mixtures can represent higher-order temporal dependence and volatility clustering while warning that parameters can vary across subperiods | Evidence of stable direction states, tradable alpha, or universal parameter stability |
+| Bulla and Bulla (2006), *Stylized Facts of Financial Time Series and Hidden Semi-Markov Models*, Computational Statistics & Data Analysis 51(4) | Abstract, introduction, and conclusion | Ground volatility as an HMM-appropriate niche and preserve the limitation that geometric HMM durations may miss slow volatility dependence | Automatic authority to replace HMM with HSMM inside `01.2` |
+| Harte (2025), CRAN `HiddenMarkov` package 1.8-14 reference manual | Package overview; `dthmm`, `BaumWelch`, `forwardback`, and Gaussian examples | Independent univariate Gaussian HMM estimation and likelihood reference for `01.2` | Package filtering as causal evidence without Gen5 cross-checks, multivariate models, or strategy authority |
 
 Project-designed elements that must not be attributed to the sources include
 SPY, log return plus log normalized true range, the B0/B1/H2/H3 registry, the
 2016-2023 folds, 20 deterministic starts, covariance floor, block bootstrap,
 temporal-order controls, every quantitative gate, and the 2024+ seal.
+
+For `01.2`, the univariate log normalized-range observation, B0/B1/B2/H2
+registry, twelve starts, formal abstention boundary, 80th-percentile high-range
+target, SPY and replication instruments, and every quantitative gate are also
+project-designed. The operator explicitly approved `HiddenMarkov` on
+2026-08-19 after a package audit; `depmixS4` was archived by CRAN on 2026-07-04
+and `hmmTMB` was judged disproportionate for this minimal POC.
 
 Implementation clarification:
 
