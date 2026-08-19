@@ -1,8 +1,8 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-08-14
-Branch: `codex/atr-percent-volatility-strategy-overlay-poc`
+Index date: 2026-08-19
+Branch: `codex/hmm-volatility-regime-poc`
 
 ## Purpose
 
@@ -148,6 +148,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D144` | Approve the HMM design and freeze exact LIT-REG-01.1 gates | current continuation | `Approved` | Freeze `LIT-REG-01.1` under Literature Studies with SPY, `[log return, log normalized true range]`, B0/B1/H2/H3, expanding 2020-2023 OOS development folds, causal filtering, 20 deterministic starts, eight engine/synthetic gates, nine H2 gates, and a separate H3 complexity gate. Require incremental held-out log score beyond the static mixture in at least three years, a positive block-bootstrap lower bound, and 90th-percentile temporal-order specificity. Keep 2024+ sealed and stop before implementation, packages, strategy contact, or performance calculations. |
 | `D145` | Execute HMM Stage A and honor the numerical-reliability STOP | current continuation | `Proceed` | Implement and test the dependency-free Gaussian/GMM/HMM engine, commit the frozen synthetic fixtures before execution, and run all eight Stage A gates. A1-A7 passed, including exact likelihood/replay/append invariants, 99.9% median strong-state classification, transition and duration recovery, and calibrated weak-state uncertainty. A8 failed with 77/100 valid fits: 49/50 strong and 28/50 weak, including 10 likelihood-decrease and 13 maximum-iteration codes. Record `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; do not query SPY, read Stage B/H3 evidence, relax A8, alter weak fixtures, or claim a market/strategy result. |
 | `D146` | Split HMM volatility and direction tracks; freeze the volatility-only variant | current continuation | `Good idea. Perhaps we can bookmark two different tracks ...` / `Okay, let's proceed with your recommendation` / `Approved` | Preserve stopped `LIT-REG-01.1`. Bookmark `LIT-REG-02.1` as a later directional-state lane without frozen mechanics. Freeze and approve `LIT-REG-01.2` as the volatility-first lane using only log single-session normalized true range, a two-state Gaussian HMM, explicit no-regime abstention, B0/B1/AR(1) baselines, causal next-session density and high-range forecasts, SPY then conditional four-asset replication, and a 2024+ seal. Approve `HiddenMarkov` 1.8-14 as the independent numerical reference after rejecting archived `depmixS4` and disproportionate `hmmTMB`; no strategy or directional result is opened. |
+| `D147` | Execute LIT-REG-01.2 Stage A and stop before market data | current continuation | `Approved` | Install the approved `HiddenMarkov` 1.8-14 reference locally, preserve the frozen pure-volatility contract, and execute 20 strong, 20 weak, and 20 null synthetic cases. A1-A5 passed, including 20/20 strong promotions with 99.1% median causal accuracy. A6-A8 failed: weak/null cases rarely reached explicit abstention and 36/60 cases ended as numerical failures. Record `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`; do not query SPY, run replication or strategies, access 2024+, or rescue the inspected architecture. |
 
 ## Compact Decision Records
 
@@ -3159,6 +3160,40 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/docs/GEN5_LIT_REG_01_2_HMM_VOLATILITY_STATE_POC_CONTRACT.md`
   and
   `literature_studies/registries/gen5_lit_reg_01_2_hmm_volatility_model_registry.csv`.
+
+### D147 — Execute LIT-REG-01.2 Stage A and honor the qualification STOP
+
+- **Question:** Does a maintained HMM reference estimator plus an explicit
+  no-regime outcome make the volatility-only variant dependable before market
+  data are exposed?
+- **Execution:** Run the committed 20 strong, 20 weak, and 20 null Gaussian
+  fixtures, each 1,200 observations with 12 deterministic starts. Cross-check
+  `HiddenMarkov` 1.8-14 against the explicit Gen5 forward recursion.
+- **Passed evidence:** Package and Gen5 likelihoods agreed within `8.88e-16`;
+  replay and append-causality differences were zero; all 20 strong cases
+  promoted, with 99.1% median filtered-state accuracy and 0.0108 median
+  maximum transition error.
+- **Failed evidence:** Only 3/20 weak and 1/20 null cases reached the required
+  explicit abstention, while 36/60 cases were numerical failures. Entropy and
+  confidence moved appropriately with ambiguity, but the estimator/comparator
+  path too often failed before a scientific classification was available.
+- **Boundary:** Record
+  `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`.
+  No Alpaca/SPY bar, Stage B/C score, 2024+ observation, direction, strategy,
+  Sharpe, drawdown, or P&L was read.
+- **Run history:** An initial completed fitting pass exposed only a reporter-
+  schema defect and produced no gate table. After a regression-tested reporter
+  fix, the exact frozen workload was rerun unchanged; that rerun is the sole
+  authoritative evidence.
+- **Inference:** Retain the positive clear-state recovery and causal-filter
+  mechanics evidence. Do not infer a market or HMM null, but do not rescue the
+  inspected estimator, starts, fixtures, thresholds, comparators, or
+  abstention rules under `01.2`.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_REG_01_2_HMM_VOLATILITY_STAGE_A_RESULTS.md`,
+  `literature_studies/presentations/gen5_lit_reg_01_2_hmm_volatility_stage_a_evidence.pptx`,
+  and
+  `runs/research_workbench/literature_studies/lit_reg_01_2_hmm_stage_a_20260819`.
 
 ## Related Artifacts
 

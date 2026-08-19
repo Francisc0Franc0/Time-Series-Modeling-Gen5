@@ -1,8 +1,13 @@
 # LIT-REG-01.2 HMM Volatility-State POC Contract
 
-Status: `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`
+Status: `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`
 
 Date frozen: 2026-08-19
+
+Authoritative Stage A result: five of eight gates passed. Strong-state
+recovery succeeded, but weak/null abstention and numerical reliability failed;
+market data were not read. See
+[the Stage A results](GEN5_LIT_REG_01_2_HMM_VOLATILITY_STAGE_A_RESULTS.md).
 
 ## Place in the HMM Research Lineage
 
