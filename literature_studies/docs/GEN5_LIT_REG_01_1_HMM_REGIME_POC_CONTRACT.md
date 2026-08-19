@@ -1,6 +1,6 @@
 # LIT-REG-01.1 Two-State Hidden Markov Regime POC Contract
 
-Status: `FROZEN_IMPLEMENTATION_NOT_OPEN`
+Status: `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`
 
 Date frozen: 2026-08-19
 
@@ -356,6 +356,11 @@ variant with its own ex ante contract.
 
 ## Current Stop State
 
-The POC is frozen but implementation is not open. The operator must review
-and explicitly approve this contract before any HMM engine, tests, data run,
-evidence packet, or deck is created.
+Implementation was approved and Stage A was executed on 2026-08-19. Gates A1
+through A7 passed, but A8 failed because only 77 of 100 synthetic fits were
+valid under the frozen numerical rules. The real SPY comparison was not read.
+
+See
+[GEN5_LIT_REG_01_1_HMM_STAGE_A_RESULTS.md](GEN5_LIT_REG_01_1_HMM_STAGE_A_RESULTS.md).
+The frozen verdict is
+`STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`.

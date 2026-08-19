@@ -12,7 +12,7 @@ human-facing evidence, and STOP decisions.
 ## Current scope
 
 The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, momentum
-concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and the frozen but unimplemented
+concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and the Stage-A-stopped
 regime-model concept `LIT-REG-01.1`. The earlier lanes are grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
@@ -32,9 +32,11 @@ Rabiner, Zucchini et al., Hamilton, Ang--Timmermann, Pohle et al., and
 implementation/applied references. Its frozen first POC uses SPY daily log
 return and log normalized true range, a one-state Gaussian and static
 two-component mixture as required baselines, a two-state HMM as primary, and
-a three-state HMM as a complexity-controlled diagnostic. It remains
-`FROZEN_IMPLEMENTATION_NOT_OPEN`; see the
-[contract](docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md) and
+a three-state HMM as a complexity-controlled diagnostic. Stage A passed seven
+of eight gates but stopped because only 77 of 100 synthetic fits were valid;
+SPY was not read. See the
+[contract](docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md),
+[results](docs/GEN5_LIT_REG_01_1_HMM_STAGE_A_RESULTS.md), and
 [model registry](registries/gen5_lit_reg_01_1_hmm_model_registry.csv).
 
 ## Layout

@@ -146,6 +146,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D142` | Close the trend series with a scoped inference and open HMM literature discussion | current continuation | `Yes, let's close this chapter, but also with the understanding that perhaps ... the 8/14 system is only one way of validating these different things we tried.` | State explicitly that the common SMA8/SMA14 overlays reject the tested candidate-policy-parent combinations on their daily or 30-minute surfaces, not the concepts categorically. Preserve the measurements without reactive rescue. Open a distinct literature-grounded HMM discussion using Rabiner, Zucchini, Hamilton, Ang--Timmermann, and Pohle et al.; recommend high or xhigh reasoning and a descriptive, causal-filtering-first POC question. Do not freeze an HMM state count, features, data window, package, strategy, confirmation, or implementation. |
 | `D143` | Propose the minimal literature-grounded HMM POC | current continuation | `Okay, let's proceed with ironing out what an HMM POC would look like for us` | Propose, but do not freeze, `LIT-REG-01.1`: one SPY daily context timeline using TRAIN-standardized log return and log normalized true range; one-state Gaussian and static two-component mixture baselines; a two-state Gaussian HMM primary; a three-state diagnostic challenger; expanding 2020-2023 development folds; causal filtered probabilities; volatility-ordered labels; synthetic, optimizer, held-out log-score, temporal-value, occupancy/transition, and refit-stability evidence. Keep 2024+ sealed and stop before package choice, exact gates, strategy contact, or implementation. |
 | `D144` | Approve the HMM design and freeze exact LIT-REG-01.1 gates | current continuation | `Approved` | Freeze `LIT-REG-01.1` under Literature Studies with SPY, `[log return, log normalized true range]`, B0/B1/H2/H3, expanding 2020-2023 OOS development folds, causal filtering, 20 deterministic starts, eight engine/synthetic gates, nine H2 gates, and a separate H3 complexity gate. Require incremental held-out log score beyond the static mixture in at least three years, a positive block-bootstrap lower bound, and 90th-percentile temporal-order specificity. Keep 2024+ sealed and stop before implementation, packages, strategy contact, or performance calculations. |
+| `D145` | Execute HMM Stage A and honor the numerical-reliability STOP | current continuation | `Proceed` | Implement and test the dependency-free Gaussian/GMM/HMM engine, commit the frozen synthetic fixtures before execution, and run all eight Stage A gates. A1-A7 passed, including exact likelihood/replay/append invariants, 99.9% median strong-state classification, transition and duration recovery, and calibrated weak-state uncertainty. A8 failed with 77/100 valid fits: 49/50 strong and 28/50 weak, including 10 likelihood-decrease and 13 maximum-iteration codes. Record `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; do not query SPY, read Stage B/H3 evidence, relax A8, alter weak fixtures, or claim a market/strategy result. |
 
 ## Compact Decision Records
 
@@ -3096,6 +3097,37 @@ tasks by the branch name above, the phrase, or the decision date.
 - **Artifacts:**
   `literature_studies/docs/GEN5_LIT_REG_01_1_HMM_REGIME_POC_CONTRACT.md` and
   `literature_studies/registries/gen5_lit_reg_01_1_hmm_model_registry.csv`.
+
+### D145 — Execute HMM Stage A and honor the numerical-reliability STOP
+
+- **Operator decision:** Approve implementation of the frozen `LIT-REG-01.1`
+  POC.
+- **Committed boundary:** Implement the Gaussian/GMM/HMM mechanics and commit
+  the immutable strong/weak fixtures, seeds, and assertions before any
+  real-data run. Use no new package dependency.
+- **Stage A passes:** A1-A7 passed. Forward likelihood equaled brute-force
+  enumeration; deterministic replay and append causality differences were
+  zero; median strong-state accuracy was 99.9%; median maximum transition
+  error was 0.0092; weak confidence fell by 0.220 as entropy rose; and median
+  maximum duration error was 17.2%.
+- **Stage A failure:** A8 required zero invalid fits, but only 77/100 were
+  valid. Strong fixtures produced 49/50 valid fits; weak fixtures produced
+  28/50. Ten fits recorded likelihood decreases and thirteen weak fits hit the
+  maximum iteration count.
+- **Inference:** This is an engine-qualification failure under ambiguous state
+  separation, not evidence that HMMs or market regimes fail categorically.
+  Passing mechanics and recovery evidence remain useful but cannot override
+  the conjunctive gate.
+- **Stop state:**
+  `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`.
+  No Alpaca/SPY query, Stage B/H3 score, strategy contact, or 2024+ evidence
+  was opened. Do not relax A8 or change weak fixtures inside `01.1` after this
+  result.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_REG_01_1_HMM_STAGE_A_RESULTS.md`,
+  `literature_studies/presentations/gen5_lit_reg_01_1_hmm_stage_a_evidence.pptx`,
+  and
+  `runs/research_workbench/literature_studies/lit_reg_01_1_hmm_stage_a_20260819`.
 
 ## Related Artifacts
 
