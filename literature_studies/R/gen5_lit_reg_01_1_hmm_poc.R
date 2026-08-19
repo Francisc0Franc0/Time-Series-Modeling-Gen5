@@ -215,6 +215,24 @@ g5_reg011_fit_synthetic_case <- function(parameters, seed, fixtures, contract) {
   )
 }
 
+g5_reg011_safe_mean <- function(x) {
+  x <- as.numeric(x)
+  if (!length(x) || all(!is.finite(x))) return(NA_real_)
+  mean(x[is.finite(x)])
+}
+
+g5_reg011_safe_median <- function(x) {
+  x <- as.numeric(x)
+  if (!length(x) || all(!is.finite(x))) return(NA_real_)
+  stats::median(x[is.finite(x)])
+}
+
+g5_reg011_safe_quantile <- function(x, probability) {
+  x <- as.numeric(x)
+  if (!length(x) || all(!is.finite(x))) return(NA_real_)
+  as.numeric(stats::quantile(x[is.finite(x)], probability, names = FALSE, type = 7))
+}
+
 g5_reg011_stage_a <- function(
   contract = g5_reg011_contract(),
   fixtures = g5_reg011_synthetic_fixtures(),
@@ -315,15 +333,15 @@ g5_reg011_stage_a <- function(
     "accuracy", "maximum_transition_error", "maximum_duration_relative_error",
     "posterior_entropy", "maximum_posterior_confidence", "minimum_covariance_eigenvalue"
   )])))
-  strong_median_accuracy <- stats::median(strong$accuracy)
-  strong_tenth_accuracy <- as.numeric(stats::quantile(strong$accuracy, 0.10, names = FALSE, type = 7))
-  transition_median <- stats::median(strong$maximum_transition_error)
-  transition_ninetieth <- as.numeric(stats::quantile(strong$maximum_transition_error, 0.90, names = FALSE, type = 7))
-  strong_entropy <- mean(strong$posterior_entropy)
-  weak_entropy <- mean(weak$posterior_entropy)
-  strong_confidence <- mean(strong$maximum_posterior_confidence)
-  weak_confidence <- mean(weak$maximum_posterior_confidence)
-  duration_median <- stats::median(strong$maximum_duration_relative_error)
+  strong_median_accuracy <- g5_reg011_safe_median(strong$accuracy)
+  strong_tenth_accuracy <- g5_reg011_safe_quantile(strong$accuracy, 0.10)
+  transition_median <- g5_reg011_safe_median(strong$maximum_transition_error)
+  transition_ninetieth <- g5_reg011_safe_quantile(strong$maximum_transition_error, 0.90)
+  strong_entropy <- g5_reg011_safe_mean(strong$posterior_entropy)
+  weak_entropy <- g5_reg011_safe_mean(weak$posterior_entropy)
+  strong_confidence <- g5_reg011_safe_mean(strong$maximum_posterior_confidence)
+  weak_confidence <- g5_reg011_safe_mean(weak$maximum_posterior_confidence)
+  duration_median <- g5_reg011_safe_median(strong$maximum_duration_relative_error)
 
   gates <- data.frame(
     gate = paste0("A", 1:8),
@@ -356,10 +374,10 @@ g5_reg011_stage_a <- function(
       numerical_invariants,
       deterministic_difference <= 1e-12,
       append_difference <= 1e-12 && smoothing_revision > 1e-6,
-      length(strong_seeds) == 50L && strong_median_accuracy >= assertion$strong_median_accuracy_minimum && strong_tenth_accuracy >= assertion$strong_tenth_percentile_accuracy_minimum,
-      length(strong_seeds) == 50L && transition_median <= assertion$transition_median_maximum_error && transition_ninetieth <= assertion$transition_ninetieth_percentile_maximum_error,
-      length(weak_seeds) == 50L && weak_entropy > strong_entropy && strong_confidence - weak_confidence >= assertion$weak_confidence_reduction_minimum,
-      duration_median <= assertion$duration_median_relative_error_maximum,
+      isTRUE(length(strong_seeds) == 50L && strong_median_accuracy >= assertion$strong_median_accuracy_minimum && strong_tenth_accuracy >= assertion$strong_tenth_percentile_accuracy_minimum),
+      isTRUE(length(strong_seeds) == 50L && transition_median <= assertion$transition_median_maximum_error && transition_ninetieth <= assertion$transition_ninetieth_percentile_maximum_error),
+      isTRUE(length(weak_seeds) == 50L && weak_entropy > strong_entropy && strong_confidence - weak_confidence >= assertion$weak_confidence_reduction_minimum),
+      isTRUE(duration_median <= assertion$duration_median_relative_error_maximum),
       all_valid
     ),
     stringsAsFactors = FALSE

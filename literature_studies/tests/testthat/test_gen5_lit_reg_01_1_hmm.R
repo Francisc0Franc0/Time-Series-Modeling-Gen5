@@ -148,3 +148,12 @@ testthat::test_that("covariance flooring and probability clamps enforce invarian
   testthat::expect_equal(sum(probability), 1, tolerance = 1e-12)
   testthat::expect_true(all(probability > 0 & probability < 1))
 })
+
+testthat::test_that("synthetic summaries turn invalid fits into reportable missing values", {
+  testthat::expect_true(is.na(g5_reg011_safe_mean(c(NA_real_, Inf))))
+  testthat::expect_true(is.na(g5_reg011_safe_median(c(NA_real_, Inf))))
+  testthat::expect_true(is.na(g5_reg011_safe_quantile(c(NA_real_, Inf), 0.1)))
+  testthat::expect_equal(g5_reg011_safe_mean(c(1, 2, NA_real_)), 1.5)
+  testthat::expect_equal(g5_reg011_safe_median(c(1, 3, NA_real_)), 2)
+  testthat::expect_equal(g5_reg011_safe_quantile(c(1, 3, NA_real_), 0.5), 2)
+})
