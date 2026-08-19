@@ -1,0 +1,5 @@
+model_id,model_name,observation,temporal_memory,role,estimator
+B0,Constant TRAIN up probability,Non-overlapping 20-session return sign,no,Base-rate probability baseline,TRAIN empirical frequency
+B1,One-state Gaussian AR(1),Daily return and lagged daily return,continuous,No-regime dynamic baseline,TRAIN OLS plus exact Gaussian horizon probability
+H2,Two-state Markov-switching Gaussian AR(1),Daily return and lagged daily return,continuous plus discrete Markov,Primary candidate,hmmTMB 1.1.2 TMB maximum likelihood plus Gen5 causal filter
+O1,True planted-state oracle,Synthetic true state and parameters,true latent process,Positive-control ceiling,Known data-generating process only

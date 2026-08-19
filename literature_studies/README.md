@@ -13,8 +13,7 @@ human-facing evidence, and STOP decisions.
 
 The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, momentum
 concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and HMM regime concepts
-`LIT-REG-01.1` through the stopped volatility-only `LIT-REG-01.2`. A separate
-directional HMM track, `LIT-REG-02.1`, is bookmarked but not frozen. The
+`LIT-REG-01.1` through the stopped directional `LIT-REG-02.1`. The
 earlier lanes are grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
@@ -59,8 +58,23 @@ with the
 [evidence deck](presentations/gen5_lit_reg_01_2_hmm_volatility_stage_a_evidence.pptx)
 as the concise teaching and review surface.
 
-The directional `LIT-REG-02.1` bookmark remains discussion-only. It does not
-authorize return-sign labels, a directional model, or a strategy test.
+`LIT-REG-02.1` is the package-native directional proof-of-mechanism. It fits a
+two-state Markov-switching Gaussian AR(1) with `hmmTMB 1.1.2` and forecasts
+the probability of a positive cumulative 20-session return. All ten teaching
+cases produced valid, deterministic, causal fits. The HMM beat both frozen
+probability baselines on Brier score and log loss in nine of ten cases, but
+median hard-state accuracy was only 72.1% and the transition-error tail missed
+its gate. Record
+`STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; the detection
+frontier, financial-shaped stress, market data, and strategy data were not
+run. See the
+[decision note](docs/GEN5_LIT_REG_02_1_DIRECTIONAL_HMM_DECISION.md),
+[contract](docs/GEN5_LIT_REG_02_1_DIRECTIONAL_HMM_POC_CONTRACT.md),
+[results](docs/GEN5_LIT_REG_02_1_DIRECTIONAL_HMM_STAGE_A_RESULTS.md), and
+[model registry](registries/gen5_lit_reg_02_1_directional_hmm_model_registry.csv),
+with the
+[evidence deck](presentations/gen5_lit_reg_02_1_directional_hmm_stage_a_evidence.pptx)
+as the concise teaching and review surface.
 
 ## Layout
 

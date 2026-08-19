@@ -124,6 +124,7 @@ original Chan/Halls-Moore PDF folder, so the source boundary remains explicit.
 | Rydén, Teräsvirta, and Åsbrink (1998), *Stylized Facts of Daily Return Series and the Hidden Markov Model*, Journal of Applied Econometrics 13(3) | Abstract and empirical S&P 500 sections | Ground the narrower claim that hidden-state mixtures can represent higher-order temporal dependence and volatility clustering while warning that parameters can vary across subperiods | Evidence of stable direction states, tradable alpha, or universal parameter stability |
 | Bulla and Bulla (2006), *Stylized Facts of Financial Time Series and Hidden Semi-Markov Models*, Computational Statistics & Data Analysis 51(4) | Abstract, introduction, and conclusion | Ground volatility as an HMM-appropriate niche and preserve the limitation that geometric HMM durations may miss slow volatility dependence | Automatic authority to replace HMM with HSMM inside `01.2` |
 | Harte (2025), CRAN `HiddenMarkov` package 1.8-14 reference manual | Package overview; `dthmm`, `BaumWelch`, `forwardback`, and Gaussian examples | Independent univariate Gaussian HMM estimation and likelihood reference for `01.2` | Package filtering as causal evidence without Gen5 cross-checks, multivariate models, or strategy authority |
+| Michelot (2025), CRAN `hmmTMB` package 1.1.2 and “General dependence structures in hmmTMB” vignette | Vignette section “Autoregressive hidden Markov models,” especially the lagged-observation formulation and state-switching AR examples | Package-native TMB maximum-likelihood authority for the state-dependent intercept, AR(1) slope, variance, and transition matrix in `02.1` | Evidence that financial directions are identifiable, permission to add model complexity, or causal filtering without the Gen5 recursion |
 
 Project-designed elements that must not be attributed to the sources include
 SPY, log return plus log normalized true range, the B0/B1/H2/H3 registry, the
@@ -136,6 +137,13 @@ target, SPY and replication instruments, and every quantitative gate are also
 project-designed. The operator explicitly approved `HiddenMarkov` on
 2026-08-19 after a package audit; `depmixS4` was archived by CRAN on 2026-07-04
 and `hmmTMB` was judged disproportionate for this minimal POC.
+
+For `02.1`, the operator separately approved `hmmTMB` and its dependencies on
+2026-08-19 after the directional lane was opened. The package is installed
+only in ignored `.codex_r_libs`. The planted drift, AR coefficients,
+transition matrices, simulation seeds, 20-session probability target,
+baselines, oracle, multistart registry, gates, and STOP boundary are Gen5
+design and must not be attributed to Michelot, Hamilton, or the package.
 
 Implementation clarification:
 
