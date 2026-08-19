@@ -145,6 +145,12 @@ transition matrices, simulation seeds, 20-session probability target,
 baselines, oracle, multistart registry, gates, and STOP boundary are Gen5
 design and must not be attributed to Michelot, Hamilton, or the package.
 
+`02.2` reuses the same package authority but changes the Gen5 evaluation
+question. The four B2 features, fixed ridge penalty, fresh seeds, paired
+confidence bounds, calibration limits, frontier definition, and stress
+interpretation are project-designed. They are not recommendations or defaults
+from `hmmTMB` or the cited HMM literature.
+
 Implementation clarification:
 
 - The printed Example 3.1 spread is `USO - beta * GLD`, while its displayed

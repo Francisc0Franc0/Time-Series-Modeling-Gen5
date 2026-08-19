@@ -64,7 +64,7 @@ renames an earlier outcome.
 | `LIT-REG-01.1` | Two-State Hidden Markov Market Regime | none | `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; Stage A passed 7/8 but only 77/100 synthetic fits were valid; SPY not read |
 | `LIT-REG-01.2` | Two-State HMM Volatility-State Forecast | none | `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`; strong recovery passed, weak/null abstention and numerical reliability failed |
 | `LIT-REG-02.1` | Directional Markov-Switching Proof-of-Mechanism | none | `STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; proper forecast scores passed, hard state/transition recovery failed; downstream stages not run |
-| `LIT-REG-02.2` | Directional HMM Forecast-Skill Frontier | none | `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`; fresh forecast confirmation precedes the still-unread frontier and stress cases |
+| `LIT-REG-02.2` | Directional HMM Forecast-Skill Frontier | none | `COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`; fresh confirmation passed, frontier sparse, stress advantage degraded |
 
 ### HMM track split
 

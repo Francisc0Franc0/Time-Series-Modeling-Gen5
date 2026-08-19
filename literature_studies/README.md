@@ -13,7 +13,7 @@ human-facing evidence, and STOP decisions.
 
 The current lineage covers `LIT-MR-01.1` through `LIT-MR-06.1`, momentum
 concepts `LIT-MOM-01.1` through `LIT-MOM-02.1`, and HMM regime concepts
-`LIT-REG-01.1` through the stopped directional `LIT-REG-02.1`. The
+`LIT-REG-01.1` through the forecast-first directional `LIT-REG-02.2`. The
 earlier lanes are grounded primarily in:
 
 - Ernest P. Chan, *Algorithmic Trading: Winning Strategies and Their
@@ -75,6 +75,21 @@ run. See the
 with the
 [evidence deck](presentations/gen5_lit_reg_02_1_directional_hmm_stage_a_evidence.pptx)
 as the concise teaching and review surface.
+
+`LIT-REG-02.2` preserves that STOP and asks a different question: whether soft
+H20 probabilities replicate under fresh evidence and beat B0, B1, and a
+fixed-ridge B2. All eight fresh confirmation gates passed. Only 2/16 frontier
+cells formally detected, no null cell did, and H2 lost mean advantage over B0
+and B1 under Student-t/GARCH stress. Record
+`COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`.
+See the
+[decision](docs/GEN5_LIT_REG_02_2_DIRECTIONAL_FORECAST_DECISION.md),
+[contract](docs/GEN5_LIT_REG_02_2_DIRECTIONAL_FORECAST_POC_CONTRACT.md),
+[results](docs/GEN5_LIT_REG_02_2_DIRECTIONAL_FORECAST_RESULTS.md), and
+[registry](registries/gen5_lit_reg_02_2_directional_forecast_model_registry.csv).
+The
+[evidence deck](presentations/gen5_lit_reg_02_2_directional_forecast_frontier_evidence.pptx)
+is the concise teaching and review surface.
 
 ## Layout
 
