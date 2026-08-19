@@ -133,10 +133,13 @@ g5_hmm_forward_backward <- function(x, pi, transition, means, covariances) {
   }, numeric(k)))
   if (n > 1L) {
     log_transition <- log(transition)
-    for (t in seq_len(n - 1L)) {
-      log_xi <- outer(log_alpha[t, ], log_emission[t + 1L, ] + log_beta[t + 1L, ], "+") +
-        log_transition
-      xi_sum <- xi_sum + exp(log_xi - g5_hmm_logsumexp(log_xi))
+    for (i in seq_len(k)) {
+      for (j in seq_len(k)) {
+        xi_sum[i, j] <- sum(exp(
+          log_alpha[seq_len(n - 1L), i] + log_transition[i, j] +
+            log_emission[2:n, j] + log_beta[2:n, j] - scales[2:n]
+        ))
+      }
     }
   }
   filtered <- exp(log_alpha)
