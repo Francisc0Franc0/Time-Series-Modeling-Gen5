@@ -64,6 +64,20 @@ testthat::test_that("reference multistart returns ordered deterministic strong-s
   testthat::expect_lt(first$selected$means[[1L]], first$selected$means[[2L]])
   testthat::expect_lte(first$selected$crosscheck_difference_per_observation, 1e-8)
   testthat::expect_equal(rowSums(first$selected$filtered), rep(1, 600L), tolerance = 1e-12)
+  testthat::expect_true("selected" %in% names(first$diagnostics))
+  testthat::expect_equal(sum(first$diagnostics$selected), 1L)
+})
+
+testthat::test_that("reference diagnostics report zero selections when every start is invalid", {
+  contract <- reg012_fast_contract()
+  contract$minimum_sd <- 10
+  row <- g5_reg012_synthetic_registry()[1L, , drop = FALSE]
+  row$observation_count <- 200L
+  simulated <- g5_reg012_simulate_fixture(row)
+  fitted <- g5_reg012_fit_reference_multistart(simulated$observations, contract)
+  testthat::expect_null(fitted$selected)
+  testthat::expect_true("selected" %in% names(fitted$diagnostics))
+  testthat::expect_false(any(fitted$diagnostics$selected))
 })
 
 testthat::test_that("strong fixture can earn a valid two-state classification", {

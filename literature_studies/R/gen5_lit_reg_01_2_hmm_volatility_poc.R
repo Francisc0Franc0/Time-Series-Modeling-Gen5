@@ -285,6 +285,7 @@ g5_reg012_fit_reference_multistart <- function(x, contract = g5_reg012_contract(
       stringsAsFactors = FALSE
     )
   }))
+  diagnostics$selected <- FALSE
   if (!any(valid)) return(list(selected = NULL, fits = fits, diagnostics = diagnostics))
   eligible <- which(valid)
   selected_index <- eligible[[which.max(vapply(
