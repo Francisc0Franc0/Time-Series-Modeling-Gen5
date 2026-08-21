@@ -1,6 +1,6 @@
 # LIT-MOM-01.3 SPY Horizon-Surface Predictor Hypothesis Card
 
-Status: `FROZEN_OUTCOMES_NOT_OPEN`
+Status: `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`
 
 Pre-outcome amendment: the initial fixed-`250/25` draft was widened on
 `2026-08-21`, at the operator's request, before any `01.3` data or outcome was
@@ -19,8 +19,21 @@ full-capital compounding, costs, portfolio accounting, and production gates.
 It fixes one instrument and a compact, confirmable predictor-target surface
 before outcomes.
 
-The visible output of a later execution slice would be a predictor-target
-evidence packet, not a backtest.
+The visible output is a predictor-target evidence packet, not a backtest.
+
+## Executed sandbox readout
+
+The operator opened the frozen sandbox on `2026-08-21`. The implementation
+used `1,699` common SPY anchors and all `1,200` admissible joint circular
+shifts. The observed maximum correlation was `0.016240`, versus a frozen
+shift-maximum p90 threshold of `0.177058` and empirical upper-tail probability
+`0.905912`. The global gate failed, so no cell was nominated.
+
+The canonical `250/25` cell had correlation `-0.118644`, beta `-0.049730`,
+and stationary-bootstrap 90% beta interval `[-0.161571, 0.016122]`. The
+2024-2025 confirmation zone remains unread, and all strategy and performance
+surfaces remain closed. See the
+[results](GEN5_LIT_MOM_01_3_SPY_HORIZON_SURFACE_RESULTS.md).
 
 ## Research question
 

@@ -154,6 +154,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D150` | Freeze LIT-REG-02.2 as a forecast-first directional HMM frontier | current continuation | `Thank you, let's proceed to that discussion` / `Approved` | Preserve the `02.1` STOP and reframe the new scientific target around causal H20 probability skill. Freeze 24 fresh confirmation seeds, unchanged H2 machinery, B0/B1, a stronger fixed-penalty ridge-logistic B2, oracle O1, proper-score paired confidence bounds, pooled calibration and sharpness gates, the still-unread 64-case frontier, and conditional Student-t GARCH stress. Hard-state and transition recovery become diagnostics. Market and strategy data remain closed. |
 | `D151` | Complete the forecast-first synthetic frontier without opening market contact | current continuation | autonomous execution under D150 | All eight fresh confirmation gates passed: H2 beat B0/B1/B2 on Brier and log loss with negative one-sided 90% paired upper bounds. The 64-case frontier produced only 2/16 formal cell detections and zero null detections; one formal cell still trailed an ex-post per-case best-baseline composite on average, and the pattern was non-monotonic. Under Student-t/GARCH stress H2 mean scores trailed B0 and B1. Record `COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`; retain the mechanism clue and robustness warning, and do not open market or strategy data. |
 | `D152` | Return to Chan's direct predictor and freeze a search-adjusted SPY horizon surface before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` / `Agreed, I like this` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as 28 causal predictor-target cells across seven source lookbacks and four confirmable swing targets. Keep `250/25` as the literature anchor; require one global circular-shift maximum-statistic sandbox pass before deterministic nomination; retain one locked-confirmation criterion; label 2017-2023 sandbox, lock 2024-2025, and open no trading or performance surface. |
+| `D153` | Execute the LIT-MOM-01.3 sandbox and honor the global-surface STOP | current continuation | `Proceed` | Run the frozen 28-cell SPY predictor surface on the 2017-2023 sandbox only. The maximum observed correlation was `0.016240`, below the `0.177058` p90 of all 1,200 admissible circular-shift surface maxima; empirical upper-tail probability was `0.905912`. The canonical `250/25` cell was negative. Record `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`, nominate no horizon, and preserve unread 2024-2025 confirmation and all trading/performance surfaces. |
 
 ## Compact Decision Records
 
@@ -3232,6 +3233,33 @@ tasks by the branch name above, the phrase, or the decision date.
   allocation, leverage, live advice, or production behavior is authorized.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md`.
+
+### D153 — Execute the SPY horizon surface and preserve confirmation after the global STOP
+
+- **Operator direction:** `Proceed` opened only the frozen 2017-2023 sandbox
+  execution under D152.
+- **Data validity:** The Alpaca adjusted-daily query returned 2,012 SPY rows
+  from `2016-01-04` through `2023-12-29`. All requested-range coverage and
+  integrity checks passed. The workbench `stale_symbol` warning referred only
+  to cache coverage relative to August 2026; the requested historical window
+  was `fully_cached`.
+- **Global result:** The 28 cells shared 1,699 eligible anchors. The largest
+  observed correlation was `0.016240`; the p90 of all 1,200 admissible joint
+  circular-shift maxima was `0.177058`, with empirical upper-tail probability
+  `0.905912`. The frozen global criterion failed.
+- **Canonical reference:** `L250_H25` had correlation `-0.118644`, beta
+  `-0.049730`, and 90% stationary-bootstrap beta interval
+  `[-0.161571, 0.016122]`. This is not authority to reverse the strategy
+  direction.
+- **Decision:** Record
+  `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`. Nominate
+  no cell, do not inspect 2024-2025 confirmation, and do not open positions,
+  costs, P&L, Sharpe, drawdown, portfolio, allocation, leverage, or live
+  behavior.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_3_SPY_HORIZON_SURFACE_RESULTS.md`
+  and
+  `runs/research_workbench/literature_grounded/lit_mom_01_3_spy_horizon_surface_20260821`.
 
 ## Related Artifacts
 

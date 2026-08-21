@@ -215,9 +215,13 @@ global circular-shift maximum-statistic test must pass before a deterministic
 sandbox nominee can be frozen, and only that nominee may later receive the
 single locked-confirmation test. The already inspected 2017-2023 history is
 sandbox only; 2024-2025 remains locked behind a later operator gate, and all
-2026 targets remain outside the card. No data or outcomes have been opened
-under `01.3`. See the
-[hypothesis card](docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md).
+2026 targets remain outside the card. The frozen sandbox subsequently failed:
+its best correlation was `0.016240` versus a `0.177058` circular-shift
+maximum p90 threshold. Record
+`STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`, nominate no
+cell, and preserve confirmation. See the
+[hypothesis card](docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md)
+and [results](docs/GEN5_LIT_MOM_01_3_SPY_HORIZON_SURFACE_RESULTS.md).
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
