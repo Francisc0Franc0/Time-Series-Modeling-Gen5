@@ -1,8 +1,8 @@
 # Gen5.4 Decision Dialogue Index
 
 Status: theory-first provenance index; capability POCs recorded; no model or live authority
-Index date: 2026-08-19
-Branch: `codex/hmm-volatility-regime-poc`
+Index date: 2026-08-21
+Branch: `codex/chan-minimal-predictor-card`
 
 ## Purpose
 
@@ -153,6 +153,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D149` | Preserve the directional Stage A STOP while retaining the proper-score signal | current continuation | autonomous execution under D148 | All ten teaching cases produced valid, deterministic, causal fits. H2 beat both baselines on mean Brier and log loss and won 9/10 cases against each, but median hard-state accuracy was 72.1% and transition-error p90 was 0.1289, failing two conjunctive gates. Record `STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; do not run the detection frontier or stress stages, alter the inspected teaching process or gates, or read market/strategy data. Retain the distinction between useful soft direction probabilities and imperfect hard state decoding for a future separately frozen forecast-first discussion. |
 | `D150` | Freeze LIT-REG-02.2 as a forecast-first directional HMM frontier | current continuation | `Thank you, let's proceed to that discussion` / `Approved` | Preserve the `02.1` STOP and reframe the new scientific target around causal H20 probability skill. Freeze 24 fresh confirmation seeds, unchanged H2 machinery, B0/B1, a stronger fixed-penalty ridge-logistic B2, oracle O1, proper-score paired confidence bounds, pooled calibration and sharpness gates, the still-unread 64-case frontier, and conditional Student-t GARCH stress. Hard-state and transition recovery become diagnostics. Market and strategy data remain closed. |
 | `D151` | Complete the forecast-first synthetic frontier without opening market contact | current continuation | autonomous execution under D150 | All eight fresh confirmation gates passed: H2 beat B0/B1/B2 on Brier and log loss with negative one-sided 90% paired upper bounds. The 64-case frontier produced only 2/16 formal cell detections and zero null detections; one formal cell still trailed an ex-post per-case best-baseline composite on average, and the pattern was non-monotonic. Under Student-t/GARCH stress H2 mean scores trailed B0 and B1. Record `COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`; retain the mechanism clue and robustness warning, and do not open market or strategy data. |
+| `D152` | Return to Chan's fixed 250/25 predictor before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as a direct causal predictor-target card with fixed 250/25 horizons, one continuous slope estimand, dependence-aware uncertainty, one locked-confirmation criterion, 2017-2023 sandbox labeling, locked 2024-2025 confirmation, and no trading or performance surface. |
 
 ## Compact Decision Records
 
@@ -3198,6 +3199,35 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/presentations/gen5_lit_reg_01_2_hmm_volatility_stage_a_evidence.pptx`,
   and
   `runs/research_workbench/literature_studies/lit_reg_01_2_hmm_stage_a_20260819`.
+
+### D152 — Return to Chan's minimal predictor before strategy construction
+
+- **Operator direction:** Preserve the stopped broad Chan evidence and open a
+  new narrow slice that asks the direct predictor-target question on one ETF.
+- **Prior evidence:** `LIT-MOM-01.1` found that the TRAIN-selected SHY `60/5`
+  relationship did not persist in 2021-2023. Its 22-stock and point-in-time
+  high-beta atlases did not rescue the unchanged long/short workflow.
+  `LIT-MOM-01.2` later produced encouraging long-only raw breadth, but exposure,
+  matched-random timing, fixed-horizon, and SPY attribution supported the
+  existing `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`.
+- **New variant:** Freeze `LIT-MOM-01.3` on `SPY` with Chan's canonical
+  `250/25` horizon fixed before outcomes. Estimate the continuous relationship
+  between trailing adjusted-close log return and the causally attainable
+  next-open-to-25-open log return.
+- **Inference:** Use `beta` from `Y=alpha+beta*X` as the primary estimand and a
+  10,000-draw seeded stationary-block bootstrap with expected block length 50.
+  The single locked-confirmation criterion requires positive `beta` and a
+  strictly positive 90% lower bound. Conditional means, sign accuracy,
+  phase offsets, circular shifts, year concentration, and horizon decay remain
+  diagnostics rather than conjunctive vetoes.
+- **Evidence boundary:** The already inspected 2017-2023 history is sandbox
+  only. Keep 2024-2025 locked until a later explicit operator replay gate, and
+  keep all 2026 targets outside the card. This design slice reads no outcomes.
+- **Closed surfaces:** No horizon search, asset atlas, sign threshold, trading
+  policy, costs, P&L, Sharpe, drawdown, portfolio, allocation, leverage, live
+  advice, or production behavior is authorized.
+- **Artifact:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md`.
 
 ## Related Artifacts
 
