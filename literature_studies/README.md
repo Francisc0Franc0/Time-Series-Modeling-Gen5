@@ -239,6 +239,15 @@ confirmation and open no strategy or performance surface. See the
 [contract](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md)
 and [results](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_RESULTS.md).
 
+`LIT-MOM-01.5` is the frozen diagnostic sibling authorized after the `01.4`
+STOP. It compares constant TRAIN drift, raw trailing return, and a compact
+path-quality extension containing positive-move efficiency and shock
+concentration. All 24 nondegenerate cells are equally weighted rather than
+searched, DEVELOPMENT loss differences receive stationary-block inference
+and within-stratum FDR control, and 2024-2025 remains sealed. The previously
+stopped ER/ADX future-path test is acknowledged rather than reopened. See the
+[frozen contract](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md).
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.

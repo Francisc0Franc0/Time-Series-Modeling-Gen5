@@ -157,6 +157,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D153` | Execute the LIT-MOM-01.3 sandbox and honor the global-surface STOP | current continuation | `Proceed` | Run the frozen 28-cell SPY predictor surface on the 2017-2023 sandbox only. The maximum observed correlation was `0.016240`, below the `0.177058` p90 of all 1,200 admissible circular-shift surface maxima; empirical upper-tail probability was `0.905912`. The canonical `250/25` cell was negative. Record `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`, nominate no horizon, and preserve unread 2024-2025 confirmation and all trading/performance surfaces. |
 | `D154` | Freeze a diverse multi-market predictor atlas with independent transport and FDR control | current continuation | `Let's proceed with your recommendations` | Open `LIT-MOM-01.4` without reopening SPY. Reuse all 92 rows of the previously frozen opening-gap registry: 68 plain ETFs, six engineered ETFs, and 18 stock challengers in separate strata. Select one positive cell per eligible asset in 2017-2020, test only that cell in 2021-2023, and apply BH `q=0.10` within strata. Keep SPY reproduction-only, 2024-2025 sealed, and all strategy, performance, native-provider, and intraday surfaces closed. |
 | `D155` | Execute LIT-MOM-01.4 and honor the no-transport STOP | current continuation | autonomous execution under D154 | All 92 frozen assets were eligible and 79 positive TRAIN nominees received one fixed 2021-2023 DEVELOPMENT test. Positive correlations appeared in 12/60 non-SPY plain ETFs, 2/5 engineered ETFs, and 5/13 stocks, but no asset survived the frozen within-stratum BH `q=0.10` gate. Record `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; treat APD, XLRE, and TQQQ only as non-promoted diagnostics, preserve unread 2024-2025 confirmation, and open no strategy or performance surface. |
+| `D156` | Freeze an incremental path-quality forecast comparison after the raw-return STOP | current continuation | `It sounds like a very worthwhile comparison. Let's go ahead and run it.` | Open `LIT-MOM-01.5` as a predictor-only sibling. Across all 92 frozen assets and 24 equally weighted nondegenerate cells, compare constant TRAIN drift, raw return, and raw return plus causal positive-move efficiency and shock concentration. Use 2017-2020 TRAIN, 2021-2023 DEVELOPMENT, stationary-block loss inference, and BH `q=0.10` by contrast and stratum. Acknowledge the stopped ER/ADX future-path test, keep SPY reference-only and 2024-2025 sealed, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3312,6 +3313,29 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_RESULTS.md`
   and
   `runs/research_workbench/literature_grounded/lit_mom_01_4_multi_market_predictor_atlas_20260821`.
+
+### D156 — Freeze drift-versus-raw-versus-path forecast comparison
+
+- **Operator direction:** Do not move immediately from the `01.4` null to an
+  unrelated hypothesis. Test the explanatory comparison between unconditional
+  drift, raw trailing return, and a richer causal trend-quality representation.
+- **Prior-evidence boundary:** Preserve the `01.4` raw-return STOP and the
+  separate `HYP-REG-05.1` ER/ADX future-path STOP. `01.5` asks whether path
+  features improve future-return forecasts; it does not reinterpret either
+  prior result.
+- **Surface:** Reuse all 92 assets, 2017-2020 TRAIN, and 2021-2023 DEVELOPMENT.
+  Forecast all six lookbacks from five through 250 sessions against all four
+  prior target horizons. Equal-weight all 24 cells; select none.
+- **Models:** Compare constant TRAIN mean (`B0_DRIFT`), raw return (`B1_RAW`),
+  and raw return plus positive-move path efficiency and shock concentration
+  (`Q2_PATH`). Fit on TRAIN only and score frozen DEVELOPMENT forecasts.
+- **Inference:** Scale cell losses by TRAIN target variance, aggregate by
+  anchor, apply 10,000-draw stationary-block inference, and control BH
+  `q=0.10` separately by contrast and stratum. Preserve SPY as reference-only.
+- **Closed surfaces:** Keep 2024-2025, strategy, P&L, portfolio, live,
+  intraday, provider expansion, and feature/horizon tuning closed.
+- **Artifact:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md`.
 
 ## Related Artifacts
 
