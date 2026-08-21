@@ -230,9 +230,14 @@ intraday rule. The atlas keeps 68 plain ETFs, six leveraged/inverse ETFs, and
 2017-2020 only to select one positive cell per eligible asset, tests exactly
 that cell in 2021-2023, and applies 10% Benjamini-Hochberg control separately
 within each stratum. SPY is a reproduction reference, not a candidate.
-2024-2025 remains sealed, and no strategy or performance surface is opened.
-See the
-[frozen contract](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md).
+The frozen execution admitted all 92 assets and produced 79 fixed-cell
+DEVELOPMENT tests. Twelve of 60 non-SPY plain-ETF tests, two of five
+engineered-ETF tests, and five of 13 stock tests had positive correlations,
+but no asset survived within-stratum BH control. Record
+`STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; preserve sealed 2024-2025
+confirmation and open no strategy or performance surface. See the
+[contract](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md)
+and [results](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_RESULTS.md).
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)

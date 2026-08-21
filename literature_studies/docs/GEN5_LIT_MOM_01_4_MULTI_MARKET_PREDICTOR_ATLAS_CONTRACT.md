@@ -1,10 +1,16 @@
 # LIT-MOM-01.4 Multi-Market Horizon-Surface Predictor Atlas Contract
 
-Status: `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`
+Status: `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`
 
 Frozen on `2026-08-21` after the operator approved broadening the stopped
 single-SPY `LIT-MOM-01.3` predictor test to a diverse, outcome-blind atlas.
 No `01.4` predictor or target outcome was queried before this contract.
+
+The frozen execution subsequently completed with all 92 assets eligible and
+79 independently selected DEVELOPMENT cells tested. No asset survived the
+within-stratum false-discovery gate, so 2024-2025 confirmation remains sealed
+and all strategy surfaces remain closed. See the
+[results](GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_RESULTS.md).
 
 ## Place in the research progression
 

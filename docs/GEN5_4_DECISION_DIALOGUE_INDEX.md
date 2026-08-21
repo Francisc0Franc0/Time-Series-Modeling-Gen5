@@ -156,6 +156,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D152` | Return to Chan's direct predictor and freeze a search-adjusted SPY horizon surface before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` / `Agreed, I like this` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as 28 causal predictor-target cells across seven source lookbacks and four confirmable swing targets. Keep `250/25` as the literature anchor; require one global circular-shift maximum-statistic sandbox pass before deterministic nomination; retain one locked-confirmation criterion; label 2017-2023 sandbox, lock 2024-2025, and open no trading or performance surface. |
 | `D153` | Execute the LIT-MOM-01.3 sandbox and honor the global-surface STOP | current continuation | `Proceed` | Run the frozen 28-cell SPY predictor surface on the 2017-2023 sandbox only. The maximum observed correlation was `0.016240`, below the `0.177058` p90 of all 1,200 admissible circular-shift surface maxima; empirical upper-tail probability was `0.905912`. The canonical `250/25` cell was negative. Record `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`, nominate no horizon, and preserve unread 2024-2025 confirmation and all trading/performance surfaces. |
 | `D154` | Freeze a diverse multi-market predictor atlas with independent transport and FDR control | current continuation | `Let's proceed with your recommendations` | Open `LIT-MOM-01.4` without reopening SPY. Reuse all 92 rows of the previously frozen opening-gap registry: 68 plain ETFs, six engineered ETFs, and 18 stock challengers in separate strata. Select one positive cell per eligible asset in 2017-2020, test only that cell in 2021-2023, and apply BH `q=0.10` within strata. Keep SPY reproduction-only, 2024-2025 sealed, and all strategy, performance, native-provider, and intraday surfaces closed. |
+| `D155` | Execute LIT-MOM-01.4 and honor the no-transport STOP | current continuation | autonomous execution under D154 | All 92 frozen assets were eligible and 79 positive TRAIN nominees received one fixed 2021-2023 DEVELOPMENT test. Positive correlations appeared in 12/60 non-SPY plain ETFs, 2/5 engineered ETFs, and 5/13 stocks, but no asset survived the frozen within-stratum BH `q=0.10` gate. Record `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; treat APD, XLRE, and TQQQ only as non-promoted diagnostics, preserve unread 2024-2025 confirmation, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3286,6 +3287,31 @@ tasks by the branch name above, the phrase, or the decision date.
   portfolio, allocation, leverage, advice, or live behavior.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md`.
+
+### D155 — Execute the predictor atlas and stop after no controlled transport
+
+- **Execution:** Complete the frozen `LIT-MOM-01.4` packet on the exact
+  92-row registry. A bounded preflight refresh completed the requested
+  2016-2023 cache range; the authoritative evidence invocation then ran from
+  cache without reading 2024 or later bars.
+- **Eligibility and reproduction:** All 92 assets passed the mechanical and
+  analytical gates. SPY matched all three locked `01.3` reproduction values
+  to numerical tolerance and remained excluded from asset multiplicity.
+- **Independent transport:** Seventy-nine assets had a positive TRAIN nominee
+  and received exactly one fixed DEVELOPMENT test. Positive correlation
+  appeared in 12/60 non-SPY plain ETFs, 2/5 engineered ETFs, and 5/13 stocks.
+- **Multiplicity result:** No asset survived within-stratum BH `q=0.10`.
+  Minimum adjusted values were `0.986063` for plain ETFs, `0.766551` for
+  engineered ETFs, and `0.883275` for stocks. APD's positive bootstrap
+  interval does not override its raw shift p `0.097561` and BH q `0.883275`.
+- **Decision:** Record
+  `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`. Preserve unread 2024-2025
+  confirmation; do not promote APD, XLRE, TQQQ, or any visual/category clue;
+  and keep all strategy, performance, portfolio, and live surfaces closed.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_RESULTS.md`
+  and
+  `runs/research_workbench/literature_grounded/lit_mom_01_4_multi_market_predictor_atlas_20260821`.
 
 ## Related Artifacts
 

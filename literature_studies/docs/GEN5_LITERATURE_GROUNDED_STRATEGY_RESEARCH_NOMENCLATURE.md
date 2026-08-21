@@ -60,7 +60,7 @@ renames an earlier outcome.
 | `LIT-MOM-01.1` | Interday Time-Series Momentum | none | `OOS_DEVELOPMENT_COMPLETE_LIT_MOM_01_1`; STOP recommended before CONFIRMATION |
 | `LIT-MOM-01.2` | Long-Only Single-Position Interday Time-Series Momentum | none | `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`; raw retrospective breadth did not survive exposure, random-timing, canonical-horizon, or beta attribution; no confirmation authority |
 | `LIT-MOM-01.3` | SPY Time-Series-Momentum Horizon-Surface Predictor | none | `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`; 28-cell sandbox global gate failed, no nominee, 2024-2025 confirmation unread |
-| `LIT-MOM-01.4` | Multi-Market Horizon-Surface Predictor Atlas | none | `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`; 92-asset TRAIN-discovery/DEVELOPMENT-transport atlas, 2024-2025 confirmation sealed |
+| `LIT-MOM-01.4` | Multi-Market Horizon-Surface Predictor Atlas | none | `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; 92/92 eligible, 79 fixed DEVELOPMENT tests, zero within-stratum FDR candidates, 2024-2025 confirmation unread |
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
 | `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `FROZEN_PLAN_EXECUTION_NOT_OPEN`; shared intraday roadmap only |
 | `LIT-REG-01.1` | Two-State Hidden Markov Market Regime | none | `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; Stage A passed 7/8 but only 77/100 synthetic fits were valid; SPY not read |

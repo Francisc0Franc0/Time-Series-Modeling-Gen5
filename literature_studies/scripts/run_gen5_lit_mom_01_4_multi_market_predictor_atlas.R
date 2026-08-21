@@ -137,7 +137,8 @@ plot_fdr <- function(development, path, q) {
     values, names.arg = x$symbol, las = 2, cex.names = 0.52,
     col = unname(stratum_colors[x$analysis_stratum]), border = NA,
     ylab = "-log10(within-stratum BH q)",
-    main = "Fixed-cell DEVELOPMENT evidence after asset multiplicity control"
+    main = "Fixed-cell DEVELOPMENT evidence after asset multiplicity control",
+    ylim = c(0, max(-log10(q) * 1.08, values * 1.08))
   )
   abline(h = -log10(q), col = "#B42318", lwd = 2, lty = 2)
   legend(
@@ -272,7 +273,8 @@ write_report <- function(result, run_spec, spy_checks, paths, path) {
     paste0("- Mechanically eligible: `", sum(result$ledger$mechanically_eligible), " / 92`."),
     paste0("- Analysis eligible after common-anchor checks: `", sum(result$ledger$analysis_eligible), " / 92`."),
     paste0("- SPY reproduction checks: `", sum(spy_checks$passed), " / ", nrow(spy_checks), "` pass."),
-    paste0("- Workbench health maximum: `", run_spec$data_health_max_severity, "`; requested-range refresh attempted: `", run_spec$refresh, "`."),
+    paste0("- Workbench health maximum: `", run_spec$data_health_max_severity, "`; authoritative evidence invocation refresh flag: `", run_spec$refresh, "`."),
+    "- All requested ranges were complete after the bounded preflight refresh; remaining WARNs compare the deliberately 2023-bounded cache with the 2026 latest session.",
     "",
     "## Stratum readout",
     "",
