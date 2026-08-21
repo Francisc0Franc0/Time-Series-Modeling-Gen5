@@ -223,6 +223,17 @@ cell, and preserve confirmation. See the
 [hypothesis card](docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md)
 and [results](docs/GEN5_LIT_MOM_01_3_SPY_HORIZON_SURFACE_RESULTS.md).
 
+`LIT-MOM-01.4` broadens that predictor-only question across the complete
+previously frozen 92-instrument opening-gap registry without reusing its
+intraday rule. The atlas keeps 68 plain ETFs, six leveraged/inverse ETFs, and
+18 survivor-limited stock challengers in separate evidence strata. It uses
+2017-2020 only to select one positive cell per eligible asset, tests exactly
+that cell in 2021-2023, and applies 10% Benjamini-Hochberg control separately
+within each stratum. SPY is a reproduction reference, not a candidate.
+2024-2025 remains sealed, and no strategy or performance surface is opened.
+See the
+[frozen contract](docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md).
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.

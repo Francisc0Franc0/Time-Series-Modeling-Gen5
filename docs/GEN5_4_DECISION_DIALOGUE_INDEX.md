@@ -155,6 +155,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D151` | Complete the forecast-first synthetic frontier without opening market contact | current continuation | autonomous execution under D150 | All eight fresh confirmation gates passed: H2 beat B0/B1/B2 on Brier and log loss with negative one-sided 90% paired upper bounds. The 64-case frontier produced only 2/16 formal cell detections and zero null detections; one formal cell still trailed an ex-post per-case best-baseline composite on average, and the pattern was non-monotonic. Under Student-t/GARCH stress H2 mean scores trailed B0 and B1. Record `COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`; retain the mechanism clue and robustness warning, and do not open market or strategy data. |
 | `D152` | Return to Chan's direct predictor and freeze a search-adjusted SPY horizon surface before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` / `Agreed, I like this` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as 28 causal predictor-target cells across seven source lookbacks and four confirmable swing targets. Keep `250/25` as the literature anchor; require one global circular-shift maximum-statistic sandbox pass before deterministic nomination; retain one locked-confirmation criterion; label 2017-2023 sandbox, lock 2024-2025, and open no trading or performance surface. |
 | `D153` | Execute the LIT-MOM-01.3 sandbox and honor the global-surface STOP | current continuation | `Proceed` | Run the frozen 28-cell SPY predictor surface on the 2017-2023 sandbox only. The maximum observed correlation was `0.016240`, below the `0.177058` p90 of all 1,200 admissible circular-shift surface maxima; empirical upper-tail probability was `0.905912`. The canonical `250/25` cell was negative. Record `STOP_LIT_MOM_01_3_SANDBOX_NO_SEARCH_ADJUSTED_PREDICTIVE_SURFACE`, nominate no horizon, and preserve unread 2024-2025 confirmation and all trading/performance surfaces. |
+| `D154` | Freeze a diverse multi-market predictor atlas with independent transport and FDR control | current continuation | `Let's proceed with your recommendations` | Open `LIT-MOM-01.4` without reopening SPY. Reuse all 92 rows of the previously frozen opening-gap registry: 68 plain ETFs, six engineered ETFs, and 18 stock challengers in separate strata. Select one positive cell per eligible asset in 2017-2020, test only that cell in 2021-2023, and apply BH `q=0.10` within strata. Keep SPY reproduction-only, 2024-2025 sealed, and all strategy, performance, native-provider, and intraday surfaces closed. |
 
 ## Compact Decision Records
 
@@ -3260,6 +3261,31 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/docs/GEN5_LIT_MOM_01_3_SPY_HORIZON_SURFACE_RESULTS.md`
   and
   `runs/research_workbench/literature_grounded/lit_mom_01_3_spy_horizon_surface_20260821`.
+
+### D154 — Freeze a diverse multi-market predictor atlas without a mega-maximum gate
+
+- **Operator direction:** Accept the SPY STOP, broaden the direct predictor
+  test to diverse assets, avoid remembered-winner selection, permit a
+  compute-heavy run, and keep intraday work out of scope.
+- **Registry:** Reuse all 92 rows of the previously frozen opening-gap atlas
+  registry under exact SHA-256
+  `69C481DCB8443AADC30D8BF10FC7FFB7EC23D193CE88A992E42F8529225E4737`.
+  Analyze 68 plain ETFs, six leveraged/inverse ETFs, and 18 stocks in separate
+  strata. SPY is reproduction-only; no asset may be substituted after data or
+  outcomes.
+- **Power and search control:** Preserve the 28-cell surface, use 2017-2020
+  only to freeze the largest positive-correlation cell per eligible asset,
+  and test exactly that cell in 2021-2023. Avoid an atlas-wide maximum over
+  2,576 cells; instead apply BH `q=0.10` to fixed-cell probabilities separately
+  within the three predeclared strata.
+- **Evidence boundary:** Query no bar after `2023-12-29`; keep 2024-2025 for a
+  later explicit confirmation gate and keep all 2026 targets outside the
+  contract.
+- **Closed surfaces:** No native futures/FX/crypto provider, intraday data,
+  reversal rescue, thresholds, positions, costs, P&L, Sharpe, drawdown,
+  portfolio, allocation, leverage, advice, or live behavior.
+- **Artifact:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_4_MULTI_MARKET_PREDICTOR_ATLAS_CONTRACT.md`.
 
 ## Related Artifacts
 
