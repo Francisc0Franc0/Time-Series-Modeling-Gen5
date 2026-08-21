@@ -153,7 +153,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D149` | Preserve the directional Stage A STOP while retaining the proper-score signal | current continuation | autonomous execution under D148 | All ten teaching cases produced valid, deterministic, causal fits. H2 beat both baselines on mean Brier and log loss and won 9/10 cases against each, but median hard-state accuracy was 72.1% and transition-error p90 was 0.1289, failing two conjunctive gates. Record `STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; do not run the detection frontier or stress stages, alter the inspected teaching process or gates, or read market/strategy data. Retain the distinction between useful soft direction probabilities and imperfect hard state decoding for a future separately frozen forecast-first discussion. |
 | `D150` | Freeze LIT-REG-02.2 as a forecast-first directional HMM frontier | current continuation | `Thank you, let's proceed to that discussion` / `Approved` | Preserve the `02.1` STOP and reframe the new scientific target around causal H20 probability skill. Freeze 24 fresh confirmation seeds, unchanged H2 machinery, B0/B1, a stronger fixed-penalty ridge-logistic B2, oracle O1, proper-score paired confidence bounds, pooled calibration and sharpness gates, the still-unread 64-case frontier, and conditional Student-t GARCH stress. Hard-state and transition recovery become diagnostics. Market and strategy data remain closed. |
 | `D151` | Complete the forecast-first synthetic frontier without opening market contact | current continuation | autonomous execution under D150 | All eight fresh confirmation gates passed: H2 beat B0/B1/B2 on Brier and log loss with negative one-sided 90% paired upper bounds. The 64-case frontier produced only 2/16 formal cell detections and zero null detections; one formal cell still trailed an ex-post per-case best-baseline composite on average, and the pattern was non-monotonic. Under Student-t/GARCH stress H2 mean scores trailed B0 and B1. Record `COMPLETE_LIT_REG_02_2_SYNTHETIC_FORECAST_FRONTIER_MAPPED_MARKET_NOT_OPENED`; retain the mechanism clue and robustness warning, and do not open market or strategy data. |
-| `D152` | Return to Chan's fixed 250/25 predictor before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as a direct causal predictor-target card with fixed 250/25 horizons, one continuous slope estimand, dependence-aware uncertainty, one locked-confirmation criterion, 2017-2023 sandbox labeling, locked 2024-2025 confirmation, and no trading or performance surface. |
+| `D152` | Return to Chan's direct predictor and freeze a search-adjusted SPY horizon surface before strategy construction | current continuation | `I agree with your recommendation as the next narrow slice` / `Agreed, I like this` | Preserve the stopped broad Chan evidence. Freeze `LIT-MOM-01.3` on SPY as 28 causal predictor-target cells across seven source lookbacks and four confirmable swing targets. Keep `250/25` as the literature anchor; require one global circular-shift maximum-statistic sandbox pass before deterministic nomination; retain one locked-confirmation criterion; label 2017-2023 sandbox, lock 2024-2025, and open no trading or performance surface. |
 
 ## Compact Decision Records
 
@@ -3200,7 +3200,7 @@ tasks by the branch name above, the phrase, or the decision date.
   and
   `runs/research_workbench/literature_studies/lit_reg_01_2_hmm_stage_a_20260819`.
 
-### D152 — Return to Chan's minimal predictor before strategy construction
+### D152 — Return to Chan's search-adjusted predictor surface before strategy construction
 
 - **Operator direction:** Preserve the stopped broad Chan evidence and open a
   new narrow slice that asks the direct predictor-target question on one ETF.
@@ -3210,22 +3210,26 @@ tasks by the branch name above, the phrase, or the decision date.
   `LIT-MOM-01.2` later produced encouraging long-only raw breadth, but exposure,
   matched-random timing, fixed-horizon, and SPY attribution supported the
   existing `STOP_LIT_MOM_01_2_AUDIT_01_NO_INCREMENTAL_TIMING`.
-- **New variant:** Freeze `LIT-MOM-01.3` on `SPY` with Chan's canonical
-  `250/25` horizon fixed before outcomes. Estimate the continuous relationship
-  between trailing adjusted-close log return and the causally attainable
-  next-open-to-25-open log return.
-- **Inference:** Use `beta` from `Y=alpha+beta*X` as the primary estimand and a
-  10,000-draw seeded stationary-block bootstrap with expected block length 50.
-  The single locked-confirmation criterion requires positive `beta` and a
-  strictly positive 90% lower bound. Conditional means, sign accuracy,
-  phase offsets, circular shifts, year concentration, and horizon decay remain
-  diagnostics rather than conjunctive vetoes.
+- **New variant:** Freeze `LIT-MOM-01.3` on `SPY` with seven source lookbacks
+  `{1,5,10,25,60,120,250}` and four confirmable swing targets `{5,10,25,60}`.
+  Estimate all 28 continuous relationships between trailing adjusted-close log
+  return and the causally attainable next-open-to-`H`-open log return. Keep
+  `250/25` visible as the literature anchor rather than forcing it onto SPY.
+- **Search and inference:** Compare the observed maximum cell correlation with
+  the complete admissible circular-shift maximum distribution. Require it to
+  exceed the 90th percentile before nominating the largest positive-correlation
+  cell, with exact ties toward shorter `H` then shorter `L`. Use `beta` as the
+  effect-size estimand and 10,000-draw stationary-block intervals with expected
+  block length 60. The single later confirmation criterion requires positive
+  nominee `beta` and a strictly positive 90% lower bound. Conditional means,
+  sign accuracy, phase offsets, neighborhood continuity, year concentration,
+  and the `250/25` anchor remain diagnostics rather than conjunctive vetoes.
 - **Evidence boundary:** The already inspected 2017-2023 history is sandbox
   only. Keep 2024-2025 locked until a later explicit operator replay gate, and
   keep all 2026 targets outside the card. This design slice reads no outcomes.
-- **Closed surfaces:** No horizon search, asset atlas, sign threshold, trading
-  policy, costs, P&L, Sharpe, drawdown, portfolio, allocation, leverage, live
-  advice, or production behavior is authorized.
+- **Closed surfaces:** No horizon outside the frozen 28 cells, asset atlas,
+  sign threshold, trading policy, costs, P&L, Sharpe, drawdown, portfolio,
+  allocation, leverage, live advice, or production behavior is authorized.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md`.
 

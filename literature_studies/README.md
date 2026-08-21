@@ -207,13 +207,16 @@ Audit 01 STOP or nominating a filter. See the
 and [review deck](presentations/gen5_lit_mom_01_2_audit_01_representative_trade_tapes.pptx).
 
 `LIT-MOM-01.3` returns to the direct prediction question before any trading
-policy. It freezes `SPY`, Chan's canonical `250/25` horizon, a trailing
-adjusted-close log-return predictor, and a causal next-open-to-exit-open
-target. The primary estimand is one continuous slope with stationary-block
-uncertainty and one locked-confirmation criterion. The already inspected
-2017-2023 history is sandbox only; 2024-2025 remains locked behind a later
-operator gate, and all 2026 targets remain outside the card. No data or
-outcomes have been opened under `01.3`. See the
+policy. It freezes `SPY` and a 28-cell surface formed from seven Chan-style
+lookbacks and four confirmable swing targets. Every cell uses a trailing
+adjusted-close log-return predictor and causal next-open-to-exit-open target;
+`250/25` remains the literature anchor rather than a forced SPY horizon. A
+global circular-shift maximum-statistic test must pass before a deterministic
+sandbox nominee can be frozen, and only that nominee may later receive the
+single locked-confirmation test. The already inspected 2017-2023 history is
+sandbox only; 2024-2025 remains locked behind a later operator gate, and all
+2026 targets remain outside the card. No data or outcomes have been opened
+under `01.3`. See the
 [hypothesis card](docs/GEN5_LIT_MOM_01_3_MINIMAL_SPY_PREDICTOR_HYPOTHESIS_CARD.md).
 
 The subsequent
