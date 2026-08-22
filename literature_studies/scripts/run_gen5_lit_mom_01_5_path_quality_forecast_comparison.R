@@ -29,6 +29,7 @@ source(file.path(
   "gen5_lit_mom_01_5_path_quality_forecast_comparison.R"
 ))
 g5_load_local_renviron(repo_root)
+options(warn = 1)
 
 env_or <- function(name, default) {
   value <- Sys.getenv(name, unset = "")
@@ -105,35 +106,50 @@ plot_model_losses <- function(summary, path) {
   groups <- split(summary$mean_scaled_loss, factor(summary$model_id, levels = names(model_colors)))
   boxplot(
     groups, col = unname(model_colors), border = "#334155",
-    ylab = "Asset mean DEVELOPMENT scaled squared loss",
+    log = "y",
+    ylab = "Asset mean DEVELOPMENT scaled squared loss (log scale)",
     xlab = "TRAIN-fitted forecast authority",
     main = "Drift versus raw return versus path quality across all 24 cells",
     las = 1
   )
-  stripchart(groups, vertical = TRUE, method = "jitter", add = TRUE,
-             pch = 19, cex = 0.35, col = grDevices::adjustcolor("#0F172A", alpha.f = 0.25))
+  for (i in seq_along(groups)) {
+    points(
+      jitter(rep(i, length(groups[[i]])), amount = 0.08), groups[[i]],
+      pch = 19, cex = 0.35,
+      col = grDevices::adjustcolor("#0F172A", alpha.f = 0.25)
+    )
+  }
 }
 
 plot_incremental_skill <- function(decisions, path) {
-  png(path, width = 1750, height = 1000, res = 150)
-  old <- par(mar = c(7, 7, 5, 2))
+  decisions <- decisions[decisions$comparison_complete, , drop = FALSE]
+  png(path, width = 2400, height = 1050, res = 150)
+  old <- par(mfrow = c(1, 2), mar = c(7, 7, 5, 2))
   on.exit({ par(old); dev.off() }, add = TRUE)
   colors <- unname(stratum_colors[decisions$analysis_stratum])
   pch <- ifelse(decisions$is_path_quality_candidate, 19, 1)
-  plot(
-    decisions$d21_mean, decisions$d20_mean,
-    pch = pch, col = colors,
-    cex = ifelse(decisions$is_path_quality_candidate, 1.5, 1),
-    xlab = "D21: path-quality loss improvement over raw return",
-    ylab = "D20: path-quality loss improvement over drift",
-    main = "Equal-weighted 24-cell DEVELOPMENT forecast improvement"
-  )
-  abline(h = 0, v = 0, col = "#CBD5E1")
-  if (any(decisions$is_path_quality_candidate)) {
-    x <- decisions[decisions$is_path_quality_candidate, , drop = FALSE]
-    text(x$d21_mean, x$d20_mean, labels = x$symbol, pos = 3, cex = 0.8)
+  draw_panel <- function(main, xlim = NULL, ylim = NULL, label_outliers = FALSE) {
+    plot(
+      decisions$d21_mean, decisions$d20_mean,
+      pch = pch, col = colors,
+      cex = ifelse(decisions$is_path_quality_candidate, 1.5, 1),
+      xlab = "D21: path-quality improvement over raw",
+      ylab = "D20: path-quality improvement over drift",
+      main = main, xlim = xlim, ylim = ylim
+    )
+    abline(h = 0, v = 0, col = "#CBD5E1")
+    if (label_outliers) {
+      score <- abs(decisions$d21_mean) + abs(decisions$d20_mean)
+      label <- which(score > 10)
+      text(decisions$d21_mean[label], decisions$d20_mean[label],
+           labels = decisions$symbol[label], pos = 3, cex = 0.75)
+    }
   }
-  legend("topleft", legend = names(stratum_colors), col = stratum_colors, pch = 19, bty = "n")
+  draw_panel("Full atlas; extreme extrapolation retained", label_outliers = TRUE)
+  xlim <- unname(stats::quantile(decisions$d21_mean, c(0.025, 0.975), type = 7))
+  ylim <- unname(stats::quantile(decisions$d20_mean, c(0.025, 0.975), type = 7))
+  draw_panel("Central 95% of assets", xlim = xlim, ylim = ylim)
+  legend("bottomleft", legend = names(stratum_colors), col = stratum_colors, pch = 19, bty = "n")
 }
 
 plot_primary_fdr <- function(contrasts, path, q) {
@@ -198,7 +214,10 @@ plot_category_breadth <- function(summary, path) {
 }
 
 write_report <- function(result, run_spec, model_summary, paths, path) {
-  non_spy <- result$decisions[!result$decisions$is_spy_reference, , drop = FALSE]
+  non_spy <- result$decisions[
+    !result$decisions$is_spy_reference & result$decisions$comparison_complete,
+    , drop = FALSE
+  ]
   contrast_lines <- unlist(lapply(result$contract$contrast_ids, function(contrast) {
     x <- result$contrasts[
       result$contrasts$contrast_id == contrast & !result$contrasts$is_spy_reference,
@@ -234,6 +253,25 @@ write_report <- function(result, run_spec, model_summary, paths, path) {
     paste0("- `", model, "`: median asset scaled loss `",
            sprintf("%.5f", stats::median(x$mean_scaled_loss)), "`.")
   }))
+  best_models <- do.call(rbind, lapply(split(model_summary, model_summary$analysis_id), function(x) {
+    x[which.min(x$mean_scaled_loss), c("analysis_id", "model_id"), drop = FALSE]
+  }))
+  best_lines <- unlist(lapply(names(model_colors), function(model) {
+    paste0("- `", model, "` had the lowest asset-average loss for `",
+           sum(best_models$model_id == model), " / ", nrow(best_models), "` eligible assets.")
+  }))
+  ineligible <- result$ledger[
+    result$ledger$mechanically_eligible & !result$ledger$analysis_eligible,
+    , drop = FALSE
+  ]
+  ineligible_lines <- if (nrow(ineligible)) {
+    apply(ineligible, 1L, function(row) paste0(
+      "- `", row[["symbol"]], "`: `", row[["eligibility_reason"]],
+      "`; partial cells discarded `", row[["cells_completed_before_invalid"]], "`."
+    ))
+  } else {
+    "- No mechanically eligible asset failed the analytical model gate."
+  }
   artifact_lines <- paste0(
     "- `", names(paths), "`: `",
     normalizePath(unlist(paths), winslash = "/", mustWork = FALSE), "`"
@@ -260,7 +298,12 @@ write_report <- function(result, run_spec, model_summary, paths, path) {
     paste0("- Registry SHA-256: `", run_spec$registry_sha256, "`."),
     paste0("- Mechanically eligible: `", run_spec$mechanically_eligible_assets, " / 92`."),
     paste0("- Analysis eligible: `", run_spec$analysis_eligible_assets, " / 92`."),
-    paste0("- Complete fitted cells: `", run_spec$complete_model_cells, " / 2208`."),
+    paste0("- Complete fitted cells retained: `", run_spec$complete_model_cells,
+           " / ", 24L * run_spec$analysis_eligible_assets, "` across eligible assets."),
+    paste0("- Partial cells discarded under the frozen all-cells gate: `",
+           run_spec$partial_cells_discarded, "`; analytically ineligible assets: `",
+           run_spec$analytically_ineligible_assets, "`."),
+    ineligible_lines,
     paste0("- Workbench health maximum: `", run_spec$data_health_max_severity,
            "`; authoritative refresh flag: `", run_spec$refresh, "`."),
     "- The requested 2016-2023 range was complete before any forecast outcome was interpreted.",
@@ -268,6 +311,10 @@ write_report <- function(result, run_spec, model_summary, paths, path) {
     "## Model loss readout",
     "",
     model_lines,
+    best_lines,
+    paste0("- Mechanism-aligned TRAIN coefficient medians: `",
+           sum(result$coefficient_summary$mechanism_aligned), " / ",
+           nrow(result$coefficient_summary), "` eligible assets."),
     "",
     "## Paired DEVELOPMENT contrasts",
     "",
@@ -380,6 +427,12 @@ run_spec <- data.frame(
   mechanically_eligible_assets = sum(result$ledger$mechanically_eligible),
   analysis_eligible_assets = sum(result$ledger$analysis_eligible),
   complete_model_cells = sum(result$ledger$valid_cell_count),
+  partial_cells_discarded = sum(
+    result$ledger$cells_completed_before_invalid[!result$ledger$analysis_eligible]
+  ),
+  analytically_ineligible_assets = sum(
+    result$ledger$mechanically_eligible & !result$ledger$analysis_eligible
+  ),
   raw_beats_drift_clues = nrow(result$raw_clues),
   path_quality_candidates = nrow(result$candidates),
   confirmation_opened = result$confirmation_opened,
@@ -439,7 +492,10 @@ write_report(result, run_spec, model_summary, paths, paths$report)
 message("LIT-MOM-01.5 complete: ", result$overall_status)
 message("Data health: ", health_max)
 message("Eligible assets: ", sum(result$ledger$analysis_eligible), " / 92")
-message("Complete model cells: ", sum(result$ledger$valid_cell_count), " / 2208")
+message(
+  "Complete model cells retained: ", sum(result$ledger$valid_cell_count),
+  " / ", 24L * sum(result$ledger$analysis_eligible), " across eligible assets"
+)
 message("Raw beats drift clues: ", nrow(result$raw_clues))
 message("Path-quality candidates: ", nrow(result$candidates))
 message("Output: ", normalizePath(output_dir, winslash = "/", mustWork = FALSE))

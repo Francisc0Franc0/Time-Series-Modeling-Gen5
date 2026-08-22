@@ -158,6 +158,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D154` | Freeze a diverse multi-market predictor atlas with independent transport and FDR control | current continuation | `Let's proceed with your recommendations` | Open `LIT-MOM-01.4` without reopening SPY. Reuse all 92 rows of the previously frozen opening-gap registry: 68 plain ETFs, six engineered ETFs, and 18 stock challengers in separate strata. Select one positive cell per eligible asset in 2017-2020, test only that cell in 2021-2023, and apply BH `q=0.10` within strata. Keep SPY reproduction-only, 2024-2025 sealed, and all strategy, performance, native-provider, and intraday surfaces closed. |
 | `D155` | Execute LIT-MOM-01.4 and honor the no-transport STOP | current continuation | autonomous execution under D154 | All 92 frozen assets were eligible and 79 positive TRAIN nominees received one fixed 2021-2023 DEVELOPMENT test. Positive correlations appeared in 12/60 non-SPY plain ETFs, 2/5 engineered ETFs, and 5/13 stocks, but no asset survived the frozen within-stratum BH `q=0.10` gate. Record `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; treat APD, XLRE, and TQQQ only as non-promoted diagnostics, preserve unread 2024-2025 confirmation, and open no strategy or performance surface. |
 | `D156` | Freeze an incremental path-quality forecast comparison after the raw-return STOP | current continuation | `It sounds like a very worthwhile comparison. Let's go ahead and run it.` | Open `LIT-MOM-01.5` as a predictor-only sibling. Across all 92 frozen assets and 24 equally weighted nondegenerate cells, compare constant TRAIN drift, raw return, and raw return plus causal positive-move efficiency and shock concentration. Use 2017-2020 TRAIN, 2021-2023 DEVELOPMENT, stationary-block loss inference, and BH `q=0.10` by contrast and stratum. Acknowledge the stopped ER/ADX future-path test, keep SPY reference-only and 2024-2025 sealed, and open no strategy or performance surface. |
+| `D157` | Execute LIT-MOM-01.5 and retain drift as the dominant forecast authority | current continuation | autonomous execution under D156 | All 92 assets passed data coverage; SQQQ failed the frozen full-rank L250 gate. Across 91 eligible assets, drift had the lowest loss for 77, raw return for 13, and path quality for one. No raw-over-drift or path-quality clue survived stationary-block inference and within-stratum FDR; minimum primary q was `0.376462`. Record `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`, retain DBA/CORN extrapolation as diagnostic learning, preserve 2024-2025, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3336,6 +3337,34 @@ tasks by the branch name above, the phrase, or the decision date.
   intraday, provider expansion, and feature/horizon tuning closed.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md`.
+
+### D157 — Execute path-quality comparison and retain the drift baseline
+
+- **Validity:** All 92 assets passed complete 2016-2023 data coverage. SQQQ
+  failed the frozen all-cells analytical gate because its L250 positive-path
+  features were perfectly collinear in TRAIN; discard its 20 partial cells.
+  Retain 2,184 complete cells across 91 assets.
+- **Model comparison:** Median scaled loss was `0.95752` for drift, `0.98407`
+  for raw return, and `1.07995` for path quality. Drift had the lowest
+  asset-average loss for 77/91, raw for 13/91, and path quality for 1/91.
+- **Controlled inference:** Among 90 non-SPY assets, D10/D21/D20 were positive
+  for 13/14/4 assets respectively. No raw or path clue survived the frozen
+  bootstrap and within-stratum FDR gates; the minimum primary D21 q was
+  `0.376462`.
+- **Mechanism diagnostic:** Only 11/91 assets had the expected median
+  coefficient directions. Rare positive L250 paths in TRAIN followed by
+  common, much larger positive paths in DEVELOPMENT caused catastrophic
+  unpenalized extrapolation for DBA and CORN. Retain those failures as a
+  warning against unsupported asymmetric state features; do not clip or
+  regularize them after observation.
+- **Decision:** Record
+  `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`. Preserve unread
+  2024-2025 confirmation and keep strategy, performance, portfolio, and live
+  surfaces closed.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md`
+  and
+  `runs/research_workbench/literature_grounded/lit_mom_01_5_path_quality_forecast_comparison_20260821`.
 
 ## Related Artifacts
 

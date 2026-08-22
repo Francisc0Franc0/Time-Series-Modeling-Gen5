@@ -447,6 +447,7 @@ g5_mom015_run_comparison <- function(
   ledger$train_anchor_count <- 0L
   ledger$development_anchor_count <- 0L
   ledger$valid_cell_count <- 0L
+  ledger$cells_completed_before_invalid <- 0L
   ledger$analysis_eligible <- FALSE
   ledger$comparison_status <- "NOT_TESTED_INELIGIBLE"
   cell_metrics <- list()
@@ -493,20 +494,24 @@ g5_mom015_run_comparison <- function(
       }
       if (!is.null(failure)) break
     }
-    ledger$valid_cell_count[[ledger_i]] <- length(fitted)
+    ledger$cells_completed_before_invalid[[ledger_i]] <- length(fitted)
     if (!is.null(failure) || length(fitted) != 24L) {
       ledger$eligibility_reason[[ledger_i]] <- paste0("invalid_model_cell:", failure)
       ledger$comparison_status[[ledger_i]] <- "INVALID_MODEL_CELL"
       next
     }
+    ledger$valid_cell_count[[ledger_i]] <- length(fitted)
     ledger$analysis_eligible[[ledger_i]] <- TRUE
     ledger$comparison_status[[ledger_i]] <- "COMPLETE_24_CELL_COMPARISON"
     tag <- function(x) cbind(
-      analysis_id = identity$analysis_id,
-      symbol = identity$symbol,
-      category = identity$category,
-      analysis_stratum = identity$analysis_stratum,
-      is_spy_reference = identity$is_spy_reference,
+      data.frame(
+        analysis_id = rep(unname(identity$analysis_id[[1L]]), nrow(x)),
+        symbol = rep(unname(identity$symbol[[1L]]), nrow(x)),
+        category = rep(unname(identity$category[[1L]]), nrow(x)),
+        analysis_stratum = rep(unname(identity$analysis_stratum[[1L]]), nrow(x)),
+        is_spy_reference = rep(unname(identity$is_spy_reference[[1L]]), nrow(x)),
+        stringsAsFactors = FALSE
+      ),
       x
     )
     metrics_asset <- do.call(rbind, lapply(fitted, `[[`, "metrics"))

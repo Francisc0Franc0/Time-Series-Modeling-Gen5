@@ -245,8 +245,14 @@ path-quality extension containing positive-move efficiency and shock
 concentration. All 24 nondegenerate cells are equally weighted rather than
 searched, DEVELOPMENT loss differences receive stationary-block inference
 and within-stratum FDR control, and 2024-2025 remains sealed. The previously
-stopped ER/ADX future-path test is acknowledged rather than reopened. See the
-[frozen contract](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md).
+stopped ER/ADX future-path test is acknowledged rather than reopened. The
+frozen execution retained 2,184 complete cells across 91 assets: drift had the
+lowest loss for 77, raw return for 13, and path quality for one. No raw or
+path-quality comparison survived the complete controlled gate. Record
+`STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`, preserve
+confirmation, and see the
+[contract](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md)
+and [results](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md).
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)

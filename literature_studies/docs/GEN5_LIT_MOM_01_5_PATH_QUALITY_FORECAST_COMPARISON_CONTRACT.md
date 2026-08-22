@@ -1,11 +1,17 @@
 # LIT-MOM-01.5 Path-Quality Incremental Forecast Comparison Contract
 
-Status: `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`
+Status: `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`
 
 Frozen on `2026-08-21` after the operator approved comparing an intercept-only
 drift forecast, the stopped raw-return predictor, and a compact causal
 path-quality extension. No `01.5` path-quality feature, forecast, loss, or
 target association was computed before this contract.
+
+The frozen execution subsequently retained 2,184 complete cells across 91
+analytically eligible assets. Drift was the lowest-loss authority for 77/91,
+raw return for 13/91, and path quality for 1/91. No non-SPY asset survived the
+complete gate, so confirmation remains sealed. See the
+[results](GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md).
 
 ## Place in the research progression
 
