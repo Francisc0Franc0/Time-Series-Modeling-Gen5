@@ -1,11 +1,17 @@
 # LIT-IMOM-01.3 Same-Slot Relative Momentum Contract
 
-Status: `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`
+Status: `STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM`
 
 Frozen on `2026-08-21` after the operator approved a minimal test of recurring
 time-of-day relative momentum. No `01.3` target, feature, coefficient,
 forecast loss, placebo comparison, or outcome was computed before this
 contract.
+
+The frozen execution subsequently retained all 26 instruments, fitted all 25
+non-SPY rows, and admitted 731 TRAIN plus 735 DEVELOPMENT target sessions.
+Every equal-weight panel contrast was negative with a strictly negative 90%
+interval, no asset survived, and 2024+ remained unread. See the
+[results](GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_RESULTS.md).
 
 ## Narrative hypothesis
 

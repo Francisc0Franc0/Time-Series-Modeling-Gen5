@@ -277,6 +277,12 @@ beat the best of all twelve wrong-clock alignments. The 22 diverse stocks form
 the candidate family; AMD, TSLA, and QQQ remain diagnostic-only, SPY is the
 benchmark, and 2024+ remains sealed. No `01.3` outcome was read before the
 contract was frozen.
+The frozen execution admitted 731 TRAIN and 735 DEVELOPMENT target sessions.
+At the equal-weight 22-stock panel level, prior-day, same-slot-over-prior-day,
+same-slot-over-clock, and same-slot-over-best-placebo loss contrasts were all
+negative with strictly negative 90% intervals. Zero assets survived. Record
+`STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM` and see the
+[results](docs/GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_RESULTS.md).
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)

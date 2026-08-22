@@ -65,7 +65,7 @@ renames an earlier outcome.
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
 | `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER`; unstable TRAIN admission and negative active-block economic transport, 2024+ unread |
 | `LIT-IMOM-01.2` | 30-Minute Path-Quality Incremental Forecast Comparison | none | `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`; 26/26 eligible, 624 complete cells, path lowest-loss for 0/26, zero controlled raw/path clues, 2024+ unread |
-| `LIT-IMOM-01.3` | Same-Slot Relative Momentum | none | `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`; SPY-relative next-session same-slot forecast versus clock, general-day, and all 12 wrong-clock controls; 2024+ sealed |
+| `LIT-IMOM-01.3` | Same-Slot Relative Momentum | none | `STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM`; 26/26 mechanically eligible, 0/22 candidates, all four panel intervals negative, 2024+ unread |
 | `LIT-REG-01.1` | Two-State Hidden Markov Market Regime | none | `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; Stage A passed 7/8 but only 77/100 synthetic fits were valid; SPY not read |
 | `LIT-REG-01.2` | Two-State HMM Volatility-State Forecast | none | `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`; strong recovery passed, weak/null abstention and numerical reliability failed |
 | `LIT-REG-02.1` | Directional Markov-Switching Proof-of-Mechanism | none | `STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; proper forecast scores passed, hard state/transition recovery failed; downstream stages not run |

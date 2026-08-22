@@ -82,7 +82,10 @@ plot_asset_contrasts <- function(decisions, path) {
     ylab = "U: same slot over best wrong clock",
     main = "Asset-level incremental forecast evidence")
   abline(h = 0, v = 0, col = "#CBD5E1")
-  text(decisions$s21_mean, decisions$u_mean, labels = decisions$symbol, pos = 3, cex = 0.65, col = color)
+  rank_u <- rank(-abs(decisions$u_mean), ties.method = "first")
+  label <- !decisions$candidate_fdr | rank_u <= 8L | decisions$is_same_slot_candidate
+  text(decisions$s21_mean[label], decisions$u_mean[label], labels = decisions$symbol[label],
+    pos = 3, cex = 0.72, col = color[label])
 }
 
 plot_panel_intervals <- function(panel_contrasts, path) {
@@ -105,10 +108,9 @@ plot_wrong_clock <- function(panel_session_losses, path) {
   same <- mean(panel_session_losses$S21)
   png(path, width = 1500, height = 1000, res = 150)
   old <- par(mar = c(6, 6, 5, 2)); on.exit({ par(old); dev.off() }, add = TRUE)
-  plot(1:12, placebo, type = "h", lwd = 7, col = "#94A3B8",
+  barplot(placebo, names.arg = 1:12, col = "#94A3B8", border = NA,
     xlab = "Circular source-slot displacement", ylab = "Improvement over prior-day control",
-    main = "Wrong-clock falsification surface", xaxt = "n")
-  axis(1, at = 1:12)
+    main = "Wrong-clock falsification surface")
   abline(h = same, col = "#0F766E", lwd = 3)
   abline(h = 0, col = "#CBD5E1")
   legend("topright", legend = c("Same slot", "Wrong-clock offsets"),
@@ -123,6 +125,8 @@ plot_coefficients <- function(summary, path) {
   barplot(x$same_slot_coefficient, names.arg = x$symbol, las = 2, col = color, border = NA,
     ylab = "TRAIN same-slot coefficient", main = "Frozen pooled coefficient by asset")
   abline(h = 0, col = "#334155")
+  legend("topleft", legend = c("22 candidate stocks", "remembered/reference"),
+    fill = c("#2563EB", "#94A3B8"), border = NA, bty = "n")
 }
 
 plot_slot_breadth <- function(slot_diagnostics, path) {
@@ -157,6 +161,27 @@ write_report <- function(result, paths, path) {
   model_lines <- vapply(seq_len(nrow(model_medians)), function(i) {
     sprintf("- `%s`: median standardized loss `%.6f`.", model_medians$model_id[[i]], model_medians$development_scaled_loss[[i]])
   }, character(1))
+  primary <- result$metrics[
+    result$metrics$candidate_fdr & result$metrics$model_id %in% result$contract$primary_model_ids,
+    , drop = FALSE
+  ]
+  winner <- vapply(split(primary, primary$analysis_id), function(x) {
+    x$model_id[[which.min(x$development_scaled_loss)]]
+  }, character(1))
+  winner_count <- table(factor(winner, levels = result$contract$primary_model_ids))
+  support <- result$contrasts[
+    result$contrasts$candidate_fdr & result$contrasts$ci_lower_90 > 0,
+    , drop = FALSE
+  ]
+  support_lines <- if (nrow(support)) vapply(seq_len(nrow(support)), function(i) {
+    sprintf("- `%s %s`: mean `%.6f`, 90%% interval `[%.6f, %.6f]`, raw p `%.6f`, BH q `%.6f`.",
+      support$symbol[[i]], support$contrast_id[[i]], support$observed_mean_differential[[i]],
+      support$ci_lower_90[[i]], support$ci_upper_90[[i]],
+      support$centered_null_upper_p[[i]], support$bh_q_value[[i]])
+  }, character(1)) else "- No candidate contrast had a positive 90% lower bound."
+  u_panel <- panel[panel$contrast_id == "U", , drop = FALSE]
+  slot_median <- aggregate(same_slot_improvement_over_day ~ target_slot,
+    data = result$slot_diagnostics[result$slot_diagnostics$candidate_fdr, ], FUN = median)
   report <- c(
     "# LIT-IMOM-01.3 Same-Slot Relative Momentum", "",
     paste0("Status: `", result$overall_status, "`"), "",
@@ -169,6 +194,8 @@ write_report <- function(result, paths, path) {
     "- All comparisons used the identical 13-slot observations. Early closes and archive exclusions were not bridged or imputed.",
     "- 2024+ was not loaded. No strategy or performance outcome was computed.", "",
     "## Primary model losses", "", model_lines, "",
+    sprintf("Candidate-stock lowest-loss counts: clock `%d / 22`, prior day `%d / 22`, same slot `%d / 22`.",
+      winner_count[["M0_CLOCK"]], winner_count[["M1_DAY"]], winner_count[["M2_SAME"]]), "",
     "## Equal-weight candidate-panel inference", "", panel_lines, "",
     sprintf("Broad-panel clue: `%s`.", result$broad_panel_clue), "",
     "## Asset gates", "",
@@ -176,6 +203,13 @@ write_report <- function(result, paths, path) {
     sprintf("- General-day clues: `%d / 22`.", sum(candidate$general_day_clue)),
     sprintf("- Positive S21 / S20 / U rows: `%d / %d / %d` of 22.",
       sum(candidate$s21_mean > 0), sum(candidate$s20_mean > 0), sum(candidate$u_mean > 0)), "",
+    sprintf("- Positive TRAIN same-slot coefficients: `%d / 22`; median coefficient `%.6f`.",
+      sum(candidate$same_slot_coefficient > 0), stats::median(candidate$same_slot_coefficient)),
+    sprintf("- Panel same-slot improvement was `%.6f`; best wrong-clock improvement was `%.6f` at offset `%d`.",
+      u_panel$same_slot_improvement, u_panel$best_placebo_improvement, u_panel$best_placebo_offset),
+    sprintf("- Candidate median S21 was positive in `%d / 13` descriptive target slots; no slot may be selected.",
+      sum(slot_median$same_slot_improvement_over_day > 0)), "",
+    "## Positive-interval diagnostics before multiplicity", "", support_lines, "",
     "Strongest U rows, reported diagnostically:", "", strongest_lines, "",
     "## Interpretation boundary", "",
     if (result$broad_panel_clue || nrow(result$candidates)) {

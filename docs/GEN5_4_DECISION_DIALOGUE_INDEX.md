@@ -162,6 +162,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D158` | Freeze a direct 30-minute bar-domain path-quality forecast comparison | current continuation | `Approved` after discussing the 30-minute sibling | Open `LIT-IMOM-01.2` on the existing 26-instrument adjusted SIP panel. Preserve the exact numeric 24-cell daily-engine grid in bar units rather than scaling by 13; compare drift, raw return, and path quality in both an exact chain and a TRAIN-fitted bar-slot chain. Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, session-equal losses, 20-session stationary blocks, and BH `q=0.10` across 22 nonremembered stocks. Keep AMD, TSLA, SPY, and QQQ diagnostic-only, 2024+ sealed, and strategy/performance closed. |
 | `D159` | Execute LIT-IMOM-01.2 and reject the 30-minute path-quality transport | current continuation | autonomous execution under D158 | All 26 instruments and 624 cells passed. Baseline models were lowest-loss for 21/26 in both chains, raw for five, and path for none. Among 22 candidates, only CAT had positive path-over-raw and no asset had positive path-over-baseline; minimum K21 q was `0.998100`. TXN/GOOGL raw intervals failed FDR at q `0.331067`. Every cell and slot/session-crossing median path diagnostic was negative. Record `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`, preserve 2024+, and open no strategy or performance surface. |
 | `D160` | Freeze same-slot relative momentum against every wrong-clock alignment | current continuation | `Let's plan and execute a test for this concept` | Open `LIT-IMOM-01.3` on the existing adjusted SIP panel. Test whether one session's slot-normalized stock-minus-SPY return forecasts the same slot next session beyond target-slot effects and prior full-session relative return. Fit all 12 circularly displaced source-slot models on the identical sample and require the same-slot model to beat the outcome-selected best placebo with the maximum recomputed inside every session-block bootstrap draw. Use 22 nonremembered stocks for broad/FDR gates, keep AMD/TSLA/QQQ diagnostic-only, preserve 2024+, and open no strategy or performance surface. |
+| `D161` | Execute LIT-IMOM-01.3 and reject the recurring-clock return proxy | current continuation | autonomous execution under D160 | All 26 rows passed; 25 non-SPY assets were fit on 731 TRAIN and 735 DEVELOPMENT target sessions. The equal-weight panel G10, S21, S20, and U contrasts were all negative with strictly negative 90% intervals. The same-slot model worsened the prior-day control by `-0.000360` and lost to the best wrong clock by `-0.000163`; 0/22 assets survived. PG and SHW were isolated pre-FDR diagnostics only. Record `STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM`, preserve 2024+, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3434,6 +3435,29 @@ tasks by the branch name above, the phrase, or the decision date.
   live surfaces closed.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_CONTRACT.md`.
+
+### D161 — Execute same-slot relative momentum and retain the null
+
+- **Validity:** All 26 rows passed common-calendar checks. Fit 25 non-SPY
+  instruments on 731 TRAIN and 735 DEVELOPMENT consecutive full-session
+  targets, or 9,503 and 9,555 slot observations per asset.
+- **Panel result:** G10, S21, S20, and clock-specificity U were all negative
+  with strictly negative 90% intervals. Same-slot improvement was `-0.000360`;
+  the best wrong-clock improvement was `-0.000197` at offset 7; U was
+  `-0.000163`.
+- **Breadth:** Clock was lowest-loss for 14/22 candidate stocks, prior day for
+  three, and same slot for five. Only 8/22 S21 and 4/22 U point estimates were
+  positive; zero assets survived.
+- **Diagnostics:** PG's positive S21/S20 raw intervals failed FDR and
+  wrong-clock specificity. SHW's positive general-day interval failed FDR.
+  Neither may select an asset, slot, or offset.
+- **Decision:** Record
+  `STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM`. Preserve 2024+ and
+  keep strategy, performance, portfolio, and live surfaces closed.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_RESULTS.md`
+  and
+  `runs/research_workbench/literature_grounded/lit_imom_01_3_same_slot_relative_momentum_20260821`.
 
 ## Related Artifacts
 
