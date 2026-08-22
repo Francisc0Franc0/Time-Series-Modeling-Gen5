@@ -63,7 +63,8 @@ renames an earlier outcome.
 | `LIT-MOM-01.4` | Multi-Market Horizon-Surface Predictor Atlas | none | `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; 92/92 eligible, 79 fixed DEVELOPMENT tests, zero within-stratum FDR candidates, 2024-2025 confirmation unread |
 | `LIT-MOM-01.5` | Path-Quality Incremental Forecast Comparison | none | `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`; 91 eligible, 2,184 complete cells, drift lowest-loss for 77 assets, zero raw or path controlled clues, 2024-2025 unread |
 | `LIT-MOM-02.1` | Causal Opening-Gap Intraday Momentum | none | `STOP_LIT_MOM_02_1_OPENING_GAP_NO_TRAIN_NOMINEE`; 0/8 small POC and 0/92 wide atlas |
-| `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `FROZEN_PLAN_EXECUTION_NOT_OPEN`; shared intraday roadmap only |
+| `LIT-IMOM-01.1` | Session-Scaled 30-Minute Chan Momentum | none | `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER`; unstable TRAIN admission and negative active-block economic transport, 2024+ unread |
+| `LIT-IMOM-01.2` | 30-Minute Path-Quality Incremental Forecast Comparison | none | `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`; exact bar-domain drift/raw/path chain plus clock-aware falsification chain, 2024+ sealed |
 | `LIT-REG-01.1` | Two-State Hidden Markov Market Regime | none | `STOP_LIT_REG_01_1_ENGINE_OR_SYNTHETIC_GATES_FAILED_REAL_DATA_NOT_READ`; Stage A passed 7/8 but only 77/100 synthetic fits were valid; SPY not read |
 | `LIT-REG-01.2` | Two-State HMM Volatility-State Forecast | none | `STOP_LIT_REG_01_2_REFERENCE_OR_SYNTHETIC_GATES_FAILED_MARKET_DATA_NOT_READ`; strong recovery passed, weak/null abstention and numerical reliability failed |
 | `LIT-REG-02.1` | Directional Markov-Switching Proof-of-Mechanism | none | `STOP_LIT_REG_02_1_DIRECTIONAL_MECHANISM_QUALIFICATION_FAILED`; proper forecast scores passed, hard state/transition recovery failed; downstream stages not run |

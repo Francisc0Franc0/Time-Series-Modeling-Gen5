@@ -254,6 +254,14 @@ confirmation, and see the
 [contract](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md)
 and [results](docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md).
 
+The approved
+[LIT-IMOM-01.2 contract](docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md)
+transports that forecast comparison into the existing adjusted SIP 30-minute
+panel without multiplying horizons by thirteen. It preserves the numeric
+24-cell grid in bar units, adds a parallel TRAIN-fitted bar-slot control,
+performs inference on whole-session averages, and keeps 2024+ sealed. No
+`01.2` forecast outcome was read before the contract was frozen.
+
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
 kept those mechanics unchanged across a frozen 22-stock, eleven-sector panel.

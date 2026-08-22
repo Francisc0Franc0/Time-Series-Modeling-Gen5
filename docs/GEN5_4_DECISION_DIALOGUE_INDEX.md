@@ -159,6 +159,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D155` | Execute LIT-MOM-01.4 and honor the no-transport STOP | current continuation | autonomous execution under D154 | All 92 frozen assets were eligible and 79 positive TRAIN nominees received one fixed 2021-2023 DEVELOPMENT test. Positive correlations appeared in 12/60 non-SPY plain ETFs, 2/5 engineered ETFs, and 5/13 stocks, but no asset survived the frozen within-stratum BH `q=0.10` gate. Record `STOP_LIT_MOM_01_4_NO_FDR_CONTROLLED_TRANSPORT`; treat APD, XLRE, and TQQQ only as non-promoted diagnostics, preserve unread 2024-2025 confirmation, and open no strategy or performance surface. |
 | `D156` | Freeze an incremental path-quality forecast comparison after the raw-return STOP | current continuation | `It sounds like a very worthwhile comparison. Let's go ahead and run it.` | Open `LIT-MOM-01.5` as a predictor-only sibling. Across all 92 frozen assets and 24 equally weighted nondegenerate cells, compare constant TRAIN drift, raw return, and raw return plus causal positive-move efficiency and shock concentration. Use 2017-2020 TRAIN, 2021-2023 DEVELOPMENT, stationary-block loss inference, and BH `q=0.10` by contrast and stratum. Acknowledge the stopped ER/ADX future-path test, keep SPY reference-only and 2024-2025 sealed, and open no strategy or performance surface. |
 | `D157` | Execute LIT-MOM-01.5 and retain drift as the dominant forecast authority | current continuation | autonomous execution under D156 | All 92 assets passed data coverage; SQQQ failed the frozen full-rank L250 gate. Across 91 eligible assets, drift had the lowest loss for 77, raw return for 13, and path quality for one. No raw-over-drift or path-quality clue survived stationary-block inference and within-stratum FDR; minimum primary q was `0.376462`. Record `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`, retain DBA/CORN extrapolation as diagnostic learning, preserve 2024-2025, and open no strategy or performance surface. |
+| `D158` | Freeze a direct 30-minute bar-domain path-quality forecast comparison | current continuation | `Approved` after discussing the 30-minute sibling | Open `LIT-IMOM-01.2` on the existing 26-instrument adjusted SIP panel. Preserve the exact numeric 24-cell daily-engine grid in bar units rather than scaling by 13; compare drift, raw return, and path quality in both an exact chain and a TRAIN-fitted bar-slot chain. Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, session-equal losses, 20-session stationary blocks, and BH `q=0.10` across 22 nonremembered stocks. Keep AMD, TSLA, SPY, and QQQ diagnostic-only, 2024+ sealed, and strategy/performance closed. |
 
 ## Compact Decision Records
 
@@ -3365,6 +3366,26 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/docs/GEN5_LIT_MOM_01_5_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md`
   and
   `runs/research_workbench/literature_grounded/lit_mom_01_5_path_quality_forecast_comparison_20260821`.
+
+### D158 — Freeze a direct 30-minute path-quality forecast sibling
+
+- **Context:** A daily null can coexist with intraday continuation because a
+  daily return aggregates overnight and within-session increments. The
+  operator approved testing the same numeric engine in 30-minute bar units,
+  explicitly without multiplying horizons by 13.
+- **Frozen panel:** Reuse the admitted 24-stock plus SPY/QQQ SIP registry and
+  its ten global archive-gap exclusions. AMD, TSLA, SPY, and QQQ remain
+  diagnostic-only; 22 diverse stocks form every candidate FDR family.
+- **Comparison:** Retain all 24 L/H cells and the exact drift/raw/path chain.
+  Add one parallel clock-aware chain with TRAIN-fitted bar-slot effects so a
+  clue must survive ordinary intraday seasonality.
+- **Inference:** Equal-average cells at each anchor and anchors within each
+  session; bootstrap ordered session means in expected 20-session blocks.
+  Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, and BH `q=0.10` by contrast.
+- **Boundary:** Preserve 2024+ and keep all strategy, trade, performance,
+  portfolio, and live surfaces closed.
+- **Artifact:**
+  `literature_studies/docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md`.
 
 ## Related Artifacts
 
