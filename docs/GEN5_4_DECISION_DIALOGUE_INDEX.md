@@ -161,6 +161,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D157` | Execute LIT-MOM-01.5 and retain drift as the dominant forecast authority | current continuation | autonomous execution under D156 | All 92 assets passed data coverage; SQQQ failed the frozen full-rank L250 gate. Across 91 eligible assets, drift had the lowest loss for 77, raw return for 13, and path quality for one. No raw-over-drift or path-quality clue survived stationary-block inference and within-stratum FDR; minimum primary q was `0.376462`. Record `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`, retain DBA/CORN extrapolation as diagnostic learning, preserve 2024-2025, and open no strategy or performance surface. |
 | `D158` | Freeze a direct 30-minute bar-domain path-quality forecast comparison | current continuation | `Approved` after discussing the 30-minute sibling | Open `LIT-IMOM-01.2` on the existing 26-instrument adjusted SIP panel. Preserve the exact numeric 24-cell daily-engine grid in bar units rather than scaling by 13; compare drift, raw return, and path quality in both an exact chain and a TRAIN-fitted bar-slot chain. Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, session-equal losses, 20-session stationary blocks, and BH `q=0.10` across 22 nonremembered stocks. Keep AMD, TSLA, SPY, and QQQ diagnostic-only, 2024+ sealed, and strategy/performance closed. |
 | `D159` | Execute LIT-IMOM-01.2 and reject the 30-minute path-quality transport | current continuation | autonomous execution under D158 | All 26 instruments and 624 cells passed. Baseline models were lowest-loss for 21/26 in both chains, raw for five, and path for none. Among 22 candidates, only CAT had positive path-over-raw and no asset had positive path-over-baseline; minimum K21 q was `0.998100`. TXN/GOOGL raw intervals failed FDR at q `0.331067`. Every cell and slot/session-crossing median path diagnostic was negative. Record `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`, preserve 2024+, and open no strategy or performance surface. |
+| `D160` | Freeze same-slot relative momentum against every wrong-clock alignment | current continuation | `Let's plan and execute a test for this concept` | Open `LIT-IMOM-01.3` on the existing adjusted SIP panel. Test whether one session's slot-normalized stock-minus-SPY return forecasts the same slot next session beyond target-slot effects and prior full-session relative return. Fit all 12 circularly displaced source-slot models on the identical sample and require the same-slot model to beat the outcome-selected best placebo with the maximum recomputed inside every session-block bootstrap draw. Use 22 nonremembered stocks for broad/FDR gates, keep AMD/TSLA/QQQ diagnostic-only, preserve 2024+, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3411,6 +3412,28 @@ tasks by the branch name above, the phrase, or the decision date.
   `literature_studies/docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md`
   and
   `runs/research_workbench/literature_grounded/lit_imom_01_2_30min_path_quality_forecast_comparison_20260821`.
+
+### D160 — Freeze same-slot relative momentum
+
+- **Narrative:** Multi-session institutional orders may recur against similar
+  liquidity or benchmark schedules, making stock-specific pressure at one
+  intraday clock slot recur at that slot on the next session.
+- **Primary estimand:** Slot-normalized stock-minus-SPY open-to-close return at
+  session `d-1`, slot `s`, forecasting session `d`, slot `s`.
+- **Controls:** TRAIN-fitted target-slot effects and the preceding complete
+  session's SPY-relative return. Restrict every comparison to consecutive
+  complete 13-slot sessions on the common 26-instrument calendar.
+- **Falsification:** Fit all twelve circularly displaced source-slot models on
+  the same observations. The same-slot authority must beat the ex-post best
+  wrong-clock model, with the maximum recomputed in every bootstrap draw.
+- **Inference:** Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, 20-session
+  stationary blocks, a broad equal-weight 22-stock test, and BH `q=0.10`
+  asset gates. AMD, TSLA, and QQQ remain diagnostic-only; SPY is benchmark
+  only.
+- **Boundary:** Preserve 2024+ and keep strategy, performance, portfolio, and
+  live surfaces closed.
+- **Artifact:**
+  `literature_studies/docs/GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_CONTRACT.md`.
 
 ## Related Artifacts
 
