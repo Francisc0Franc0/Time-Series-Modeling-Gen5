@@ -419,8 +419,8 @@ g5_imom012_slot_diagnostics <- function(fitted, identity, contract = g5_imom012_
   out <- do.call(rbind, rows)
   cbind(
     data.frame(
-      analysis_id = rep(identity$analysis_id[[1L]], nrow(out)),
-      symbol = rep(identity$symbol[[1L]], nrow(out)), stringsAsFactors = FALSE
+      analysis_id = rep(unname(identity$analysis_id[[1L]]), nrow(out)),
+      symbol = rep(unname(identity$symbol[[1L]]), nrow(out)), stringsAsFactors = FALSE
     ),
     out
   )
@@ -497,11 +497,11 @@ g5_imom012_run_comparison <- function(bars, registry, contract = g5_imom012_cont
     ledger$comparison_status[[ledger_i]] <- "COMPLETE_24_CELL_SIX_MODEL_COMPARISON"
     tag <- function(x) cbind(
       data.frame(
-        analysis_id = rep(identity$analysis_id[[1L]], nrow(x)),
-        symbol = rep(identity$symbol[[1L]], nrow(x)),
-        sector = rep(identity$sector[[1L]], nrow(x)),
-        analysis_stratum = rep(identity$analysis_stratum[[1L]], nrow(x)),
-        candidate_fdr = rep(identity$candidate_fdr[[1L]], nrow(x)),
+        analysis_id = rep(unname(identity$analysis_id[[1L]]), nrow(x)),
+        symbol = rep(unname(identity$symbol[[1L]]), nrow(x)),
+        sector = rep(unname(identity$sector[[1L]]), nrow(x)),
+        analysis_stratum = rep(unname(identity$analysis_stratum[[1L]]), nrow(x)),
+        candidate_fdr = rep(unname(identity$candidate_fdr[[1L]]), nrow(x)),
         stringsAsFactors = FALSE
       ), x
     )

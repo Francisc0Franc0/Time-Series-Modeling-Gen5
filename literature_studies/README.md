@@ -260,7 +260,12 @@ transports that forecast comparison into the existing adjusted SIP 30-minute
 panel without multiplying horizons by thirteen. It preserves the numeric
 24-cell grid in bar units, adds a parallel TRAIN-fitted bar-slot control,
 performs inference on whole-session averages, and keeps 2024+ sealed. No
-`01.2` forecast outcome was read before the contract was frozen.
+`01.2` forecast outcome was read before the contract was frozen. The complete
+execution retained all 26 instruments and 624 cells. Baseline models were
+lowest-loss for 21/26 instruments in both chains, raw return for five, and
+path quality for none; zero raw or path clues survived the controlled gates.
+Record `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST` and see
+the [results](docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md).
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)

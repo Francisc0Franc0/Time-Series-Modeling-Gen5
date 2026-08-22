@@ -1,11 +1,17 @@
 # LIT-IMOM-01.2 30-Minute Path-Quality Forecast Comparison Contract
 
-Status: `FROZEN_IMPLEMENTATION_APPROVED_RESULTS_UNREAD`
+Status: `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`
 
 Frozen on `2026-08-21` after the operator approved a close bar-domain
 transport of `LIT-MOM-01.5` to 30-minute data. No `01.2` feature, target,
 forecast loss, coefficient, contrast, or outcome was computed before this
 contract.
+
+The frozen execution subsequently retained all 26 instruments and all 624
+cells. Drift/clock baselines were lowest-loss for 21/26 instruments in their
+respective chains, raw return for five, and path quality for none. No raw or
+path row survived the controlled gates. See the
+[results](GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md).
 
 ## Place in the research progression
 
@@ -237,4 +243,3 @@ regime, volume, volatility, cross-sectional, news, or nonlinear predictors;
 thresholds, positions, trades, costs, turnover, P&L, Sharpe, drawdown,
 allocation, leverage, advice, execution, or live behavior; or native futures,
 FX, crypto, options, extended-hours, or post-2023 data.
-

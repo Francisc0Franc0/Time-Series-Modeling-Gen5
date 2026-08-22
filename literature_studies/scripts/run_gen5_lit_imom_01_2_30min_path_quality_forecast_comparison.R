@@ -92,13 +92,13 @@ model_colors <- c(
 
 plot_model_losses <- function(summary, path, contract) {
   png(path, width = 2200, height = 1050, res = 150)
-  old <- par(mfrow = c(1, 2), mar = c(8, 7, 5, 2))
+  old <- par(mfrow = c(1, 2), mar = c(9, 7, 5, 2))
   on.exit({ par(old); dev.off() }, add = TRUE)
   for (models in list(contract$model_ids[1:3], contract$model_ids[4:6])) {
     groups <- split(summary$mean_scaled_loss, factor(summary$model_id, levels = models))
     boxplot(
       groups, col = unname(model_colors[models]), border = "#334155", log = "y",
-      ylab = "Mean DEVELOPMENT scaled loss (log)", xlab = "TRAIN-fitted authority",
+      ylab = "Mean DEVELOPMENT scaled loss (log)", xlab = "",
       main = if (models[[1L]] == "B0_DRIFT") "Exact drop-in chain" else "Clock-aware chain",
       las = 2
     )
@@ -112,25 +112,26 @@ plot_model_losses <- function(summary, path, contract) {
 plot_incremental_skill <- function(decisions, path) {
   x <- decisions[decisions$comparison_complete, , drop = FALSE]
   png(path, width = 2200, height = 1050, res = 150)
-  old <- par(mfrow = c(1, 2), mar = c(7, 7, 5, 2))
+  old <- par(mfrow = c(1, 2), mar = c(7, 6, 5, 2), oma = c(0, 0, 2, 0))
   on.exit({ par(old); dev.off() }, add = TRUE)
   color <- ifelse(x$candidate_fdr, "#2563EB", "#94A3B8")
   pch <- ifelse(x$is_clock_controlled_path_candidate, 19, 1)
   plot(x$d21_mean, x$d20_mean, pch = pch, col = color,
-       xlab = "D21: path improvement over raw", ylab = "D20: path improvement over drift",
-       main = "Exact bar-domain chain")
+       xlab = "D21: path over raw", ylab = "D20: path over drift",
+       main = "Exact chain")
   abline(h = 0, v = 0, col = "#CBD5E1")
   text(x$d21_mean[!x$candidate_fdr], x$d20_mean[!x$candidate_fdr],
        labels = x$symbol[!x$candidate_fdr], pos = 3, cex = 0.65, col = "#64748B")
   plot(x$k21_mean, x$k20_mean, pch = pch, col = color,
-       xlab = "K21: clock-path improvement over clock-raw",
-       ylab = "K20: clock-path improvement over clock baseline",
-       main = "Clock-aware falsification chain")
+       xlab = "K21: clock-path over clock-raw",
+       ylab = "K20: clock-path over clock baseline",
+       main = "Clock-aware chain")
   abline(h = 0, v = 0, col = "#CBD5E1")
   text(x$k21_mean[!x$candidate_fdr], x$k20_mean[!x$candidate_fdr],
        labels = x$symbol[!x$candidate_fdr], pos = 3, cex = 0.65, col = "#64748B")
   legend("bottomleft", legend = c("22 candidate stocks", "remembered/reference"),
          col = c("#2563EB", "#94A3B8"), pch = 19, bty = "n")
+  mtext("Positive values favor path quality", outer = TRUE, side = 3, line = 0.2, cex = 0.9)
 }
 
 plot_primary_fdr <- function(contrasts, path, q) {
@@ -141,14 +142,14 @@ plot_primary_fdr <- function(contrasts, path, q) {
   for (id in c("K21", "K20")) {
     z <- x[x$contrast_id == id, , drop = FALSE]
     z <- z[order(z$bh_q_value), , drop = FALSE]
-    values <- -log10(pmax(z$bh_q_value, 1e-8))
+    values <- z$bh_q_value
     barplot(
       values, names.arg = z$symbol, las = 2, cex.names = 0.65,
-      col = "#6B46C1", border = NA, ylab = "-log10(BH q)",
+      col = "#6B46C1", border = NA, ylab = "BH q (lower is stronger)",
       main = if (id == "K21") "Clock-path over clock-raw" else "Clock-path over clock baseline",
-      ylim = c(0, max(-log10(q) * 1.08, values * 1.08))
+      ylim = c(0, 1)
     )
-    abline(h = -log10(q), col = "#B42318", lwd = 2, lty = 2)
+    abline(h = q, col = "#B42318", lwd = 2, lty = 2)
   }
 }
 
@@ -190,6 +191,7 @@ plot_slot_diagnostics <- function(slot_diagnostics, path) {
        main = "Predeclared clock and session-boundary diagnostic")
   for (crosses in c(FALSE, TRUE)) {
     y <- z[z$target_crosses_session == crosses, , drop = FALSE]
+    y <- y[order(y$anchor_slot), , drop = FALSE]
     lines(y$anchor_slot, y$improvement, type = "b", pch = 19,
           col = if (crosses) "#D97706" else "#2563EB", lwd = 2)
   }
@@ -200,6 +202,29 @@ plot_slot_diagnostics <- function(slot_diagnostics, path) {
 
 write_report <- function(result, run_spec, model_summary, paths, path) {
   candidate_contrasts <- result$contrasts[result$contrasts$candidate_fdr, , drop = FALSE]
+  raw_support <- candidate_contrasts[
+    candidate_contrasts$contrast_id == "K10" & candidate_contrasts$ci_lower_90 > 0,
+    , drop = FALSE
+  ]
+  raw_support_line <- if (nrow(raw_support)) paste0(
+    "- Positive clock-raw intervals before FDR: `",
+    paste(paste0(raw_support$symbol, " (q ", sprintf("%.6f", raw_support$bh_q_value), ")"), collapse = ", "),
+    "`."
+  ) else "- No candidate stock had a positive clock-raw 90% lower bound."
+  top_k21 <- candidate_contrasts[
+    candidate_contrasts$contrast_id == "K21", , drop = FALSE
+  ]
+  top_k21 <- top_k21[which.max(top_k21$observed_mean_differential), , drop = FALSE]
+  top_k20 <- candidate_contrasts[
+    candidate_contrasts$analysis_id == top_k21$analysis_id &
+      candidate_contrasts$contrast_id == "K20", , drop = FALSE
+  ]
+  top_path_line <- paste0(
+    "- Strongest K21 point row: `", top_k21$symbol, "`, K21 `",
+    sprintf("%.6f", top_k21$observed_mean_differential), "`, q `",
+    sprintf("%.6f", top_k21$bh_q_value), "`, K20 `",
+    sprintf("%.6f", top_k20$observed_mean_differential), "`."
+  )
   contrast_lines <- unlist(lapply(result$contract$contrast_ids, function(id) {
     x <- candidate_contrasts[candidate_contrasts$contrast_id == id, , drop = FALSE]
     paste0(
@@ -254,6 +279,8 @@ write_report <- function(result, run_spec, model_summary, paths, path) {
            sum(result$coefficient_summary$clock_mechanism_aligned), " / ",
            nrow(result$coefficient_summary), "` eligible instruments."), "",
     "## Controlled candidates", "", candidates, "",
+    "## Near-miss diagnostics", "", raw_support_line, top_path_line,
+    "- Inspect the complete cell and slot tables; no row here can select a horizon, slot, or asset.", "",
     "## Interpretation boundary", "",
     if (nrow(result$candidates)) {
       "Candidates are bounded DEVELOPMENT forecast discoveries only. They do not authorize horizon selection, trading, or confirmation."
@@ -316,7 +343,9 @@ if (preflight_only) {
 result <- g5_imom012_run_comparison(bars_raw, registry, contract)
 model_summary <- asset_model_summary(result$session_losses, contract)
 run_spec <- data.frame(
-  schema_version = g5_imom012_schema_version(), wrapper = basename(script_path), run_id = run_id,
+  schema_version = g5_imom012_schema_version(),
+  wrapper = "literature_studies/scripts/run_gen5_lit_imom_01_2_30min_path_quality_forecast_comparison.R",
+  run_id = run_id,
   design_as_of_timestamp = contract$design_as_of_timestamp,
   cache_as_of_timestamp = contract$cache_as_of_timestamp,
   registry_sha256 = registry_hash, registry_assets = nrow(registry), candidate_assets = sum(registry$candidate_fdr),

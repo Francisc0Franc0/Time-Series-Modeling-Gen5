@@ -160,6 +160,7 @@ tasks by the branch name above, the phrase, or the decision date.
 | `D156` | Freeze an incremental path-quality forecast comparison after the raw-return STOP | current continuation | `It sounds like a very worthwhile comparison. Let's go ahead and run it.` | Open `LIT-MOM-01.5` as a predictor-only sibling. Across all 92 frozen assets and 24 equally weighted nondegenerate cells, compare constant TRAIN drift, raw return, and raw return plus causal positive-move efficiency and shock concentration. Use 2017-2020 TRAIN, 2021-2023 DEVELOPMENT, stationary-block loss inference, and BH `q=0.10` by contrast and stratum. Acknowledge the stopped ER/ADX future-path test, keep SPY reference-only and 2024-2025 sealed, and open no strategy or performance surface. |
 | `D157` | Execute LIT-MOM-01.5 and retain drift as the dominant forecast authority | current continuation | autonomous execution under D156 | All 92 assets passed data coverage; SQQQ failed the frozen full-rank L250 gate. Across 91 eligible assets, drift had the lowest loss for 77, raw return for 13, and path quality for one. No raw-over-drift or path-quality clue survived stationary-block inference and within-stratum FDR; minimum primary q was `0.376462`. Record `STOP_LIT_MOM_01_5_NO_INCREMENTAL_PATH_QUALITY_FORECAST`, retain DBA/CORN extrapolation as diagnostic learning, preserve 2024-2025, and open no strategy or performance surface. |
 | `D158` | Freeze a direct 30-minute bar-domain path-quality forecast comparison | current continuation | `Approved` after discussing the 30-minute sibling | Open `LIT-IMOM-01.2` on the existing 26-instrument adjusted SIP panel. Preserve the exact numeric 24-cell daily-engine grid in bar units rather than scaling by 13; compare drift, raw return, and path quality in both an exact chain and a TRAIN-fitted bar-slot chain. Use 2018-2020 TRAIN, 2021-2023 DEVELOPMENT, session-equal losses, 20-session stationary blocks, and BH `q=0.10` across 22 nonremembered stocks. Keep AMD, TSLA, SPY, and QQQ diagnostic-only, 2024+ sealed, and strategy/performance closed. |
+| `D159` | Execute LIT-IMOM-01.2 and reject the 30-minute path-quality transport | current continuation | autonomous execution under D158 | All 26 instruments and 624 cells passed. Baseline models were lowest-loss for 21/26 in both chains, raw for five, and path for none. Among 22 candidates, only CAT had positive path-over-raw and no asset had positive path-over-baseline; minimum K21 q was `0.998100`. TXN/GOOGL raw intervals failed FDR at q `0.331067`. Every cell and slot/session-crossing median path diagnostic was negative. Record `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`, preserve 2024+, and open no strategy or performance surface. |
 
 ## Compact Decision Records
 
@@ -3386,6 +3387,30 @@ tasks by the branch name above, the phrase, or the decision date.
   portfolio, and live surfaces closed.
 - **Artifact:**
   `literature_studies/docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_CONTRACT.md`.
+
+### D159 — Execute the 30-minute sibling and retain the null
+
+- **Validity:** All 26 frozen instruments passed exact common-calendar and
+  model-rank gates. Retain 624/624 instrument/cells, 9,654 TRAIN anchors and
+  9,639 DEVELOPMENT anchors per instrument, and 744 DEVELOPMENT sessions.
+- **Loss ranking:** Exact drift and clock-only baselines were lowest-loss for
+  21/26 instruments in their respective chains, raw return for five, and path
+  quality for none.
+- **Controlled inference:** Among 22 candidate stocks, D/K raw contrasts were
+  positive for four, path-over-raw for one, and path-over-baseline for zero.
+  TXN and GOOGL raw intervals had q `0.331067`; CAT's lone positive K21 had q
+  `0.998100` and negative K20.
+- **Breadth:** Every one of 24 cell medians and every predeclared
+  slot/session-crossing path diagnostic was negative. Only 4/26 coefficient
+  summaries had the expected Q-positive/S-negative mechanism direction.
+- **Decision:** Record
+  `STOP_LIT_IMOM_01_2_NO_CLOCK_CONTROLLED_PATH_QUALITY_FORECAST`. Higher
+  resolution did not rescue this direct path formulation. Preserve 2024+ and
+  keep strategy, performance, portfolio, and live surfaces closed.
+- **Artifacts:**
+  `literature_studies/docs/GEN5_LIT_IMOM_01_2_30MIN_PATH_QUALITY_FORECAST_COMPARISON_RESULTS.md`
+  and
+  `runs/research_workbench/literature_grounded/lit_imom_01_2_30min_path_quality_forecast_comparison_20260821`.
 
 ## Related Artifacts
 
