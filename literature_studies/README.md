@@ -283,6 +283,11 @@ same-slot-over-clock, and same-slot-over-best-placebo loss contrasts were all
 negative with strictly negative 90% intervals. Zero assets survived. Record
 `STOP_LIT_IMOM_01_3_NO_CLOCK_SPECIFIC_RELATIVE_MOMENTUM` and see the
 [results](docs/GEN5_LIT_IMOM_01_3_SAME_SLOT_RELATIVE_MOMENTUM_RESULTS.md).
+The complete five-test learning sequence is consolidated in the
+[momentum predictor evidence-series deck](presentations/gen5_momentum_predictor_evidence_series.pptx),
+which separates daily own-return continuation, daily and 30-minute path
+quality, and same-slot clock recurrence with explicit transition slides and
+STOP states.
 
 The subsequent
 [stock breadth replication](docs/GEN5_LIT_MOM_01_1_STOCK_ATLAS_01_RESULTS.md)
