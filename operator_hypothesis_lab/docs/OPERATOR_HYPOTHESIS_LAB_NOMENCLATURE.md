@@ -54,8 +54,18 @@ a new frozen replication contract before a distinct dataset is queried.
 | `HYP-MOM-05.1` | Ordered Triple-SMA Pullback/Reclaim | `DISCOVERY_REUSED_WINDOW` | `WIDE_DISCOVERY_COMPLETE_NO_PROMOTION_AUTHORITY` |
 | `HYP-MOM-05.2` | Triple-SMA Grid Walk-Forward | `REUSED_WINDOW_WALK_FORWARD_DEVELOPMENT` | `STOP_DEVELOPMENT_WFA_FAILED_CONFIRMATION_NOT_RUN` |
 | `HYP-MOM-06.1` | Daily SMA8/SMA14 Crossover Reconstruction | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
-| `HYP-IMOM-01.1` | 30-Minute SMA8/SMA14 Crossover Reconstruction | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
-| `HYP-IMOM-02.1` | Session-Scaled 30-Minute Price/SMA Cross | `PLANNED` | `FROZEN_PLAN_EXECUTION_NOT_OPEN` |
+| `HYP-MOM-07.1` | QQQ / Equal-Weight Leadership Persistence | `TRAIN_PREDICTOR_TEST` | `STOP_HYP_MOM_07_1_NO_SEARCH_ADJUSTED_TRAIN_SURFACE` |
+| `HYP-MOM-08.1` | QQQ / SPY Relative-Strength Persistence | `TRAIN_PREDICTOR_TEST` | `STOP_HYP_MOM_08_1_NO_SEARCH_ADJUSTED_TRAIN_SURFACE` |
+| `HYP-MOM-09.1` | QQQ Volume-Confirmed Continuation | `TRAIN_PREDICTOR_TEST` | `STOP_HYP_MOM_09_1_NO_SEARCH_ADJUSTED_TRAIN_INTERACTION` |
+| `HYP-MOM-10.1` | QQQ-Adjacent ETF Cross-Sectional Momentum | `TRAIN_PREDICTOR_TEST` | `STOP_HYP_MOM_10_1_NO_SEARCH_ADJUSTED_TRAIN_RANKING` |
+| `HYP-MR-01.1` | QQQ Intraday-Shock Reversal | `HISTORICAL_DEVELOPMENT_PREDICTOR_TEST` | `STOP_HYP_MR_01_1_DEVELOPMENT_REVERSAL_GATES_FAILED_CONFIRMATION_NOT_RUN` |
+| `HYP-MR-01.2` | Cross-Asset Intraday-Shock Reversal Atlas | `TRAIN_BREADTH_PREDICTOR_TEST` | `STOP_HYP_MR_01_2_ATLAS_TRAIN_BREADTH_GATES_FAILED_DEVELOPMENT_NOT_RUN` |
+| `HYP-MR-02.1` | QQQ Peer-Advance Laggard Catch-Up | `BOOKMARKED_DATA_FEASIBILITY` | `POINT_IN_TIME_NASDAQ_100_MEMBERSHIP_AUTHORITY_REQUIRED` |
+| `HYP-MR-03.1` | Multivariate Peer-Equilibrium Laggard Reversion | `BOOKMARKED_MODEL_SEQUENCE_AND_DATA_FEASIBILITY` | `FACTOR_RESIDUAL_BASELINE_REQUIRED_BEFORE_COINTEGRATION_CHALLENGER` |
+| `HYP-IMOM-01.1` | 30-Minute SMA8/SMA14 Crossover Reconstruction | `HISTORICAL_DEVELOPMENT_STRATEGY_POC` | `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
+| `HYP-IMOM-02.1` | Session-Scaled 30-Minute Price/SMA Cross | `HISTORICAL_DEVELOPMENT_STRATEGY_POC` | `DEVELOPMENT_COMPLETE_STOP_BEFORE_REGIME_FILTER` |
+| `HYP-IMOM-03.1` | SMH-to-QQQ First-Hour Lead-Lag | `TRAIN_PREDICTOR_TEST` | `STOP_HYP_IMOM_03_1_TRAIN_LEAD_LAG_GATES_FAILED` |
+| `HYP-IMOM-04.1` | TSLA Intraday Permission and Direct-Exposure Positive-Control Lab | `OUTCOME_AWARE_POSITIVE_CONTROL_CALIBRATION` | `STOP_CAL_A02_DIRECT_EXPOSURE_GATES_FAILED_CONFIRMATION_NOT_READ` |
 | `HYP-ALT-01.1` | WSB Daily Ticker Attention Tape | `FORWARD_COLLECTION_POC` | `IMPLEMENTED_STOP_LIVE_REDDIT_ACCESS_NOT_CONFIGURED` |
 
 `HYP-MOM-02.1` is authoritative under the
@@ -161,6 +171,93 @@ ports the price/slow-anchor question using session-equivalent 30-minute
 horizons. The related Chan adaptation remains `LIT-IMOM-01.1` under the
 literature-study phylogeny. The shared series is complete and stops before any
 confirmation or live authority.
+
+`HYP-MOM-08.1` is a new predictor-only concept from QQQ slate item `QQQ-S3`.
+It tests daily QQQ-minus-SPY relative leadership rather than own-return
+continuation, within-Nasdaq equal-weight leadership, or semiconductor
+intraday transmission. Its separate-leg controls and family-wise horizon
+surface are frozen before outcomes; any beta-residualized target, sign flip,
+strategy, or nearby-window search would require a different identifier.
+
+`HYP-MOM-09.1` is a new predictor-only concept from QQQ slate item `QQQ-S5`.
+It asks whether causal positive QQQ dollar-volume surprise changes the forward
+content of a signed QQQ move after drift, signed return, volume level, and
+absolute move size are controlled. Its nine-cell interaction surface failed
+the complete circular-shift maximum-statistic gate, so it nominated no cell
+and left DEVELOPMENT and confirmation unread. Share volume, turnover, event
+thresholds, positive-return conditioning, other assets, and sign inversion
+are new hypotheses rather than repairs under this identifier.
+
+`HYP-MOM-10.1` is the frozen QQQ-S6 cross-sectional ETF concept. It ranks a
+predeclared 12-fund growth/technology basket on same-date basket-relative
+returns and asks whether the ordering persists at short daily horizons. All
+nine TRAIN cells were negative and the best cell failed both the family-wise
+time-shift threshold and randomized-rank specificity control. The basket,
+sleeves, direction, horizons, common-return subtraction, and evidence zones
+may not be changed under this identifier; a reversal question requires a new
+contract and fresh evidence.
+
+`HYP-MR-01.1` opens the operator lab's mean-reversion family with one
+univariate QQQ predictor: completed open-to-close return divided by strictly
+prior ATR20%, forecasting the exact next session's open-to-close return. It is
+not a sign-flipped momentum surface. All six TRAIN gates passed, including
+three positive expanding folds and complete circular-shift separation, so the
+registered 2021-2023 DEVELOPMENT read was authorized. The frozen coefficient
+then lost to intercept-only drift overall, bootstrap support fell to `0.3167`,
+and only one of three years improved. Preserve the DEVELOPMENT STOP and keep
+2024-2025 confirmation sealed. Thresholds, classifiers, alternate ATRs,
+horizons, decompositions, or assets are new hypotheses rather than repairs.
+
+`HYP-MR-01.2` is the outcome-independent breadth follow-up: the unchanged
+prior-normalized predictor is fitted separately to 36 assets across nine
+categories on one common calendar. Negative slopes and rank correlations were
+broad, but only 12 assets improved on drift, the atlas median improvement was
+negative, and the joint common-shift breadth gate failed. QQQ ranked fourth,
+showing that its TRAIN pass was unusual rather than representative. Preserve
+the TRAIN STOP; do not select the observed stock/industry winners, prune weak
+categories, or inspect DEVELOPMENT or confirmation under this identifier.
+
+`HYP-MR-02.1` asks whether a QQQ constituent that lags a broadly advancing
+leave-one-out peer group subsequently catches up in relative return. The first
+recommended estimand uses a five-session formation window, a five-session
+forward window, non-overlapping weekly anchors, and an explicit interaction
+with positive peer breadth. It remains blocked until point-in-time Nasdaq-100
+membership authority is admitted; current constituents may not be projected
+backward.
+
+`HYP-MR-03.1` is the multivariate equilibrium formulation of laggard catch-up.
+It reserves an externally defined five-to-ten-asset basket, a causal rolling
+common-factor residual baseline, and only then a Johansen/VECM challenger. An
+all-QQQ cointegration system is not the minimal test. Long-only confirmation
+requires the laggard to rise rather than convergence occurring through peer
+decline.
+
+`HYP-IMOM-04.1` is a positive-control calibration lane on the unchanged TSLA
+30-minute SMA8/SMA14 parent. Approved `CAL-A01` uses one common event ledger,
+six causal monotone features, three fixed two-feature AND gates, and a
+familywise maximum-statistic control. Synthetic recovery and outcome-aware
+2018-2023 TSLA calibration remain separate from any fresh 2024+ transport.
+Calibration iterations must remain in an explicit attempt ledger and cannot
+create an independent edge claim.
+
+`CAL-A01` recovered all nine planted synthetic mechanisms but stopped on TSLA:
+the nominal trend selector missed the familywise timing control, permitted only
+20.1% of OOF events, selected economically weaker trades, and lost after
+primary costs while the unchanged parent gained. The calibration STOP does not
+authorize 2024+ transport. Any further outcome-aware attempt must be recorded
+as `CAL-A02` rather than modifying the completed atlas invisibly.
+
+`CAL-A02` changed the scientific question rather than modifying CAL-A01. It
+used completed 30-minute sessions to make a direct next-open long/cash TSLA
+decision over the following open-to-open interval. Twelve causal state
+features, four fixed interactions, a primary ridge return regressor, and a
+secondary depth-two tree were frozen before outcomes were read. The ridge
+captured 71.8% of upside and 72.2% of downside, lost 7.48% after primary costs,
+and forecast worse than fold drift. The secondary tree's positive compounded
+return is preserved as an unexpected nonlinear tail-timing clue, not a
+survivor: it also forecast worse than drift, captured 63.2% of downside, passed
+only six quarters, and used changing root features. Fresh 2024+ transport
+remains unread. Any new outcome-aware formulation is `CAL-A03`.
 
 `HYP-REG-01.1` is a strategy-independent measurement lane: causal ATR14/close
 percentiles with a prior-252-session memory and hysteretic low/medium/high

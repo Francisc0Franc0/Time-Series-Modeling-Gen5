@@ -6,6 +6,8 @@
 .codex_r_libs/
 .codex_tmp/
 .tmp/
+tmp/
+.cache/
 
 # Local data and generated outputs
 data_cache/
