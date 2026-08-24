@@ -1,0 +1,37 @@
+atlas_order,source_order,source_instance_id,symbol,category,instrument_type,selection_rule
+1,2,OG002_SPY,SPY,Broad US equity,ETF,first_four_by_source_order_within_category
+2,3,OG003_QQQ,QQQ,Broad US equity,ETF,first_four_by_source_order_within_category
+3,4,OG004_IWM,IWM,Broad US equity,ETF,first_four_by_source_order_within_category
+4,9,OG009_DIA,DIA,Broad US equity,ETF,first_four_by_source_order_within_category
+5,11,OG011_XLB,XLB,US sector,ETF,first_four_by_source_order_within_category
+6,12,OG012_XLE,XLE,US sector,ETF,first_four_by_source_order_within_category
+7,13,OG013_XLF,XLF,US sector,ETF,first_four_by_source_order_within_category
+8,14,OG014_XLI,XLI,US sector,ETF,first_four_by_source_order_within_category
+9,21,OG021_SMH,SMH,US industry,ETF,first_four_by_source_order_within_category
+10,22,OG022_XBI,XBI,US industry,ETF,first_four_by_source_order_within_category
+11,23,OG023_KRE,KRE,US industry,ETF,first_four_by_source_order_within_category
+12,24,OG024_XRT,XRT,US industry,ETF,first_four_by_source_order_within_category
+13,1,OG001_FEZ,FEZ,International equity,ETF,first_four_by_source_order_within_category
+14,35,OG035_VGK,VGK,International equity,ETF,first_four_by_source_order_within_category
+15,36,OG036_EFA,EFA,International equity,ETF,first_four_by_source_order_within_category
+16,37,OG037_EEM,EEM,International equity,ETF,first_four_by_source_order_within_category
+17,5,OG005_TLT,TLT,Fixed income,ETF,first_four_by_source_order_within_category
+18,48,OG048_SHY,SHY,Fixed income,ETF,first_four_by_source_order_within_category
+19,49,OG049_IEI,IEI,Fixed income,ETF,first_four_by_source_order_within_category
+20,50,OG050_IEF,IEF,Fixed income,ETF,first_four_by_source_order_within_category
+21,6,OG006_GLD,GLD,Commodity,ETF,first_four_by_source_order_within_category
+22,7,OG007_USO,USO,Commodity,ETF,first_four_by_source_order_within_category
+23,58,OG058_SLV,SLV,Commodity,ETF,first_four_by_source_order_within_category
+24,59,OG059_DBA,DBA,Commodity,ETF,first_four_by_source_order_within_category
+25,8,OG008_UUP,UUP,Currency,ETF,first_four_by_source_order_within_category
+26,64,OG064_FXE,FXE,Currency,ETF,first_four_by_source_order_within_category
+27,65,OG065_FXY,FXY,Currency,ETF,first_four_by_source_order_within_category
+28,66,OG066_FXB,FXB,Currency,ETF,first_four_by_source_order_within_category
+29,69,OG069_UPRO,UPRO,Leveraged or inverse ETF,ETF,first_four_by_source_order_within_category
+30,70,OG070_TQQQ,TQQQ,Leveraged or inverse ETF,ETF,first_four_by_source_order_within_category
+31,71,OG071_TNA,TNA,Leveraged or inverse ETF,ETF,first_four_by_source_order_within_category
+32,72,OG072_SPXU,SPXU,Leveraged or inverse ETF,ETF,first_four_by_source_order_within_category
+33,75,OG075_MSFT,MSFT,Individual-stock challenger,Stock,first_four_by_source_order_within_category
+34,76,OG076_TXN,TXN,Individual-stock challenger,Stock,first_four_by_source_order_within_category
+35,77,OG077_JPM,JPM,Individual-stock challenger,Stock,first_four_by_source_order_within_category
+36,78,OG078_AXP,AXP,Individual-stock challenger,Stock,first_four_by_source_order_within_category
