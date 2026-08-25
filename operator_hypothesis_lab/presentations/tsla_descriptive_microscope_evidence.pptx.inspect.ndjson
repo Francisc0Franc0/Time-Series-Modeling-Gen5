@@ -1,0 +1,190 @@
+{"kind":"deck","id":"pr/7mtwcu","name":"Deck"}
+{"kind":"layout","layoutId":"03687318-c80e-4ea8-a8a2-ca92e1ed07cf","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"a8f6fc77-6353-4adc-99e9-321c072ee1fa","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/ey47zx","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
+{"kind":"textbox","id":"sh/1k7i9ofi","slide":1,"text":"OPERATOR HYPOTHESIS LAB","textPreview":"OPERATOR HYPOTHESIS LAB","textChars":23,"textLines":1,"bbox":[48,42,520,30]}
+{"kind":"textbox","id":"sh/ehgzy9wr","slide":1,"text":"TSLA descriptive\nmicroscope","textPreview":"TSLA descriptive | microscope","textChars":27,"textLines":2,"bbox":[48,178,1050,230]}
+{"kind":"shape","id":"sh/zip07exc","slide":1,"bbox":[48,440,130,8]}
+{"kind":"textbox","id":"sh/oni143et","slide":1,"text":"From visual intuition to measured daily-return dependence","textPreview":"From visual intuition to measured daily-return dependence","textChars":57,"textLines":1,"bbox":[48,486,870,82]}
+{"kind":"textbox","id":"sh/98rid8fe","slide":1,"text":"Adjusted daily TSLA | 2018-2023 | Descriptive research only","textPreview":"Adjusted daily TSLA | 2018-2023 | Descriptive research only","textChars":59,"textLines":1,"bbox":[48,640,850,28]}
+{"kind":"notes","id":"nt/ey47zx","slide":1,"text":"Introduce this as a running laboratory notebook, not a strategy pitch.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_LAGGED_DAILY_RETURN_SCATTER_2018_2023.md\n- operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/nmujkd","slide":2,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/dkrep0by","slide":2,"name":"section-2","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/qh0fe5sn","slide":2,"name":"title-2","text":"The lane starts with description, not strategy","textPreview":"The lane starts with description, not strategy","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ri9wnats","slide":2,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/4fyxcvah","slide":2,"name":"footer-left-2","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/pgrel0b2","slide":2,"name":"footer-number-2","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/2tgvalsb","slide":2,"bbox":[62,170,8,94]}
+{"kind":"textbox","id":"sh/3upwjqtw","slide":2,"text":"See","textPreview":"See","textChars":3,"textLines":1,"bbox":[94,166,380,38]}
+{"kind":"textbox","id":"sh/ob2xozal","slide":2,"text":"Start with raw price and return geometry before deciding what relationship ought to exist.","textPreview":"Start with raw price and return geometry before deciding what relationship ought to exist.","textChars":90,"textLines":1,"bbox":[500,164,700,102]}
+{"kind":"shape","id":"sh/9cbexkb6","slide":2,"bbox":[94,276,1106,1]}
+{"kind":"shape","id":"sh/h4rqdcfi","slide":2,"bbox":[62,318,8,94]}
+{"kind":"textbox","id":"sh/w3ipk7yx","slide":2,"text":"Name","textPreview":"Name","textChars":4,"textLines":1,"bbox":[94,314,380,38]}
+{"kind":"textbox","id":"sh/v298bmhc","slide":2,"text":"Separate direction, magnitude, path shape, and volatility so one visual impression does not stand in for all four.","textPreview":"Separate direction, magnitude, path shape, and volatility so one visual impression does not stand in for all four.","textChars":114,"textLines":1,"bbox":[500,312,700,102]}
+{"kind":"shape","id":"sh/u107ihgr","slide":2,"bbox":[94,424,1106,1]}
+{"kind":"shape","id":"sh/90rq9cz6","slide":2,"bbox":[62,466,8,94]}
+{"kind":"textbox","id":"sh/8zypg7yl","slide":2,"text":"Measure","textPreview":"Measure","textChars":7,"textLines":1,"bbox":[94,462,380,38]}
+{"kind":"textbox","id":"sh/7yp872h0","slide":2,"text":"Quantify one frozen relationship at a time; only later ask whether a finding predicts, trades, or transports.","textPreview":"Quantify one frozen relationship at a time; only later ask whether a finding predicts, trades, or transports.","textChars":109,"textLines":1,"bbox":[500,460,700,102]}
+{"kind":"shape","id":"sh/mxg7exgv","slide":2,"bbox":[94,572,1106,1]}
+{"kind":"notes","id":"nt/nmujkd","slide":2,"text":"The learning objective is bottom-up hypothesis formation. The order is observation, definition, measurement, then falsification.\n\n[Sources]\n- User-directed research workflow in this task\n- docs/GEN5_1_POC_PROGRESS_LOG.md entries 186-188\n[/Sources]"}
+{"kind":"slide","id":"sl/r4qtcv","slide":3,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/czex4zq9","slide":3,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/be5wbupo","slide":3,"name":"title-3","text":"One question, one fixed sample","textPreview":"One question, one fixed sample","textChars":30,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/qdcf2p83","slide":3,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/pc3e9k7i","slide":3,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/obux0fqx","slide":3,"name":"footer-number-3","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/3alw7apc","slide":3,"text":"r[t] = log(C[t] / C[t-1])","textPreview":"r[t] = log(C[t] / C[t-1])","textChars":25,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/29cfy58r","slide":3,"text":"Each row pairs yesterday's adjusted close-to-close log return with today's.","textPreview":"Each row pairs yesterday's adjusted close-to-close log return with today's.","textChars":75,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/987ylo7m","slide":3,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/87yxcjqh","slide":3,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/6do3a9g7","slide":3,"text":"1,509","textPreview":"1,509","textChars":5,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/7ex4jexs","slide":3,"text":"consecutive-session pairs","textPreview":"consecutive-session pairs","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/8f6lcjyd","slide":3,"text":"Fixed boundaries","textPreview":"Fixed boundaries","textChars":16,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/tgfmlofi","slide":3,"text":"Asset","textPreview":"Asset","textChars":5,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/y9o36pgv","slide":3,"text":"TSLA","textPreview":"TSLA","textChars":4,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/jaxkfuxg","slide":3,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/kb6l8zy1","slide":3,"text":"Price","textPreview":"Price","textChars":5,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/lcfmh4fm","slide":3,"text":"Alpaca SIP adjusted daily close","textPreview":"Alpaca SIP adjusted daily close","textChars":31,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/i583itgf","slide":3,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/36h4ryx0","slide":3,"text":"Target sessions","textPreview":"Target sessions","textChars":15,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/fqt0jqdc","slide":3,"text":"2018-01-02 through 2023-12-29","textPreview":"2018-01-02 through 2023-12-29","textChars":29,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/ep0jalwr","slide":3,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/1sbil0v2","slide":3,"text":"Search","textPreview":"Search","textChars":6,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/0r21cvex","slide":3,"text":"No alternate lag or horizon","textPreview":"No alternate lag or horizon","textChars":27,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/net0nqd8","slide":3,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/mdkjelwn","slide":3,"text":"Trading","textPreview":"Trading","textChars":7,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/9gbip0ve","slide":3,"text":"No policy or performance calculation","textPreview":"No policy or performance calculation","textChars":36,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/of21gvet","slide":3,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/bid0radk","slide":3,"text":"Confirmation","textPreview":"Confirmation","textChars":12,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/ah4ji5wz","slide":3,"text":"No post-2023 data read","textPreview":"No post-2023 data read","textChars":22,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/r4qtcv","slide":3,"text":"Explain the definition before showing any statistic. The sample is the exact scatterplot surface from the prior slice.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/pair_checks.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/s6hhfn","slide":4,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/54by9sni","slide":4,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/ihkzyd4r","slide":4,"name":"title-4","text":"The raw cloud has no clear directional structure","textPreview":"The raw cloud has no clear directional structure","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/3itg7i5c","slide":4,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/s7mh4nmt","slide":4,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/d8vydsne","slide":4,"name":"footer-number-4","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/q5kz2x43","slide":4,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/8bixs3mp","slide":4,"text":"First look: no fitted line, correlation, p-value, binning, or outlier removal.","textPreview":"First look: no fitted line, correlation, p-value, binning, or outlier removal.","textChars":78,"textLines":1,"bbox":[120,648,1040,24]}
+{"kind":"image","id":"im/m90vydwj","slide":4,"name":"","geometry":"rect","alt":"Scatterplot of prior-day versus next-day TSLA log returns, colored by direction combination","bbox":[105,142,1070,515]}
+{"kind":"notes","id":"nt/s6hhfn","slide":4,"text":"The eye sees a dense cloud around zero and observations in all four quadrants. This slide preserves the pre-statistics view.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_daily_return_scatter_20260824/visuals/tsla_t_minus_1_vs_t_daily_log_return_scatter.png\n- operator_hypothesis_lab/docs/TSLA_LAGGED_DAILY_RETURN_SCATTER_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/7byx4c","slide":5,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/x8f6x0n6","slide":5,"name":"section-5","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/a5o7254f","slide":5,"name":"title-5","text":"ER20 labels path shape—not volatility","textPreview":"ER20 labels path shape—not volatility","textChars":37,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/b6xovq50","slide":5,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/o3mp0vm9","slide":5,"name":"footer-left-5","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/p4f6t0nu","slide":5,"name":"footer-number-5","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/2147yl4j","slide":5,"bbox":[34,145,900,506]}
+{"kind":"textbox","id":"sh/0zmpwbmd","slide":5,"text":"How","textPreview":"How","textChars":3,"textLines":1,"bbox":[966,166,230,38]}
+{"kind":"textbox","id":"sh/10v6pgny","slide":5,"text":"Absolute 20-session endpoint displacement divided by the total log-price path traveled.","textPreview":"Absolute 20-session endpoint displacement divided by the total log-price path traveled.","textChars":87,"textLines":1,"bbox":[966,214,252,120]}
+{"kind":"textbox","id":"sh/l8nyd47e","slide":5,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[966,358,230,38]}
+{"kind":"textbox","id":"sh/k7ex4zqt","slide":5,"text":"Green recognizes efficient rises and declines. Red marks a locally choppy path. Daily thresholding is visibly flickery near transitions.","textPreview":"Green recognizes efficient rises and declines. Red marks a locally choppy path. Daily thresholding is visibly flickery near transitions.","textChars":136,"textLines":1,"bbox":[966,406,252,174]}
+{"kind":"shape","id":"sh/z65gbu98","slide":5,"bbox":[966,600,252,4]}
+{"kind":"textbox","id":"sh/y5wf2p8n","slide":5,"text":"Descriptive state—not a future-return claim","textPreview":"Descriptive state—not a future-return claim","textChars":43,"textLines":1,"bbox":[966,616,252,44]}
+{"kind":"image","id":"im/65g7ih4n","slide":5,"name":"","geometry":"rect","alt":"TSLA adjusted close with red sideways and green trending ER20 bands and a lower ER20 trace","bbox":[34,145,900,506]}
+{"kind":"notes","id":"nt/7byx4c","slide":5,"text":"ER20 asks whether the trailing path was efficient. It ignores bullish versus bearish direction and does not measure volatility.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_efficiency_ratio_regime_bands_20260824/visuals/tsla_er20_path_regime_bands.png\n- operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/ab839e","slide":6,"title":"MEASUREMENT PASS","textShapes":5}
+{"kind":"textbox","id":"sh/29onihs7","slide":6,"text":"MEASUREMENT PASS","textPreview":"MEASUREMENT PASS","textChars":16,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/pcfmtcbi","slide":6,"text":"A visual cloud asks one\nprecise next question","textPreview":"A visual cloud asks one | precise next question","textChars":45,"textLines":2,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/ob65krax","slide":6,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/beh4vmto","slide":6,"text":"Does r[t-1] contain measurable information about r[t]?","textPreview":"Does r[t-1] contain measurable information about r[t]?","textChars":54,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/qdonmhs3","slide":6,"text":"Primary: signed linear dependence. Diagnostics: rank, sign, outliers, annual stability, and absolute-return persistence.","textPreview":"Primary: signed linear dependence. Diagnostics: rank, sign, outliers, annual stability, and absolute-return persistence.","textChars":120,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/dgz6xwbu","slide":6,"text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/ab839e","slide":6,"text":"The primary estimand is frozen before reading the result: Pearson correlation, equivalently the OLS slope in r[t] = alpha + beta r[t-1] + error.\n\n[Sources]\n- scripts/inspect/run_tsla_lagged_return_dependence_statistics.R\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/3oujly","slide":7,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/0bi107mp","slide":7,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/fa90r2l4","slide":7,"name":"title-7","text":"Signed dependence is effectively zero","textPreview":"Signed dependence is effectively zero","textChars":37,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/e90zyx4j","slide":7,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/9gbixw36","slide":7,"name":"footer-left-7","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/of214r21","slide":7,"name":"footer-number-7","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/net0vmlg","slide":7,"bbox":[36,150,806,500]}
+{"kind":"shape","id":"sh/5k7ils32","slide":7,"bbox":[878,158,330,150]}
+{"kind":"shape","id":"sh/4jyhsnmh","slide":7,"bbox":[878,158,8,150]}
+{"kind":"textbox","id":"sh/6p8relo7","slide":7,"text":"-0.021","textPreview":"-0.021","textChars":6,"textLines":1,"bbox":[906,176,282,62]}
+{"kind":"textbox","id":"sh/rqhs7qps","slide":7,"text":"Pearson correlation","textPreview":"Pearson correlation","textChars":19,"textLines":1,"bbox":[906,246,282,46]}
+{"kind":"shape","id":"sh/srq9gb6d","slide":7,"bbox":[878,330,330,150]}
+{"kind":"shape","id":"sh/tsza9g7y","slide":7,"bbox":[878,330,8,150]}
+{"kind":"textbox","id":"sh/etsbilo3","slide":7,"text":"[-0.073, +0.028]","textPreview":"[-0.073, +0.028]","textChars":16,"textLines":1,"bbox":[906,348,282,62]}
+{"kind":"textbox","id":"sh/fu1sbqpo","slide":7,"text":"95% block-bootstrap interval","textPreview":"95% block-bootstrap interval","textChars":28,"textLines":1,"bbox":[906,418,282,46]}
+{"kind":"shape","id":"sh/gvatkv69","slide":7,"bbox":[878,502,330,150]}
+{"kind":"shape","id":"sh/1wjad07u","slide":7,"bbox":[878,502,8,150]}
+{"kind":"textbox","id":"sh/2hsbm5of","slide":7,"text":"0.044%","textPreview":"0.044%","textChars":6,"textLines":1,"bbox":[906,520,282,62]}
+{"kind":"textbox","id":"sh/3i1sfap0","slide":7,"text":"R-squared: variance explained","textPreview":"R-squared: variance explained","textChars":29,"textLines":1,"bbox":[906,590,282,46]}
+{"kind":"image","id":"im/rqx8vupo","slide":7,"name":"","geometry":"rect","alt":"TSLA lagged-return scatter with a shallow fitted OLS line","bbox":[36,150,806,500]}
+{"kind":"notes","id":"nt/3oujly","slide":7,"text":"The interval includes zero and the fitted line explains roughly four hundredths of one percent of next-day return variation. HAC slope p-value is 0.451.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/primary_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/block_bootstrap_intervals.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/visuals/tsla_signed_return_dependence_fitted_scatter.png\n[/Sources]"}
+{"kind":"slide","id":"sl/l2s46t","slide":8,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/zylove1k","slide":8,"name":"section-8","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/0zupoji5","slide":8,"name":"title-8","text":"Yesterday's sign barely changes tomorrow's odds","textPreview":"Yesterday's sign barely changes tomorrow's odds","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/l036xojq","slide":8,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/m1c7qt0b","slide":8,"name":"footer-left-8","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/n258zy1w","slide":8,"name":"footer-number-8","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/83eps3i1","slide":8,"bbox":[40,154,830,490]}
+{"kind":"shape","id":"sh/25s7ep0r","slide":8,"bbox":[904,178,300,150]}
+{"kind":"shape","id":"sh/361onu1c","slide":8,"bbox":[904,178,8,150]}
+{"kind":"textbox","id":"sh/zixk769s","slide":8,"text":"52.9%","textPreview":"52.9%","textChars":5,"textLines":1,"bbox":[932,196,252,62]}
+{"kind":"textbox","id":"sh/yhoje187","slide":8,"text":"up after a prior down day","textPreview":"up after a prior down day","textChars":25,"textLines":1,"bbox":[932,266,252,46]}
+{"kind":"shape","id":"sh/lkf29gry","slide":8,"bbox":[904,354,300,150]}
+{"kind":"shape","id":"sh/0j61gbqd","slide":8,"bbox":[904,354,8,150]}
+{"kind":"textbox","id":"sh/bedk369w","slide":8,"text":"52.1%","textPreview":"52.1%","textChars":5,"textLines":1,"bbox":[932,372,252,62]}
+{"kind":"textbox","id":"sh/qd4ja18b","slide":8,"text":"up after a prior up day","textPreview":"up after a prior up day","textChars":23,"textLines":1,"bbox":[932,442,252,46]}
+{"kind":"textbox","id":"sh/dgf25grm","slide":8,"text":"Difference: -0.7 percentage points\n95% interval: -5.8 to +4.2 pp","textPreview":"Difference: -0.7 percentage points | 95% interval: -5.8 to +4.2 pp","textChars":64,"textLines":2,"bbox":[914,548,280,84]}
+{"kind":"image","id":"im/0ryd4ze1","slide":8,"name":"","geometry":"rect","alt":"Conditional probabilities that TSLA rises after a prior up or down day, with block-bootstrap intervals","bbox":[40,154,830,490]}
+{"kind":"notes","id":"nt/l2s46t","slide":8,"text":"A binary direction view reaches the same conclusion as the continuous-return view. The conditional probabilities are nearly identical and their difference interval crosses zero.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/direction_transition_probabilities.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/direction_transition_difference.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/visuals/tsla_direction_transition_probabilities.png\n[/Sources]"}
+{"kind":"slide","id":"sl/z0fe0j","slide":9,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/1kz21gf6","slide":9,"name":"section-9","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/exojqlgf","slide":9,"name":"title-9","text":"The signed result stays weak under obvious checks","textPreview":"The signed result stays weak under obvious checks","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/fyx0zqx0","slide":9,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/sv61oby9","slide":9,"name":"footer-left-9","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/twfixgfu","slide":9,"name":"footer-number-9","text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/6tojm1gj","slide":9,"bbox":[32,150,850,505]}
+{"kind":"textbox","id":"sh/4rm1kbyd","slide":9,"text":"Rank check","textPreview":"Rank check","textChars":10,"textLines":1,"bbox":[916,174,270,36]}
+{"kind":"textbox","id":"sh/5sfitwfy","slide":9,"text":"Spearman rho = -0.004\n95% block interval: -0.054 to +0.044","textPreview":"Spearman rho = -0.004 | 95% block interval: -0.054 to +0.044","textChars":58,"textLines":2,"bbox":[916,222,280,92]}
+{"kind":"shape","id":"sh/hc7ix4b2","slide":9,"bbox":[916,334,280,1]}
+{"kind":"textbox","id":"sh/wbeh4zuh","slide":9,"text":"Outlier check","textPreview":"Outlier check","textChars":13,"textLines":1,"bbox":[916,364,270,36]}
+{"kind":"textbox","id":"sh/vq50vutw","slide":9,"text":"Pearson changes from -0.021 to -0.008 after fixed 1%/99% winsorization.","textPreview":"Pearson changes from -0.021 to -0.008 after fixed 1%/99% winsorization.","textChars":71,"textLines":1,"bbox":[916,412,280,104]}
+{"kind":"shape","id":"sh/upwz29cb","slide":9,"bbox":[916,536,280,1]}
+{"kind":"textbox","id":"sh/9onit4bq","slide":9,"text":"Every annual HAC interval crosses zero.","textPreview":"Every annual HAC interval crosses zero.","textChars":39,"textLines":1,"bbox":[916,566,280,70]}
+{"kind":"image","id":"im/uhobmlo7","slide":9,"name":"","geometry":"rect","alt":"Annual and full-period OLS slopes with HAC confidence intervals","bbox":[32,150,850,505]}
+{"kind":"notes","id":"nt/z0fe0j","slide":9,"text":"Annual point estimates change sign, but none of the annual HAC intervals excludes zero. Rank correlation and the fixed winsor sensitivity are also near zero.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/annual_stability.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/outlier_sensitivity.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/block_bootstrap_intervals.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/oekh7g","slide":10,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/d83ad4j2","slide":10,"name":"section-10","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/q5cripkr","slide":10,"name":"title-10","text":"Magnitude persistence is modest—and different","textPreview":"Magnitude persistence is modest—and different","textChars":45,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/b6lsbu1c","slide":10,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/43u9gf2l","slide":10,"name":"footer-left-10","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/p43a9kj6","slide":10,"name":"footer-number-10","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/21sre5kf","slide":10,"bbox":[36,152,850,498]}
+{"kind":"shape","id":"sh/8zetsj2p","slide":10,"bbox":[920,166,290,164]}
+{"kind":"shape","id":"sh/90naloja","slide":10,"bbox":[920,166,8,164]}
+{"kind":"textbox","id":"sh/9kb25cne","slide":10,"text":"+0.107","textPreview":"+0.107","textChars":6,"textLines":1,"bbox":[948,184,242,62]}
+{"kind":"textbox","id":"sh/oj21w769","slide":10,"text":"Pearson correlation of |r[t-1]| and |r[t]|","textPreview":"Pearson correlation of |r[t-1]| and |r[t]|","textChars":42,"textLines":1,"bbox":[948,254,242,60]}
+{"kind":"textbox","id":"sh/nitk325o","slide":10,"text":"95% block interval\n+0.033 to +0.168","textPreview":"95% block interval | +0.033 to +0.168","textChars":35,"textLines":2,"bbox":[942,354,248,78]}
+{"kind":"shape","id":"sh/2hkjuxo3","slide":10,"bbox":[942,450,248,1]}
+{"kind":"textbox","id":"sh/1gr21sni","slide":10,"text":"Caution","textPreview":"Caution","textChars":7,"textLines":1,"bbox":[942,476,240,34]}
+{"kind":"textbox","id":"sh/0fi1sn6x","slide":10,"text":"The decile pattern is not monotonic; rank correlation is only +0.053 and its interval crosses zero. This is a clue about turbulence—not direction.","textPreview":"The decile pattern is not monotonic; rank correlation is only +0.053 and its interval crosses zero. This is a clue about turbulence—not d...","textChars":146,"textLines":1,"bbox":[942,520,248,124]}
+{"kind":"image","id":"im/qxs3u9sb","slide":10,"name":"","geometry":"rect","alt":"Mean next-day absolute return across prior-day absolute-return deciles","bbox":[36,152,850,498]}
+{"kind":"notes","id":"nt/oekh7g","slide":10,"text":"Absolute and squared returns show positive linear dependence, but the equal-count deciles are jagged and the absolute-return rank interval includes zero. Treat this as modest magnitude persistence and a separate future question.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/primary_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/block_bootstrap_intervals.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/absolute_return_deciles.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/phqoh6","slide":11,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/4zypwfyd","slide":11,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/3yp83ahs","slide":11,"name":"title-11","text":"What survives this first measurement pass","textPreview":"What survives this first measurement pass","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ixg7u5g7","slide":11,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/dorq9kzu","slide":11,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/snip0fy9","slide":11,"name":"footer-number-11","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/r2987aho","slide":11,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/q107y5g3","slide":11,"text":"SIGNED RETURN","textPreview":"SIGNED RETURN","textChars":13,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/1sbqd4zq","slide":11,"text":"No measurable adjacent-session continuation or reversal","textPreview":"No measurable adjacent-session continuation or reversal","textChars":55,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/0r2p4zyl","slide":11,"text":"Pearson -0.021; direction difference -0.7 pp","textPreview":"Pearson -0.021; direction difference -0.7 pp","textChars":44,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/6ponutkr","slide":11,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/7qx43ylc","slide":11,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/8rq5w32x","slide":11,"text":"PATH SHAPE","textPreview":"PATH SHAPE","textChars":10,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/tszm5832","slide":11,"text":"ER20 usefully describes trend versus chop","textPreview":"ER20 usefully describes trend versus chop","textChars":41,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/ut8nydkn","slide":11,"text":"Direction-agnostic, lagging, and flickery near transitions","textPreview":"Direction-agnostic, lagging, and flickery near transitions","textChars":58,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/fuh47il8","slide":11,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/gvq5032t","slide":11,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/hgzm983e","slide":11,"text":"RETURN MAGNITUDE","textPreview":"RETURN MAGNITUDE","textChars":16,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/ax43m94j","slide":11,"text":"A modest persistence clue remains","textPreview":"A modest persistence clue remains","textChars":33,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/byd4vel4","slide":11,"text":"Absolute-return Pearson +0.107; non-monotonic diagnostic pattern","textPreview":"Absolute-return Pearson +0.107; non-monotonic diagnostic pattern","textChars":64,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/z2tk3a1w","slide":11,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/e1kju5kb","slide":11,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/14b2pkj2","slide":11,"text":"Next narrow question","textPreview":"Next narrow question","textChars":20,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/0321wf2h","slide":11,"text":"Does yesterday's return magnitude forecast tomorrow's magnitude on a separately frozen surface?","textPreview":"Does yesterday's return magnitude forecast tomorrow's magnitude on a separately frozen surface?","textChars":95,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/phqoh6","slide":11,"text":"Close by separating what was learned. The signed-return question stops descriptively; ER20 remains a descriptive lens; magnitude persistence is the only new clue and requires its own predeclared test before any strategy interpretation.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_LAGGED_DAILY_RETURN_SCATTER_2018_2023.md\n- operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_lagged_return_dependence_statistics_20260825/report.md\n[/Sources]"}

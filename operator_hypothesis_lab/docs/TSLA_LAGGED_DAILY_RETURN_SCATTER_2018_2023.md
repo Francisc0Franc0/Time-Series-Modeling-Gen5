@@ -48,3 +48,5 @@ time.
   `runs/research_workbench/operator_hypothesis_lab/tsla_lagged_daily_return_scatter_20260824/`
 - Reproduction script:
   `scripts/inspect/run_tsla_lagged_daily_return_scatter.R`
+- Running descriptive-research deck:
+  `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`

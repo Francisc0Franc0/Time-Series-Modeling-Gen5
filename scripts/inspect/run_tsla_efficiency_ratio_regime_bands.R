@@ -166,7 +166,7 @@ band_colors <- c(
   SIDEWAYS = grDevices::adjustcolor("#E99A9A", alpha.f = 0.29)
 )
 x_min <- analysis_start
-x_max <- analysis_end + 1
+x_max <- analysis_end
 
 draw_regime_bands <- function(y_bottom, y_top) {
   for (i in seq_len(nrow(regime_spans))) {
@@ -240,6 +240,7 @@ graphics::plot(
   type = "n",
   xlim = c(x_min, x_max),
   ylim = c(0, 1),
+  xaxt = "n",
   xlab = "Session date",
   ylab = "ER20",
   cex.lab = 1.12,
@@ -248,6 +249,8 @@ graphics::plot(
   las = 1
 )
 draw_regime_bands(0, 1)
+date_ticks <- as.Date(c("2018-01-02", "2020-01-02", "2022-01-03", "2023-12-29"))
+graphics::axis(1, at = date_ticks, labels = c("2018", "2020", "2022", "2023"))
 graphics::abline(h = trend_cutoff, col = "#526070", lwd = 1.5, lty = 2)
 graphics::lines(ledger$session_date, ledger$er20, col = "#223A58", lwd = 1.25)
 graphics::box(bty = "l", col = "#7D8794")

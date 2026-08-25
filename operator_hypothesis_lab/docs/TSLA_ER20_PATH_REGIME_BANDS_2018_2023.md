@@ -81,3 +81,5 @@ regimes improve a trading system. Each would require a separate hypothesis.
   `runs/research_workbench/operator_hypothesis_lab/tsla_efficiency_ratio_regime_bands_20260824/`
 - Reproduction script:
   `scripts/inspect/run_tsla_efficiency_ratio_regime_bands.R`
+- Running descriptive-research deck:
+  `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
