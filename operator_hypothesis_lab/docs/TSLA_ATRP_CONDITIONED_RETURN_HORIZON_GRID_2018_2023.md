@@ -33,6 +33,19 @@ The pre-2018 adjusted TSLA prices needed for the longest prior-return windows
 come from the same cached daily series used by the aggregate and ER20 grids.
 The run stops unless all 2018-2023 closes match the accepted ATR% ledger.
 
+## Price-Level State View
+
+The companion price chart overlays those exact accepted states on TSLA's
+adjusted close and shows the causal trailing ATR% percentile underneath. Blue
+marks LOW movement capacity, gold MEDIUM, and red HIGH. The colors are not
+directional labels: each state can occur during rising, falling, or sideways
+price paths. The four dashed reference levels correspond to the accepted
+30/40 and 60/70 hysteresis boundaries; the colored band itself remains the
+authoritative operational state.
+
+This is a descriptive alignment check. It adds no threshold search, outcome
+selection, prediction, or strategy calculation.
+
 ## Visual Readout
 
 The three correlation surfaces separate strongly by volatility state:
@@ -136,7 +149,11 @@ These ideas are recorded but not opened by this slice:
   `pairwise_state_comparison_statistics.csv` in the same packet.
 - LOW, MEDIUM, HIGH, difference, R-squared, sample-size, and q-value matrices:
   the same packet.
-- Heatmaps: `visuals/` in the same packet.
+- Price/state chart:
+  `visuals/tsla_atrp_state_price_bands.png` in the same packet.
+- Frozen chart inputs: `tsla_atrp_state_chart_ledger.csv` and
+  `tsla_atrp_state_spans.csv` in the same packet.
+- Heatmaps: the other files in `visuals/` in the same packet.
 - Reproduction script:
   `scripts/inspect/run_tsla_atrp_conditioned_return_horizon_grid.R`.
 - Running evidence deck:

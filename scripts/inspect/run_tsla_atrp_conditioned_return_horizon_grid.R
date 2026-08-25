@@ -142,6 +142,104 @@ if (!all(source_checks$passed)) {
   stop("TSLA ATR%-conditioned source checks failed: ", paste(failed, collapse = ", "), call. = FALSE)
 }
 
+# Build one contiguous span per accepted state run. The state labels come from
+# the frozen HYP-REG-01.1 ledger; this visual layer does not reconstruct them.
+chart_ledger <- data.frame(
+  session_date = bars$session_date[analysis_rows],
+  adjusted_close = bars$close[analysis_rows],
+  atr_percent = bars$atr_percent[analysis_rows],
+  atr_percentile = bars$atr_percentile[analysis_rows],
+  atrp_state = bars$regime_state[analysis_rows],
+  stringsAsFactors = FALSE
+)
+state_change <- c(TRUE, chart_ledger$atrp_state[-1L] != chart_ledger$atrp_state[-nrow(chart_ledger)])
+span_rows <- split(seq_len(nrow(chart_ledger)), cumsum(state_change))
+state_spans <- do.call(rbind, lapply(span_rows, function(rows) {
+  end_row <- max(rows)
+  next_session <- if (end_row < nrow(chart_ledger)) chart_ledger$session_date[[end_row + 1L]] else analysis_end + 1
+  data.frame(
+    atrp_state = chart_ledger$atrp_state[[min(rows)]],
+    band_start = chart_ledger$session_date[[min(rows)]],
+    band_end_exclusive = next_session,
+    stringsAsFactors = FALSE
+  )
+}))
+rownames(state_spans) <- NULL
+
+state_colors <- c(
+  LOW = grDevices::adjustcolor("#74A7E8", alpha.f = 0.30),
+  MEDIUM = grDevices::adjustcolor("#D6B85E", alpha.f = 0.25),
+  HIGH = grDevices::adjustcolor("#DD7777", alpha.f = 0.29)
+)
+
+draw_state_bands <- function(y_bottom, y_top) {
+  for (i in seq_len(nrow(state_spans))) {
+    graphics::rect(
+      xleft = as.numeric(state_spans$band_start[[i]]),
+      ybottom = y_bottom,
+      xright = as.numeric(state_spans$band_end_exclusive[[i]]),
+      ytop = y_top,
+      col = unname(state_colors[state_spans$atrp_state[[i]]]),
+      border = NA
+    )
+  }
+}
+
+state_plot_path <- file.path(visual_dir, "tsla_atrp_state_price_bands.png")
+grDevices::png(state_plot_path, width = 2400, height = 1350, res = 180)
+old_par <- graphics::par(
+  family = "sans", bg = "white", fg = "#273548", col.axis = "#526070",
+  col.lab = "#273548"
+)
+graphics::layout(matrix(c(1L, 2L), nrow = 2L), heights = c(3.25, 1.0))
+
+graphics::par(mar = c(1.0, 7.0, 7.3, 2.2), mgp = c(3.9, 1.15, 0))
+price_ylim <- range(chart_ledger$adjusted_close)
+graphics::plot(
+  chart_ledger$session_date, chart_ledger$adjusted_close,
+  type = "n", xlim = c(analysis_start, analysis_end), ylim = price_ylim,
+  log = "y", xaxt = "n", xlab = "", ylab = "TSLA adjusted close (log scale)",
+  main = "TSLA volatility state: LOW, MEDIUM, and HIGH ATR% bands",
+  cex.main = 1.55, cex.lab = 1.18, cex.axis = 0.96,
+  col.main = "#142033", bty = "n", las = 1
+)
+graphics::mtext(
+  "Accepted HYP-REG-01.1 state | Wilder ATR14 / close | Prior-252 causal percentile with hysteresis | 2018-2023",
+  side = 3, line = 1.0, cex = 0.94, col = "#5C6777"
+)
+draw_state_bands(price_ylim[[1L]], price_ylim[[2L]])
+graphics::grid(nx = NA, ny = NULL, col = grDevices::adjustcolor("#8B96A5", alpha.f = 0.22), lty = 1)
+graphics::lines(chart_ledger$session_date, chart_ledger$adjusted_close, col = "#17273B", lwd = 2.15)
+graphics::box(bty = "l", col = "#7D8794")
+graphics::legend(
+  "topleft",
+  legend = c("LOW movement capacity", "MEDIUM movement capacity", "HIGH movement capacity", "TSLA adjusted close"),
+  fill = c(unname(state_colors[c("LOW", "MEDIUM", "HIGH")]), NA),
+  border = rep(NA, 4L), lty = c(NA, NA, NA, 1), lwd = c(NA, NA, NA, 2.15),
+  col = c(NA, NA, NA, "#17273B"), bg = grDevices::adjustcolor("white", alpha.f = 0.88),
+  box.col = "#C5CBD3", cex = 0.82, inset = 0.015
+)
+
+graphics::par(mar = c(5.7, 7.0, 1.1, 2.2), mgp = c(3.6, 1.15, 0))
+graphics::plot(
+  chart_ledger$session_date, chart_ledger$atr_percentile,
+  type = "n", xlim = c(analysis_start, analysis_end), ylim = c(0, 1), xaxt = "n",
+  xlab = "Session date", ylab = "Rank", cex.lab = 1.12,
+  cex.axis = 0.94, bty = "n", las = 1
+)
+draw_state_bands(0, 1)
+date_ticks <- as.Date(c("2018-01-02", "2020-01-02", "2022-01-03", "2023-12-29"))
+graphics::axis(1, at = date_ticks, labels = c("2018", "2020", "2022", "2023"))
+graphics::abline(h = c(0.30, 0.40, 0.60, 0.70), col = "#6E7785", lwd = 1.0, lty = 2)
+graphics::lines(chart_ledger$session_date, chart_ledger$atr_percentile, col = "#223A58", lwd = 1.20)
+graphics::box(bty = "l", col = "#7D8794")
+graphics::mtext(
+  "Bands show the accepted hysteretic state at close t. ATR% measures movement capacity, not trend direction or expected return.",
+  side = 1, line = 4.25, cex = 0.72, col = "#667384"
+)
+graphics::par(old_par)
+grDevices::dev.off()
+
 hac_vcov <- function(fit, lag) {
   design <- stats::model.matrix(fit)
   residuals <- stats::residuals(fit)
@@ -425,6 +523,8 @@ utils::write.csv(conditioned, file.path(output_dir, "conditioned_horizon_grid_st
 utils::write.csv(pairwise, file.path(output_dir, "pairwise_state_comparison_statistics.csv"), row.names = FALSE)
 utils::write.csv(source_checks, file.path(output_dir, "source_checks.csv"), row.names = FALSE)
 utils::write.csv(grid_checks, file.path(output_dir, "grid_checks.csv"), row.names = FALSE)
+utils::write.csv(chart_ledger, file.path(output_dir, "tsla_atrp_state_chart_ledger.csv"), row.names = FALSE)
+utils::write.csv(state_spans, file.path(output_dir, "tsla_atrp_state_spans.csv"), row.names = FALSE)
 for (state in states) {
   prefix <- tolower(state)
   write_matrix_csv(state_matrices[[state]], paste0(prefix, "_pearson_matrix.csv"), 4L)
@@ -553,6 +653,9 @@ report_lines <- c(
   "## HIGH Pearson Matrix", "", markdown_matrix(state_matrices$HIGH), "",
   "## HIGH Minus LOW Pearson Matrix", "", markdown_matrix(high_minus_low), "",
   "## HIGH Minus MEDIUM Pearson Matrix", "", markdown_matrix(high_minus_medium), "",
+  "## Price-Level State View", "",
+  "The companion price chart uses the same accepted state labels as the tables. The upper panel overlays the causal LOW, MEDIUM, and HIGH state bands on TSLA adjusted close; the lower panel shows the underlying trailing ATR% percentile and the four accepted hysteresis boundaries. This is a visual alignment check, not a return claim.",
+  "",
   "## Descriptive Readout", "",
   vapply(seq_len(nrow(top_by_state)), function(i) sprintf(
     "- %s strongest absolute correlation: `%+.4f` at prior `%d` / forward `%d` (`n=%d`, HAC interval `[%+.4f,%+.4f]`, family BH q=`%.4f`, R-squared=`%.3f%%`).",
@@ -595,7 +698,9 @@ report_lines <- c(
   "- `pairwise_state_comparison_statistics.csv`: 243 pairwise state contrasts.",
   "- Matrix CSVs: state correlations, R-squared, samples, pairwise differences, and interaction q-values.",
   "- `cells_ranked_by_absolute_state_difference.csv`: descriptive navigation ranking.",
-  "- `visuals/`: LOW, MEDIUM, HIGH, HIGH-minus-LOW, and HIGH-minus-MEDIUM correlation heatmaps."
+  "- `tsla_atrp_state_chart_ledger.csv` and `tsla_atrp_state_spans.csv`: frozen chart inputs.",
+  "- `visuals/tsla_atrp_state_price_bands.png`: TSLA price and accepted ATR% states.",
+  "- Other files in `visuals/`: LOW, MEDIUM, HIGH, HIGH-minus-LOW, and HIGH-minus-MEDIUM correlation heatmaps."
 )
 writeLines(report_lines, file.path(output_dir, "report.md"), useBytes = TRUE)
 
@@ -609,4 +714,5 @@ for (i in seq_len(nrow(top_by_state))) cat(
 )
 cat("Largest absolute state difference:", sprintf("%+.4f", top_pair$second_minus_first_correlation),
     top_pair$comparison, "at", top_pair$prior_sessions, "/", top_pair$forward_sessions, "\n")
+cat("State-band chart:", state_plot_path, "\n")
 cat("Output:", output_dir, "\n")
