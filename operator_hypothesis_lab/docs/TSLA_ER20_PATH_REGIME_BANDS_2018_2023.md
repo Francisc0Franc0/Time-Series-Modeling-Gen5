@@ -73,6 +73,14 @@ This chart does not establish that `ER20` predicts future returns, that `0.30`
 is the right threshold, that 20 sessions is the best horizon, or that the
 regimes improve a trading system. Each would require a separate hypothesis.
 
+## Conditional-Return Follow-Up
+
+The completed follow-up reuses these exact causal labels to split the fixed
+prior-versus-forward cumulative-return horizon grid. The red and green maps
+look materially different, but no within-regime or red-versus-green result
+survives the 81-cell scan. See
+`operator_hypothesis_lab/docs/TSLA_ER20_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md`.
+
 ## Artifacts
 
 - Chart:

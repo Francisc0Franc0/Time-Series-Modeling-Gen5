@@ -1,3 +1,4 @@
+{"kind":"deck","id":"pr/gkq2ij","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
@@ -234,7 +235,7 @@
 {"kind":"textbox","id":"sh/idgvmx8r","slide":14,"name":"footer-number-4","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"shape","id":"sh/5grehs7i","slide":14,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/zi5c3y98","slide":14,"text":"Pearson correlation matrix; no BH-FDR q-value is below 0.05.","textPreview":"Pearson correlation matrix; no BH-FDR q-value is below 0.05.","textChars":60,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/fu1cza1s","slide":14,"name":"","alt":"Pearson correlation heatmap for 81 TSLA prior-versus-forward cumulative-return horizon pairs","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/fu1cza1s","slide":14,"name":"","bbox":[308.93,142,662.14,515]}
 {"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"The positive region is coherent rather than a single isolated cell, but its magnitude is small and this nested grid is highly dependent.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/pearson_correlation_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/slope_bh_q_value_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/visuals/tsla_cumulative_return_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/vaxsvy10","slide":15,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
 {"kind":"textbox","id":"sh/1kjyt83e","slide":15,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -255,7 +256,7 @@
 {"kind":"shape","id":"sh/judsvqxg","slide":15,"bbox":[878,502,8,150]}
 {"kind":"textbox","id":"sh/0z29cbyh","slide":15,"text":"0.852%","textPreview":"0.852%","textChars":6,"textLines":1,"bbox":[906,520,282,62]}
 {"kind":"textbox","id":"sh/l0bqlgf2","slide":15,"text":"maximum R-squared across 81 cells","textPreview":"maximum R-squared across 81 cells","textChars":33,"textLines":1,"bbox":[906,590,282,46]}
-{"kind":"image","id":"im/3ypo7mtw","slide":15,"name":"","alt":"R-squared percentage heatmap for 81 TSLA cumulative-return horizon pairs","bbox":[64,150,750,500]}
+{"kind":"image","id":"im/3ypo7mtw","slide":15,"name":"","bbox":[64,150,750,500]}
 {"kind":"notes","id":"nt/vaxsvy10","slide":15,"text":"The strongest point estimate explains less than one percent of forward-return variance, and its overlap-aware interval includes zero. Its BH q-value is 0.660.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/r_squared_percent_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/visuals/tsla_cumulative_return_r_squared_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/gny5sjyp","slide":16,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
 {"kind":"textbox","id":"sh/oruhcf65","slide":16,"name":"section-8","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -273,7 +274,7 @@
 {"kind":"textbox","id":"sh/nqlg3a5k","slide":16,"text":"0 / 81","textPreview":"0 / 81","textChars":6,"textLines":1,"bbox":[932,372,252,62]}
 {"kind":"textbox","id":"sh/2pcfa5oz","slide":16,"text":"direction cells with BH-FDR q < 0.05","textPreview":"direction cells with BH-FDR q < 0.05","textChars":36,"textLines":1,"bbox":[932,442,252,46]}
 {"kind":"textbox","id":"sh/ps3y5knq","slide":16,"text":"Best raw direction p = 0.025 at 10 prior / 3 forward.\nBH q = 0.554; nested horizons share data.","textPreview":"Best raw direction p = 0.025 at 10 prior / 3 forward. | BH q = 0.554; nested horizons share data.","textChars":95,"textLines":2,"bbox":[914,548,280,84]}
-{"kind":"image","id":"im/4fmtcza9","slide":16,"name":"","alt":"Percentage-point direction-difference heatmap for 81 TSLA cumulative-return horizon pairs","bbox":[40,156.92,830,484.17]}
+{"kind":"image","id":"im/4fmtcza9","slide":16,"name":"","bbox":[40,156.92,830,484.17]}
 {"kind":"notes","id":"nt/gny5sjyp","slide":16,"text":"Several direction differences are positive, but the best raw p-value becomes q=0.554 after the 81-cell scan. None survives BH-FDR or Bonferroni.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/direction_difference_pp_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/visuals/tsla_cumulative_return_direction_difference_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/14bup87q","slide":17,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
 {"kind":"textbox","id":"sh/lwnq5gf6","slide":17,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -300,3 +301,108 @@
 {"kind":"textbox","id":"sh/ny5876xc","slide":17,"text":"Next narrow question","textPreview":"Next narrow question","textChars":20,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/mxw7e1gr","slide":17,"text":"Does the 5–10-session ridge deserve one frozen replication, or does this descriptive lane stop here?","textPreview":"Does the 5–10-session ridge deserve one frozen replication, or does this descriptive lane stop here?","textChars":100,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/14bup87q","slide":17,"text":"Close by separating the descriptive pattern from evidence strength. The ridge is worth naming, but this scan does not establish predictive authority.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/report.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/cells_ranked_by_absolute_correlation.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/y5wne50z","slide":18,"title":"REGIME CONDITIONING","textShapes":5}
+{"kind":"textbox","id":"sh/5gnmp4bq","slide":18,"text":"REGIME CONDITIONING","textPreview":"REGIME CONDITIONING","textChars":19,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/wrelszu9","slide":18,"text":"What if aggregation mixes\nincompatible path states?","textPreview":"What if aggregation mixes | incompatible path states?","textChars":51,"textLines":2,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/hsn2l4bu","slide":18,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/itw3upcf","slide":18,"text":"Use the ER20 color already known at the anchor close.","textPreview":"Use the ER20 color already known at the anchor close.","textChars":53,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/je5knut0","slide":18,"text":"Red and green inherit the prior POC's fixed 20-session metric and 0.30 cutoff. No threshold search.","textPreview":"Red and green inherit the prior POC's fixed 20-session metric and 0.30 cutoff. No threshold search.","textChars":99,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/4felwzu5","slide":18,"text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/y5wne50z","slide":18,"text":"This section asks whether aggregating red and green path states washes out different prior-versus-forward return relationships.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md\n- scripts/inspect/run_tsla_er20_conditioned_return_horizon_grid.R\n[/Sources]"}
+{"kind":"slide","id":"sl/nid43ytk","slide":19,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/qdsfutgn","slide":19,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9gb6xgbi","slide":19,"name":"title-3","text":"Condition on ER20 before reading the future","textPreview":"Condition on ER20 before reading the future","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8v2pobax","slide":19,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vitozqt8","slide":19,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ahk7qls3","slide":19,"name":"footer-number-3","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/xkbq10be","slide":19,"text":"State[t]  then  R+(f)","textPreview":"State[t]  then  R+(f)","textChars":21,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/wj2psvat","slide":19,"text":"The anchor is labeled from closes through t. Prior return ends at t; following return begins after t.","textPreview":"The anchor is labeled from closes through t. Prior return ends at t; following return begins after t.","textChars":101,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/jmd83atk","slide":19,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/il47u5sz","slide":19,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/cri1gnql","slide":19,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/dsri9sr6","slide":19,"text":"fixed path states","textPreview":"fixed path states","textChars":17,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/qpgjex8f","slide":19,"text":"Fixed conditioning","textPreview":"Fixed conditioning","textChars":18,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/rqp07290","slide":19,"text":"Metric","textPreview":"Metric","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/0vi1k7qx","slide":19,"text":"20-session log-price ER","textPreview":"20-session log-price ER","textChars":23,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/1gridcr2","slide":19,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/et0jix8r","slide":19,"text":"Red","textPreview":"Red","textChars":3,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/zu90b29c","slide":19,"text":"ER20 < 0.30 (sideways)","textPreview":"ER20 < 0.30 (sideways)","textChars":22,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/oj21o7qt","slide":19,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/9kb2hcre","slide":19,"text":"Green","textPreview":"Green","textChars":5,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/x07i1cji","slide":19,"text":"ER20 >= 0.30 (trending)","textPreview":"ER20 >= 0.30 (trending)","textChars":23,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/wfy1s7ix","slide":19,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/vep0z21c","slide":19,"text":"Timing","textPreview":"Timing","textChars":6,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/adgjqx0r","slide":19,"text":"State known at anchor close t","textPreview":"State known at anchor close t","textChars":29,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/54ri5wje","slide":19,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/k3y1wri9","slide":19,"text":"Surface","textPreview":"Surface","textChars":7,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/j2p03m1o","slide":19,"text":"Same 81 horizon pairs","textPreview":"Same 81 horizon pairs","textChars":21,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/i1gjuh03","slide":19,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/l8nitsja","slide":19,"text":"Caution","textPreview":"Caution","textChars":7,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/07ehknip","slide":19,"text":"ER20 and prior return share trailing price data","textPreview":"ER20 and prior return share trailing price data","textChars":47,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/nid43ytk","slide":19,"text":"The timing is causal: ER20 at the anchor uses closes through that anchor only. One pre-2018 anchor from the aggregate grid is uncolored and excluded.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/grid_checks.csv\n- operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/zyxsni5k","slide":20,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/hk3ipcr6","slide":20,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/qpwjmh8n","slide":20,"name":"title-4","text":"Red ER20 states expose a positive island","textPreview":"Red ER20 states expose a positive island","textChars":40,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/rq50vmp8","slide":20,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/4nu1krqh","slide":20,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/po3itc72","slide":20,"name":"footer-number-4","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/2lczih8r","slide":20,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/gjuhg7ql","slide":20,"text":"Red/sideways matrix; strongest cell +0.173 at 15 prior / 5 forward.","textPreview":"Red/sideways matrix; strongest cell +0.173 at 15 prior / 5 forward.","textChars":67,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/m5k7q1g3","slide":20,"name":"","alt":"Pearson correlation heatmap for TSLA cumulative returns when anchor ER20 is red or sideways","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/zyxsni5k","slide":20,"text":"Red states show a coherent positive island centered around 10 to 15 prior sessions and 3 to 10 forward sessions. The largest cell has an overlap-aware interval that still includes zero.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/red_sideways_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_red_sideways_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/m1wvqtk3","slide":21,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/al43uxor","slide":21,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1gbmxs7a","slide":21,"name":"title-4","text":"Green ER20 states suppress the positive island","textPreview":"Green ER20 states suppress the positive island","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0f2lon6p","slide":21,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra9kryp8","slide":21,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/qp03yt8n","slide":21,"name":"footer-number-4","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/dcb2t87y","slide":21,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/b6d432pc","slide":21,"text":"Green/trending matrix; long/long cells turn negative; strongest absolute cell -0.154.","textPreview":"Green/trending matrix; long/long cells turn negative; strongest absolute cell -0.154.","textChars":85,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/j69c3adw","slide":21,"name":"","alt":"Pearson correlation heatmap for TSLA cumulative returns when anchor ER20 is green or trending","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/m1wvqtk3","slide":21,"text":"Green states retain small positive short-horizon patches, but the red medium-horizon island is muted or reversed and the long-prior/long-forward corner becomes negative.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/green_trending_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_green_trending_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/5onypobq","slide":22,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/krihkz2d","slide":22,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/6987itcr","slide":22,"name":"title-7","text":"The state split is coherent, but unresolved","textPreview":"The state split is coherent, but unresolved","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/7a18rydc","slide":22,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/k7qpgjul","slide":22,"name":"footer-left-7","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/58zqpov6","slide":22,"name":"footer-number-7","text":"22","textPreview":"22","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/il87etcv","slide":22,"bbox":[36,150,806,500]}
+{"kind":"shape","id":"sh/43u9snu5","slide":22,"bbox":[878,158,330,150]}
+{"kind":"shape","id":"sh/p43q1sva","slide":22,"bbox":[878,158,8,150]}
+{"kind":"textbox","id":"sh/p4z6tcri","slide":22,"text":"-0.231","textPreview":"-0.231","textChars":6,"textLines":1,"bbox":[906,176,282,62]}
+{"kind":"textbox","id":"sh/436507qx","slide":22,"text":"largest correlation change: 15 prior / 5 forward","textPreview":"largest correlation change: 15 prior / 5 forward","textChars":48,"textLines":1,"bbox":[906,246,282,46]}
+{"kind":"shape","id":"sh/3ixor29c","slide":22,"bbox":[878,330,330,150]}
+{"kind":"shape","id":"sh/2honyx8r","slide":22,"bbox":[878,330,8,150]}
+{"kind":"textbox","id":"sh/hgf6pcr6","slide":22,"text":"p = 0.029","textPreview":"p = 0.029","textChars":9,"textLines":1,"bbox":[906,348,282,62]}
+{"kind":"textbox","id":"sh/gf65w7ql","slide":22,"text":"raw HAC slope-interaction test","textPreview":"raw HAC slope-interaction test","textChars":30,"textLines":1,"bbox":[906,418,282,46]}
+{"kind":"shape","id":"sh/fexon290","slide":22,"bbox":[878,502,330,150]}
+{"kind":"shape","id":"sh/udonux8v","slide":22,"bbox":[878,502,8,150]}
+{"kind":"textbox","id":"sh/1cj61w7q","slide":22,"text":"0 / 81","textPreview":"0 / 81","textChars":6,"textLines":1,"bbox":[906,520,282,62]}
+{"kind":"textbox","id":"sh/0bap8rq5","slide":22,"text":"interaction cells with BH-FDR q < 0.05","textPreview":"interaction cells with BH-FDR q < 0.05","textChars":38,"textLines":1,"bbox":[906,590,282,46]}
+{"kind":"image","id":"im/6dczy90f","slide":22,"name":"","alt":"Green-minus-red Pearson correlation difference heatmap for TSLA cumulative-return horizons","bbox":[64,150,750,500]}
+{"kind":"notes","id":"nt/5onypobq","slide":22,"text":"The largest raw regime contrast is at 15 prior and 5 forward: red correlation +0.173 versus green -0.058, a -0.231 difference. Its slope interaction has raw HAC p=0.029 but BH q=0.919; no interaction survives the grid scan.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/green_minus_red_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/regime_comparison_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/slope_interaction_bh_q_value_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_green_minus_red_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/c7uhcr6t","slide":23,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/l47ap8vu","slide":23,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/90vqdczq","slide":23,"name":"title-11","text":"ER20 changes the map, but not the evidentiary stop","textPreview":"ER20 changes the map, but not the evidentiary stop","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8zm9k7y5","slide":23,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/v2d8fmhw","slide":23,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/a14rmhgb","slide":23,"name":"footer-number-11","text":"23","textPreview":"23","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/xovqhcz2","slide":23,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/w3m9o7yh","slide":23,"text":"RED MAP","textPreview":"RED MAP","textChars":7,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/jqd8jmhs","slide":23,"text":"A positive island appears around 10–15 prior / 3–10 forward","textPreview":"A positive island appears around 10–15 prior / 3–10 forward","textChars":59,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ip4rqhgn","slide":23,"text":"Max +0.173 at 15 prior / 5 forward","textPreview":"Max +0.173 at 15 prior / 5 forward","textChars":34,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/sby90zm1","slide":23,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/tc7at436","slide":23,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/69gry94v","slide":23,"text":"GREEN MAP","textPreview":"GREEN MAP","textChars":9,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/rapsrelg","slide":23,"text":"The same island is muted or reversed; long/long turns negative","textPreview":"The same island is muted or reversed; long/long turns negative","textChars":62,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/0fi94jmx","slide":23,"text":"15 / 5 = -0.058; 25 / 25 = -0.154","textPreview":"15 / 5 = -0.058; 25 / 25 = -0.154","textChars":33,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/1graxo3i","slide":23,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/edgr294r","slide":23,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/fepsvelc","slide":23,"text":"UNCERTAINTY","textPreview":"UNCERTAINTY","textChars":11,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/oji9832t","slide":23,"text":"No regime-specific or interaction result survives the scan","textPreview":"No regime-specific or interaction result survives the scan","textChars":58,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/p4ra1o3e","slide":23,"text":"0/81 red; 0/81 green; 0/81 interactions","textPreview":"0/81 red; 0/81 green; 0/81 interactions","textChars":39,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/x0nalovi","slide":23,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/wze9cjud","slide":23,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/by58jeds","slide":23,"text":"Next narrow question","textPreview":"Next narrow question","textChars":20,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/axwratc7","slide":23,"text":"Freeze 15-prior / 5-forward for separate replication—or first test a regime filter less entangled with prior return?","textPreview":"Freeze 15-prior / 5-forward for separate replication—or first test a regime filter less entangled with prior return?","textChars":116,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/c7uhcr6t","slide":23,"text":"Conditioning changes the descriptive map in a coherent way, but the finding remains exploratory. ER20 is built from the same trailing path as the prior-return variable, so a less mechanically entangled filter would be a useful comparison.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/report.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/regime_comparison_statistics.csv\n[/Sources]"}

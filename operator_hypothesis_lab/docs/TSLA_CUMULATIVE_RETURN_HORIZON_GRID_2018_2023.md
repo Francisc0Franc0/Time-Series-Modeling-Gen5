@@ -110,6 +110,14 @@ replication. It is not a discovered edge, a selected model, or authority to
 trade. If pursued, the next slice should name one representative comparison in
 advance rather than refine this grid until a preferred cell appears.
 
+## ER20-Conditioned Follow-Up
+
+The completed follow-up conditions every cell on the previously fixed causal
+ER20 red/green state. It finds a coherent descriptive split—especially at 15
+prior / 5 forward—but no within-regime or interaction result survives the
+81-cell scan. See
+`operator_hypothesis_lab/docs/TSLA_ER20_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md`.
+
 ## Artifacts
 
 - Complete cell table:
