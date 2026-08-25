@@ -107,3 +107,10 @@ but it is not yet a predictive result and has no strategy authority.
   `operator_hypothesis_lab/docs/TSLA_LAGGED_DAILY_RETURN_SCATTER_2018_2023.md`
   and
   `operator_hypothesis_lab/docs/TSLA_ER20_PATH_REGIME_BANDS_2018_2023.md`
+
+## Follow-Up
+
+The predeclared cumulative prior-versus-forward horizon grid is documented in
+`operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md`.
+It extends both sides to `1, 2, 3, 4, 5, 10, 15, 20, 25` sessions without
+opening a trading rule or reading post-2023 data.
