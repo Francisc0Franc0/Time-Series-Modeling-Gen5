@@ -1065,3 +1065,82 @@
 {"kind":"textbox","id":"sh/z6lc7aps","slide":62,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/y5sbe587","slide":62,"text":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textPreview":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textChars":103,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/1kzq5knq","slide":62,"text":"The result earns a narrow confirmation step, not strategy construction. Freeze the surviving cells and inspect outlier dependence and temporal stability before reading economic meaning into them.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/report.md\n- operator_hypothesis_lab/docs/TSLA_PRIOR_RETURN_SIGN_ASYMMETRY_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/8jepo3et","slide":63,"title":"TREND DIRECTION","textShapes":5}
+{"kind":"textbox","id":"sh/kfepkny1","slide":63,"text":"TREND DIRECTION","textPreview":"TREND DIRECTION","textChars":15,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/947qxsfi","slide":63,"text":"Can path efficiency also reveal direction?","textPreview":"Can path efficiency also reveal direction?","textChars":42,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/83e9o7yx","slide":63,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/ze58rixg","slide":63,"text":"Retain the sign of the same 20-session efficiency score.","textPreview":"Retain the sign of the same 20-session efficiency score.","textChars":56,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/ydw7idgv","slide":63,"text":"Same TSLA sample, window, cutoff, and causal timing. No return-grid conditioning yet.","textPreview":"Same TSLA sample, window, cutoff, and causal timing. No return-grid conditioning yet.","textChars":85,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/lgnqtsf6","slide":63,"text":"63","textPreview":"63","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/8jepo3et","slide":63,"text":"This section completes the earlier direction-agnostic ER20 lens by retaining the sign of its net displacement. It measures state behavior only.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_SIGNED_ER20_TREND_DIRECTION_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/nedsfetc","slide":64,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/654ned0f","slide":64,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/hknihsf2","slide":64,"name":"title-3","text":"Signed ER20 turns one path score into three states","textPreview":"Signed ER20 turns one path score into three states","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/gjehonyh","slide":64,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/3650jixs","slide":64,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ilwzqdgn","slide":64,"name":"footer-number-3","text":"64","textPreview":"64","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/58nilsfy","slide":64,"text":"net move / total path","textPreview":"net move / total path","textChars":21,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/47ehsnyd","slide":64,"text":"The numerator keeps direction; the denominator penalizes churn. Taking the absolute value reproduces ER20 exactly.","textPreview":"The numerator keeps direction; the denominator penalizes churn. Taking the absolute value reproduces ER20 exactly.","textChars":114,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/rap0n2x4","slide":64,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/q9gzuxgj","slide":64,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/83apk7ad","slide":64,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/t43qtcry","slide":64,"text":"up / sideways / down states","textPreview":"up / sideways / down states","textChars":27,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/6hs7ixs7","slide":64,"text":"Fixed direction surface","textPreview":"Fixed direction surface","textChars":23,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/7218r29s","slide":64,"text":"Window","textPreview":"Window","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/g7upora9","slide":64,"text":"20 sessions","textPreview":"20 sessions","textChars":11,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/h83qxcru","slide":64,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/u5c7mhsj","slide":64,"text":"Up state","textPreview":"Up state","textChars":8,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/f6l8vm94","slide":64,"text":"signed ER20 ≥ +0.30","textPreview":"signed ER20 ≥ +0.30","textChars":19,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/4bepsrql","slide":64,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/pcnq1wr6","slide":64,"text":"Sideways","textPreview":"Sideways","textChars":8,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/dsjqlwja","slide":64,"text":"between −0.30 and +0.30","textPreview":"between −0.30 and +0.30","textChars":23,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/crapcrip","slide":64,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/bq18jm14","slide":64,"text":"Down state","textPreview":"Down state","textChars":10,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/qp87ah0j","slide":64,"text":"signed ER20 ≤ −0.30","textPreview":"signed ER20 ≤ −0.30","textChars":19,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/lwjqpwj6","slide":64,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/0vapgril","slide":64,"text":"Timing","textPreview":"Timing","textChars":6,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/zu18nm1g","slide":64,"text":"Known at close t","textPreview":"Known at close t","textChars":16,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/yts7e10v","slide":64,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/10z6dcj2","slide":64,"text":"Search","textPreview":"Search","textChars":6,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/gzqp472h","slide":64,"text":"None","textPreview":"None","textChars":4,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/nedsfetc","slide":64,"text":"Signed ER20 is bounded from minus one to plus one. Sign supplies direction and magnitude supplies path efficiency. It is not independent of ER20 because its absolute value is ER20.\n\n[Sources]\n- operator_hypothesis_lab/R/tsla_signed_er20_direction.R\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/run_spec.csv\n- operator_hypothesis_lab/docs/TSLA_SIGNED_ER20_TREND_DIRECTION_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/u5wbe5cf","slide":65,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/k3uxsja1","slide":65,"name":"section-5","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/l0n29kn2","slide":65,"name":"title-5","text":"Signed ER20 separates direction without a crossover","textPreview":"Signed ER20 separates direction without a crossover","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/kzel0z6h","slide":65,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ba5k3a50","slide":65,"name":"footer-left-5","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/a9cju5of","slide":65,"name":"footer-number-5","text":"65","textPreview":"65","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/xwn25kn6","slide":65,"bbox":[34,145,900,506]}
+{"kind":"textbox","id":"sh/v6pkfe54","slide":65,"text":"How","textPreview":"How","textChars":3,"textLines":1,"bbox":[966,166,230,38]}
+{"kind":"textbox","id":"sh/u5g369oj","slide":65,"text":"Net 20-session log displacement divided by the total path traveled; sign is retained.","textPreview":"Net 20-session log displacement divided by the total path traveled; sign is retained.","textChars":85,"textLines":1,"bbox":[966,214,252,120]}
+{"kind":"textbox","id":"sh/s7uxw3ad","slide":65,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[966,358,230,38]}
+{"kind":"textbox","id":"sh/t8ne58ry","slide":65,"text":"Green marks efficient rises, red efficient declines, and gray an inefficient path. Down states are visibly shorter on TSLA.","textPreview":"Green marks efficient rises, red efficient declines, and gray an inefficient path. Down states are visibly shorter on TSLA.","textChars":123,"textLines":1,"bbox":[966,406,252,174]}
+{"kind":"shape","id":"sh/65cfuts7","slide":65,"bbox":[966,600,252,4]}
+{"kind":"textbox","id":"sh/76lw3y9s","slide":65,"text":"Descriptive state—not a future-return claim","textPreview":"Descriptive state—not a future-return claim","textChars":43,"textLines":1,"bbox":[966,616,252,44]}
+{"kind":"image","id":"im/u58j6dcv","slide":65,"name":"","alt":"TSLA adjusted close with causal signed-ER20 up, sideways, and down state bands","bbox":[34.22,145,899.56,506]}
+{"kind":"notes","id":"nt/u5wbe5cf","slide":65,"text":"The neutral band absorbs every observed direction reversal, so no session jumps directly from up trend to down trend or vice versa. The chart also shows that down states are less prevalent and shorter than up states on this TSLA sample.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/visuals/tsla_signed_er20_direction_bands.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/state_occupancy.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/state_duration_summary.csv\n- operator_hypothesis_lab/docs/TSLA_SIGNED_ER20_TREND_DIRECTION_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/dovq5k3u","slide":66,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/hs3e9gzq","slide":66,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/pwnu90ru","slide":66,"name":"title-11","text":"Direction is readable—but still flickery","textPreview":"Direction is readable—but still flickery","textChars":40,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ovet0va9","slide":66,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fq5s3q9c","slide":66,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/epcbuls7","slide":66,"name":"footer-number-11","text":"66","textPreview":"66","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1sna50ri","slide":66,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/0retwvax","slide":66,"text":"STATE MAP","textPreview":"STATE MAP","textChars":9,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/jmpcfa9w","slide":66,"text":"Green up, gray sideways, red down","textPreview":"Green up, gray sideways, red down","textChars":33,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ylgb65sb","slide":66,"text":"1,509 causal daily labels","textPreview":"1,509 causal daily labels","textChars":25,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/kj6p4nax","slide":66,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/5kf6xsbi","slide":66,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/yho72dsr","slide":66,"text":"CHURN CONTROL","textPreview":"CHURN CONTROL","textChars":13,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/jixovitc","slide":66,"text":"Every direction reversal crosses the neutral band","textPreview":"Every direction reversal crosses the neutral band","textChars":49,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/wf6p03a1","slide":66,"text":"0 direct up/down flips; 10.3% daily transition rate","textPreview":"0 direct up/down flips; 10.3% daily transition rate","textChars":51,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/xgf6t8b6","slide":66,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ad47ydsv","slide":66,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/bedorytg","slide":66,"text":"LIMIT","textPreview":"LIMIT","textChars":5,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/obmpw3ap","slide":66,"text":"Down states are brief and boundaries still flicker","textPreview":"Down states are brief and boundaries still flicker","textChars":50,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/9cv6p8ba","slide":66,"text":"12.1% occupancy; median span 2 sessions","textPreview":"12.1% occupancy; median span 2 sessions","textChars":39,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/pw3ed0z2","slide":66,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/4vud4vyh","slide":66,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/3ulwbqhw","slide":66,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/2tcv2lgb","slide":66,"text":"Freeze as the template's direction baseline—not a predictor. Parameter search waits until after the multi-asset atlas.","textPreview":"Freeze as the template's direction baseline—not a predictor. Parameter search waits until after the multi-asset atlas.","textChars":118,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/dovq5k3u","slide":66,"text":"The fixed state is adequate as a reusable descriptive baseline, but its brief down spans and one-session boundary states remain visible limitations. The next methodological step is to apply this unchanged state to the existing return surfaces; parameter and time-window selection remain deferred.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/state_occupancy.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/state_duration_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_trend_direction_20260826/state_quality_summary.csv\n- operator_hypothesis_lab/docs/TSLA_SIGNED_ER20_TREND_DIRECTION_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n[/Sources]"}
