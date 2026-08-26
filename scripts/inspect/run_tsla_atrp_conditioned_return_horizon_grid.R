@@ -1,6 +1,8 @@
-# Condition the fixed TSLA cumulative-return horizon grid on the accepted
-# HYP-REG-01.1 ATR-percent volatility states. This is descriptive research:
-# no state or cell becomes a trading rule, model, or performance claim.
+# Condition the fixed TSLA cumulative-return horizon grid on an accepted
+# HYP-REG-01.1 ATR-percent state authority. The default is TSLA itself; a
+# caller may set GEN5_ATRP_STATE_SYMBOL=SPY for the frozen external-market
+# context slice. This remains descriptive research: no state or cell becomes
+# a trading rule, model, or performance claim.
 
 script_path <- tryCatch(
   normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE),
@@ -26,6 +28,12 @@ g5_load_local_renviron(repo_root)
 
 cfg <- g5_load_data_layer_config(repo_root)
 symbol <- "TSLA"
+state_symbol <- toupper(trimws(Sys.getenv("GEN5_ATRP_STATE_SYMBOL", unset = symbol)))
+if (!state_symbol %in% c("TSLA", "SPY")) {
+  stop("GEN5_ATRP_STATE_SYMBOL must be TSLA or SPY for this frozen slice.", call. = FALSE)
+}
+external_state <- state_symbol != symbol
+file_stem <- if (external_state) "tsla_spy_atrp" else "tsla_atrp"
 horizons <- c(1L, 2L, 3L, 4L, 5L, 10L, 15L, 20L, 25L)
 states <- c("LOW", "MEDIUM", "HIGH")
 query_start <- as.Date("2017-10-02")
@@ -38,7 +46,11 @@ accepted_ledger_path <- file.path(
 )
 output_dir <- file.path(
   repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
-  "tsla_atrp_conditioned_return_horizon_grid_20260825"
+  if (external_state) {
+    "tsla_spy_atrp_conditioned_return_horizon_grid_20260825"
+  } else {
+    "tsla_atrp_conditioned_return_horizon_grid_20260825"
+  }
 )
 visual_dir <- file.path(output_dir, "visuals")
 dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
@@ -55,9 +67,15 @@ required <- c(
 missing <- setdiff(required, names(ledger_all))
 if (length(missing)) stop("Accepted ATR% ledger is missing columns: ", paste(missing, collapse = ", "), call. = FALSE)
 
-accepted <- ledger_all[ledger_all$symbol == symbol, required, drop = FALSE]
-accepted$session_date <- as.Date(accepted$session_date)
-accepted <- accepted[order(accepted$session_date), , drop = FALSE]
+accepted_return <- ledger_all[ledger_all$symbol == symbol, required, drop = FALSE]
+accepted_return$session_date <- as.Date(accepted_return$session_date)
+accepted_return <- accepted_return[order(accepted_return$session_date), , drop = FALSE]
+accepted_state <- ledger_all[ledger_all$symbol == state_symbol, required, drop = FALSE]
+accepted_state$session_date <- as.Date(accepted_state$session_date)
+accepted_state <- accepted_state[order(accepted_state$session_date), , drop = FALSE]
+if (!nrow(accepted_return) || !nrow(accepted_state)) {
+  stop("Accepted ATR% ledger is missing the return or state authority symbol.", call. = FALSE)
+}
 
 # Reuse the same cached adjusted daily TSLA bars as the aggregate and ER20
 # grids so the longest prior horizon has its pre-2018 observations. The
@@ -76,22 +94,28 @@ query <- g5_workbench_query_adjusted_daily_bars(
 bars <- query$bars[query$bars$symbol == symbol, , drop = FALSE]
 bars$session_date <- as.Date(bars$session_date)
 bars <- bars[order(bars$session_date), , drop = FALSE]
-ledger_index <- match(bars$session_date, accepted$session_date)
+ledger_index <- match(bars$session_date, accepted_state$session_date)
 for (column in c("atr", "atr_percent", "atr_percentile", "regime_state")) {
-  bars[[column]] <- accepted[[column]][ledger_index]
+  bars[[column]] <- accepted_state[[column]][ledger_index]
 }
 
 analysis_rows <-
   bars$session_date >= analysis_start & bars$session_date <= analysis_end
 state_counts <- table(factor(bars$regime_state[analysis_rows], levels = states))
-accepted_match <- match(accepted$session_date, bars$session_date)
+expected_state_counts <- if (state_symbol == "TSLA") {
+  stats::setNames(c(581L, 341L, 587L), states)
+} else {
+  stats::setNames(c(568L, 430L, 511L), states)
+}
+accepted_state_match <- match(accepted_state$session_date, bars$session_date)
+accepted_return_match <- match(accepted_return$session_date, bars$session_date)
 source_checks <- data.frame(
   check_id = c(
     "accepted_ledger_present", "exact_symbol", "unique_sessions", "strict_date_order",
     "finite_valid_ohlc", "adjusted_daily_only", "prehistory_covers_25_prior_sessions", "analysis_window_exact",
     "analysis_row_count_matches_accepted_poc", "state_vocabulary_exact",
-    "state_occupancy_matches_accepted_tsla_ledger", "accepted_ledger_dates_match_bars",
-    "accepted_ledger_closes_match_bars", "finite_atr_fields", "future_rows_absent"
+    "state_occupancy_matches_accepted_state_ledger", "accepted_state_dates_match_tsla_bars",
+    "accepted_tsla_closes_match_bars", "finite_atr_fields", "future_rows_absent"
   ),
   passed = c(
     file.exists(accepted_ledger_path),
@@ -108,10 +132,10 @@ source_checks <- data.frame(
       max(bars$session_date[analysis_rows]) == analysis_end,
     sum(analysis_rows) == 1509L,
     identical(sort(unique(bars$regime_state[analysis_rows])), sort(states)),
-    identical(as.integer(state_counts), c(581L, 341L, 587L)),
-    !anyNA(accepted_match) && length(accepted_match) == sum(analysis_rows),
-    !anyNA(accepted_match) && isTRUE(all.equal(
-      bars$close[accepted_match], accepted$close, tolerance = 1e-10, check.attributes = FALSE
+    identical(as.integer(state_counts), as.integer(expected_state_counts)),
+    !anyNA(accepted_state_match) && length(accepted_state_match) == sum(analysis_rows),
+    !anyNA(accepted_return_match) && isTRUE(all.equal(
+      bars$close[accepted_return_match], accepted_return$close, tolerance = 1e-10, check.attributes = FALSE
     )),
     all(is.finite(bars$atr[analysis_rows])) && all(is.finite(bars$atr_percent[analysis_rows])) &&
       all(is.finite(bars$atr_percentile[analysis_rows])) &&
@@ -130,8 +154,8 @@ source_checks <- data.frame(
     as.character(sum(analysis_rows)),
     paste(sort(unique(bars$regime_state[analysis_rows])), collapse = ","),
     paste(names(state_counts), as.integer(state_counts), sep = "=", collapse = ","),
-    sprintf("%d/%d accepted dates matched", sum(!is.na(accepted_match)), nrow(accepted)),
-    if (!anyNA(accepted_match)) sprintf("max abs close diff %.12f", max(abs(bars$close[accepted_match] - accepted$close))) else "unmatched dates",
+    sprintf("%d/%d %s state dates matched", sum(!is.na(accepted_state_match)), nrow(accepted_state), state_symbol),
+    if (!anyNA(accepted_return_match)) sprintf("max abs TSLA close diff %.12f", max(abs(bars$close[accepted_return_match] - accepted_return$close))) else "unmatched dates",
     sprintf("ATR%% %.4f to %.4f; percentile %.4f to %.4f", min(bars$atr_percent[analysis_rows]), max(bars$atr_percent[analysis_rows]), min(bars$atr_percentile[analysis_rows]), max(bars$atr_percentile[analysis_rows])),
     as.character(max(bars$session_date))
   ),
@@ -139,7 +163,7 @@ source_checks <- data.frame(
 )
 if (!all(source_checks$passed)) {
   failed <- source_checks$check_id[!source_checks$passed]
-  stop("TSLA ATR%-conditioned source checks failed: ", paste(failed, collapse = ", "), call. = FALSE)
+  stop("TSLA return / ", state_symbol, " ATR%-state source checks failed: ", paste(failed, collapse = ", "), call. = FALSE)
 }
 
 # Build one contiguous span per accepted state run. The state labels come from
@@ -147,6 +171,7 @@ if (!all(source_checks$passed)) {
 chart_ledger <- data.frame(
   session_date = bars$session_date[analysis_rows],
   adjusted_close = bars$close[analysis_rows],
+  state_authority = state_symbol,
   atr_percent = bars$atr_percent[analysis_rows],
   atr_percentile = bars$atr_percentile[analysis_rows],
   atrp_state = bars$regime_state[analysis_rows],
@@ -185,7 +210,7 @@ draw_state_bands <- function(y_bottom, y_top) {
   }
 }
 
-state_plot_path <- file.path(visual_dir, "tsla_atrp_state_price_bands.png")
+state_plot_path <- file.path(visual_dir, paste0(file_stem, "_state_price_bands.png"))
 grDevices::png(state_plot_path, width = 2400, height = 1350, res = 180)
 old_par <- graphics::par(
   family = "sans", bg = "white", fg = "#273548", col.axis = "#526070",
@@ -199,12 +224,16 @@ graphics::plot(
   chart_ledger$session_date, chart_ledger$adjusted_close,
   type = "n", xlim = c(analysis_start, analysis_end), ylim = price_ylim,
   log = "y", xaxt = "n", xlab = "", ylab = "TSLA adjusted close (log scale)",
-  main = "TSLA volatility state: LOW, MEDIUM, and HIGH ATR% bands",
+  main = if (external_state) {
+    "SPY volatility state over TSLA price: LOW, MEDIUM, and HIGH ATR% bands"
+  } else {
+    "TSLA volatility state: LOW, MEDIUM, and HIGH ATR% bands"
+  },
   cex.main = 1.55, cex.lab = 1.18, cex.axis = 0.96,
   col.main = "#142033", bty = "n", las = 1
 )
 graphics::mtext(
-  "Accepted HYP-REG-01.1 state | Wilder ATR14 / close | Prior-252 causal percentile with hysteresis | 2018-2023",
+  paste0("Accepted HYP-REG-01.1 ", state_symbol, " state | Wilder ATR14 / close | Prior-252 causal percentile with hysteresis | 2018-2023"),
   side = 3, line = 1.0, cex = 0.94, col = "#5C6777"
 )
 draw_state_bands(price_ylim[[1L]], price_ylim[[2L]])
@@ -213,7 +242,12 @@ graphics::lines(chart_ledger$session_date, chart_ledger$adjusted_close, col = "#
 graphics::box(bty = "l", col = "#7D8794")
 graphics::legend(
   "topleft",
-  legend = c("LOW movement capacity", "MEDIUM movement capacity", "HIGH movement capacity", "TSLA adjusted close"),
+  legend = c(
+    paste0(state_symbol, " LOW movement capacity"),
+    paste0(state_symbol, " MEDIUM movement capacity"),
+    paste0(state_symbol, " HIGH movement capacity"),
+    "TSLA adjusted close"
+  ),
   fill = c(unname(state_colors[c("LOW", "MEDIUM", "HIGH")]), NA),
   border = rep(NA, 4L), lty = c(NA, NA, NA, 1), lwd = c(NA, NA, NA, 2.15),
   col = c(NA, NA, NA, "#17273B"), bg = grDevices::adjustcolor("white", alpha.f = 0.88),
@@ -224,7 +258,7 @@ graphics::par(mar = c(5.7, 7.0, 1.1, 2.2), mgp = c(3.6, 1.15, 0))
 graphics::plot(
   chart_ledger$session_date, chart_ledger$atr_percentile,
   type = "n", xlim = c(analysis_start, analysis_end), ylim = c(0, 1), xaxt = "n",
-  xlab = "Session date", ylab = "Rank", cex.lab = 1.12,
+  xlab = "Session date", ylab = paste0(state_symbol, " rank"), cex.lab = 1.12,
   cex.axis = 0.94, bty = "n", las = 1
 )
 draw_state_bands(0, 1)
@@ -234,7 +268,7 @@ graphics::abline(h = c(0.30, 0.40, 0.60, 0.70), col = "#6E7785", lwd = 1.0, lty 
 graphics::lines(chart_ledger$session_date, chart_ledger$atr_percentile, col = "#223A58", lwd = 1.20)
 graphics::box(bty = "l", col = "#7D8794")
 graphics::mtext(
-  "Bands show the accepted hysteretic state at close t. ATR% measures movement capacity, not trend direction or expected return.",
+  paste0("Bands show the accepted ", state_symbol, " hysteretic state at close t. ATR% measures movement capacity, not trend direction or expected return."),
   side = 1, line = 4.25, cex = 0.72, col = "#667384"
 )
 graphics::par(old_par)
@@ -486,7 +520,7 @@ grid_checks <- data.frame(
 )
 if (!all(grid_checks$passed)) {
   failed <- grid_checks$check_id[!grid_checks$passed]
-  stop("TSLA ATR%-conditioned grid checks failed: ", paste(failed, collapse = ", "), call. = FALSE)
+  stop("TSLA return / ", state_symbol, " ATR%-state grid checks failed: ", paste(failed, collapse = ", "), call. = FALSE)
 }
 
 matrix_for_state <- function(column, state) {
@@ -516,6 +550,7 @@ write_matrix_csv <- function(values, file_name, digits = NULL) {
 state_matrices <- setNames(lapply(states, function(state) matrix_for_state("pearson_correlation", state)), states)
 state_r_squared <- setNames(lapply(states, function(state) 100 * matrix_for_state("ols_r_squared", state)), states)
 state_samples <- setNames(lapply(states, function(state) matrix_for_state("observations", state)), states)
+medium_minus_low <- matrix_for_pair("second_minus_first_correlation", "MEDIUM_MINUS_LOW")
 high_minus_low <- matrix_for_pair("second_minus_first_correlation", "HIGH_MINUS_LOW")
 high_minus_medium <- matrix_for_pair("second_minus_first_correlation", "HIGH_MINUS_MEDIUM")
 
@@ -523,8 +558,8 @@ utils::write.csv(conditioned, file.path(output_dir, "conditioned_horizon_grid_st
 utils::write.csv(pairwise, file.path(output_dir, "pairwise_state_comparison_statistics.csv"), row.names = FALSE)
 utils::write.csv(source_checks, file.path(output_dir, "source_checks.csv"), row.names = FALSE)
 utils::write.csv(grid_checks, file.path(output_dir, "grid_checks.csv"), row.names = FALSE)
-utils::write.csv(chart_ledger, file.path(output_dir, "tsla_atrp_state_chart_ledger.csv"), row.names = FALSE)
-utils::write.csv(state_spans, file.path(output_dir, "tsla_atrp_state_spans.csv"), row.names = FALSE)
+utils::write.csv(chart_ledger, file.path(output_dir, paste0(file_stem, "_state_chart_ledger.csv")), row.names = FALSE)
+utils::write.csv(state_spans, file.path(output_dir, paste0(file_stem, "_state_spans.csv")), row.names = FALSE)
 for (state in states) {
   prefix <- tolower(state)
   write_matrix_csv(state_matrices[[state]], paste0(prefix, "_pearson_matrix.csv"), 4L)
@@ -544,6 +579,46 @@ ranked_pairwise <- pairwise[order(-abs(pairwise$second_minus_first_correlation))
 ranked_pairwise$absolute_correlation_difference <- abs(ranked_pairwise$second_minus_first_correlation)
 utils::write.csv(ranked_pairwise, file.path(output_dir, "cells_ranked_by_absolute_state_difference.csv"), row.names = FALSE)
 
+own_external_map_comparison <- NULL
+if (external_state) {
+  own_statistics_path <- file.path(
+    repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
+    "tsla_atrp_conditioned_return_horizon_grid_20260825",
+    "conditioned_horizon_grid_statistics.csv"
+  )
+  if (!file.exists(own_statistics_path)) {
+    stop("Frozen TSLA-own-ATR% comparison packet is missing.", call. = FALSE)
+  }
+  own <- utils::read.csv(own_statistics_path, stringsAsFactors = FALSE)
+  own <- own[c("prior_sessions", "forward_sessions", "atrp_state", "pearson_correlation")]
+  names(own)[names(own) == "pearson_correlation"] <- "own_tsla_atrp_pearson"
+  external <- conditioned[c("prior_sessions", "forward_sessions", "atrp_state", "pearson_correlation")]
+  names(external)[names(external) == "pearson_correlation"] <- "external_spy_atrp_pearson"
+  aligned <- merge(
+    own, external,
+    by = c("prior_sessions", "forward_sessions", "atrp_state"),
+    sort = TRUE
+  )
+  if (nrow(aligned) != 243L) stop("Own-versus-external ATR% maps did not align on all 243 cells.", call. = FALSE)
+  aligned$external_minus_own_pearson <- aligned$external_spy_atrp_pearson - aligned$own_tsla_atrp_pearson
+  aligned$same_sign <- sign(aligned$external_spy_atrp_pearson) == sign(aligned$own_tsla_atrp_pearson)
+  utils::write.csv(aligned, file.path(output_dir, "own_vs_external_atrp_cell_comparison.csv"), row.names = FALSE)
+  own_external_map_comparison <- do.call(rbind, lapply(states, function(state) {
+    sample <- aligned[aligned$atrp_state == state, , drop = FALSE]
+    data.frame(
+      atrp_state = state,
+      own_mean_pearson = mean(sample$own_tsla_atrp_pearson),
+      external_mean_pearson = mean(sample$external_spy_atrp_pearson),
+      cellwise_map_correlation = stats::cor(sample$own_tsla_atrp_pearson, sample$external_spy_atrp_pearson),
+      sign_agreement_cells = sum(sample$same_sign),
+      mean_absolute_cell_difference = mean(abs(sample$external_minus_own_pearson)),
+      maximum_absolute_cell_difference = max(abs(sample$external_minus_own_pearson)),
+      stringsAsFactors = FALSE
+    )
+  }))
+  utils::write.csv(own_external_map_comparison, file.path(output_dir, "own_vs_external_atrp_map_summary.csv"), row.names = FALSE)
+}
+
 run_spec <- data.frame(
   field = c(
     "asset", "state_authority", "source_bars", "return_definition", "prior_horizons",
@@ -552,8 +627,8 @@ run_spec <- data.frame(
     "hac_lag_rule", "multiplicity", "post_2023_confirmation", "trading_calculation"
   ),
   value = c(
-    symbol, "accepted HYP-REG-01.1 daily state ledger",
-    "same cached Alpaca adjusted daily bars as prior grids; 2018-2023 closes exact-match accepted ledger",
+    symbol, paste0("accepted HYP-REG-01.1 ", state_symbol, " daily state ledger"),
+    "same cached Alpaca TSLA adjusted daily bars as prior grids; 2018-2023 TSLA closes exact-match accepted TSLA ledger",
     "log(close_anchor/close_anchor_minus_p) versus log(close_anchor_plus_f/close_anchor)",
     paste(horizons, collapse = ","), paste(horizons, collapse = ","),
     "Wilder ATR14 / close", "percentile versus preceding 252 completed ATR% observations excluding current",
@@ -598,23 +673,30 @@ common_limit <- max(abs(unlist(state_matrices)))
 for (state in states) {
   draw_heatmap(
     state_matrices[[state]],
-    file.path(visual_dir, paste0("tsla_atrp_", tolower(state), "_pearson_heatmap.png")),
-    paste0("TSLA return dependence in accepted ATR% ", state, " state"),
+    file.path(visual_dir, paste0(file_stem, "_", tolower(state), "_pearson_heatmap.png")),
+    paste0("TSLA return dependence in accepted ", state_symbol, " ATR% ", state, " state"),
     "Cell values are Pearson correlations | Same color scale across LOW, MEDIUM, and HIGH",
     common_limit
   )
 }
 draw_heatmap(
+  medium_minus_low,
+  file.path(visual_dir, paste0(file_stem, "_medium_minus_low_pearson_heatmap.png")),
+  paste0("How much does correlation change in ", state_symbol, " MEDIUM versus LOW ATR% states?"),
+  "Cell values are MEDIUM Pearson correlation minus LOW Pearson correlation",
+  max(abs(medium_minus_low))
+)
+draw_heatmap(
   high_minus_low,
-  file.path(visual_dir, "tsla_atrp_high_minus_low_pearson_heatmap.png"),
-  "How much does correlation change in HIGH versus LOW ATR% states?",
+  file.path(visual_dir, paste0(file_stem, "_high_minus_low_pearson_heatmap.png")),
+  paste0("How much does correlation change in ", state_symbol, " HIGH versus LOW ATR% states?"),
   "Cell values are HIGH Pearson correlation minus LOW Pearson correlation",
   max(abs(high_minus_low))
 )
 draw_heatmap(
   high_minus_medium,
-  file.path(visual_dir, "tsla_atrp_high_minus_medium_pearson_heatmap.png"),
-  "How much does correlation change in HIGH versus MEDIUM ATR% states?",
+  file.path(visual_dir, paste0(file_stem, "_high_minus_medium_pearson_heatmap.png")),
+  paste0("How much does correlation change in ", state_symbol, " HIGH versus MEDIUM ATR% states?"),
   "Cell values are HIGH Pearson correlation minus MEDIUM Pearson correlation",
   max(abs(high_minus_medium))
 )
@@ -634,15 +716,16 @@ top_by_state <- do.call(rbind, lapply(states, function(state) {
 }))
 top_pair <- ranked_pairwise[1L, , drop = FALSE]
 report_lines <- c(
-  "# TSLA ATR%-Conditioned Cumulative Return Horizon Grid",
+  paste0("# TSLA Return Grid Conditioned on ", state_symbol, " ATR%"),
   "",
   "## Question",
   "",
-  "Does the prior-versus-forward cumulative signed-return map differ across the accepted causal LOW, MEDIUM, and HIGH ATR-percent volatility states?",
+  paste0("Does the TSLA prior-versus-forward cumulative signed-return map differ across the accepted causal LOW, MEDIUM, and HIGH ", state_symbol, " ATR-percent volatility states?"),
   "",
   "## Fixed State Authority",
   "",
-  "- Exact reuse of the accepted HYP-REG-01.1 TSLA daily state ledger.",
+  paste0("- Exact reuse of the accepted HYP-REG-01.1 ", state_symbol, " daily state ledger."),
+  paste0("- TSLA supplies all prior and following returns; ", state_symbol, " supplies only the state at anchor t."),
   "- Wilder ATR14 / close, ranked against the preceding 252 completed ATR% observations excluding the current session.",
   "- LOW/MEDIUM/HIGH operational states use the accepted 30/40 and 60/70 hysteresis.",
   "- State at anchor t is known after close t; the forward-return window begins on t+1.",
@@ -654,7 +737,7 @@ report_lines <- c(
   "## HIGH Minus LOW Pearson Matrix", "", markdown_matrix(high_minus_low), "",
   "## HIGH Minus MEDIUM Pearson Matrix", "", markdown_matrix(high_minus_medium), "",
   "## Price-Level State View", "",
-  "The companion price chart uses the same accepted state labels as the tables. The upper panel overlays the causal LOW, MEDIUM, and HIGH state bands on TSLA adjusted close; the lower panel shows the underlying trailing ATR% percentile and the four accepted hysteresis boundaries. This is a visual alignment check, not a return claim.",
+  paste0("The companion price chart uses the same accepted ", state_symbol, " state labels as the tables. The upper panel overlays the causal LOW, MEDIUM, and HIGH state bands on TSLA adjusted close; the lower panel shows the underlying trailing ", state_symbol, " ATR% percentile and the four accepted hysteresis boundaries. This is a visual alignment check, not a return claim."),
   "",
   "## Descriptive Readout", "",
   vapply(seq_len(nrow(top_by_state)), function(i) sprintf(
@@ -683,28 +766,44 @@ report_lines <- c(
     sum(conditioned$slope_omnibus_bh_pass_05),
     sum(pairwise$interaction_omnibus_bh_pass_05)
   ),
+  if (external_state) c(
+    "",
+    "## Comparison With TSLA's Own ATR% Map",
+    "",
+    vapply(seq_len(nrow(own_external_map_comparison)), function(i) sprintf(
+      "- %s: own-map mean `%+.4f`; external-map mean `%+.4f`; cellwise map correlation `%+.3f`; sign agreement `%d/81`; mean absolute cell difference `%.4f`.",
+      own_external_map_comparison$atrp_state[[i]],
+      own_external_map_comparison$own_mean_pearson[[i]],
+      own_external_map_comparison$external_mean_pearson[[i]],
+      own_external_map_comparison$cellwise_map_correlation[[i]],
+      own_external_map_comparison$sign_agreement_cells[[i]],
+      own_external_map_comparison$mean_absolute_cell_difference[[i]]
+    ), character(1))
+  ) else character(0),
   "",
   "## Guardrails", "",
-  "- ATR% measures movement capacity, not trend direction. LOW, MEDIUM, and HIGH must not be read as bearish, neutral, and bullish.",
+  paste0("- ", state_symbol, " ATR% measures movement capacity, not trend direction. LOW, MEDIUM, and HIGH must not be read as bearish, neutral, and bullish."),
+  if (external_state) "- This external state does not use TSLA's own ATR%, but SPY and TSLA still share calendar time and market shocks; the result is not causal attribution." else "- The state and return asset are the same, so own-price conditioning geometry remains a live alternative explanation.",
   "- Horizon cells are nested and overlapping. HAC addresses serial dependence within a cell; BH-FDR addresses the scan.",
   "- This is descriptive navigation. Any selected state/horizon relationship requires a separately frozen replication.",
   "",
   "## Bookmarked Follow-Ups", "",
   "- Split green ER20 path-efficiency states into causal uptrend versus downtrend direction.",
-  "- Condition the same grid on an external market-context state rather than TSLA's own trailing data.",
+  if (external_state) "- Compare this external-state map directly with the already frozen TSLA-own-ATR% map before designing another cross-sectional cue." else "- Condition the same grid on an external market-context state rather than TSLA's own trailing data.",
   "",
   "## Artifacts", "",
   "- `conditioned_horizon_grid_statistics.csv`: 243 state-specific rows.",
   "- `pairwise_state_comparison_statistics.csv`: 243 pairwise state contrasts.",
   "- Matrix CSVs: state correlations, R-squared, samples, pairwise differences, and interaction q-values.",
   "- `cells_ranked_by_absolute_state_difference.csv`: descriptive navigation ranking.",
-  "- `tsla_atrp_state_chart_ledger.csv` and `tsla_atrp_state_spans.csv`: frozen chart inputs.",
-  "- `visuals/tsla_atrp_state_price_bands.png`: TSLA price and accepted ATR% states.",
+  if (external_state) "- `own_vs_external_atrp_cell_comparison.csv` and `own_vs_external_atrp_map_summary.csv`: descriptive alignment with the frozen TSLA-own-ATR% maps." else character(0),
+  paste0("- `", file_stem, "_state_chart_ledger.csv` and `", file_stem, "_state_spans.csv`: frozen chart inputs."),
+  paste0("- `visuals/", file_stem, "_state_price_bands.png`: TSLA price and accepted ", state_symbol, " ATR% states."),
   "- Other files in `visuals/`: LOW, MEDIUM, HIGH, HIGH-minus-LOW, and HIGH-minus-MEDIUM correlation heatmaps."
 )
 writeLines(report_lines, file.path(output_dir, "report.md"), useBytes = TRUE)
 
-cat("TSLA ATR%-conditioned cumulative-return horizon grid complete.\n")
+cat("TSLA returns conditioned on", state_symbol, "ATR% states: horizon grid complete.\n")
 cat("Conditioned rows:", nrow(conditioned), "| pairwise rows:", nrow(pairwise), "\n")
 cat("State observations per cell:", min(conditioned$observations), "to", max(conditioned$observations), "\n")
 for (i in seq_len(nrow(top_by_state))) cat(
