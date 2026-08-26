@@ -1,8 +1,8 @@
 # Condition the fixed TSLA cumulative-return horizon grid on an accepted
 # HYP-REG-01.1 ATR-percent state authority. The default is TSLA itself; a
-# caller may set GEN5_ATRP_STATE_SYMBOL=SPY for the frozen external-market
-# context slice. This remains descriptive research: no state or cell becomes
-# a trading rule, model, or performance claim.
+# caller may set GEN5_ATRP_STATE_SYMBOL=SPY or QQQ for a frozen external-market
+# context slice. This remains descriptive research: no state or cell becomes a
+# trading rule, model, or performance claim.
 
 script_path <- tryCatch(
   normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE),
@@ -29,11 +29,11 @@ g5_load_local_renviron(repo_root)
 cfg <- g5_load_data_layer_config(repo_root)
 symbol <- "TSLA"
 state_symbol <- toupper(trimws(Sys.getenv("GEN5_ATRP_STATE_SYMBOL", unset = symbol)))
-if (!state_symbol %in% c("TSLA", "SPY")) {
-  stop("GEN5_ATRP_STATE_SYMBOL must be TSLA or SPY for this frozen slice.", call. = FALSE)
+if (!state_symbol %in% c("TSLA", "SPY", "QQQ")) {
+  stop("GEN5_ATRP_STATE_SYMBOL must be TSLA, SPY, or QQQ for this frozen slice.", call. = FALSE)
 }
 external_state <- state_symbol != symbol
-file_stem <- if (external_state) "tsla_spy_atrp" else "tsla_atrp"
+file_stem <- if (external_state) paste0("tsla_", tolower(state_symbol), "_atrp") else "tsla_atrp"
 horizons <- c(1L, 2L, 3L, 4L, 5L, 10L, 15L, 20L, 25L)
 states <- c("LOW", "MEDIUM", "HIGH")
 query_start <- as.Date("2017-10-02")
@@ -47,7 +47,7 @@ accepted_ledger_path <- file.path(
 output_dir <- file.path(
   repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
   if (external_state) {
-    "tsla_spy_atrp_conditioned_return_horizon_grid_20260825"
+    paste0("tsla_", tolower(state_symbol), "_atrp_conditioned_return_horizon_grid_20260825")
   } else {
     "tsla_atrp_conditioned_return_horizon_grid_20260825"
   }
@@ -102,11 +102,12 @@ for (column in c("atr", "atr_percent", "atr_percentile", "regime_state")) {
 analysis_rows <-
   bars$session_date >= analysis_start & bars$session_date <= analysis_end
 state_counts <- table(factor(bars$regime_state[analysis_rows], levels = states))
-expected_state_counts <- if (state_symbol == "TSLA") {
-  stats::setNames(c(581L, 341L, 587L), states)
-} else {
-  stats::setNames(c(568L, 430L, 511L), states)
-}
+expected_state_counts <- switch(
+  state_symbol,
+  TSLA = stats::setNames(c(581L, 341L, 587L), states),
+  SPY = stats::setNames(c(568L, 430L, 511L), states),
+  QQQ = stats::setNames(c(574L, 390L, 545L), states)
+)
 accepted_state_match <- match(accepted_state$session_date, bars$session_date)
 accepted_return_match <- match(accepted_return$session_date, bars$session_date)
 source_checks <- data.frame(
@@ -225,7 +226,7 @@ graphics::plot(
   type = "n", xlim = c(analysis_start, analysis_end), ylim = price_ylim,
   log = "y", xaxt = "n", xlab = "", ylab = "TSLA adjusted close (log scale)",
   main = if (external_state) {
-    "SPY volatility state over TSLA price: LOW, MEDIUM, and HIGH ATR% bands"
+    paste0(state_symbol, " volatility state over TSLA price: LOW, MEDIUM, and HIGH ATR% bands")
   } else {
     "TSLA volatility state: LOW, MEDIUM, and HIGH ATR% bands"
   },
@@ -580,6 +581,7 @@ ranked_pairwise$absolute_correlation_difference <- abs(ranked_pairwise$second_mi
 utils::write.csv(ranked_pairwise, file.path(output_dir, "cells_ranked_by_absolute_state_difference.csv"), row.names = FALSE)
 
 own_external_map_comparison <- NULL
+three_way_map_summary <- NULL
 if (external_state) {
   own_statistics_path <- file.path(
     repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
@@ -593,23 +595,26 @@ if (external_state) {
   own <- own[c("prior_sessions", "forward_sessions", "atrp_state", "pearson_correlation")]
   names(own)[names(own) == "pearson_correlation"] <- "own_tsla_atrp_pearson"
   external <- conditioned[c("prior_sessions", "forward_sessions", "atrp_state", "pearson_correlation")]
-  names(external)[names(external) == "pearson_correlation"] <- "external_spy_atrp_pearson"
+  external_column <- paste0("external_", tolower(state_symbol), "_atrp_pearson")
+  names(external)[names(external) == "pearson_correlation"] <- external_column
   aligned <- merge(
     own, external,
     by = c("prior_sessions", "forward_sessions", "atrp_state"),
     sort = TRUE
   )
   if (nrow(aligned) != 243L) stop("Own-versus-external ATR% maps did not align on all 243 cells.", call. = FALSE)
-  aligned$external_minus_own_pearson <- aligned$external_spy_atrp_pearson - aligned$own_tsla_atrp_pearson
-  aligned$same_sign <- sign(aligned$external_spy_atrp_pearson) == sign(aligned$own_tsla_atrp_pearson)
+  aligned$external_state_authority <- state_symbol
+  aligned$external_minus_own_pearson <- aligned[[external_column]] - aligned$own_tsla_atrp_pearson
+  aligned$same_sign <- sign(aligned[[external_column]]) == sign(aligned$own_tsla_atrp_pearson)
   utils::write.csv(aligned, file.path(output_dir, "own_vs_external_atrp_cell_comparison.csv"), row.names = FALSE)
   own_external_map_comparison <- do.call(rbind, lapply(states, function(state) {
     sample <- aligned[aligned$atrp_state == state, , drop = FALSE]
     data.frame(
       atrp_state = state,
       own_mean_pearson = mean(sample$own_tsla_atrp_pearson),
-      external_mean_pearson = mean(sample$external_spy_atrp_pearson),
-      cellwise_map_correlation = stats::cor(sample$own_tsla_atrp_pearson, sample$external_spy_atrp_pearson),
+      external_state_authority = state_symbol,
+      external_mean_pearson = mean(sample[[external_column]]),
+      cellwise_map_correlation = stats::cor(sample$own_tsla_atrp_pearson, sample[[external_column]]),
       sign_agreement_cells = sum(sample$same_sign),
       mean_absolute_cell_difference = mean(abs(sample$external_minus_own_pearson)),
       maximum_absolute_cell_difference = max(abs(sample$external_minus_own_pearson)),
@@ -617,6 +622,48 @@ if (external_state) {
     )
   }))
   utils::write.csv(own_external_map_comparison, file.path(output_dir, "own_vs_external_atrp_map_summary.csv"), row.names = FALSE)
+
+  if (state_symbol == "QQQ") {
+    spy_statistics_path <- file.path(
+      repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
+      "tsla_spy_atrp_conditioned_return_horizon_grid_20260825",
+      "conditioned_horizon_grid_statistics.csv"
+    )
+    if (!file.exists(spy_statistics_path)) {
+      stop("Frozen SPY-ATR% comparison packet is missing.", call. = FALSE)
+    }
+    spy <- utils::read.csv(spy_statistics_path, stringsAsFactors = FALSE)
+    spy <- spy[c("prior_sessions", "forward_sessions", "atrp_state", "pearson_correlation")]
+    names(spy)[names(spy) == "pearson_correlation"] <- "spy_atrp_pearson"
+    qqq <- external
+    names(qqq)[names(qqq) == external_column] <- "qqq_atrp_pearson"
+    three_way <- merge(merge(own, spy, by = c("prior_sessions", "forward_sessions", "atrp_state")), qqq,
+                       by = c("prior_sessions", "forward_sessions", "atrp_state"), sort = TRUE)
+    if (nrow(three_way) != 243L) stop("Own/SPY/QQQ ATR% maps did not align on all 243 cells.", call. = FALSE)
+    three_way_map_summary <- do.call(rbind, lapply(states, function(state) {
+      sample <- three_way[three_way$atrp_state == state, , drop = FALSE]
+      authorities <- list(
+        TSLA_OWN = sample$own_tsla_atrp_pearson,
+        SPY = sample$spy_atrp_pearson,
+        QQQ = sample$qqq_atrp_pearson
+      )
+      do.call(rbind, lapply(names(authorities), function(authority) {
+        values <- authorities[[authority]]
+        data.frame(
+          atrp_state = state,
+          state_authority = authority,
+          mean_pearson = mean(values),
+          positive_cells = sum(values > 0),
+          negative_cells = sum(values < 0),
+          cellwise_map_correlation_vs_own = stats::cor(sample$own_tsla_atrp_pearson, values),
+          sign_agreement_vs_own = sum(sign(sample$own_tsla_atrp_pearson) == sign(values)),
+          maximum_absolute_pearson = max(abs(values)),
+          stringsAsFactors = FALSE
+        )
+      }))
+    }))
+    utils::write.csv(three_way_map_summary, file.path(output_dir, "own_spy_qqq_atrp_map_summary.csv"), row.names = FALSE)
+  }
 }
 
 run_spec <- data.frame(
@@ -778,12 +825,24 @@ report_lines <- c(
       own_external_map_comparison$cellwise_map_correlation[[i]],
       own_external_map_comparison$sign_agreement_cells[[i]],
       own_external_map_comparison$mean_absolute_cell_difference[[i]]
-    ), character(1))
+    ), character(1)),
+    if (!is.null(three_way_map_summary)) c(
+      "",
+      "## Three-Way Context Comparison",
+      "",
+      vapply(seq_len(nrow(three_way_map_summary)), function(i) sprintf(
+        "- %s / %s: mean `%+.4f`; positive cells `%d/81`; sign agreement versus own `%d/81`; map correlation versus own `%+.3f`.",
+        three_way_map_summary$atrp_state[[i]], three_way_map_summary$state_authority[[i]],
+        three_way_map_summary$mean_pearson[[i]], three_way_map_summary$positive_cells[[i]],
+        three_way_map_summary$sign_agreement_vs_own[[i]],
+        three_way_map_summary$cellwise_map_correlation_vs_own[[i]]
+      ), character(1))
+    ) else character(0)
   ) else character(0),
   "",
   "## Guardrails", "",
   paste0("- ", state_symbol, " ATR% measures movement capacity, not trend direction. LOW, MEDIUM, and HIGH must not be read as bearish, neutral, and bullish."),
-  if (external_state) "- This external state does not use TSLA's own ATR%, but SPY and TSLA still share calendar time and market shocks; the result is not causal attribution." else "- The state and return asset are the same, so own-price conditioning geometry remains a live alternative explanation.",
+  if (external_state) paste0("- This state does not use TSLA's own ATR%, but ", state_symbol, " and TSLA still share calendar time and market shocks; the result is not causal attribution.") else "- The state and return asset are the same, so own-price conditioning geometry remains a live alternative explanation.",
   "- Horizon cells are nested and overlapping. HAC addresses serial dependence within a cell; BH-FDR addresses the scan.",
   "- This is descriptive navigation. Any selected state/horizon relationship requires a separately frozen replication.",
   "",
@@ -797,6 +856,7 @@ report_lines <- c(
   "- Matrix CSVs: state correlations, R-squared, samples, pairwise differences, and interaction q-values.",
   "- `cells_ranked_by_absolute_state_difference.csv`: descriptive navigation ranking.",
   if (external_state) "- `own_vs_external_atrp_cell_comparison.csv` and `own_vs_external_atrp_map_summary.csv`: descriptive alignment with the frozen TSLA-own-ATR% maps." else character(0),
+  if (!is.null(three_way_map_summary)) "- `own_spy_qqq_atrp_map_summary.csv`: compact three-authority comparison across the frozen TSLA-own, SPY, and QQQ maps." else character(0),
   paste0("- `", file_stem, "_state_chart_ledger.csv` and `", file_stem, "_state_spans.csv`: frozen chart inputs."),
   paste0("- `visuals/", file_stem, "_state_price_bands.png`: TSLA price and accepted ", state_symbol, " ATR% states."),
   "- Other files in `visuals/`: LOW, MEDIUM, HIGH, HIGH-minus-LOW, and HIGH-minus-MEDIUM correlation heatmaps."

@@ -1,4 +1,4 @@
-{"kind":"deck","id":"pr/gkq2ij","name":"Deck"}
+{"kind":"deck","id":"pr/e1dal4","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
@@ -348,7 +348,7 @@
 {"kind":"textbox","id":"sh/po3itc72","slide":20,"name":"footer-number-4","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"shape","id":"sh/2lczih8r","slide":20,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/gjuhg7ql","slide":20,"text":"Red/sideways matrix; strongest cell +0.173 at 15 prior / 5 forward.","textPreview":"Red/sideways matrix; strongest cell +0.173 at 15 prior / 5 forward.","textChars":67,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/m5k7q1g3","slide":20,"name":"","alt":"Pearson correlation heatmap for TSLA cumulative returns when anchor ER20 is red or sideways","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/m5k7q1g3","slide":20,"name":"","bbox":[308.93,142,662.14,515]}
 {"kind":"notes","id":"nt/zyxsni5k","slide":20,"text":"Red states show a coherent positive island centered around 10 to 15 prior sessions and 3 to 10 forward sessions. The largest cell has an overlap-aware interval that still includes zero.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/red_sideways_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_red_sideways_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/m1wvqtk3","slide":21,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
 {"kind":"textbox","id":"sh/al43uxor","slide":21,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -358,7 +358,7 @@
 {"kind":"textbox","id":"sh/qp03yt8n","slide":21,"name":"footer-number-4","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"shape","id":"sh/dcb2t87y","slide":21,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/b6d432pc","slide":21,"text":"Green/trending matrix; long/long cells turn negative; strongest absolute cell -0.154.","textPreview":"Green/trending matrix; long/long cells turn negative; strongest absolute cell -0.154.","textChars":85,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/j69c3adw","slide":21,"name":"","alt":"Pearson correlation heatmap for TSLA cumulative returns when anchor ER20 is green or trending","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/j69c3adw","slide":21,"name":"","bbox":[308.93,142,662.14,515]}
 {"kind":"notes","id":"nt/m1wvqtk3","slide":21,"text":"Green states retain small positive short-horizon patches, but the red medium-horizon island is muted or reversed and the long-prior/long-forward corner becomes negative.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/green_trending_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_green_trending_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/5onypobq","slide":22,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
 {"kind":"textbox","id":"sh/krihkz2d","slide":22,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -379,7 +379,7 @@
 {"kind":"shape","id":"sh/udonux8v","slide":22,"bbox":[878,502,8,150]}
 {"kind":"textbox","id":"sh/1cj61w7q","slide":22,"text":"0 / 81","textPreview":"0 / 81","textChars":6,"textLines":1,"bbox":[906,520,282,62]}
 {"kind":"textbox","id":"sh/0bap8rq5","slide":22,"text":"interaction cells with BH-FDR q < 0.05","textPreview":"interaction cells with BH-FDR q < 0.05","textChars":38,"textLines":1,"bbox":[906,590,282,46]}
-{"kind":"image","id":"im/6dczy90f","slide":22,"name":"","alt":"Green-minus-red Pearson correlation difference heatmap for TSLA cumulative-return horizons","bbox":[64,150,750,500]}
+{"kind":"image","id":"im/6dczy90f","slide":22,"name":"","bbox":[64,150,750,500]}
 {"kind":"notes","id":"nt/5onypobq","slide":22,"text":"The largest raw regime contrast is at 15 prior and 5 forward: red correlation +0.173 versus green -0.058, a -0.231 difference. Its slope interaction has raw HAC p=0.029 but BH q=0.919; no interaction survives the grid scan.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/green_minus_red_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/regime_comparison_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/slope_interaction_bh_q_value_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/visuals/tsla_green_minus_red_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/c7uhcr6t","slide":23,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
 {"kind":"textbox","id":"sh/l47ap8vu","slide":23,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -406,3 +406,393 @@
 {"kind":"textbox","id":"sh/by58jeds","slide":23,"text":"Next narrow question","textPreview":"Next narrow question","textChars":20,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/axwratc7","slide":23,"text":"Freeze 15-prior / 5-forward for separate replication—or first test a regime filter less entangled with prior return?","textPreview":"Freeze 15-prior / 5-forward for separate replication—or first test a regime filter less entangled with prior return?","textChars":116,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/c7uhcr6t","slide":23,"text":"Conditioning changes the descriptive map in a coherent way, but the finding remains exploratory. ER20 is built from the same trailing path as the prior-return variable, so a less mechanically entangled filter would be a useful comparison.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/report.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_er20_conditioned_return_horizon_grid_20260825/regime_comparison_statistics.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/7qto7e10","slide":24,"title":"VOLATILITY CONDITIONING","textShapes":5}
+{"kind":"textbox","id":"sh/ov6p8nux","slide":24,"text":"VOLATILITY CONDITIONING","textPreview":"VOLATILITY CONDITIONING","textChars":23,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/1sfqxsv6","slide":24,"text":"Does movement capacity separate\ncontinuation from reversal?","textPreview":"Does movement capacity separate | continuation from reversal?","textChars":59,"textLines":2,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/0r6p4nul","slide":24,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/nux8zidc","slide":24,"text":"Reuse the accepted ATR% state already known at the anchor close.","textPreview":"Reuse the accepted ATR% state already known at the anchor close.","textChars":64,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/2to76dcr","slide":24,"text":"LOW, MEDIUM, and HIGH inherit HYP-REG-01.1's fixed causal classifier. No threshold search.","textPreview":"LOW, MEDIUM, and HIGH inherit HYP-REG-01.1's fixed causal classifier. No threshold search.","textChars":90,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/9wzq1svi","slide":24,"text":"24","textPreview":"24","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/7qto7e10","slide":24,"text":"This section asks whether signed-return dependence changes with movement capacity, using the already accepted ATR-percent classifier rather than designing new bins from this result.\n\n[Sources]\n- operator_hypothesis_lab/docs/GEN5_HYP_REG_01_1_ATR_PERCENT_VOLATILITY_RESULTS.md\n- operator_hypothesis_lab/docs/TSLA_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/69wfm9o7","slide":25,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/upkfqdcf","slide":25,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xg7axgf2","slide":25,"name":"title-3","text":"Condition on accepted ATR% before reading the future","textPreview":"Condition on accepted ATR% before reading the future","textChars":52,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cfyt4beh","slide":25,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/napsr6x0","slide":25,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/29wby1wf","slide":25,"name":"footer-number-3","text":"25","textPreview":"25","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/pc7atgf6","slide":25,"text":"State[t]  then  R+(f)","textPreview":"State[t]  then  R+(f)","textChars":21,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/obyt0bel","slide":25,"text":"ATR% state is assigned at anchor close t. Prior return ends at t; following return begins after t. It measures capacity—not direction.","textPreview":"ATR% state is assigned at anchor close t. Prior return ends at t; following return begins after t. It measures capacity—not direction.","textChars":134,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/fm5snmx4","slide":25,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/elwbu1wj","slide":25,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/wza9cbqp","slide":25,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/h0jalgra","slide":25,"text":"accepted volatility states","textPreview":"accepted volatility states","textChars":26,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/uxsra18j","slide":25,"text":"Fixed conditioning","textPreview":"Fixed conditioning","textChars":18,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/vy1sj694","slide":25,"text":"Metric","textPreview":"Metric","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/8ba98bqt","slide":25,"text":"Wilder ATR14 / close","textPreview":"Wilder ATR14 / close","textChars":20,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/9cjahgry","slide":25,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/m98r618n","slide":25,"text":"Memory","textPreview":"Memory","textChars":6,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/7a1sf698","slide":25,"text":"Prior 252 completed sessions","textPreview":"Prior 252 completed sessions","textChars":28,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/s7utkvqx","slide":25,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/t83at0ri","slide":25,"text":"States","textPreview":"States","textChars":6,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/1czihwva","slide":25,"text":"LOW / MEDIUM / HIGH","textPreview":"LOW / MEDIUM / HIGH","textChars":19,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/gbq1obep","slide":25,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/fax0f6d4","slide":25,"text":"Hysteresis","textPreview":"Hysteresis","textChars":10,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/e9ojm1wj","slide":25,"text":"30/40 and 60/70 gates","textPreview":"30/40 and 60/70 gates","textChars":21,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/t8fidwfe","slide":25,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/s761kret","slide":25,"text":"Timing","textPreview":"Timing","textChars":6,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/r6x0bmx8","slide":25,"text":"Known at anchor close t","textPreview":"Known at anchor close t","textChars":23,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/6lojihwn","slide":25,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/5kfi9cf2","slide":25,"text":"Surface","textPreview":"Surface","textChars":7,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/4j61g7eh","slide":25,"text":"Same 81 horizon pairs","textPreview":"Same 81 horizon pairs","textChars":21,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/69wfm9o7","slide":25,"text":"The state definition is reused exactly: Wilder ATR14 divided by close, current ATR-percent ranked against the prior 252 completed observations, and the accepted 30/40–60/70 hysteresis. State t is known before future returns begin.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/source_checks.csv\n- runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814/hyp_reg_01_1_daily_state_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/l0bepsfm","slide":26,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/x4jax436","slide":26,"name":"section-5","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/uhk36lk7","slide":26,"name":"title-5","text":"ATR% shows movement capacity—not direction","textPreview":"ATR% shows movement capacity—not direction","textChars":42,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/vitkzqlc","slide":26,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/8fil4b21","slide":26,"name":"footer-left-5","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/tgr2xg3m","slide":26,"name":"footer-number-5","text":"26","textPreview":"26","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/md0321kv","slide":26,"bbox":[34,145,900,506]}
+{"kind":"textbox","id":"sh/kbil0r2p","slide":26,"text":"How","textPreview":"How","textChars":3,"textLines":1,"bbox":[966,166,230,38]}
+{"kind":"textbox","id":"sh/lcr2tw3a","slide":26,"text":"Accepted state uses Wilder ATR14 / close, ranked against the prior 252 completed ATR% observations.","textPreview":"Accepted state uses Wilder ATR14 / close, ranked against the prior 252 completed ATR% observations.","textChars":99,"textLines":1,"bbox":[966,214,252,120]}
+{"kind":"textbox","id":"sh/lsja143i","slide":26,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[966,358,230,38]}
+{"kind":"textbox","id":"sh/krat8z2x","slide":26,"text":"Blue marks LOW, gold MEDIUM, and red HIGH movement capacity. Price and the causal trailing ATR% rank are shown together.","textPreview":"Blue marks LOW, gold MEDIUM, and red HIGH movement capacity. Price and the causal trailing ATR% rank are shown together.","textChars":120,"textLines":1,"bbox":[966,406,252,174]}
+{"kind":"shape","id":"sh/z61szulc","slide":26,"bbox":[966,600,252,4]}
+{"kind":"textbox","id":"sh/y5sr69kr","slide":26,"text":"Descriptive state—not a future-return claim","textPreview":"Descriptive state—not a future-return claim","textChars":43,"textLines":1,"bbox":[966,616,252,44]}
+{"kind":"image","id":"im/rqxwj6t8","slide":26,"name":"","bbox":[34.22,145,899.56,506]}
+{"kind":"notes","id":"nt/l0bepsfm","slide":26,"text":"This companion view makes the accepted volatility classifier visible in price time. Blue, gold, and red mean LOW, MEDIUM, and HIGH movement capacity; they do not mean bearish, neutral, and bullish. The lower panel shows the causal trailing ATR-percent rank and accepted hysteretic state at each close.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_state_price_bands.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/tsla_atrp_state_chart_ledger.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/tsla_atrp_state_spans.csv\n- runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814/hyp_reg_01_1_daily_state_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/4vyxknqp","slide":27,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/vuxsj250","slide":27,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/kn694nmx","slide":27,"name":"title-4","text":"LOW ATR% is broadly positive, but no cell passes","textPreview":"LOW ATR% is broadly positive, but no cell passes","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/lofadsni","slide":27,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/mpor6x43","slide":27,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/7qxsfi5o","slide":27,"name":"footer-number-4","text":"27","textPreview":"27","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/8r698nm9","slide":27,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/utobax4f","slide":27,"text":"All 81 cells positive; strongest +0.198 at 10 prior / 25 forward; 0/81 within-state BH passes.","textPreview":"All 81 cells positive; strongest +0.198 at 10 prior / 25 forward; 0/81 within-state BH passes.","textChars":94,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/4zyhsn2d","slide":27,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/4vyxknqp","slide":27,"text":"LOW ATR-percent anchors produce positive point estimates throughout the grid, but the strongest cell's interval crosses zero and no LOW cell survives the within-state scan.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/low_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_low_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/3mdove10","slide":28,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/947ipwje","slide":28,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/q9cz6xkv","slide":28,"name":"title-4","text":"MEDIUM ATR% contains the stable continuation island","textPreview":"MEDIUM ATR% contains the stable continuation island","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ralgf21g","slide":28,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/0zehcr2x","slide":28,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/10nylwji","slide":28,"name":"footer-number-4","text":"28","textPreview":"28","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/exwzahkr","slide":28,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/o3ehgr29","slide":28,"text":"All 81 cells positive; 21/81 within-state BH passes; strict survivors cluster at 5–10 prior / 2–3 forward.","textPreview":"All 81 cells positive; 21/81 within-state BH passes; strict survivors cluster at 5–10 prior / 2–3 forward.","textChars":106,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/yxk76d4n","slide":28,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/3mdove10","slide":28,"text":"MEDIUM ATR-percent anchors show the most statistically stable continuation pattern. Under the strict correction across all 486 tests, the 5/3, 10/2, and 10/3 cells remain.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/medium_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_medium_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/i5o3q10v","slide":29,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/apsnyxcz","slide":29,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/tk36hwby","slide":29,"name":"title-4","text":"HIGH ATR% flips the surface toward reversal","textPreview":"HIGH ATR% flips the surface toward reversal","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8jup8rad","slide":29,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vmlojmto","slide":29,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ulc7a1s3","slide":29,"name":"footer-number-4","text":"29","textPreview":"29","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/h8n6lwbu","slide":29,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/bq1o72tk","slide":29,"text":"77/81 cells negative; strongest -0.301 at 20 prior / 20 forward; 0/81 within-state BH passes.","textPreview":"77/81 cells negative; strongest -0.301 at 20 prior / 20 forward; 0/81 within-state BH passes.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/juxgzqdg","slide":29,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/i5o3q10v","slide":29,"text":"HIGH ATR-percent anchors reverse the sign of the broad surface, especially at longer horizons. The most extreme cell is visually strong but its dependence-robust interval still crosses zero.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/high_pearson_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_high_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/wnqh07ex","slide":30,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/907mhc7m","slide":30,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/po72d8nm","slide":30,"name":"title-7","text":"HIGH and MEDIUM contain direct state differences","textPreview":"HIGH and MEDIUM contain direct state differences","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/o3yl4361","slide":30,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/bqpkfy5s","slide":30,"name":"footer-left-7","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/apg36do7","slide":30,"name":"footer-number-7","text":"30","textPreview":"30","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/xsr2h8ni","slide":30,"bbox":[36,150,806,500]}
+{"kind":"shape","id":"sh/ru5k3ep8","slide":30,"bbox":[878,158,330,150]}
+{"kind":"shape","id":"sh/6twju9o3","slide":30,"bbox":[878,158,8,150]}
+{"kind":"textbox","id":"sh/onqx8zix","slide":30,"text":"-0.548","textPreview":"-0.548","textChars":6,"textLines":1,"bbox":[906,176,282,62]}
+{"kind":"textbox","id":"sh/p8ze14zi","slide":30,"text":"largest correlation change: 25 prior / 15 forward","textPreview":"largest correlation change: 25 prior / 15 forward","textChars":49,"textLines":1,"bbox":[906,246,282,46]}
+{"kind":"shape","id":"sh/2l8f6p0r","slide":30,"bbox":[878,330,330,150]}
+{"kind":"shape","id":"sh/3mhwzu1c","slide":30,"bbox":[878,330,8,150]}
+{"kind":"textbox","id":"sh/cbaxczit","slide":30,"text":"q = 0.038","textPreview":"q = 0.038","textChars":9,"textLines":1,"bbox":[906,348,282,62]}
+{"kind":"textbox","id":"sh/dcje54ze","slide":30,"text":"within HIGH-minus-MEDIUM family","textPreview":"within HIGH-minus-MEDIUM family","textChars":31,"textLines":1,"bbox":[906,418,282,46]}
+{"kind":"shape","id":"sh/q9sfap03","slide":30,"bbox":[878,502,330,150]}
+{"kind":"shape","id":"sh/ba1w3uh8","slide":30,"bbox":[878,502,8,150]}
+{"kind":"textbox","id":"sh/sf6d0fip","slide":30,"text":"3 / 243","textPreview":"3 / 243","textChars":7,"textLines":1,"bbox":[906,520,282,62]}
+{"kind":"textbox","id":"sh/tgfetkja","slide":30,"text":"pairwise cells surviving strict omnibus BH","textPreview":"pairwise cells surviving strict omnibus BH","textChars":42,"textLines":1,"bbox":[906,590,282,46]}
+{"kind":"image","id":"im/j6pc3q1g","slide":30,"name":"","bbox":[64,150,750,500]}
+{"kind":"notes","id":"nt/wnqh07ex","slide":30,"text":"The largest correlation contrast is -0.548 at 25 prior and 15 forward; its within-family interaction q is 0.038 but strict omnibus q is 0.081. Three smaller HIGH-minus-MEDIUM interactions survive the omnibus correction.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/high_minus_medium_pearson_difference_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/pairwise_state_comparison_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/high_minus_medium_interaction_bh_q_matrix.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_high_minus_medium_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/lcn6tkb6","slide":31,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/xon2po3i","slide":31,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/dgja98fe","slide":31,"name":"title-11","text":"ATR% changes the map—and leaves a replication candidate","textPreview":"ATR% changes the map—and leaves a replication candidate","textChars":55,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cfa903yt","slide":31,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/zilsbyx4","slide":31,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ehsr2dgz","slide":31,"name":"footer-number-11","text":"31","textPreview":"31","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1k3ad8fa","slide":31,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/0jut43yp","slide":31,"text":"LOW MAP","textPreview":"LOW MAP","textChars":7,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/fmhszex0","slide":31,"text":"All cells are positive, but none survive the within-state scan","textPreview":"All cells are positive, but none survive the within-state scan","textChars":62,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ul8rq9gf","slide":31,"text":"Max +0.198; 0/81 BH passes","textPreview":"Max +0.198; 0/81 BH passes","textChars":26,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/4vm5g7al","slide":31,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/5wvmpcr6","slide":31,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/it4nexsf","slide":31,"text":"MEDIUM MAP","textPreview":"MEDIUM MAP","textChars":10,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3ud4n290","slide":31,"text":"A continuation island survives around 5–10 prior / 2–3 forward","textPreview":"A continuation island survives around 5–10 prior / 2–3 forward","textChars":62,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/sz65k7ah","slide":31,"text":"21/81 family; 3 strict omnibus passes","textPreview":"21/81 family; 3 strict omnibus passes","textChars":37,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/d0fmtcr2","slide":31,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/qx4nihsb","slide":31,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/ryd4rm9w","slide":31,"text":"HIGH MAP","textPreview":"HIGH MAP","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/832l8nad","slide":31,"text":"The surface broadly reverses, especially at longer horizons","textPreview":"The surface broadly reverses, especially at longer horizons","textChars":59,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/t4bmhsry","slide":31,"text":"77/81 negative; max |r| = 0.301","textPreview":"77/81 negative; max |r| = 0.301","textChars":31,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/9032l43m","slide":31,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/8zu1cj21","slide":31,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/nylkjelg","slide":31,"text":"Bookmarked next questions","textPreview":"Bookmarked next questions","textChars":25,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/mxcja9kv","slide":31,"text":"Replicate ATR% on a frozen sample. Then split green ER20 into up/down direction and test external market context.","textPreview":"Replicate ATR% on a frozen sample. Then split green ER20 into up/down direction and test external market context.","textChars":113,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/lcn6tkb6","slide":31,"text":"The ATR-percent split is the clearest conditional map in this descriptive lane and is partially multiplicity-robust, but it is still a same-sample replication candidate rather than a trading rule. The ER20 direction split and external-context filter are bookmarked, not opened here.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/report.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/pairwise_state_comparison_statistics.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/6l0j294r","slide":32,"title":"EXTERNAL MARKET CONTEXT","textShapes":5}
+{"kind":"textbox","id":"sh/twzipkfy","slide":32,"text":"EXTERNAL MARKET CONTEXT","textPreview":"EXTERNAL MARKET CONTEXT","textChars":23,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/kr61sfy1","slide":32,"text":"Can SPY movement capacity organize TSLA returns?","textPreview":"Can SPY movement capacity organize TSLA returns?","textChars":48,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/lszilkfm","slide":32,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/6t8jupg7","slide":32,"text":"Use SPY's accepted ATR% state at the same TSLA anchor close.","textPreview":"Use SPY's accepted ATR% state at the same TSLA anchor close.","textChars":60,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/7uh0nuxs","slide":32,"text":"TSLA, sample, return windows, and uncertainty stay fixed. No threshold search.","textPreview":"TSLA, sample, return windows, and uncertainty stay fixed. No threshold search.","textChars":78,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/8vq1wzyd","slide":32,"text":"32","textPreview":"32","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/6l0j294r","slide":32,"text":"This section changes one authority only. TSLA still supplies every prior and following return. SPY supplies the already accepted causal ATR-percent state at the anchor close.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814/hyp_reg_01_1_daily_state_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/nax4b2dk","slide":33,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/uhkjm1w7","slide":33,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/lk3m50nq","slide":33,"name":"title-3","text":"Condition on SPY ATR% before reading TSLA's future","textPreview":"Condition on SPY ATR% before reading TSLA's future","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0jalwfm5","slide":33,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nml47a5w","slide":33,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mlc3y54b","slide":33,"name":"footer-number-3","text":"33","textPreview":"33","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/9o3m9knm","slide":33,"text":"SPY state  →  TSLA future","textPreview":"SPY state  →  TSLA future","textChars":25,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/8nul0fmh","slide":33,"text":"SPY labels anchor close t. TSLA prior return ends at t; TSLA following return begins after t.","textPreview":"SPY labels anchor close t. TSLA prior return ends at t; TSLA following return begins after t.","textChars":93,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/vql4bu5s","slide":33,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/apc32p47","slide":33,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/grad8zah","slide":33,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/hsjuhkb2","slide":33,"text":"accepted external states","textPreview":"accepted external states","textChars":24,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/upsv6psb","slide":33,"text":"Fixed conditioning","textPreview":"Fixed conditioning","textChars":18,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/vq1cfutw","slide":33,"text":"Metric","textPreview":"Metric","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/4vadczad","slide":33,"text":"Wilder ATR14 / SPY close","textPreview":"Wilder ATR14 / SPY close","textChars":24,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/5w3ul4by","slide":33,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/itsvapsn","slide":33,"text":"Memory","textPreview":"Memory","textChars":6,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/3u1cjut8","slide":33,"text":"Prior 252 completed sessions","textPreview":"Prior 252 completed sessions","textChars":28,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/czudgjap","slide":33,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/dk3ep4ba","slide":33,"text":"States","textPreview":"States","textChars":6,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/lgzu94je","slide":33,"text":"LOW / MEDIUM / HIGH","textPreview":"LOW / MEDIUM / HIGH","textChars":19,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/0fqd0z2t","slide":33,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/zehc7u18","slide":33,"text":"Hysteresis","textPreview":"Hysteresis","textChars":10,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/yd8vy9kn","slide":33,"text":"30/40 and 60/70 gates","textPreview":"30/40 and 60/70 gates","textChars":21,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/9kjudoja","slide":33,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/8jad4j2p","slide":33,"text":"Timing","textPreview":"Timing","textChars":6,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/nihcbe1k","slide":33,"text":"Known at anchor close t","textPreview":"Known at anchor close t","textChars":23,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/mh8v29kz","slide":33,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/pofu1k36","slide":33,"text":"Surface","textPreview":"Surface","textChars":7,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/4n6tsf2l","slide":33,"text":"Same 81 horizon pairs","textPreview":"Same 81 horizon pairs","textChars":21,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/nax4b2dk","slide":33,"text":"The SPY classifier is reused exactly: Wilder ATR14 divided by adjusted close, prior-252 causal percentile, and 30/40 plus 60/70 hysteresis. No state definition or horizon changes after seeing TSLA returns.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/source_checks.csv\n- runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814/hyp_reg_01_1_daily_state_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ofu103u5","slide":34,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/oz2dozu1","slide":34,"name":"section-5","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/pwzm1kbm","slide":34,"name":"title-5","text":"SPY ATR% supplies context—not TSLA direction","textPreview":"SPY ATR% supplies context—not TSLA direction","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ovq58fu1","slide":34,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/byh43utc","slide":34,"name":"footer-left-5","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/qx8napc7","slide":34,"name":"footer-number-5","text":"34","textPreview":"34","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/d0zm54bi","slide":34,"bbox":[34,145,900,506]}
+{"kind":"textbox","id":"sh/z2147eto","slide":34,"text":"How","textPreview":"How","textChars":3,"textLines":1,"bbox":[966,166,230,38]}
+{"kind":"textbox","id":"sh/y18ne9c3","slide":34,"text":"Accepted SPY state uses Wilder ATR14 / close, ranked against the prior 252 completed SPY ATR% observations.","textPreview":"Accepted SPY state uses Wilder ATR14 / close, ranked against the prior 252 completed SPY ATR% observations.","textChars":107,"textLines":1,"bbox":[966,214,252,120]}
+{"kind":"textbox","id":"sh/0vidkfu5","slide":34,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[966,358,230,38]}
+{"kind":"textbox","id":"sh/1wredkbq","slide":34,"text":"Bands are SPY states over TSLA price. Blue LOW and red HIGH describe movement capacity—not bullish or bearish calls.","textPreview":"Bands are SPY states over TSLA price. Blue LOW and red HIGH describe movement capacity—not bullish or bearish calls.","textChars":116,"textLines":1,"bbox":[966,406,252,174]}
+{"kind":"shape","id":"sh/e90vipcz","slide":34,"bbox":[966,600,252,4]}
+{"kind":"textbox","id":"sh/za9wbutk","slide":34,"text":"Descriptive state—not a future-return claim","textPreview":"Descriptive state—not a future-return claim","textChars":43,"textLines":1,"bbox":[966,616,252,44]}
+{"kind":"image","id":"im/qtkf2p0j","slide":34,"name":"","bbox":[34.22,145,899.56,506]}
+{"kind":"notes","id":"nt/ofu103u5","slide":34,"text":"The price stays TSLA, while every colored band and the lower-panel percentile come from SPY. This visual checks alignment in time; it does not claim that SPY state causes TSLA returns.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_spy_atrp_state_price_bands.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/tsla_spy_atrp_state_chart_ledger.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/tsla_spy_atrp_state_spans.csv\n- runs/research_workbench/operator_hypothesis_lab/hyp_reg_01_1_atr_percent_20260814/hyp_reg_01_1_daily_state_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/1obmtofm","slide":35,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/t8vm1876","slide":35,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/idonexon","slide":35,"name":"title-4","text":"SPY LOW reveals TSLA continuation","textPreview":"SPY LOW reveals TSLA continuation","textChars":33,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/3ex47ip8","slide":35,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/gb6lcn6x","slide":35,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/hcfm5s72","slide":35,"name":"footer-number-4","text":"35","textPreview":"35","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/u943ador","slide":35,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/87ml836l","slide":35,"text":"72/81 cells positive; strongest +0.228 at 5 prior / 10 forward; 0/81 within-state BH passes.","textPreview":"72/81 cells positive; strongest +0.228 at 5 prior / 10 forward; 0/81 within-state BH passes.","textChars":92,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/y1onqx03","slide":35,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/1obmtofm","slide":35,"text":"SPY LOW ATR-percent sessions contain the clearest TSLA continuation geometry. The pattern is broad, but no single within-state cell survives its 81-cell BH-FDR family.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_spy_atrp_low_pearson_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/m9s3ehgf","slide":36,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/exwb69s7","slide":36,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/5s3atkbq","slide":36,"name":"title-4","text":"SPY MEDIUM turns long-forward returns negative","textPreview":"SPY MEDIUM turns long-forward returns negative","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4rut0fa5","slide":36,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/rulsvutw","slide":36,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/qtcb2psb","slide":36,"name":"footer-number-4","text":"36","textPreview":"36","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/dwnax4bm","slide":36,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/fy5szuts","slide":36,"text":"67/81 cells negative; strongest -0.191 at 15 prior / 20 forward; 0/81 within-state BH passes.","textPreview":"67/81 cells negative; strongest -0.191 at 15 prior / 20 forward; 0/81 within-state BH passes.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/fid8vu90","slide":36,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/m9s3ehgf","slide":36,"text":"SPY MEDIUM ATR-percent sessions reverse the long-forward portion of the TSLA map. This differs sharply from TSLA's own MEDIUM state, which held the earlier positive continuation island.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_spy_atrp_medium_pearson_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/own_vs_external_atrp_map_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/jyhsreh4","slide":37,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/pw7q5sza","slide":37,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/61c7md0r","slide":37,"name":"title-4","text":"SPY HIGH leaves a mild TSLA surface","textPreview":"SPY HIGH leaves a mild TSLA surface","textChars":35,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/7m58vyhw","slide":37,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/kzupk3il","slide":37,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/503qt8z6","slide":37,"name":"footer-number-4","text":"37","textPreview":"37","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/ixc7it0f","slide":37,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/4vy9wnyp","slide":37,"text":"60/81 cells positive; max |r| = 0.103 at 25 prior / 15 forward; 0/81 within-state BH passes.","textPreview":"60/81 cells positive; max |r| = 0.103 at 25 prior / 15 forward; 0/81 within-state BH passes.","textChars":92,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/ahojmlsn","slide":37,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/jyhsreh4","slide":37,"text":"SPY HIGH ATR-percent does not reproduce the broad reversal seen under TSLA's own HIGH ATR-percent state. Most cells are mildly positive, with a small negative corner at the longest prior horizons.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_spy_atrp_high_pearson_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/own_vs_external_atrp_map_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ofahkri5","slide":38,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/a5o3qloj","slide":38,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/kvy1kbep","slide":38,"name":"title-7","text":"SPY LOW versus MEDIUM is the clearest contrast","textPreview":"SPY LOW versus MEDIUM is the clearest contrast","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/lw7idgva","slide":38,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/mxgjmlwv","slide":38,"name":"footer-left-7","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/7yp0f6dg","slide":38,"name":"footer-number-7","text":"38","textPreview":"38","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/8zi1obe1","slide":38,"bbox":[36,150,806,500]}
+{"kind":"shape","id":"sh/u10jqlwr","slide":38,"bbox":[878,158,330,150]}
+{"kind":"shape","id":"sh/v290jqdc","slide":38,"bbox":[878,158,8,150]}
+{"kind":"textbox","id":"sh/3it0j25o","slide":38,"text":"-0.389","textPreview":"-0.389","textChars":6,"textLines":1,"bbox":[906,176,282,62]}
+{"kind":"textbox","id":"sh/ih0zqxoj","slide":38,"text":"largest correlation change: 5 prior / 15 forward","textPreview":"largest correlation change: 5 prior / 15 forward","textChars":48,"textLines":1,"bbox":[906,246,282,46]}
+{"kind":"shape","id":"sh/5kbilcnu","slide":38,"bbox":[878,330,330,150]}
+{"kind":"shape","id":"sh/4j2hs7m9","slide":38,"bbox":[878,330,8,150]}
+{"kind":"textbox","id":"sh/ve90f25s","slide":38,"text":"q = 0.016","textPreview":"q = 0.016","textChars":9,"textLines":1,"bbox":[906,348,282,62]}
+{"kind":"textbox","id":"sh/ud0zmxo7","slide":38,"text":"within MEDIUM-minus-LOW family","textPreview":"within MEDIUM-minus-LOW family","textChars":30,"textLines":1,"bbox":[906,418,282,46]}
+{"kind":"shape","id":"sh/hgrihsny","slide":38,"bbox":[878,502,330,150]}
+{"kind":"shape","id":"sh/gfihon6d","slide":38,"bbox":[878,502,8,150]}
+{"kind":"textbox","id":"sh/fad0rm5w","slide":38,"text":"0 / 243","textPreview":"0 / 243","textChars":7,"textLines":1,"bbox":[906,520,282,62]}
+{"kind":"textbox","id":"sh/e94jyh4b","slide":38,"text":"pairwise cells surviving strict omnibus BH","textPreview":"pairwise cells surviving strict omnibus BH","textChars":42,"textLines":1,"bbox":[906,590,282,46]}
+{"kind":"image","id":"im/07ahkfeh","slide":38,"name":"","bbox":[64,150,750,500]}
+{"kind":"notes","id":"nt/ofahkri5","slide":38,"text":"The largest direct contrast is LOW continuation versus MEDIUM reversal at 5 prior and 15 forward sessions. Three neighboring MEDIUM-minus-LOW interactions survive their 81-cell family correction, but no pairwise interaction survives the stricter 486-test omnibus correction.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_spy_atrp_medium_minus_low_pearson_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/pairwise_state_comparison_statistics.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/twb2lg7e","slide":39,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/l03e107y","slide":39,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/50769kvu","slide":39,"name":"title-11","text":"External context changes the map—but confirms no edge","textPreview":"External context changes the map—but confirms no edge","textChars":53,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4ze50fu9","slide":39,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/r2pobudk","slide":39,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/q1gn2pcf","slide":39,"name":"footer-number-11","text":"39","textPreview":"39","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/do76d4vq","slide":39,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/snyp4zu5","slide":39,"text":"SPY LOW MAP","textPreview":"SPY LOW MAP","textChars":11,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/76lozqdg","slide":39,"text":"Broadly preserves the positive continuation geometry","textPreview":"Broadly preserves the positive continuation geometry","textChars":52,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/65cnq5cv","slide":39,"text":"72/81 same sign vs own LOW; mean r +0.091","textPreview":"72/81 same sign vs own LOW; mean r +0.091","textChars":41,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/sjmpon2x","slide":39,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/dkvqxsji","slide":39,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/qx47mdkr","slide":39,"text":"SPY MEDIUM MAP","textPreview":"SPY MEDIUM MAP","textChars":14,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/rid8vi1c","slide":39,"text":"Reverses the own-asset MEDIUM interpretation","textPreview":"Reverses the own-asset MEDIUM interpretation","textChars":44,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/0n6psni9","slide":39,"text":"14/81 same sign; mean r -0.058","textPreview":"14/81 same sign; mean r -0.058","textChars":30,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/1ofq1sje","slide":39,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/el47qxk3","slide":39,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/fmx8z21o","slide":39,"text":"SPY HIGH MAP","textPreview":"SPY HIGH MAP","textChars":12,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/gr2pg32p","slide":39,"text":"Mild and mixed—not broad TSLA reversal","textPreview":"Mild and mixed—not broad TSLA reversal","textChars":38,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/hsbqp8ja","slide":39,"text":"25/81 same sign; mean r +0.031","textPreview":"25/81 same sign; mean r +0.031","textChars":30,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/xcjex072","slide":39,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/cbax4vqh","slide":39,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/ba1wvqpw","slide":39,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/a9sf2l8b","slide":39,"text":"External context is a promising descriptive axis. Next: brainstorm cross-sectional cues; keep replication and strategy gates closed.","textPreview":"External context is a promising descriptive axis. Next: brainstorm cross-sectional cues; keep replication and strategy gates closed.","textChars":132,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/twb2lg7e","slide":39,"text":"External SPY conditioning is coherent enough to justify more descriptive cross-sectional brainstorming, but it does not confirm an edge. LOW is the most portable geometry; MEDIUM changes almost completely; HIGH keeps a related ordering while most signs shift.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/own_vs_external_atrp_map_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/report.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/conditioned_horizon_grid_statistics.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/5ojatgfe","slide":40,"title":"QUASI-EXTERNAL MARKET CONTEXT","textShapes":5}
+{"kind":"textbox","id":"sh/bm5gzqhw","slide":40,"text":"QUASI-EXTERNAL MARKET CONTEXT","textPreview":"QUASI-EXTERNAL MARKET CONTEXT","textChars":29,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/y9gzu50n","slide":40,"text":"Can QQQ movement capacity organize TSLA returns?","textPreview":"Can QQQ movement capacity organize TSLA returns?","textChars":48,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/zapg3qh8","slide":40,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/cnexsvih","slide":40,"text":"Use QQQ's accepted ATR% state at the same TSLA anchor close.","textPreview":"Use QQQ's accepted ATR% state at the same TSLA anchor close.","textChars":60,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/x8ny10z2","slide":40,"text":"TSLA, sample, return windows, and uncertainty stay fixed. QQQ is quasi-external; no threshold search.","textPreview":"TSLA, sample, return windows, and uncertainty stay fixed. QQQ is quasi-external; no threshold search.","textChars":101,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/alwfql0r","slide":40,"text":"40","textPreview":"40","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/5ojatgfe","slide":40,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/cnmpwjmp","slide":41,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/qxknypgj","slide":41,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/t0rqhkju","slide":41,"name":"title-3","text":"Condition on QQQ ATR% to read TSLA's future","textPreview":"Condition on QQQ ATR% to read TSLA's future","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/szi98fi9","slide":41,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/f298ju10","slide":41,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/u10rap0f","slide":41,"name":"footer-number-3","text":"41","textPreview":"41","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/h4bqlkj6","slide":41,"text":"QQQ state  →  TSLA future","textPreview":"QQQ state  →  TSLA future","textChars":25,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/g3i9czil","slide":41,"text":"QQQ labels anchor close t. TSLA prior return ends at t; TSLA following return begins after t.","textPreview":"QQQ labels anchor close t. TSLA prior return ends at t; TSLA following return begins after t.","textChars":93,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/36t8nu1w","slide":41,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/25krep0r","slide":41,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/cvqp43qh","slide":41,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/dwjqd8r2","slide":41,"text":"accepted external states","textPreview":"accepted external states","textChars":24,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/qt872t8b","slide":41,"text":"Fixed conditioning","textPreview":"Fixed conditioning","textChars":18,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/ruh8by9w","slide":41,"text":"Metric","textPreview":"Metric","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/0za983qd","slide":41,"text":"Wilder ATR14 / QQQ close","textPreview":"Wilder ATR14 / QQQ close","textChars":24,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/10jqh8ry","slide":41,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/exsr6t87","slide":41,"text":"Memory","textPreview":"Memory","textChars":6,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/zy18fy9s","slide":41,"text":"Prior 252 completed sessions","textPreview":"Prior 252 completed sessions","textChars":28,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/83u9cnqp","slide":41,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/943qlsru","slide":41,"text":"States","textPreview":"States","textChars":6,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/hkzq58je","slide":41,"text":"LOW / MEDIUM / HIGH","textPreview":"LOW / MEDIUM / HIGH","textChars":19,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/wjqpwnit","slide":41,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/vih83i18","slide":41,"text":"Hysteresis","textPreview":"Hysteresis","textChars":10,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/uho7ud0n","slide":41,"text":"30/40 and 60/70 gates","textPreview":"30/40 and 60/70 gates","textChars":21,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/5ozq9sja","slide":41,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/4nq90nip","slide":41,"text":"Timing","textPreview":"Timing","textChars":6,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/jmh87i14","slide":41,"text":"Known at anchor close t","textPreview":"Known at anchor close t","textChars":23,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/il87yd0j","slide":41,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/lsfqxoj6","slide":41,"text":"Surface","textPreview":"Surface","textChars":7,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/0r6po3il","slide":41,"text":"Same 81 horizon pairs","textPreview":"Same 81 horizon pairs","textChars":21,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/cnmpwjmp","slide":41,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/7mdw7yh8","slide":42,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/hsjq10zq","slide":42,"name":"section-5","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/mlovmtcr","slide":42,"name":"title-5","text":"QQQ ATR% supplies context—not TSLA direction","textPreview":"QQQ ATR% supplies context—not TSLA direction","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/nmxwfetc","slide":42,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/0j6dkjul","slide":42,"name":"footer-left-5","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/lkfedov6","slide":42,"name":"footer-number-5","text":"42","textPreview":"42","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/yh4vi9cv","slide":42,"bbox":[34,145,900,506]}
+{"kind":"textbox","id":"sh/cfmdgzup","slide":42,"text":"How","textPreview":"How","textChars":3,"textLines":1,"bbox":[966,166,230,38]}
+{"kind":"textbox","id":"sh/dgvu94va","slide":42,"text":"Accepted QQQ state uses Wilder ATR14 / close, ranked against the prior 252 completed QQQ ATR% observations.","textPreview":"Accepted QQQ state uses Wilder ATR14 / close, ranked against the prior 252 completed QQQ ATR% observations.","textChars":107,"textLines":1,"bbox":[966,214,252,120]}
+{"kind":"textbox","id":"sh/5w3qp0z2","slide":42,"text":"Read","textPreview":"Read","textChars":4,"textLines":1,"bbox":[966,358,230,38]}
+{"kind":"textbox","id":"sh/4vu9wvih","slide":42,"text":"Bands are QQQ states over TSLA price. Blue LOW and red HIGH describe movement capacity—not bullish or bearish calls.","textPreview":"Bands are QQQ states over TSLA price. Blue LOW and red HIGH describe movement capacity—not bullish or bearish calls.","textChars":116,"textLines":1,"bbox":[966,406,252,174]}
+{"kind":"shape","id":"sh/jul8nahw","slide":42,"bbox":[966,600,252,4]}
+{"kind":"textbox","id":"sh/itsru50b","slide":42,"text":"Descriptive state—not a future-return claim","textPreview":"Descriptive state—not a future-return claim","textChars":43,"textLines":1,"bbox":[966,616,252,44]}
+{"kind":"image","id":"im/vuxkzu10","slide":42,"name":"","alt":"QQQ ATR-percent state bands over TSLA adjusted close, 2018-2023","bbox":[34.22,145,899.56,506]}
+{"kind":"notes","id":"nt/7mdw7yh8","slide":42,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/qhkbqxoz","slide":43,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/etczi58z","slide":43,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/5ojy5gr2","slide":43,"name":"title-4","text":"QQQ LOW reveals broad TSLA continuation","textPreview":"QQQ LOW reveals broad TSLA continuation","textChars":39,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/43axcvqx","slide":43,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vyhgz690","slide":43,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ux8f618f","slide":43,"name":"footer-number-4","text":"43","textPreview":"43","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/h0jy1gr6","slide":43,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/fulgba9k","slide":43,"text":"77/81 cells positive; strongest +0.260 at 10 prior / 5 forward; family q = 0.051, so 0/81 passes.","textPreview":"77/81 cells positive; strongest +0.260 at 10 prior / 5 forward; family q = 0.051, so 0/81 passes.","textChars":97,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/vid8na5c","slide":43,"name":"","alt":"TSLA prior-versus-forward correlation heatmap in QQQ LOW ATR-percent state","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/qhkbqxoz","slide":43,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/pcvutcvy","slide":44,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/ut4b2xkv","slide":44,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/tozulw3e","slide":44,"name":"title-4","text":"QQQ MEDIUM weakens at longer horizons","textPreview":"QQQ MEDIUM weakens at longer horizons","textChars":37,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/s3qdcr2t","slide":44,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fqhcn6lk","slide":44,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ep8ve1kz","slide":44,"name":"footer-number-4","text":"44","textPreview":"44","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1szepg3q","slide":44,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/vuxcb2lg","slide":44,"text":"44/81 cells positive; long/long cells turn negative; strongest -0.224 at 20 prior / 25 forward; 0/81 passes.","textPreview":"44/81 cells positive; long/long cells turn negative; strongest -0.224 at 20 prior / 25 forward; 0/81 passes.","textChars":108,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/je9ofut8","slide":44,"name":"","alt":"TSLA prior-versus-forward correlation heatmap in QQQ MEDIUM ATR-percent state","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/pcvutcvy","slide":44,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/kvipwnmh","slide":45,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/ahs3qtwf","slide":45,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/lsz2dofy","slide":45,"name":"title-4","text":"QQQ HIGH leaves a mild negative TSLA surface","textPreview":"QQQ HIGH leaves a mild negative TSLA surface","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0rq1kjed","slide":45,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ne1kfydo","slide":45,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mtsjmtw3","slide":45,"name":"footer-number-4","text":"45","textPreview":"45","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9gj2hovu","slide":45,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/vi1kjyd0","slide":45,"text":"59/81 cells negative; max |r| = 0.112 at 25 prior / 15 forward; 0/81 within-state BH passes.","textPreview":"59/81 cells negative; max |r| = 0.112 at 25 prior / 15 forward; 0/81 within-state BH passes.","textChars":92,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/zy1cn2xw","slide":45,"name":"","alt":"TSLA prior-versus-forward correlation heatmap in QQQ HIGH ATR-percent state","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/kvipwnmh","slide":45,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/zixsf2ps","slide":46,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/gbil07ih","slide":46,"name":"section-7","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/a9s3uhcv","slide":46,"name":"title-7","text":"QQQ LOW versus MEDIUM is the clearest contrast","textPreview":"QQQ LOW versus MEDIUM is the clearest contrast","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/va14nmtg","slide":46,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/kful0rud","slide":46,"name":"footer-left-7","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/5g3mtwbi","slide":46,"name":"footer-number-7","text":"46","textPreview":"46","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/ids3yhc7","slide":46,"bbox":[36,150,806,500]}
+{"kind":"shape","id":"sh/s3ul4bu9","slide":46,"bbox":[878,158,330,150]}
+{"kind":"shape","id":"sh/t43mxwbu","slide":46,"bbox":[878,158,8,150]}
+{"kind":"textbox","id":"sh/l0721wre","slide":46,"text":"-0.342","textPreview":"-0.342","textChars":6,"textLines":1,"bbox":[906,176,282,62]}
+{"kind":"textbox","id":"sh/0zylsrat","slide":46,"text":"largest correlation change: 10 prior / 15 forward","textPreview":"largest correlation change: 10 prior / 15 forward","textChars":49,"textLines":1,"bbox":[906,246,282,46]}
+{"kind":"shape","id":"sh/zypkzm9o","slide":46,"bbox":[878,330,330,150]}
+{"kind":"shape","id":"sh/yxg3qhs3","slide":46,"bbox":[878,330,8,150]}
+{"kind":"textbox","id":"sh/9orm5wrq","slide":46,"text":"q = 0.274","textPreview":"q = 0.274","textChars":9,"textLines":1,"bbox":[906,348,282,62]}
+{"kind":"textbox","id":"sh/8nilwra5","slide":46,"text":"within MEDIUM-minus-LOW family","textPreview":"within MEDIUM-minus-LOW family","textChars":30,"textLines":1,"bbox":[906,418,282,46]}
+{"kind":"shape","id":"sh/nm943m9k","slide":46,"bbox":[878,502,330,150]}
+{"kind":"shape","id":"sh/m103uhsz","slide":46,"bbox":[878,502,8,150]}
+{"kind":"textbox","id":"sh/psn2tcr6","slide":46,"text":"0 / 243","textPreview":"0 / 243","textChars":7,"textLines":1,"bbox":[906,520,282,62]}
+{"kind":"textbox","id":"sh/orelk7a1","slide":46,"text":"pairwise cells surviving strict omnibus BH","textPreview":"pairwise cells surviving strict omnibus BH","textChars":42,"textLines":1,"bbox":[906,590,282,46]}
+{"kind":"image","id":"im/m9o3e90b","slide":46,"name":"","alt":"QQQ MEDIUM-minus-LOW correlation-difference heatmap for TSLA","bbox":[64,150,750,500]}
+{"kind":"notes","id":"nt/zixsf2ps","slide":46,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md"}
+{"kind":"slide","id":"sl/atcnytkf","slide":47,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/5sf2psnu","slide":47,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/503e9ora","slide":47,"name":"title-11","text":"QQQ reshapes TSLA returns—but leaves no edge","textPreview":"QQQ reshapes TSLA returns—but leaves no edge","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4zadgjap","slide":47,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/rmlwby90","slide":47,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6lcvitsf","slide":47,"name":"footer-number-11","text":"47","textPreview":"47","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/do3edor6","slide":47,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/snudk3al","slide":47,"text":"QQQ LOW MAP","textPreview":"QQQ LOW MAP","textChars":11,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/7qhczu9w","slide":47,"text":"Preserves the broad continuation geometry","textPreview":"Preserves the broad continuation geometry","textChars":41,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/mp8v6psb","slide":47,"text":"77/81 positive; 77/81 same sign vs own; mean r +0.123","textPreview":"77/81 positive; 77/81 same sign vs own; mean r +0.123","textChars":53,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/szy5wbeh","slide":47,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/d07mpgv2","slide":47,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/qxgnu1wb","slide":47,"text":"QQQ MEDIUM MAP","textPreview":"QQQ MEDIUM MAP","textChars":14,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/ryp4n6dw","slide":47,"text":"Weakens own-asset MEDIUM; long horizons turn negative","textPreview":"Weakens own-asset MEDIUM; long horizons turn negative","textChars":53,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/03y50ved","slide":47,"text":"44/81 positive; 44/81 same sign vs own; mean r -0.010","textPreview":"44/81 positive; 44/81 same sign vs own; mean r -0.010","textChars":53,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/14rmtgvy","slide":47,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/e1gnylwn","slide":47,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/f2p4rqd8","slide":47,"text":"QQQ HIGH MAP","textPreview":"QQQ HIGH MAP","textChars":12,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/g7elore9","slide":47,"text":"Mild negative map; closer to TSLA-own HIGH than SPY HIGH","textPreview":"Mild negative map; closer to TSLA-own HIGH than SPY HIGH","textChars":56,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/h8nmhwvu","slide":47,"text":"59/81 negative; 63/81 same sign vs own; mean r -0.022","textPreview":"59/81 negative; 63/81 same sign vs own; mean r -0.022","textChars":53,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/xof2lsni","slide":47,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/wn6lsn6x","slide":47,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/b2xkjips","slide":47,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/a1ojqdo7","slide":47,"text":"QQQ is a coherent quasi-external axis—not independent evidence. Next: frozen QQQ/SPY lead–lag grid; keep strategy gates closed.","textPreview":"QQQ is a coherent quasi-external axis—not independent evidence. Next: frozen QQQ/SPY lead–lag grid; keep strategy gates closed.","textChars":127,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/atcnytkf","slide":47,"text":"[Sources]\nInternal Gen5 packet: runs/research_workbench/operator_hypothesis_lab/tsla_qqq_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 note: operator_hypothesis_lab/docs/TSLA_QQQ_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md\nInternal Gen5 comparison packet: runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/\nInternal Gen5 comparison packet: runs/research_workbench/operator_hypothesis_lab/tsla_spy_atrp_conditioned_return_horizon_grid_20260825/"}
