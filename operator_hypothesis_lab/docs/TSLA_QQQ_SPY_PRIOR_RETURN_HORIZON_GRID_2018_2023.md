@@ -106,7 +106,8 @@ claim independent information, or open a strategy gate from this packet.
 - QQQ-versus-SPY comparison: `qqq_vs_spy_cell_comparison.csv`.
 - Own/external baseline comparison: `tsla_own_qqq_spy_cell_comparison.csv` and
   `tsla_own_qqq_spy_map_summary.csv`.
-- Visuals: QQQ, SPY, and QQQ-minus-SPY Pearson heatmaps in `visuals/`.
+- Visuals: QQQ, SPY, QQQ-minus-SPY, and a shared-scale TSLA-own/QQQ/SPY
+  Pearson heatmap comparison in `visuals/`.
 - Reproduction script:
   `scripts/inspect/run_tsla_qqq_spy_prior_return_horizon_grid.R`.
 - Running evidence deck:

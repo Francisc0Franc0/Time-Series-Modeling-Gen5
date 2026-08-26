@@ -372,6 +372,7 @@ if (!file.exists(own_grid_path)) {
 own_grid <- utils::read.csv(own_grid_path, stringsAsFactors = FALSE)
 own_grid <- own_grid[c("prior_sessions", "forward_sessions", "pearson_correlation")]
 names(own_grid)[names(own_grid) == "pearson_correlation"] <- "tsla_own_pearson"
+own_pearson <- matrix_for(own_grid, "tsla_own_pearson")
 three_way <- merge(
   merge(
     own_grid,
@@ -494,6 +495,58 @@ draw_heatmap(
   "%+.3f"
 )
 
+draw_three_way_comparison <- function(output_path) {
+  matrices <- list(
+    "TSLA past -> TSLA future" = own_pearson,
+    "QQQ past -> TSLA future" = qqq_pearson,
+    "SPY past -> TSLA future" = spy_pearson
+  )
+  panel_subtitles <- c(
+    "mean r +0.028 | max +0.092 at 5 prior / 10 forward",
+    "map r vs TSLA-own +0.906 | max +0.134 at 10 / 10",
+    "map r vs TSLA-own +0.965 | max +0.111 at 10 / 5"
+  )
+  shared_limit <- max(abs(unlist(matrices)), na.rm = TRUE)
+  palette <- grDevices::colorRampPalette(c("#D95F5F", "#F7F8FA", "#3D8DFF"))(201)
+  grDevices::png(output_path, width = 2760, height = 1040, res = 180)
+  graphics::layout(matrix(seq_along(matrices), nrow = 1L))
+  graphics::par(
+    family = "sans", bg = "white", fg = "#273548", col.axis = "#526070",
+    col.lab = "#273548", oma = c(0.5, 0.5, 3.2, 0.5)
+  )
+  for (panel_index in seq_along(matrices)) {
+    values <- matrices[[panel_index]]
+    graphics::par(mar = c(5.1, if (panel_index == 1L) 5.7 else 3.7, 4.6, 1.2), mgp = c(3.1, 0.8, 0))
+    graphics::image(
+      x = seq_along(horizons), y = seq_along(horizons), z = t(values),
+      col = palette, zlim = c(-shared_limit, shared_limit), axes = FALSE,
+      xlab = "Following TSLA sessions",
+      ylab = if (panel_index == 1L) "Prior sessions" else "",
+      main = names(matrices)[[panel_index]], cex.main = 1.2, cex.lab = 0.95
+    )
+    graphics::axis(1, at = seq_along(horizons), labels = horizons, tick = FALSE, cex.axis = 0.77)
+    graphics::axis(2, at = seq_along(horizons), labels = horizons, tick = FALSE, las = 1, cex.axis = 0.77)
+    for (row in seq_along(horizons)) {
+      for (column in seq_along(horizons)) {
+        value <- values[row, column]
+        label_color <- if (abs(value) > 0.58 * shared_limit) "white" else "#273548"
+        graphics::text(column, row, labels = sprintf("%+.2f", value), cex = 0.58, col = label_color)
+      }
+    }
+    graphics::mtext(panel_subtitles[[panel_index]], side = 3, line = 1.0, cex = 0.72, col = "#667384")
+    graphics::box(col = "#CDD3DA")
+  }
+  graphics::mtext(
+    "Shared color scale across all three maps | Pearson correlations | 2018-2023",
+    side = 3, outer = TRUE, line = 1.0, cex = 1.02, font = 2, col = "#273548"
+  )
+  grDevices::dev.off()
+}
+
+draw_three_way_comparison(
+  file.path(visual_dir, "tsla_own_qqq_spy_prior_return_pearson_comparison.png")
+)
+
 markdown_matrix <- function(values, digits = 3L) {
   header <- paste(c("Prior \\ Forward", colnames(values)), collapse = " | ")
   separator <- paste(c("---", rep("---:", ncol(values))), collapse = " | ")
@@ -556,7 +609,7 @@ report_lines <- c(
   "- `tsla_own_qqq_spy_cell_comparison.csv` and `tsla_own_qqq_spy_map_summary.csv`: frozen own-versus-external baseline comparison.",
   "- Matrix CSVs: QQQ and SPY Pearson, family BH q, and QQQ-minus-SPY difference.",
   "- `predictor_map_summary.csv`: compact predictor-level readout.",
-  "- `visuals/`: QQQ, SPY, and difference heatmaps."
+  "- `visuals/`: QQQ, SPY, difference, and shared-scale TSLA-own/QQQ/SPY comparison heatmaps."
 )
 writeLines(report_lines, file.path(output_dir, "report.md"), useBytes = TRUE)
 
