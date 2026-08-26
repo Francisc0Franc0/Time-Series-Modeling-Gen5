@@ -972,8 +972,8 @@
 {"kind":"textbox","id":"sh/6l03u9sj","slide":57,"name":"footer-number-4","text":"57","textPreview":"57","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"shape","id":"sh/tobm5ora","slide":57,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/ji94zu98","slide":57,"text":"Negative slope −0.182 vs positive +0.053; difference +0.235, 81-cell BH q=0.044. Up odds: 52.9% vs 52.1%.","textPreview":"Negative slope −0.182 vs positive +0.053; difference +0.235, 81-cell BH q=0.044. Up odds: 52.9% vs 52.1%.","textChars":105,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/5snap8r6","slide":57,"name":"","alt":"TSLA adjacent-session scatter split by negative and positive prior return","bbox":[308.93,142,662.14,515]}
-{"kind":"image","id":"im/4retg3al","slide":57,"name":"","alt":"TSLA adjacent-session scatter split by negative and positive prior return","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/jq5sni90","slide":57,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/ipwbedsv","slide":57,"name":"","bbox":[308.93,142,662.14,515]}
 {"kind":"notes","id":"nt/p8vetc3e","slide":57,"text":"The negative branch slopes downward: more severe prior losses are associated with stronger next-session rebound. This is not continuation and not a sign-based win-rate edge.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/one_by_one_branch_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/one_by_one_asymmetry_test.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_one_by_one_prior_sign_split_scatter.png\n[/Sources]"}
 {"kind":"slide","id":"sl/mdo3u583","slide":58,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
 {"kind":"textbox","id":"sh/il47adov","slide":58,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
@@ -985,52 +985,83 @@
 {"kind":"textbox","id":"sh/jmd83ipg","slide":58,"text":"1/1 and a 20-prior / 4–10-forward cluster survive; negative branches reverse while positive branches stay near zero.","textPreview":"1/1 and a 20-prior / 4–10-forward cluster survive; negative branches reverse while positive branches stay near zero.","textChars":116,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/pgf2tkn2","slide":58,"bbox":[105,142,1070,515]}
 {"kind":"image","id":"im/tsfexgr2","slide":58,"name":"","bbox":[308.93,142,662.14,515]}
-{"kind":"image","id":"im/sr6dobqh","slide":58,"name":"","alt":"Unfiltered TSLA prior-return sign-asymmetry heatmaps","bbox":[105,166,1070,403]}
+{"kind":"image","id":"im/sr6dobqh","slide":58,"name":"","bbox":[105,166,1070,403]}
 {"kind":"notes","id":"nt/mdo3u583","slide":58,"text":"Four of 81 direct slope-interaction tests pass BH. The 20-session cells are nested and should be read as one descriptive cluster, not three independent discoveries.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/unfiltered_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/unfiltered_asymmetry_tests.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_unfiltered_prior_sign_heatmaps.png\n[/Sources]"}
-{"kind":"slide","id":"sl/7uxozyps","slide":59,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
-{"kind":"textbox","id":"sh/l8ja5cj6","slide":59,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/udcri1kn","slide":59,"name":"title-4","text":"ER20 reorganizes the branches, but no asymmetry survives","textPreview":"ER20 reorganizes the branches, but no asymmetry survives","textChars":56,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"slide","id":"sl/7uxozyps","slide":59,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":21}
+{"kind":"textbox","id":"sh/fudcni9o","slide":59,"name":"section-3","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/udcri1kn","slide":59,"name":"title-3","text":"Positive minus negative detects a kink—not a spread","textPreview":"Positive minus negative detects a kink—not a spread","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/velsb618","slide":59,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/43e9ob25","slide":59,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/54nahgja","slide":59,"name":"footer-number-4","text":"59","textPreview":"59","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/ihwrm1kz","slide":59,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/k7a9c72l","slide":59,"text":"0/162 direct slope interactions pass BH; ER20 and prior return share trailing TSLA path data.","textPreview":"0/162 direct slope interactions pass BH; ER20 and prior return share trailing TSLA path data.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/kzyx0ba1","slide":59,"name":"","alt":"TSLA prior-return sign-asymmetry heatmaps conditioned on ER20 state","bbox":[308.93,142,662.14,515]}
-{"kind":"image","id":"im/507ytgbm","slide":59,"name":"","alt":"TSLA prior-return sign-asymmetry heatmaps conditioned on ER20 state","bbox":[308.93,142,662.14,515]}
-{"kind":"notes","id":"nt/7uxozyps","slide":59,"text":"The ER20 split produces different-looking surfaces but no multiplicity survivor. ER20 is also not independent of the predictor because both use trailing TSLA prices.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/er20_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/er20_asymmetry_tests.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_er20_prior_sign_heatmaps.png\n[/Sources]"}
+{"kind":"textbox","id":"sh/43e9ob25","slide":59,"name":"footer-left-3","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/54nahgja","slide":59,"name":"footer-number-3","text":"59","textPreview":"59","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/ihwrm1kz","slide":59,"text":"b+ − b−","textPreview":"b+ − b−","textChars":7,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/ji5sf61k","slide":59,"text":"Compare two conditional slopes. Like an asymmetric spring, deeper losses can create rebound pressure while larger gains add little information.","textPreview":"Compare two conditional slopes. Like an asymmetric spring, deeper losses can create rebound pressure while larger gains add little inform...","textChars":143,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/k7a9c72l","slide":59,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/l8ja5cj6","slide":59,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/tkvypsfi","slide":59,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/szmhw7ex","slide":59,"text":"hinge at prior return = 0","textPreview":"hinge at prior return = 0","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/7ydgn2xc","slide":59,"text":"How to read the blue cells","textPreview":"How to read the blue cells","textChars":26,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/6x4zuxw7","slide":59,"text":"Negative branch","textPreview":"Negative branch","textChars":15,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/hofytcfu","slide":59,"text":"b− < 0: deeper loss → stronger rebound","textPreview":"b− < 0: deeper loss → stronger rebound","textChars":38,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/gn6h07e9","slide":59,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/fmxgr2xo","slide":59,"text":"Positive branch","textPreview":"Positive branch","textChars":15,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/ul4zyxw3","slide":59,"text":"b+ ≈ 0: gain size → little information","textPreview":"b+ ≈ 0: gain size → little information","textChars":38,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/psfixwfq","slide":59,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/4r6h4re5","slide":59,"text":"Difference","textPreview":"Difference","textChars":10,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/o7y9gfqt","slide":59,"text":"b+ − b− > 0: sign changes the mapping","textPreview":"b+ − b− > 0: sign changes the mapping","textChars":37,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/987apkre","slide":59,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/m5grep8n","slide":59,"text":"Not a trade","textPreview":"Not a trade","textChars":11,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/n6psnu98","slide":59,"text":"No realized returns are being subtracted","textPreview":"No realized returns are being subtracted","textChars":40,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/wbitkzqp","slide":59,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/xcrat47a","slide":59,"text":"Candidate use","textPreview":"Candidate use","textChars":13,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/a9grip8j","slide":59,"text":"Score loss severity only inside X < 0","textPreview":"Score loss severity only inside X < 0","textChars":37,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/va9srup4","slide":59,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/cfe98vql","slide":59,"text":"Guardrail","textPreview":"Guardrail","textChars":9,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/dgnah0r6","slide":59,"text":"Slope asymmetry ≠ positive expectancy","textPreview":"Slope asymmetry ≠ positive expectancy","textChars":37,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/7uxozyps","slide":59,"text":"Positive-minus-negative does not subtract two realized returns. It compares the positive-branch slope with the negative-branch slope. In the current survivors, b− < 0 and b+ is near zero, so loss severity contains information only after losses. A future long-only implementation would score loss severity inside X < 0 and act only if the full conditional forecast clears drift, costs, and a safety margin. The intercept matters: slope asymmetry alone does not imply positive expectancy.\n\n[Sources]\n- scripts/inspect/run_tsla_prior_return_sign_asymmetry.R\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/unfiltered_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/unfiltered_asymmetry_tests.csv\n- operator_hypothesis_lab/docs/TSLA_PRIOR_RETURN_SIGN_ASYMMETRY_2018_2023.md\n- Current Codex task, operator/assistant exchange dated 2026-08-26: ‘Positive minus negative as a kink detector.’\n[/Sources]"}
 {"kind":"slide","id":"sl/bapcne9c","slide":60,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
 {"kind":"textbox","id":"sh/pofyh8be","slide":60,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/6t4ze9cf","slide":60,"name":"title-4","text":"ATR% isolates two clusters—but not a rule","textPreview":"ATR% isolates two clusters—but not a rule","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"textbox","id":"sh/6t4ze9cf","slide":60,"name":"title-4","text":"ER20 reorganizes the branches, but no asymmetry survives","textPreview":"ER20 reorganizes the branches, but no asymmetry survives","textChars":56,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/rudg7et0","slide":60,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/krmxcjup","slide":60,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/5svy5obu","slide":60,"name":"footer-number-4","text":"60","textPreview":"60","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"shape","id":"sh/ipkfa9cj","slide":60,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/on6ho3ut","slide":60,"text":"HIGH 1/1 plus LOW 20–25 prior / 15–20 forward: 5/243 pass BH. LOW loss branches have only 165–167 observations.","textPreview":"HIGH 1/1 plus LOW 20–25 prior / 15–20 forward: 5/243 pass BH. LOW loss branches have only 165–167 observations.","textChars":111,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"image","id":"im/c3y5wjql","slide":60,"name":"","alt":"TSLA prior-return sign-asymmetry heatmaps conditioned on ATR percent state","bbox":[308.93,142,662.14,515]}
-{"kind":"image","id":"im/x47m5o76","slide":60,"name":"","alt":"TSLA prior-return sign-asymmetry heatmaps conditioned on ATR percent state","bbox":[308.93,142,662.14,515]}
-{"kind":"notes","id":"nt/bapcne9c","slide":60,"text":"ATR percent identifies a high-volatility adjacent-session survivor and a low-volatility long-horizon cluster. The long-horizon negative branches are relatively small and need outlier and temporal-stability checks.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/atrp_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/atrp_asymmetry_tests.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_atrp_prior_sign_heatmaps.png\n[/Sources]"}
-{"kind":"slide","id":"sl/atgzmloz","slide":61,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
-{"kind":"textbox","id":"sh/lov2doji","slide":61,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/9czu54ba","slide":61,"name":"title-11","text":"The split reveals rebound geometry—not momentum","textPreview":"The split reveals rebound geometry—not momentum","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"textbox","id":"sh/on6ho3ut","slide":60,"text":"0/162 direct slope interactions pass BH; ER20 and prior return share trailing TSLA path data.","textPreview":"0/162 direct slope interactions pass BH; ER20 and prior return share trailing TSLA path data.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/a1wnut8f","slide":60,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/b2p43ep0","slide":60,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/bapcne9c","slide":60,"text":"The ER20 split produces different-looking surfaces but no multiplicity survivor. ER20 is also not independent of the predictor because both use trailing TSLA prices.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/er20_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/er20_asymmetry_tests.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_er20_prior_sign_heatmaps.png\n[/Sources]"}
+{"kind":"slide","id":"sl/atgzmloz","slide":61,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/i1svitsr","slide":61,"name":"section-4","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9czu54ba","slide":61,"name":"title-4","text":"ATR% isolates two clusters—but not a rule","textPreview":"ATR% isolates two clusters—but not a rule","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/8bqdczap","slide":61,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/z6xczut8","slide":61,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/y5ob6pcn","slide":61,"name":"footer-number-11","text":"61","textPreview":"61","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/l8zu14be","slide":61,"bbox":[58,168,10,94]}
-{"kind":"textbox","id":"sh/07qd8zut","slide":61,"text":"ADJACENT","textPreview":"ADJACENT","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
-{"kind":"textbox","id":"sh/j21cbytc","slide":61,"text":"Rebound slope after losses—not sign persistence","textPreview":"Rebound slope after losses—not sign persistence","textChars":47,"textLines":1,"bbox":[326,164,500,44]}
-{"kind":"textbox","id":"sh/i1svitsr","slide":61,"text":"q=0.044; up odds 52.9% after loss vs 52.1% after gain","textPreview":"q=0.044; up odds 52.9% after loss vs 52.1% after gain","textChars":53,"textLines":1,"bbox":[850,166,350,74]}
-{"kind":"shape","id":"sh/4ne5crqt","slide":61,"bbox":[92,272,1108,1]}
-{"kind":"shape","id":"sh/5on6lwry","slide":61,"bbox":[58,294,10,94]}
-{"kind":"textbox","id":"sh/ilwnah8n","slide":61,"text":"UNFILTERED 9×9","textPreview":"UNFILTERED 9×9","textChars":14,"textLines":1,"bbox":[92,292,220,30]}
-{"kind":"textbox","id":"sh/3m5ojm98","slide":61,"text":"Coherent 20-prior / 4–10-forward rebound cluster","textPreview":"Coherent 20-prior / 4–10-forward rebound cluster","textChars":48,"textLines":1,"bbox":[326,290,500,44]}
-{"kind":"textbox","id":"sh/gje587qh","slide":61,"text":"4/81 BH passes; nested horizons share data","textPreview":"4/81 BH passes; nested horizons share data","textChars":42,"textLines":1,"bbox":[850,292,350,74]}
-{"kind":"shape","id":"sh/hkn6hcr2","slide":61,"bbox":[92,398,1108,1]}
-{"kind":"shape","id":"sh/uxcn6h8b","slide":61,"bbox":[58,420,10,94]}
-{"kind":"textbox","id":"sh/vi5ofm9w","slide":61,"text":"REGIME SPLITS","textPreview":"REGIME SPLITS","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
-{"kind":"textbox","id":"sh/8vu547ql","slide":61,"text":"ER20 none; ATR% HIGH 1×1 plus LOW long-horizon cluster","textPreview":"ER20 none; ATR% HIGH 1×1 plus LOW long-horizon cluster","textChars":54,"textLines":1,"bbox":[326,416,500,44]}
-{"kind":"textbox","id":"sh/tw3mdcr6","slide":61,"text":"0/162 ER20; 5/243 ATR%","textPreview":"0/162 ER20; 5/243 ATR%","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
-{"kind":"shape","id":"sh/9cvmh8ju","slide":61,"bbox":[92,524,1108,1]}
-{"kind":"shape","id":"sh/8bml83i9","slide":61,"bbox":[58,562,1142,82]}
-{"kind":"textbox","id":"sh/nqdkfy1o","slide":61,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
-{"kind":"textbox","id":"sh/mp436t03","slide":61,"text":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textPreview":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textChars":103,"textLines":1,"bbox":[350,576,820,44]}
-{"kind":"notes","id":"nt/atgzmloz","slide":61,"text":"The result earns a narrow confirmation step, not strategy construction. Freeze the surviving cells and inspect outlier dependence and temporal stability before reading economic meaning into them.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/report.md\n- operator_hypothesis_lab/docs/TSLA_PRIOR_RETURN_SIGN_ASYMMETRY_2018_2023.md\n[/Sources]"}
+{"kind":"textbox","id":"sh/z6xczut8","slide":61,"name":"footer-left-4","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/y5ob6pcn","slide":61,"name":"footer-number-4","text":"61","textPreview":"61","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/l8zu14be","slide":61,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/j21cbytc","slide":61,"text":"HIGH 1/1 plus LOW 20–25 prior / 15–20 forward: 5/243 pass BH. LOW loss branches have only 165–167 observations.","textPreview":"HIGH 1/1 plus LOW 20–25 prior / 15–20 forward: 5/243 pass BH. LOW loss branches have only 165–167 observations.","textChars":111,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/72dkny10","slide":61,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"image","id":"im/614jud0f","slide":61,"name":"","bbox":[308.93,142,662.14,515]}
+{"kind":"notes","id":"nt/atgzmloz","slide":61,"text":"ATR percent identifies a high-volatility adjacent-session survivor and a low-volatility long-horizon cluster. The long-horizon negative branches are relatively small and need outlier and temporal-stability checks.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/atrp_branch_statistics.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/atrp_asymmetry_tests.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/visuals/tsla_atrp_prior_sign_heatmaps.png\n[/Sources]"}
+{"kind":"slide","id":"sl/1kzq5knq","slide":62,"title":"TSLA DESCRIPTIVE MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/d4ju507m","slide":62,"name":"section-11","text":"TSLA DESCRIPTIVE MICROSCOPE","textPreview":"TSLA DESCRIPTIVE MICROSCOPE","textChars":27,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/dk7id03u","slide":62,"name":"title-11","text":"The split reveals rebound geometry—not momentum","textPreview":"The split reveals rebound geometry—not momentum","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cjyh4v29","slide":62,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/3upg7qlc","slide":62,"name":"footer-left-11","text":"Adjusted daily TSLA | 2018-2023","textPreview":"Adjusted daily TSLA | 2018-2023","textChars":31,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/2twzylk7","slide":62,"name":"footer-number-11","text":"62","textPreview":"62","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/pw7y903i","slide":62,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/4vyh0v2x","slide":62,"text":"ADJACENT","textPreview":"ADJACENT","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/nq90julw","slide":62,"text":"Rebound slope after losses—not sign persistence","textPreview":"Rebound slope after losses—not sign persistence","textChars":47,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/mp0zapkb","slide":62,"text":"q=0.044; up odds 52.9% after loss vs 52.1% after gain","textPreview":"q=0.044; up odds 52.9% after loss vs 52.1% after gain","textChars":53,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/gv650n2t","slide":62,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/1wf69sje","slide":62,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/ut4nyxkn","slide":62,"text":"UNFILTERED 9×9","textPreview":"UNFILTERED 9×9","textChars":14,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/fuxo7218","slide":62,"text":"Coherent 20-prior / 4–10-forward rebound cluster","textPreview":"Coherent 20-prior / 4–10-forward rebound cluster","textChars":48,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/srm5wn2h","slide":62,"text":"4/81 BH passes; nested horizons share data","textPreview":"4/81 BH passes; nested horizons share data","textChars":42,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/tsv65sj2","slide":62,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/6p4nudkr","slide":62,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/7qdo3i1c","slide":62,"text":"REGIME SPLITS","textPreview":"REGIME SPLITS","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/knm5s32l","slide":62,"text":"ER20 none; ATR% HIGH 1×1 plus LOW long-horizon cluster","textPreview":"ER20 none; ATR% HIGH 1×1 plus LOW long-horizon cluster","textChars":54,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/5ovm18j6","slide":62,"text":"0/162 ER20; 5/243 ATR%","textPreview":"0/162 ER20; 5/243 ATR%","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/l83u907i","slide":62,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/07udgfqd","slide":62,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/z6lc7aps","slide":62,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/y5sbe587","slide":62,"text":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textPreview":"A novel in-sample asymmetry worth frozen sensitivity—not a trading rule. Keep the strategy gate closed.","textChars":103,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/1kzq5knq","slide":62,"text":"The result earns a narrow confirmation step, not strategy construction. Freeze the surviving cells and inspect outlier dependence and temporal stability before reading economic meaning into them.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/tsla_prior_return_sign_asymmetry_20260825/report.md\n- operator_hypothesis_lab/docs/TSLA_PRIOR_RETURN_SIGN_ASYMMETRY_2018_2023.md\n[/Sources]"}
