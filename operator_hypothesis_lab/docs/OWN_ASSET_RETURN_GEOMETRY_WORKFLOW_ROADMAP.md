@@ -12,12 +12,19 @@ parameter search, multi-asset run, or strategy implementation.
 ## Phase 1: Complete the TSLA Direction Lens
 
 Use the fixed signed-ER20 state as the first causal up/down/sideways baseline.
-Inspect the price bands and state behavior before applying the state to return
-relationships.
+Inspect the price bands and state behavior, then apply the unchanged state to
+the existing return grid and prior-sign branches.
 
 Current status:
 
-`DESCRIPTIVE_SIGNED_ER20_DIRECTION_POC_COMPLETE_FILTER_APPLICATION_NOT_YET_RUN`
+`DESCRIPTIVE_SIGNED_ER20_GRID_COMPLETE_DOWN_REBOUND_FOUND_STOP_BEFORE_TRANSPORT`
+
+The application is complete. UP and SIDEWAYS produced no within-state BH
+survivors, while DOWN produced a broad long-prior rebound island (`18/81`) and
+short-prior sign-branch separation (`17` estimable family survivors). This is a
+descriptive success, but signed ER20 and prior return share trailing-path data.
+The `p=20` opposite-sign UP/DOWN branches are structurally empty. Preserve the
+result without tuning and carry these limitations into the template.
 
 ## Phase 2: Freeze the Own-Asset Microscope Template
 
