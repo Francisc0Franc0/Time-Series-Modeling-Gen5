@@ -42,6 +42,15 @@ The core template should contain:
 QQQ/SPY predictors and other external cues remain optional extensions rather
 than requirements of the own-asset core.
 
+Current status:
+
+`FROZEN_AND_TRANSPORTED_WITHOUT_ASSET_SPECIFIC_TUNING`
+
+The atlas implementation now applies this common core to every asset and
+reproduces the frozen TSLA signed-ER20 packet to below `1e-12`. Complete 9 by 9
+surfaces remain descriptive; HAC/BH inference is restricted to seven
+TSLA-discovered cells frozen before transport.
+
 ## Phase 3: Run a Predeclared Balanced Asset Atlas
 
 Freeze the asset list and behavioral groups before reading results. Keep
@@ -55,6 +64,17 @@ Use two evidence tracks:
   and `20/10` cells unchanged into every other asset.
 - **Exploratory morphology:** render the complete fixed 9 by 9 surface for each
   asset without promoting each asset's most attractive cell as a new discovery.
+
+Current status:
+
+`DESCRIPTIVE_ATLAS_COMPLETE_DOWN_REBOUND_TRANSPORTS_BROADLY_STOP_BEFORE_FINE_GRID`
+
+The predeclared atlas contains 30 assets in six equal groups. At the frozen
+signed-ER20 DOWN 20/20 cell, 23/29 transport assets share TSLA's negative
+correlation sign, the transport median Pearson is `-0.1960`, and 12/29 survive
+BH within that single frozen cell. The complete 15-25 by 15-25 neighborhood has
+negative equal-asset medians, and every behavioral group has a negative 20/20
+median. The earlier unfiltered 1/1 sign kink does not transport cleanly.
 
 ## Phase 4: Describe Cross-Asset Shape
 
@@ -70,6 +90,15 @@ Produce both asset-level and pooled views:
 
 Same-date observations across assets are not independent. A pooled sample must
 not be treated as though asset-session rows are unrelated replicates.
+
+Initial status:
+
+`CORE_CROSS_ASSET_SHAPE_DESCRIPTION_COMPLETE`
+
+The packet now contains common-axis small multiples, a raw pooled scatter with
+an explicit dependence warning, equal-asset and group summaries, same-sign
+breadth, map similarity, and leave-one-asset-out diagnostics. The result is a
+broad long-horizon DOWN-state rebound surface, not a universal prior-sign kink.
 
 ## Phase 5: Parameter and Temporal Transport Research
 
@@ -104,7 +133,10 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 
 ## Current Stop
 
-Do not optimize the current TSLA window, cutoff, horizons, state persistence,
-training length, or forward increment while the workflow itself is still being
-defined. Finish the template and atlas first so parameter research answers a
-stable question rather than rescuing one inspected result.
+Do not optimize the signed-ER window, cutoff, state persistence, training
+length, or forward increment. The template and atlas are now complete, but the
+next gate still belongs to the operator: either open temporal transport of the
+frozen long-horizon rebound neighborhood or open one separately declared local
+horizon refinement. The atlas does not specifically support filling the
+6-9-session gap; its repeated neighborhood is approximately 15-25 prior by
+15-25 following sessions.
