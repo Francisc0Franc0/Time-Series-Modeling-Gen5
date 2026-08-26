@@ -100,6 +100,26 @@ an explicit dependence warning, equal-asset and group summaries, same-sign
 breadth, map similarity, and leave-one-asset-out diagnostics. The result is a
 broad long-horizon DOWN-state rebound surface, not a universal prior-sign kink.
 
+### Frozen Behavioral Vocabulary
+
+The atlas is now also cataloged through four branch behaviors: gain
+continuation, gain exhaustion, loss rebound, and loss continuation. The same
+four labels apply in every conditioning state, so the method can discriminate
+different behavior profiles without changing its statistical machinery or
+turning every attractive cell into a new hypothesis.
+
+Current status:
+
+`DESCRIPTIVE_BEHAVIOR_CATALOG_COMPLETE_NO_EDGE_OR_CAUSAL_CLAIM`
+
+Across the current atlas, loss rebound is broad in most states; gain exhaustion
+is broad in trending and signed-up paths; gain continuation is conditional and
+clusters most clearly in sideways paths, with a smaller low-ATR cluster; and
+loss continuation is not broad. These are observed geometries and mechanism
+hypotheses, not causal explanations or trading authority. The catalog should
+be reused as the naming layer for future transport work: one archetype, one
+conditioning state, and one predeclared horizon neighborhood at a time.
+
 ## Phase 5: Parameter and Temporal Transport Research
 
 Only after the template is frozen and the atlas has been run should the project
@@ -134,9 +154,9 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 ## Current Stop
 
 Do not optimize the signed-ER window, cutoff, state persistence, training
-length, or forward increment. The template and atlas are now complete, but the
-next gate still belongs to the operator: either open temporal transport of the
-frozen long-horizon rebound neighborhood or open one separately declared local
-horizon refinement. The atlas does not specifically support filling the
-6-9-session gap; its repeated neighborhood is approximately 15-25 prior by
-15-25 following sessions.
+length, or forward increment. The template, atlas, and descriptive behavioral
+catalog are now complete, but the next gate still belongs to the operator:
+either open temporal transport of one frozen behavior/state neighborhood or
+open one separately declared local horizon refinement. The atlas does not
+specifically support filling the 6-9-session gap; its repeated rebound
+neighborhood is approximately 15-25 prior by 15-25 following sessions.

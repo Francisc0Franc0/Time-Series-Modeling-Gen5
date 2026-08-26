@@ -1,4 +1,3 @@
-{"kind":"deck","id":"pr/0z48af","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
@@ -1251,167 +1250,255 @@
 {"kind":"textbox","id":"sh/mxgfi5c3","slide":73,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/nypgrado","slide":73,"text":"Freeze the DOWN-rebound shape for cross-asset transport—no tuning and no trading rule.","textPreview":"Freeze the DOWN-rebound shape for cross-asset transport—no tuning and no trading rule.","textChars":86,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/v25cret4","slide":73,"text":"This is a successful descriptive filter application. The unexpected result is rebound geometry inside trending-down paths, not continuation inside trending-up paths. The next gate is a frozen workflow template and predeclared asset transport, not parameter tuning.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_SIGNED_ER20_CONDITIONED_RETURN_GEOMETRY_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_conditioned_grid_20260826/global_bh_pass_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/tsla_signed_er20_conditioned_grid_20260826/grid_checks.csv\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n[/Sources]"}
-{"kind":"slide","id":"sl/ncz18a","slide":74,"title":"CROSS-ASSET TRANSPORT","textShapes":5}
-{"kind":"textbox","id":"sh/vix4fypk","slide":74,"text":"CROSS-ASSET TRANSPORT","textPreview":"CROSS-ASSET TRANSPORT","textChars":21,"textLines":1,"bbox":[48,42,420,28]}
-{"kind":"textbox","id":"sh/i5o3qd8b","slide":74,"text":"Does the TSLA rebound shape survive transport?","textPreview":"Does the TSLA rebound shape survive transport?","textChars":46,"textLines":1,"bbox":[48,164,1130,190]}
-{"kind":"shape","id":"sh/36x4jypw","slide":74,"bbox":[48,390,132,8]}
-{"kind":"textbox","id":"sh/g36lo3q5","slide":74,"text":"Run the same signed-ER20 microscope across a predeclared 30-asset atlas.","textPreview":"Run the same signed-ER20 microscope across a predeclared 30-asset atlas.","textChars":72,"textLines":1,"bbox":[48,438,970,72]}
-{"kind":"textbox","id":"sh/h4fmh87q","slide":74,"text":"Atlas first. Finer horizons wait until cross-asset morphology gives us a reason to zoom.","textPreview":"Atlas first. Finer horizons wait until cross-asset morphology gives us a reason to zoom.","textChars":88,"textLines":1,"bbox":[48,570,1070,64]}
-{"kind":"textbox","id":"sh/uho3mt8z","slide":74,"text":"74","textPreview":"74","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"notes","id":"nt/ncz18a","slide":74,"text":"This section answers the sequencing question by transporting the frozen TSLA microscope before adding 6–9-session horizons. The aim is morphology, not a strategy or performance claim.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/run_spec.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/hcgjn9","slide":75,"title":"OWN-ASSET RETURN ATLAS","textShapes":21}
-{"kind":"textbox","id":"sh/zm5s725g","slide":75,"name":"section-3","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/6pwfyt0r","slide":75,"name":"title-3","text":"Atlas first—transport the frozen microscope unchanged","textPreview":"Atlas first—transport the frozen microscope unchanged","textChars":53,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/rq5gryhc","slide":75,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/4nuxwjil","slide":75,"name":"footer-left-3","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/5onypoz6","slide":75,"name":"footer-number-3","text":"75","textPreview":"75","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"textbox","id":"sh/ilcfut0v","slide":75,"text":"30 assets / 6 behavior groups","textPreview":"30 assets / 6 behavior groups","textChars":29,"textLines":1,"bbox":[66,184,570,80]}
-{"kind":"textbox","id":"sh/jmlgnehg","slide":75,"text":"The basket spans high-beta names, mature growth, cyclicals, defensives, equity ETFs, and non-equity proxies.","textPreview":"The basket spans high-beta names, mature growth, cyclicals, defensives, equity ETFs, and non-equity proxies.","textChars":108,"textLines":1,"bbox":[66,286,530,104]}
-{"kind":"shape","id":"sh/ojyh8ni5","slide":75,"bbox":[66,430,520,178]}
-{"kind":"shape","id":"sh/pk7y1szq","slide":75,"bbox":[66,430,8,178]}
-{"kind":"textbox","id":"sh/x8z618vi","slide":75,"text":"29","textPreview":"29","textChars":2,"textLines":1,"bbox":[94,448,472,62]}
-{"kind":"textbox","id":"sh/w7qp83ux","slide":75,"text":"non-TSLA transport assets","textPreview":"non-TSLA transport assets","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
-{"kind":"textbox","id":"sh/b6hozydc","slide":75,"text":"Frozen transport contract","textPreview":"Frozen transport contract","textChars":25,"textLines":1,"bbox":[700,176,440,42]}
-{"kind":"textbox","id":"sh/a5876tcr","slide":75,"text":"Sample","textPreview":"Sample","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
-{"kind":"textbox","id":"sh/9kz6x8v6","slide":75,"text":"Adjusted daily, 2018–2023","textPreview":"Adjusted daily, 2018–2023","textChars":25,"textLines":1,"bbox":[900,240,310,44]}
-{"kind":"shape","id":"sh/ojq543ul","slide":75,"bbox":[700,288,510,1]}
-{"kind":"textbox","id":"sh/nixovydg","slide":75,"text":"Horizons","textPreview":"Horizons","textChars":8,"textLines":1,"bbox":[700,302,190,34]}
-{"kind":"textbox","id":"sh/mhon2tcv","slide":75,"text":"1,2,3,4,5,10,15,20,25","textPreview":"1,2,3,4,5,10,15,20,25","textChars":21,"textLines":1,"bbox":[900,302,310,44]}
-{"kind":"shape","id":"sh/tgj69sbq","slide":75,"bbox":[700,350,510,1]}
-{"kind":"textbox","id":"sh/8fapgnu5","slide":75,"text":"Conditioning","textPreview":"Conditioning","textChars":12,"textLines":1,"bbox":[700,364,190,34]}
-{"kind":"textbox","id":"sh/sji9cr21","slide":75,"text":"signed ER20 + ER20 + ATR%","textPreview":"signed ER20 + ER20 + ATR%","textChars":25,"textLines":1,"bbox":[900,364,310,44]}
-{"kind":"shape","id":"sh/dkrq5wjm","slide":75,"bbox":[700,412,510,1]}
-{"kind":"textbox","id":"sh/qh0ra1kb","slide":75,"text":"Frozen cells","textPreview":"Frozen cells","textChars":12,"textLines":1,"bbox":[700,426,190,34]}
-{"kind":"textbox","id":"sh/ri98361w","slide":75,"text":"7 TSLA-discovered comparisons","textPreview":"7 TSLA-discovered comparisons","textChars":29,"textLines":1,"bbox":[900,426,310,44]}
-{"kind":"shape","id":"sh/4fi98r25","slide":75,"bbox":[700,474,510,1]}
-{"kind":"textbox","id":"sh/5grq1wjq","slide":75,"text":"Inference","textPreview":"Inference","textChars":9,"textLines":1,"bbox":[700,488,190,34]}
-{"kind":"textbox","id":"sh/idgr6hkz","slide":75,"text":"HAC + fixed-family BH","textPreview":"HAC + fixed-family BH","textChars":21,"textLines":1,"bbox":[900,488,310,44]}
-{"kind":"shape","id":"sh/3e98zm1k","slide":75,"bbox":[700,536,510,1]}
-{"kind":"textbox","id":"sh/gry94729","slide":75,"text":"No refinement","textPreview":"No refinement","textChars":13,"textLines":1,"bbox":[700,550,190,34]}
-{"kind":"textbox","id":"sh/hc7qxcje","slide":75,"text":"6–9 sessions not searched","textPreview":"6–9 sessions not searched","textChars":25,"textLines":1,"bbox":[900,550,310,44]}
-{"kind":"notes","id":"nt/hcgjn9","slide":75,"text":"The atlas and inferential cells were fixed before examining cross-asset outcomes. Complete grids are descriptive; formal inference is limited to seven TSLA-discovered comparisons.\n\n[Sources]\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/atlas_checks.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/o4b6k8","slide":76,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
-{"kind":"textbox","id":"sh/6hgza58v","slide":76,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/pcbid47e","slide":76,"name":"title-4","text":"The frozen DOWN p20→f20 cell transports broadly","textPreview":"The frozen DOWN p20→f20 cell transports broadly","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/4b2hkz6t","slide":76,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/f69g7upc","slide":76,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/u50zepor","slide":76,"name":"footer-number-4","text":"76","textPreview":"76","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/h8ry947i","slide":76,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/729g3apg","slide":76,"text":"23/29 transport assets are negative; median Pearson r = −0.196. Twelve survive fixed-family BH.","textPreview":"23/29 transport assets are negative; median Pearson r = −0.196. Twelve survive fixed-family BH.","textChars":95,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/1wbe5cjy","slide":76,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/907mh8f2","slide":76,"name":"","alt":"Asset-level Pearson correlations for prior 20-session versus following 20-session returns in signed-ER20 down states","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/o4b6k8","slide":76,"text":"The direction of the TSLA finding repeats in 23 of 29 transport assets. This is breadth evidence for the morphology, not a trading rule.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_p20_f20_asset_effects.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_inference.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/bwf0r9","slide":77,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
-{"kind":"textbox","id":"sh/ylsj2943","slide":77,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/hgn258nm","slide":77,"name":"title-4","text":"Rebound spans the 15–25-session neighborhood","textPreview":"Rebound spans the 15–25-session neighborhood","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/wfelc3m1","slide":77,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/7alkze5k","slide":77,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/m9cj694z","slide":77,"name":"footer-number-4","text":"77","textPreview":"77","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/9c321onq","slide":77,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/zmlkve58","slide":77,"text":"Every equal-asset median in the 15/20/25 × 15/20/25 corner is negative; 70%–83% of assets agree per cell.","textPreview":"Every equal-asset median in the 15/20/25 × 15/20/25 corner is negative; 70%–83% of assets agree per cell.","textChars":105,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/ho7ytory","slide":77,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/tsruh8ba","slide":77,"name":"","alt":"Equal-asset median signed-ER20 down-state return-correlation heatmap","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/bwf0r9","slide":77,"text":"The cross-asset median surface shows a broad long-prior, long-following negative island. That argues against a cell-specific accident and points to the 15–25-session neighborhood if later refinement is authorized.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_equal_asset_median_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/equal_asset_cell_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/hp8axw","slide":78,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
-{"kind":"textbox","id":"sh/o36l0fa9","slide":78,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/radkjq9g","slide":78,"name":"title-4","text":"Every behavior group leans toward rebound","textPreview":"Every behavior group leans toward rebound","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/q9k3qlsv","slide":78,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/p8b2h0ra","slide":78,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/472lova5","slide":78,"name":"footer-number-4","text":"78","textPreview":"78","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/36tkfq9k","slide":78,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/94fmtkru","slide":78,"text":"All six group medians are negative at DOWN p20→f20; strength varies, but no group reverses the sign.","textPreview":"All six group medians are negative at DOWN p20→f20; strength varies, but no group reverses the sign.","textChars":100,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/3e9cbuhc","slide":78,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/fi5wbmlw","slide":78,"name":"","alt":"Behavior-group breadth across the seven frozen replication comparisons","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/hp8axw","slide":78,"text":"The effect is not confined to operator favorites or high-beta equities. All six behavior groups have negative median correlation at the frozen DOWN p20/f20 cell.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/frozen_replication_group_breadth.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_group_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/lrz8ec","slide":79,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
-{"kind":"textbox","id":"sh/mt47mdwb","slide":79,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/dov6pofu","slide":79,"name":"title-4","text":"Thirty maps repeat the corner—but differ locally","textPreview":"Thirty maps repeat the corner—but differ locally","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/cn2pg3e9","slide":79,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/3itojexs","slide":79,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/2xk7a9w7","slide":79,"name":"footer-number-4","text":"79","textPreview":"79","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/pkb6lofi","slide":79,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/ned8vidw","slide":79,"text":"The long-horizon red corner recurs across many assets, while local surface shape remains heterogeneous.","textPreview":"The long-horizon red corner recurs across many assets, while local surface shape remains heterogeneous.","textChars":103,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/54n61sja","slide":79,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/pon61grm","slide":79,"name":"","alt":"Contact sheet of signed-ER20 down-state horizon heatmaps for all thirty atlas assets","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/lrz8ec","slide":79,"text":"This contact sheet is a morphology check. It shows recurring long-horizon rebound geometry without pretending every asset has the same map or effect size.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_asset_heatmap_atlas.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_state_grid_cells.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_map_similarity_to_tsla.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/nj8p2i","slide":80,"title":"OWN-ASSET RETURN ATLAS","textShapes":15}
-{"kind":"textbox","id":"sh/w3e90ryt","slide":80,"name":"section-11","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/ed8n650f","slide":80,"name":"title-11","text":"What transports—and what does not","textPreview":"What transports—and what does not","textChars":33,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/feh4zah0","slide":80,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/o3q5cfih","slide":80,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/p4jm5kz2","slide":80,"name":"footer-number-11","text":"80","textPreview":"80","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/218nap0b","slide":80,"bbox":[58,168,10,94]}
-{"kind":"textbox","id":"sh/n2h43ahw","slide":80,"text":"TRANSPORTS","textPreview":"TRANSPORTS","textChars":10,"textLines":1,"bbox":[92,166,220,30]}
-{"kind":"textbox","id":"sh/476l0vid","slide":80,"text":"DOWN long-prior rebound geometry","textPreview":"DOWN long-prior rebound geometry","textChars":32,"textLines":1,"bbox":[326,164,500,44]}
-{"kind":"textbox","id":"sh/58fmt0zi","slide":80,"text":"23/29 negative; median r −0.196","textPreview":"23/29 negative; median r −0.196","textChars":31,"textLines":1,"bbox":[850,166,350,74]}
-{"kind":"shape","id":"sh/tcry5knm","slide":80,"bbox":[92,272,1108,1]}
-{"kind":"shape","id":"sh/srixcf61","slide":80,"bbox":[58,294,10,94]}
-{"kind":"textbox","id":"sh/rq9g3a5g","slide":80,"text":"WEAKENS","textPreview":"WEAKENS","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
-{"kind":"textbox","id":"sh/6p0fapov","slide":80,"text":"Unfiltered 1×1 sign kink","textPreview":"Unfiltered 1×1 sign kink","textChars":24,"textLines":1,"bbox":[326,290,500,44]}
-{"kind":"textbox","id":"sh/1gby94ni","slide":80,"text":"0 raw passes; 27.6% same sign","textPreview":"0 raw passes; 27.6% same sign","textChars":29,"textLines":1,"bbox":[850,292,350,74]}
-{"kind":"shape","id":"sh/gf2xgz6x","slide":80,"bbox":[92,398,1108,1]}
-{"kind":"shape","id":"sh/fetg7u5s","slide":80,"bbox":[58,420,10,94]}
-{"kind":"textbox","id":"sh/edkfepo7","slide":80,"text":"HETEROGENEITY","textPreview":"HETEROGENEITY","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
-{"kind":"textbox","id":"sh/pkbyd4nu","slide":80,"text":"Maps differ in strength and detail","textPreview":"Maps differ in strength and detail","textChars":34,"textLines":1,"bbox":[326,416,500,44]}
-{"kind":"textbox","id":"sh/oj2xkzm9","slide":80,"text":"all 6 group medians still negative","textPreview":"all 6 group medians still negative","textChars":34,"textLines":1,"bbox":[850,418,350,74]}
-{"kind":"shape","id":"sh/8zu9w7yh","slide":80,"bbox":[92,524,1108,1]}
-{"kind":"shape","id":"sh/903q5cz2","slide":80,"bbox":[58,562,1142,82]}
-{"kind":"textbox","id":"sh/mxcruxgr","slide":80,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
-{"kind":"textbox","id":"sh/7yl832hw","slide":80,"text":"Keep the broad DOWN-rebound morphology; retire any universal sign-kink interpretation.","textPreview":"Keep the broad DOWN-rebound morphology; retire any universal sign-kink interpretation.","textChars":86,"textLines":1,"bbox":[350,576,820,44]}
-{"kind":"notes","id":"nt/nj8p2i","slide":80,"text":"The atlas separates the robust descriptive shape from the TSLA-local wrinkle. The DOWN-state long-horizon rebound transports; the unfiltered 1x1 sign kink does not.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_group_summary.csv\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n[/Sources]"}
-{"kind":"slide","id":"sl/369ux2","slide":81,"title":"OWN-ASSET RETURN ATLAS","textShapes":21}
-{"kind":"textbox","id":"sh/j2xc76l8","slide":81,"name":"section-3","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/utkzudcn","slide":81,"name":"title-3","text":"Why breadth is still not an edge","textPreview":"Why breadth is still not an edge","textChars":32,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/futg3it8","slide":81,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/sr2hs3uh","slide":81,"name":"footer-left-3","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/tsby18b2","slide":81,"name":"footer-number-3","text":"81","textPreview":"81","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"textbox","id":"sh/6pkzqtcr","slide":81,"text":"state and predictor share the path","textPreview":"state and predictor share the path","textChars":34,"textLines":1,"bbox":[66,184,570,80]}
-{"kind":"textbox","id":"sh/7qtgzytc","slide":81,"text":"Signed ER20 defines DOWN using the same trailing displacement used by the p20 prior return. Selection geometry can amplify the pattern.","textPreview":"Signed ER20 defines DOWN using the same trailing displacement used by the p20 prior return. Selection geometry can amplify the pattern.","textChars":135,"textLines":1,"bbox":[66,286,530,104]}
-{"kind":"shape","id":"sh/cn6h4na1","slide":81,"bbox":[66,430,520,178]}
-{"kind":"shape","id":"sh/dofidsbm","slide":81,"bbox":[66,430,8,178]}
-{"kind":"textbox","id":"sh/xora1sra","slide":81,"text":"0","textPreview":"0","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
-{"kind":"textbox","id":"sh/w3i9snap","slide":81,"text":"trading claims authorized","textPreview":"trading claims authorized","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
-{"kind":"textbox","id":"sh/v29szi94","slide":81,"text":"Evidence boundary","textPreview":"Evidence boundary","textChars":17,"textLines":1,"bbox":[700,176,440,42]}
-{"kind":"textbox","id":"sh/a10rqxsj","slide":81,"text":"What we have","textPreview":"What we have","textChars":12,"textLines":1,"bbox":[700,240,190,34]}
-{"kind":"textbox","id":"sh/90rqxsby","slide":81,"text":"cross-asset morphology","textPreview":"cross-asset morphology","textChars":22,"textLines":1,"bbox":[900,240,310,44]}
-{"kind":"shape","id":"sh/8zy9onad","slide":81,"bbox":[700,288,510,1]}
-{"kind":"textbox","id":"sh/nyp8vit8","slide":81,"text":"What we lack","textPreview":"What we lack","textChars":12,"textLines":1,"bbox":[700,302,190,34]}
-{"kind":"textbox","id":"sh/mxgrmdsn","slide":81,"text":"later-time confirmation","textPreview":"later-time confirmation","textChars":23,"textLines":1,"bbox":[900,302,310,44]}
-{"kind":"shape","id":"sh/twba9cri","slide":81,"bbox":[700,350,510,1]}
-{"kind":"textbox","id":"sh/sv2907ax","slide":81,"text":"Also absent","textPreview":"Also absent","textChars":11,"textLines":1,"bbox":[700,364,190,34]}
-{"kind":"textbox","id":"sh/czatwvit","slide":81,"text":"expectancy, costs, execution","textPreview":"expectancy, costs, execution","textChars":28,"textLines":1,"bbox":[900,364,310,44]}
-{"kind":"shape","id":"sh/d0ju5gze","slide":81,"bbox":[700,412,510,1]}
-{"kind":"textbox","id":"sh/qxsbul03","slide":81,"text":"Mechanical caveat","textPreview":"Mechanical caveat","textChars":17,"textLines":1,"bbox":[700,426,190,34]}
-{"kind":"textbox","id":"sh/ry1c3qho","slide":81,"text":"p20 displacement is shared","textPreview":"p20 displacement is shared","textChars":26,"textLines":1,"bbox":[900,426,310,44]}
-{"kind":"shape","id":"sh/4vatsbix","slide":81,"bbox":[700,474,510,1]}
-{"kind":"textbox","id":"sh/5wju1gzi","slide":81,"text":"Interpretation","textPreview":"Interpretation","textChars":14,"textLines":1,"bbox":[700,488,190,34]}
-{"kind":"textbox","id":"sh/i98bq10r","slide":81,"text":"descriptive dependence","textPreview":"descriptive dependence","textChars":22,"textLines":1,"bbox":[900,488,310,44]}
-{"kind":"shape","id":"sh/3ahcz6hc","slide":81,"bbox":[700,536,510,1]}
-{"kind":"textbox","id":"sh/g7qtobil","slide":81,"text":"Next authority","textPreview":"Next authority","textChars":14,"textLines":1,"bbox":[700,550,190,34]}
-{"kind":"textbox","id":"sh/h8zaxwz6","slide":81,"text":"operator opens next gate","textPreview":"operator opens next gate","textChars":24,"textLines":1,"bbox":[900,550,310,44]}
-{"kind":"notes","id":"nt/369ux2","slide":81,"text":"Breadth strengthens the case that the morphology is real in-sample, but it does not resolve shared-path conditioning, same-date dependence, later-time stability, or realizable returns.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/tsla_parity_checks.csv\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n[/Sources]"}
-{"kind":"slide","id":"sl/lpc25e","slide":82,"title":"OWN-ASSET RETURN ATLAS","textShapes":15}
-{"kind":"textbox","id":"sh/uh0fu9wf","slide":82,"name":"section-11","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/w7etsn6x","slide":82,"name":"title-11","text":"Decision: stop before adding 6–9 sessions","textPreview":"Decision: stop before adding 6–9 sessions","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/x8nulsni","slide":82,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/y9wbuxo3","slide":82,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/ja5cni5o","slide":82,"name":"footer-number-11","text":"82","textPreview":"82","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/kbytwn69","slide":82,"bbox":[58,168,10,94]}
-{"kind":"textbox","id":"sh/lw7upsnu","slide":82,"text":"NOW","textPreview":"NOW","textChars":3,"textLines":1,"bbox":[92,166,220,30]}
-{"kind":"textbox","id":"sh/6xgbyxof","slide":82,"text":"Frozen atlas is complete","textPreview":"Frozen atlas is complete","textChars":24,"textLines":1,"bbox":[326,164,500,44]}
-{"kind":"textbox","id":"sh/7ypcr25k","slide":82,"text":"broad transport demonstrated","textPreview":"broad transport demonstrated","textChars":28,"textLines":1,"bbox":[850,166,350,74]}
-{"kind":"shape","id":"sh/fqlcj6do","slide":82,"bbox":[92,272,1108,1]}
-{"kind":"shape","id":"sh/e5cba1c3","slide":82,"bbox":[58,294,10,94]}
-{"kind":"textbox","id":"sh/1s3ulgve","slide":82,"text":"NOT YET","textPreview":"NOT YET","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
-{"kind":"textbox","id":"sh/0rutcbu9","slide":82,"text":"6–9-session local zoom","textPreview":"6–9-session local zoom","textChars":22,"textLines":1,"bbox":[326,290,500,44]}
-{"kind":"textbox","id":"sh/r21cf6dc","slide":82,"text":"not motivated by atlas shape","textPreview":"not motivated by atlas shape","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
-{"kind":"shape","id":"sh/q1sbm1cr","slide":82,"bbox":[92,398,1108,1]}
-{"kind":"shape","id":"sh/d43uhgvi","slide":82,"bbox":[58,420,10,94]}
-{"kind":"textbox","id":"sh/s3at8bux","slide":82,"text":"NEXT GATE","textPreview":"NEXT GATE","textChars":9,"textLines":1,"bbox":[92,418,220,30]}
-{"kind":"textbox","id":"sh/by5crqtw","slide":82,"text":"confirm or refine 15–25","textPreview":"confirm or refine 15–25","textChars":23,"textLines":1,"bbox":[326,416,500,44]}
-{"kind":"textbox","id":"sh/axwvilcb","slide":82,"text":"with a frozen, later-time design","textPreview":"with a frozen, later-time design","textChars":32,"textLines":1,"bbox":[850,418,350,74]}
-{"kind":"shape","id":"sh/mtgfqpwj","slide":82,"bbox":[92,524,1108,1]}
-{"kind":"shape","id":"sh/7upwjux4","slide":82,"bbox":[58,562,1142,82]}
-{"kind":"textbox","id":"sh/8vixsze9","slide":82,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
-{"kind":"textbox","id":"sh/tgrel4vu","slide":82,"text":"Atlas first was the right order. Any finer search should target the transported 15–25-session neighborhood.","textPreview":"Atlas first was the right order. Any finer search should target the transported 15–25-session neighborhood.","textChars":107,"textLines":1,"bbox":[350,576,820,44]}
-{"kind":"notes","id":"nt/lpc25e","slide":82,"text":"The atlas gives no special reason to add 6–9-session horizons. If the operator opens refinement, the evidence-backed target is the broad 15–25-session neighborhood, ideally with a frozen later-time increment before strategy work.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/equal_asset_cell_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/cb6x4vet","slide":74,"title":"CROSS-ASSET TRANSPORT","textShapes":5}
+{"kind":"textbox","id":"sh/gzalsri9","slide":74,"text":"CROSS-ASSET TRANSPORT","textPreview":"CROSS-ASSET TRANSPORT","textChars":21,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/po3mpwzq","slide":74,"text":"Does the TSLA rebound shape survive transport?","textPreview":"Does the TSLA rebound shape survive transport?","textChars":46,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/43ulwry5","slide":74,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/fy14jmho","slide":74,"text":"Run the same signed-ER20 microscope across a predeclared 30-asset atlas.","textPreview":"Run the same signed-ER20 microscope across a predeclared 30-asset atlas.","textChars":72,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/uxs3qh03","slide":74,"text":"Atlas first. Finer horizons wait until cross-asset morphology gives us a reason to zoom.","textPreview":"Atlas first. Finer horizons wait until cross-asset morphology gives us a reason to zoom.","textChars":88,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/h0jmlwze","slide":74,"text":"74","textPreview":"74","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/cb6x4vet","slide":74,"text":"This section answers the sequencing question by transporting the frozen TSLA microscope before adding 6–9-session horizons. The aim is morphology, not a strategy or performance claim.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/hcv6ho7e","slide":75,"title":"OWN-ASSET RETURN ATLAS","textShapes":21}
+{"kind":"textbox","id":"sh/ml8fqxoz","slide":75,"name":"section-3","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9srepgf6","slide":75,"name":"title-3","text":"Atlas first—transport the frozen microscope unchanged","textPreview":"Atlas first—transport the frozen microscope unchanged","textChars":53,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/orixgbe1","slide":75,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fmpwj6x4","slide":75,"name":"footer-left-3","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/elgfa1wj","slide":75,"name":"footer-number-3","text":"75","textPreview":"75","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/1orelgfa","slide":75,"text":"30 assets / 6 behavior groups","textPreview":"30 assets / 6 behavior groups","textChars":29,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/0nyxcbep","slide":75,"text":"The basket spans high-beta names, mature growth, cyclicals, defensives, equity ETFs, and non-equity proxies.","textPreview":"The basket spans high-beta names, mature growth, cyclicals, defensives, equity ETFs, and non-equity proxies.","textChars":108,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/rypwf6x8","slide":75,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/qxgf61wn","slide":75,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/ozehwbix","slide":75,"text":"29","textPreview":"29","textChars":2,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/pkni5wzi","slide":75,"text":"non-TSLA transport assets","textPreview":"non-TSLA transport assets","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/2xczu107","slide":75,"text":"Frozen transport contract","textPreview":"Frozen transport contract","textChars":25,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/ny5036hc","slide":75,"text":"Sample","textPreview":"Sample","textChars":6,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/0vuhsri1","slide":75,"text":"Adjusted daily, 2018–2023","textPreview":"Adjusted daily, 2018–2023","textChars":25,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/1w3i1wzm","slide":75,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/etczqh0v","slide":75,"text":"Horizons","textPreview":"Horizons","textChars":8,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/ful0zmhg","slide":75,"text":"1,2,3,4,5,10,15,20,25","textPreview":"1,2,3,4,5,10,15,20,25","textChars":21,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/kry14vy5","slide":75,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/ls7idgzq","slide":75,"text":"Conditioning","textPreview":"Conditioning","textChars":12,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/t83ixgru","slide":75,"text":"signed ER20 + ER20 + ATR%","textPreview":"signed ER20 + ER20 + ATR%","textChars":25,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/87uhobq9","slide":75,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/76l0vq9o","slide":75,"text":"Frozen cells","textPreview":"Frozen cells","textChars":12,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/65czml8j","slide":75,"text":"7 TSLA-discovered comparisons","textPreview":"7 TSLA-discovered comparisons","textChars":29,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/l43itgry","slide":75,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/kjahkbqd","slide":75,"text":"Inference","textPreview":"Inference","textChars":9,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/ji10r69s","slide":75,"text":"HAC + fixed-family BH","textPreview":"HAC + fixed-family BH","textChars":21,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/yhszi187","slide":75,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/xgjipwrm","slide":75,"text":"No refinement","textPreview":"No refinement","textChars":13,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/wfahgrq1","slide":75,"text":"6–9 sessions not searched","textPreview":"6–9 sessions not searched","textChars":25,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/hcv6ho7e","slide":75,"text":"The atlas and inferential cells were fixed before examining cross-asset outcomes. Complete grids are descriptive; formal inference is limited to seven TSLA-discovered comparisons.\n\n[Sources]\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/atlas_checks.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/m1wv2xgv","slide":76,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/q1g7ql4f","slide":76,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9wbq9k3y","slide":76,"name":"title-4","text":"The frozen DOWN p20→f20 cell transports broadly","textPreview":"The frozen DOWN p20→f20 cell transports broadly","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ov2p0fmd","slide":76,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/zq983q5w","slide":76,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ep07u54b","slide":76,"name":"footer-number-4","text":"76","textPreview":"76","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1srq5032","slide":76,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/rmp8zq50","slide":76,"text":"23/29 transport assets are negative; median Pearson r = −0.196. Twelve survive fixed-family BH.","textPreview":"23/29 transport assets are negative; median Pearson r = −0.196. Twelve survive fixed-family BH.","textChars":95,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/h0nihwfe","slide":76,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/9k3exsny","slide":76,"name":"","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/m1wv2xgv","slide":76,"text":"The direction of the TSLA finding repeats in 23 of 29 transport assets. This is breadth evidence for the morphology, not a trading rule.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_p20_f20_asset_effects.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_inference.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/vm1kr65c","slide":77,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/xwbmpkfi","slide":77,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/614nm9gf","slide":77,"name":"title-4","text":"Rebound spans the 15–25-session neighborhood","textPreview":"Rebound spans the 15–25-session neighborhood","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/7md4vuxk","slide":77,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/gr65sjyh","slide":77,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/hsfm1of2","slide":77,"name":"footer-number-4","text":"77","textPreview":"77","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/up4nq9gb","slide":77,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/wv25gfyx","slide":77,"text":"Every equal-asset median in the 15/20/25 × 15/20/25 corner is negative; 70%–83% of assets agree per cell.","textPreview":"Every equal-asset median in the 15/20/25 × 15/20/25 corner is negative; 70%–83% of assets agree per cell.","textChars":105,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/47ad43ed","slide":77,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/snidkze9","slide":77,"name":"","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/vm1kr65c","slide":77,"text":"The cross-asset median surface shows a broad long-prior, long-following negative island. That argues against a cell-specific accident and points to the 15–25-session neighborhood if later refinement is authorized.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_equal_asset_median_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/equal_asset_cell_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/s7u5k3mh","slide":78,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/buh4f2l4","slide":78,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/sna5g72x","slide":78,"name":"title-4","text":"Every behavior group leans toward rebound","textPreview":"Every behavior group leans toward rebound","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/tojm9c3i","slide":78,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ix83axkv","slide":78,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/jyh432lg","slide":78,"name":"footer-number-4","text":"78","textPreview":"78","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/kzqlc721","slide":78,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/at836xkz","slide":78,"text":"All six group medians are negative at DOWN p20→f20; strength varies, but no group reverses the sign.","textPreview":"All six group medians are negative at DOWN p20→f20; strength varies, but no group reverses the sign.","textChars":100,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/yxg72lwn","slide":78,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/i50ratc7","slide":78,"name":"","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/s7u5k3mh","slide":78,"text":"The effect is not confined to operator favorites or high-beta equities. All six behavior groups have negative median correlation at the frozen DOWN p20/f20 cell.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/frozen_replication_group_breadth.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_group_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/x4vml8na","slide":79,"title":"OWN-ASSET RETURN ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/2dg3ipwb","slide":79,"name":"section-4","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/18bm1ova","slide":79,"name":"title-4","text":"Thirty maps repeat the corner—but differ locally","textPreview":"Thirty maps repeat the corner—but differ locally","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0725sjep","slide":79,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nat43ed0","slide":79,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/m9knutcf","slide":79,"name":"footer-number-4","text":"79","textPreview":"79","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9cbm5ov6","slide":79,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/3ep4rudw","slide":79,"text":"The long-horizon red corner recurs across many assets, while local surface shape remains heterogeneous.","textPreview":"The long-horizon red corner recurs across many assets, while local surface shape remains heterogeneous.","textChars":103,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/hgva1cra","slide":79,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/5ozu1s7a","slide":79,"name":"","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/x4vml8na","slide":79,"text":"This contact sheet is a morphology check. It shows recurring long-horizon rebound geometry without pretending every asset has the same map or effect size.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/visuals/signed_er20_down_asset_heatmap_atlas.png\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_state_grid_cells.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_map_similarity_to_tsla.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/d4ryxcn6","slide":80,"title":"OWN-ASSET RETURN ATLAS","textShapes":15}
+{"kind":"textbox","id":"sh/9k7ypg7e","slide":80,"name":"section-11","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/dsrexcfy","slide":80,"name":"title-11","text":"What transports—and what does not","textPreview":"What transports—and what does not","textChars":33,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/crid47ed","slide":80,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ze9wzmxo","slide":80,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ed0v6hw3","slide":80,"name":"footer-number-11","text":"80","textPreview":"80","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1gbe1cfu","slide":80,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/0fid87e9","slide":80,"text":"TRANSPORTS","textPreview":"TRANSPORTS","textChars":10,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/fipcnixk","slide":80,"text":"DOWN long-prior rebound geometry","textPreview":"DOWN long-prior rebound geometry","textChars":32,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/uxgvudgz","slide":80,"text":"23/29 negative; median r −0.196","textPreview":"23/29 negative; median r −0.196","textChars":31,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/03q9c3id","slide":80,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/1oja58jy","slide":80,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/e18rat0n","slide":80,"text":"WEAKENS","textPreview":"WEAKENS","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/f2h83y18","slide":80,"text":"Unfiltered 1×1 sign kink","textPreview":"Unfiltered 1×1 sign kink","textChars":24,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/ora9g3ip","slide":80,"text":"0 raw passes; 27.6% same sign","textPreview":"0 raw passes; 27.6% same sign","textChars":29,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/psja98ja","slide":80,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/2psred0j","slide":80,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/nq1s7i14","slide":80,"text":"HETEROGENEITY","textPreview":"HETEROGENEITY","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/4v694jil","slide":80,"text":"Maps differ in strength and detail","textPreview":"Maps differ in strength and detail","textChars":34,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/5wzqxojq","slide":80,"text":"all 6 group medians still negative","textPreview":"all 6 group medians still negative","textChars":34,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/lg7ylg7i","slide":80,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/kfyxcb6x","slide":80,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/ze5gj6pc","slide":80,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ydwfa1or","slide":80,"text":"Keep the broad DOWN-rebound morphology; retire any universal sign-kink interpretation.","textPreview":"Keep the broad DOWN-rebound morphology; retire any universal sign-kink interpretation.","textChars":86,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/d4ryxcn6","slide":80,"text":"The atlas separates the robust descriptive shape from the TSLA-local wrinkle. The DOWN-state long-horizon rebound transports; the unfiltered 1x1 sign kink does not.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/frozen_replication_group_summary.csv\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/kny10fi9","slide":81,"title":"OWN-ASSET RETURN ATLAS","textShapes":21}
+{"kind":"textbox","id":"sh/10jmtkf6","slide":81,"name":"section-3","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/cje14zi1","slide":81,"name":"title-3","text":"Why breadth is still not an edge","textPreview":"Why breadth is still not an edge","textChars":32,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/dknid4jm","slide":81,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/2dcjypkz","slide":81,"name":"footer-left-3","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/3el07u1k","slide":81,"name":"footer-number-3","text":"81","textPreview":"81","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"textbox","id":"sh/4fu10z25","slide":81,"text":"state and predictor share the path","textPreview":"state and predictor share the path","textChars":34,"textLines":1,"bbox":[66,184,570,80]}
+{"kind":"textbox","id":"sh/pg3i94jq","slide":81,"text":"Signed ER20 defines DOWN using the same trailing displacement used by the p20 prior return. Selection geometry can amplify the pattern.","textPreview":"Signed ER20 defines DOWN using the same trailing displacement used by the p20 prior return. Selection geometry can amplify the pattern.","textChars":135,"textLines":1,"bbox":[66,286,530,104]}
+{"kind":"shape","id":"sh/m9wjat0j","slide":81,"bbox":[66,430,520,178]}
+{"kind":"shape","id":"sh/na5kje1o","slide":81,"bbox":[66,430,8,178]}
+{"kind":"textbox","id":"sh/nq9gvitg","slide":81,"text":"0","textPreview":"0","textChars":1,"textLines":1,"bbox":[94,448,472,62]}
+{"kind":"textbox","id":"sh/mp0zmdsb","slide":81,"text":"trading claims authorized","textPreview":"trading claims authorized","textChars":25,"textLines":1,"bbox":[94,518,472,74]}
+{"kind":"textbox","id":"sh/9sryxsbm","slide":81,"text":"Evidence boundary","textPreview":"Evidence boundary","textChars":17,"textLines":1,"bbox":[700,176,440,42]}
+{"kind":"textbox","id":"sh/orihona1","slide":81,"text":"What we have","textPreview":"What we have","textChars":12,"textLines":1,"bbox":[700,240,190,34]}
+{"kind":"textbox","id":"sh/be9gzits","slide":81,"text":"cross-asset morphology","textPreview":"cross-asset morphology","textChars":22,"textLines":1,"bbox":[900,240,310,44]}
+{"kind":"shape","id":"sh/at0zqxs7","slide":81,"bbox":[700,288,510,1]}
+{"kind":"textbox","id":"sh/xgby1sby","slide":81,"text":"What we lack","textPreview":"What we lack","textChars":12,"textLines":1,"bbox":[700,302,190,34]}
+{"kind":"textbox","id":"sh/wf2hsnad","slide":81,"text":"later-time confirmation","textPreview":"later-time confirmation","textChars":23,"textLines":1,"bbox":[900,302,310,44]}
+{"kind":"shape","id":"sh/jitg32to","slide":81,"bbox":[700,350,510,1]}
+{"kind":"textbox","id":"sh/ihkzuxs3","slide":81,"text":"Also absent","textPreview":"Also absent","textChars":11,"textLines":1,"bbox":[700,364,190,34]}
+{"kind":"textbox","id":"sh/ud4jm1cb","slide":81,"text":"expectancy, costs, execution","textPreview":"expectancy, costs, execution","textChars":28,"textLines":1,"bbox":[900,364,310,44]}
+{"kind":"shape","id":"sh/fexkv6dw","slide":81,"bbox":[700,412,510,1]}
+{"kind":"textbox","id":"sh/gf61obuh","slide":81,"text":"Mechanical caveat","textPreview":"Mechanical caveat","textChars":17,"textLines":1,"bbox":[700,426,190,34]}
+{"kind":"textbox","id":"sh/hgf2xgv2","slide":81,"text":"p20 displacement is shared","textPreview":"p20 displacement is shared","textChars":26,"textLines":1,"bbox":[900,426,310,44]}
+{"kind":"shape","id":"sh/694jihcf","slide":81,"bbox":[700,474,510,1]}
+{"kind":"textbox","id":"sh/7adkrmd0","slide":81,"text":"Interpretation","textPreview":"Interpretation","textChars":14,"textLines":1,"bbox":[700,488,190,34]}
+{"kind":"textbox","id":"sh/sbm1krul","slide":81,"text":"descriptive dependence","textPreview":"descriptive dependence","textChars":22,"textLines":1,"bbox":[900,488,310,44]}
+{"kind":"shape","id":"sh/tcv2twv6","slide":81,"bbox":[700,536,510,1]}
+{"kind":"textbox","id":"sh/q58julcj","slide":81,"text":"Next authority","textPreview":"Next authority","textChars":14,"textLines":1,"bbox":[700,550,190,34]}
+{"kind":"textbox","id":"sh/r6hk3qd4","slide":81,"text":"operator opens next gate","textPreview":"operator opens next gate","textChars":24,"textLines":1,"bbox":[900,550,310,44]}
+{"kind":"notes","id":"nt/kny10fi9","slide":81,"text":"Breadth strengthens the case that the morphology is real in-sample, but it does not resolve shared-path conditioning, same-date dependence, later-time stability, or realizable returns.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/tsla_parity_checks.csv\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/7ehsvqh0","slide":82,"title":"OWN-ASSET RETURN ATLAS","textShapes":15}
+{"kind":"textbox","id":"sh/147i9sju","slide":82,"name":"section-11","text":"OWN-ASSET RETURN ATLAS","textPreview":"OWN-ASSET RETURN ATLAS","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xwj6t8zi","slide":82,"name":"title-11","text":"Decision: stop before adding 6–9 sessions","textPreview":"Decision: stop before adding 6–9 sessions","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wva5k3ix","slide":82,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/n6h4ny1g","slide":82,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/m58net0v","slide":82,"name":"footer-number-11","text":"82","textPreview":"82","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9szmp8jm","slide":82,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/o7q5g3i1","slide":82,"text":"NOW","textPreview":"NOW","textChars":3,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/z2x4je1k","slide":82,"text":"Frozen atlas is complete","textPreview":"Frozen atlas is complete","textChars":24,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/e1onat0z","slide":82,"text":"broad transport demonstrated","textPreview":"broad transport demonstrated","textChars":28,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/4jihsnq9","slide":82,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/5kbilsre","slide":82,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/ix0zqd83","slide":82,"text":"NOT YET","textPreview":"NOT YET","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3i90ji9o","slide":82,"text":"6–9-session local zoom","textPreview":"6–9-session local zoom","textChars":22,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/gvihonqx","slide":82,"text":"not motivated by atlas shape","textPreview":"not motivated by atlas shape","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/hwrih8ri","slide":82,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ut0zmd8r","slide":82,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/vu90fi9c","slide":82,"text":"NEXT GATE","textPreview":"NEXT GATE","textChars":9,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0r2107q1","slide":82,"text":"confirm or refine 15–25","textPreview":"confirm or refine 15–25","textChars":23,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/1svitcrm","slide":82,"text":"with a frozen, later-time design","textPreview":"with a frozen, later-time design","textChars":32,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/98ridcjq","slide":82,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/o7ihk7il","slide":82,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/n6p0b210","slide":82,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/m5gzix0f","slide":82,"text":"Atlas first was the right order. Any finer search should target the transported 15–25-session neighborhood.","textPreview":"Atlas first was the right order. Any finer search should target the transported 15–25-session neighborhood.","textChars":107,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/7ehsvqh0","slide":82,"text":"The atlas gives no special reason to add 6–9-session horizons. If the operator opens refinement, the evidence-backed target is the broad 15–25-session neighborhood, ideally with a frozen later-time increment before strategy work.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/equal_asset_cell_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ehgvyhg3","slide":83,"title":"BEHAVIORAL CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/9c3mp4jy","slide":83,"text":"BEHAVIORAL CATALOG","textPreview":"BEHAVIORAL CATALOG","textChars":18,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/wfu50zip","slide":83,"text":"What else can this microscope reveal?","textPreview":"What else can this microscope reveal?","textChars":37,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/xg36t4ja","slide":83,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/mpsnup0n","slide":83,"text":"Treat return geometry as a four-archetype behavioral vocabulary—not a search for one recurring cell.","textPreview":"Treat return geometry as a four-archetype behavioral vocabulary—not a search for one recurring cell.","textChars":100,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/nq14nu18","slide":83,"text":"The atlas has already populated several archetypes. The next slides show what was observed and what remains absent.","textPreview":"The atlas has already populated several archetypes. The next slides show what was observed and what remains absent.","textChars":115,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/8ra5wzit","slide":83,"text":"83","textPreview":"83","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/ehgvyhg3","slide":83,"text":"The frozen atlas can be read as a behavioral microscope. Prior-return sign and the within-branch slope define four archetypes, while the existing state filters change which archetype is most prevalent.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/tgfydgrm","slide":84,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/61w3epcv","slide":84,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/hw32hkve","slide":84,"name":"title-4","text":"The microscope can express four return behaviors","textPreview":"The microscope can express four return behaviors","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wvul8fut","slide":84,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/jylkjud4","slide":84,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ixc3apcj","slide":84,"name":"footer-number-4","text":"84","textPreview":"84","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/50n2lkva","slide":84,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/r25knudg","slide":84,"text":"Prior sign and within-branch slope define the archetype; conditioning changes its prevalence.","textPreview":"Prior sign and within-branch slope define the archetype; conditioning changes its prevalence.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/tkv61sri","slide":84,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/58zy9knu","slide":84,"name":"","alt":"Two-by-two grammar of gain continuation, gain exhaustion, loss rebound, and loss continuation","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/tgfydgrm","slide":84,"text":"This grammar prevents the investigation from repeatedly renaming whichever cell looks interesting. A positive slope means continuation within that sign branch; a negative slope means reversal within that branch.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_archetype_grammar.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/wb2x8b25","slide":85,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/atwbyd47","slide":85,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/lo3a183q","slide":85,"name":"title-4","text":"Conditioning changes which behavior dominates","textPreview":"Conditioning changes which behavior dominates","textChars":45,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0nuts3m5","slide":85,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nq5s3ylw","slide":85,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mpwbut4b","slide":85,"name":"footer-number-4","text":"85","textPreview":"85","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9sna5832","slide":85,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/vu5s7ils","slide":85,"text":"Loss rebound is broad; gain exhaustion dominates trending/up states; gain continuation clusters in sideways paths.","textPreview":"Loss rebound is broad; gain exhaustion dominates trending/up states; gain continuation clusters in sideways paths.","textChars":114,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/l4by9kfi","slide":85,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/hk3mxorq","slide":85,"name":"","alt":"Heatmap catalog of four return behaviors across eight existing conditioning states","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/wb2x8b25","slide":85,"text":"A supported cell requires at least 20 estimable assets and at least 60 percent same-sign breadth. These are post-hoc display rules for cataloging the inspected atlas, not inferential thresholds.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_state_catalog.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/z6x8f2d0","slide":86,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/excnqxwn","slide":86,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/5sjmd8fq","slide":86,"name":"title-4","text":"Momentum-like continuation is conditional—not universal","textPreview":"Momentum-like continuation is conditional—not universal","textChars":55,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4ralkne5","slide":86,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/v2h47yxo","slide":86,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/u183etg3","slide":86,"name":"footer-number-4","text":"86","textPreview":"86","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/h4jm98fu","slide":86,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/fyl4j2xs","slide":86,"text":"Sideways: 39/81 supported cells; ATR low: 17/81; signed up: 0/45.","textPreview":"Sideways: 39/81 supported cells; ATR low: 17/81; signed up: 0/45.","textChars":65,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/hkjex8nu","slide":86,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/dwbytsjy","slide":86,"name":"","alt":"Three heatmaps comparing gain-continuation breadth in sideways, low-volatility, and signed-up states","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/z6x8f2d0","slide":86,"text":"The classical momentum-like branch is visible, but not where a simple trending-up intuition would put it. It clusters most strongly in path-sideways observations and more modestly in low ATR percent; the signed-up state instead leans toward gain exhaustion.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/gain_continuation_state_heatmaps.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ypgfux0n","slide":87,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/v2dkja5k","slide":87,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/kv21kv6x","slide":87,"name":"title-4","text":"Loss rebound is broader than the DOWN 20→20 cell","textPreview":"Loss rebound is broader than the DOWN 20→20 cell","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/lwb2dgni","slide":87,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/6xk3mlo3","slide":87,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/7ytkfq58","slide":87,"name":"footer-number-4","text":"87","textPreview":"87","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/8z2lov6t","slide":87,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/u1k3q5oz","slide":87,"text":"Loss rebound is broad unfiltered and strongest in high-volatility and signed-down long-horizon cells.","textPreview":"Loss rebound is broad unfiltered and strongest in high-volatility and signed-down long-horizon cells.","textChars":101,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/al8rq1s3","slide":87,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/6lcv2h4f","slide":87,"name":"","alt":"Three heatmaps comparing loss-rebound breadth in unfiltered, high-volatility, and signed-down states","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/ypgfux0n","slide":87,"text":"The atlas-wide catalog dims the spotlight on one TSLA-discovered cell. Loss rebound is a broad family of geometry across several states, although signed-down maps retain structural blanks where conditioning and prior sign cannot coexist.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/loss_rebound_state_heatmaps.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/947ipo3a","slide":88,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
+{"kind":"textbox","id":"sh/e9kve5kb","slide":88,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/x4fehk3u","slide":88,"name":"title-4","text":"Mechanism stories become hypotheses to falsify","textPreview":"Mechanism stories become hypotheses to falsify","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/c3mdoz29","slide":88,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/z6xwjul0","slide":88,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/y5ovqpkf","slide":88,"name":"footer-number-4","text":"88","textPreview":"88","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/lsfel4j6","slide":88,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/fatc7alw","slide":88,"text":"The geometry organizes candidate explanations; correlation alone cannot identify the mechanism.","textPreview":"The geometry organizes candidate explanations; correlation alone cannot identify the mechanism.","textChars":95,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/dwrmh8ju","slide":88,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/tgvud0bu","slide":88,"name":"","alt":"Four-row catalog linking observed return geometries to mechanism theses and evidence boundaries","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/947ipo3a","slide":88,"text":"Information diffusion, extension, overshoot, liquidity relief, volatility normalization, and forced deleveraging are candidate mechanisms only. Shared-path selection, overlap, drift, and common shocks remain competing explanations.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_mechanism_theses.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/0nilwn6h","slide":89,"title":"RETURN BEHAVIOR CATALOG","textShapes":15}
+{"kind":"textbox","id":"sh/twvy9ob6","slide":89,"name":"section-11","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/hgfe54jm","slide":89,"name":"title-11","text":"The microscope catalogs behavior—not edge","textPreview":"The microscope catalogs behavior—not edge","textChars":41,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wf6xczih","slide":89,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/7adwzu1k","slide":89,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mp4v6p0z","slide":89,"name":"footer-number-11","text":"89","textPreview":"89","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9cve14jq","slide":89,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/8bmd8zi5","slide":89,"text":"METHOD","textPreview":"METHOD","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/r6hwbeh4","slide":89,"text":"Four branch archetypes","textPreview":"Four branch archetypes","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/6lofi90j","slide":89,"text":"same engine, different states","textPreview":"same engine, different states","textChars":29,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/w7yt4b6x","slide":89,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/x8radgni","slide":89,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/a5gb2lo7","slide":89,"text":"OBSERVED","textPreview":"OBSERVED","textChars":8,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/b6psb65s","slide":89,"text":"Continuation is conditional","textPreview":"Continuation is conditional","textChars":27,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/o3y90b61","slide":89,"text":"sideways + low ATR%","textPreview":"sideways + low ATR%","textChars":19,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/947a9gnm","slide":89,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/mhgry1ov","slide":89,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/nips765g","slide":89,"text":"BOUNDARY","textPreview":"BOUNDARY","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0fe9wr65","slide":89,"text":"Mechanisms remain hypotheses","textPreview":"Mechanisms remain hypotheses","textChars":28,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/1g7a5wna","slide":89,"text":"no causal or trading authority","textPreview":"no causal or trading authority","textChars":30,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/h0fydob2","slide":89,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/gz6hk3uh","slide":89,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/vydgbytw","slide":89,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ux4zitcb","slide":89,"text":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textPreview":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textChars":132,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/0nilwn6h","slide":89,"text":"The catalog is a naming and discrimination layer. It earns clearer hypothesis generation, not a strategy. Any next confirmation should predeclare one archetype, one state, and one horizon neighborhood rather than search the complete atlas again.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n[/Sources]"}

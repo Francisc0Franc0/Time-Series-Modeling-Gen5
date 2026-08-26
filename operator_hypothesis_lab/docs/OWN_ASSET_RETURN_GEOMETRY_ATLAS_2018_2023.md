@@ -127,6 +127,53 @@ The raw pooled scatter is retained only as a morphology view. Equal-asset
 medians, group breadth, fixed-cell inference, and leave-one-asset-out summaries
 are the primary cross-asset readouts.
 
+## Behavioral Catalog Synthesis
+
+The same microscope can be read as a descriptive vocabulary rather than a
+search for one recurring cell. Prior-return sign and the within-branch slope
+define four archetypes:
+
+| Prior branch | Positive slope | Negative slope |
+|---|---|---|
+| Positive prior return | gain continuation | gain exhaustion |
+| Negative prior return | loss continuation | loss rebound |
+
+For this post-atlas catalog, a cell is called cross-asset supported only when
+at least 20 assets are estimable and at least 60% of them share the same slope
+sign. These are display rules for organizing the already-inspected atlas, not
+new inferential thresholds. A state is labeled broad when at least half its
+eligible cells are supported, a cluster when at least one fifth are supported,
+and a pocket when at least three cells are supported.
+
+The eight frozen conditioning states reveal distinct behavior profiles:
+
+| State | Eligible cells | Gain continuation | Gain exhaustion | Loss rebound | Loss continuation |
+|---|---:|---:|---:|---:|---:|
+| Unfiltered | 81 | 5 | 44 | 65 | 4 |
+| Path sideways | 81 | 39 | 26 | 55 | 5 |
+| Path trending | 81 | 0 | 72 | 70 | 1 |
+| Signed up | 45 | 0 | 41 | 16 | 6 |
+| Signed down | 36 | 7 | 2 | 24 | 1 |
+| ATR low | 81 | 17 | 28 | 65 | 0 |
+| ATR medium | 81 | 10 | 27 | 18 | 17 |
+| ATR high | 81 | 9 | 40 | 71 | 2 |
+
+The strongest atlas-wide pattern is therefore loss rebound, especially in
+high-ATR and path-trending states. Gain exhaustion is broad in path-trending
+and signed-up states. Classical gain continuation is not universal, but it
+does form a meaningful cluster in path-sideways cells and a smaller cluster in
+low ATR%. Loss continuation is the least broadly represented archetype.
+
+These geometries motivate mechanisms to falsify, not explanations already
+established. Gradual information diffusion is one possible basis for the
+sideways/low-volatility gain-continuation cluster. Extension and later-stage
+repricing could underlie gain exhaustion. Overshoot, liquidity relief, short
+covering, or volatility normalization could produce loss rebound. Persistent
+bad-news repricing or forced deleveraging could produce loss continuation, but
+that archetype is not broad in this atlas. Shared-path conditioning,
+overlapping windows, drift, and common market dates remain serious alternative
+explanations.
+
 ## Decision
 
 Status:
@@ -150,5 +197,9 @@ gate.
   `scripts/inspect/run_own_asset_return_geometry_atlas.R`
 - Reusable helpers:
   `operator_hypothesis_lab/R/own_asset_return_geometry_atlas.R`
+- Behavioral-catalog runner:
+  `scripts/inspect/run_return_geometry_behavior_catalog.R`
+- Behavioral-catalog packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826`
 - Running evidence deck:
   `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
