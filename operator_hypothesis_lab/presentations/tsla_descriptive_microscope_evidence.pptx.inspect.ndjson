@@ -1502,3 +1502,116 @@
 {"kind":"textbox","id":"sh/vydgbytw","slide":89,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/ux4zitcb","slide":89,"text":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textPreview":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textChars":132,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/0nilwn6h","slide":89,"text":"The catalog is a naming and discrimination layer. It earns clearer hypothesis generation, not a strategy. Any next confirmation should predeclare one archetype, one state, and one horizon neighborhood rather than search the complete atlas again.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/42ou2w","slide":90,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/b2xw7ylw","slide":90,"text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/ypof2d47","slide":90,"text":"Is the rebound a real neighborhood—or a 20-session artifact?","textPreview":"Is the rebound a real neighborhood—or a 20-session artifact?","textChars":60,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/zqxwbils","slide":90,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/c36x03m1","slide":90,"text":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textPreview":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textChars":90,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/xofe983m","slide":90,"text":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textPreview":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textChars":98,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/a1ofyt4b","slide":90,"text":"90","textPreview":"90","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/42ou2w","slide":90,"text":"The coarse atlas earned one finer descriptive slice. The question is topological: bounded island, exact-window artifact, or broad open surface. The slice does not search for a tradable parameter.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/hlc603","slide":91,"title":"FINE-GRID TOPOLOGY","textShapes":15}
+{"kind":"textbox","id":"sh/1gvmtkni","slide":91,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/dormtkj6","slide":91,"name":"title-11","text":"The slice changes resolution—not the question","textPreview":"The slice changes resolution—not the question","textChars":45,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/sni50fil","slide":91,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fq94vu1c","slide":91,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ep0n2p0r","slide":91,"name":"footer-number-11","text":"91","textPreview":"91","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1srmx4j2","slide":91,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/0ri54zix","slide":91,"text":"LOCKED","textPreview":"LOCKED","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/vup4ja1s","slide":91,"text":"30 assets + six groups","textPreview":"30 assets + six groups","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/utw3q507","slide":91,"text":"2018–2023 daily bars","textPreview":"2018–2023 daily bars","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/8zexgnyh","slide":91,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/t0ne9sf2","slide":91,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/6xwfedgr","slide":91,"text":"PRIMARY","textPreview":"PRIMARY","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/7y5wnihw","slide":91,"text":"Signed-ER20 DOWN losses","textPreview":"Signed-ER20 DOWN losses","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/g3yxk7yt","slide":91,"text":"10–30 by 10–30 grid","textPreview":"10–30 by 10–30 grid","textChars":19,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/h47ydcfe","slide":91,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/u1wfixgn","slide":91,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/v25wb2x8","slide":91,"text":"CONTROLS","textPreview":"CONTROLS","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/w7ux83y9","slide":91,"text":"Unfiltered + ATR%-high","textPreview":"Unfiltered + ATR%-high","textChars":22,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/x83eh8zu","slide":91,"text":"no p-values or BH scan","textPreview":"no p-values or BH scan","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/dsbmp0nm","slide":91,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/sr2lwvm1","slide":91,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/rqt4nq5g","slide":91,"text":"What remains fixed","textPreview":"What remains fixed","textChars":18,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/qpk3u54v","slide":91,"text":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textPreview":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textChars":107,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/hlc603","slide":91,"text":"Only the horizon resolution changes. The primary state and two comparators were declared before the surface was interpreted, and the old coarse cells serve as an exact parity check.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_checks.csv\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/73p9iz","slide":92,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/gbat4ryl","slide":92,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/j2hs3mhs","slide":92,"name":"title-4","text":"Fine resolution reveals an open rebound surface","textPreview":"Fine resolution reveals an open rebound surface","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/y18ruh07","slide":92,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/xgza1cz2","slide":92,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/wf69s7ih","slide":92,"name":"footer-number-4","text":"92","textPreview":"92","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/bexsz2hw","slide":92,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/hwjadwz6","slide":92,"text":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textPreview":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textChars":101,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/zeh8jy5c","slide":92,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/nqxojy1w","slide":92,"name":"","alt":"Fine-grid equal-asset median correlation heatmaps for unfiltered, ATR-percent-high, and signed-down loss branches","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/73p9iz","slide":92,"text":"Black outlines mark the predeclared strong-cell rule. The signed-down component spans 414 cells and touches every edge of the inspected 10–30 grid.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_equal_asset_median_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/origca","slide":93,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/t8fil0j2","slide":93,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/adkz2103","slide":93,"name":"title-4","text":"The shape is shared across assets—not carried by one name","textPreview":"The shape is shared across assets—not carried by one name","textChars":57,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/vetgb61o","slide":93,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/kjmh8vil","slide":93,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/5kvyh0jq","slide":93,"name":"footer-number-4","text":"93","textPreview":"93","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/ih4z6l0f","slide":93,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/s7mhcvih","slide":93,"text":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textPreview":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textChars":76,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/s3ypc3ix","slide":93,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/g3aho3mh","slide":93,"name":"","alt":"Fine-grid heatmaps showing the fraction of atlas assets with negative within-loss correlation","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/origca","slide":93,"text":"Cross-asset breadth is the guard against a single-name color patch. It does not turn common calendar observations into independent evidence.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_cross_asset_breadth_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ie1374","slide":94,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/1sryd4fy","slide":94,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/ahkfatgf","slide":94,"name":"title-4","text":"Window 20 sits inside the curve","textPreview":"Window 20 sits inside the curve","textChars":31,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/bitgjyx0","slide":94,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/knmhg3ex","slide":94,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/lovyp8f2","slide":94,"name":"footer-number-4","text":"94","textPreview":"94","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/ylkzetwr","slide":94,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/0rix4zyd","slide":94,"text":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textPreview":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textChars":106,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/ovyh8v69","slide":94,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/8f614fa1","slide":94,"name":"","alt":"Cross-sections through the fine-grid surfaces with prior or following horizon fixed at 20 sessions","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/ie1374","slide":94,"text":"The signed-down prior-20 row median differs from adjacent rows by only -0.0036; its following-20 column differs from adjacent columns by -0.0099. That reduces, but does not eliminate, shared-path coupling concern.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/p20_topology_cross_sections.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/4c6m3w","slide":95,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/wzitovyd","slide":95,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/rqts3ax0","slide":95,"name":"title-4","text":"Group maps reveal meaningful heterogeneity","textPreview":"Group maps reveal meaningful heterogeneity","textChars":42,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/6pkbu5gf","slide":95,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/1gvu9kf2","slide":95,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/gvmt0fyx","slide":95,"name":"footer-number-4","text":"95","textPreview":"95","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/fudc7uxc","slide":95,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/xkrax0fy","slide":95,"text":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textPreview":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textChars":99,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/nahsfetk","slide":95,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/fmxormhw","slide":95,"name":"","alt":"Six heatmaps of signed-down loss-rebound correlation by frozen behavioral group","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/4c6m3w","slide":95,"text":"The group maps preserve identity rather than pooling everything into one result. Five assets per group are enough to show heterogeneity, not to estimate an asset-class population.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/signed_down_behavior_group_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/1r0pov","slide":96,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/gzi987at","slide":96,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/j6p8rit0","slide":96,"name":"title-4","text":"Coverage—not the hottest cell—defines the finding","textPreview":"Coverage—not the hottest cell—defines the finding","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/i5grydcf","slide":96,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/twrqxcb2","slide":96,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/svi947ah","slide":96,"name":"footer-number-4","text":"96","textPreview":"96","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/7u98v2tc","slide":96,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/h0ra1cbe","slide":96,"text":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textPreview":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textChars":73,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/fil8vu98","slide":96,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/z65on6t4","slide":96,"name":"","alt":"Bar chart summarizing breadth-supported and strong-cell coverage for the three fine-grid surfaces","bbox":[105,150,1070,475]}
+{"kind":"notes","id":"nt/1r0pov","slide":96,"text":"Every largest strong component touches the grid boundary. The correct label is open plateau or ridge; 20→26 and 18→24 are descriptive extrema, not selected parameters.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/topology_coverage_summary.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/iujx2i","slide":97,"title":"FINE-GRID TOPOLOGY","textShapes":15}
+{"kind":"textbox","id":"sh/orqt8jup","slide":97,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/i5cbe5gf","slide":97,"name":"title-11","text":"Decision: freeze one open plateau—then stop","textPreview":"Decision: freeze one open plateau—then stop","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/365c7ah0","slide":97,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/sbetkfyh","slide":97,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/dwnudkz2","slide":97,"name":"footer-number-11","text":"97","textPreview":"97","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/q9wbi5gb","slide":97,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/ra5cbahw","slide":97,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/8fut8byd","slide":97,"text":"Open rebound plateau","textPreview":"Open rebound plateau","textChars":20,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/t03a1gzy","slide":97,"text":"not a 20-session island","textPreview":"not a 20-session island","textChars":23,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/5snq90nu","slide":97,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/krep0vm9","slide":97,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/jq587q54","slide":97,"text":"EARNS","textPreview":"EARNS","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/ipw7yl4j","slide":97,"text":"Less coupling concern","textPreview":"Less coupling concern","textChars":21,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/tg7qd0n6","slide":97,"text":"same geometry across windows","textPreview":"same geometry across windows","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/svyp4vml","slide":97,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/7u58bq50","slide":97,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/6tw72l4f","slide":97,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/hk7qhkn2","slide":97,"text":"A chosen horizon or rule","textPreview":"A chosen horizon or rule","textChars":24,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/gjy98fmh","slide":97,"text":"no edge or causality claim","textPreview":"no edge or causality claim","textChars":26,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/0n694jut","slide":97,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/1ofadobe","slide":97,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/e1or29cn","slide":97,"text":"Next gate belongs to the operator","textPreview":"Next gate belongs to the operator","textChars":33,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/f2xsbet8","slide":97,"text":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open boundary.","textPreview":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open b...","textChars":145,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/iujx2i","slide":97,"text":"The fine grid answers the approved question: the transported rebound is a broad open surface rather than an exact-window island. The current 30 assets are sufficient for that diagnosis, but not for population-level asset-class claims. No later data, horizon extension, breadth expansion, or rule is opened here.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}

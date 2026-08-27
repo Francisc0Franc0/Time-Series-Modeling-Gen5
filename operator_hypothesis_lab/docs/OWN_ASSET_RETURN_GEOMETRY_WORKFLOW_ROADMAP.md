@@ -120,6 +120,26 @@ hypotheses, not causal explanations or trading authority. The catalog should
 be reused as the naming layer for future transport work: one archetype, one
 conditioning state, and one predeclared horizon neighborhood at a time.
 
+### Frozen Loss-Rebound Topology Refinement
+
+The operator then opened one local descriptive refinement of the transported
+loss-rebound neighborhood. The frozen 30 assets, 2018-2023 window, return
+construction, and state definitions were retained; only the prior and
+following horizons were resolved to every integer from 10 through 30.
+
+Current status:
+
+`DESCRIPTIVE_FINE_GRID_COMPLETE_OPEN_REBOUND_PLATEAU_STOP_BEFORE_TEMPORAL_TRANSPORT`
+
+The signed-ER20 DOWN loss branch has 440/441 breadth-supported cells and
+414/441 strong cells under predeclared descriptive rules. Its 414-cell largest
+strong component spans and touches the 10-30 grid boundary. ATR%-high losses
+show an even broader 421-cell strong component, while unfiltered losses retain
+289 strong cells. Window-20 cross-sections are smooth rather than singular, so
+the result is not an exact 20-session island. Because adjacent horizons are
+highly dependent, this is one broad morphological result, not hundreds of
+independent confirmations.
+
 ## Phase 5: Parameter and Temporal Transport Research
 
 Only after the template is frozen and the atlas has been run should the project
@@ -154,9 +174,10 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 ## Current Stop
 
 Do not optimize the signed-ER window, cutoff, state persistence, training
-length, or forward increment. The template, atlas, and descriptive behavioral
-catalog are now complete, but the next gate still belongs to the operator:
-either open temporal transport of one frozen behavior/state neighborhood or
-open one separately declared local horizon refinement. The atlas does not
-specifically support filling the 6-9-session gap; its repeated rebound
-neighborhood is approximately 15-25 prior by 15-25 following sessions.
+length, or forward increment. The template, atlas, descriptive behavioral
+catalog, and approved 10-30 loss-rebound topology refinement are complete. The
+next gate still belongs to the operator: either open temporal transport of one
+frozen neighborhood summary or open a separately declared breadth expansion
+with more predeclared representatives per asset group. Do not extend the
+horizon boundary merely because the strong region reaches it, and do not
+select the hottest observed cell as a parameter.

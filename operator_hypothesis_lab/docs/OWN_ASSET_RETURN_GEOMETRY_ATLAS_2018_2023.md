@@ -178,14 +178,15 @@ explanations.
 
 Status:
 
-`DESCRIPTIVE_ATLAS_COMPLETE_DOWN_REBOUND_TRANSPORTS_BROADLY_STOP_BEFORE_FINE_GRID`
+`DESCRIPTIVE_ATLAS_COMPLETE_FINE_GRID_OPEN_REBOUND_PLATEAU_STOP_BEFORE_TEMPORAL_TRANSPORT`
 
-The atlas validates the decision to transport before zooming. It also changes
-where a future local refinement should focus: the repeated neighborhood is
-roughly 15-25 prior and 15-25 following sessions, not specifically the proposed
-6-9-session gap. Keep both finer-horizon work and post-2023 temporal transport
-closed until the operator reviews this shape and explicitly chooses the next
-gate.
+The atlas validated the decision to transport before zooming. The subsequently
+approved 10-30 one-session refinement is now complete: signed-down loss
+rebound occupies one 414-cell strong connected component, touches every edge
+of the inspected grid, and is not pinned to 20 sessions. See
+`OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md`. Freeze that open
+plateau/ridge and keep post-2023 temporal transport, further horizon expansion,
+asset expansion, and trading interpretation closed until separately opened.
 
 ## Artifacts
 
@@ -201,5 +202,11 @@ gate.
   `scripts/inspect/run_return_geometry_behavior_catalog.R`
 - Behavioral-catalog packet:
   `runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826`
+- Fine-grid topology results:
+  `operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md`
+- Fine-grid topology packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827`
+- Fine-grid topology runner:
+  `scripts/inspect/run_return_geometry_rebound_topology.R`
 - Running evidence deck:
   `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
