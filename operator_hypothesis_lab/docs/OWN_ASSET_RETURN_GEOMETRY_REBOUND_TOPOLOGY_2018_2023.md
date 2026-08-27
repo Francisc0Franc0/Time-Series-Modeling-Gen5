@@ -87,18 +87,32 @@ complete representation of every asset type. More names per group would be a
 separate breadth-expansion study and should not be used to make this same
 descriptive surface look more certain.
 
+## Sparse Boundary-Probe Addendum
+
+The operator subsequently opened a sparse 30-100 boundary probe. It retained
+the same 30 assets, dates, states, negative-prior branch, and descriptive rules,
+then varied one horizon through `35, 40, 50, 75, 100` while holding the other at
+`20`, `25`, or `30`. All 18 condition-by-orientation-by-anchor paths remained
+strong at every outer checkpoint. At 100 sessions, the signed-down equal-asset
+median correlation ranges from `-0.213` to `-0.251` when prior is varied and
+from `-0.288` to `-0.326` when following is varied.
+
+This extends the morphological description but not the trading conclusion.
+The cumulative relationship remains open through 100; nested future returns do
+not establish that rebound return continues accruing through session 100. See
+`OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md`.
+
 ## Decision
 
 Status:
 
-`DESCRIPTIVE_FINE_GRID_COMPLETE_OPEN_REBOUND_PLATEAU_STOP_BEFORE_TEMPORAL_TRANSPORT`
+`DESCRIPTIVE_BOUNDARY_PROBE_COMPLETE_CUMULATIVE_REBOUND_PERSISTS_THROUGH_100_STOP_BEFORE_INCREMENTAL_DECOMPOSITION`
 
-Freeze the 10-30 topology as an open plateau/ridge. Do not name 20/20, 20/26,
-18/24, or any other hottest cell as a selected parameter. Do not expand the
-grid, add assets, query post-2023 data, or formulate a trading rule within this
-slice. The next meaningful gate belongs to the operator: temporal transport of
-one frozen neighborhood summary or a separately predeclared atlas-breadth
-expansion.
+Freeze the 10-30 topology and sparse 30-100 boundary result as one open
+cumulative-return plateau/ridge. Do not name 20/20, 20/26, 18/24, 50, 75, 100,
+or any other cell as a selected parameter or holding period. The next meaningful
+gate is a separately frozen incremental-return decomposition or temporal
+transport—not a denser horizon search.
 
 ## Artifacts
 
@@ -110,5 +124,11 @@ expansion.
   `runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826`
 - Frozen registry:
   `operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv`
+- Sparse boundary-probe results:
+  `operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md`
+- Sparse boundary-probe packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827`
+- Sparse boundary-probe runner:
+  `scripts/inspect/run_return_geometry_rebound_boundary_probe.R`
 - Running evidence deck:
   `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`

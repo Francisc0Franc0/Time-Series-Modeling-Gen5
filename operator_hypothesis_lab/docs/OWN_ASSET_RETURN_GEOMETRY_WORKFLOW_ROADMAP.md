@@ -140,6 +140,25 @@ the result is not an exact 20-session island. Because adjacent horizons are
 highly dependent, this is one broad morphological result, not hundreds of
 independent confirmations.
 
+### Frozen Sparse Boundary Probe
+
+The operator then opened a sparse boundary check rather than a dense expansion.
+One horizon was varied through `35, 40, 50, 75, 100` while the other stayed at
+`20`, `25`, or `30`, in both orientations. The 30 assets, 2018-2023 window,
+negative-prior branch, states, and descriptive rules remained unchanged.
+
+Current status:
+
+`DESCRIPTIVE_BOUNDARY_PROBE_COMPLETE_CUMULATIVE_REBOUND_PERSISTS_THROUGH_100_STOP_BEFORE_INCREMENTAL_DECOMPOSITION`
+
+All 18 condition-by-orientation-by-anchor paths remained strong through every
+outer checkpoint. At 100 sessions, signed-down median correlations are
+`-0.213` to `-0.251` when prior is varied and `-0.288` to `-0.326` when the
+following horizon is varied. This establishes that the cumulative relationship
+has no visible boundary by 100; it does not establish a 100-session response or
+holding period because the future targets are nested. Incremental future blocks
+are now the clean next measurement question.
+
 ## Phase 5: Parameter and Temporal Transport Research
 
 Only after the template is frozen and the atlas has been run should the project
@@ -175,9 +194,9 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 
 Do not optimize the signed-ER window, cutoff, state persistence, training
 length, or forward increment. The template, atlas, descriptive behavioral
-catalog, and approved 10-30 loss-rebound topology refinement are complete. The
-next gate still belongs to the operator: either open temporal transport of one
-frozen neighborhood summary or open a separately declared breadth expansion
-with more predeclared representatives per asset group. Do not extend the
-horizon boundary merely because the strong region reaches it, and do not
-select the hottest observed cell as a parameter.
+catalog, 10-30 loss-rebound topology, and sparse 30-100 boundary probe are
+complete. Do not densify the extended horizon grid or treat 100 as a holding
+period. The next gate belongs to the operator: open an incremental future-return
+decomposition, temporal transport of one frozen summary, or a separately
+declared breadth expansion. Do not select the hottest observed cell as a
+parameter.

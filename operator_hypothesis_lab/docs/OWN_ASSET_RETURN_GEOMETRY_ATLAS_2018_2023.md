@@ -178,7 +178,7 @@ explanations.
 
 Status:
 
-`DESCRIPTIVE_ATLAS_COMPLETE_FINE_GRID_OPEN_REBOUND_PLATEAU_STOP_BEFORE_TEMPORAL_TRANSPORT`
+`DESCRIPTIVE_ATLAS_COMPLETE_BOUNDARY_PROBE_OPEN_THROUGH_100_STOP_BEFORE_INCREMENTAL_DECOMPOSITION`
 
 The atlas validated the decision to transport before zooming. The subsequently
 approved 10-30 one-session refinement is now complete: signed-down loss
@@ -187,6 +187,12 @@ of the inspected grid, and is not pinned to 20 sessions. See
 `OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md`. Freeze that open
 plateau/ridge and keep post-2023 temporal transport, further horizon expansion,
 asset expansion, and trading interpretation closed until separately opened.
+
+A subsequently approved sparse 30-100 boundary probe found that all 18
+condition-by-orientation-by-anchor paths remained strong at every outer
+checkpoint. The cumulative-return plateau is therefore still open at 100, but
+the nested future targets do not identify when the response accrues. See
+`OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md`.
 
 ## Artifacts
 
@@ -208,5 +214,11 @@ asset expansion, and trading interpretation closed until separately opened.
   `runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827`
 - Fine-grid topology runner:
   `scripts/inspect/run_return_geometry_rebound_topology.R`
+- Sparse boundary-probe results:
+  `operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md`
+- Sparse boundary-probe packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827`
+- Sparse boundary-probe runner:
+  `scripts/inspect/run_return_geometry_rebound_boundary_probe.R`
 - Running evidence deck:
   `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
