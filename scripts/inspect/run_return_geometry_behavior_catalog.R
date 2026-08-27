@@ -338,7 +338,7 @@ make_branch_heatmap <- function(spec, value_column, title, subtitle, filename) {
     x
   }))
   panels$panel <- factor(panels$panel, levels = spec$panel)
-  panels$prior_factor <- factor(panels$prior_sessions, levels = rev(horizons))
+  panels$prior_factor <- factor(panels$prior_sessions, levels = horizons)
   panels$forward_factor <- factor(panels$forward_sessions, levels = horizons)
   panels$value <- panels[[value_column]]
   panels$label <- ifelse(is.finite(panels$value), sprintf("%+.02f", panels$value), "NE")

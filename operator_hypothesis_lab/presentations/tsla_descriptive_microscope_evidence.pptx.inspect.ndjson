@@ -1431,7 +1431,7 @@
 {"kind":"shape","id":"sh/50n2lkva","slide":84,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/r25knudg","slide":84,"text":"Prior sign and within-branch slope define the archetype; conditioning changes its prevalence.","textPreview":"Prior sign and within-branch slope define the archetype; conditioning changes its prevalence.","textChars":93,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/tkv61sri","slide":84,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/58zy9knu","slide":84,"name":"","alt":"Two-by-two grammar of gain continuation, gain exhaustion, loss rebound, and loss continuation","bbox":[105,150,1070,475]}
+{"kind":"image","id":"im/58zy9knu","slide":84,"name":"","bbox":[217.78,150,844.44,475]}
 {"kind":"notes","id":"nt/tgfydgrm","slide":84,"text":"This grammar prevents the investigation from repeatedly renaming whichever cell looks interesting. A positive slope means continuation within that sign branch; a negative slope means reversal within that branch.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_archetype_grammar.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
 {"kind":"slide","id":"sl/wb2x8b25","slide":85,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
 {"kind":"textbox","id":"sh/atwbyd47","slide":85,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
@@ -1442,7 +1442,7 @@
 {"kind":"shape","id":"sh/9sna5832","slide":85,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/vu5s7ils","slide":85,"text":"Loss rebound is broad; gain exhaustion dominates trending/up states; gain continuation clusters in sideways paths.","textPreview":"Loss rebound is broad; gain exhaustion dominates trending/up states; gain continuation clusters in sideways paths.","textChars":114,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/l4by9kfi","slide":85,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/hk3mxorq","slide":85,"name":"","alt":"Heatmap catalog of four return behaviors across eight existing conditioning states","bbox":[105,150,1070,475]}
+{"kind":"image","id":"im/hk3mxorq","slide":85,"name":"","bbox":[217.78,150,844.44,475]}
 {"kind":"notes","id":"nt/wb2x8b25","slide":85,"text":"A supported cell requires at least 20 estimable assets and at least 60 percent same-sign breadth. These are post-hoc display rules for cataloging the inspected atlas, not inferential thresholds.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_state_catalog.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
 {"kind":"slide","id":"sl/z6x8f2d0","slide":86,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
 {"kind":"textbox","id":"sh/excnqxwn","slide":86,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
@@ -1453,7 +1453,7 @@
 {"kind":"shape","id":"sh/h4jm98fu","slide":86,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/fyl4j2xs","slide":86,"text":"Sideways: 39/81 supported cells; ATR low: 17/81; signed up: 0/45.","textPreview":"Sideways: 39/81 supported cells; ATR low: 17/81; signed up: 0/45.","textChars":65,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/hkjex8nu","slide":86,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/dwbytsjy","slide":86,"name":"","alt":"Three heatmaps comparing gain-continuation breadth in sideways, low-volatility, and signed-up states","bbox":[105,150,1070,475]}
+{"kind":"image","id":"im/dwbytsjy","slide":86,"name":"","bbox":[217.78,150,844.44,475]}
 {"kind":"notes","id":"nt/z6x8f2d0","slide":86,"text":"The classical momentum-like branch is visible, but not where a simple trending-up intuition would put it. It clusters most strongly in path-sideways observations and more modestly in low ATR percent; the signed-up state instead leans toward gain exhaustion.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/gain_continuation_state_heatmaps.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
 {"kind":"slide","id":"sl/ypgfux0n","slide":87,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
 {"kind":"textbox","id":"sh/v2dkja5k","slide":87,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
@@ -1464,7 +1464,7 @@
 {"kind":"shape","id":"sh/8z2lov6t","slide":87,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/u1k3q5oz","slide":87,"text":"Loss rebound is broad unfiltered and strongest in high-volatility and signed-down long-horizon cells.","textPreview":"Loss rebound is broad unfiltered and strongest in high-volatility and signed-down long-horizon cells.","textChars":101,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/al8rq1s3","slide":87,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/6lcv2h4f","slide":87,"name":"","alt":"Three heatmaps comparing loss-rebound breadth in unfiltered, high-volatility, and signed-down states","bbox":[105,150,1070,475]}
+{"kind":"image","id":"im/6lcv2h4f","slide":87,"name":"","bbox":[217.78,150,844.44,475]}
 {"kind":"notes","id":"nt/ypgfux0n","slide":87,"text":"The atlas-wide catalog dims the spotlight on one TSLA-discovered cell. Loss rebound is a broad family of geometry across several states, although signed-down maps retain structural blanks where conditioning and prior sign cannot coexist.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/loss_rebound_state_heatmaps.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
 {"kind":"slide","id":"sl/947ipo3a","slide":88,"title":"RETURN BEHAVIOR CATALOG","textShapes":5}
 {"kind":"textbox","id":"sh/e9kve5kb","slide":88,"name":"section-4","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
@@ -1475,7 +1475,7 @@
 {"kind":"shape","id":"sh/lsfel4j6","slide":88,"bbox":[105,142,1070,515]}
 {"kind":"textbox","id":"sh/fatc7alw","slide":88,"text":"The geometry organizes candidate explanations; correlation alone cannot identify the mechanism.","textPreview":"The geometry organizes candidate explanations; correlation alone cannot identify the mechanism.","textChars":95,"textLines":1,"bbox":[120,660,1040,18]}
 {"kind":"shape","id":"sh/dwrmh8ju","slide":88,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/tgvud0bu","slide":88,"name":"","alt":"Four-row catalog linking observed return geometries to mechanism theses and evidence boundaries","bbox":[105,150,1070,475]}
+{"kind":"image","id":"im/tgvud0bu","slide":88,"name":"","bbox":[217.78,150,844.44,475]}
 {"kind":"notes","id":"nt/947ipo3a","slide":88,"text":"Information diffusion, extension, overshoot, liquidity relief, volatility normalization, and forced deleveraging are candidate mechanisms only. Shared-path selection, overlap, drift, and common shocks remain competing explanations.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_mechanism_theses.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/asset_prior_sign_cells.csv\n[/Sources]"}
 {"kind":"slide","id":"sl/0nilwn6h","slide":89,"title":"RETURN BEHAVIOR CATALOG","textShapes":15}
 {"kind":"textbox","id":"sh/twvy9ob6","slide":89,"name":"section-11","text":"RETURN BEHAVIOR CATALOG","textPreview":"RETURN BEHAVIOR CATALOG","textChars":23,"textLines":1,"bbox":[48,24,440,24]}
