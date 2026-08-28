@@ -100,3 +100,27 @@ Current status:
 
 See `RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md`. Do not tune or
 open post-2023 outcomes.
+
+## Upstream Applicability Feature Exploration
+
+The failed TRAIN rule remained unchanged while six signal-close features were
+computed for its existing events: sector-relative loss, peer negative breadth,
+abnormal dollar volume, price-impact shock, causal SPY volatility percentile,
+and pre-shock volatility-normalized trend. The 88-stock core remained primary;
+all 129 assets remained in the ledger; post-2023 outcomes remained sealed.
+
+The first visual pass does not reveal a clean monotone discriminator. The
+sector shock map is mixed, so broad peer participation does not validate the
+initial shared-selloff intuition. High abnormal-volume bins are negative, while
+extreme sector-relative loss and the highest price-impact bin form post-hoc,
+nonmonotone islands. SPY volatility is alternating and pretrend is U-shaped.
+These shapes are hypothesis generators only; no feature or threshold is
+selected.
+
+Current status:
+
+`DESCRIPTIVE_FEATURE_ATLAS_COMPLETE_NO_GATE_SELECTED`
+
+See `RETURN_GEOMETRY_APPLICABILITY_FEATURE_ATLAS_2018_2023.md`. Any next test
+must freeze a narrow shape and hold out assets/sectors before temporal
+confirmation.

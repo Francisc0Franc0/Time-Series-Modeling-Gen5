@@ -315,3 +315,25 @@ and calendar results alternated sharply. The severity gate added only +0.06%
 under the equal-sector median lens versus the state-only rule. Preserve the
 TRAIN stop and keep post-2023 outcomes sealed. See
 `RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md`.
+
+### Applicability Feature Atlas
+
+The stopped executable rule was retained unchanged while six causal,
+OHLCV-derived descriptions of its environment were added: sector-relative
+loss, peer negative breadth, abnormal dollar volume, price-impact shock, causal
+SPY volatility percentile, and pre-shock volatility-normalized trend. The
+primary surface contains 1,548 existing trades from the balanced 88-stock core;
+the ledger retains 2,221 trades from all 129 instruments.
+
+Current status:
+
+`DESCRIPTIVE_FEATURE_ATLAS_COMPLETE_NO_GATE_SELECTED`
+
+No candidate supplies a clean monotone separator. Sector participation does
+not confirm the initial shared-selloff intuition; abnormal-volume high states
+are negative; the most conspicuous positive shapes are nonmonotone endpoint
+islands in extreme sector-relative loss and price impact. Treat these as visual
+clues only. See
+`RETURN_GEOMETRY_APPLICABILITY_FEATURE_ATLAS_2018_2023.md`. Keep post-2023
+sealed and do not select a feature, threshold, model, or upstream gate without
+a separately frozen held-out-asset/sector design.
