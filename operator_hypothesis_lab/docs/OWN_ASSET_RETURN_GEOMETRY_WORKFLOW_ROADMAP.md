@@ -238,9 +238,10 @@ length, or forward increment. The template, original atlas, descriptive
 behavioral catalog, 10-30 loss-rebound topology, sparse 30-100 boundary probe,
 129-instrument sector-balanced transport, and the full horizon/filter/branch
 vocabulary are complete. Stop horizon expansion at 100 and do not treat 100 as
-a holding period. The next gate belongs to the operator: open an incremental
-future-return decomposition or temporal transport of one frozen summary. Do
-not select the hottest observed cell as a parameter.
+a holding period. The incremental future-return decomposition is now complete:
+descriptive support continues to roughly session 60 and fades in sessions
+61-100. The next gate belongs to the operator; do not select the hottest
+observed cell as a parameter, infer a holding rule, or open post-2023 evidence.
 
 ### Edge-Promotion Huddle
 
@@ -250,7 +251,7 @@ embedded in every longer cumulative future-return target that contains it, so
 the persistence of a cumulative relationship through 100 sessions does not
 locate when the conditional return arrived.
 
-Current status:
+Planning status at the close of that huddle:
 
 `PLANNING_HUDDLE_COMPLETE_STOP_BEFORE_INCREMENTAL_RETURN_CALCULATION`
 
@@ -264,3 +265,25 @@ unconditional drift, state-only return, and matched-exposure baselines. See
 `RETURN_GEOMETRY_EDGE_PROMOTION_HUDDLE.md` and
 `presentations/return_geometry_edge_promotion_huddle.pptx`. Post-2023 evidence
 remains sealed.
+
+### Incremental Forward-Return Decomposition
+
+The planned timing slice was executed without changing the frozen 20-session
+negative-prior, signed-ER20 DOWN anchor. Every observation was required to have
+a complete 100-session future path, and that path was split into disjoint
+blocks `1-5`, `6-10`, `11-20`, `21-40`, `41-60`, and `61-100`.
+
+Current status:
+
+`LATE_INCREMENTAL_DURATION_RETAINS_DESCRIPTIVE_SUPPORT`
+
+The `21-40` and `41-60` blocks retain broad negative prior-to-future
+correlations and positive conditional return above same-asset unconditional
+drift. The `61-100` block retains only weak correlation breadth and has
+`-0.90 bp/session` drift-adjusted return, with positive excess in only 3/11
+sectors. The cumulative 100-session plateau is therefore neither a pure early
+echo nor evidence of continuous accrual through day 100: the descriptive
+response persists to roughly day 60 and then fades. This does not establish a
+holding rule. See
+`RETURN_GEOMETRY_INCREMENTAL_FORWARD_DECOMPOSITION_2018_2023.md` and slides
+8-14 of `presentations/return_geometry_edge_promotion_huddle.pptx`.

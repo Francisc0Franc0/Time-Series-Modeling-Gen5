@@ -1,4 +1,4 @@
-{"kind":"deck","id":"pr/k1tbur","name":"Deck"}
+{"kind":"deck","id":"pr/nw3hk8","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"EDGE PROMOTION","textShapes":5}
@@ -159,3 +159,110 @@
 {"kind":"textbox","id":"sh/4fm1wb6p","slide":7,"text":"Recommended next slice","textPreview":"Recommended next slice","textChars":22,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/50v2pgna","slide":7,"text":"Use the original 20-session prior anchor and decompose future returns before opening post-2023 data.","textPreview":"Use the original 20-session prior anchor and decompose future returns before opening post-2023 data.","textChars":100,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"The promotion ladder is behavior → candidate signal → predictive signal → tradeable edge → deployable system. This introductory deck stops at the candidate-design gate. The next technical slice should preserve the original 20-session prior anchor and measure non-overlapping future blocks under the pre-existing filters and baselines.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator–Codex huddle immediately following the full-vocabulary atlas closeout.\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n[/Sources]"}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"FROZEN MICROSCOPE","textShapes":15}
+{"kind":"textbox","id":"sh/5sne5wne","slide":8,"name":"section-11","text":"FROZEN MICROSCOPE","textPreview":"FROZEN MICROSCOPE","textChars":17,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/18byd4zy","slide":8,"name":"title-11","text":"One narrow slice asks when the rebound arrives","textPreview":"One narrow slice asks when the rebound arrives","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/g72x4zyd","slide":8,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ri9g7uhw","slide":8,"name":"footer-left-11","text":"Return geometry | incremental forward decomposition","textPreview":"Return geometry | incremental forward decomposition","textChars":51,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6h0fypgb","slide":8,"name":"footer-number-11","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/tkby9kzm","slide":8,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/sjix0zy1","slide":8,"text":"ANCHOR","textPreview":"ANCHOR","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/je9g3ahk","slide":8,"text":"20 prior sessions","textPreview":"20 prior sessions","textChars":17,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/id0fu50z","slide":8,"text":"negative cumulative log return","textPreview":"negative cumulative log return","textChars":30,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/o7ydoret","slide":8,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/98rehwve","slide":8,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/m5gvmhwn","slide":8,"text":"STATE","textPreview":"STATE","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/n6pwfmd8","slide":8,"text":"Signed ER20 down","textPreview":"Signed ER20 down","textChars":16,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/0jydkreh","slide":8,"text":"known at the anchor","textPreview":"known at the anchor","textChars":19,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/1k7edwv2","slide":8,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ehgvihwr","slide":8,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/zipwbmdc","slide":8,"text":"FUTURE","textPreview":"FUTURE","textChars":6,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/kfixwbe1","slide":8,"text":"Six disjoint blocks","textPreview":"Six disjoint blocks","textChars":19,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/lgbepgvm","slide":8,"text":"sessions 1 through 100","textPreview":"sessions 1 through 100","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/tw7e9gnq","slide":8,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/svydgb65","slide":8,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/7u5w765k","slide":8,"text":"Primary surface","textPreview":"Primary surface","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/6twve1oz","slide":8,"text":"88 full-history stocks, equal-sector weighted. All 129 assets remain diagnostic; post-2023 stays sealed.","textPreview":"88 full-history stocks, equal-sector weighted. All 129 assets remain diagnostic; post-2023 stays sealed.","textChars":104,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/fu1gfa1s","slide":8,"text":"This slide freezes the only outcome subset under the microscope. The primary state is signed ER20 DOWN_TREND at a 20-session negative-prior anchor. The 88-stock GICS core forms the equal-sector headline; other cohorts cannot alter it.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/run_spec.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_EDGE_PROMOTION_HUDDLE.md\n[/Sources]"}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"MEASUREMENT CONTRACT","textShapes":15}
+{"kind":"textbox","id":"sh/hcji5o7a","slide":9,"name":"section-11","text":"MEASUREMENT CONTRACT","textPreview":"MEASUREMENT CONTRACT","textChars":20,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1cfmhgne","slide":9,"name":"title-11","text":"Every block uses the same historical anchors","textPreview":"Every block uses the same historical anchors","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0b65obm9","slide":9,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nex4jq5k","slide":9,"name":"footer-left-11","text":"Return geometry | common-sample timing test","textPreview":"Return geometry | common-sample timing test","textChars":43,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mdonql4z","slide":9,"name":"footer-number-11","text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/9gzml0nq","slide":9,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/ofq5svm5","slide":9,"text":"COMMON SAMPLE","textPreview":"COMMON SAMPLE","textChars":13,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"text":"Complete 100-session path","textPreview":"Complete 100-session path","textChars":25,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ah8nu54b","slide":9,"text":"prevents block-to-block sample drift","textPreview":"prevents block-to-block sample drift","textChars":36,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/oza1gfyh","slide":9,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/p0ji9kf2","slide":9,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/2xsjepgb","slide":9,"text":"INCREMENTAL","textPreview":"INCREMENTAL","textChars":11,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3y107axw","slide":9,"text":"1–5 / 6–10 / … / 61–100","textPreview":"1–5 / 6–10 / … / 61–100","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/cnu1kzyd","slide":9,"text":"six blocks sum exactly to R(1:100)","textPreview":"six blocks sum exactly to R(1:100)","textChars":34,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/do3id4fy","slide":9,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/qlcjipgn","slide":9,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/bml0buxs","slide":9,"text":"COMPARE","textPreview":"COMPARE","textChars":7,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0ru1ozyp","slide":9,"text":"Cumulative + drift","textPreview":"Cumulative + drift","textChars":18,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/lsn2h4fa","slide":9,"text":"one unfiltered-loss comparator","textPreview":"one unfiltered-loss comparator","textChars":30,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/98ji147e","slide":9,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/87a18zqt","slide":9,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/76h0zup8","slide":9,"text":"Frozen rule","textPreview":"Frozen rule","textChars":11,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ml8j6p8n","slide":9,"text":"Duration survives only if at least 2 of 3 late blocks retain negative sector breadth and positive drift-adjusted return.","textPreview":"Duration survives only if at least 2 of 3 late blocks retain negative sector breadth and positive drift-adjusted return.","textChars":120,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/udsvah03","slide":9,"text":"All blocks are evaluated on anchors that have the full subsequent 100 sessions available. The construction audit verifies that the six incremental returns sum to R(1:100) with maximum absolute error below 7e-16 and reproduces shared cumulative cells below 6e-16.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/decomposition_checks.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/m90b6t0r","slide":10,"title":"TIMING RESULT","textShapes":4}
+{"kind":"textbox","id":"sh/lk7ut0va","slide":10,"name":"section-11","text":"TIMING RESULT","textPreview":"TIMING RESULT","textChars":13,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xc3mho32","slide":10,"name":"title-11","text":"Cumulative strength hides a non-uniform response","textPreview":"Cumulative strength hides a non-uniform response","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cbu58j2h","slide":10,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/zelojyl8","slide":10,"name":"footer-left-11","text":"Return geometry | equal-sector timing","textPreview":"Return geometry | equal-sector timing","textChars":37,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ydcnatkn","slide":10,"name":"footer-number-11","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/v6xczqp0","slide":10,"name":"","alt":"Cumulative versus incremental signed-down loss-response correlations across six future blocks","bbox":[186,140,908,530]}
+{"kind":"notes","id":"nt/m90b6t0r","slide":10,"text":"The cumulative line remains strongly negative because it carries earlier blocks. The incremental line shows where new covariance arrives: it is negative in every block, but its strength is uneven. The 41-60 block is especially distinct; the 61-100 block is weak and the unfiltered-loss comparator is near zero there.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/cumulative_vs_incremental_correlation.png\n[/Sources]"}
+{"kind":"slide","id":"sl/jetc3ut0","slide":11,"title":"SECTOR BREADTH","textShapes":4}
+{"kind":"textbox","id":"sh/l43ilgn2","slide":11,"name":"section-11","text":"SECTOR BREADTH","textPreview":"SECTOR BREADTH","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xcryxg7y","slide":11,"name":"title-11","text":"The response remains broad through sessions 41–60","textPreview":"The response remains broad through sessions 41–60","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wbih4b6d","slide":11,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/n69grmpw","slide":11,"name":"footer-left-11","text":"Return geometry | sector timing map","textPreview":"Return geometry | sector timing map","textChars":35,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/250zy18b","slide":11,"name":"footer-number-11","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/7itszulo","slide":11,"name":"","alt":"Signed-down incremental loss-response correlation by GICS sector and future block","bbox":[186,140,908,530]}
+{"kind":"notes","id":"nt/jetc3ut0","slide":11,"text":"Ten of 11 sector medians are negative in both 21-40 and 41-60. Breadth falls to 7 of 11 in 61-100, where Utilities, Real Estate, Financials, and Energy turn positive. This is broad morphology with real heterogeneity, not a universal asset law.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/core_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_sector_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/8f2psfyx","slide":12,"title":"CROSS-ASSET SHAPE","textShapes":4}
+{"kind":"textbox","id":"sh/tgrm1wzy","slide":12,"name":"section-11","text":"CROSS-ASSET SHAPE","textPreview":"CROSS-ASSET SHAPE","textChars":17,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1gbm9s3a","slide":12,"name":"title-11","text":"Late support is broad—but visibly heterogeneous","textPreview":"Late support is broad—but visibly heterogeneous","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0f2lgnmp","slide":12,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra943il8","slide":12,"name":"footer-left-11","text":"Return geometry | 88-stock core distribution","textPreview":"Return geometry | 88-stock core distribution","textChars":44,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/q903ad4n","slide":12,"name":"footer-number-11","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","alt":"Per-asset incremental correlations across the 88-stock full-history core","bbox":[186,140,908,530]}
+{"kind":"notes","id":"nt/8f2psfyx","slide":12,"text":"The asset distributions show why the equal-sector median should not be read as a universal prediction. The median is negative through 41-60, while individual assets span both signs. The 61-100 median approaches zero and its interquartile range crosses well into positive territory.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/asset_block_metrics.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_asset_distribution.png\n[/Sources]"}
+{"kind":"slide","id":"sl/hgzapcr6","slide":13,"title":"DRIFT-ADJUSTED ACCRUAL","textShapes":4}
+{"kind":"textbox","id":"sh/oz6x4vul","slide":13,"name":"section-11","text":"DRIFT-ADJUSTED ACCRUAL","textPreview":"DRIFT-ADJUSTED ACCRUAL","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/q50nydsj","slide":13,"name":"title-11","text":"Return advantage fades after session 60","textPreview":"Return advantage fades after session 60","textChars":39,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/bq9orito","slide":13,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/o3i5w3ad","slide":13,"name":"footer-left-11","text":"Return geometry | conditional minus unconditional drift","textPreview":"Return geometry | conditional minus unconditional drift","textChars":55,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/p4r6p8by","slide":13,"name":"footer-number-11","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","alt":"Signed-down conditional excess return in basis points per session by future block","bbox":[186,140,908,530]}
+{"kind":"notes","id":"nt/hgzapcr6","slide":13,"text":"Drift-adjusted return is positive from sessions 1 through 60, peaking at 7.07 bp per session in 11-20 and remaining 4.47 bp in 21-40. It falls to 0.72 bp in 41-60 and turns negative at -0.90 bp in 61-100; only 3 of 11 sector medians remain positive in that final block. This is descriptive and not cost-, overlap-, or path-adjusted.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_excess_bp_per_session.png\n[/Sources]"}
+{"kind":"slide","id":"sl/6lsnupw7","slide":14,"title":"SLICE DECISION","textShapes":15}
+{"kind":"textbox","id":"sh/pwvy90rq","slide":14,"name":"section-11","text":"SLICE DECISION","textPreview":"SLICE DECISION","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xc7eds76","slide":14,"name":"title-11","text":"Duration survives to 60 sessions—not to 100","textPreview":"Duration survives to 60 sessions—not to 100","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wbydknq1","slide":14,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/jepwf2pc","slide":14,"name":"footer-left-11","text":"Return geometry | incremental timing decision","textPreview":"Return geometry | incremental timing decision","textChars":45,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/idgvmx8r","slide":14,"name":"footer-number-11","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/5grehs7i","slide":14,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/kfidonqx","slide":14,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/zi5c3y98","slide":14,"text":"Late incremental support","textPreview":"Late incremental support","textChars":24,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ehwvat8n","slide":14,"text":"21–40 and 41–60 pass","textPreview":"21–40 and 41–60 pass","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/c3e1gjyd","slide":14,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/x4ni9ofy","slide":14,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/a1wze9g7","slide":14,"text":"FADES","textPreview":"FADES","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/b2507exs","slide":14,"text":"Final block loses accrual","textPreview":"Final block loses accrual","textChars":25,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/kre1k3y9","slide":14,"text":"61–100 = −0.90 bp/session","textPreview":"61–100 = −0.90 bp/session","textChars":25,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/ls7idofu","slide":14,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/y5wjitgj","slide":14,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/z650byxo","slide":14,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0buh8zy5","slide":14,"text":"A holding rule","textPreview":"A holding rule","textChars":14,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/1w3i14fq","slide":14,"text":"overlap and time transport unresolved","textPreview":"overlap and time transport unresolved","textChars":37,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/hsvy50re","slide":14,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/grmxwvqt","slide":14,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/fqdg3q98","slide":14,"text":"STOP","textPreview":"STOP","textChars":4,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/up4fal83","slide":14,"text":"Freeze this timing morphology. Do not retune blocks or open post-2023 outcomes until the next gate is designed.","textPreview":"Freeze this timing morphology. Do not retune blocks or open post-2023 outcomes until the next gate is designed.","textChars":111,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"The predeclared descriptive rule required at least two of three late blocks to have negative equal-sector correlation, at least 7 of 11 negative sector medians, and positive drift-adjusted return per session. The 21-40 and 41-60 blocks pass; 61-100 fails on drift-adjusted accrual. Preserve LATE_INCREMENTAL_DURATION_RETAINS_DESCRIPTIVE_SUPPORT without converting it into a 60-session holding recommendation.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/late_block_readout.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/status.csv\n[/Sources]"}

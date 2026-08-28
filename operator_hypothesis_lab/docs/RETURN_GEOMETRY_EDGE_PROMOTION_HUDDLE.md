@@ -53,6 +53,25 @@ before opening later data. Do not query post-2023 evidence in this slice.
 - Closed descriptive deck: `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
 - Workflow roadmap: `operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md`
 
+## Executed Incremental Slice
+
+The frozen decomposition has now been run on the 2018-2023 atlas evidence. All
+six future blocks use the same anchors with a complete 100-session future path.
+The `21-40` and `41-60` blocks retain negative relationship breadth and positive
+conditional return above same-asset unconditional drift. The `61-100` block
+does not retain positive drift-adjusted accrual.
+
+This falsifies the simplest early-echo explanation: the response is not
+confined to the first 5-10 sessions. It also rejects a stronger 100-session
+duration interpretation. The defensible descriptive summary is that the
+response continues into approximately sessions 41-60 and then fades.
+
+See `RETURN_GEOMETRY_INCREMENTAL_FORWARD_DECOMPOSITION_2018_2023.md` and slides
+8-14 of the huddle deck.
+
 ## Stop State
 
-`PLANNING_HUDDLE_COMPLETE_STOP_BEFORE_INCREMENTAL_RETURN_CALCULATION`
+`LATE_INCREMENTAL_DURATION_RETAINS_DESCRIPTIVE_SUPPORT`
+
+Do not infer a holding rule, retune blocks, or open post-2023 outcomes before a
+new gate is designed.
