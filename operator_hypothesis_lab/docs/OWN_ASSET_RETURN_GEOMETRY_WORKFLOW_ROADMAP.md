@@ -159,6 +159,27 @@ has no visible boundary by 100; it does not establish a 100-session response or
 holding period because the future targets are nested. Incremental future blocks
 are now the clean next measurement question.
 
+### Frozen Wide-Atlas Sector Transport
+
+The operator then opened the breadth expansion explicitly. The coarse
+`20, 25, 30, 35, 40, 50, 75, 100` prior-by-following grid and all nine existing
+state views were transported to 129 instruments: an 88-stock eight-per-sector
+GICS core, 16 attention challengers, 15 equity ETF controls, and 10 non-equity
+proxies. Only the full-history 88-stock core enters the equal-sector headline.
+
+Current status:
+
+`DESCRIPTIVE_WIDE_ATLAS_COMPLETE_BROAD_SECTOR_TRANSPORT_STOP_BEFORE_TEMPORAL_OR_INCREMENTAL_GATE`
+
+The signed-down loss branch remains negative across the entire equal-sector
+8x8 surface. On the diagonal, all 11 sector medians are negative through 75
+sessions; 10/11 remain negative at 100, where Health Care is approximately
+flat. Core-asset median correlations range from `-0.271` at 20 to `-0.347` at
+100. Attention names are weaker and less uniform at 20, while non-equity
+controls are near zero, preserving meaningful heterogeneity. This broadens the
+descriptive transport claim; it does not locate incremental response timing or
+open temporal confirmation.
+
 ## Phase 5: Parameter and Temporal Transport Research
 
 Only after the template is frozen and the atlas has been run should the project
@@ -193,10 +214,10 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 ## Current Stop
 
 Do not optimize the signed-ER window, cutoff, state persistence, training
-length, or forward increment. The template, atlas, descriptive behavioral
-catalog, 10-30 loss-rebound topology, and sparse 30-100 boundary probe are
-complete. Do not densify the extended horizon grid or treat 100 as a holding
-period. The next gate belongs to the operator: open an incremental future-return
-decomposition, temporal transport of one frozen summary, or a separately
-declared breadth expansion. Do not select the hottest observed cell as a
+length, or forward increment. The template, original atlas, descriptive
+behavioral catalog, 10-30 loss-rebound topology, sparse 30-100 boundary probe,
+and 129-instrument sector-balanced transport are complete. Stop horizon
+expansion at 100 and do not treat 100 as a holding period. The next gate belongs
+to the operator: open an incremental future-return decomposition or temporal
+transport of one frozen summary. Do not select the hottest observed cell as a
 parameter.

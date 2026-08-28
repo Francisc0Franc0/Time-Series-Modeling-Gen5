@@ -1,3 +1,4 @@
+{"kind":"deck","id":"pr/3hvd9b","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
@@ -1502,116 +1503,352 @@
 {"kind":"textbox","id":"sh/vydgbytw","slide":89,"text":"What this earns","textPreview":"What this earns","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/ux4zitcb","slide":89,"text":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textPreview":"Freeze this catalog as the method’s descriptive vocabulary; future tests name one behavior, one state, and one horizon neighborhood.","textChars":132,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/0nilwn6h","slide":89,"text":"The catalog is a naming and discrimination layer. It earns clearer hypothesis generation, not a strategy. Any next confirmation should predeclare one archetype, one state, and one horizon neighborhood rather than search the complete atlas again.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/behavior_catalog_state_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/42ou2w","slide":90,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/b2xw7ylw","slide":90,"text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,42,420,28]}
-{"kind":"textbox","id":"sh/ypof2d47","slide":90,"text":"Is the rebound a real neighborhood—or a 20-session artifact?","textPreview":"Is the rebound a real neighborhood—or a 20-session artifact?","textChars":60,"textLines":1,"bbox":[48,164,1130,190]}
-{"kind":"shape","id":"sh/zqxwbils","slide":90,"bbox":[48,390,132,8]}
-{"kind":"textbox","id":"sh/c36x03m1","slide":90,"text":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textPreview":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textChars":90,"textLines":1,"bbox":[48,438,970,72]}
-{"kind":"textbox","id":"sh/xofe983m","slide":90,"text":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textPreview":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textChars":98,"textLines":1,"bbox":[48,570,1070,64]}
-{"kind":"textbox","id":"sh/a1ofyt4b","slide":90,"text":"90","textPreview":"90","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"notes","id":"nt/42ou2w","slide":90,"text":"The coarse atlas earned one finer descriptive slice. The question is topological: bounded island, exact-window artifact, or broad open surface. The slice does not search for a tradable parameter.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/hlc603","slide":91,"title":"FINE-GRID TOPOLOGY","textShapes":15}
-{"kind":"textbox","id":"sh/1gvmtkni","slide":91,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/dormtkj6","slide":91,"name":"title-11","text":"The slice changes resolution—not the question","textPreview":"The slice changes resolution—not the question","textChars":45,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/sni50fil","slide":91,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/fq94vu1c","slide":91,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/ep0n2p0r","slide":91,"name":"footer-number-11","text":"91","textPreview":"91","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/1srmx4j2","slide":91,"bbox":[58,168,10,94]}
-{"kind":"textbox","id":"sh/0ri54zix","slide":91,"text":"LOCKED","textPreview":"LOCKED","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
-{"kind":"textbox","id":"sh/vup4ja1s","slide":91,"text":"30 assets + six groups","textPreview":"30 assets + six groups","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
-{"kind":"textbox","id":"sh/utw3q507","slide":91,"text":"2018–2023 daily bars","textPreview":"2018–2023 daily bars","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
-{"kind":"shape","id":"sh/8zexgnyh","slide":91,"bbox":[92,272,1108,1]}
-{"kind":"shape","id":"sh/t0ne9sf2","slide":91,"bbox":[58,294,10,94]}
-{"kind":"textbox","id":"sh/6xwfedgr","slide":91,"text":"PRIMARY","textPreview":"PRIMARY","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
-{"kind":"textbox","id":"sh/7y5wnihw","slide":91,"text":"Signed-ER20 DOWN losses","textPreview":"Signed-ER20 DOWN losses","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
-{"kind":"textbox","id":"sh/g3yxk7yt","slide":91,"text":"10–30 by 10–30 grid","textPreview":"10–30 by 10–30 grid","textChars":19,"textLines":1,"bbox":[850,292,350,74]}
-{"kind":"shape","id":"sh/h47ydcfe","slide":91,"bbox":[92,398,1108,1]}
-{"kind":"shape","id":"sh/u1wfixgn","slide":91,"bbox":[58,420,10,94]}
-{"kind":"textbox","id":"sh/v25wb2x8","slide":91,"text":"CONTROLS","textPreview":"CONTROLS","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
-{"kind":"textbox","id":"sh/w7ux83y9","slide":91,"text":"Unfiltered + ATR%-high","textPreview":"Unfiltered + ATR%-high","textChars":22,"textLines":1,"bbox":[326,416,500,44]}
-{"kind":"textbox","id":"sh/x83eh8zu","slide":91,"text":"no p-values or BH scan","textPreview":"no p-values or BH scan","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
-{"kind":"shape","id":"sh/dsbmp0nm","slide":91,"bbox":[92,524,1108,1]}
-{"kind":"shape","id":"sh/sr2lwvm1","slide":91,"bbox":[58,562,1142,82]}
-{"kind":"textbox","id":"sh/rqt4nq5g","slide":91,"text":"What remains fixed","textPreview":"What remains fixed","textChars":18,"textLines":1,"bbox":[82,580,260,34]}
-{"kind":"textbox","id":"sh/qpk3u54v","slide":91,"text":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textPreview":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textChars":107,"textLines":1,"bbox":[350,576,820,44]}
-{"kind":"notes","id":"nt/hlc603","slide":91,"text":"Only the horizon resolution changes. The primary state and two comparators were declared before the surface was interpreted, and the old coarse cells serve as an exact parity check.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_checks.csv\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/73p9iz","slide":92,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/gbat4ryl","slide":92,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/j2hs3mhs","slide":92,"name":"title-4","text":"Fine resolution reveals an open rebound surface","textPreview":"Fine resolution reveals an open rebound surface","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/y18ruh07","slide":92,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/xgza1cz2","slide":92,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/wf69s7ih","slide":92,"name":"footer-number-4","text":"92","textPreview":"92","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/bexsz2hw","slide":92,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/hwjadwz6","slide":92,"text":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textPreview":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textChars":101,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/zeh8jy5c","slide":92,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/nqxojy1w","slide":92,"name":"","alt":"Fine-grid equal-asset median correlation heatmaps for unfiltered, ATR-percent-high, and signed-down loss branches","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/73p9iz","slide":92,"text":"Black outlines mark the predeclared strong-cell rule. The signed-down component spans 414 cells and touches every edge of the inspected 10–30 grid.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_equal_asset_median_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/origca","slide":93,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/t8fil0j2","slide":93,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/adkz2103","slide":93,"name":"title-4","text":"The shape is shared across assets—not carried by one name","textPreview":"The shape is shared across assets—not carried by one name","textChars":57,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/vetgb61o","slide":93,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/kjmh8vil","slide":93,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/5kvyh0jq","slide":93,"name":"footer-number-4","text":"93","textPreview":"93","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/ih4z6l0f","slide":93,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/s7mhcvih","slide":93,"text":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textPreview":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textChars":76,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/s3ypc3ix","slide":93,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/g3aho3mh","slide":93,"name":"","alt":"Fine-grid heatmaps showing the fraction of atlas assets with negative within-loss correlation","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/origca","slide":93,"text":"Cross-asset breadth is the guard against a single-name color patch. It does not turn common calendar observations into independent evidence.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_cross_asset_breadth_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/ie1374","slide":94,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/1sryd4fy","slide":94,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/ahkfatgf","slide":94,"name":"title-4","text":"Window 20 sits inside the curve","textPreview":"Window 20 sits inside the curve","textChars":31,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/bitgjyx0","slide":94,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/knmhg3ex","slide":94,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/lovyp8f2","slide":94,"name":"footer-number-4","text":"94","textPreview":"94","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/ylkzetwr","slide":94,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/0rix4zyd","slide":94,"text":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textPreview":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textChars":106,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/ovyh8v69","slide":94,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/8f614fa1","slide":94,"name":"","alt":"Cross-sections through the fine-grid surfaces with prior or following horizon fixed at 20 sessions","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/ie1374","slide":94,"text":"The signed-down prior-20 row median differs from adjacent rows by only -0.0036; its following-20 column differs from adjacent columns by -0.0099. That reduces, but does not eliminate, shared-path coupling concern.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/p20_topology_cross_sections.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/4c6m3w","slide":95,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/wzitovyd","slide":95,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/rqts3ax0","slide":95,"name":"title-4","text":"Group maps reveal meaningful heterogeneity","textPreview":"Group maps reveal meaningful heterogeneity","textChars":42,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/6pkbu5gf","slide":95,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/1gvu9kf2","slide":95,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/gvmt0fyx","slide":95,"name":"footer-number-4","text":"95","textPreview":"95","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/fudc7uxc","slide":95,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/xkrax0fy","slide":95,"text":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textPreview":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textChars":99,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/nahsfetk","slide":95,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/fmxormhw","slide":95,"name":"","alt":"Six heatmaps of signed-down loss-rebound correlation by frozen behavioral group","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/4c6m3w","slide":95,"text":"The group maps preserve identity rather than pooling everything into one result. Five assets per group are enough to show heterogeneity, not to estimate an asset-class population.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/signed_down_behavior_group_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/1r0pov","slide":96,"title":"FINE-GRID TOPOLOGY","textShapes":5}
-{"kind":"textbox","id":"sh/gzi987at","slide":96,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/j6p8rit0","slide":96,"name":"title-4","text":"Coverage—not the hottest cell—defines the finding","textPreview":"Coverage—not the hottest cell—defines the finding","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/i5grydcf","slide":96,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/twrqxcb2","slide":96,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/svi947ah","slide":96,"name":"footer-number-4","text":"96","textPreview":"96","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/7u98v2tc","slide":96,"bbox":[105,142,1070,515]}
-{"kind":"textbox","id":"sh/h0ra1cbe","slide":96,"text":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textPreview":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textChars":73,"textLines":1,"bbox":[120,660,1040,18]}
-{"kind":"shape","id":"sh/fil8vu98","slide":96,"bbox":[105,142,1070,515]}
-{"kind":"image","id":"im/z65on6t4","slide":96,"name":"","alt":"Bar chart summarizing breadth-supported and strong-cell coverage for the three fine-grid surfaces","bbox":[105,150,1070,475]}
-{"kind":"notes","id":"nt/1r0pov","slide":96,"text":"Every largest strong component touches the grid boundary. The correct label is open plateau or ridge; 20→26 and 18→24 are descriptive extrema, not selected parameters.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/topology_coverage_summary.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
-{"kind":"slide","id":"sl/iujx2i","slide":97,"title":"FINE-GRID TOPOLOGY","textShapes":15}
-{"kind":"textbox","id":"sh/orqt8jup","slide":97,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/i5cbe5gf","slide":97,"name":"title-11","text":"Decision: freeze one open plateau—then stop","textPreview":"Decision: freeze one open plateau—then stop","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
-{"kind":"shape","id":"sh/365c7ah0","slide":97,"bbox":[48,126,1184,2]}
-{"kind":"textbox","id":"sh/sbetkfyh","slide":97,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
-{"kind":"textbox","id":"sh/dwnudkz2","slide":97,"name":"footer-number-11","text":"97","textPreview":"97","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
-{"kind":"shape","id":"sh/q9wbi5gb","slide":97,"bbox":[58,168,10,94]}
-{"kind":"textbox","id":"sh/ra5cbahw","slide":97,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
-{"kind":"textbox","id":"sh/8fut8byd","slide":97,"text":"Open rebound plateau","textPreview":"Open rebound plateau","textChars":20,"textLines":1,"bbox":[326,164,500,44]}
-{"kind":"textbox","id":"sh/t03a1gzy","slide":97,"text":"not a 20-session island","textPreview":"not a 20-session island","textChars":23,"textLines":1,"bbox":[850,166,350,74]}
-{"kind":"shape","id":"sh/5snq90nu","slide":97,"bbox":[92,272,1108,1]}
-{"kind":"shape","id":"sh/krep0vm9","slide":97,"bbox":[58,294,10,94]}
-{"kind":"textbox","id":"sh/jq587q54","slide":97,"text":"EARNS","textPreview":"EARNS","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
-{"kind":"textbox","id":"sh/ipw7yl4j","slide":97,"text":"Less coupling concern","textPreview":"Less coupling concern","textChars":21,"textLines":1,"bbox":[326,290,500,44]}
-{"kind":"textbox","id":"sh/tg7qd0n6","slide":97,"text":"same geometry across windows","textPreview":"same geometry across windows","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
-{"kind":"shape","id":"sh/svyp4vml","slide":97,"bbox":[92,398,1108,1]}
-{"kind":"shape","id":"sh/7u58bq50","slide":97,"bbox":[58,420,10,94]}
-{"kind":"textbox","id":"sh/6tw72l4f","slide":97,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
-{"kind":"textbox","id":"sh/hk7qhkn2","slide":97,"text":"A chosen horizon or rule","textPreview":"A chosen horizon or rule","textChars":24,"textLines":1,"bbox":[326,416,500,44]}
-{"kind":"textbox","id":"sh/gjy98fmh","slide":97,"text":"no edge or causality claim","textPreview":"no edge or causality claim","textChars":26,"textLines":1,"bbox":[850,418,350,74]}
-{"kind":"shape","id":"sh/0n694jut","slide":97,"bbox":[92,524,1108,1]}
-{"kind":"shape","id":"sh/1ofadobe","slide":97,"bbox":[58,562,1142,82]}
-{"kind":"textbox","id":"sh/e1or29cn","slide":97,"text":"Next gate belongs to the operator","textPreview":"Next gate belongs to the operator","textChars":33,"textLines":1,"bbox":[82,580,260,34]}
-{"kind":"textbox","id":"sh/f2xsbet8","slide":97,"text":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open boundary.","textPreview":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open b...","textChars":145,"textLines":1,"bbox":[350,576,820,44]}
-{"kind":"notes","id":"nt/iujx2i","slide":97,"text":"The fine grid answers the approved question: the transported rebound is a broad open surface rather than an exact-window island. The current 30 assets are sufficient for that diagnosis, but not for population-level asset-class claims. No later data, horizon extension, breadth expansion, or rule is opened here.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/y10z65c7","slide":90,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/h47et0f2","slide":90,"text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/8fydwvyl","slide":90,"text":"Is the rebound a real neighborhood—or a 20-session artifact?","textPreview":"Is the rebound a real neighborhood—or a 20-session artifact?","textChars":60,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/9g7ep0f6","slide":90,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/uhgfy5gb","slide":90,"text":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textPreview":"Resolve the transported loss-rebound region from 10 to 30 sessions, one session at a time.","textChars":90,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/v2pwrqxw","slide":90,"text":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textPreview":"Same 30 assets. Same 2018–2023 data. Negative-prior branch only. No new inference or trading test.","textChars":98,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/w3yx0vyh","slide":90,"text":"90","textPreview":"90","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/y10z65c7","slide":90,"text":"The coarse atlas earned one finer descriptive slice. The question is topological: bounded island, exact-window artifact, or broad open surface. The slice does not search for a tradable parameter.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/zi9cryxk","slide":91,"title":"FINE-GRID TOPOLOGY","textShapes":15}
+{"kind":"textbox","id":"sh/cni54b65","slide":91,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/ad4be1gz","slide":91,"name":"title-11","text":"The slice changes resolution—not the question","textPreview":"The slice changes resolution—not the question","textChars":45,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/vedcnmhk","slide":91,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/k36tkby1","slide":91,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/54futgzm","slide":91,"name":"footer-number-11","text":"91","textPreview":"91","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/i1obi1gv","slide":91,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/j2xcr6hg","slide":91,"text":"LOCKED","textPreview":"LOCKED","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/07mto7yx","slide":91,"text":"30 assets + six groups","textPreview":"30 assets + six groups","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/l8vuhcz2","slide":91,"text":"2018–2023 daily bars","textPreview":"2018–2023 daily bars","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/tofmp8za","slide":91,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/sn6lw3ip","slide":91,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/7mx4nih4","slide":91,"text":"PRIMARY","textPreview":"PRIMARY","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/6lo3ud0j","slide":91,"text":"Signed-ER20 DOWN losses","textPreview":"Signed-ER20 DOWN losses","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/hczmtsz6","slide":91,"text":"10–30 by 10–30 grid","textPreview":"10–30 by 10–30 grid","textChars":19,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/grql0nil","slide":91,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/fqh4rih0","slide":91,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/upo3yd0f","slide":91,"text":"CONTROLS","textPreview":"CONTROLS","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/pgzmxsz2","slide":91,"text":"Unfiltered + ATR%-high","textPreview":"Unfiltered + ATR%-high","textChars":22,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/4fql47ix","slide":91,"text":"no p-values or BH scan","textPreview":"no p-values or BH scan","textChars":22,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/ojy50bqt","slide":91,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/pk76tg7e","slide":91,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/2xgny183","slide":91,"text":"What remains fixed","textPreview":"What remains fixed","textChars":18,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/nipor6p8","slide":91,"text":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textPreview":"Coarse 10/15/20/25 anchors must reproduce exactly; neighboring cells are morphology, not independent tests.","textChars":107,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/zi9cryxk","slide":91,"text":"Only the horizon resolution changes. The primary state and two comparators were declared before the surface was interpreted, and the old coarse cells serve as an exact parity check.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_checks.csv\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/cry98721","slide":92,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/fqt8r214","slide":92,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/kzi9c3ih","slide":92,"name":"title-4","text":"Fine resolution reveals an open rebound surface","textPreview":"Fine resolution reveals an open rebound surface","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/50rql8j2","slide":92,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/atg76tkf","slide":92,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/vup8fy10","slide":92,"name":"footer-number-4","text":"92","textPreview":"92","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/wvyp83il","slide":92,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/upkrix0z","slide":92,"text":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textPreview":"Strong cells form connected regions across all three negative-prior views—not a bounded 20→20 island.","textChars":101,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/2tg7a50f","slide":92,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/q1cnadcz","slide":92,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/cry98721","slide":92,"text":"Black outlines mark the predeclared strong-cell rule. The signed-down component spans 414 cells and touches every edge of the inspected 10–30 grid.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_equal_asset_median_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/5sjq9oby","slide":93,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/ix83q1oz","slide":93,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/98zmdw7i","slide":93,"name":"title-4","text":"The shape is shared across assets—not carried by one name","textPreview":"The shape is shared across assets—not carried by one name","textChars":57,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/876lkr6x","slide":93,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/z2x472p0","slide":93,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/y1o3ehov","slide":93,"name":"footer-number-4","text":"93","textPreview":"93","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/l4fm9c76","slide":93,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/jyh4j6pk","slide":93,"text":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textPreview":"At least 70% of assets are negative in most signed-down and ATR%-high cells.","textChars":76,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/50jq1c3i","slide":93,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/dk7alovm","slide":93,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/5sjq9oby","slide":93,"text":"Cross-asset breadth is the guard against a single-name color patch. It does not turn common calendar observations into independent evidence.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/fine_grid_cross_asset_breadth_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/idgbyp0n","slide":94,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/bex0rm5s","slide":94,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/g7mhs765","slide":94,"name":"title-4","text":"Window 20 sits inside the curve","textPreview":"Window 20 sits inside the curve","textChars":31,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/18vilcnq","slide":94,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/6hkzmxo3","slide":94,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/rit0f2po","slide":94,"name":"footer-number-4","text":"94","textPreview":"94","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/sj2ho769","slide":94,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/qd4jyho7","slide":94,"text":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textPreview":"Holding one horizon at 20 produces broad curves, not a singular notch at the signed-ER measurement window.","textChars":106,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/mdcnm90n","slide":94,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/ah0z6hob","slide":94,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/idgbyp0n","slide":94,"text":"The signed-down prior-20 row median differs from adjacent rows by only -0.0036; its following-20 column differs from adjacent columns by -0.0099. That reduces, but does not eliminate, shared-path coupling concern.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/p20_topology_cross_sections.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/bmxsjyhk","slide":95,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/ed0nup0f","slide":95,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/5o7mh0zy","slide":95,"name":"title-4","text":"Group maps reveal meaningful heterogeneity","textPreview":"Group maps reveal meaningful heterogeneity","textChars":42,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4ny5ovid","slide":95,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vi54bqhw","slide":95,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/uhw3il0b","slide":95,"name":"footer-number-4","text":"95","textPreview":"95","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/hknmd0zm","slide":95,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/ze94nah0","slide":95,"text":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textPreview":"Equity ETFs and defensive equities are darkest; five-name groups remain exploratory representation.","textChars":99,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/9sju5cju","slide":95,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/tsjax4rq","slide":95,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/bmxsjyhk","slide":95,"text":"The group maps preserve identity rather than pooling everything into one result. Five assets per group are enough to show heterogeneity, not to estimate an asset-class population.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/signed_down_behavior_group_surfaces.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/0b2pori9","slide":96,"title":"FINE-GRID TOPOLOGY","textShapes":5}
+{"kind":"textbox","id":"sh/zu1876dw","slide":96,"name":"section-4","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/wnu9ovu9","slide":96,"name":"title-4","text":"Coverage—not the hottest cell—defines the finding","textPreview":"Coverage—not the hottest cell—defines the finding","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/xo3qh0vu","slide":96,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/mxs7ilc7","slide":96,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ny18b6ds","slide":96,"name":"footer-number-4","text":"96","textPreview":"96","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/ozapkbud","slide":96,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/ets7e1cb","slide":96,"text":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textPreview":"Strong-cell coverage: 66% unfiltered, 95% ATR%-high, and 94% signed-down.","textChars":73,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/y9gbm94f","slide":96,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/2t0fa9sb","slide":96,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/0b2pori9","slide":96,"text":"Every largest strong component touches the grid boundary. The correct label is open plateau or ridge; 20→26 and 18→24 are descriptive extrema, not selected parameters.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/visuals/topology_coverage_summary.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/equal_asset_fine_grid_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/1wfq9orm","slide":97,"title":"FINE-GRID TOPOLOGY","textShapes":15}
+{"kind":"textbox","id":"sh/x4neh0j2","slide":97,"name":"section-11","text":"FINE-GRID TOPOLOGY","textPreview":"FINE-GRID TOPOLOGY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/hsvyds7m","slide":97,"name":"title-11","text":"Decision: freeze one open plateau—then stop","textPreview":"Decision: freeze one open plateau—then stop","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/g7mxkn61","slide":97,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/72dw7ipk","slide":97,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/61kfedoz","slide":97,"name":"footer-number-11","text":"97","textPreview":"97","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/t4ve9s7q","slide":97,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/s3mxgn65","slide":97,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/ryxgj2po","slide":97,"text":"Open rebound plateau","textPreview":"Open rebound plateau","textChars":20,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/qxofqxoj","slide":97,"text":"not a 20-session island","textPreview":"not a 20-session island","textChars":23,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/0fq9cnu9","slide":97,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/1gjqlsbu","slide":97,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/ed8raxcj","slide":97,"text":"EARNS","textPreview":"EARNS","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/feh8j2to","slide":97,"text":"Less coupling concern","textPreview":"Less coupling concern","textChars":21,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/sbq98nud","slide":97,"text":"same geometry across windows","textPreview":"same geometry across windows","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/tczqhsby","slide":97,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/69876dc7","slide":97,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/rah8fits","slide":97,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/4n6p43u1","slide":97,"text":"A chosen horizon or rule","textPreview":"A chosen horizon or rule","textChars":24,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/58fqd8bm","slide":97,"text":"no edge or causality claim","textPreview":"no edge or causality claim","textChars":26,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/ls7ylkze","slide":97,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/krexsfit","slide":97,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/zq5wjah8","slide":97,"text":"Next gate belongs to the operator","textPreview":"Next gate belongs to the operator","textChars":33,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/y5wfq50n","slide":97,"text":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open boundary.","textPreview":"Choose temporal transport of one frozen neighborhood summary or a separately predeclared atlas-breadth expansion. Do not chase the open b...","textChars":145,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/1wfq9orm","slide":97,"text":"The fine grid answers the approved question: the transported rebound is a broad open surface rather than an exact-window island. The current 30 assets are sufficient for that diagnosis, but not for population-level asset-class claims. No later data, horizon extension, breadth expansion, or rule is opened here.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_TOPOLOGY_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_topology_20260827/topology_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/6tkni9gr","slide":98,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/4bax036t","slide":98,"text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/h8jyp8n2","slide":98,"text":"How far does the cumulative rebound plateau extend?","textPreview":"How far does the cumulative rebound plateau extend?","textChars":51,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/g7axw36h","slide":98,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/3a1gry58","slide":98,"text":"Probe sparse 35 / 40 / 50 / 75 / 100-session checkpoints—without filling a new grid.","textPreview":"Probe sparse 35 / 40 / 50 / 75 / 100-session checkpoints—without filling a new grid.","textChars":84,"textLines":1,"bbox":[48,438,970,72]}
+{"kind":"textbox","id":"sh/29sfydon","slide":98,"text":"Same 30 assets. Same 2018–2023 data. Same loss branch and states. No holding-period test.","textPreview":"Same 30 assets. Same 2018–2023 data. Same loss branch and states. No holding-period test.","textChars":89,"textLines":1,"bbox":[48,570,1070,64]}
+{"kind":"textbox","id":"sh/pcjyt8ne","slide":98,"text":"98","textPreview":"98","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/6tkni9gr","slide":98,"text":"The fine-grid result was open at 30, so this slice asks a narrow boundary question. Sparse checkpoints protect the operator from turning one descriptive plateau into a dense endpoint search.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/rex8n2xg","slide":99,"title":"BOUNDARY PROBE","textShapes":15}
+{"kind":"textbox","id":"sh/xc3mxo72","slide":99,"name":"section-11","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/10n2943a","slide":99,"name":"title-11","text":"The probe extends the boundary—not the search surface","textPreview":"The probe extends the boundary—not the search surface","textChars":53,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0zelgzmp","slide":99,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/n25kbelg","slide":99,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/21w3i94v","slide":99,"name":"footer-number-11","text":"99","textPreview":"99","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/po72do3m","slide":99,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/o3ylkjm1","slide":99,"text":"LOCKED","textPreview":"LOCKED","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/j6lkzu5c","slide":99,"text":"30 assets + six groups","textPreview":"30 assets + six groups","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/i5cj6p4r","slide":99,"text":"2018–2023 daily bars","textPreview":"2018–2023 daily bars","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/4vmxkbi1","slide":99,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/pgfedwzm","slide":99,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/2t4fi10v","slide":99,"text":"PRIMARY","textPreview":"PRIMARY","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3udwb6hg","slide":99,"text":"Signed-ER20 DOWN losses","textPreview":"Signed-ER20 DOWN losses","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/cj6xobix","slide":99,"text":"negative-prior branch","textPreview":"negative-prior branch","textChars":21,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/dkfehgzi","slide":99,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/qhofm10r","slide":99,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/rixwf6hc","slide":99,"text":"CROSSHAIR","textPreview":"CROSSHAIR","textChars":9,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/sn2dcrit","slide":99,"text":"vary one horizon to 100","textPreview":"vary one horizon to 100","textChars":23,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/tove5cze","slide":99,"text":"other fixed at 20 / 25 / 30","textPreview":"other fixed at 20 / 25 / 30","textChars":27,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/983mto7q","slide":99,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/o7ulkj65","slide":99,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/n61krep0","slide":99,"text":"What this does not test","textPreview":"What this does not test","textChars":23,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/m5s3i9of","slide":99,"text":"147 unique pairs. Same display rules. No inference, later data, endpoint selection, edge, or holding-period claim.","textPreview":"147 unique pairs. Same display rules. No inference, later data, endpoint selection, edge, or holding-period claim.","textChars":114,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/rex8n2xg","slide":99,"text":"The union contains 147 unique prior/following pairs. Both orientations are measured: vary prior with following fixed, and vary following with prior fixed. Shared 10–30 cells must match the preceding packet exactly.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/probe_registry.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_probe_checks.csv\n- operator_hypothesis_lab/registries/own_asset_return_geometry_atlas.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/q58fqtwb","slide":100,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/ql0bu5sb","slide":100,"name":"section-4","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/hg7ah0bu","slide":100,"name":"title-4","text":"The cumulative relationship stays open through 100","textPreview":"The cumulative relationship stays open through 100","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/gfytovu9","slide":100,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/7q5sbqts","slide":100,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6pwbilc7","slide":100,"name":"footer-number-4","text":"100","textPreview":"100","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/ts7adgby","slide":100,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/rm9cnatw","slide":100,"text":"All 18 anchor paths remain strong at every outer checkpoint; no decay boundary appears.","textPreview":"All 18 anchor paths remain strong at every outer checkpoint; no decay boundary appears.","textChars":87,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/xg72hgf6","slide":100,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/1cvutkbm","slide":100,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/q58fqtwb","slide":100,"text":"Every condition, orientation, and fixed-anchor path remains breadth-supported and strong at 35, 40, 50, 75, and 100 sessions. This is one cumulative morphology result, not 18 independent discoveries.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/visuals/boundary_equal_asset_cross_sections.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/equal_asset_boundary_cross_sections.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/7y90baxs","slide":101,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/dwre5cbi","slide":101,"name":"section-4","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/u1gv2dsz","slide":101,"name":"title-4","text":"Breadth stays high through 100","textPreview":"Breadth stays high through 100","textChars":30,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/f2pwvitk","slide":101,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/4rix87a1","slide":101,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/psre1sbm","slide":101,"name":"footer-number-4","text":"101","textPreview":"101","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/25gf6xsv","slide":101,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/cvixc7ax","slide":101,"text":"At 100, 83–93% of assets remain negative across every condition and orientation.","textPreview":"At 100, 83–93% of assets remain negative across every condition and orientation.","textChars":80,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/kbu9sb2x","slide":101,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/svipc7ax","slide":101,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/7y90baxs","slide":101,"text":"The breadth view guards against one or two names driving the equal-asset median. Same-date observations remain dependent, so breadth does not create independent time experiments.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/visuals/boundary_cross_asset_breadth.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/equal_asset_boundary_cross_sections.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/83qdw7m9","slide":102,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/6lsze1c3","slide":102,"name":"section-4","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,12,440,24]}
+{"kind":"textbox","id":"sh/5g3ix0b2","slide":102,"name":"title-4","text":"Signed-down rebound stays strong to 100","textPreview":"Signed-down rebound stays strong to 100","textChars":39,"textLines":1,"bbox":[48,68,1184,58]}
+{"kind":"shape","id":"sh/4fuhovuh","slide":102,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/val0rqt0","slide":102,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/u9szilcf","slide":102,"name":"footer-number-4","text":"102","textPreview":"102","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/hc3it0bq","slide":102,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/7m10n6to","slide":102,"text":"At following = 100, median r is −0.29 to −0.33 for prior anchors 20 / 25 / 30.","textPreview":"At following = 100, median r is −0.29 to −0.33 for prior anchors 20 / 25 / 30.","textChars":78,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/1gj2twfe","slide":102,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/pwraxwfa","slide":102,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/83qdw7m9","slide":102,"text":"The signed-down boundary matrix remains strong in both orientations. The most negative outer values occur when the prior anchor stays at 20–30 and cumulative following return expands to 100.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/visuals/signed_down_outer_checkpoint_matrix.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/equal_asset_boundary_cross_sections.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/18fuxcb6","slide":103,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/t0fml8fy","slide":103,"name":"section-4","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/a54329gz","slide":103,"name":"title-4","text":"Behavior groups remain visibly heterogeneous","textPreview":"Behavior groups remain visibly heterogeneous","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/b6d4bexk","slide":103,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/kv658jyh","slide":103,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/lwfmhofm","slide":103,"name":"footer-number-4","text":"103","textPreview":"103","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/yto369gb","slide":103,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/8z65c3ed","slide":103,"text":"Equity ETFs are darkest; non-equity proxies weaken when the future window expands.","textPreview":"Equity ETFs are darkest; non-equity proxies weaken when the future window expands.","textChars":82,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/sra10b21","slide":103,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/s7654jul","slide":103,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/18fuxcb6","slide":103,"text":"At the 100-session signed-down boundary, equity-ETF group medians are about -0.58 to -0.67. Non-equity proxy medians are only about -0.03 to -0.06 when the following horizon expands. Five-name groups remain descriptive.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/visuals/signed_down_group_boundary_cross_sections.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/equal_asset_boundary_cross_sections.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/2pkbi9wz","slide":104,"title":"BOUNDARY PROBE","textShapes":5}
+{"kind":"textbox","id":"sh/etwvah8j","slide":104,"name":"section-4","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/54nexc72","slide":104,"name":"title-4","text":"Observation support remains usable at 100","textPreview":"Observation support remains usable at 100","textChars":41,"textLines":1,"bbox":[48,68,1184,58]}
+{"kind":"shape","id":"sh/k3ud47qh","slide":104,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vylwr2p0","slide":104,"name":"footer-left-4","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/axcvyx8f","slide":104,"name":"footer-number-4","text":"104","textPreview":"104","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/x03ets76","slide":104,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/fu5w3mp4","slide":104,"text":"Signed-down median branch count is 121 when prior expands and 146–154 when future expands.","textPreview":"Signed-down median branch count is 121 when prior expands and 146–154 when future expands.","textChars":90,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"shape","id":"sh/x8r698v2","slide":104,"bbox":[105,142,1070,515]}
+{"kind":"image","id":"im/90bitcnu","slide":104,"name":"","bbox":[217.78,150,844.44,475]}
+{"kind":"notes","id":"nt/2pkbi9wz","slide":104,"text":"Longer windows reduce the number of completed observations, especially after signed-down filtering, but the descriptive support guardrails remain satisfied through 100 sessions.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/visuals/boundary_sample_support.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/equal_asset_boundary_cross_sections.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/jutcfaps","slide":105,"title":"BOUNDARY PROBE","textShapes":15}
+{"kind":"textbox","id":"sh/hsbmxova","slide":105,"name":"section-11","text":"BOUNDARY PROBE","textPreview":"BOUNDARY PROBE","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xkjqhcny","slide":105,"name":"title-11","text":"Decision: open through 100—duration unknown","textPreview":"Decision: open through 100—duration unknown","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wjap876d","slide":105,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nuh8b25g","slide":105,"name":"footer-left-11","text":"30 assets | adjusted daily | 2018–2023","textPreview":"30 assets | adjusted daily | 2018–2023","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mt872xob","slide":105,"name":"footer-number-11","text":"105","textPreview":"105","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/9gzqdcnm","slide":105,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/ovqp4761","slide":105,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/zqh87i5k","slide":105,"text":"Open through 100","textPreview":"Open through 100","textChars":16,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ep87yxoz","slide":105,"text":"cumulative relation persists","textPreview":"cumulative relation persists","textChars":28,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/kj6dwnql","slide":105,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/lkfeps76","slide":105,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/yhovud8f","slide":105,"text":"EARNS","textPreview":"EARNS","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/zixcnip0","slide":105,"text":"One boundary conclusion","textPreview":"One boundary conclusion","textChars":23,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/cf6ds3qp","slide":105,"text":"not a selected endpoint","textPreview":"not a selected endpoint","textChars":23,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/xgful8ra","slide":105,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ad4vqt8j","slide":105,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/bexcjy94","slide":105,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/wbqd47qt","slide":105,"text":"A 100-session hold","textPreview":"A 100-session hold","textChars":18,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/hczexc7e","slide":105,"text":"no edge or causality claim","textPreview":"no edge or causality claim","textChars":26,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/5gvm18v6","slide":105,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/4vmls3el","slide":105,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/jut4zyd0","slide":105,"text":"Next gate: incremental return blocks","textPreview":"Next gate: incremental return blocks","textChars":36,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/itk3qtwv","slide":105,"text":"Decompose sessions 1–20, 21–40, 41–60, and 61–100. Ask when the response accrues—not which cumulative endpoint looks hottest.","textPreview":"Decompose sessions 1–20, 21–40, 41–60, and 61–100. Ask when the response accrues—not which cumulative endpoint looks hottest.","textChars":125,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/jutcfaps","slide":105,"text":"A 100-session cumulative future return includes every earlier return block. Persistence at 100 may mean that a rebound happened early and remains embedded in the total; it does not show that new return continues for 100 sessions. Incremental blocks are the clean next measurement.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827/boundary_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ov2p4vup","slide":106,"title":"WIDE ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/knyl0ry9","slide":106,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/tsrmdwzq","slide":106,"text":"Does the plateau survive real sector breadth?","textPreview":"Does the plateau survive real sector breadth?","textChars":45,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/sril4ry5","slide":106,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/jmp47mho","slide":106,"text":"Freeze 129 instruments, all nine filters, and a coarse 20–100-session grid.","textPreview":"Freeze 129 instruments, all nine filters, and a coarse 20–100-session grid.","textChars":75,"textLines":1,"bbox":[48,438,1040,72]}
+{"kind":"textbox","id":"sh/ilg3yhg3","slide":106,"text":"Primary headline: 88 stocks, eight in each of 11 GICS sectors, equal-sector weighted.","textPreview":"Primary headline: 88 stocks, eight in each of 11 GICS sectors, equal-sector weighted.","textChars":85,"textLines":1,"bbox":[48,570,1100,64]}
+{"kind":"textbox","id":"sh/5o7m9wzu","slide":106,"text":"106","textPreview":"106","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/ov2p4vup","slide":106,"text":"This slice opens breadth, not another horizon search. The attention sleeve and controls are retained as challengers, while the full-history 88-stock core determines the equal-sector headline.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- operator_hypothesis_lab/registries/return_geometry_wide_atlas.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/loz2xkzi","slide":107,"title":"WIDE ATLAS","textShapes":15}
+{"kind":"textbox","id":"sh/wzitkjat","slide":107,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/yxkr2d4r","slide":107,"text":"The wider atlas is balanced before results are read","textPreview":"The wider atlas is balanced before results are read","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/zyt8vi5c","slide":107,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/8nm98nmt","slide":107,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/9ovq1sne","slide":107,"text":"107","textPreview":"107","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/m1kr6x43","slide":107,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/n2d8zi58","slide":107,"text":"CORE","textPreview":"CORE","textChars":4,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/oripw36p","slide":107,"text":"88 stocks","textPreview":"88 stocks","textChars":9,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/psrqp8na","slide":107,"text":"11 sectors × 8 names","textPreview":"11 sectors × 8 names","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/d0fqlg3y","slide":107,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/sz6pcb2d","slide":107,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/ryx8j6ls","slide":107,"text":"CHALLENGE","textPreview":"CHALLENGE","textChars":9,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/qxo7a1k7","slide":107,"text":"16 attention names","textPreview":"16 attention names","textChars":18,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/1ozqp03u","slide":107,"text":"separate sleeve—not a sector","textPreview":"separate sleeve—not a sector","textChars":28,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/0nqpgv29","slide":107,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/fmx8nqlo","slide":107,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/e1o7elkj","slide":107,"text":"CONTROLS","textPreview":"CONTROLS","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/pszqt036","slide":107,"text":"25 liquid proxies","textPreview":"25 liquid proxies","textChars":17,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/orqpkv2l","slide":107,"text":"15 equity ETFs + 10 non-equity","textPreview":"15 equity ETFs + 10 non-equity","textChars":30,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/8vy9gzah","slide":107,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/9w7ap4b2","slide":107,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/mtgre9sr","slide":107,"text":"Frozen grid","textPreview":"Frozen grid","textChars":11,"textLines":1,"bbox":[82,580,270,34]}
+{"kind":"textbox","id":"sh/nupsnetc","slide":107,"text":"Prior and following = 20 / 25 / 30 / 35 / 40 / 50 / 75 / 100. All nine existing filter states; no per-asset selection.","textPreview":"Prior and following = 20 / 25 / 30 / 35 / 40 / 50 / 75 / 100. All nine existing filter states; no per-asset selection.","textChars":118,"textLines":1,"bbox":[350,576,820,52]}
+{"kind":"notes","id":"nt/loz2xkzi","slide":107,"text":"GICS supplies the 11-sector top-level taxonomy. These are frozen current research labels, not point-in-time constituent histories. Only the core enters equal-sector aggregation.\n\n[Sources]\n- operator_hypothesis_lab/registries/return_geometry_wide_atlas.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/run_spec.csv\n- https://www.spglobal.com/spdji/en/landing/topic/gics/\n- https://www.spglobal.com/spdji/en/documents/methodologies/methodology-gics.pdf?force_download=true\n[/Sources]"}
+{"kind":"slide","id":"sl/q50betc3","slide":108,"title":"WIDE ATLAS","textShapes":13}
+{"kind":"textbox","id":"sh/adwva98v","slide":108,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/orit8bi1","slide":108,"text":"Coverage is complete where the headline is formed","textPreview":"Coverage is complete where the headline is formed","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/psru1gjm","slide":108,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/elgb2h0z","slide":108,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/fmpsvm1k","slide":108,"text":"108","textPreview":"108","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/gnyt4rip","slide":108,"bbox":[58,164,340,180]}
+{"kind":"textbox","id":"sh/1o7uxwja","slide":108,"text":"129/129","textPreview":"129/129","textChars":7,"textLines":1,"bbox":[80,188,296,70]}
+{"kind":"textbox","id":"sh/6xwbyh0n","slide":108,"text":"analyzable","textPreview":"analyzable","textChars":10,"textLines":1,"bbox":[80,274,296,38]}
+{"kind":"shape","id":"sh/ry5srm18","slide":108,"bbox":[450,164,340,180]}
+{"kind":"textbox","id":"sh/769wby9o","slide":108,"text":"88/88","textPreview":"88/88","textChars":5,"textLines":1,"bbox":[472,188,296,70]}
+{"kind":"textbox","id":"sh/65gvit83","slide":108,"text":"core full-history","textPreview":"core full-history","textChars":17,"textLines":1,"bbox":[472,274,296,38]}
+{"kind":"shape","id":"sh/t8redore","slide":108,"bbox":[842,164,340,180]}
+{"kind":"textbox","id":"sh/s7idkjq9","slide":108,"text":"74,304","textPreview":"74,304","textChars":6,"textLines":1,"bbox":[864,188,296,70]}
+{"kind":"textbox","id":"sh/fa9wfy9k","slide":108,"text":"asset-state cells","textPreview":"asset-state cells","textChars":17,"textLines":1,"bbox":[864,274,296,38]}
+{"kind":"shape","id":"sh/u90vmt8z","slide":108,"bbox":[58,386,1142,210]}
+{"kind":"textbox","id":"sh/hcreh8rq","slide":108,"text":"10 partial-history attention names","textPreview":"10 partial-history attention names","textChars":34,"textLines":1,"bbox":[84,414,460,48]}
+{"kind":"textbox","id":"sh/gbido3q5","slide":108,"text":"Refreshed once; no pre-listing rows exist. Every history reaches 2023, and none enters equal-sector weighting.","textPreview":"Refreshed once; no pre-listing rows exist. Every history reaches 2023, and none enters equal-sector weighting.","textChars":110,"textLines":1,"bbox":[84,478,1055,72]}
+{"kind":"textbox","id":"sh/ve5c3e9g","slide":108,"text":"12 / 12 integrity checks pass • original 30-name overlap reproduces below 5e−16","textPreview":"12 / 12 integrity checks pass • original 30-name overlap reproduces below 5e−16","textChars":79,"textLines":1,"bbox":[84,566,1055,30]}
+{"kind":"notes","id":"nt/q50betc3","slide":108,"text":"The remaining provider WARN labels are structural IPO/first-trade partial histories in the attention sleeve. A refresh was attempted and returned no earlier bars. The equal-sector core is fully covered.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/coverage_ledger.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/wide_atlas_query_merge_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/wide_atlas_checks.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/original_atlas_parity.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/zi107e9c","slide":109,"title":"WIDE ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/y5sjehgb","slide":109,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/x032hgfu","slide":109,"text":"The signed-down plateau survives the full coarse surface","textPreview":"The signed-down plateau survives the full coarse surface","textChars":56,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wzu1obe9","slide":109,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/na1kb6xs","slide":109,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/m9sji1w7","slide":109,"text":"109","textPreview":"109","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/9w32dwfy","slide":109,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/z61k7mxw","slide":109,"text":"Every one of 64 equal-sector cells is negative; this is a broad surface—not a selected endpoint.","textPreview":"Every one of 64 equal-sector cells is negative; this is a broad surface—not a selected endpoint.","textChars":96,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/nqd8bah0","slide":109,"name":"","bbox":[340,148,600,500]}
+{"kind":"notes","id":"nt/zi107e9c","slide":109,"text":"The primary surface takes the median loss-branch correlation within each sector and then the median across 11 sectors. All 64 cells remain negative. This is one dependent morphology, not 64 independent confirmations.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/visuals/equal_sector_signed_er20_down_trend_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/equal_sector_cell_summary.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/pk3mp4by","slide":110,"title":"WIDE ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/elkre5o7","slide":110,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/pwrah07q","slide":110,"text":"Sector breadth holds through 75—and nearly through 100","textPreview":"Sector breadth holds through 75—and nearly through 100","textChars":54,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/4vi98v65","slide":110,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fqp8b6p8","slide":110,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/upgr21o3","slide":110,"text":"110","textPreview":"110","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/hsradg7e","slide":110,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/zmtsna5s","slide":110,"text":"11 / 11 sector medians are negative through 75; 10 / 11 at 100, with Health Care ≈ +0.01.","textPreview":"11 / 11 sector medians are negative through 75; 10 / 11 at 100, with Health Care ≈ +0.01.","textChars":89,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/zu14z61g","slide":110,"name":"","bbox":[248.7,148,782.61,500]}
+{"kind":"notes","id":"nt/pk3mp4by","slide":110,"text":"The 100-session Health Care exception is useful: broad transport is not the same thing as a universal law. Consumer Discretionary, Materials, Industrials, and Utilities are especially negative at 100.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/visuals/signed_down_sector_diagonal.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/sector_horizon_diagonal.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/headline_signed_down_diagonal.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/sf6p0fed","slide":111,"title":"WIDE ATLAS","textShapes":5}
+{"kind":"textbox","id":"sh/a90b298n","slide":111,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/94vu5o76","slide":111,"text":"The template discriminates among regime states","textPreview":"The template discriminates among regime states","textChars":46,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/832dcjql","slide":111,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/zytczep4","slide":111,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/yxkv698j","slide":111,"text":"1 1 1","textPreview":"1 1 1","textChars":5,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/l0bu1o7a","slide":111,"bbox":[105,142,1070,515]}
+{"kind":"textbox","id":"sh/ba9cveps","slide":111,"text":"Trending / ATR-high / signed-down are strongest; signed-up losses are structurally sparse at short horizons.","textPreview":"Trending / ATR-high / signed-down are strongest; signed-up losses are structurally sparse at short horizons.","textChars":108,"textLines":1,"bbox":[120,660,1040,18]}
+{"kind":"image","id":"im/fapkfe1g","slide":111,"name":"","bbox":[242.27,148,795.45,500]}
+{"kind":"notes","id":"nt/sf6p0fed","slide":111,"text":"This view prevents the study from becoming a signed-down-only story. Unfiltered loss rebound remains visible, ATR-high is stronger than low/medium, and the signed-up negative-prior branch is sparse because the state and branch are mechanically discordant.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/visuals/all_states_equal_sector_diagonal.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/equal_sector_horizon_diagonal.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/fu187e1o","slide":112,"title":"WIDE ATLAS","textShapes":6}
+{"kind":"textbox","id":"sh/29cnqt4r","slide":112,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/d4bq10j6","slide":112,"text":"Challenge cohorts preserve useful heterogeneity","textPreview":"Challenge cohorts preserve useful heterogeneity","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cjipsv2l","slide":112,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/z6t83q1c","slide":112,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/e5k7ulkr","slide":112,"text":"112","textPreview":"112","textChars":3,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/18bq50ji","slide":112,"bbox":[58,150,560,490]}
+{"kind":"shape","id":"sh/0729wv2x","slide":112,"bbox":[662,150,538,490]}
+{"kind":"textbox","id":"sh/obu5s3mx","slide":112,"text":"Equity ETFs are strongest; non-equity proxies start near zero.","textPreview":"Equity ETFs are strongest; non-equity proxies start near zero.","textChars":62,"textLines":1,"bbox":[82,590,520,42]}
+{"kind":"textbox","id":"sh/pc3m1o3i","slide":112,"text":"Attention breadth rises from 56% at 20 to 75% at 100—still not uniform.","textPreview":"Attention breadth rises from 56% at 20 to 75% at 100—still not uniform.","textChars":71,"textLines":1,"bbox":[682,590,500,42]}
+{"kind":"image","id":"im/kfep0rax","slide":112,"name":"","bbox":[72,209.71,532,328.59]}
+{"kind":"image","id":"im/7ip8b6t8","slide":112,"name":"","bbox":[680,184.61,500,378.79]}
+{"kind":"notes","id":"nt/fu187e1o","slide":112,"text":"The attention sleeve is deliberately secondary and heterogeneous. Its median moves from -0.105 at 20 to -0.295 at 100, but several names retain opposite signs. Non-equity controls remain much weaker than equities.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/visuals/signed_down_cohort_diagonal.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/visuals/signed_down_attention_diagonal.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/cohort_horizon_diagonal.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/asset_horizon_diagonal.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/utonm5kj","slide":113,"title":"WIDE ATLAS","textShapes":16}
+{"kind":"textbox","id":"sh/6xknm98n","slide":113,"text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/0f6dwzqx","slide":113,"text":"Broad transport survives; edge remains unopened","textPreview":"Broad transport survives; edge remains unopened","textChars":47,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/1gfu54ri","slide":113,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/qp4vqp8v","slide":113,"text":"129 instruments | adjusted daily | 2018–2023","textPreview":"129 instruments | adjusted daily | 2018–2023","textChars":44,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"shape","id":"sh/rqdczu9g","slide":113,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/crmdszql","slide":113,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/dsfu1kr6","slide":113,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/il4bm58j","slide":113,"text":"Sector-wide plateau","textPreview":"Sector-wide plateau","textChars":19,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/3mdcva94","slide":113,"text":"64 / 64 primary cells negative","textPreview":"64 / 64 primary cells negative","textChars":30,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/nm5s361c","slide":113,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/2lwbu1kr","slide":113,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/po7a5gji","slide":113,"text":"LEARNS","textPreview":"LEARNS","textChars":6,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/onetwb2x","slide":113,"text":"Real heterogeneity","textPreview":"Real heterogeneity","textChars":18,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/bqpc761o","slide":113,"text":"Health Care flat at 100; controls differ","textPreview":"Health Care flat at 100; controls differ","textChars":40,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/apgby1k3","slide":113,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/xs7u9gje","slide":113,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/cryt0b2t","slide":113,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/rulsvm14","slide":113,"text":"A strategy or duration","textPreview":"A strategy or duration","textChars":22,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/qtcbmhkj","slide":113,"text":"no edge, causality, or 100-session hold","textPreview":"no edge, causality, or 100-session hold","textChars":39,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/ul4nq98j","slide":113,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/fmd4jep4","slide":113,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/gnm5sjqp","slide":113,"text":"Next clean gate","textPreview":"Next clean gate","textChars":15,"textLines":1,"bbox":[82,580,270,34]}
+{"kind":"textbox","id":"sh/hovmlo7a","slide":113,"text":"Decompose non-overlapping future blocks—or freeze one compact summary for untouched-time transport. Stop expanding horizons at 100.","textPreview":"Decompose non-overlapping future blocks—or freeze one compact summary for untouched-time transport. Stop expanding horizons at 100.","textChars":131,"textLines":1,"bbox":[350,576,820,52]}
+{"kind":"textbox","id":"sh/7yt4feps","slide":113,"name":"wide-atlas-section-overlay","text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/sz25ojqd","slide":113,"name":"wide-atlas-page-overlay","text":"113","textPreview":"113","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/utonm5kj","slide":113,"text":"This breadth slice weakens a TSLA-only, five-name-group, or single-sector explanation. Cumulative overlapping returns still hide when the rebound accrues. The operator must open the next gate explicitly.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/wide_atlas_status.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/report.md\n[/Sources]"}

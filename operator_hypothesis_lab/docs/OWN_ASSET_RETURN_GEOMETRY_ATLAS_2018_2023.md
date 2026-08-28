@@ -194,6 +194,14 @@ checkpoint. The cumulative-return plateau is therefore still open at 100, but
 the nested future targets do not identify when the response accrues. See
 `OWN_ASSET_RETURN_GEOMETRY_REBOUND_BOUNDARY_PROBE_2018_2023.md`.
 
+A subsequently approved wide-atlas transport expanded the coarse 20-100 grid
+and all nine state views to 129 instruments, including an 88-stock core with
+eight names in each of 11 GICS sectors. The signed-down loss branch remained
+negative across the entire equal-sector 8x8 surface. All 11 sector medians were
+negative on the equal-horizon diagonal through 75 sessions; 10/11 remained
+negative at 100. Attention and non-equity cohorts remained visibly more
+heterogeneous. See `RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md`.
+
 ## Artifacts
 
 - Packet:
@@ -220,5 +228,12 @@ the nested future targets do not identify when the response accrues. See
   `runs/research_workbench/operator_hypothesis_lab/return_geometry_rebound_boundary_probe_20260827`
 - Sparse boundary-probe runner:
   `scripts/inspect/run_return_geometry_rebound_boundary_probe.R`
+- Wide-atlas transport results:
+  `operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md`
+- Wide-atlas packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827`
+- Wide-atlas registry and runner:
+  `operator_hypothesis_lab/registries/return_geometry_wide_atlas.csv` and
+  `scripts/inspect/run_return_geometry_wide_atlas.R`
 - Running evidence deck:
   `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
