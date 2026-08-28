@@ -241,3 +241,26 @@ vocabulary are complete. Stop horizon expansion at 100 and do not treat 100 as
 a holding period. The next gate belongs to the operator: open an incremental
 future-return decomposition or temporal transport of one frozen summary. Do
 not select the hottest observed cell as a parameter.
+
+### Edge-Promotion Huddle
+
+The closed descriptive deck is now followed by a separate promotion-huddle
+deck. It records the key nested-window consequence: an early rebound remains
+embedded in every longer cumulative future-return target that contains it, so
+the persistence of a cumulative relationship through 100 sessions does not
+locate when the conditional return arrived.
+
+Current status:
+
+`PLANNING_HUDDLE_COMPLETE_STOP_BEFORE_INCREMENTAL_RETURN_CALCULATION`
+
+The recommended first falsification slice retains the original 20-session
+negative-prior anchor and measures non-overlapping future blocks `1-5`, `6-10`,
+`11-20`, `21-40`, `41-60`, and `61-100`. A response confined to early blocks
+would identify the long cumulative plateau as an echo. Conditional excess
+return that continues into later blocks could support a genuinely longer-lived,
+potentially actionable medium-term hypothesis, but only after comparison with
+unconditional drift, state-only return, and matched-exposure baselines. See
+`RETURN_GEOMETRY_EDGE_PROMOTION_HUDDLE.md` and
+`presentations/return_geometry_edge_promotion_huddle.pptx`. Post-2023 evidence
+remains sealed.
