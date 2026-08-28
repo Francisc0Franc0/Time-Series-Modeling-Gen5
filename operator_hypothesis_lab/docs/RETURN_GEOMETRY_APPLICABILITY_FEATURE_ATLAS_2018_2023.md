@@ -116,3 +116,22 @@ All 13 construction checks pass. This slice does not fit a classifier, compute
 p-values, optimize thresholds, select features, alter the frozen rule, or open
 post-2023 outcomes. If opened, the next gate should predeclare one or at most
 two shapes and test held-out assets and sectors before temporal confirmation.
+
+## Frozen Abnormal-Volume Follow-Up
+
+The operator opened one follow-up: map the atlas's top-two abnormal-volume-bin
+clue to a causal 60th-percentile veto, while leaving every other rule component
+unchanged. All seven frozen cross-sectional checks pass. The 625 high-volume
+events underperform the 923 retained events by `-160 bp/trade` under the
+asset-balanced view and by `-179 bp/trade` in same-asset, prior-loss-severity
+matched pairs. The veto retains 59.6% of core events and improves the retained
+event-pooled excess from `-25` to `+41 bp/trade`.
+
+The result is not temporally stable: only 2018, 2020, and 2021 support the veto;
+2019, 2022, and 2023 reverse. Preserve the seven gate labels, but qualify the
+overall status as:
+
+`TRAIN_VOLUME_VETO_CROSS_SECTIONAL_SUPPORT_TEMPORALLY_UNSTABLE_STOP_BEFORE_OOS`
+
+See `RETURN_GEOMETRY_ABNORMAL_VOLUME_VETO_2018_2023.md`. Do not tune the
+threshold, combine features, or open post-2023 outcomes.

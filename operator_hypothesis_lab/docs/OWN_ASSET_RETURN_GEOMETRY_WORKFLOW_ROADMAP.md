@@ -337,3 +337,21 @@ clues only. See
 `RETURN_GEOMETRY_APPLICABILITY_FEATURE_ATLAS_2018_2023.md`. Keep post-2023
 sealed and do not select a feature, threshold, model, or upstream gate without
 a separately frozen held-out-asset/sector design.
+
+### Abnormal-Volume Veto
+
+One atlas clue was opened as a separately frozen falsification: veto a rebound
+event when its causal abnormal-dollar-volume percentile is at least 60%. The
+underlying next-open rule remained fixed. All seven cross-sectional checks
+pass: asset-balanced contrast is `-160 bp/trade`, 55/88 assets and 8/11 sectors
+favor the veto, severity-matched contrast is `-179 bp/trade`, 59.6% of events
+remain, and retained event-pooled excess improves from `-25` to `+41 bp/trade`.
+
+Current status:
+
+`TRAIN_VOLUME_VETO_CROSS_SECTIONAL_SUPPORT_TEMPORALLY_UNSTABLE_STOP_BEFORE_OOS`
+
+Only 3/6 calendar years support the veto and 2023 reverses. Treat the feature
+as a plausible failure-state descriptor inside TRAIN, not a promoted edge or
+permission rule. See `RETURN_GEOMETRY_ABNORMAL_VOLUME_VETO_2018_2023.md`.
+Keep post-2023 sealed and do not retune or combine features.

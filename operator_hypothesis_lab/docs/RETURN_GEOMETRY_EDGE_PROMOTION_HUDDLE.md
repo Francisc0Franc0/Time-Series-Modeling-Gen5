@@ -124,3 +124,28 @@ Current status:
 See `RETURN_GEOMETRY_APPLICABILITY_FEATURE_ATLAS_2018_2023.md`. Any next test
 must freeze a narrow shape and hold out assets/sectors before temporal
 confirmation.
+
+## Abnormal-Volume Veto Falsification
+
+The top-two-bin abnormal-dollar-volume clue was frozen as one causal veto:
+exclude otherwise qualifying events when their current abnormal-volume feature
+ranks at or above the 60th percentile of strictly prior observations. The
+stopped underlying next-open rule, costs, dates, and outcomes were not changed.
+
+The veto passes all seven predeclared cross-sectional checks. High-volume
+events underperform retained events by `-160 bp/trade` under asset balancing,
+55/88 assets and 8/11 sector medians favor the veto, and a same-asset,
+loss-severity-matched comparison is `-179 bp/trade`. It retains 59.6% of core
+events and changes event-pooled excess from `-25` to `+41 bp/trade`.
+
+The finding is nevertheless temporally unstable: only 3/6 TRAIN calendar years
+support the veto, and 2023 reverses. This prevents a clean promotion claim even
+though the frozen cross-sectional gates retain their PASS labels.
+
+Current status:
+
+`TRAIN_VOLUME_VETO_CROSS_SECTIONAL_SUPPORT_TEMPORALLY_UNSTABLE_STOP_BEFORE_OOS`
+
+See `RETURN_GEOMETRY_ABNORMAL_VOLUME_VETO_2018_2023.md`. Post-2023 remains
+sealed; threshold tuning, feature combinations, and favorable-year or
+favorable-sector selection remain stopped.
