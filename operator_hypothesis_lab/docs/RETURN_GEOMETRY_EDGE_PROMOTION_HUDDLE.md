@@ -75,3 +75,28 @@ See `RETURN_GEOMETRY_INCREMENTAL_FORWARD_DECOMPOSITION_2018_2023.md` and slides
 
 Do not infer a holding rule, retune blocks, or open post-2023 outcomes before a
 new gate is designed.
+
+## Executable Rule Translation
+
+The operator then opened one causal TRAIN rule on all 129 atlas instruments.
+The 88-stock, 11-sector core remained the primary equal-sector surface; the
+attention, ETF, and non-equity cohorts remained visible diagnostics. The rule
+required signed ER20 DOWN plus a 20-session loss at or below the causal 20th
+percentile of the asset's prior negative 20-session returns. It entered at the
+next open, exited 20 held sessions later, ignored overlapping signals, and
+included a 10 bp round-trip cost descriptor.
+
+All 14 construction checks passed. The rule produced 2,221 TRAIN trades across
+all 129 instruments, including 1,548 trades across all 88 core stocks. The
+close-to-open translation cost was small: mean core research return was +0.60%
+versus +0.55% gross executable return. The failure was cross-sectional and
+temporal. Only 6/11 sector medians had positive excess, the event-pooled core
+was -0.25% per trade below unconditional drift, attention names were negative,
+and 2020 and 2022 were losing calendar slices.
+
+Current status:
+
+`TRAIN_RULE_TRANSLATION_DOES_NOT_RETAIN_MECHANICAL_SUPPORT_STOP_OOS`
+
+See `RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md`. Do not tune or
+open post-2023 outcomes.

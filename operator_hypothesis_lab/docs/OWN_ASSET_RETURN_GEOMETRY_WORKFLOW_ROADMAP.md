@@ -287,3 +287,31 @@ response persists to roughly day 60 and then fades. This does not establish a
 holding rule. See
 `RETURN_GEOMETRY_INCREMENTAL_FORWARD_DECOMPOSITION_2018_2023.md` and slides
 8-14 of `presentations/return_geometry_edge_promotion_huddle.pptx`.
+
+### Next-Open Rule Translation
+
+The first executable TRAIN rule used the complete 129-instrument atlas. The
+88-stock equal-sector core remained primary because it alone has balanced
+full-history representation across 11 sectors; the 41 attention, ETF, and
+non-equity instruments were retained as separate diagnostic cohorts.
+
+The frozen rule combined signed ER20 DOWN with a 20-session loss at or below
+the causal 20th percentile of the asset's previously observed negative
+20-session returns. It entered at open `t+1`, exited at open `t+21`, prohibited
+pyramiding, ignored signals while holding, and applied a 10 bp round-trip cost
+descriptor.
+
+Current status:
+
+`TRAIN_RULE_TRANSLATION_DOES_NOT_RETAIN_MECHANICAL_SUPPORT_STOP_OOS`
+
+All 14 construction checks passed, and the executable clock preserved most of
+the descriptive return: core mean close-to-close return was +0.60% versus
++0.55% gross open-to-open. The rule nevertheless missed the frozen breadth
+requirement with only 6/11 positive-excess sectors. Equal-sector median excess
+was +0.17%, median core-asset excess was only +0.019%, and event-pooled core
+excess was -0.25% per trade. Attention and non-equity cohorts were negative,
+and calendar results alternated sharply. The severity gate added only +0.06%
+under the equal-sector median lens versus the state-only rule. Preserve the
+TRAIN stop and keep post-2023 outcomes sealed. See
+`RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md`.

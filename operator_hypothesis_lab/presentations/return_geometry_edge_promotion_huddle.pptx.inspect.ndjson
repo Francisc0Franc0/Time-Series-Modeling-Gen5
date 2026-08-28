@@ -1,4 +1,3 @@
-{"kind":"deck","id":"pr/nw3hk8","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"EDGE PROMOTION","textShapes":5}
@@ -215,15 +214,15 @@
 {"kind":"shape","id":"sh/cbu58j2h","slide":10,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/zelojyl8","slide":10,"name":"footer-left-11","text":"Return geometry | equal-sector timing","textPreview":"Return geometry | equal-sector timing","textChars":37,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/ydcnatkn","slide":10,"name":"footer-number-11","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/v6xczqp0","slide":10,"name":"","alt":"Cumulative versus incremental signed-down loss-response correlations across six future blocks","bbox":[186,140,908,530]}
+{"kind":"image","id":"im/v6xczqp0","slide":10,"name":"","bbox":[186,140.17,908,529.67]}
 {"kind":"notes","id":"nt/m90b6t0r","slide":10,"text":"The cumulative line remains strongly negative because it carries earlier blocks. The incremental line shows where new covariance arrives: it is negative in every block, but its strength is uneven. The 41-60 block is especially distinct; the 61-100 block is weak and the unfiltered-loss comparator is near zero there.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/cumulative_vs_incremental_correlation.png\n[/Sources]"}
 {"kind":"slide","id":"sl/jetc3ut0","slide":11,"title":"SECTOR BREADTH","textShapes":4}
 {"kind":"textbox","id":"sh/l43ilgn2","slide":11,"name":"section-11","text":"SECTOR BREADTH","textPreview":"SECTOR BREADTH","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/xcryxg7y","slide":11,"name":"title-11","text":"The response remains broad through sessions 41–60","textPreview":"The response remains broad through sessions 41–60","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"textbox","id":"sh/xcryxg7y","slide":11,"name":"title-11","text":"The response stays broad through sessions 41–60","textPreview":"The response stays broad through sessions 41–60","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/wbih4b6d","slide":11,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/n69grmpw","slide":11,"name":"footer-left-11","text":"Return geometry | sector timing map","textPreview":"Return geometry | sector timing map","textChars":35,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/250zy18b","slide":11,"name":"footer-number-11","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/7itszulo","slide":11,"name":"","alt":"Signed-down incremental loss-response correlation by GICS sector and future block","bbox":[186,140,908,530]}
+{"kind":"image","id":"im/7itszulo","slide":11,"name":"","bbox":[242.5,140,795,530]}
 {"kind":"notes","id":"nt/jetc3ut0","slide":11,"text":"Ten of 11 sector medians are negative in both 21-40 and 41-60. Breadth falls to 7 of 11 in 61-100, where Utilities, Real Estate, Financials, and Energy turn positive. This is broad morphology with real heterogeneity, not a universal asset law.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/core_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_sector_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/8f2psfyx","slide":12,"title":"CROSS-ASSET SHAPE","textShapes":4}
 {"kind":"textbox","id":"sh/tgrm1wzy","slide":12,"name":"section-11","text":"CROSS-ASSET SHAPE","textPreview":"CROSS-ASSET SHAPE","textChars":17,"textLines":1,"bbox":[48,24,440,24]}
@@ -231,7 +230,7 @@
 {"kind":"shape","id":"sh/0f2lgnmp","slide":12,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/ra943il8","slide":12,"name":"footer-left-11","text":"Return geometry | 88-stock core distribution","textPreview":"Return geometry | 88-stock core distribution","textChars":44,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/q903ad4n","slide":12,"name":"footer-number-11","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","alt":"Per-asset incremental correlations across the 88-stock full-history core","bbox":[186,140,908,530]}
+{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","bbox":[186,140.17,908,529.67]}
 {"kind":"notes","id":"nt/8f2psfyx","slide":12,"text":"The asset distributions show why the equal-sector median should not be read as a universal prediction. The median is negative through 41-60, while individual assets span both signs. The 61-100 median approaches zero and its interquartile range crosses well into positive territory.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/asset_block_metrics.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_asset_distribution.png\n[/Sources]"}
 {"kind":"slide","id":"sl/hgzapcr6","slide":13,"title":"DRIFT-ADJUSTED ACCRUAL","textShapes":4}
 {"kind":"textbox","id":"sh/oz6x4vul","slide":13,"name":"section-11","text":"DRIFT-ADJUSTED ACCRUAL","textPreview":"DRIFT-ADJUSTED ACCRUAL","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
@@ -239,7 +238,7 @@
 {"kind":"shape","id":"sh/bq9orito","slide":13,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/o3i5w3ad","slide":13,"name":"footer-left-11","text":"Return geometry | conditional minus unconditional drift","textPreview":"Return geometry | conditional minus unconditional drift","textChars":55,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/p4r6p8by","slide":13,"name":"footer-number-11","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","alt":"Signed-down conditional excess return in basis points per session by future block","bbox":[186,140,908,530]}
+{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","bbox":[186,140.17,908,529.67]}
 {"kind":"notes","id":"nt/hgzapcr6","slide":13,"text":"Drift-adjusted return is positive from sessions 1 through 60, peaking at 7.07 bp per session in 11-20 and remaining 4.47 bp in 21-40. It falls to 0.72 bp in 41-60 and turns negative at -0.90 bp in 61-100; only 3 of 11 sector medians remain positive in that final block. This is descriptive and not cost-, overlap-, or path-adjusted.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/equal_sector_block_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/visuals/incremental_excess_bp_per_session.png\n[/Sources]"}
 {"kind":"slide","id":"sl/6lsnupw7","slide":14,"title":"SLICE DECISION","textShapes":15}
 {"kind":"textbox","id":"sh/pwvy90rq","slide":14,"name":"section-11","text":"SLICE DECISION","textPreview":"SLICE DECISION","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
@@ -266,3 +265,148 @@
 {"kind":"textbox","id":"sh/fqdg3q98","slide":14,"text":"STOP","textPreview":"STOP","textChars":4,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/up4fal83","slide":14,"text":"Freeze this timing morphology. Do not retune blocks or open post-2023 outcomes until the next gate is designed.","textPreview":"Freeze this timing morphology. Do not retune blocks or open post-2023 outcomes until the next gate is designed.","textChars":111,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"The predeclared descriptive rule required at least two of three late blocks to have negative equal-sector correlation, at least 7 of 11 negative sector medians, and positive drift-adjusted return per session. The 21-40 and 41-60 blocks pass; 61-100 fails on drift-adjusted accrual. Preserve LATE_INCREMENTAL_DURATION_RETAINS_DESCRIPTIVE_SUPPORT without converting it into a 60-session holding recommendation.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-27), operator-authorized incremental forward-return decomposition slice.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/late_block_readout.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_incremental_forward_decomposition_20260827/status.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/vaxsvy10","slide":15,"title":"EXECUTABLE TRANSLATION","textShapes":15}
+{"kind":"textbox","id":"sh/p8jyx83q","slide":15,"name":"section-11","text":"EXECUTABLE TRANSLATION","textPreview":"EXECUTABLE TRANSLATION","textChars":22,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/547mhg3m","slide":15,"name":"title-11","text":"A frozen rule asks whether geometry becomes a trade","textPreview":"A frozen rule asks whether geometry becomes a trade","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/k3y5ov21","slide":15,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/76p4jqls","slide":15,"name":"footer-left-11","text":"Return geometry | next-open rule translation","textPreview":"Return geometry | next-open rule translation","textChars":44,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/65gnqlk7","slide":15,"name":"footer-number-11","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/t87ml0ji","slide":15,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/s7y5sv2x","slide":15,"text":"SIGNAL","textPreview":"SIGNAL","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/na5476l8","slide":15,"text":"Signed ER20 down","textPreview":"Signed ER20 down","textChars":16,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/m9c3e1kn","slide":15,"text":"at completed close t","textPreview":"at completed close t","textChars":20,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/wrm9kvep","slide":15,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/hsvat0fa","slide":15,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/upkrilwj","slide":15,"text":"SEVERITY","textPreview":"SEVERITY","textChars":8,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/vqdsrqx4","slide":15,"text":"Bottom 20% of prior losses","textPreview":"Bottom 20% of prior losses","textChars":26,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/4vm9ovel","slide":15,"text":"causal, asset-specific","textPreview":"causal, asset-specific","textChars":22,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/5wvax0f6","slide":15,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/it4rm5wv","slide":15,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/judsvqxg","slide":15,"text":"UNIVERSE","textPreview":"UNIVERSE","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0z29cbyh","slide":15,"text":"All 129 atlas instruments","textPreview":"All 129 atlas instruments","textChars":25,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/l0bqlgf2","slide":15,"text":"88-stock core is headline","textPreview":"88-stock core is headline","textChars":25,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/1kjyt83e","slide":15,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/gjax03m9","slide":15,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/fi1grylo","slide":15,"text":"TRAIN only","textPreview":"TRAIN only","textChars":10,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ehsfyt43","slide":15,"text":"2018–2023 mechanics study. Post-2023 outcomes remain sealed.","textPreview":"2018–2023 mechanics study. Post-2023 outcomes remain sealed.","textChars":60,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/vaxsvy10","slide":15,"text":"All 129 instruments in the wide atlas are processed wherever the causal history requirement is met. The 88 figure is not a reduced universe: it is the full-history stock core spanning 11 GICS sectors and supplies the equal-sector headline. The remaining 41 instruments stay visible as attention, equity-ETF, and non-equity diagnostic cohorts.\n\n[Sources]\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), operator-authorized bottom-20% next-open rule translation.\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/candidate_coverage.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/gny5sjyp","slide":16,"title":"EXECUTION CONTRACT","textShapes":15}
+{"kind":"textbox","id":"sh/ylwj2987","slide":16,"name":"section-11","text":"EXECUTION CONTRACT","textPreview":"EXECUTION CONTRACT","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/8z2h8bq1","slide":16,"name":"title-11","text":"The rule is causal, non-overlapping, and next-open","textPreview":"The rule is causal, non-overlapping, and next-open","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/9kby1g7m","slide":16,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ytkf2h8j","slide":16,"name":"footer-left-11","text":"Return geometry | executable mechanics","textPreview":"Return geometry | executable mechanics","textChars":38,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/zutgvm94","slide":16,"name":"footer-number-11","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/kv2h4rqp","slide":16,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/lwbyxwra","slide":16,"text":"ENTRY","textPreview":"ENTRY","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/ip4zel83","slide":16,"text":"Open t+1","textPreview":"Open t+1","textChars":8,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/3qdg7qpo","slide":16,"text":"after completed signal close","textPreview":"after completed signal close","textChars":28,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/fm1gzq5o","slide":16,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/e1sf65o3","slide":16,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/1ojy10ne","slide":16,"text":"EXIT","textPreview":"EXIT","textChars":4,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/gnax8v6t","slide":16,"text":"Open t+21","textPreview":"Open t+21","textChars":9,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/nqlg3a5k","slide":16,"text":"20 held sessions","textPreview":"20 held sessions","textChars":16,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/2pcfa5oz","slide":16,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ps3y5knq","slide":16,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/oruhcf65","slide":16,"text":"POSITION","textPreview":"POSITION","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/bulg7u5g","slide":16,"text":"One per asset","textPreview":"One per asset","textChars":13,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/atczepob","slide":16,"text":"intervening signals ignored","textPreview":"intervening signals ignored","textChars":27,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/mpgj6t8j","slide":16,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/7qp0zepo","slide":16,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/8by18jq9","slide":16,"text":"Frozen mechanics","textPreview":"Frozen mechanics","textChars":16,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/9c7i1o7u","slide":16,"text":"100 prior negative observations • causal 20th percentile • 10 bp round trip","textPreview":"100 prior negative observations • causal 20th percentile • 10 bp round trip","textChars":75,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/gny5sjyp","slide":16,"text":"The severity threshold uses only an asset's previous negative 20-session returns; the current observation is excluded. A qualifying close-t signal enters at adjusted open t+1 and exits at adjusted open t+21. Only one position may be active per asset, and a signal observed at the close of the exit session may seed the next trade.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/rule_translation_checks.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/14bup87q","slide":17,"title":"CLOCK TRANSLATION","textShapes":4}
+{"kind":"textbox","id":"sh/lwnq5gf6","slide":17,"name":"section-11","text":"CLOCK TRANSLATION","textPreview":"CLOCK TRANSLATION","textChars":17,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1c7e50ni","slide":17,"name":"title-11","text":"Next-open timing preserves almost all of the return","textPreview":"Next-open timing preserves almost all of the return","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/gbedwfmx","slide":17,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/rm5czq50","slide":17,"name":"footer-left-11","text":"Return geometry | close-to-close versus open-to-open","textPreview":"Return geometry | close-to-close versus open-to-open","textChars":52,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6lwvql4v","slide":17,"name":"footer-number-11","text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/7uhsvypo","slide":17,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/svqto369","slide":17,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/twzaxonu","slide":17,"name":"","alt":"Core stock mean conditional return under close-to-close and next-open clocks.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/14bup87q","slide":17,"text":"For the 88-stock core, the same events average +0.60% close-to-close and +0.55% gross open-to-open. The roughly -0.04 percentage-point translation loss is real but small, so the TRAIN outcome is not explained by moving the trade clock to executable opens.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/trade_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/close_to_open_translation.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/y5wne50z","slide":18,"title":"SECTOR BREADTH","textShapes":4}
+{"kind":"textbox","id":"sh/a14nm9s3","slide":18,"name":"section-11","text":"SECTOR BREADTH","textPreview":"SECTOR BREADTH","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/wrelszu9","slide":18,"name":"title-11","text":"Only six of eleven sectors clear ordinary drift","textPreview":"Only six of eleven sectors clear ordinary drift","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/hsn2l4bu","slide":18,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/itw3upcf","slide":18,"name":"footer-left-11","text":"Return geometry | median asset net excess by sector","textPreview":"Return geometry | median asset net excess by sector","textChars":51,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/je5knut0","slide":18,"name":"footer-number-11","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/ozqlc36x","slide":18,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/nyhk3ypc","slide":18,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/mx83ato7","slide":18,"name":"","alt":"Median asset net excess return by GICS sector.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/y5wne50z","slide":18,"text":"The frozen breadth gate required at least 7 of 11 sectors to have positive median asset net excess over the same-asset unconditional 20-session open-to-open drift baseline. Only 6 pass. Communication Services is strongest; Consumer Discretionary is weakest.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/core_sector_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/train_mechanics_gates.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/core_sector_net_excess.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/nid43ytk","slide":19,"title":"AGGREGATION","textShapes":4}
+{"kind":"textbox","id":"sh/54ri5wje","slide":19,"name":"section-11","text":"AGGREGATION","textPreview":"AGGREGATION","textChars":11,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9gb6xgbi","slide":19,"name":"title-11","text":"A typical asset looks positive—but pooled events do not","textPreview":"A typical asset looks positive—but pooled events do not","textChars":55,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8v2pobax","slide":19,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vitozqt8","slide":19,"name":"footer-left-11","text":"Return geometry | three aggregation lenses","textPreview":"Return geometry | three aggregation lenses","textChars":42,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ahk7qls3","slide":19,"name":"footer-number-11","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/ze1or2ls","slide":19,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/kfup07md","slide":19,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/lg3qtc3y","slide":19,"name":"","alt":"Comparison of equal-sector median, median core asset, and event-pooled core net excess returns.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/nid43ytk","slide":19,"text":"The equal-sector median asset earns +16.7 bp net excess per trade and the median core asset is barely positive at +1.9 bp. But the event-pooled core mean is -25.1 bp. That sign conflict means the result depends materially on whether assets, sectors, or events receive equal weight.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/equal_sector_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/trade_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/core_aggregation_lenses.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/zyxsni5k","slide":20,"title":"CALENDAR STABILITY","textShapes":4}
+{"kind":"textbox","id":"sh/k7650f6p","slide":20,"name":"section-11","text":"CALENDAR STABILITY","textPreview":"CALENDAR STABILITY","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/qpwjmh8n","slide":20,"name":"title-11","text":"Strong years coexist with two material losing years","textPreview":"Strong years coexist with two material losing years","textChars":51,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/rq50vmp8","slide":20,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/4nu1krqh","slide":20,"name":"footer-left-11","text":"Return geometry | core event-pooled net return by year","textPreview":"Return geometry | core event-pooled net return by year","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/po3itc72","slide":20,"name":"footer-number-11","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/6tw3mdwb","slide":20,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/tg7mhsv2","slide":20,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/sfeloneh","slide":20,"name":"","alt":"Core stock event-pooled mean net trade return by signal year.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/zyxsni5k","slide":20,"text":"The TRAIN mechanics are not temporally stable: 2019 and 2021 are strongly positive, while 2020 and 2022 are negative. This calendar view is descriptive and does not create a new year filter.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/core_year_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/core_yearly_net_return.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/m1wvqtk3","slide":21,"title":"COHORT PATHS","textShapes":4}
+{"kind":"textbox","id":"sh/1kru5kj2","slide":21,"name":"section-11","text":"COHORT PATHS","textPreview":"COHORT PATHS","textChars":12,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1gbmxs7a","slide":21,"name":"title-11","text":"The attention cohort keeps falling after entry","textPreview":"The attention cohort keeps falling after entry","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0f2lon6p","slide":21,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra9kryp8","slide":21,"name":"footer-left-11","text":"Return geometry | mean cumulative trade path by cohort","textPreview":"Return geometry | mean cumulative trade path by cohort","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/qp03yt8n","slide":21,"name":"footer-number-11","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/nixofi1c","slide":21,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/oj65onix","slide":21,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/9kf6hsji","slide":21,"name":"","alt":"Mean cumulative open-to-open trade path for four atlas cohorts.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/m1wvqtk3","slide":21,"text":"Cohort paths reveal that the atlas is not behaviorally homogeneous. The 88-stock GICS core and equity ETFs stabilize above zero on average, while the attention cohort continues declining after entry. The non-equity controls remain weak.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/trade_path_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/cohort_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/mean_trade_path_by_cohort.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/5onypobq","slide":22,"title":"ASSET HETEROGENEITY","textShapes":4}
+{"kind":"textbox","id":"sh/wnihgf2h","slide":22,"name":"section-11","text":"ASSET HETEROGENEITY","textPreview":"ASSET HETEROGENEITY","textChars":19,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/6987itcr","slide":22,"name":"title-11","text":"Sector medians conceal wide asset dispersion","textPreview":"Sector medians conceal wide asset dispersion","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/7a18rydc","slide":22,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/k7qpgjul","slide":22,"name":"footer-left-11","text":"Return geometry | core asset net excess distribution","textPreview":"Return geometry | core asset net excess distribution","textChars":52,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/58zqpov6","slide":22,"name":"footer-number-11","text":"22","textPreview":"22","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/i9czu9kj","slide":22,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/5c3y54ju","slide":22,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/4buhwji9","slide":22,"name":"","alt":"Distribution of per-asset mean net excess return within each GICS sector.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/5onypobq","slide":22,"text":"Even within sectors, asset-level outcomes span both signs. This dispersion is why a positive equal-sector median is not enough to promote the rule and why the breadth gate was frozen before seeing the result.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/asset_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/core_sector_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/core_asset_excess_distribution.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/c7uhcr6t","slide":23,"title":"REPRESENTATIVE TAPES","textShapes":4}
+{"kind":"textbox","id":"sh/l47ap8vu","slide":23,"name":"section-11","text":"REPRESENTATIVE TAPES","textPreview":"REPRESENTATIVE TAPES","textChars":20,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/90vqdczq","slide":23,"name":"title-11","text":"The rule produces rebounds—and continued declines","textPreview":"The rule produces rebounds—and continued declines","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8zm9k7y5","slide":23,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/v2d8fmhw","slide":23,"name":"footer-left-11","text":"Return geometry | deterministic representative trades","textPreview":"Return geometry | deterministic representative trades","textChars":53,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/a14rmhgb","slide":23,"name":"footer-number-11","text":"23","textPreview":"23","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/v25grydk","slide":23,"name":"","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/w3ehk3u5","slide":23,"name":"","alt":"White background for replacement evidence chart.","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/h4nyt8vq","slide":23,"name":"","alt":"Representative TSLA, AMD, GOOGL, and SPY price paths around selected trades.","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/c7uhcr6t","slide":23,"text":"These are the first eligible deterministic trades for TSLA, AMD, GOOGL, and SPY—not chosen winners. Red marks the qualifying signal close, green the next-open entry, and blue the 20-session exit. The panels make the rule's heterogeneous path behavior directly inspectable.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/primary_trade_ledger.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/visuals/representative_trade_tapes.png\n- Codex thread 01a0226e-2fa2-7222-a6d9-79ab971ac616 (2026-08-28), executable TRAIN rule discussion.\n[/Sources]"}
+{"kind":"slide","id":"sl/7qto7e10","slide":24,"title":"TRAIN DECISION","textShapes":15}
+{"kind":"textbox","id":"sh/1cv6l47m","slide":24,"name":"section-11","text":"TRAIN DECISION","textPreview":"TRAIN DECISION","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1sfqxsv6","slide":24,"name":"title-11","text":"The rule stops before OOS","textPreview":"The rule stops before OOS","textChars":25,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0r6p4nul","slide":24,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nux8zidc","slide":24,"name":"footer-left-11","text":"Return geometry | executable TRAIN decision","textPreview":"Return geometry | executable TRAIN decision","textChars":43,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/2to76dcr","slide":24,"name":"footer-number-11","text":"24","textPreview":"24","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/9wzq1svi","slide":24,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/ov6p8nux","slide":24,"text":"TRANSLATES","textPreview":"TRANSLATES","textChars":10,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/3ydonyd8","slide":24,"text":"Clock change is small","textPreview":"Clock change is small","textChars":21,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ix47utcn","slide":24,"text":"+0.60% close vs +0.55% open","textPreview":"+0.60% close vs +0.55% open","textChars":27,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/8veh8ril","slide":24,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/9wni1wjq","slide":24,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/mtwz6h0f","slide":24,"text":"FAILS","textPreview":"FAILS","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/nu50zm10","slide":24,"text":"Sector breadth","textPreview":"Sector breadth","textChars":14,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/wzyhcrih","slide":24,"text":"6 of 11 versus 7 required","textPreview":"6 of 11 versus 7 required","textChars":25,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/x07i5wj2","slide":24,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/axgza10b","slide":24,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/vyp03m1w","slide":24,"text":"CONFLICTS","textPreview":"CONFLICTS","textChars":9,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/c3uh07id","slide":24,"text":"Event weighting","textPreview":"Event weighting","textChars":15,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/d43itcjy","slide":24,"text":"−25.1 bp versus drift","textPreview":"−25.1 bp versus drift","textChars":21,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/t8v6h47a","slide":24,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/s72p8z6p","slide":24,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/rmtofup4","slide":24,"text":"STOP OOS","textPreview":"STOP OOS","textChars":8,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/6lk76poz","slide":24,"text":"Do not tune percentile, ER cutoff, hold, overlap, costs, or universe. Post-2023 stays sealed.","textPreview":"Do not tune percentile, ER cutoff, hold, overlap, costs, or universe. Post-2023 stays sealed.","textChars":93,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/7qto7e10","slide":24,"text":"The frozen TRAIN rule does not retain mechanical support. It activates all 129 atlas instruments and 88 of 88 core stocks, so coverage is not the problem. It fails only the predeclared sector-breadth gate, but the event-pooled negative excess and strong cohort/calendar heterogeneity reinforce the STOP. No post-2023 outcomes were opened.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/status.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/train_mechanics_gates.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_next_open_rule_translation_20260828/report.md\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_NEXT_OPEN_RULE_TRANSLATION_2018_2023.md\n[/Sources]"}
