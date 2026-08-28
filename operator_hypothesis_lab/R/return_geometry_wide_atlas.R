@@ -30,6 +30,10 @@ rgwa_contract <- function() {
   )
 }
 
+rgwa_full_vocabulary_horizons <- function() {
+  c(1L, 2L, 3L, 4L, 5L, 10L, 15L, 20L, 25L, 30L, 35L, 40L, 50L, 75L, 100L)
+}
+
 rgwa_expected_symbols <- function() {
   c(
     "GOOGL", "META", "NFLX", "DIS", "CMCSA", "T", "VZ", "TMUS",
@@ -197,8 +201,11 @@ rgwa_summarize_cells <- function(cells, grouping_fields) {
       negative_asset_fraction = if (any(described)) mean(x$negative_pearson_correlation[described] < 0) else NA_real_,
       strong_negative_asset_fraction = if (any(described)) mean(x$negative_pearson_correlation[described] <= -0.10) else NA_real_,
       median_positive_pearson = if (any(positive_described)) stats::median(x$positive_pearson_correlation[positive_described]) else NA_real_,
+      positive_asset_fraction = if (any(positive_described)) mean(x$positive_pearson_correlation[positive_described] > 0) else NA_real_,
+      strong_positive_asset_fraction = if (any(positive_described)) mean(x$positive_pearson_correlation[positive_described] >= 0.10) else NA_real_,
       median_sign_difference = if (any(described & positive_described)) stats::median(x$positive_minus_negative_pearson[described & positive_described]) else NA_real_,
       median_negative_observations = if (any(described)) stats::median(x$negative_observations[described]) else NA_real_,
+      median_positive_observations = if (any(positive_described)) stats::median(x$positive_observations[positive_described]) else NA_real_,
       stringsAsFactors = FALSE
     )
   }
@@ -212,15 +219,23 @@ rgwa_sector_balanced_summary <- function(sector_summary) {
   keys <- interaction(sector_summary[grouping], drop = TRUE, lex.order = TRUE)
   groups <- split(sector_summary, keys)
   out <- do.call(rbind, lapply(groups, function(x) {
-    valid <- is.finite(x$median_negative_pearson)
+    valid_negative <- is.finite(x$median_negative_pearson)
+    valid_positive <- is.finite(x$median_positive_pearson)
+    valid_difference <- is.finite(x$median_sign_difference)
     data.frame(
       x[1L, grouping, drop = FALSE],
       sectors = nrow(x),
-      described_sectors = sum(valid),
-      equal_sector_median_negative_pearson = if (any(valid)) stats::median(x$median_negative_pearson[valid]) else NA_real_,
-      equal_sector_mean_negative_pearson = if (any(valid)) mean(x$median_negative_pearson[valid]) else NA_real_,
-      negative_sector_fraction = if (any(valid)) mean(x$median_negative_pearson[valid] < 0) else NA_real_,
-      strong_negative_sector_fraction = if (any(valid)) mean(x$median_negative_pearson[valid] <= -0.10) else NA_real_,
+      described_sectors = sum(valid_negative),
+      described_positive_sectors = sum(valid_positive),
+      equal_sector_median_negative_pearson = if (any(valid_negative)) stats::median(x$median_negative_pearson[valid_negative]) else NA_real_,
+      equal_sector_mean_negative_pearson = if (any(valid_negative)) mean(x$median_negative_pearson[valid_negative]) else NA_real_,
+      negative_sector_fraction = if (any(valid_negative)) mean(x$median_negative_pearson[valid_negative] < 0) else NA_real_,
+      strong_negative_sector_fraction = if (any(valid_negative)) mean(x$median_negative_pearson[valid_negative] <= -0.10) else NA_real_,
+      equal_sector_median_positive_pearson = if (any(valid_positive)) stats::median(x$median_positive_pearson[valid_positive]) else NA_real_,
+      equal_sector_mean_positive_pearson = if (any(valid_positive)) mean(x$median_positive_pearson[valid_positive]) else NA_real_,
+      positive_sector_fraction = if (any(valid_positive)) mean(x$median_positive_pearson[valid_positive] > 0) else NA_real_,
+      strong_positive_sector_fraction = if (any(valid_positive)) mean(x$median_positive_pearson[valid_positive] >= 0.10) else NA_real_,
+      equal_sector_median_sign_difference = if (any(valid_difference)) stats::median(x$median_sign_difference[valid_difference]) else NA_real_,
       stringsAsFactors = FALSE
     )
   }))

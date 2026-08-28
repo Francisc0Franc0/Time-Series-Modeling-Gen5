@@ -21,6 +21,10 @@ testthat::test_that("wide atlas identities, cohorts, and sectors are frozen", {
 
 testthat::test_that("coarse horizon contract stops at 100", {
   testthat::expect_equal(rgwa_contract()$horizons, c(20L, 25L, 30L, 35L, 40L, 50L, 75L, 100L))
+  testthat::expect_equal(
+    rgwa_full_vocabulary_horizons(),
+    c(1L, 2L, 3L, 4L, 5L, 10L, 15L, 20L, 25L, 30L, 35L, 40L, 50L, 75L, 100L)
+  )
 })
 
 testthat::test_that("partial-history ledgers remain causal and analyzable", {
@@ -58,10 +62,29 @@ testthat::test_that("equal-sector aggregation weights sector summaries equally",
     prior_sessions = 20L,
     forward_sessions = 20L,
     median_negative_pearson = seq(-0.30, -0.10, length.out = 11L),
+    median_positive_pearson = rep(NA_real_, 11L),
+    median_sign_difference = rep(NA_real_, 11L),
     stringsAsFactors = FALSE
   )
   out <- rgwa_sector_balanced_summary(x)
   testthat::expect_equal(out$described_sectors, 11L)
   testthat::expect_equal(out$equal_sector_mean_negative_pearson, mean(x$median_negative_pearson))
   testthat::expect_equal(out$equal_sector_median_negative_pearson, stats::median(x$median_negative_pearson))
+})
+
+testthat::test_that("equal-sector aggregation retains the gain branch", {
+  x <- data.frame(
+    sector = paste0("S", seq_len(11L)),
+    condition = "UNFILTERED", state = "ALL",
+    prior_sessions = 1L, forward_sessions = 1L,
+    median_negative_pearson = seq(-0.20, 0, length.out = 11L),
+    median_positive_pearson = seq(0.05, 0.25, length.out = 11L),
+    median_sign_difference = seq(0.10, 0.30, length.out = 11L),
+    stringsAsFactors = FALSE
+  )
+  out <- rgwa_sector_balanced_summary(x)
+  testthat::expect_equal(out$described_positive_sectors, 11L)
+  testthat::expect_equal(out$equal_sector_median_positive_pearson, 0.15)
+  testthat::expect_equal(out$positive_sector_fraction, 1)
+  testthat::expect_equal(out$equal_sector_median_sign_difference, 0.20)
 })

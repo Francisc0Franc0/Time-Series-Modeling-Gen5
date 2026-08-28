@@ -127,6 +127,39 @@ signed-down states:
 These differences show that the template discriminates behavior. They do not
 authorize choosing the darkest filter after inspection.
 
+## Full-vocabulary completion
+
+For completeness, the same 129-instrument atlas was rerun on the union of the
+original short horizons and the coarse extension:
+
+`1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 75, 100`
+
+This produces a 15 by 15 grid for each of the same nine states and retains both
+prior-sign branches symmetrically: 261,225 asset-state-horizon rows. All 12
+integrity checks passed, including exact parity with every original-atlas cell
+to `5.55e-16`. No asset, filter, or endpoint was added after reading results.
+
+The complete surface adds two useful qualifications:
+
+- loss rebound is not monotone at the shortest equal horizons. In the
+  signed-down diagonal, `1/1` is negative (`-0.189`), `2/2` and `3/3` are
+  slightly positive (`+0.019`, `+0.028`), `4/4` is near zero (`-0.010`), and
+  the broad negative plateau strengthens from roughly 5-15 sessions onward;
+- across all 225 cells, the loss branch remains most negative in ER20 trending
+  (`-0.173` median), signed-down (`-0.165`), and ATR%-high (`-0.151`) states;
+- the gain branch discriminates differently. ER20/signed-ER sideways states
+  have a `+0.027` median and positive continuation sign in 81.8% of cells,
+  while ER20 trending has a `-0.028` median and positive continuation sign in
+  only 27.6% of cells, consistent with gain exhaustion rather than classical
+  continuation in that state; and
+- signed-state/prior-sign conflicts create structural sparsity. Only 165/225
+  signed-up loss cells and 135/225 signed-down gain cells are described. Those
+  blanks remain visible rather than being imputed.
+
+The gain-branch effects are much smaller in magnitude than the loss-rebound
+surface. Their value here is behavioral discrimination and hypothesis
+generation, not an edge claim or parameter selection.
+
 ## Interpretation
 
 This slice did not falsify the broad cumulative loss-rebound morphology. It
@@ -146,7 +179,7 @@ causal, temporal-transport, independent-observation, or net-edge claim follows.
 
 Status:
 
-`DESCRIPTIVE_WIDE_ATLAS_COMPLETE_BROAD_SECTOR_TRANSPORT_STOP_BEFORE_TEMPORAL_OR_INCREMENTAL_GATE`
+`DESCRIPTIVE_WIDE_ATLAS_FULL_VOCABULARY_COMPLETE_STOP_BEFORE_SELECTION_OR_TEMPORAL_GATE`
 
 Stop horizon expansion at 100 and do not choose a best horizon or filter from
 this surface. The next clean gate belongs to the operator: either decompose the
@@ -157,7 +190,8 @@ untouched time window.
 ## Artifacts
 
 - Packet: `runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827`
+- Full-vocabulary packet: `runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827`
 - Registry: `operator_hypothesis_lab/registries/return_geometry_wide_atlas.csv`
 - Runner: `scripts/inspect/run_return_geometry_wide_atlas.R`
 - Helpers: `operator_hypothesis_lab/R/return_geometry_wide_atlas.R`
-- Running deck: `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx`
+- Running deck: `operator_hypothesis_lab/presentations/tsla_descriptive_microscope_evidence.pptx` (slides 114-123 complete the horizon, filter, and prior-sign vocabulary)

@@ -1,6 +1,7 @@
-# Expand the frozen cumulative loss-rebound morphology to a sector-balanced
-# 129-instrument atlas using a coarse 20-100-session horizon grid. This is a
-# descriptive transport/falsification slice, not a strategy or inference run.
+# Expand the frozen return-geometry vocabulary to a sector-balanced
+# 129-instrument atlas. The default is the coarse 20-100-session transport;
+# full_vocabulary adds the original short horizons without changing states,
+# assets, data, inference, or strategy scope.
 
 script_path <- tryCatch(
   normalizePath(sys.frames()[[1]]$ofile, winslash = "/", mustWork = FALSE),
@@ -30,6 +31,16 @@ g5_load_local_renviron(repo_root)
 
 cfg <- g5_load_data_layer_config(repo_root)
 contract <- rgwa_contract()
+analysis_mode <- tolower(Sys.getenv(
+  "GEN5_RETURN_GEOMETRY_WIDE_ATLAS_MODE", unset = "coarse"
+))
+if (!analysis_mode %in% c("coarse", "full_vocabulary")) {
+  rgwa_stop("GEN5_RETURN_GEOMETRY_WIDE_ATLAS_MODE must be coarse or full_vocabulary.")
+}
+if (analysis_mode == "full_vocabulary") {
+  contract$atlas_id <- "RETURN_GEOMETRY_WIDE_ATLAS_FULL_VOCABULARY_01"
+  contract$horizons <- rgwa_full_vocabulary_horizons()
+}
 registry_path <- file.path(
   repo_root, "operator_hypothesis_lab", "registries", "return_geometry_wide_atlas.csv"
 )
@@ -42,7 +53,11 @@ refresh <- identical(
 as_of_timestamp <- as.POSIXct("2026-08-27 17:30:00", tz = cfg$calendar$timezone)
 output_dir <- file.path(
   repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
-  "return_geometry_wide_atlas_20260827"
+  if (analysis_mode == "full_vocabulary") {
+    "return_geometry_wide_atlas_full_vocabulary_20260827"
+  } else {
+    "return_geometry_wide_atlas_20260827"
+  }
 )
 visual_dir <- file.path(output_dir, "visuals")
 dir.create(visual_dir, recursive = TRUE, showWarnings = FALSE)
@@ -54,7 +69,7 @@ query <- g5_workbench_query_adjusted_daily_bars(
   end_date = contract$analysis_end,
   as_of_timestamp = as_of_timestamp,
   symbols = registry$symbol,
-  universe_name = "return_geometry_wide_atlas_01",
+  universe_name = paste0("return_geometry_wide_atlas_", analysis_mode, "_01"),
   universe_roles = paste0("frozen_", tolower(registry$atlas_cohort)),
   refresh = refresh,
   repo_root = repo_root
@@ -171,17 +186,18 @@ utils::write.csv(diagonal_all, file.path(output_dir, "equal_asset_horizon_diagon
 utils::write.csv(diagonal_sector, file.path(output_dir, "sector_horizon_diagonal.csv"), row.names = FALSE, na = "")
 utils::write.csv(diagonal_sector_balanced, file.path(output_dir, "equal_sector_horizon_diagonal.csv"), row.names = FALSE, na = "")
 
-# Exact parity against the original 30-asset atlas at overlapping 20/25 cells.
+# Exact parity against every original-atlas horizon present in this run.
 old_path <- file.path(
   repo_root, "runs", "research_workbench", "operator_hypothesis_lab",
   "own_asset_return_geometry_atlas_20260826", "asset_prior_sign_cells.csv"
 )
 old <- utils::read.csv(old_path, stringsAsFactors = FALSE, check.names = FALSE)
 overlap_symbols <- intersect(old$symbol, cells$symbol)
-old_overlap <- old[old$symbol %in% overlap_symbols & old$prior_sessions %in% c(20L, 25L) &
-                     old$forward_sessions %in% c(20L, 25L), , drop = FALSE]
-new_overlap <- cells[cells$symbol %in% overlap_symbols & cells$prior_sessions %in% c(20L, 25L) &
-                       cells$forward_sessions %in% c(20L, 25L), , drop = FALSE]
+overlap_horizons <- intersect(sort(unique(old$prior_sessions)), contract$horizons)
+old_overlap <- old[old$symbol %in% overlap_symbols & old$prior_sessions %in% overlap_horizons &
+                     old$forward_sessions %in% overlap_horizons, , drop = FALSE]
+new_overlap <- cells[cells$symbol %in% overlap_symbols & cells$prior_sessions %in% overlap_horizons &
+                       cells$forward_sessions %in% overlap_horizons, , drop = FALSE]
 parity_keys <- c("symbol", "condition", "state", "prior_sessions", "forward_sessions")
 parity <- merge(
   old_overlap[c(parity_keys, "negative_pearson_correlation", "positive_pearson_correlation")],
@@ -232,7 +248,8 @@ checks <- data.frame(
 utils::write.csv(checks, file.path(output_dir, "wide_atlas_checks.csv"), row.names = FALSE)
 if (any(checks$status != "PASS")) rgwa_stop("One or more wide-atlas checks failed.")
 
-write_matrix_heat <- function(data, value_field, title, path, limit = NULL) {
+write_matrix_heat <- function(data, value_field, title, path, limit = NULL,
+                              annotate = length(contract$horizons) <= 9L) {
   horizons <- contract$horizons
   matrix_values <- matrix(NA_real_, nrow = length(horizons), ncol = length(horizons),
                           dimnames = list(horizons, horizons))
@@ -248,13 +265,15 @@ write_matrix_heat <- function(data, value_field, title, path, limit = NULL) {
   graphics::image(seq_along(horizons), seq_along(horizons), t(display_values),
                   col = palette, zlim = c(-limit, limit), axes = FALSE,
                   xlab = "Following sessions", ylab = "Prior sessions", main = title)
-  graphics::axis(1, at = seq_along(horizons), labels = horizons)
-  graphics::axis(2, at = seq_along(horizons), labels = horizons, las = 1)
-  for (r in seq_along(horizons)) for (c in seq_along(horizons)) {
-    value <- matrix_values[r, c]
-    if (is.finite(value)) graphics::text(c, r, sprintf("%+.2f", value), cex = 0.72)
+  axis_cex <- if (length(horizons) > 9L) 0.76 else 1
+  graphics::axis(1, at = seq_along(horizons), labels = horizons, cex.axis = axis_cex)
+  graphics::axis(2, at = seq_along(horizons), labels = horizons, las = 1, cex.axis = axis_cex)
+  if (annotate) for (r in seq_along(horizons)) for (c in seq_along(horizons)) {
+      value <- matrix_values[r, c]
+      if (is.finite(value)) graphics::text(c, r, sprintf("%+.2f", value), cex = 0.72)
   }
   grDevices::dev.off()
+  invisible(matrix_values)
 }
 
 for (i in seq_len(nrow(expected_states))) {
@@ -268,6 +287,14 @@ for (i in seq_len(nrow(expected_states))) {
     x, "equal_sector_median_negative_pearson",
     paste("Equal-sector loss-branch correlation |", state_row$state_label),
     file.path(visual_dir, filename), limit = 0.40
+  )
+  gain_filename <- paste0(
+    "equal_sector_gain_", tolower(state_row$condition), "_", tolower(state_row$state), "_heatmap.png"
+  )
+  write_matrix_heat(
+    x, "equal_sector_median_positive_pearson",
+    paste("Equal-sector gain-branch correlation |", state_row$state_label),
+    file.path(visual_dir, gain_filename), limit = 0.40
   )
 }
 
@@ -373,6 +400,32 @@ for (r in seq_len(nrow(expected_states))) for (c in seq_along(contract$horizons)
 }
 grDevices::dev.off()
 
+positive_state_matrix <- matrix(
+  NA_real_, nrow = nrow(expected_states), ncol = length(contract$horizons),
+  dimnames = list(expected_states$state_label, contract$horizons)
+)
+for (i in seq_len(nrow(diagonal_sector_balanced))) {
+  row <- diagonal_sector_balanced[i, , drop = FALSE]
+  positive_state_matrix[row$state_label, as.character(row$prior_sessions)] <-
+    row$equal_sector_median_positive_pearson
+}
+positive_state_display <- positive_state_matrix
+positive_state_display[] <- pmax(-0.50, pmin(0.50, positive_state_matrix))
+grDevices::png(file.path(visual_dir, "all_states_equal_sector_gain_diagonal.png"), width = 1750, height = 1100, res = 170)
+graphics::par(mar = c(5, 11, 4, 2))
+graphics::image(seq_along(contract$horizons), seq_len(nrow(expected_states)), t(positive_state_display),
+                col = palette, zlim = c(-0.50, 0.50), axes = FALSE,
+                xlab = "Equal prior / following horizon (sessions)", ylab = "",
+                main = "All frozen filters | equal-sector gain-branch correlation")
+graphics::axis(1, at = seq_along(contract$horizons), labels = contract$horizons,
+               cex.axis = if (length(contract$horizons) > 9L) 0.76 else 1)
+graphics::axis(2, at = seq_len(nrow(expected_states)), labels = expected_states$state_label, las = 1)
+for (r in seq_len(nrow(expected_states))) for (c in seq_along(contract$horizons)) {
+  value <- positive_state_matrix[r, c]
+  graphics::text(c, r, if (is.finite(value)) sprintf("%+.2f", value) else "sparse", cex = 0.58)
+}
+grDevices::dev.off()
+
 headline <- diagonal_sector_balanced[
   diagonal_sector_balanced$condition == "SIGNED_ER20" & diagonal_sector_balanced$state == "DOWN_TREND",
   , drop = FALSE
@@ -397,15 +450,54 @@ headline <- merge(
 )
 utils::write.csv(headline, file.path(output_dir, "headline_signed_down_diagonal.csv"), row.names = FALSE, na = "")
 
+state_overview <- do.call(rbind, lapply(seq_len(nrow(expected_states)), function(i) {
+  state_row <- expected_states[i, , drop = FALSE]
+  x <- sector_balanced[
+    sector_balanced$condition == state_row$condition & sector_balanced$state == state_row$state,
+    , drop = FALSE
+  ]
+  loss_valid <- is.finite(x$equal_sector_median_negative_pearson)
+  gain_valid <- is.finite(x$equal_sector_median_positive_pearson)
+  data.frame(
+    state_order = state_row$state_order,
+    condition = state_row$condition,
+    state = state_row$state,
+    state_label = state_row$state_label,
+    total_grid_cells = nrow(x),
+    described_loss_cells = sum(loss_valid),
+    median_loss_branch_correlation = if (any(loss_valid)) stats::median(x$equal_sector_median_negative_pearson[loss_valid]) else NA_real_,
+    loss_rebound_cell_fraction = if (any(loss_valid)) mean(x$equal_sector_median_negative_pearson[loss_valid] < 0) else NA_real_,
+    described_gain_cells = sum(gain_valid),
+    median_gain_branch_correlation = if (any(gain_valid)) stats::median(x$equal_sector_median_positive_pearson[gain_valid]) else NA_real_,
+    gain_continuation_cell_fraction = if (any(gain_valid)) mean(x$equal_sector_median_positive_pearson[gain_valid] > 0) else NA_real_,
+    stringsAsFactors = FALSE
+  )
+}))
+rownames(state_overview) <- NULL
+utils::write.csv(state_overview, file.path(output_dir, "full_state_vocabulary_summary.csv"), row.names = FALSE, na = "")
+
+grid_label <- paste(contract$horizons, collapse = ", ")
+grid_cells_per_state <- length(contract$horizons)^2L
+report_title <- if (analysis_mode == "full_vocabulary") {
+  "Wide-Atlas Full-Vocabulary Return Geometry (2018-2023)"
+} else {
+  "Wide-Atlas Coarse-Horizon Return Geometry (2018-2023)"
+}
+report_question <- if (analysis_mode == "full_vocabulary") {
+  "What does the complete original-plus-coarse horizon and filter vocabulary look like on the 129-instrument sector-balanced atlas, including both prior-sign branches?"
+} else {
+  "Does the cumulative loss-rebound plateau observed in the frozen 30-asset atlas survive a much wider, sector-balanced atlas through 100 sessions when the complete existing filter vocabulary is retained?"
+}
+
 run_spec <- data.frame(
   field = c(
-    "atlas_id", "provider", "bar_contract", "query_start", "analysis_window", "as_of_timestamp",
+    "atlas_id", "analysis_mode", "provider", "bar_contract", "query_start", "analysis_window", "as_of_timestamp",
     "assets", "core_design", "attention_design", "controls", "horizons", "returns", "filter_states",
     "primary_branch", "primary_aggregation", "secondary_aggregation", "inference", "post_2023_data",
     "selection", "trading_calculation", "gics_definition_source", "gics_methodology_source"
   ),
   value = c(
-    contract$atlas_id, "Alpaca SIP", "adjusted daily OHLCV", as.character(contract$query_start),
+    contract$atlas_id, analysis_mode, "Alpaca SIP", "adjusted daily OHLCV", as.character(contract$query_start),
     paste(contract$analysis_start, contract$analysis_end, sep = " to "),
     format(as_of_timestamp, tz = cfg$calendar$timezone), nrow(registry),
     "88 stocks; 11 GICS sectors; 8 frozen names per sector; current research labels, not point-in-time membership",
@@ -434,14 +526,14 @@ format_line <- function(row) {
 }
 headline <- headline[order(headline$prior_sessions), , drop = FALSE]
 report <- c(
-  "# Wide-Atlas Coarse-Horizon Return Geometry (2018-2023)", "",
+  paste0("# ", report_title), "",
   "## Question", "",
-  "Does the cumulative loss-rebound plateau observed in the frozen 30-asset atlas survive a much wider, sector-balanced atlas through 100 sessions when the complete existing filter vocabulary is retained?", "",
+  report_question, "",
   "## Frozen design", "",
   "- 129 instruments: 88 core stocks (eight in each of 11 GICS sectors), 16 attention/meme challengers, 15 equity ETF controls, and 10 non-equity proxies.",
-  "- Coarse prior and following grid: 20, 25, 30, 35, 40, 50, 75, and 100 sessions (64 cells per state).",
+  sprintf("- Prior and following grid: %s sessions (%d cells per state).", grid_label, grid_cells_per_state),
   "- Nine state views: unfiltered; ER20 sideways/trending; ATR% low/medium/high; signed-ER20 up/sideways/down.",
-  "- Negative-prior branch is primary; the positive-prior branch remains in the artifact as a comparator.",
+  "- Negative- and positive-prior branches are retained symmetrically for loss-rebound/loss-continuation and gain-continuation/gain-exhaustion views.",
   "- Equal-sector summaries use only the 88-stock core. Attention names and controls cannot alter the sector-balanced headline.",
   "- The roster is a frozen current research atlas, not point-in-time historical GICS membership. No inference, parameter selection, post-2023 outcomes, or trading calculation is included.", "",
   "## Coverage", "",
@@ -449,14 +541,25 @@ report <- c(
   sprintf("- The sector-balanced core is full-history for `%d/%d` stocks. Partial histories occur only outside the equal-sector core.", sum(core_coverage$full_frozen_history), nrow(core_coverage)), "",
   "## Signed-down loss-branch diagonal", "",
   unlist(lapply(seq_len(nrow(headline)), function(i) format_line(headline[i, , drop = FALSE]))), "",
+  "## Full state vocabulary", "",
+  unlist(lapply(seq_len(nrow(state_overview)), function(i) {
+    row <- state_overview[i, , drop = FALSE]
+    sprintf(
+      "- **%s:** loss median `%+.3f` across `%d/%d` cells (`%.1f%%` rebound sign); gain median `%+.3f` across `%d/%d` cells (`%.1f%%` continuation sign).",
+      row$state_label, row$median_loss_branch_correlation, row$described_loss_cells, row$total_grid_cells,
+      100 * row$loss_rebound_cell_fraction, row$median_gain_branch_correlation,
+      row$described_gain_cells, row$total_grid_cells, 100 * row$gain_continuation_cell_fraction
+    )
+  })), "",
   "## Interpretation boundary", "",
   "- A negative correlation within the negative-prior branch describes stronger preceding losses being associated with stronger subsequent cumulative returns. It remains behavior, not an executable edge.",
   "- Overlapping cumulative horizons are nested. Persistence through 100 sessions does not show when rebound return accrues or imply a 100-session holding period.",
   "- Sector breadth weakens a single-name or single-sector explanation. It does not establish causality, independence, temporal transport, or net profitability.",
   "- Current GICS labels are descriptive balancing metadata. They are not point-in-time constituent histories.", "",
   "## Artifacts", "",
-  "- `asset_prior_sign_cells.csv`: full 129 x 64 x 9 descriptive sign-branch surface.",
+  sprintf("- `asset_prior_sign_cells.csv`: full 129 x %d x 9 descriptive sign-branch surface.", grid_cells_per_state),
   "- `equal_sector_cell_summary.csv`: primary sector-balanced surface.",
+  "- `full_state_vocabulary_summary.csv`: balanced loss/gain overview for all nine filter states.",
   "- `cohort_cell_summary.csv`, `core_sector_cell_summary.csv`, and diagonal extracts: breadth and heterogeneity views.",
   "- `coverage_ledger.csv`, `wide_atlas_checks.csv`, and `original_atlas_parity.csv`: audit surface.",
   "- `visuals/`: equal-sector state heatmaps plus sector, cohort, and attention views.", "",
@@ -467,7 +570,12 @@ writeLines(report, file.path(output_dir, "report.md"), useBytes = TRUE)
 
 status <- data.frame(
   atlas_id = contract$atlas_id,
-  status = "DESCRIPTIVE_WIDE_ATLAS_COMPLETE_STOP_BEFORE_TEMPORAL_OR_INCREMENTAL_GATE",
+  analysis_mode = analysis_mode,
+  status = if (analysis_mode == "full_vocabulary") {
+    "DESCRIPTIVE_WIDE_ATLAS_FULL_VOCABULARY_COMPLETE_STOP_BEFORE_SELECTION_OR_TEMPORAL_GATE"
+  } else {
+    "DESCRIPTIVE_WIDE_ATLAS_COMPLETE_STOP_BEFORE_TEMPORAL_OR_INCREMENTAL_GATE"
+  },
   checks_passed = sum(checks$status == "PASS"),
   checks_total = nrow(checks),
   assets = nrow(registry),

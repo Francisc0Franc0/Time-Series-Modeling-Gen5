@@ -180,6 +180,26 @@ controls are near zero, preserving meaningful heterogeneity. This broadens the
 descriptive transport claim; it does not locate incremental response timing or
 open temporal confirmation.
 
+### Frozen Full-Vocabulary Completion
+
+The same wide atlas was then expanded only by restoring the original short
+horizons. The frozen grid is now
+`1,2,3,4,5,10,15,20,25,30,35,40,50,75,100` by itself under all nine existing
+states and both prior-sign branches. The resulting 261,225 rows reproduce every
+shared original-atlas cell below `5.55e-16`.
+
+Current status:
+
+`DESCRIPTIVE_WIDE_ATLAS_FULL_VOCABULARY_COMPLETE_STOP_BEFORE_SELECTION_OR_TEMPORAL_GATE`
+
+The full view shows a mixed 1-4-session region before the loss-rebound plateau
+broadens from approximately 5-15 sessions onward. Trending, ATR%-high, and
+signed-down states remain the strongest loss-branch discriminators. The gain
+branch instead distinguishes sideways continuation from trending exhaustion,
+at much smaller magnitudes. Structural state/sign conflicts remain blank. This
+completion is a descriptive reference surface, not a license to select a cell,
+state, horizon, or strategy.
+
 ## Phase 5: Parameter and Temporal Transport Research
 
 Only after the template is frozen and the atlas has been run should the project
@@ -216,8 +236,8 @@ blocks, with multiplicity and repeated-selection effects handled explicitly.
 Do not optimize the signed-ER window, cutoff, state persistence, training
 length, or forward increment. The template, original atlas, descriptive
 behavioral catalog, 10-30 loss-rebound topology, sparse 30-100 boundary probe,
-and 129-instrument sector-balanced transport are complete. Stop horizon
-expansion at 100 and do not treat 100 as a holding period. The next gate belongs
-to the operator: open an incremental future-return decomposition or temporal
-transport of one frozen summary. Do not select the hottest observed cell as a
-parameter.
+129-instrument sector-balanced transport, and the full horizon/filter/branch
+vocabulary are complete. Stop horizon expansion at 100 and do not treat 100 as
+a holding period. The next gate belongs to the operator: open an incremental
+future-return decomposition or temporal transport of one frozen summary. Do
+not select the hottest observed cell as a parameter.

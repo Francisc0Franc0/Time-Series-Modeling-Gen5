@@ -1,4 +1,4 @@
-{"kind":"deck","id":"pr/3hvd9b","name":"Deck"}
+{"kind":"deck","id":"pr/gmkiz6","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"OPERATOR HYPOTHESIS LAB","textShapes":4}
@@ -1852,3 +1852,220 @@
 {"kind":"textbox","id":"sh/7yt4feps","slide":113,"name":"wide-atlas-section-overlay","text":"WIDE ATLAS","textPreview":"WIDE ATLAS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
 {"kind":"textbox","id":"sh/sz25ojqd","slide":113,"name":"wide-atlas-page-overlay","text":"113","textPreview":"113","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
 {"kind":"notes","id":"nt/utonm5kj","slide":113,"text":"This breadth slice weakens a TSLA-only, five-name-group, or single-sector explanation. Cumulative overlapping returns still hide when the rebound accrues. The operator must open the next gate explicitly.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_WORKFLOW_ROADMAP.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/wide_atlas_status.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_20260827/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/14b2hofy","slide":114,"title":"FULL VOCABULARY","textShapes":5}
+{"kind":"textbox","id":"sh/nex0nyts","slide":114,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/a18jyds3","slide":114,"text":"The atlas deserves a complete view","textPreview":"The atlas deserves a complete view","textChars":34,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/v2hkryto","slide":114,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/8z61w3ad","slide":114,"text":"Restore the original short horizons and show every frozen filter on both prior-sign branches.","textPreview":"Restore the original short horizons and show every frozen filter on both prior-sign branches.","textChars":93,"textLines":1,"bbox":[48,438,1040,72]}
+{"kind":"textbox","id":"sh/90z2p8bi","slide":114,"text":"No new asset, filter, or endpoint was chosen after looking at the results.","textPreview":"No new asset, filter, or endpoint was chosen after looking at the results.","textChars":74,"textLines":1,"bbox":[48,570,1100,64]}
+{"kind":"textbox","id":"sh/mdojuts7","slide":114,"text":"114","textPreview":"114","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/14b2hofy","slide":114,"text":"This section is a completeness layer. It restores the original 1/2/3/4/5/10/15/20/25 horizons, retains the coarse extension through 100, and treats both prior-sign branches symmetrically.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/run_spec.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/kz2lob61","slide":115,"title":"FULL VOCABULARY","textShapes":15}
+{"kind":"textbox","id":"sh/yd8jqh4z","slide":115,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/cz2p83q5","slide":115,"text":"The full vocabulary is frozen before comparison","textPreview":"The full vocabulary is frozen before comparison","textChars":47,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/d0bq187q","slide":115,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/29072t83","slide":115,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/3a9ovepo","slide":115,"text":"115","textPreview":"115","textChars":3,"textLines":1,"bbox":[1160,682,72,20]}
+{"kind":"shape","id":"sh/4bip4jqt","slide":115,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/pcr6xo7e","slide":115,"text":"HORIZONS","textPreview":"HORIZONS","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/m5k7ed87","slide":115,"text":"15 × 15","textPreview":"15 × 15","textChars":7,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/n6d87ips","slide":115,"text":"1,2,3,4,5,10,15,20,25,30,35,40,50,75,100","textPreview":"1,2,3,4,5,10,15,20,25,30,35,40,50,75,100","textChars":40,"textLines":1,"bbox":[832,166,388,50]}
+{"kind":"shape","id":"sh/fudgnyl0","slide":115,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/et4zudkf","slide":115,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/1wvyp836","slide":115,"text":"FILTERS","textPreview":"FILTERS","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/gvmhw32l","slide":115,"text":"9 states","textPreview":"9 states","textChars":8,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/nyd0rilw","slide":115,"text":"Unfiltered • ER20 • ATR% • signed ER20","textPreview":"Unfiltered • ER20 • ATR% • signed ER20","textChars":38,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/2x4zydkr","slide":115,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/pkfits32","slide":115,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/ojmh0n2h","slide":115,"text":"BRANCHES","textPreview":"BRANCHES","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/bmx0vil8","slide":115,"text":"2 prior signs","textPreview":"2 prior signs","textChars":13,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/aloz2xkn","slide":115,"text":"Rebound / continuation • continuation / exhaustion","textPreview":"Rebound / continuation • continuation / exhaustion","textChars":50,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/mh8juh4v","slide":115,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/7ihk3m5g","slide":115,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/8ja1wrm1","slide":115,"text":"Complete surface","textPreview":"Complete surface","textChars":16,"textLines":1,"bbox":[82,580,270,34]}
+{"kind":"textbox","id":"sh/9kj25wnm","slide":115,"text":"261,225 asset-state-horizon rows; identical assets, bars, filters, and 2018–2023 window.","textPreview":"261,225 asset-state-horizon rows; identical assets, bars, filters, and 2018–2023 window.","textChars":88,"textLines":1,"bbox":[350,576,820,52]}
+{"kind":"notes","id":"nt/kz2lob61","slide":115,"text":"The state vocabulary is unchanged. Negative-prior correlations can express loss rebound or loss continuation; positive-prior correlations can express gain continuation or gain exhaustion.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/wide_atlas_checks.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/n6pkzi1g","slide":116,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/294bql4v","slide":116,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9o3ih8ne","slide":116,"text":"Loss branch | unfiltered and ER20","textPreview":"Loss branch | unfiltered and ER20","textChars":33,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/8nuh836t","slide":116,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vql0ji5k","slide":116,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/apczadoz","slide":116,"text":"116","textPreview":"116","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/xs3il8nq","slide":116,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/wruhc365","slide":116,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/4bmtsvm1","slide":116,"text":"All observations","textPreview":"All observations","textChars":16,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/pcvu103m","slide":116,"text":"ER20 sideways","textPreview":"ER20 sideways","textChars":13,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/d0vu5k3i","slide":116,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/rydc3alc","slide":116,"text":"ER20 trending — stronger rebound","textPreview":"ER20 trending — stronger rebound","textChars":32,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/036t0f29","slide":116,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/nitcbads","slide":116,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/xovuhkvu","slide":116,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/vmtcfudo","slide":116,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/p83axozy","slide":116,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/ehsrypgb","slide":116,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/filsruhw","slide":116,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/hwrexcje","slide":116,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/wvid47it","slide":116,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/va9wv218","slide":116,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/n6pkzi1g","slide":116,"text":"This is the negative-prior branch. Negative correlation means larger preceding losses are associated with stronger following cumulative returns; positive correlation would indicate loss continuation.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_unfiltered_all_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_er20_red_sideways_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_er20_green_trending_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/210zitov","slide":117,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/hsvy1ojy","slide":117,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/4rutc3ud","slide":117,"text":"Loss branch | ATR% states","textPreview":"Loss branch | ATR% states","textChars":25,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/5sna58by","slide":117,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/u1cb6tcb","slide":117,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/v2lszydg","slide":117,"text":"117","textPreview":"117","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/g3ut8ju1","slide":117,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/ho3a1obm","slide":117,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/vqdgze1s","slide":117,"text":"ATR% low","textPreview":"ATR% low","textChars":8,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/u54fq9kn","slide":117,"text":"ATR% medium","textPreview":"ATR% medium","textChars":11,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/it4zutkj","slide":117,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/4v6hw32p","slide":117,"text":"ATR% high — stronger rebound","textPreview":"ATR% high — stronger rebound","textChars":28,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/ryxg7y10","slide":117,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/8ratobq5","slide":117,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/y1srih83","slide":117,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/03a9krqt","slide":117,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/m5sre14v","slide":117,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/l4jq5wnq","slide":117,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/k3a9crm5","slide":117,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/a9876xkn","slide":117,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/bahof2l8","slide":117,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/cbqp872t","slide":117,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/210zitov","slide":117,"text":"All three volatility states are shown on the same scale. ATR-high is emphasized only because the complete surface reveals stronger negative dependence there.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_atrp_low_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_atrp_medium_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_atrp_high_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/dszatg72","slide":118,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/2xobed43","slide":118,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/p4j214ni","slide":118,"text":"Loss branch | signed ER20 states","textPreview":"Loss branch | signed ER20 states","textChars":32,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/ojq1szmx","slide":118,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/fehkva5g","slide":118,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/ed8jmp4v","slide":118,"text":"118","textPreview":"118","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/1gz2xkn6","slide":118,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/0fq1ofm1","slide":118,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/oj6tgnm9","slide":118,"text":"Signed ER20 up — sparse at short horizons","textPreview":"Signed ER20 up — sparse at short horizons","textChars":41,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/pkfups3u","slide":118,"text":"Signed ER20 sideways","textPreview":"Signed ER20 sideways","textChars":20,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/1wful83i","slide":118,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/fudsjils","slide":118,"text":"Signed ER20 down — clearest rebound","textPreview":"Signed ER20 down — clearest rebound","textChars":35,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/srmt83m1","slide":118,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/nal0nqt8","slide":118,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/l83ilgb2","slide":118,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/z6l0jqtw","slide":118,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/pg7y9sj6","slide":118,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/ixcfmt0b","slide":118,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/jylwvy1w","slide":118,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/lcbi1w3e","slide":118,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/kb2hsr2t","slide":118,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/zat0z6l8","slide":118,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/dszatg72","slide":118,"text":"The up-state loss branch is mechanically sparse at short horizons because a positive path state and negative cumulative prior return are discordant. The sparse region is retained rather than imputed.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_signed_er20_up_trend_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_signed_er20_sideways_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_signed_er20_down_trend_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/832t8bal","slide":119,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/m9w321oj","slide":119,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/l8ne5k3y","slide":119,"text":"Gain branch | unfiltered and ER20","textPreview":"Gain branch | unfiltered and ER20","textChars":33,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/k7edcfmd","slide":119,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/7apw7alo","slide":119,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/m9wvep43","slide":119,"text":"119","textPreview":"119","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/9c7e9k3u","slide":119,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/8bydgfm9","slide":119,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/8vyl4b69","slide":119,"text":"All observations","textPreview":"All observations","textChars":16,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/9w72dgnu","slide":119,"text":"ER20 sideways","textPreview":"ER20 sideways","textChars":13,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/x07mhgn6","slide":119,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/vypkf650","slide":119,"text":"ER20 trending","textPreview":"ER20 trending","textChars":13,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/k3ilcvmh","slide":119,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/ri5k3qxg","slide":119,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/1on290fi","slide":119,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/fm5k7qxc","slide":119,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/dkjidczm","slide":119,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/6lozqd07","slide":119,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/7mxgzi1c","slide":119,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/9g325gja","slide":119,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/ofu1cb2p","slide":119,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/nelk3614","slide":119,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/832t8bal","slide":119,"text":"This is the positive-prior branch. Positive correlation indicates gain continuation; negative correlation indicates gain exhaustion. The same assets and horizon grid are used as on the loss branch.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_unfiltered_all_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_er20_red_sideways_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_er20_green_trending_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/4vahw365","slide":120,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/at0f29kn","slide":120,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/p8n29kja","slide":120,"text":"Gain branch | ATR% states","textPreview":"Gain branch | ATR% states","textChars":25,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/47e1gf25","slide":120,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra5kba1g","slide":120,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/q9w3ipkv","slide":120,"text":"120","textPreview":"120","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/dcn2dkjm","slide":120,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/cbelkf21","slide":120,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/wvix4z2d","slide":120,"text":"ATR% low","textPreview":"ATR% low","textChars":8,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/xgryd4jy","slide":120,"text":"ATR% medium","textPreview":"ATR% medium","textChars":11,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/5kbyhoja","slide":120,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/ji9gfe14","slide":120,"text":"ATR% high","textPreview":"ATR% high","textChars":9,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/sn2xcj2l","slide":120,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/f2pw3et4","slide":120,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/p8ry98bm","slide":120,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/n69g7ytg","slide":120,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/p43mlgza","slide":120,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/i583yh0f","slide":120,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/j6hk7mh0","slide":120,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/10n6dkji","slide":120,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/0ze54f2x","slide":120,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/zy5oba1c","slide":120,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/4vahw365","slide":120,"text":"The gain branch is shown without selecting a favorable volatility state. The slide is descriptive and uses one shared scale across all three panels.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_atrp_low_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_atrp_medium_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_atrp_high_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/hkfit87u","slide":121,"title":"FULL VOCABULARY","textShapes":8}
+{"kind":"textbox","id":"sh/mpsryxwv","slide":121,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/5wfql8bi","slide":121,"text":"Gain branch | signed ER20 states","textPreview":"Gain branch | signed ER20 states","textChars":32,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/4v69c3ux","slide":121,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ryhsnito","slide":121,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/6xoredc3","slide":121,"text":"121","textPreview":"121","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/t0zapsbu","slide":121,"bbox":[48,154,370,482]}
+{"kind":"shape","id":"sh/szq9gnu9","slide":121,"bbox":[455,154,370,482]}
+{"kind":"textbox","id":"sh/8rat07e1","slide":121,"text":"Signed ER20 up","textPreview":"Signed ER20 up","textChars":14,"textLines":1,"bbox":[60,562,346,54]}
+{"kind":"textbox","id":"sh/9sja9sv6","slide":121,"text":"Signed ER20 sideways","textPreview":"Signed ER20 sideways","textChars":20,"textLines":1,"bbox":[467,562,346,54]}
+{"kind":"shape","id":"sh/hw3adcvi","slide":121,"bbox":[862,154,370,482]}
+{"kind":"textbox","id":"sh/vu1sb2dc","slide":121,"text":"Signed ER20 down — sparse at short horizons","textPreview":"Signed ER20 down — sparse at short horizons","textChars":43,"textLines":1,"bbox":[874,562,346,54]}
+{"kind":"textbox","id":"sh/czq9snet","slide":121,"text":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textPreview":"Shared scale: burgundy = negative correlation • cream = near zero • teal = positive correlation","textChars":95,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/ru983upw","slide":121,"bbox":[60,174,346,350]}
+{"kind":"shape","id":"sh/1kbq9ony","slide":121,"bbox":[467,174,346,350]}
+{"kind":"shape","id":"sh/zi987e58","slide":121,"bbox":[874,174,346,350]}
+{"kind":"image","id":"im/xwfutsrq","slide":121,"name":"","bbox":[60,174,346,350]}
+{"kind":"image","id":"im/m54ved83","slide":121,"name":"","bbox":[467,174,346,350]}
+{"kind":"image","id":"im/nqxcni9o","slide":121,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"image","id":"im/pk3ytgr6","slide":121,"name":"","bbox":[60,204.83,346,288.33]}
+{"kind":"image","id":"im/4juxkbal","slide":121,"name":"","bbox":[467,204.83,346,288.33]}
+{"kind":"image","id":"im/3ilgr69g","slide":121,"name":"","bbox":[874,204.83,346,288.33]}
+{"kind":"notes","id":"nt/hkfit87u","slide":121,"text":"The down-state gain branch is mechanically sparse at short horizons because a negative path state and positive cumulative prior return are discordant. Missing cells remain visible.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/equal_sector_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_signed_er20_up_trend_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_signed_er20_sideways_heatmap.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/equal_sector_gain_signed_er20_down_trend_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/i98nytwz","slide":122,"title":"FULL VOCABULARY","textShapes":7}
+{"kind":"textbox","id":"sh/axcva5wb","slide":122,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xwbqhgjy","slide":122,"text":"The filters discriminate the two branches differently","textPreview":"The filters discriminate the two branches differently","textChars":53,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/wv29ob2t","slide":122,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/jyt8jq14","slide":122,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"textbox","id":"sh/ixkrqlkj","slide":122,"text":"122","textPreview":"122","textChars":3,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"shape","id":"sh/50bql0ja","slide":122,"bbox":[58,150,560,490]}
+{"kind":"shape","id":"sh/kz29sv2p","slide":122,"bbox":[662,150,538,490]}
+{"kind":"textbox","id":"sh/wzedcfe1","slide":122,"text":"Loss branch: short cells mix; rebound strengthens in trending / ATR-high / signed-down","textPreview":"Loss branch: short cells mix; rebound strengthens in trending / ATR-high / signed-down","textChars":86,"textLines":1,"bbox":[72,574,532,50]}
+{"kind":"textbox","id":"sh/x0ne5kfm","slide":122,"text":"Gain branch: sideways favors continuation; trending favors exhaustion","textPreview":"Gain branch: sideways favors continuation; trending favors exhaustion","textChars":69,"textLines":1,"bbox":[680,574,500,50]}
+{"kind":"textbox","id":"sh/5one94fy","slide":122,"text":"Same horizons and filters on both branches; colors use the shared diverging scale.","textPreview":"Same horizons and filters on both branches; colors use the shared diverging scale.","textChars":82,"textLines":1,"bbox":[60,132,1160,18]}
+{"kind":"shape","id":"sh/0rad4ve9","slide":122,"bbox":[60,168,554,396]}
+{"kind":"shape","id":"sh/1cb2ls36","slide":122,"bbox":[666,168,554,396]}
+{"kind":"image","id":"im/jehs72dg","slide":122,"name":"","bbox":[72,174,532,390]}
+{"kind":"image","id":"im/4fq90nel","slide":122,"name":"","bbox":[680,174,500,390]}
+{"kind":"image","id":"im/5gza9sv6","slide":122,"name":"","bbox":[60,191.89,554,348.23]}
+{"kind":"image","id":"im/6h8r2xwr","slide":122,"name":"","bbox":[666,191.89,554,348.23]}
+{"kind":"notes","id":"nt/i98nytwz","slide":122,"text":"Equal-horizon diagonals compress the complete grids only for comparison. They are not a parameter recommendation. The full 15-by-15 panels on the preceding slides remain the authoritative completeness view.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/full_state_vocabulary_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/all_states_equal_sector_diagonal.png\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/all_states_equal_sector_gain_diagonal.png\n[/Sources]"}
+{"kind":"slide","id":"sl/jq10jmxc","slide":123,"title":"The broader view strengthens interpretation","textShapes":16}
+{"kind":"shape","id":"sh/xwnmdgvm","slide":123,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9wjmlcve","slide":123,"text":"The broader view strengthens interpretation","textPreview":"The broader view strengthens interpretation","textChars":43,"textLines":1,"bbox":[48,56,1184,62]}
+{"kind":"shape","id":"sh/8valc7et","slide":123,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/zqhkf2xw","slide":123,"text":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textPreview":"129 instruments | 15 horizons | 9 filters | 2 branches | 2018–2023","textChars":66,"textLines":1,"bbox":[48,684,470,18]}
+{"kind":"shape","id":"sh/yp836xwr","slide":123,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/lsz2hsv2","slide":123,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/krql87eh","slide":123,"text":"FOUND","textPreview":"FOUND","textChars":5,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/bmhkbix0","slide":123,"text":"A complete reference surface","textPreview":"A complete reference surface","textChars":28,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/alo32dwf","slide":123,"text":"short and long horizons coexist","textPreview":"short and long horizons coexist","textChars":31,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/0by5gbml","slide":123,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/1c7mpg36","slide":123,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/epgne14v","slide":123,"text":"LEARNS","textPreview":"LEARNS","textChars":6,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/zqp4n6l0","slide":123,"text":"Scale and filters both matter","textPreview":"Scale and filters both matter","textChars":29,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/cnylcrmp","slide":123,"text":"short sign flips; branch states differ","textPreview":"short sign flips; branch states differ","textChars":38,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/do7mlwna","slide":123,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/qlw3a14j","slide":123,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/rm54j654","slide":123,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/wji5ovmt","slide":123,"text":"A chosen cell, filter, or rule","textPreview":"A chosen cell, filter, or rule","textChars":30,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/xkrmx03e","slide":123,"text":"no edge, causality, or hold period","textPreview":"no edge, causality, or hold period","textChars":34,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/50nmh0vi","slide":123,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/kze58vex","slide":123,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/jy54fqdc","slide":123,"text":"Next clean gate","textPreview":"Next clean gate","textChars":15,"textLines":1,"bbox":[82,580,270,34]}
+{"kind":"textbox","id":"sh/ixw36lw7","slide":123,"text":"Freeze this as the descriptive reference. Incremental-return timing or untouched-time transport still requires a separate gate.","textPreview":"Freeze this as the descriptive reference. Incremental-return timing or untouched-time transport still requires a separate gate.","textChars":127,"textLines":1,"bbox":[350,576,820,52]}
+{"kind":"textbox","id":"sh/wbel4be1","slide":123,"name":"wide-atlas-section-overlay","text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/va54b6dg","slide":123,"name":"wide-atlas-page-overlay","text":"123","textPreview":"123","textChars":3,"textLines":1,"bbox":[1160,682,72,20]}
+{"kind":"textbox","id":"sh/a9w32lwv","slide":123,"text":"FULL VOCABULARY","textPreview":"FULL VOCABULARY","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"notes","id":"nt/jq10jmxc","slide":123,"text":"Completeness protects against a curated story: all states and both sign branches are visible. The strongest discriminators can now be discussed in context, but no cell or state is promoted into a rule.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/full_state_vocabulary_summary.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
