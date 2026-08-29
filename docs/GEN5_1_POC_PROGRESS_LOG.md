@@ -340,6 +340,20 @@ outcomes, fit pairs, run random controls, compute portfolio metrics, or place
 short orders until the exact universe, timing, thresholds, ordinary costs,
 controls, and nine gates receive operator approval.
 
+35. The return-geometry lane now has a durable candidate ledger and a separate
+daily continuation microscope. `PROTO-MR-01` records the temporally unstable
+volume-veto rebound as a proto-mean-reversion strategy; `BEHAV-MOM-01` records
+sideways gain continuation as a descriptive behavioral lead. No new outcome
+was calculated. Existing evidence shows a weak TSLA 5-10-session ridge, a
+clearer TSLA ATR%-conditioned split, 39/81 continuation-support cells in the
+30-asset path-sideways state versus 0/81 path-trending, and a small but broad
+129-instrument sideways-versus-trending gain-branch contrast. Preserve
+`DESCRIPTIVE_BEHAVIORAL_LEAD_STOP_BEFORE_RULE_SELECTION`. The next gate is an
+operator-owned narrative choice before any horizon selection, next-open rule,
+post-2023 query, or 30-minute calculation. The intraday lane remains
+design-only until its bar clock, overnight convention, horizon meaning, and
+filter timing are frozen.
+
 ## Next Candidate Tests
 
 - Run the older-window temporal context batch as an overnight job over `AMD,NVDA,TSLA,AAPL,MSTR`, starting with adjacent 2021 and 2022 windows; resolve the `VXX` pre-2018 context choice before claiming older fully comparable windows.

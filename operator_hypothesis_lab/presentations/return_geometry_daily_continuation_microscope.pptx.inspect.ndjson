@@ -1,0 +1,126 @@
+{"kind":"deck","id":"pr/sc30be","name":"Deck"}
+{"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"DAILY CONTINUATION","textShapes":5}
+{"kind":"textbox","id":"sh/sryl4zqx","slide":1,"text":"DAILY CONTINUATION","textPreview":"DAILY CONTINUATION","textChars":18,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/547294r6","slide":1,"text":"From return geometry to a continuation hypothesis","textPreview":"From return geometry to a continuation hypothesis","textChars":49,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/k3yl0zql","slide":1,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/7qp4be9c","slide":1,"text":"A descriptive microscope before a trading rule","textPreview":"A descriptive microscope before a trading rule","textChars":46,"textLines":1,"bbox":[48,438,1040,72]}
+{"kind":"textbox","id":"sh/65g3298r","slide":1,"text":"TSLA origin • 30-asset catalog • 129-instrument transport • post-2023 sealed","textPreview":"TSLA origin • 30-asset catalog • 129-instrument transport • post-2023 sealed","textChars":76,"textLines":1,"bbox":[48,570,1100,64]}
+{"kind":"textbox","id":"sh/ts7md4r2","slide":1,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/y90nupkv","slide":1,"text":"This new research volume preserves the weaker but coherent momentum/continuation line separately from the rebound proto-strategy. It summarizes only already-computed 2018-2023 evidence.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"EVIDENCE BOUNDARY","textShapes":15}
+{"kind":"textbox","id":"sh/hcvy14ne","slide":2,"name":"section-11","text":"EVIDENCE BOUNDARY","textPreview":"EVIDENCE BOUNDARY","textChars":17,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9072xkry","slide":2,"name":"title-11","text":"Continuation is a behavioral lead—not a strategy","textPreview":"Continuation is a behavioral lead—not a strategy","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/ozy1ofad","slide":2,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/b29kza94","slide":2,"name":"footer-left-11","text":"Return geometry | daily continuation microscope | 2026-08-28","textPreview":"Return geometry | daily continuation microscope | 2026-08-28","textChars":60,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/a10jqpsj","slide":2,"name":"footer-number-11","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/x4r21kru","slide":2,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/w3i1sfa9","slide":2,"text":"OBSERVED","textPreview":"OBSERVED","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/r65knqtk","slide":2,"text":"Positive-prior dependence changes with state","textPreview":"Positive-prior dependence changes with state","textChars":44,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"text":"sideways / low-vol differ from trending","textPreview":"sideways / low-vol differ from trending","textChars":39,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/ove9o7yd","slide":2,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/9wnqhczy","slide":2,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/mtwrmxg7","slide":2,"text":"CONTRAST","textPreview":"CONTRAST","textChars":8,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/nu58f2hs","slide":2,"text":"Efficient trending paths lean toward exhaustion","textPreview":"Efficient trending paths lean toward exhaustion","textChars":47,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/wjy9sry9","slide":2,"text":"same method, opposite slope sign","textPreview":"same method, opposite slope sign","textChars":32,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/xk7qlczu","slide":2,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ahwrqhgj","slide":2,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/bip8jmho","slide":2,"text":"DOES NOT EARN","textPreview":"DOES NOT EARN","textChars":13,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/cnupgny5","slide":2,"text":"A chosen horizon or executable rule","textPreview":"A chosen horizon or executable rule","textChars":35,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/do3q9szq","slide":2,"text":"next-open, baseline, and fresh data unresolved","textPreview":"next-open, baseline, and fresh data unresolved","textChars":46,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/t8byxkn2","slide":2,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/s72xofmh","slide":2,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/76twva5c","slide":2,"text":"Registry status","textPreview":"Registry status","textChars":15,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/65kfmpor","slide":2,"text":"BEHAV-MOM-01 is worth preserving and discussing. Its current status is DESCRIPTIVE_BEHAVIORAL_LEAD.","textPreview":"BEHAV-MOM-01 is worth preserving and discussing. Its current status is DESCRIPTIVE_BEHAVIORAL_LEAD.","textChars":99,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/hwbqtkby","slide":2,"text":"The line has enough structure to deserve a name and a separate research volume. It has not earned expectancy, a representative cell, a next-open rule, or an OOS query.\n\n[Sources]\n- operator_hypothesis_lab/registries/proto_strategy_ledger.xlsx\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"TSLA ORIGIN","textShapes":4}
+{"kind":"textbox","id":"sh/6d0fytg3","slide":3,"name":"section-11","text":"TSLA ORIGIN","textPreview":"TSLA ORIGIN","textChars":11,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/cza94vmx","slide":3,"name":"title-11","text":"Aggregation reveals a weak 5–10-session continuation ridge","textPreview":"Aggregation reveals a weak 5–10-session continuation ridge","textChars":58,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/d0jax03i","slide":3,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/298ryl4v","slide":3,"name":"footer-left-11","text":"TSLA | cumulative close-to-close log returns | 2018–2023","textPreview":"TSLA | cumulative close-to-close log returns | 2018–2023","textChars":56,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/3ah8rqlg","slide":3,"name":"footer-number-11","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/0z2ds325","slide":3,"name":"","alt":"TSLA 9 by 9 prior-versus-following cumulative-return Pearson heatmap","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/ofy9wn61","slide":3,"text":"The strongest TSLA cell is about +0.092 near the 5-to-10-session ridge, but the maximum explains less than one percent of variance and no signed-return or direction cell survives the complete 81-cell scan.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/visuals/tsla_cumulative_return_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"VOLATILITY STATE","textShapes":4}
+{"kind":"textbox","id":"sh/1wbapc7q","slide":4,"name":"section-11","text":"VOLATILITY STATE","textPreview":"VOLATILITY STATE","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1cj2d8b6","slide":4,"name":"title-11","text":"Medium ATR sharpens TSLA's continuation surface","textPreview":"Medium ATR sharpens TSLA's continuation surface","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0ba143al","slide":4,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/rm1k7yt4","slide":4,"name":"footer-left-11","text":"TSLA | accepted causal ATR% state | 2018–2023","textPreview":"TSLA | accepted causal ATR% state | 2018–2023","textChars":45,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ql8jytsj","slide":4,"name":"footer-number-11","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/v618be10","slide":4,"name":"","alt":"TSLA medium-ATR-state prior-versus-following cumulative-return Pearson heatmap","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/jyx0ra1s","slide":4,"text":"All 81 medium-ATR cells are positive. Three medium-state cells survive the stricter 486-test BH family, while the high-ATR surface is predominantly negative. This is a state discriminator, not a trading permission rule.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_medium_pearson_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"METHOD GRAMMAR","textShapes":4}
+{"kind":"textbox","id":"sh/pkr6tgjy","slide":5,"name":"section-11","text":"METHOD GRAMMAR","textPreview":"METHOD GRAMMAR","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/dgbulwnm","slide":5,"name":"title-11","text":"Continuation sits inside a four-behavior grammar","textPreview":"Continuation sits inside a four-behavior grammar","textChars":48,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/cf2tcr61","slide":5,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/z2tcnm5s","slide":5,"name":"footer-left-11","text":"Return geometry | positive and negative prior branches","textPreview":"Return geometry | positive and negative prior branches","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/yhkbe1o7","slide":5,"name":"footer-number-11","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/7itgf6p8","slide":5,"name":"","alt":"Four-archetype grammar for gain continuation, gain exhaustion, loss rebound, and loss continuation","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/i107q5of","slide":5,"text":"Prior-return sign and within-branch slope define the behavior. This prevents us from treating every interesting state as a new strategy: continuation and exhaustion are opposite shapes within the same positive-prior branch.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_archetype_grammar.png\n[/Sources]"}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"30-ASSET CATALOG","textShapes":4}
+{"kind":"textbox","id":"sh/0fy5k3id","slide":6,"name":"section-11","text":"30-ASSET CATALOG","textPreview":"30-ASSET CATALOG","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"name":"title-11","text":"Sideways paths carry the atlas's largest continuation cluster","textPreview":"Sideways paths carry the atlas's largest continuation cluster","textChars":61,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/zi98nu94","slide":6,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/87ipkzal","slide":6,"name":"footer-left-11","text":"30 assets | fixed 9 x 9 microscope | equal-asset support","textPreview":"30 assets | fixed 9 x 9 microscope | equal-asset support","textChars":56,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/98rqt4r6","slide":6,"name":"footer-number-11","text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/md8ru5sv","slide":6,"name":"","alt":"Behavior-state catalog showing supported horizon-cell counts across eight states","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/x8f69ofe","slide":6,"text":"Under the post-hoc display vocabulary, gain continuation appears in 39 of 81 path-sideways cells and 17 of 81 low-ATR cells, but in zero of 81 path-trending cells. Trending and signed-up states instead favor gain exhaustion.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_state_catalog.png\n[/Sources]"}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"129-INSTRUMENT ATLAS","textShapes":4}
+{"kind":"textbox","id":"sh/q143ylov","slide":7,"name":"section-11","text":"129-INSTRUMENT ATLAS","textPreview":"129-INSTRUMENT ATLAS","textChars":20,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/cb2tkvap","slide":7,"name":"title-11","text":"Breadth preserves a small state contrast","textPreview":"Breadth preserves a small state contrast","textChars":40,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/dcbud0ra","slide":7,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ydkbm5sv","slide":7,"name":"footer-left-11","text":"129 instruments | equal-sector gain branch | 2018–2023","textPreview":"129 instruments | equal-sector gain branch | 2018–2023","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/zedcfa9g","slide":7,"name":"footer-number-11","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/4zm50365","slide":7,"name":"","alt":"Equal-sector gain-branch diagonal correlations across all frozen conditioning states","bbox":[186,140.17,908,529.67]}
+{"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"Across the full 15-by-15 atlas, ER20-sideways gain cells have median correlation +0.027 and positive sign in 81.8 percent of cells. ER20-trending cells have median -0.028 and positive sign in only 27.6 percent. The separation is broad but small.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/all_states_equal_sector_gain_diagonal.png\n[/Sources]"}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"EVIDENCE SYNTHESIS","textShapes":15}
+{"kind":"textbox","id":"sh/5sne5wne","slide":8,"name":"section-11","text":"EVIDENCE SYNTHESIS","textPreview":"EVIDENCE SYNTHESIS","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/18byd4zy","slide":8,"name":"title-11","text":"A coherent discriminator is still not a trading rule","textPreview":"A coherent discriminator is still not a trading rule","textChars":52,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/g72x4zyd","slide":8,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ri9g7uhw","slide":8,"name":"footer-left-11","text":"Return geometry | continuation evidence status","textPreview":"Return geometry | continuation evidence status","textChars":46,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6h0fypgb","slide":8,"name":"footer-number-11","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/tkby9kzm","slide":8,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/sjix0zy1","slide":8,"text":"TSLA","textPreview":"TSLA","textChars":4,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/je9g3ahk","slide":8,"text":"Weak 5–10-session ridge","textPreview":"Weak 5–10-session ridge","textChars":23,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/id0fu50z","slide":8,"text":"0 / 81 aggregate cells survive BH","textPreview":"0 / 81 aggregate cells survive BH","textChars":33,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/o7ydoret","slide":8,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/98rehwve","slide":8,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/m5gvmhwn","slide":8,"text":"30 ASSETS","textPreview":"30 ASSETS","textChars":9,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/n6pwfmd8","slide":8,"text":"Sideways continuation cluster","textPreview":"Sideways continuation cluster","textChars":29,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/0jydkreh","slide":8,"text":"39 / 81 versus 0 / 81 trending","textPreview":"39 / 81 versus 0 / 81 trending","textChars":30,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/1k7edwv2","slide":8,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ehgvihwr","slide":8,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/zipwbmdc","slide":8,"text":"129 INSTRUMENTS","textPreview":"129 INSTRUMENTS","textChars":15,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/kfixwbe1","slide":8,"text":"Broad state-sign contrast","textPreview":"Broad state-sign contrast","textChars":25,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/lgbepgvm","slide":8,"text":"+0.027 sideways vs −0.028 trending median","textPreview":"+0.027 sideways vs −0.028 trending median","textChars":41,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/tw7e9gnq","slide":8,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/svydgb65","slide":8,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/7u5w765k","slide":8,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/6twve1oz","slide":8,"text":"Preserve BEHAV-MOM-01 as a behavioral lead. Do not select a cell or open post-2023 data before a narrative-first rule is frozen.","textPreview":"Preserve BEHAV-MOM-01 as a behavioral lead. Do not select a cell or open post-2023 data before a narrative-first rule is frozen.","textChars":128,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/fu1gfa1s","slide":8,"text":"This is a real research milestone: the continuation line is no longer a vague intuition. It is a broad but small conditional shape. The evidence boundary remains important because the same research history discovered and summarized it.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"NEXT FROZEN GATE","textShapes":15}
+{"kind":"textbox","id":"sh/hcji5o7a","slide":9,"name":"section-11","text":"NEXT FROZEN GATE","textPreview":"NEXT FROZEN GATE","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1cfmhgne","slide":9,"name":"title-11","text":"The next move is a narrative choice—not more feature mining","textPreview":"The next move is a narrative choice—not more feature mining","textChars":59,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0b65obm9","slide":9,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/nex4jq5k","slide":9,"name":"footer-left-11","text":"Return geometry | continuation research roadmap","textPreview":"Return geometry | continuation research roadmap","textChars":47,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/mdonql4z","slide":9,"name":"footer-number-11","text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/9gzml0nq","slide":9,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/ofq5svm5","slide":9,"text":"BEHAVIOR","textPreview":"BEHAVIOR","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"text":"Name the state-dependent continuation lead","textPreview":"Name the state-dependent continuation lead","textChars":42,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ah8nu54b","slide":9,"text":"complete for 2018–2023","textPreview":"complete for 2018–2023","textChars":22,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/oza1gfyh","slide":9,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/p0ji9kf2","slide":9,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/2xsjepgb","slide":9,"text":"CANDIDATE","textPreview":"CANDIDATE","textChars":9,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3y107axw","slide":9,"text":"Choose one representative contrast before calculating","textPreview":"Choose one representative contrast before calculating","textChars":53,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/cnu1kzyd","slide":9,"text":"one state, one horizon, one baseline","textPreview":"one state, one horizon, one baseline","textChars":36,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/do3id4fy","slide":9,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/qlcjipgn","slide":9,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/bml0buxs","slide":9,"text":"EDGE","textPreview":"EDGE","textChars":4,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0ru1ozyp","slide":9,"text":"Require next-open value on fresh data","textPreview":"Require next-open value on fresh data","textChars":37,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/lsn2h4fa","slide":9,"text":"later—not yet earned","textPreview":"later—not yet earned","textChars":20,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/98ji147e","slide":9,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/87a18zqt","slide":9,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/76h0zup8","slide":9,"text":"Recommended huddle","textPreview":"Recommended huddle","textChars":18,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ml8j6p8n","slide":9,"text":"Decide whether to freeze sideways continuation alone or the direct sideways-versus-trending contrast. Keep the 30-minute lane design-only until its clock contract is explicit.","textPreview":"Decide whether to freeze sideways continuation alone or the direct sideways-versus-trending contrast. Keep the 30-minute lane design-only...","textChars":175,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/udsvah03","slide":9,"text":"The next discussion should select the economic claim before its test. A reasonable default is the direct contrast: after a positive prior return, continuation should be stronger in ER20-sideways than ER20-trending. The horizon and failure rule must then be frozen without scanning the inspected grid again. The planned 30-minute lane remains unopened until sessions, overnight returns, and daily-filter timing are specified.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n- operator_hypothesis_lab/registries/proto_strategy_ledger.xlsx\n[/Sources]"}

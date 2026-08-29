@@ -355,3 +355,45 @@ Only 3/6 calendar years support the veto and 2023 reverses. Treat the feature
 as a plausible failure-state descriptor inside TRAIN, not a promoted edge or
 permission rule. See `RETURN_GEOMETRY_ABNORMAL_VOLUME_VETO_2018_2023.md`.
 Keep post-2023 sealed and do not retune or combine features.
+
+### Strategy Candidate Ledger
+
+The operator hypothesis lab now has a durable spreadsheet registry at
+`registries/proto_strategy_ledger.xlsx`. It separates maturity from excitement
+or point-estimate size and records one row per sufficiently developed research
+line plus one row per completed evidence slice.
+
+The first two registered lines are deliberately different:
+
+- `PROTO-MR-01`, `Volume-Veto Rebound`, is an executable TRAIN
+  proto-mean-reversion strategy with cross-sectional support and unstable
+  calendar transport; and
+- `BEHAV-MOM-01`, `Sideways Gain Continuation`, is a descriptive momentum lead
+  with no frozen rule.
+
+The workbook also defines `Behavioral lead`, `Proto-strategy`, `Candidate`,
+`Stopped`, `OOS-confirmed`, and `SEALED` so later research lines can be tracked
+without turning the registry into a performance leaderboard.
+
+### Daily Continuation Microscope
+
+The existing continuation evidence has been assembled into a separate compact
+research volume without calculating new outcomes. TSLA supplies a weak
+five-to-ten-session aggregate ridge and a clearer ATR%-conditioned split. The
+30-asset catalog shows gain continuation in 39/81 path-sideways cells versus
+0/81 path-trending cells. In the 129-instrument atlas, ER20-sideways gain cells
+have median correlation `+0.027` and `81.8%` positive sign breadth, whereas
+ER20-trending cells have median `-0.028` and only `27.6%` positive sign breadth.
+
+Current status:
+
+`DESCRIPTIVE_BEHAVIORAL_LEAD_STOP_BEFORE_RULE_SELECTION`
+
+See `RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md` and
+`presentations/return_geometry_daily_continuation_microscope.pptx`. The next
+gate is an operator-owned narrative choice between sideways continuation alone
+and the direct sideways-versus-trending contrast. Do not select a horizon,
+calculate a next-open rule, open post-2023 evidence, or run the 30-minute lane
+until that contract is frozen. The intraday lane remains design-only pending an
+explicit bar clock, overnight convention, horizon interpretation, and filter
+timing.
