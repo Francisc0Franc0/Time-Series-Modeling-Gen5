@@ -85,19 +85,56 @@ This slice adds no:
 
 Post-2023 evidence remains sealed.
 
-## Recommended Next Gate
+## Approved Sideways-Versus-Trending Contrast
 
-The next step is an operator huddle, not a grid extension. The cleanest default
-candidate narrative is the direct contrast:
+The operator selected the direct contrast for fuller context:
 
 > After a positive completed return, continuation is stronger in an
 > ER20-sideways state than in an ER20-trending state.
 
-If that narrative is selected, a later slice must freeze one representative
-horizon, the causal state timing, the next-open translation, the correct
-baseline, and an explicit failure rule before calculating anything new. The
-alternative is to freeze sideways continuation alone. That choice remains with
-the operator.
+The slice re-expressed the already-computed full-vocabulary atlas rather than
+recomputing bars or returns. For every asset and prior/following horizon cell,
+the positive-prior correlation in the causal ER20-trending state was subtracted
+from the corresponding ER20-sideways correlation. The primary aggregation then
+took asset medians within each of the 11 frozen sectors and an equal-sector
+median across sectors.
+
+Across the complete 15 by 15 surface:
+
+- ER20-sideways median correlation is `+0.027`;
+- ER20-trending median correlation is `-0.028`;
+- the paired sideways-minus-trending median is `+0.048`;
+- `209 / 225`, or `92.9%`, of cells favor sideways; and
+- all 11 sectors have positive median paired contrasts across their 225-cell
+  surfaces, with positive-cell breadth ranging from `62.2%` to `85.8%`.
+
+The result is broad but not uniform. Sixteen cells do not favor sideways.
+Exceptions cluster at the shortest horizons, several 20-session-prior / long-
+forward combinations, and the `100 -> 100` diagonal cell. In the frozen
+5/10/15/20-session lead region, `15 / 16` cells favor sideways and the median
+paired contrast is `+0.047`.
+
+There are `29,024 / 29,025` complete asset-level pairs. The one explicit blank
+is RIVN's `100 -> 100` trending positive-prior branch, which has 24 observations
+and therefore remains below the inherited 30-observation minimum. RIVN is a
+partial-history attention name and does not enter the 88-stock core headline.
+
+The contrast is a difference in correlations, not a return, spread trade, or
+execution result. The same 2018-2023 history revealed and evaluated the state
+split, the cumulative cells overlap, and no multiplicity or independent-
+confirmation claim is attached to the 92.9% morphology.
+
+Current status:
+
+`DESCRIPTIVE_PAIRED_STATE_CONTRAST_COMPLETE_STOP_BEFORE_HORIZON_OR_RULE_SELECTION`
+
+## Next Gate
+
+Do not select the strongest observed cell. The next operator huddle should
+decide whether to freeze one representative daily horizon together with causal
+state timing, a next-open translation, a state-only/drift baseline, and an
+explicit failure rule, or preserve this result as behavioral context while
+opening the separately designed 30-minute lane.
 
 The 30-minute lane remains bookmarked but design-only until its bar clock,
 overnight-return treatment, horizon meaning, and any daily-to-intraday filter
@@ -109,6 +146,12 @@ timing are explicit.
   `operator_hypothesis_lab/registries/proto_strategy_ledger.xlsx`.
 - Continuation microscope deck:
   `operator_hypothesis_lab/presentations/return_geometry_daily_continuation_microscope.pptx`.
+- Paired state-contrast packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828`.
+- Paired state-contrast runner:
+  `scripts/inspect/run_return_geometry_continuation_state_contrast.R`.
+- Paired state-contrast helpers:
+  `operator_hypothesis_lab/R/return_geometry_continuation_state_contrast.R`.
 - TSLA aggregate source note:
   `operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md`.
 - TSLA ATR% source note:

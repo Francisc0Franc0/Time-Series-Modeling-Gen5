@@ -387,13 +387,20 @@ ER20-trending cells have median `-0.028` and only `27.6%` positive sign breadth.
 
 Current status:
 
-`DESCRIPTIVE_BEHAVIORAL_LEAD_STOP_BEFORE_RULE_SELECTION`
+`DESCRIPTIVE_PAIRED_STATE_CONTRAST_COMPLETE_STOP_BEFORE_HORIZON_OR_RULE_SELECTION`
 
 See `RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md` and
-`presentations/return_geometry_daily_continuation_microscope.pptx`. The next
-gate is an operator-owned narrative choice between sideways continuation alone
-and the direct sideways-versus-trending contrast. Do not select a horizon,
-calculate a next-open rule, open post-2023 evidence, or run the 30-minute lane
-until that contract is frozen. The intraday lane remains design-only pending an
-explicit bar clock, overnight convention, horizon interpretation, and filter
-timing.
+`presentations/return_geometry_daily_continuation_microscope.pptx`.
+
+The operator selected the direct sideways-versus-trending contrast. Pairing
+each asset within the same horizon cell produces an equal-sector median
+sideways-minus-trending correlation of `+0.048`; `92.9%` of 225 cells favor
+sideways, and all 11 core sectors have positive median contrasts. The result is
+not universal: 16 cells are exceptions, including micro horizons, several
+20-prior/long-forward combinations, and `100 -> 100`.
+
+Do not select the strongest observed horizon, calculate a next-open rule, or
+open post-2023 evidence. The next gate is either a separately frozen
+representative daily horizon plus baseline/failure contract or the explicitly
+designed 30-minute lane. The intraday lane remains design-only pending a bar
+clock, overnight convention, horizon interpretation, and filter timing.

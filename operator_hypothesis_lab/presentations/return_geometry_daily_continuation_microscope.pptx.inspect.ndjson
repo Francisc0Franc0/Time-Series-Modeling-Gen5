@@ -1,4 +1,4 @@
-{"kind":"deck","id":"pr/sc30be","name":"Deck"}
+{"kind":"deck","id":"pr/1nx899","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"DAILY CONTINUATION","textShapes":5}
@@ -36,11 +36,11 @@
 {"kind":"notes","id":"nt/hwbqtkby","slide":2,"text":"The line has enough structure to deserve a name and a separate research volume. It has not earned expectancy, a representative cell, a next-open rule, or an OOS query.\n\n[Sources]\n- operator_hypothesis_lab/registries/proto_strategy_ledger.xlsx\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n[/Sources]"}
 {"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"TSLA ORIGIN","textShapes":4}
 {"kind":"textbox","id":"sh/6d0fytg3","slide":3,"name":"section-11","text":"TSLA ORIGIN","textPreview":"TSLA ORIGIN","textChars":11,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/cza94vmx","slide":3,"name":"title-11","text":"Aggregation reveals a weak 5–10-session continuation ridge","textPreview":"Aggregation reveals a weak 5–10-session continuation ridge","textChars":58,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"textbox","id":"sh/cza94vmx","slide":3,"name":"title-11","text":"A weak 5–10-session continuation ridge appears","textPreview":"A weak 5–10-session continuation ridge appears","textChars":46,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/d0jax03i","slide":3,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/298ryl4v","slide":3,"name":"footer-left-11","text":"TSLA | cumulative close-to-close log returns | 2018–2023","textPreview":"TSLA | cumulative close-to-close log returns | 2018–2023","textChars":56,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/3ah8rqlg","slide":3,"name":"footer-number-11","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/0z2ds325","slide":3,"name":"","alt":"TSLA 9 by 9 prior-versus-following cumulative-return Pearson heatmap","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/0z2ds325","slide":3,"name":"","bbox":[302.94,140.17,674.12,529.67]}
 {"kind":"notes","id":"nt/ofy9wn61","slide":3,"text":"The strongest TSLA cell is about +0.092 near the 5-to-10-session ridge, but the maximum explains less than one percent of variance and no signed-return or direction cell survives the complete 81-cell scan.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_cumulative_return_horizon_grid_20260825/visuals/tsla_cumulative_return_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"VOLATILITY STATE","textShapes":4}
 {"kind":"textbox","id":"sh/1wbapc7q","slide":4,"name":"section-11","text":"VOLATILITY STATE","textPreview":"VOLATILITY STATE","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
@@ -48,7 +48,7 @@
 {"kind":"shape","id":"sh/0ba143al","slide":4,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/rm1k7yt4","slide":4,"name":"footer-left-11","text":"TSLA | accepted causal ATR% state | 2018–2023","textPreview":"TSLA | accepted causal ATR% state | 2018–2023","textChars":45,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/ql8jytsj","slide":4,"name":"footer-number-11","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/v618be10","slide":4,"name":"","alt":"TSLA medium-ATR-state prior-versus-following cumulative-return Pearson heatmap","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/v618be10","slide":4,"name":"","bbox":[258.64,140.17,762.72,529.67]}
 {"kind":"notes","id":"nt/jyx0ra1s","slide":4,"text":"All 81 medium-ATR cells are positive. Three medium-state cells survive the stricter 486-test BH family, while the high-ATR surface is predominantly negative. This is a state discriminator, not a trading permission rule.\n\n[Sources]\n- operator_hypothesis_lab/docs/TSLA_ATRP_CONDITIONED_RETURN_HORIZON_GRID_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/tsla_atrp_conditioned_return_horizon_grid_20260825/visuals/tsla_atrp_medium_pearson_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/i107q5of","slide":5,"title":"METHOD GRAMMAR","textShapes":4}
 {"kind":"textbox","id":"sh/pkr6tgjy","slide":5,"name":"section-11","text":"METHOD GRAMMAR","textPreview":"METHOD GRAMMAR","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
@@ -56,15 +56,15 @@
 {"kind":"shape","id":"sh/cf2tcr61","slide":5,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/z2tcnm5s","slide":5,"name":"footer-left-11","text":"Return geometry | positive and negative prior branches","textPreview":"Return geometry | positive and negative prior branches","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/yhkbe1o7","slide":5,"name":"footer-number-11","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/7itgf6p8","slide":5,"name":"","alt":"Four-archetype grammar for gain continuation, gain exhaustion, loss rebound, and loss continuation","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/7itgf6p8","slide":5,"name":"","bbox":[186,149.62,908,510.75]}
 {"kind":"notes","id":"nt/i107q5of","slide":5,"text":"Prior-return sign and within-branch slope define the behavior. This prevents us from treating every interesting state as a new strategy: continuation and exhaustion are opposite shapes within the same positive-prior branch.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_archetype_grammar.png\n[/Sources]"}
 {"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"30-ASSET CATALOG","textShapes":4}
 {"kind":"textbox","id":"sh/0fy5k3id","slide":6,"name":"section-11","text":"30-ASSET CATALOG","textPreview":"30-ASSET CATALOG","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
-{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"name":"title-11","text":"Sideways paths carry the atlas's largest continuation cluster","textPreview":"Sideways paths carry the atlas's largest continuation cluster","textChars":61,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"name":"title-11","text":"Sideways paths carry the largest continuation cluster","textPreview":"Sideways paths carry the largest continuation cluster","textChars":53,"textLines":1,"bbox":[48,56,1184,66]}
 {"kind":"shape","id":"sh/zi98nu94","slide":6,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/87ipkzal","slide":6,"name":"footer-left-11","text":"30 assets | fixed 9 x 9 microscope | equal-asset support","textPreview":"30 assets | fixed 9 x 9 microscope | equal-asset support","textChars":56,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/98rqt4r6","slide":6,"name":"footer-number-11","text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/md8ru5sv","slide":6,"name":"","alt":"Behavior-state catalog showing supported horizon-cell counts across eight states","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/md8ru5sv","slide":6,"name":"","bbox":[186,149.62,908,510.75]}
 {"kind":"notes","id":"nt/x8f69ofe","slide":6,"text":"Under the post-hoc display vocabulary, gain continuation appears in 39 of 81 path-sideways cells and 17 of 81 low-ATR cells, but in zero of 81 path-trending cells. Trending and signed-up states instead favor gain exhaustion.\n\n[Sources]\n- operator_hypothesis_lab/docs/OWN_ASSET_RETURN_GEOMETRY_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_behavior_catalog_20260826/visuals/behavior_state_catalog.png\n[/Sources]"}
 {"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"129-INSTRUMENT ATLAS","textShapes":4}
 {"kind":"textbox","id":"sh/q143ylov","slide":7,"name":"section-11","text":"129-INSTRUMENT ATLAS","textPreview":"129-INSTRUMENT ATLAS","textChars":20,"textLines":1,"bbox":[48,24,440,24]}
@@ -72,7 +72,7 @@
 {"kind":"shape","id":"sh/dcbud0ra","slide":7,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/ydkbm5sv","slide":7,"name":"footer-left-11","text":"129 instruments | equal-sector gain branch | 2018–2023","textPreview":"129 instruments | equal-sector gain branch | 2018–2023","textChars":54,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/zedcfa9g","slide":7,"name":"footer-number-11","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/4zm50365","slide":7,"name":"","alt":"Equal-sector gain-branch diagonal correlations across all frozen conditioning states","bbox":[186,140.17,908,529.67]}
+{"kind":"image","id":"im/4zm50365","slide":7,"name":"","bbox":[218.67,140.17,842.65,529.67]}
 {"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"Across the full 15-by-15 atlas, ER20-sideways gain cells have median correlation +0.027 and positive sign in 81.8 percent of cells. ER20-trending cells have median -0.028 and positive sign in only 27.6 percent. The separation is broad but small.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_WIDE_ATLAS_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_wide_atlas_full_vocabulary_20260827/visuals/all_states_equal_sector_gain_diagonal.png\n[/Sources]"}
 {"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"EVIDENCE SYNTHESIS","textShapes":15}
 {"kind":"textbox","id":"sh/5sne5wne","slide":8,"name":"section-11","text":"EVIDENCE SYNTHESIS","textPreview":"EVIDENCE SYNTHESIS","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
@@ -124,3 +124,68 @@
 {"kind":"textbox","id":"sh/76h0zup8","slide":9,"text":"Recommended huddle","textPreview":"Recommended huddle","textChars":18,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/ml8j6p8n","slide":9,"text":"Decide whether to freeze sideways continuation alone or the direct sideways-versus-trending contrast. Keep the 30-minute lane design-only until its clock contract is explicit.","textPreview":"Decide whether to freeze sideways continuation alone or the direct sideways-versus-trending contrast. Keep the 30-minute lane design-only...","textChars":175,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/udsvah03","slide":9,"text":"The next discussion should select the economic claim before its test. A reasonable default is the direct contrast: after a positive prior return, continuation should be stronger in ER20-sideways than ER20-trending. The horizon and failure rule must then be frozen without scanning the inspected grid again. The planned 30-minute lane remains unopened until sessions, overnight returns, and daily-filter timing are specified.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n- operator_hypothesis_lab/registries/proto_strategy_ledger.xlsx\n[/Sources]"}
+{"kind":"slide","id":"sl/m90b6t0r","slide":10,"title":"STATE CONTRAST","textShapes":5}
+{"kind":"textbox","id":"sh/kzu5c32t","slide":10,"text":"STATE CONTRAST","textPreview":"STATE CONTRAST","textChars":14,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/xc3mho32","slide":10,"text":"Sideways versus trending: the approved comparison","textPreview":"Sideways versus trending: the approved comparison","textChars":49,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/cbu58j2h","slide":10,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/zelojyl8","slide":10,"text":"A paired descriptive contrast—not a strategy test","textPreview":"A paired descriptive contrast—not a strategy test","textChars":49,"textLines":1,"bbox":[48,438,1040,72]}
+{"kind":"textbox","id":"sh/ydcnatkn","slide":10,"text":"Positive-prior branch • 15 × 15 horizons • 88-stock equal-sector core • post-2023 sealed","textPreview":"Positive-prior branch • 15 × 15 horizons • 88-stock equal-sector core • post-2023 sealed","textChars":88,"textLines":1,"bbox":[48,570,1100,64]}
+{"kind":"textbox","id":"sh/l036l83y","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/m90b6t0r","slide":10,"text":"The operator selected the direct ER20-sideways versus ER20-trending comparison for fuller context. This section re-expresses the already-computed 2018-2023 atlas; it does not recompute returns, select a horizon, or test a trading rule.\n\n[Sources]\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/jetc3ut0","slide":11,"title":"STATE SURFACES","textShapes":4}
+{"kind":"textbox","id":"sh/l43ilgn2","slide":11,"name":"section-11","text":"STATE SURFACES","textPreview":"STATE SURFACES","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xcryxg7y","slide":11,"name":"title-11","text":"Sideways looks continuation-shaped; trending often does not","textPreview":"Sideways looks continuation-shaped; trending often does not","textChars":59,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wbih4b6d","slide":11,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/n69grmpw","slide":11,"name":"footer-left-11","text":"88-stock core | paired positive-prior branch | equal-sector medians","textPreview":"88-stock core | paired positive-prior branch | equal-sector medians","textChars":67,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/250zy18b","slide":11,"name":"footer-number-11","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/7itszulo","slide":11,"name":"","alt":"Side-by-side 15 by 15 heatmaps of positive-prior correlation in ER20-sideways and ER20-trending states","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"notes","id":"nt/jetc3ut0","slide":11,"text":"Across all 225 cells, the median equal-sector positive-prior correlation is +0.027 in ER20-sideways and -0.028 in ER20-trending. Both use the identical asset core, horizon vocabulary, and causal state timing.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/contrast_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_vs_trending_positive_branch_heatmaps.png\n[/Sources]"}
+{"kind":"slide","id":"sl/8f2psfyx","slide":12,"title":"PAIRED CONTRAST","textShapes":4}
+{"kind":"textbox","id":"sh/tgrm1wzy","slide":12,"name":"section-11","text":"PAIRED CONTRAST","textPreview":"PAIRED CONTRAST","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1gbm9s3a","slide":12,"name":"title-11","text":"Sideways wins 92.9% of paired horizon cells","textPreview":"Sideways wins 92.9% of paired horizon cells","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0f2lgnmp","slide":12,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra943il8","slide":12,"name":"footer-left-11","text":"Sideways r minus trending r | paired within asset and horizon cell","textPreview":"Sideways r minus trending r | paired within asset and horizon cell","textChars":66,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/q903ad4n","slide":12,"name":"footer-number-11","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","alt":"Heatmap of paired sideways-minus-trending positive-prior correlation across 225 horizon cells","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"notes","id":"nt/8f2psfyx","slide":12,"text":"Each asset is paired inside the same prior/following horizon cell before sector aggregation. The all-surface median paired contrast is +0.048, and 209 of 225 cells are positive. The contrast is a difference in correlations, not a return or spread trade.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/equal_sector_paired_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_minus_trending_paired_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/hgzapcr6","slide":13,"title":"SECTOR CONTEXT","textShapes":4}
+{"kind":"textbox","id":"sh/oz6x4vul","slide":13,"name":"section-11","text":"SECTOR CONTEXT","textPreview":"SECTOR CONTEXT","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/q50nydsj","slide":13,"name":"title-11","text":"All 11 sectors favor sideways on their median cell","textPreview":"All 11 sectors favor sideways on their median cell","textChars":50,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/bq9orito","slide":13,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/o3i5w3ad","slide":13,"name":"footer-left-11","text":"Frozen current GICS labels | eight stocks per sector | 225 cells","textPreview":"Frozen current GICS labels | eight stocks per sector | 225 cells","textChars":64,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/p4r6p8by","slide":13,"name":"footer-number-11","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","alt":"Sector dot plot of median sideways-minus-trending correlation and positive-cell breadth","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"notes","id":"nt/hgzapcr6","slide":13,"text":"Every core sector has a positive median paired contrast across its 225-cell surface. The median contrast ranges from about +0.020 in Utilities to +0.077 in Health Care. Positive-cell breadth ranges from 62.2 to 85.8 percent, so the shape is broad but not uniform.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/sector_surface_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_advantage_by_sector.png\n[/Sources]"}
+{"kind":"slide","id":"sl/6lsnupw7","slide":14,"title":"EXCEPTIONS","textShapes":4}
+{"kind":"textbox","id":"sh/pwvy90rq","slide":14,"name":"section-11","text":"EXCEPTIONS","textPreview":"EXCEPTIONS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/xc7eds76","slide":14,"name":"title-11","text":"The state contrast has clear exceptions","textPreview":"The state contrast has clear exceptions","textChars":39,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/wbydknq1","slide":14,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/jepwf2pc","slide":14,"name":"footer-left-11","text":"Equal-horizon diagonal | context for non-uniformity | no cell selection","textPreview":"Equal-horizon diagonal | context for non-uniformity | no cell selection","textChars":71,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/idgvmx8r","slide":14,"name":"footer-number-11","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/vm9g3yl4","slide":14,"name":"","alt":"Line chart comparing sideways, trending, and their paired difference on equal prior and following horizons","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"The diagonal is mostly positive but not monotone. The paired contrast is negative at 1-to-1 and 100-to-100, while its largest equal-horizon value occurs at 10-to-10. Across the full grid, 16 cells do not favor sideways; exceptions cluster at micro horizons and several 20-prior / long-forward combinations. These are context, not permission to choose 10-to-10.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/equal_sector_paired_diagonal.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_vs_trending_diagonal.png\n[/Sources]"}
+{"kind":"slide","id":"sl/vaxsvy10","slide":15,"title":"CONTRAST READOUT","textShapes":15}
+{"kind":"textbox","id":"sh/p8jyx83q","slide":15,"name":"section-11","text":"CONTRAST READOUT","textPreview":"CONTRAST READOUT","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/547mhg3m","slide":15,"name":"title-11","text":"The state discriminator is broad but still descriptive","textPreview":"The state discriminator is broad but still descriptive","textChars":54,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/k3y5ov21","slide":15,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/76p4jqls","slide":15,"name":"footer-left-11","text":"Return geometry | ER20 state contrast | 2018–2023","textPreview":"Return geometry | ER20 state contrast | 2018–2023","textChars":49,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/65gnqlk7","slide":15,"name":"footer-number-11","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/t87ml0ji","slide":15,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/s7y5sv2x","slide":15,"text":"SURFACE","textPreview":"SURFACE","textChars":7,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/na5476l8","slide":15,"text":"Paired median contrast","textPreview":"Paired median contrast","textChars":22,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/m9c3e1kn","slide":15,"text":"+0.048; 92.9% of cells positive","textPreview":"+0.048; 92.9% of cells positive","textChars":31,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/wrm9kvep","slide":15,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/hsvat0fa","slide":15,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/upkrilwj","slide":15,"text":"BREADTH","textPreview":"BREADTH","textChars":7,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/vqdsrqx4","slide":15,"text":"All sector medians favor sideways","textPreview":"All sector medians favor sideways","textChars":33,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/4vm9ovel","slide":15,"text":"62.2%–85.8% positive-cell breadth","textPreview":"62.2%–85.8% positive-cell breadth","textChars":33,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/5wvax0f6","slide":15,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/it4rm5wv","slide":15,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/judsvqxg","slide":15,"text":"LIMITS","textPreview":"LIMITS","textChars":6,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0z29cbyh","slide":15,"text":"Sixteen cells break the pattern","textPreview":"Sixteen cells break the pattern","textChars":31,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/l0bqlgf2","slide":15,"text":"Micro, prior-20/long-forward, 100→100","textPreview":"Micro, prior-20/long-forward, 100→100","textChars":37,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/1kjyt83e","slide":15,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/gjax03m9","slide":15,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/fi1grylo","slide":15,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/ehsfyt43","slide":15,"text":"BEHAV-MOM-01 remains a behavioral lead. Do not select a horizon or open a next-open rule, baseline, or post-2023 confirmation yet.","textPreview":"BEHAV-MOM-01 remains a behavioral lead. Do not select a horizon or open a next-open rule, baseline, or post-2023 confirmation yet.","textChars":130,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/vaxsvy10","slide":15,"text":"The approved comparison strengthened the behavioral description: sideways and trending are not merely different-looking heatmaps; their paired difference is positive across most cells and every sector's median surface. The magnitude remains small and the same research history discovered the contrast, so the lane stops before horizon choice or trading translation.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/contrast_summary.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n[/Sources]"}

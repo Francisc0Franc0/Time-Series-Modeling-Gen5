@@ -354,6 +354,20 @@ post-2023 query, or 30-minute calculation. The intraday lane remains
 design-only until its bar clock, overnight convention, horizon meaning, and
 filter timing are frozen.
 
+36. The operator selected the direct ER20-sideways versus ER20-trending
+continuation contrast for fuller context. The slice re-expressed the frozen
+2018-2023 full-vocabulary atlas without querying bars or recomputing outcomes.
+Within each asset and horizon cell, the positive-prior sideways correlation was
+paired against its trending counterpart before equal-sector aggregation. The
+all-surface median paired contrast is `+0.048`; `209 / 225` cells favor
+sideways, and all 11 sector surfaces have positive median contrasts. The
+result is not universal: 16 cells are exceptions, and the lone incomplete
+asset pair is RIVN `100 -> 100` trending with only 24 observations, outside the
+88-stock headline core. Preserve
+`DESCRIPTIVE_PAIRED_STATE_CONTRAST_COMPLETE_STOP_BEFORE_HORIZON_OR_RULE_SELECTION`.
+No horizon, next-open rule, baseline, post-2023 outcome, or 30-minute
+calculation was opened.
+
 ## Next Candidate Tests
 
 - Run the older-window temporal context batch as an overnight job over `AMD,NVDA,TSLA,AAPL,MSTR`, starting with adjacent 2021 and 2022 windows; resolve the `VXX` pre-2018 context choice before claiming older fully comparable windows.
