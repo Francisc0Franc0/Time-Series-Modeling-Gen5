@@ -2,18 +2,19 @@
 
 ## Purpose
 
-This slice separates the weaker but coherent momentum/continuation line from
-the stronger loss-rebound line. It does not calculate a new outcome, select a
-new horizon, or promote a strategy. It assembles the already-computed
-2018-2023 evidence into one operator-facing research volume and gives the line
-a durable registry identity.
+This research volume separates the weaker but coherent momentum/continuation
+line from the stronger loss-rebound line. It first assembled the descriptive
+2018-2023 evidence, then translated one literal version of the lead into a
+causal next-open TRAIN rule. The translation is intentionally minimal: it
+tests mechanics and matched baselines without selecting a horizon or opening
+post-2023 outcomes.
 
 The registered lead is:
 
 - ID: `BEHAV-MOM-01`;
 - nickname: `Sideways Gain Continuation`;
-- maturity: `Behavioral lead`; and
-- status: `DESCRIPTIVE_BEHAVIORAL_LEAD`.
+- maturity: `Proto-strategy`; and
+- status: `TRAIN_NEXT_OPEN_HORIZON_COMPARISON_COMPLETE_STOP_BEFORE_SELECTION_OR_OOS`.
 
 The existing rebound implementation is registered separately as
 `PROTO-MR-01`, `Volume-Veto Rebound`. The two lines are not treated as variants
@@ -71,19 +72,12 @@ small magnitude:
 The result is broad enough to preserve as a hypothesis-generation clue and too
 small and research-conditioned to call edge.
 
-## Evidence Boundary
+## Initial Evidence Boundary
 
-This slice adds no:
-
-- selected prior or following horizon;
-- next-open trading rule;
-- drift, state-only, or exposure-matched baseline;
-- transaction-cost or portfolio replay;
-- new feature, threshold, or model;
-- post-2023 query; or
-- 30-minute calculation.
-
-Post-2023 evidence remains sealed.
+The descriptive assembly selected no prior or following horizon, trading rule,
+baseline, cost model, portfolio replay, feature, threshold, or model. It also
+left post-2023 and 30-minute data sealed. The later executable slice opened
+only the explicitly frozen daily mechanics and matched TRAIN baselines below.
 
 ## Approved Sideways-Versus-Trending Contrast
 
@@ -128,13 +122,56 @@ Current status:
 
 `DESCRIPTIVE_PAIRED_STATE_CONTRAST_COMPLETE_STOP_BEFORE_HORIZON_OR_RULE_SELECTION`
 
+## Minimal Next-Open Rule Translation
+
+The operator approved a direct daily translation rather than an optimized
+search. At completed close `t`, the primary rule requires:
+
+- completed 20-session log return `R20 > 0`;
+- causal path-efficiency state `ER20 < 0.30` (sideways/red);
+- entry at open `t+1`;
+- exit after `5`, `10`, or `20` held sessions;
+- one live position per asset/rule/horizon, ignoring signals until exit; and
+- `10 bp` round-trip cost.
+
+Four matched references were calculated on the same next-open clock:
+trending-plus-positive-R20, positive-R20-only, sideways-only, and unconditional
+same-horizon drift. All 129 frozen instruments remain visible, while the
+88-stock, 11-sector equal-sector core is the primary aggregation. The complete
+calculation remains inside 2018-2023 TRAIN.
+
+All 16 construction checks passed. Under the equal-sector median-asset lens,
+the primary rule returned approximately `+5 bp`, `+23 bp`, and `+66 bp` net per
+trade at 5, 10, and 20 sessions. Those positive levels do not clear the basic
+drift comparison: excess versus unconditional same-horizon drift was `-16 bp`,
+`-10 bp`, and `-14 bp` respectively, with only 1, 2, and 4 of 11 sector medians
+positive.
+
+The state contrast is more nuanced. Sideways-plus-positive-R20 beat
+trending-plus-positive-R20 at 20 sessions under both aggregation lenses:
+approximately `+38 bp` under the equal-sector median and `+5 bp` when events
+are pooled. It did not do so at both 5 and 10 sessions. Moreover, the positive
+R20 condition itself did not add value to the sideways state: the primary rule
+trailed sideways-only by about `7 bp`, `9 bp`, and `14 bp` at the three holds.
+
+The executable conclusion is therefore not “20 sessions wins.” It is:
+
+- the literal rule is mechanically viable and produces positive raw returns;
+- no frozen hold improves on ordinary drift;
+- only the 20-session sideways-versus-trending contrast is directionally
+  consistent under both weighting lenses; and
+- the sign condition appears to detract rather than help.
+
+Current status:
+
+`TRAIN_NEXT_OPEN_HORIZON_COMPARISON_COMPLETE_STOP_BEFORE_SELECTION_OR_OOS`
+
 ## Next Gate
 
-Do not select the strongest observed cell. The next operator huddle should
-decide whether to freeze one representative daily horizon together with causal
-state timing, a next-open translation, a state-only/drift baseline, and an
-explicit failure rule, or preserve this result as behavioral context while
-opening the separately designed 30-minute lane.
+Do not select the 20-session hold, tune the ER threshold, or query post-2023
+outcomes from this readout. The next operator huddle should decide whether the
+20-session state contrast warrants a separately predeclared mechanism test
+without the positive-R20 condition, or should remain descriptive context.
 
 The 30-minute lane remains bookmarked but design-only until its bar clock,
 overnight-return treatment, horizon meaning, and any daily-to-intraday filter
@@ -152,6 +189,12 @@ timing are explicit.
   `scripts/inspect/run_return_geometry_continuation_state_contrast.R`.
 - Paired state-contrast helpers:
   `operator_hypothesis_lab/R/return_geometry_continuation_state_contrast.R`.
+- Next-open rule packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829`.
+- Next-open rule runner:
+  `scripts/inspect/run_return_geometry_continuation_next_open_rule.R`.
+- Next-open rule helpers:
+  `operator_hypothesis_lab/R/return_geometry_continuation_next_open_rule.R`.
 - TSLA aggregate source note:
   `operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md`.
 - TSLA ATR% source note:

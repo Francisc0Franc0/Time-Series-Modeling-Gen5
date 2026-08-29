@@ -368,8 +368,9 @@ The first two registered lines are deliberately different:
 - `PROTO-MR-01`, `Volume-Veto Rebound`, is an executable TRAIN
   proto-mean-reversion strategy with cross-sectional support and unstable
   calendar transport; and
-- `BEHAV-MOM-01`, `Sideways Gain Continuation`, is a descriptive momentum lead
-  with no frozen rule.
+- `BEHAV-MOM-01`, `Sideways Gain Continuation`, is now an executable TRAIN
+  proto-strategy with a frozen next-open rule and a stop before horizon
+  selection or OOS.
 
 The workbook also defines `Behavioral lead`, `Proto-strategy`, `Candidate`,
 `Stopped`, `OOS-confirmed`, and `SEALED` so later research lines can be tracked
@@ -387,7 +388,7 @@ ER20-trending cells have median `-0.028` and only `27.6%` positive sign breadth.
 
 Current status:
 
-`DESCRIPTIVE_PAIRED_STATE_CONTRAST_COMPLETE_STOP_BEFORE_HORIZON_OR_RULE_SELECTION`
+`TRAIN_NEXT_OPEN_HORIZON_COMPARISON_COMPLETE_STOP_BEFORE_SELECTION_OR_OOS`
 
 See `RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md` and
 `presentations/return_geometry_daily_continuation_microscope.pptx`.
@@ -399,8 +400,13 @@ sideways, and all 11 core sectors have positive median contrasts. The result is
 not universal: 16 cells are exceptions, including micro horizons, several
 20-prior/long-forward combinations, and `100 -> 100`.
 
-Do not select the strongest observed horizon, calculate a next-open rule, or
-open post-2023 evidence. The next gate is either a separately frozen
-representative daily horizon plus baseline/failure contract or the explicitly
-designed 30-minute lane. The intraday lane remains design-only pending a bar
-clock, overnight convention, horizon interpretation, and filter timing.
+The literal next-open translation has now been calculated for 5-, 10-, and
+20-session holds. It requires positive R20 in causal ER20-sideways, enters the
+next open, ignores overlapping signals, and charges 10 bp round trip. Raw net
+returns were positive, but the rule trailed unconditional same-horizon drift
+by `16`, `10`, and `14 bp` per trade. Only the 20-session sideways-versus-
+trending contrast was positive under both equal-sector and event-pooled lenses,
+while positive R20 detracted versus sideways-only at every hold. Do not select
+20 sessions or open post-2023 evidence. The next gate is an operator huddle on
+whether the state contrast deserves a separately frozen mechanism test without
+the positive-R20 condition. The 30-minute lane remains bookmarked and sealed.

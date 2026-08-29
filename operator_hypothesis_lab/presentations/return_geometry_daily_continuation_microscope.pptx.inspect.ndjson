@@ -1,4 +1,4 @@
-{"kind":"deck","id":"pr/1nx899","name":"Deck"}
+{"kind":"deck","id":"pr/a94bic","name":"Deck"}
 {"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
 {"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
 {"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"DAILY CONTINUATION","textShapes":5}
@@ -138,7 +138,7 @@
 {"kind":"shape","id":"sh/wbih4b6d","slide":11,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/n69grmpw","slide":11,"name":"footer-left-11","text":"88-stock core | paired positive-prior branch | equal-sector medians","textPreview":"88-stock core | paired positive-prior branch | equal-sector medians","textChars":67,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/250zy18b","slide":11,"name":"footer-number-11","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/7itszulo","slide":11,"name":"","alt":"Side-by-side 15 by 15 heatmaps of positive-prior correlation in ER20-sideways and ER20-trending states","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"image","id":"im/7itszulo","slide":11,"name":"","bbox":[302.94,235.22,674.12,339.56]}
 {"kind":"notes","id":"nt/jetc3ut0","slide":11,"text":"Across all 225 cells, the median equal-sector positive-prior correlation is +0.027 in ER20-sideways and -0.028 in ER20-trending. Both use the identical asset core, horizon vocabulary, and causal state timing.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/contrast_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_vs_trending_positive_branch_heatmaps.png\n[/Sources]"}
 {"kind":"slide","id":"sl/8f2psfyx","slide":12,"title":"PAIRED CONTRAST","textShapes":4}
 {"kind":"textbox","id":"sh/tgrm1wzy","slide":12,"name":"section-11","text":"PAIRED CONTRAST","textPreview":"PAIRED CONTRAST","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
@@ -146,7 +146,7 @@
 {"kind":"shape","id":"sh/0f2lgnmp","slide":12,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/ra943il8","slide":12,"name":"footer-left-11","text":"Sideways r minus trending r | paired within asset and horizon cell","textPreview":"Sideways r minus trending r | paired within asset and horizon cell","textChars":66,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/q903ad4n","slide":12,"name":"footer-number-11","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","alt":"Heatmap of paired sideways-minus-trending positive-prior correlation across 225 horizon cells","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"image","id":"im/bqhs3u5w","slide":12,"name":"","bbox":[302.94,149.26,674.12,511.49]}
 {"kind":"notes","id":"nt/8f2psfyx","slide":12,"text":"Each asset is paired inside the same prior/following horizon cell before sector aggregation. The all-surface median paired contrast is +0.048, and 209 of 225 cells are positive. The contrast is a difference in correlations, not a return or spread trade.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/equal_sector_paired_cell_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_minus_trending_paired_heatmap.png\n[/Sources]"}
 {"kind":"slide","id":"sl/hgzapcr6","slide":13,"title":"SECTOR CONTEXT","textShapes":4}
 {"kind":"textbox","id":"sh/oz6x4vul","slide":13,"name":"section-11","text":"SECTOR CONTEXT","textPreview":"SECTOR CONTEXT","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
@@ -154,7 +154,7 @@
 {"kind":"shape","id":"sh/bq9orito","slide":13,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/o3i5w3ad","slide":13,"name":"footer-left-11","text":"Frozen current GICS labels | eight stocks per sector | 225 cells","textPreview":"Frozen current GICS labels | eight stocks per sector | 225 cells","textChars":64,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/p4r6p8by","slide":13,"name":"footer-number-11","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","alt":"Sector dot plot of median sideways-minus-trending correlation and positive-cell breadth","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"image","id":"im/qd4fuhsn","slide":13,"name":"","bbox":[302.94,193.97,674.12,422.06]}
 {"kind":"notes","id":"nt/hgzapcr6","slide":13,"text":"Every core sector has a positive median paired contrast across its 225-cell surface. The median contrast ranges from about +0.020 in Utilities to +0.077 in Health Care. Positive-cell breadth ranges from 62.2 to 85.8 percent, so the shape is broad but not uniform.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/sector_surface_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_advantage_by_sector.png\n[/Sources]"}
 {"kind":"slide","id":"sl/6lsnupw7","slide":14,"title":"EXCEPTIONS","textShapes":4}
 {"kind":"textbox","id":"sh/pwvy90rq","slide":14,"name":"section-11","text":"EXCEPTIONS","textPreview":"EXCEPTIONS","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
@@ -162,7 +162,7 @@
 {"kind":"shape","id":"sh/wbydknq1","slide":14,"bbox":[48,126,1184,2]}
 {"kind":"textbox","id":"sh/jepwf2pc","slide":14,"name":"footer-left-11","text":"Equal-horizon diagonal | context for non-uniformity | no cell selection","textPreview":"Equal-horizon diagonal | context for non-uniformity | no cell selection","textChars":71,"textLines":1,"bbox":[48,684,360,18]}
 {"kind":"textbox","id":"sh/idgvmx8r","slide":14,"name":"footer-number-11","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
-{"kind":"image","id":"im/vm9g3yl4","slide":14,"name":"","alt":"Line chart comparing sideways, trending, and their paired difference on equal prior and following horizons","bbox":[302.94,140.17,674.12,529.67]}
+{"kind":"image","id":"im/vm9g3yl4","slide":14,"name":"","bbox":[302.94,214.49,674.12,381.03]}
 {"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"The diagonal is mostly positive but not monotone. The paired contrast is negative at 1-to-1 and 100-to-100, while its largest equal-horizon value occurs at 10-to-10. Across the full grid, 16 cells do not favor sideways; exceptions cluster at micro horizons and several 20-prior / long-forward combinations. These are context, not permission to choose 10-to-10.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/equal_sector_paired_diagonal.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/visuals/sideways_vs_trending_diagonal.png\n[/Sources]"}
 {"kind":"slide","id":"sl/vaxsvy10","slide":15,"title":"CONTRAST READOUT","textShapes":15}
 {"kind":"textbox","id":"sh/p8jyx83q","slide":15,"name":"section-11","text":"CONTRAST READOUT","textPreview":"CONTRAST READOUT","textChars":16,"textLines":1,"bbox":[48,24,440,24]}
@@ -189,3 +189,101 @@
 {"kind":"textbox","id":"sh/fi1grylo","slide":15,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[82,580,260,34]}
 {"kind":"textbox","id":"sh/ehsfyt43","slide":15,"text":"BEHAV-MOM-01 remains a behavioral lead. Do not select a horizon or open a next-open rule, baseline, or post-2023 confirmation yet.","textPreview":"BEHAV-MOM-01 remains a behavioral lead. Do not select a horizon or open a next-open rule, baseline, or post-2023 confirmation yet.","textChars":130,"textLines":1,"bbox":[350,576,820,44]}
 {"kind":"notes","id":"nt/vaxsvy10","slide":15,"text":"The approved comparison strengthened the behavioral description: sideways and trending are not merely different-looking heatmaps; their paired difference is positive across most cells and every sector's median surface. The magnitude remains small and the same research history discovered the contrast, so the lane stops before horizon choice or trading translation.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_state_contrast_20260828/contrast_summary.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/gny5sjyp","slide":16,"title":"OPEN-TO-OPEN","textShapes":5}
+{"kind":"textbox","id":"sh/lwbyxwra","slide":16,"text":"OPEN-TO-OPEN","textPreview":"OPEN-TO-OPEN","textChars":12,"textLines":1,"bbox":[48,42,420,28]}
+{"kind":"textbox","id":"sh/8z2h8bq1","slide":16,"text":"A descriptive state contrast becomes an executable rule","textPreview":"A descriptive state contrast becomes an executable rule","textChars":55,"textLines":1,"bbox":[48,164,1130,190]}
+{"kind":"shape","id":"sh/9kby1g7m","slide":16,"bbox":[48,390,132,8]}
+{"kind":"textbox","id":"sh/ytkf2h8j","slide":16,"text":"Signal at the close; trade at the next open; three frozen holds","textPreview":"Signal at the close; trade at the next open; three frozen holds","textChars":63,"textLines":1,"bbox":[48,438,1040,72]}
+{"kind":"textbox","id":"sh/zutgvm94","slide":16,"text":"R20 > 0 • ER20 < 0.30 • 5 / 10 / 20 sessions • 10 bp • post-2023 sealed","textPreview":"R20 > 0 • ER20 < 0.30 • 5 / 10 / 20 sessions • 10 bp • post-2023 sealed","textChars":71,"textLines":1,"bbox":[48,570,1100,64]}
+{"kind":"textbox","id":"sh/kv2h4rqp","slide":16,"text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1180,682,52,20]}
+{"kind":"notes","id":"nt/gny5sjyp","slide":16,"text":"This section translates the descriptive ER20-sideways continuation lead into the simplest executable daily rule. The 20-session prior window is aligned with ER20; 5, 10, and 20 held sessions are frozen diagnostics rather than an optimized horizon search.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/run_spec.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n[/Sources]"}
+{"kind":"slide","id":"sl/14bup87q","slide":17,"title":"FROZEN RULE","textShapes":15}
+{"kind":"textbox","id":"sh/lwnq5gf6","slide":17,"name":"section-11","text":"FROZEN RULE","textPreview":"FROZEN RULE","textChars":11,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1c7e50ni","slide":17,"name":"title-11","text":"The first executable rule is deliberately literal","textPreview":"The first executable rule is deliberately literal","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/gbedwfmx","slide":17,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/rm5czq50","slide":17,"name":"footer-left-11","text":"Daily adjusted bars | 129 instruments | 88-stock equal-sector core","textPreview":"Daily adjusted bars | 129 instruments | 88-stock equal-sector core","textChars":66,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/6lwvql4v","slide":17,"name":"footer-number-11","text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/t8ne10n6","slide":17,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/snedsvml","slide":17,"text":"SIGNAL","textPreview":"SIGNAL","textChars":6,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/jilcvq54","slide":17,"text":"Positive R20 in ER20 sideways","textPreview":"Positive R20 in ER20 sideways","textChars":29,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ihcvml4j","slide":17,"text":"R20 > 0; ER20 < 0.30 at close t","textPreview":"R20 > 0; ER20 < 0.30 at close t","textChars":31,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/4by9or6l","slide":17,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/pc7qhwn6","slide":17,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/29grm1of","slide":17,"text":"EXECUTION","textPreview":"EXECUTION","textChars":9,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/3ap8fm50","slide":17,"text":"Next-open entry; fixed exit","textPreview":"Next-open entry; fixed exit","textChars":27,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/gnepkr69","slide":17,"text":"5 / 10 / 20 held sessions; 10 bp","textPreview":"5 / 10 / 20 held sessions; 10 bp","textChars":32,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/honqdwnu","slide":17,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/ulw7ihoj","slide":17,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/fm58bm54","slide":17,"text":"CONTROLS","textPreview":"CONTROLS","textChars":8,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/0ji9wb6t","slide":17,"text":"Four matched reference rules","textPreview":"Four matched reference rules","textChars":28,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/14rqpgne","slide":17,"text":"Trending +R20; +R20; sideways; drift","textPreview":"Trending +R20; +R20; sideways; drift","textChars":36,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/90nq9gfi","slide":17,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/8ze9gbyx","slide":17,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/ny5876xc","slide":17,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/mxw7e1gr","slide":17,"text":"Frozen before calculation. No horizon selection, post-2023 confirmation, portfolio replay, or 30-minute data is opened.","textPreview":"Frozen before calculation. No horizon selection, post-2023 confirmation, portfolio replay, or 30-minute data is opened.","textChars":119,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/14bup87q","slide":17,"text":"The primary rule is known at completed close t and enters at open t+1. One position is allowed per asset, rule, and horizon; intervening signals are ignored until the exit open. All controls use the same execution and non-overlap convention.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/run_spec.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/construction_checks.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/y5wne50z","slide":18,"title":"HORIZON READOUT","textShapes":4}
+{"kind":"textbox","id":"sh/a14nm9s3","slide":18,"name":"section-11","text":"HORIZON READOUT","textPreview":"HORIZON READOUT","textChars":15,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/wrelszu9","slide":18,"name":"title-11","text":"Positive returns do not beat ordinary drift","textPreview":"Positive returns do not beat ordinary drift","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/hsn2l4bu","slide":18,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/itw3upcf","slide":18,"name":"footer-left-11","text":"Equal-sector median asset | net of 10 bp | 11 sectors","textPreview":"Equal-sector median asset | net of 10 bp | 11 sectors","textChars":53,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/je5knut0","slide":18,"name":"footer-number-11","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/ozqlc36x","slide":18,"name":"","alt":"Grouped bars comparing primary net return, excess versus drift, and three controls across 5, 10, and 20 sessions","bbox":[302.94,193.97,674.12,422.06]}
+{"kind":"notes","id":"nt/y5wne50z","slide":18,"text":"The primary rule has positive equal-sector median net returns of +0.05%, +0.23%, and +0.66% over 5, 10, and 20 sessions. It nevertheless trails unconditional same-horizon drift by 16, 10, and 14 basis points per trade. Positive R20 adds little versus the positive-only control and detracts versus sideways-state-only.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/equal_sector_horizon_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/visuals/equal_sector_horizon_comparison.png\n[/Sources]"}
+{"kind":"slide","id":"sl/nid43ytk","slide":19,"title":"WEIGHTING SENSITIVITY","textShapes":4}
+{"kind":"textbox","id":"sh/54ri5wje","slide":19,"name":"section-11","text":"WEIGHTING SENSITIVITY","textPreview":"WEIGHTING SENSITIVITY","textChars":21,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/9gb6xgbi","slide":19,"name":"title-11","text":"Only 20 sessions beats trending under both lenses","textPreview":"Only 20 sessions beats trending under both lenses","textChars":49,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8v2pobax","slide":19,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/vitozqt8","slide":19,"name":"footer-left-11","text":"Sideways-positive minus trending-positive | bp per trade","textPreview":"Sideways-positive minus trending-positive | bp per trade","textChars":56,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/ahk7qls3","slide":19,"name":"footer-number-11","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/ze1or2ls","slide":19,"name":"","alt":"Bar chart of sideways-positive minus trending-positive net return under equal-sector and event-pooled aggregation","bbox":[302.94,149.26,674.12,511.49]}
+{"kind":"notes","id":"nt/nid43ytk","slide":19,"text":"The executable state contrast is sensitive to aggregation at 5 sessions and negative under both lenses at 10. At 20 sessions it is positive under both: about +38 basis points under equal-sector median aggregation and +5 basis points event-pooled. This is a descriptive robustness clue, not horizon-selection permission.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/aggregation_lens_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/visuals/sideways_vs_trending_executable_returns.png\n[/Sources]"}
+{"kind":"slide","id":"sl/zyxsni5k","slide":20,"title":"SECTOR BREADTH","textShapes":4}
+{"kind":"textbox","id":"sh/k7650f6p","slide":20,"name":"section-11","text":"SECTOR BREADTH","textPreview":"SECTOR BREADTH","textChars":14,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/qpwjmh8n","slide":20,"name":"title-11","text":"Excess versus drift is negative in most sectors","textPreview":"Excess versus drift is negative in most sectors","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/rq50vmp8","slide":20,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/4nu1krqh","slide":20,"name":"footer-left-11","text":"Primary net return minus unconditional same-horizon drift | bp/trade","textPreview":"Primary net return minus unconditional same-horizon drift | bp/trade","textChars":68,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/po3itc72","slide":20,"name":"footer-number-11","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/6tw3mdwb","slide":20,"name":"","alt":"Heatmap of primary-rule excess versus unconditional drift across 11 sectors and three held horizons","bbox":[302.94,193.97,674.12,422.06]}
+{"kind":"notes","id":"nt/zyxsni5k","slide":20,"text":"Only 1 of 11 sectors has positive median excess at 5 sessions, 2 at 10, and 4 at 20. Energy is the clearest positive exception at longer holds; Utilities and Real Estate remain negative. The breadth does not support an asset-agnostic rule.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/core_sector_horizon_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/visuals/sector_excess_heatmap.png\n[/Sources]"}
+{"kind":"slide","id":"sl/m1wvqtk3","slide":21,"title":"PATH SHAPE","textShapes":4}
+{"kind":"textbox","id":"sh/1kru5kj2","slide":21,"name":"section-11","text":"PATH SHAPE","textPreview":"PATH SHAPE","textChars":10,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/1gbmxs7a","slide":21,"name":"title-11","text":"Trending leads early; sideways catches up by 20","textPreview":"Trending leads early; sideways catches up by 20","textChars":47,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/0f2lon6p","slide":21,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/ra9kryp8","slide":21,"name":"footer-left-11","text":"Event-pooled mean path | state-qualified positive-R20 trades","textPreview":"Event-pooled mean path | state-qualified positive-R20 trades","textChars":60,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/qp03yt8n","slide":21,"name":"footer-number-11","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/nixofi1c","slide":21,"name":"","alt":"Three mean executable trade paths comparing sideways-positive and trending-positive signals over 5, 10, and 20 sessions","bbox":[302.94,214.49,674.12,381.03]}
+{"kind":"notes","id":"nt/m1wvqtk3","slide":21,"text":"Event-pooled trade paths show trending-positive entries ahead through the 5- and 10-session holds. The paths converge near the end of the 20-session hold, where sideways-positive finishes modestly ahead. This timing shape helps explain why the correlation surface did not translate cleanly at shorter horizons.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/trade_path_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/visuals/sideways_vs_trending_trade_paths.png\n[/Sources]"}
+{"kind":"slide","id":"sl/5onypobq","slide":22,"title":"TRADE TAPES","textShapes":4}
+{"kind":"textbox","id":"sh/wnihgf2h","slide":22,"name":"section-11","text":"TRADE TAPES","textPreview":"TRADE TAPES","textChars":11,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/6987itcr","slide":22,"name":"title-11","text":"Winners coexist with weak aggregate results","textPreview":"Winners coexist with weak aggregate results","textChars":43,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/7a18rydc","slide":22,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/k7qpgjul","slide":22,"name":"footer-left-11","text":"First eligible 10-session event | deterministic, not outcome-selected","textPreview":"First eligible 10-session event | deterministic, not outcome-selected","textChars":69,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/58zqpov6","slide":22,"name":"footer-number-11","text":"22","textPreview":"22","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"image","id":"im/i9czu9kj","slide":22,"name":"","alt":"Four representative first-event trade tapes for TSLA, AMD, NVDA, and SPY with signal, entry, and exit markers","bbox":[302.94,149.26,674.12,511.49]}
+{"kind":"notes","id":"nt/5onypobq","slide":22,"text":"The first eligible 10-session event is shown for TSLA, AMD, NVDA, and SPY. TSLA, AMD, and NVDA happen to be profitable while SPY is slightly negative. These deterministic examples make the mechanics concrete but do not override the weak aggregate baseline comparison.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/trade_ledger.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/visuals/representative_primary_trade_tapes.png\n[/Sources]"}
+{"kind":"slide","id":"sl/c7uhcr6t","slide":23,"title":"EXECUTABLE READOUT","textShapes":15}
+{"kind":"textbox","id":"sh/l47ap8vu","slide":23,"name":"section-11","text":"EXECUTABLE READOUT","textPreview":"EXECUTABLE READOUT","textChars":18,"textLines":1,"bbox":[48,24,440,24]}
+{"kind":"textbox","id":"sh/90vqdczq","slide":23,"name":"title-11","text":"The rule earns context—not horizon selection","textPreview":"The rule earns context—not horizon selection","textChars":44,"textLines":1,"bbox":[48,56,1184,66]}
+{"kind":"shape","id":"sh/8zm9k7y5","slide":23,"bbox":[48,126,1184,2]}
+{"kind":"textbox","id":"sh/v2d8fmhw","slide":23,"name":"footer-left-11","text":"2018–2023 TRAIN | descriptive mechanics | no OOS opened","textPreview":"2018–2023 TRAIN | descriptive mechanics | no OOS opened","textChars":55,"textLines":1,"bbox":[48,684,360,18]}
+{"kind":"textbox","id":"sh/a14rmhgb","slide":23,"name":"footer-number-11","text":"23","textPreview":"23","textChars":2,"textLines":1,"bbox":[1100,682,132,20]}
+{"kind":"shape","id":"sh/xovqhcz2","slide":23,"bbox":[58,168,10,94]}
+{"kind":"textbox","id":"sh/w3m9o7yh","slide":23,"text":"BASELINE","textPreview":"BASELINE","textChars":8,"textLines":1,"bbox":[92,166,220,30]}
+{"kind":"textbox","id":"sh/jqd8jmhs","slide":23,"text":"Rule trails unconditional drift","textPreview":"Rule trails unconditional drift","textChars":31,"textLines":1,"bbox":[326,164,500,44]}
+{"kind":"textbox","id":"sh/ip4rqhgn","slide":23,"text":"−16 / −10 / −14 bp at 5 / 10 / 20","textPreview":"−16 / −10 / −14 bp at 5 / 10 / 20","textChars":33,"textLines":1,"bbox":[850,166,350,74]}
+{"kind":"shape","id":"sh/sby90zm1","slide":23,"bbox":[92,272,1108,1]}
+{"kind":"shape","id":"sh/tc7at436","slide":23,"bbox":[58,294,10,94]}
+{"kind":"textbox","id":"sh/69gry94v","slide":23,"text":"STATE","textPreview":"STATE","textChars":5,"textLines":1,"bbox":[92,292,220,30]}
+{"kind":"textbox","id":"sh/rapsrelg","slide":23,"text":"Only 20d survives both lenses","textPreview":"Only 20d survives both lenses","textChars":29,"textLines":1,"bbox":[326,290,500,44]}
+{"kind":"textbox","id":"sh/0fi94jmx","slide":23,"text":"+38 bp equal-sector; +5 bp pooled","textPreview":"+38 bp equal-sector; +5 bp pooled","textChars":33,"textLines":1,"bbox":[850,292,350,74]}
+{"kind":"shape","id":"sh/1graxo3i","slide":23,"bbox":[92,398,1108,1]}
+{"kind":"shape","id":"sh/edgr294r","slide":23,"bbox":[58,420,10,94]}
+{"kind":"textbox","id":"sh/fepsvelc","slide":23,"text":"SIGN","textPreview":"SIGN","textChars":4,"textLines":1,"bbox":[92,418,220,30]}
+{"kind":"textbox","id":"sh/oji9832t","slide":23,"text":"R20 > 0 adds no value vs sideways-only","textPreview":"R20 > 0 adds no value vs sideways-only","textChars":38,"textLines":1,"bbox":[326,416,500,44]}
+{"kind":"textbox","id":"sh/p4ra1o3e","slide":23,"text":"−7 / −9 / −14 bp at 5 / 10 / 20","textPreview":"−7 / −9 / −14 bp at 5 / 10 / 20","textChars":31,"textLines":1,"bbox":[850,418,350,74]}
+{"kind":"shape","id":"sh/x0nalovi","slide":23,"bbox":[92,524,1108,1]}
+{"kind":"shape","id":"sh/wze9cjud","slide":23,"bbox":[58,562,1142,82]}
+{"kind":"textbox","id":"sh/by58jeds","slide":23,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[82,580,260,34]}
+{"kind":"textbox","id":"sh/axwratc7","slide":23,"text":"Raw net returns are positive at all holds, but no horizon earns promotion. Stop before selecting 20d, changing thresholds, or opening OOS.","textPreview":"Raw net returns are positive at all holds, but no horizon earns promotion. Stop before selecting 20d, changing thresholds, or opening OOS.","textChars":138,"textLines":1,"bbox":[350,576,820,44]}
+{"kind":"notes","id":"nt/c7uhcr6t","slide":23,"text":"The minimal rule translated cleanly into next-open mechanics but did not beat unconditional drift at any frozen hold. The 20-session sideways-versus-trending contrast deserves context because it is positive under both aggregation lenses, yet the positive-return condition itself underperforms sideways-state-only. The correct status is a transparent TRAIN stop before horizon selection or OOS—not an edge claim and not a dead-end verdict on all continuation ideas.\n\n[Sources]\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/report.md\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/equal_sector_horizon_summary.csv\n- runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_next_open_rule_20260829/aggregation_lens_summary.csv\n- operator_hypothesis_lab/docs/RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md\n[/Sources]"}
