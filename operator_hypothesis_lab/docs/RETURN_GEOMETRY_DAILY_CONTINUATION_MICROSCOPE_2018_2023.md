@@ -209,11 +209,17 @@ Current status:
 
 ## Next Gate
 
-Keep the continuation formulation stopped. The next operator huddle should
-decide whether the negative-prior sideways rebound deserves a separate
-candidate identity and a predeclared rule contract. Do not repurpose the
-continuation row, optimize the data-informed 20-session horizon, tune the ER
-threshold, or query post-2023 outcomes from this readout.
+The continuation formulation is now closed as a stopped hypothesis. The
+negative-prior result has been given the separate identity `Sideways Loss
+Rebound`; it does not inherit continuation's candidate row or interpretation.
+Its first matched-control baseline is documented in
+`RETURN_GEOMETRY_SIDEWAYS_LOSS_REBOUND_2018_2023.md`.
+
+That baseline found that ER20-sideways did not robustly improve on negative R20
+alone: the primary trailed negative-only under equal-sector weighting and led
+only under event pooling, with positive excess in 2/6 TRAIN years. Keep both
+continuation and the initial sideways-gate formulation stopped before rule
+selection or OOS.
 
 The 30-minute lane remains bookmarked but design-only until its bar clock,
 overnight-return treatment, horizon meaning, and any daily-to-intraday filter
@@ -243,6 +249,8 @@ timing are explicit.
   `scripts/inspect/run_return_geometry_continuation_20d_attribution.R`.
 - 20-session attribution helpers:
   `operator_hypothesis_lab/R/return_geometry_continuation_20d_attribution.R`.
+- Separate sideways-loss rebound note:
+  `operator_hypothesis_lab/docs/RETURN_GEOMETRY_SIDEWAYS_LOSS_REBOUND_2018_2023.md`.
 - TSLA aggregate source note:
   `operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md`.
 - TSLA ATR% source note:

@@ -420,3 +420,22 @@ positive excess for the negative branch. The continuation interpretation is
 therefore stopped; a modest rebound lead remains under a separate conceptual
 identity. Do not select a rebound rule, optimize 20 sessions, or open OOS from
 this same TRAIN evidence. The 30-minute lane remains bookmarked and sealed.
+
+### Sideways Loss Rebound
+
+The continuation line is now closed. Its negative-prior observation was opened
+under the separate `Sideways Loss Rebound` identity and tested against the
+previously missing negative-R20-only control, trending-negative control,
+sideways-only control, and unconditional drift.
+
+Current status:
+
+`TRAIN_SIDEWAYS_LOSS_REBOUND_BASELINE_COMPLETE_STOP_BEFORE_RULE_OR_OOS`
+
+The primary retained modest excess versus drift (`+5.8 bp` equal-sector and
+`+3.7 bp` pooled), but the ER20-sideways gate did not robustly improve on
+negative R20 alone. It trailed negative-only by `5.6 bp` equal-sector and led by
+`4.3 bp` pooled. Only 2/6 TRAIN years had positive primary excess. Preserve the
+new conceptual identity and the matched-control evidence, but do not select a
+rule, add severity, tune the state or horizon, or open post-2023 OOS. See
+`RETURN_GEOMETRY_SIDEWAYS_LOSS_REBOUND_2018_2023.md`.
