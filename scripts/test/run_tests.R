@@ -63,5 +63,11 @@ run_step("operator-hypothesis-lab non-network tests", {
   )
 })
 
+run_step("edge-discovery-lab non-network tests", {
+  testthat::test_dir(
+    file.path(repo_root, "edge_discovery_lab", "tests", "testthat")
+  )
+})
+
 message("")
 message("Gen5 local tests passed.")

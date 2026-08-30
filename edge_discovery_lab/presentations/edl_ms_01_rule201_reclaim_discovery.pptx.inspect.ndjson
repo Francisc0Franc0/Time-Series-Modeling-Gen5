@@ -1,0 +1,146 @@
+{"kind":"deck","id":"pr/6nfnxz","name":"Deck"}
+{"kind":"layout","layoutId":"83dc9f7b-45b3-4ca0-a532-3df8fc1c9af4","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"0d1462a9-d27d-4f7d-aef2-2ee1e5c696b6","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/akr4b5","slide":1,"title":"EDGE DISCOVERY LAB · FIRST JOINT LLM / OPERATOR CANDIDATE","textShapes":8}
+{"kind":"shape","id":"sh/bix0r258","slide":1,"bbox":[0,0,24,720]}
+{"kind":"textbox","id":"sh/wjqh076d","slide":1,"text":"EDGE DISCOVERY LAB · FIRST JOINT LLM / OPERATOR CANDIDATE","textPreview":"EDGE DISCOVERY LAB · FIRST JOINT LLM / OPERATOR CANDIDATE","textChars":57,"textLines":1,"bbox":[72,72,720,28]}
+{"kind":"textbox","id":"sh/xkzitcny","slide":1,"text":"Rule 201\nReclaim","textPreview":"Rule 201 | Reclaim","textChars":16,"textLines":2,"bbox":[72,148,820,190]}
+{"kind":"textbox","id":"sh/mtozuxob","slide":1,"text":"A fixed market-structure threshold meets same-day price recovery.","textPreview":"A fixed market-structure threshold meets same-day price recovery.","textChars":65,"textLines":1,"bbox":[76,370,780,70]}
+{"kind":"shape","id":"sh/nexgn2pw","slide":1,"bbox":[930,118,250,250]}
+{"kind":"textbox","id":"sh/of6hw76h","slide":1,"text":"−10%","textPreview":"−10%","textChars":4,"textLines":1,"bbox":[944,180,222,86]}
+{"kind":"textbox","id":"sh/9gfipcn2","slide":1,"text":"prior-close\nthreshold","textPreview":"prior-close | threshold","textChars":21,"textLines":2,"bbox":[954,276,202,58]}
+{"kind":"shape","id":"sh/ep4zqxof","slide":1,"bbox":[72,532,1106,2]}
+{"kind":"textbox","id":"sh/zqdgjip0","slide":1,"text":"Discovery question","textPreview":"Discovery question","textChars":18,"textLines":1,"bbox":[72,562,220,26]}
+{"kind":"textbox","id":"sh/3ux07eds","slide":1,"text":"When a volatile stock breaches a salient rule threshold but recovers before the close, does the next tradable session behave differently?","textPreview":"When a volatile stock breaches a salient rule threshold but recovers before the close, does the next tradable session behave differently?","textChars":137,"textLines":1,"bbox":[300,555,860,64]}
+{"kind":"textbox","id":"sh/2toje9c7","slide":1,"text":"DISCOVERY SLICE COMPLETE · NO EDGE CLAIM","textPreview":"DISCOVERY SLICE COMPLETE · NO EDGE CLAIM","textChars":40,"textLines":1,"bbox":[72,666,540,20]}
+{"kind":"notes","id":"nt/akr4b5","slide":1,"text":"This opens the Edge Discovery Lab. The purpose is to let the operator and LLM interrogate one narrow mechanism visually before any broad statistical gate is opened.\n\n[Sources]\n- SEC, Division of Trading and Markets, Responses to Frequently Asked Questions Concerning Rule 201 of Regulation SHO, https://www.sec.gov/rules-regulations/staff-guidance/trading-markets-frequently-asked-questions-7\n- Nasdaq Trader, Short Sale Circuit Breaker, https://nasdaqtrader.com/trader.aspx?id=ShortSaleCircuitBreaker\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/06bzf7","slide":2,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":15}
+{"kind":"textbox","id":"sh/d0bipc3y","slide":2,"text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[48,26,520,20]}
+{"kind":"textbox","id":"sh/qxkzuh47","slide":2,"text":"The candidate joins price stress to a real market-structure threshold","textPreview":"The candidate joins price stress to a real market-structure threshold","textChars":69,"textLines":1,"bbox":[48,58,1160,64]}
+{"kind":"shape","id":"sh/ryt0nm5s","slide":2,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/03mhkrmp","slide":2,"text":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textPreview":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textChars":60,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/l4vitw3u","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"textbox","id":"sh/e1kzih4j","slide":2,"text":"PRICE PATH","textPreview":"PRICE PATH","textChars":10,"textLines":1,"bbox":[68,178,250,24]}
+{"kind":"textbox","id":"sh/z2d0rml4","slide":2,"text":"Prior close","textPreview":"Prior close","textChars":11,"textLines":1,"bbox":[72,224,190,34]}
+{"kind":"shape","id":"sh/8rm1obml","slide":2,"bbox":[228,238,126,4]}
+{"kind":"textbox","id":"sh/9svixw36","slide":2,"text":"Intraday low\n≤ −10%","textPreview":"Intraday low | ≤ −10%","textChars":19,"textLines":2,"bbox":[378,202,190,70]}
+{"kind":"shape","id":"sh/d4j25cz2","slide":2,"bbox":[562,238,126,4]}
+{"kind":"textbox","id":"sh/c3a1w7yx","slide":2,"text":"Close-location\nvalue","textPreview":"Close-location | value","textChars":20,"textLines":2,"bbox":[704,202,220,70]}
+{"kind":"shape","id":"sh/b2hk32hc","slide":2,"bbox":[908,238,126,4]}
+{"kind":"textbox","id":"sh/q18juhgr","slide":2,"text":"Next open\nis tradable","textPreview":"Next open | is tradable","textChars":21,"textLines":2,"bbox":[1048,202,150,70]}
+{"kind":"shape","id":"sh/lsj29wze","slide":2,"bbox":[64,326,548,250]}
+{"kind":"textbox","id":"sh/0ra10ryt","slide":2,"text":"What Rule 201 contributes","textPreview":"What Rule 201 contributes","textChars":25,"textLines":1,"bbox":[92,354,470,34]}
+{"kind":"shape","id":"sh/z61k7mh8","slide":2,"bbox":[94,422,9,9]}
+{"kind":"textbox","id":"sh/y5sjyhgn","slide":2,"text":"A fixed threshold anchored to the prior close—not a fitted indicator.","textPreview":"A fixed threshold anchored to the prior close—not a fitted indicator.","textChars":69,"textLines":1,"bbox":[118,414,452,58]}
+{"kind":"shape","id":"sh/hwzixsza","slide":2,"bbox":[94,488,9,9]}
+{"kind":"textbox","id":"sh/gv61onyp","slide":2,"text":"A plausible change in the short-sale execution environment after activation.","textPreview":"A plausible change in the short-sale execution environment after activation.","textChars":76,"textLines":1,"bbox":[118,480,452,58]}
+{"kind":"shape","id":"sh/8fa14n6l","slide":2,"bbox":[644,326,548,250]}
+{"kind":"textbox","id":"sh/tgj2ds7q","slide":2,"text":"What it does not contribute","textPreview":"What it does not contribute","textChars":27,"textLines":1,"bbox":[672,354,470,34]}
+{"kind":"shape","id":"sh/6dsj2xof","slide":2,"bbox":[674,422,9,9]}
+{"kind":"textbox","id":"sh/7e1kb2p0","slide":2,"text":"It is not a ban on short selling; eligible short-sale executions are price constrained.","textPreview":"It is not a ban on short selling; eligible short-sale executions are price constrained.","textChars":87,"textLines":1,"bbox":[698,414,452,58]}
+{"kind":"shape","id":"sh/gju1876h","slide":2,"bbox":[674,488,9,9]}
+{"kind":"textbox","id":"sh/hk32hc72","slide":2,"text":"A daily low is only a proxy for official exchange activation status.","textPreview":"A daily low is only a proxy for official exchange activation status.","textChars":68,"textLines":1,"bbox":[698,480,452,58]}
+{"kind":"notes","id":"nt/06bzf7","slide":2,"text":"Rule 201 generally activates after a 10 percent decline from the prior close and applies for the remainder of that day and the following trading day. This study uses adjusted daily bars, so the trigger is explicitly labeled a proxy rather than official exchange status.\n\n[Sources]\n- SEC, Division of Trading and Markets, Responses to Frequently Asked Questions Concerning Rule 201 of Regulation SHO, https://www.sec.gov/rules-regulations/staff-guidance/trading-markets-frequently-asked-questions-7\n- Nasdaq Trader, Short Sale Circuit Breaker, https://nasdaqtrader.com/trader.aspx?id=ShortSaleCircuitBreaker\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/5p5lzu","slide":3,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":24}
+{"kind":"textbox","id":"sh/9gr2dsjm","slide":3,"text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[48,26,520,20]}
+{"kind":"textbox","id":"sh/mt0jix0b","slide":3,"text":"The first slice freezes a small, interpretable discovery surface","textPreview":"The first slice freezes a small, interpretable discovery surface","textChars":64,"textLines":1,"bbox":[48,58,1160,64]}
+{"kind":"shape","id":"sh/ne9kb21g","slide":3,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/wji1o7id","slide":3,"text":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textPreview":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textChars":60,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/xkb2hcjy","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/ah0jmx07","slide":3,"bbox":[58,180,260,126]}
+{"kind":"shape","id":"sh/bi9kf21s","slide":3,"bbox":[58,180,8,126]}
+{"kind":"textbox","id":"sh/kn21sri9","slide":3,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[82,196,220,44]}
+{"kind":"textbox","id":"sh/lob2lcju","slide":3,"text":"volatile equities","textPreview":"volatile equities","textChars":17,"textLines":1,"bbox":[82,246,220,24]}
+{"kind":"textbox","id":"sh/58jyt8ne","slide":3,"text":"TSLA, AMD, NVDA, GME, AMC…","textPreview":"TSLA, AMD, NVDA, GME, AMC…","textChars":26,"textLines":1,"bbox":[82,274,220,20]}
+{"kind":"shape","id":"sh/47ahk369","slide":3,"bbox":[346,180,260,126]}
+{"kind":"shape","id":"sh/j61grypo","slide":3,"bbox":[346,180,8,126]}
+{"kind":"textbox","id":"sh/i5szito3","slide":3,"text":"2018–23","textPreview":"2018–23","textChars":7,"textLines":1,"bbox":[370,196,220,44]}
+{"kind":"textbox","id":"sh/dc3yx8nq","slide":3,"text":"TRAIN window","textPreview":"TRAIN window","textChars":12,"textLines":1,"bbox":[370,246,220,24]}
+{"kind":"textbox","id":"sh/sbaho365","slide":3,"text":"post-2023 remains sealed","textPreview":"post-2023 remains sealed","textChars":24,"textLines":1,"bbox":[370,274,220,20]}
+{"kind":"shape","id":"sh/ra1gvi5k","slide":3,"bbox":[634,180,260,126]}
+{"kind":"shape","id":"sh/69szmdoz","slide":3,"bbox":[634,180,8,126]}
+{"kind":"textbox","id":"sh/9gzylo76","slide":3,"text":"−12%…−8%","textPreview":"−12%…−8%","textChars":8,"textLines":1,"bbox":[658,196,220,44]}
+{"kind":"textbox","id":"sh/8fqxcj61","slide":3,"text":"visual band","textPreview":"visual band","textChars":11,"textLines":1,"bbox":[658,246,220,24]}
+{"kind":"textbox","id":"sh/0juh8jex","slide":3,"text":"around the −10% proxy","textPreview":"around the −10% proxy","textChars":21,"textLines":1,"bbox":[658,274,220,20]}
+{"kind":"shape","id":"sh/lk3y1of2","slide":3,"bbox":[922,180,260,126]}
+{"kind":"shape","id":"sh/yhsz69wr","slide":3,"bbox":[922,180,8,126]}
+{"kind":"textbox","id":"sh/zilgzexc","slide":3,"text":"1 / 3 / 5","textPreview":"1 / 3 / 5","textChars":9,"textLines":1,"bbox":[946,196,220,44]}
+{"kind":"textbox","id":"sh/8nuhc3et","slide":3,"text":"forward sessions","textPreview":"forward sessions","textChars":16,"textLines":1,"bbox":[946,246,220,24]}
+{"kind":"textbox","id":"sh/9o3y5ofe","slide":3,"text":"next-open entry convention","textPreview":"next-open entry convention","textChars":26,"textLines":1,"bbox":[946,274,220,20]}
+{"kind":"textbox","id":"sh/mlczatwn","slide":3,"text":"MEASURED NOW","textPreview":"MEASURED NOW","textChars":12,"textLines":1,"bbox":[64,360,260,24]}
+{"kind":"shape","id":"sh/nmlg3yx8","slide":3,"bbox":[68,410,9,9]}
+{"kind":"textbox","id":"sh/wrehg3ep","slide":3,"text":"Trigger proxy: daily low / prior close − 1 ≤ −10%.","textPreview":"Trigger proxy: daily low / prior close − 1 ≤ −10%.","textChars":50,"textLines":1,"bbox":[92,402,496,58]}
+{"kind":"shape","id":"sh/xsni98fa","slide":3,"bbox":[68,480,9,9]}
+{"kind":"textbox","id":"sh/rmpkz2hs","slide":3,"text":"Reclaim strength: where the close lands inside that day’s high–low range.","textPreview":"Reclaim strength: where the close lands inside that day’s high–low range.","textChars":73,"textLines":1,"bbox":[92,472,496,58]}
+{"kind":"shape","id":"sh/6lgj6xg7","slide":3,"bbox":[68,550,9,9]}
+{"kind":"textbox","id":"sh/t8721czi","slide":3,"text":"Context only: abnormal dollar volume versus the strictly prior 20-session median.","textPreview":"Context only: abnormal dollar volume versus the strictly prior 20-session median.","textChars":81,"textLines":1,"bbox":[92,542,496,58]}
+{"kind":"textbox","id":"sh/s7y187yx","slide":3,"text":"DELIBERATELY NOT OPENED","textPreview":"DELIBERATELY NOT OPENED","textChars":23,"textLines":1,"bbox":[660,360,350,24]}
+{"kind":"shape","id":"sh/jipkv2hg","slide":3,"bbox":[664,410,9,9]}
+{"kind":"textbox","id":"sh/ihgj2xgv","slide":3,"text":"No significance tests, multiplicity gates, costs, sizing, or executable strategy.","textPreview":"No significance tests, multiplicity gates, costs, sizing, or executable strategy.","textChars":81,"textLines":1,"bbox":[688,402,486,58]}
+{"kind":"shape","id":"sh/5k72xszm","slide":3,"bbox":[664,480,9,9]}
+{"kind":"textbox","id":"sh/kjy14ny1","slide":3,"text":"No outcome-selected tapes and no post-2023 inspection.","textPreview":"No outcome-selected tapes and no post-2023 inspection.","textChars":54,"textLines":1,"bbox":[688,472,486,58]}
+{"kind":"shape","id":"sh/3e9k7mxk","slide":3,"bbox":[664,550,9,9]}
+{"kind":"textbox","id":"sh/2d0jehgf","slide":3,"text":"No claim that this basket represents the broader market.","textPreview":"No claim that this basket represents the broader market.","textChars":56,"textLines":1,"bbox":[688,542,486,58]}
+{"kind":"notes","id":"nt/5p5lzu","slide":3,"text":"The basket is an explicit operator-style discovery surface rather than a representative atlas. The point of this slice is construction validity and visual intelligibility.\n\n[Sources]\n- Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/run_spec.csv\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/0ap8k5","slide":4,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":14}
+{"kind":"textbox","id":"sh/vmlgza94","slide":4,"text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[48,26,520,20]}
+{"kind":"textbox","id":"sh/gnuh8va9","slide":4,"text":"The threshold is visible; a following-return cliff is not","textPreview":"The threshold is visible; a following-return cliff is not","textChars":57,"textLines":1,"bbox":[48,58,1160,64]}
+{"kind":"shape","id":"sh/ho3i10ru","slide":4,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/ipwza5sf","slide":4,"text":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textPreview":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textChars":60,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/3q503a90","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/5sni5kr6","slide":4,"bbox":[928,174,264,126]}
+{"kind":"shape","id":"sh/qdwzepsr","slide":4,"bbox":[928,174,8,126]}
+{"kind":"textbox","id":"sh/re507u9w","slide":4,"text":"646","textPreview":"646","textChars":3,"textLines":1,"bbox":[952,190,224,44]}
+{"kind":"textbox","id":"sh/7654jehg","slide":4,"text":"band events","textPreview":"band events","textChars":11,"textLines":1,"bbox":[952,240,224,24]}
+{"kind":"textbox","id":"sh/65wna9gv","slide":4,"text":"−12% through −8%","textPreview":"−12% through −8%","textChars":16,"textLines":1,"bbox":[952,268,224,20]}
+{"kind":"shape","id":"sh/t8n6l4z6","slide":4,"bbox":[928,320,264,126]}
+{"kind":"shape","id":"sh/s7e5cjy1","slide":4,"bbox":[928,320,8,126]}
+{"kind":"textbox","id":"sh/jil4fuh4","slide":4,"text":"239","textPreview":"239","textChars":3,"textLines":1,"bbox":[952,336,224,44]}
+{"kind":"textbox","id":"sh/ihcn6pgj","slide":4,"text":"proxy-triggered","textPreview":"proxy-triggered","textChars":15,"textLines":1,"bbox":[952,386,224,24]}
+{"kind":"textbox","id":"sh/54nmh4za","slide":4,"text":"low drawdown ≤ −10%","textPreview":"low drawdown ≤ −10%","textChars":19,"textLines":1,"bbox":[952,414,224,20]}
+{"kind":"shape","id":"sh/k3e58zyp","slide":4,"bbox":[928,466,264,126]}
+{"kind":"shape","id":"sh/3eporyho","slide":4,"bbox":[928,466,8,126]}
+{"kind":"textbox","id":"sh/2dgnitg3","slide":4,"text":"24","textPreview":"24","textChars":2,"textLines":1,"bbox":[952,482,224,44]}
+{"kind":"textbox","id":"sh/yt07qx0b","slide":4,"text":"strong reclaims","textPreview":"strong reclaims","textChars":15,"textLines":1,"bbox":[952,532,224,24]}
+{"kind":"textbox","id":"sh/zut8j21w","slide":4,"text":"triggered + CLV ≥ 0.75","textPreview":"triggered + CLV ≥ 0.75","textChars":22,"textLines":1,"bbox":[952,560,224,20]}
+{"kind":"textbox","id":"sh/0v29s7ih","slide":4,"text":"Visual read: dispersion dominates any abrupt separation at the rule threshold.","textPreview":"Visual read: dispersion dominates any abrupt separation at the rule threshold.","textChars":78,"textLines":1,"bbox":[930,610,260,50]}
+{"kind":"image","id":"im/h03i9k7m","slide":4,"name":"","alt":"Scatterplot of intraday low drawdown around the Rule 201 proxy against next-open session return, colored by close-location value and sized by abnormal dollar volume.","bbox":[44,150,850,500]}
+{"kind":"notes","id":"nt/0ap8k5","slide":4,"text":"There are enough events to inspect the construction, but only 24 proxy-triggered strong-reclaim observations. The scatter does not show an obvious discontinuity in next-session returns at the negative 10 percent line.\n\n[Sources]\n- Local event ledger: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/event_ledger.csv\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/kgvqtm","slide":5,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":5}
+{"kind":"textbox","id":"sh/q5gvih0j","slide":5,"text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[48,26,520,20]}
+{"kind":"textbox","id":"sh/d87utcju","slide":5,"text":"The first tapes challenge the immediate-next-session story","textPreview":"The first tapes challenge the immediate-next-session story","textChars":58,"textLines":1,"bbox":[48,58,1160,64]}
+{"kind":"shape","id":"sh/s7ydkri9","slide":5,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/32pcn21s","slide":5,"text":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textPreview":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textChars":60,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/i1wbex07","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/43ydg7id","slide":5,"bbox":[58,642,1164,30]}
+{"kind":"textbox","id":"sh/ve5cj21w","slide":5,"text":"All four examples fell in the immediately following session; three were positive by five sessions. That is a horizon question—not a rescue.","textPreview":"All four examples fell in the immediately following session; three were positive by five sessions. That is a horizon question—not a rescue.","textChars":139,"textLines":1,"bbox":[76,647,1128,20]}
+{"kind":"image","id":"im/or29gb6t","slide":5,"name":"","alt":"Four deterministic chronological Rule 201 candidate event tapes showing the event day, prior-close line, threshold line, and next-open entry marker.","bbox":[58,152,1164,482]}
+{"kind":"notes","id":"nt/kgvqtm","slide":5,"text":"The tapes are the first chronological example of each predeclared category, not the best or worst outcomes. Their common next-session weakness makes the immediate-rebound story less compelling, while three positive five-session outcomes motivate keeping horizon and mechanism separate in the next discussion.\n\n[Sources]\n- Local deterministic tape selection: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/selected_event_tapes.csv\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/j0ed9e","slide":6,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":16}
+{"kind":"textbox","id":"sh/to36twje","slide":6,"text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[48,26,520,20]}
+{"kind":"textbox","id":"sh/6ls7yhkn","slide":6,"text":"The slice earns a sharper question—not an edge claim","textPreview":"The slice earns a sharper question—not an edge claim","textChars":52,"textLines":1,"bbox":[48,58,1160,64]}
+{"kind":"shape","id":"sh/7m1orm18","slide":6,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/kjapwr2x","slide":6,"text":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textPreview":"Discovery slice · adjusted daily bars · 2018–2023 TRAIN only","textChars":60,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/5kj6pcj2","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/ixsnuhkr","slide":6,"bbox":[58,172,552,360]}
+{"kind":"textbox","id":"sh/ji1onm1c","slide":6,"text":"VISIBLE NOW","textPreview":"VISIBLE NOW","textChars":11,"textLines":1,"bbox":[88,202,250,26]}
+{"kind":"textbox","id":"sh/4fep8b21","slide":6,"text":"The construction works.","textPreview":"The construction works.","textChars":23,"textLines":1,"bbox":[88,252,470,40]}
+{"kind":"shape","id":"sh/pgn61gjm","slide":6,"bbox":[90,330,9,9]}
+{"kind":"textbox","id":"sh/tkvixg36","slide":6,"text":"A real fixed threshold can be interrogated without fitting it.","textPreview":"A real fixed threshold can be interrogated without fitting it.","textChars":62,"textLines":1,"bbox":[114,322,446,58]}
+{"kind":"shape","id":"sh/8jm14bml","slide":6,"bbox":[90,406,9,9]}
+{"kind":"textbox","id":"sh/7it0v6lg","slide":6,"text":"Close-location value cleanly distinguishes reclaim from weak-close events.","textPreview":"Close-location value cleanly distinguishes reclaim from weak-close events.","textChars":74,"textLines":1,"bbox":[114,398,446,58]}
+{"kind":"shape","id":"sh/6hkj2l4v","slide":6,"bbox":[90,482,9,9]}
+{"kind":"textbox","id":"sh/lgbitgna","slide":6,"text":"The tape view exposes timing that a single summary return would hide.","textPreview":"The tape view exposes timing that a single summary return would hide.","textChars":69,"textLines":1,"bbox":[114,474,446,58]}
+{"kind":"shape","id":"sh/kf210bmp","slide":6,"bbox":[642,172,580,360]}
+{"kind":"textbox","id":"sh/jet0r654","slide":6,"text":"STILL UNKNOWN","textPreview":"STILL UNKNOWN","textChars":13,"textLines":1,"bbox":[672,202,250,26]}
+{"kind":"textbox","id":"sh/ydkjy14j","slide":6,"text":"Whether a tradable effect exists.","textPreview":"Whether a tradable effect exists.","textChars":33,"textLines":1,"bbox":[672,252,500,40]}
+{"kind":"shape","id":"sh/pcf2503e","slide":6,"bbox":[674,330,9,9]}
+{"kind":"textbox","id":"sh/4b61cvmt","slide":6,"text":"Does exact exchange activation sharpen the proxy?","textPreview":"Does exact exchange activation sharpen the proxy?","textChars":49,"textLines":1,"bbox":[698,322,470,58]}
+{"kind":"shape","id":"sh/ovel8ju5","slide":6,"bbox":[674,406,9,9]}
+{"kind":"textbox","id":"sh/pgn214bq","slide":6,"text":"Is there any reproducible distinction by reclaim strength or horizon?","textPreview":"Is there any reproducible distinction by reclaim strength or horizon?","textChars":69,"textLines":1,"bbox":[698,398,470,58]}
+{"kind":"shape","id":"sh/2tc369cz","slide":6,"bbox":[674,482,9,9]}
+{"kind":"textbox","id":"sh/nulkzetk","slide":6,"text":"Does the idea survive a predeclared atlas, costs, and untouched data?","textPreview":"Does the idea survive a predeclared atlas, costs, and untouched data?","textChars":69,"textLines":1,"bbox":[698,474,470,58]}
+{"kind":"shape","id":"sh/0rul4zut","slide":6,"bbox":[58,568,1164,78]}
+{"kind":"textbox","id":"sh/1s32x4be","slide":6,"text":"STATUS","textPreview":"STATUS","textChars":6,"textLines":1,"bbox":[86,590,120,26]}
+{"kind":"textbox","id":"sh/epc32pc3","slide":6,"text":"DISCOVERY SLICE COMPLETE · NO PASS / STOP · NO EDGE CLAIM","textPreview":"DISCOVERY SLICE COMPLETE · NO PASS / STOP · NO EDGE CLAIM","textChars":57,"textLines":1,"bbox":[230,583,920,38]}
+{"kind":"notes","id":"nt/j0ed9e","slide":6,"text":"This is a successful lab slice because it creates a transparent mechanism, validated construction, and operator-facing evidence. The next research gate remains an operator decision.\n\n[Sources]\n- Local discovery packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/report.md\n- Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_reclaim_discovery_20260830/run_spec.csv\n[/Sources]"}
