@@ -388,7 +388,7 @@ ER20-trending cells have median `-0.028` and only `27.6%` positive sign breadth.
 
 Current status:
 
-`TRAIN_NEXT_OPEN_HORIZON_COMPARISON_COMPLETE_STOP_BEFORE_SELECTION_OR_OOS`
+`TRAIN_20D_SIGN_STATE_ATTRIBUTION_COMPLETE_STOP_BEFORE_RULE_OR_OOS`
 
 See `RETURN_GEOMETRY_DAILY_CONTINUATION_MICROSCOPE_2018_2023.md` and
 `presentations/return_geometry_daily_continuation_microscope.pptx`.
@@ -400,7 +400,7 @@ sideways, and all 11 core sectors have positive median contrasts. The result is
 not universal: 16 cells are exceptions, including micro horizons, several
 20-prior/long-forward combinations, and `100 -> 100`.
 
-The literal next-open translation has now been calculated for 5-, 10-, and
+The literal next-open translation was calculated for 5-, 10-, and
 20-session holds. It requires positive R20 in causal ER20-sideways, enters the
 next open, ignores overlapping signals, and charges 10 bp round trip. Raw net
 returns were positive, but the rule trailed unconditional same-horizon drift
@@ -408,5 +408,15 @@ by `16`, `10`, and `14 bp` per trade. Only the 20-session sideways-versus-
 trending contrast was positive under both equal-sector and event-pooled lenses,
 while positive R20 detracted versus sideways-only at every hold. Do not select
 20 sessions or open post-2023 evidence. The next gate is an operator huddle on
-whether the state contrast deserves a separately frozen mechanism test without
-the positive-R20 condition. The 30-minute lane remains bookmarked and sealed.
+whether the state contrast deserved a separately frozen mechanism test without
+the positive-R20 condition.
+
+That approved attribution is now complete at the fixed 20-session hold. Four
+branches separated ER20 state from prior-return sign. Only sideways negative-
+R20 cleared unconditional drift under both primary lenses: approximately
+`+5.8 bp` equal-sector and `+3.7 bp` core event-pooled. Sideways positive-R20
+trailed negative-R20 by `15-19 bp`, and seven of eleven sector medians had
+positive excess for the negative branch. The continuation interpretation is
+therefore stopped; a modest rebound lead remains under a separate conceptual
+identity. Do not select a rebound rule, optimize 20 sessions, or open OOS from
+this same TRAIN evidence. The 30-minute lane remains bookmarked and sealed.

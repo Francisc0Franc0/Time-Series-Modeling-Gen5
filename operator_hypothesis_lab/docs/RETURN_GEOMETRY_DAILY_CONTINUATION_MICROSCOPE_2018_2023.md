@@ -166,12 +166,54 @@ Current status:
 
 `TRAIN_NEXT_OPEN_HORIZON_COMPARISON_COMPLETE_STOP_BEFORE_SELECTION_OR_OOS`
 
+## Frozen 20-Session Sign/State Attribution
+
+The operator approved one narrow mechanism test at the already-observed
+20-session horizon. No additional horizon, threshold, or outcome partition was
+searched. The executable clock, non-overlap rule, 10 bp round-trip cost,
+2018-2023 TRAIN boundary, 129-instrument visible atlas, and 88-stock
+equal-sector primary lens were inherited unchanged.
+
+Four branches were compared against unconditional same-asset 20-session
+open-to-open drift:
+
+- any prior R20 in causal ER20 sideways;
+- positive R20 in causal ER20 sideways, the original continuation branch;
+- negative R20 in causal ER20 sideways, a rebound branch; and
+- any prior R20 in causal ER20 trending.
+
+All 18 construction checks passed. Under the primary equal-sector median-asset
+lens, net return and excess versus drift were:
+
+- sideways all: `+0.6965%`, `-8.24 bp` excess;
+- sideways positive R20: `+0.6574%`, `-14.30 bp` excess;
+- sideways negative R20: `+0.8071%`, `+5.75 bp` excess; and
+- trending all: `+0.4841%`, `-23.67 bp` excess.
+
+The core event-pooled lens gives the same qualitative attribution. Only the
+sideways negative-R20 branch is above drift, by `+3.73 bp` per trade. The
+positive branch trails the negative branch by approximately `15 bp` under the
+equal-sector lens and `19 bp` event-pooled. Seven of eleven sector medians have
+positive excess for the negative branch.
+
+This falsifies the original continuation interpretation at the frozen horizon.
+The surviving result is a modest rebound lead, not a rescue of continuation and
+not an edge claim. Its 20-session horizon was learned from the same TRAIN
+surface, its excess margins are small, and the mean path separates late in the
+hold. No rebound rule, horizon optimization, post-2023 OOS, portfolio replay,
+or 30-minute calculation was opened.
+
+Current status:
+
+`TRAIN_20D_SIGN_STATE_ATTRIBUTION_COMPLETE_STOP_BEFORE_RULE_OR_OOS`
+
 ## Next Gate
 
-Do not select the 20-session hold, tune the ER threshold, or query post-2023
-outcomes from this readout. The next operator huddle should decide whether the
-20-session state contrast warrants a separately predeclared mechanism test
-without the positive-R20 condition, or should remain descriptive context.
+Keep the continuation formulation stopped. The next operator huddle should
+decide whether the negative-prior sideways rebound deserves a separate
+candidate identity and a predeclared rule contract. Do not repurpose the
+continuation row, optimize the data-informed 20-session horizon, tune the ER
+threshold, or query post-2023 outcomes from this readout.
 
 The 30-minute lane remains bookmarked but design-only until its bar clock,
 overnight-return treatment, horizon meaning, and any daily-to-intraday filter
@@ -195,6 +237,12 @@ timing are explicit.
   `scripts/inspect/run_return_geometry_continuation_next_open_rule.R`.
 - Next-open rule helpers:
   `operator_hypothesis_lab/R/return_geometry_continuation_next_open_rule.R`.
+- 20-session attribution packet:
+  `runs/research_workbench/operator_hypothesis_lab/return_geometry_continuation_20d_attribution_20260829`.
+- 20-session attribution runner:
+  `scripts/inspect/run_return_geometry_continuation_20d_attribution.R`.
+- 20-session attribution helpers:
+  `operator_hypothesis_lab/R/return_geometry_continuation_20d_attribution.R`.
 - TSLA aggregate source note:
   `operator_hypothesis_lab/docs/TSLA_CUMULATIVE_RETURN_HORIZON_GRID_2018_2023.md`.
 - TSLA ATR% source note:
