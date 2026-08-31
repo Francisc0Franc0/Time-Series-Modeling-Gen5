@@ -525,3 +525,12 @@ implementation remains unopened.
 Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
+
+The NVDA-specific descriptive lane begins with
+`HYP-NVDA-CLOCK-01.1`. Its
+[results note](docs/NVDA_INTRADAY_RETURN_CLOCK_2018_2023.md) and ignored run
+packet `nvda_intraday_clock_descriptive_20260831` place the prior-close to
+first-open gap before all 13 regular-session 30-minute open-to-close returns.
+The 2018-2023 plot retains every eligible observation, removes no outliers,
+fits no model, and leaves 2024+ untouched. It establishes a raw one-asset clock
+anatomy surface only; no bar, threshold, strategy, or edge is selected.
