@@ -1,0 +1,145 @@
+{"kind":"deck","id":"pr/ou850a","name":"Deck"}
+{"kind":"layout","layoutId":"135b57b9-c11c-4f58-9732-f9c90605f531","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"e4016987-da2c-4cdd-9619-62c49ebeac5e","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/8j1gpy","slide":1,"title":"EDGE DISCOVERY LAB · NARROW FALSIFICATION","textShapes":8}
+{"kind":"shape","id":"sh/9gfehc7m","slide":1,"bbox":[0,0,22,720]}
+{"kind":"textbox","id":"sh/mt4f6xob","slide":1,"text":"EDGE DISCOVERY LAB · NARROW FALSIFICATION","textPreview":"EDGE DISCOVERY LAB · NARROW FALSIFICATION","textChars":41,"textLines":1,"bbox":[56,50,700,26]}
+{"kind":"textbox","id":"sh/7udwf2pg","slide":1,"text":"Attention-stock distinction","textPreview":"Attention-stock distinction","textChars":27,"textLines":1,"bbox":[56,146,900,88]}
+{"kind":"textbox","id":"sh/krmd4n65","slide":1,"text":"The positive effect does not reproduce.","textPreview":"The positive effect does not reproduce.","textChars":39,"textLines":1,"bbox":[58,264,920,54]}
+{"kind":"textbox","id":"sh/lsveds7q","slide":1,"text":"Yet the matching itself fails balance—showing that attention and core events occupy meaningfully different pre-outcome environments.","textPreview":"Yet the matching itself fails balance—showing that attention and core events occupy meaningfully different pre-outcome environments.","textChars":132,"textLines":1,"bbox":[58,350,820,112]}
+{"kind":"shape","id":"sh/yp4v2xoz","slide":1,"bbox":[958,150,240,240]}
+{"kind":"textbox","id":"sh/zqdwb2pk","slide":1,"text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[976,194,204,74]}
+{"kind":"textbox","id":"sh/cn2d0n6t","slide":1,"text":"matched pairs","textPreview":"matched pairs","textChars":13,"textLines":1,"bbox":[978,288,200,42]}
+{"kind":"shape","id":"sh/xove9s7e","slide":1,"bbox":[58,532,1140,2]}
+{"kind":"textbox","id":"sh/h03ihsj6","slide":1,"text":"INCONCLUSIVE · MATCH BALANCE FAILED","textPreview":"INCONCLUSIVE · MATCH BALANCE FAILED","textChars":35,"textLines":1,"bbox":[58,572,720,28]}
+{"kind":"textbox","id":"sh/wfuho7il","slide":1,"text":"No matcher rescue after outcomes","textPreview":"No matcher rescue after outcomes","textChars":32,"textLines":1,"bbox":[850,572,348,28]}
+{"kind":"notes","id":"nt/8j1gpy","slide":1,"text":"This sequel tests the wide-atlas clue that attention stocks carried most of the apparent five-session rebound. The result has two layers: the positive distinction fails in the matched sample, and the predeclared balance gate also fails.\n\n[Sources]\n- Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/report.md\n- Local falsification status: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/falsification_status.csv\n- Local primary day-five test: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/primary_day5_test.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/0ujvry","slide":2,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":26}
+{"kind":"textbox","id":"sh/sji1sre9","slide":2,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/ri90j6do","slide":2,"name":"slide-title","text":"The comparison was frozen before forward returns were attached","textPreview":"The comparison was frozen before forward returns were attached","textChars":62,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/qh0jq1w3","slide":2,"name":"slide-subtitle","text":"One target state, one outcome horizon, one paired inferential test.","textPreview":"One target state, one outcome horizon, one paired inferential test.","textChars":67,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/18bipgvq","slide":2,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/0721wbel","slide":2,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/f6t0n6d0","slide":2,"name":"page-number","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/e5kju1wf","slide":2,"name":"metric-same-year pairs","bbox":[52,182,260,128]}
+{"kind":"shape","id":"sh/hc7idcvm","slide":2,"bbox":[52,182,8,128]}
+{"kind":"textbox","id":"sh/gbyhk7e1","slide":2,"text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[74,196,222,48]}
+{"kind":"textbox","id":"sh/yh8ve1gj","slide":2,"text":"same-year pairs","textPreview":"same-year pairs","textChars":15,"textLines":1,"bbox":[74,247,222,24]}
+{"kind":"textbox","id":"sh/jihwn6h4","slide":2,"text":"1:1 without replacement","textPreview":"1:1 without replacement","textChars":23,"textLines":1,"bbox":[74,276,222,28]}
+{"kind":"shape","id":"sh/kjqdgbyp","slide":2,"name":"metric-matching variables","bbox":[340,182,260,128]}
+{"kind":"shape","id":"sh/lkjepgzu","slide":2,"bbox":[340,182,8,128]}
+{"kind":"textbox","id":"sh/6lsvilgf","slide":2,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[362,196,222,48]}
+{"kind":"textbox","id":"sh/7m1wrqh0","slide":2,"text":"matching variables","textPreview":"matching variables","textChars":18,"textLines":1,"bbox":[362,247,222,24]}
+{"kind":"textbox","id":"sh/s7adkvyl","slide":2,"text":"all observed before outcome","textPreview":"all observed before outcome","textChars":27,"textLines":1,"bbox":[362,276,222,28]}
+{"kind":"shape","id":"sh/t8jetgz6","slide":2,"name":"metric-forward sessions","bbox":[628,182,260,128]}
+{"kind":"shape","id":"sh/u9sfmlgr","slide":2,"bbox":[628,182,8,128]}
+{"kind":"textbox","id":"sh/fa1wvqhc","slide":2,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[650,196,222,48]}
+{"kind":"textbox","id":"sh/relcjqd4","slide":2,"text":"forward sessions","textPreview":"forward sessions","textChars":16,"textLines":1,"bbox":[650,247,222,24]}
+{"kind":"textbox","id":"sh/qdcvalwj","slide":2,"text":"sole inferential horizon","textPreview":"sole inferential horizon","textChars":24,"textLines":1,"bbox":[650,276,222,28]}
+{"kind":"shape","id":"sh/dg3ul0va","slide":2,"name":"metric-balance limit","bbox":[916,182,312,128]}
+{"kind":"shape","id":"sh/cfudcvep","slide":2,"bbox":[916,182,8,128]}
+{"kind":"textbox","id":"sh/3a1cfqd8","slide":2,"text":"0.25","textPreview":"0.25","textChars":4,"textLines":1,"bbox":[938,196,274,48]}
+{"kind":"textbox","id":"sh/29sv6lwn","slide":2,"text":"balance limit","textPreview":"balance limit","textChars":13,"textLines":1,"bbox":[938,247,274,24]}
+{"kind":"textbox","id":"sh/pc3uh0ve","slide":2,"text":"maximum absolute SMD","textPreview":"maximum absolute SMD","textChars":20,"textLines":1,"bbox":[938,276,274,28]}
+{"kind":"shape","id":"sh/4bud8vet","slide":2,"bbox":[52,350,560,278]}
+{"kind":"textbox","id":"sh/fm1cb6xw","slide":2,"text":"MATCH ON EVENT GEOMETRY","textPreview":"MATCH ON EVENT GEOMETRY","textChars":23,"textLines":1,"bbox":[82,380,390,24]}
+{"kind":"shape","id":"sh/ulsv21wr","slide":2,"bbox":[82,438,9,9]}
+{"kind":"textbox","id":"sh/kr69c7u9","slide":2,"text":"Minimum intraday return: breach severity.","textPreview":"Minimum intraday return: breach severity.","textChars":41,"textLines":1,"bbox":[104,430,458,44]}
+{"kind":"shape","id":"sh/lsza5cbu","slide":2,"bbox":[82,490,9,9]}
+{"kind":"textbox","id":"sh/yporahcj","slide":2,"text":"Close-location value: strength of reclaim.","textPreview":"Close-location value: strength of reclaim.","textChars":42,"textLines":1,"bbox":[104,482,458,44]}
+{"kind":"shape","id":"sh/jqxs32do","slide":2,"bbox":[82,542,9,9]}
+{"kind":"textbox","id":"sh/8fqtgrul","slide":2,"text":"Log abnormal dollar volume: event attention/scale.","textPreview":"Log abnormal dollar volume: event attention/scale.","textChars":50,"textLines":1,"bbox":[104,534,458,48]}
+{"kind":"shape","id":"sh/tgza9wb6","slide":2,"bbox":[82,596,9,9]}
+{"kind":"textbox","id":"sh/6t8rehcf","slide":2,"text":"Event date: calendar proximity within year.","textPreview":"Event date: calendar proximity within year.","textChars":43,"textLines":1,"bbox":[104,588,458,38]}
+{"kind":"shape","id":"sh/7uhs7mt0","slide":2,"bbox":[646,350,582,278]}
+{"kind":"textbox","id":"sh/ojm94nu1","slide":2,"text":"PREDECLARED PASS LOGIC","textPreview":"PREDECLARED PASS LOGIC","textChars":22,"textLines":1,"bbox":[676,380,390,24]}
+{"kind":"shape","id":"sh/9kfaxsvm","slide":2,"bbox":[676,438,9,9]}
+{"kind":"textbox","id":"sh/1sratwz2","slide":2,"text":"Mean attention-minus-core day-five return must be positive.","textPreview":"Mean attention-minus-core day-five return must be positive.","textChars":59,"textLines":1,"bbox":[698,430,482,52]}
+{"kind":"shape","id":"sh/0rit0ryx","slide":2,"bbox":[676,502,9,9]}
+{"kind":"textbox","id":"sh/fq9srmhc","slide":2,"text":"Exact one-sided sign-flip p ≤ .05.","textPreview":"Exact one-sided sign-flip p ≤ .05.","textChars":34,"textLines":1,"bbox":[698,494,482,44]}
+{"kind":"shape","id":"sh/ep0byhgr","slide":2,"bbox":[676,556,9,9]}
+{"kind":"textbox","id":"sh/dorapcz6","slide":2,"text":"All leave-one-year and leave-one-attention-symbol means stay positive.","textPreview":"All leave-one-year and leave-one-attention-symbol means stay positive.","textChars":70,"textLines":1,"bbox":[698,548,482,66]}
+{"kind":"notes","id":"nt/0ujvry","slide":2,"text":"The matching pool contained only stock events in the triggered-proxy and strong-reclaim state. Matching occurred inside exact calendar year and was completed before outcomes were attached.\n\n[Sources]\n- Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/run_spec.csv\n- Local matching enrollment audit: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matching_enrollment_audit.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/85s2ix","slide":3,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":10}
+{"kind":"textbox","id":"sh/jidobuh8","slide":3,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/k3m5kzyt","slide":3,"name":"slide-title","text":"The matcher cannot make the two cohorts sufficiently comparable","textPreview":"The matcher cannot make the two cohorts sufficiently comparable","textChars":63,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/l4v6d4zy","slide":3,"name":"slide-subtitle","text":"Two of four pre-outcome variables remain beyond the frozen 0.25 balance limit.","textPreview":"Two of four pre-outcome variables remain beyond the frozen 0.25 balance limit.","textChars":78,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/adknepgb","slide":3,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/beto7uhw","slide":3,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/wf25gzyh","slide":3,"name":"page-number","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/u9o7q9gv","slide":3,"bbox":[974,184,254,168]}
+{"kind":"textbox","id":"sh/vaxojehg","slide":3,"text":"0.421","textPreview":"0.421","textChars":5,"textLines":1,"bbox":[994,218,214,48]}
+{"kind":"textbox","id":"sh/bq5gfy9o","slide":3,"text":"breach severity\npost-match SMD","textPreview":"breach severity | post-match SMD","textChars":30,"textLines":2,"bbox":[994,278,214,54]}
+{"kind":"shape","id":"sh/qpcf6d8j","slide":3,"bbox":[974,378,254,168]}
+{"kind":"textbox","id":"sh/dsnyh8ru","slide":3,"text":"0.331","textPreview":"0.331","textChars":5,"textLines":1,"bbox":[994,412,214,48]}
+{"kind":"textbox","id":"sh/crex83q9","slide":3,"text":"event timing\npost-match SMD","textPreview":"event timing | post-match SMD","textChars":27,"textLines":2,"bbox":[994,472,214,54]}
+{"kind":"textbox","id":"sh/ze5gji90","slide":3,"text":"2021 contributes 11 attention events but no same-year core comparator.","textPreview":"2021 contributes 11 attention events but no same-year core comparator.","textChars":70,"textLines":1,"bbox":[974,584,254,60]}
+{"kind":"image","id":"im/s3u18z2t","slide":3,"name":"","alt":"Absolute standardized mean differences before and after matching attention-stock events to core-stock events.","bbox":[46,154,900,510]}
+{"kind":"notes","id":"nt/85s2ix","slide":3,"text":"Close-location value and log abnormal dollar volume pass the balance limit. Breach severity and event date do not. Twenty pairs come from 2018, 2020, 2022, and 2023; 2021 attention events cannot enter because the core pool has no target event that year.\n\n[Sources]\n- Local matching balance: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matching_balance.csv\n- Local matching enrollment audit: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matching_enrollment_audit.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/ov7km2","slide":4,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":11}
+{"kind":"textbox","id":"sh/214ji14j","slide":4,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/p4v2tgna","slide":4,"name":"slide-title","text":"Within the available pairs, attention stocks perform worse by day five","textPreview":"Within the available pairs, attention stocks perform worse by day five","textChars":70,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/43m1kbmp","slide":4,"name":"slide-subtitle","text":"The direction is opposite the wide-atlas clue, with no one-sided evidence for a positive difference.","textPreview":"The direction is opposite the wide-atlas clue, with no one-sided evidence for a positive difference.","textChars":100,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/rqdkvq50","slide":4,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/qp4jml4v","slide":4,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/dsf2x0n6","slide":4,"name":"page-number","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/7ut0jm5w","slide":4,"bbox":[980,178,248,150]}
+{"kind":"textbox","id":"sh/69kjah4b","slide":4,"text":"−3.34 pp","textPreview":"−3.34 pp","textChars":8,"textLines":1,"bbox":[996,208,216,46]}
+{"kind":"textbox","id":"sh/8j6dgni9","slide":4,"text":"mean paired log-return\ndifference","textPreview":"mean paired log-return | difference","textChars":33,"textLines":2,"bbox":[996,266,216,48]}
+{"kind":"shape","id":"sh/9kfe98ju","slide":4,"bbox":[980,352,248,132]}
+{"kind":"textbox","id":"sh/mh4ved0j","slide":4,"text":"45%","textPreview":"45%","textChars":3,"textLines":1,"bbox":[996,380,216,42]}
+{"kind":"textbox","id":"sh/7ixw7i14","slide":4,"text":"attention win rate","textPreview":"attention win rate","textChars":18,"textLines":1,"bbox":[996,435,216,30]}
+{"kind":"shape","id":"sh/wn6xknil","slide":4,"bbox":[980,508,248,132]}
+{"kind":"textbox","id":"sh/h8fedsj6","slide":4,"text":"p = .818","textPreview":"p = .818","textChars":8,"textLines":1,"bbox":[996,536,216,42]}
+{"kind":"textbox","id":"sh/ulovid0f","slide":4,"text":"exact one-sided sign flip","textPreview":"exact one-sided sign flip","textChars":25,"textLines":1,"bbox":[996,591,216,30]}
+{"kind":"image","id":"im/5kbilsbq","slide":4,"name":"","alt":"Matched-pair day-five outcomes and the distribution of attention-minus-core return differences.","bbox":[42,154,910,514]}
+{"kind":"notes","id":"nt/ov7km2","slide":4,"text":"The exact test enumerates all 1,048,576 sign assignments for the 20 paired differences. The negative point estimate and large one-sided p-value show that the earlier positive attention-stock pattern does not reproduce in this matched sample.\n\n[Sources]\n- Local primary day-five test: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/primary_day5_test.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/83yz9b","slide":5,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":5}
+{"kind":"textbox","id":"sh/dofm94ni","slide":5,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/q1o3ypor","slide":5,"name":"slide-title","text":"The contextual path shows no hidden day-five recovery advantage","textPreview":"The contextual path shows no hidden day-five recovery advantage","textChars":63,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/r2x47u5c","slide":5,"name":"slide-subtitle","text":"Only session five is inferential; sessions 0–10 are displayed to understand shape.","textPreview":"Only session five is inferential; sessions 0–10 are displayed to understand shape.","textChars":82,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/0r6l4z6t","slide":5,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/1szmd4ne","slide":5,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/epo329on","slide":5,"name":"page-number","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"image","id":"im/qdwfu5kv","slide":5,"name":"","alt":"Matched attention and core median forward paths and paired mean differences from next-open session zero through ten.","bbox":[52,160,1176,492]}
+{"kind":"notes","id":"nt/83yz9b","slide":5,"text":"The paired mean difference is below zero around the predeclared day-five horizon. The surrounding path is descriptive context and was not searched to nominate another holding period.\n\n[Sources]\n- Local matched path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matched_path_summary.csv\n- Local primary day-five test: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/primary_day5_test.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/3ikp7s","slide":6,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":9}
+{"kind":"textbox","id":"sh/h0r2xk76","slide":6,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/ux0jm58f","slide":6,"name":"slide-title","text":"No single year or attention symbol creates the negative result","textPreview":"No single year or attention symbol creates the negative result","textChars":62,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/vy9kvap0","slide":6,"name":"slide-subtitle","text":"Every leave-one-out mean remains negative—the opposite of the frozen robustness condition.","textPreview":"Every leave-one-out mean remains negative—the opposite of the frozen robustness condition.","textChars":90,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/4nilszqh","slide":6,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/5ob21472","slide":6,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/i103qp8r","slide":6,"name":"page-number","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/sr2lwzqt","slide":6,"bbox":[1002,192,226,188]}
+{"kind":"textbox","id":"sh/dsb2547e","slide":6,"text":"0 / 4","textPreview":"0 / 4","textChars":5,"textLines":1,"bbox":[1018,228,194,48]}
+{"kind":"textbox","id":"sh/9wby1cr2","slide":6,"text":"leave-one-year means\nremain positive","textPreview":"leave-one-year means | remain positive","textChars":36,"textLines":2,"bbox":[1018,290,194,60]}
+{"kind":"shape","id":"sh/8bixs7ah","slide":6,"bbox":[1002,412,226,188]}
+{"kind":"textbox","id":"sh/na9gz29w","slide":6,"text":"0 / all","textPreview":"0 / all","textChars":7,"textLines":1,"bbox":[1018,448,194,48]}
+{"kind":"textbox","id":"sh/m90fqhsb","slide":6,"text":"leave-one-symbol means\nremain positive","textPreview":"leave-one-symbol means | remain positive","textChars":38,"textLines":2,"bbox":[1018,510,194,60]}
+{"kind":"image","id":"im/qh8ridsf","slide":6,"name":"","alt":"Leave-one-year-out and leave-one-attention-symbol-out paired mean differences at the day-five horizon.","bbox":[48,158,930,500]}
+{"kind":"notes","id":"nt/3ikp7s","slide":6,"text":"Omitting each matched calendar year in turn leaves a negative attention-minus-core mean. Omitting each attention symbol in turn also leaves a negative mean. This is robust against simple single-era and single-name explanations within the matched sample.\n\n[Sources]\n- Local leave-one-year-out sensitivity: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/leave_one_year_out.csv\n- Local leave-one-attention-symbol-out sensitivity: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/leave_one_attention_symbol_out.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/jd53u6","slide":7,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":15}
+{"kind":"textbox","id":"sh/9kza98bu","slide":7,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/mxorydc3","slide":7,"name":"slide-title","text":"The cohort label fails; the environment difference becomes the next question","textPreview":"The cohort label fails; the environment difference becomes the next question","textChars":76,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/nyhs7ito","slide":7,"name":"slide-subtitle","text":"We close this falsification without edge promotion or post-outcome matcher changes.","textPreview":"We close this falsification without edge promotion or post-outcome matcher changes.","textChars":83,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/wnq94na5","slide":7,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/xozadsbq","slide":7,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textPreview":"Adjusted daily · 2018–2023 TRAIN · matched falsification","textChars":56,"textLines":1,"bbox":[42,684,650,18]}
+{"kind":"textbox","id":"sh/al8r2dsz","slide":7,"name":"page-number","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/vmhsbitk","slide":7,"bbox":[52,182,560,326]}
+{"kind":"textbox","id":"sh/cr69sju1","slide":7,"text":"WHAT WE CAN SAY","textPreview":"WHAT WE CAN SAY","textChars":15,"textLines":1,"bbox":[82,214,360,24]}
+{"kind":"textbox","id":"sh/dsfq1obm","slide":7,"text":"The attention-stock advantage does not reproduce.","textPreview":"The attention-stock advantage does not reproduce.","textChars":49,"textLines":1,"bbox":[82,258,476,74]}
+{"kind":"shape","id":"sh/xczy9of2","slide":7,"bbox":[84,374,9,9]}
+{"kind":"textbox","id":"sh/wbqxgjeh","slide":7,"text":"Matched point estimate is negative, not merely weak.","textPreview":"Matched point estimate is negative, not merely weak.","textChars":52,"textLines":1,"bbox":[106,366,448,48]}
+{"kind":"shape","id":"sh/bahg7exc","slide":7,"bbox":[84,434,9,9]}
+{"kind":"textbox","id":"sh/a9ofe9wr","slide":7,"text":"All year and symbol leave-outs remain negative.","textPreview":"All year and symbol leave-outs remain negative.","textChars":47,"textLines":1,"bbox":[106,426,448,48]}
+{"kind":"shape","id":"sh/lgzydofe","slide":7,"bbox":[646,182,582,326]}
+{"kind":"textbox","id":"sh/kfqhkjet","slide":7,"text":"WHAT WE CANNOT SAY","textPreview":"WHAT WE CANNOT SAY","textChars":18,"textLines":1,"bbox":[676,214,360,24]}
+{"kind":"textbox","id":"sh/jehgbex8","slide":7,"text":"This is not a clean matched-estimand rejection.","textPreview":"This is not a clean matched-estimand rejection.","textChars":47,"textLines":1,"bbox":[676,258,500,74]}
+{"kind":"shape","id":"sh/yd8zi9wn","slide":7,"bbox":[678,374,9,9]}
+{"kind":"textbox","id":"sh/t4jyh8fa","slide":7,"text":"Severity and timing remain materially imbalanced.","textPreview":"Severity and timing remain materially imbalanced.","textChars":49,"textLines":1,"bbox":[700,366,478,48]}
+{"kind":"shape","id":"sh/sjaho3ep","slide":7,"bbox":[678,434,9,9]}
+{"kind":"textbox","id":"sh/sni1k7m1","slide":7,"text":"Changing the matcher now would be post-outcome rescue.","textPreview":"Changing the matcher now would be post-outcome rescue.","textChars":54,"textLines":1,"bbox":[700,426,478,48]}
+{"kind":"shape","id":"sh/doridc3m","slide":7,"bbox":[52,548,1176,108]}
+{"kind":"textbox","id":"sh/ql0jix4v","slide":7,"text":"NEXT SEPARATELY FROZEN SLICE","textPreview":"NEXT SEPARATELY FROZEN SLICE","textChars":28,"textLines":1,"bbox":[80,572,270,24]}
+{"kind":"textbox","id":"sh/rm90r25g","slide":7,"text":"Quantify the pre-outcome features that separate these event environments—starting with breach severity and calendar timing, then carefully chosen asset traits.","textPreview":"Quantify the pre-outcome features that separate these event environments—starting with breach severity and calendar timing, then carefull...","textChars":159,"textLines":1,"bbox":[360,566,830,66]}
+{"kind":"notes","id":"nt/jd53u6","slide":7,"text":"The earlier positive cohort clue is not promoted. The inability to balance the two pools is itself a finding: the target events occur in different environments. A new slice may quantify those separators, but its feature vocabulary and outcomes must be frozen separately.\n\n[Sources]\n- Local falsification status: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/falsification_status.csv\n- Local matching balance: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matching_balance.csv\n- Local primary day-five test: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/primary_day5_test.csv\n- Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/report.md\n[/Sources]"}
