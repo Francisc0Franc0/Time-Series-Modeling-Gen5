@@ -22,6 +22,9 @@ testthat::test_that("the learning-first contract is frozen", {
   testthat::expect_equal(contract$discovery_band, c(-0.12, -0.08))
   testthat::expect_equal(contract$forward_sessions, c(1L, 3L, 5L))
   testthat::expect_equal(length(contract$symbols), 10L)
+  path_contract <- edl_ms01_validate_forward_path_contract()
+  testthat::expect_equal(path_contract$horizons, 0:10)
+  testthat::expect_equal(length(path_contract$focal_categories), 4L)
 })
 
 testthat::test_that("the proxy trigger and reclaim geometry are explicit", {
@@ -78,4 +81,38 @@ testthat::test_that("event tapes are deterministic and not outcome-selected", {
   selected <- edl_ms01_select_event_tapes(events)
   testthat::expect_equal(selected$symbol, rep("A", 4L))
   testthat::expect_equal(selected$event_category, categories)
+})
+
+testthat::test_that("forward paths remain anchored to the next open", {
+  bars <- edl_ms01_test_bars()
+  ledger <- edl_ms01_add_forward_paths(edl_ms01_build_symbol_ledger(bars))
+  testthat::expect_equal(ledger$path_0_open_log_return[[10L]], 0)
+  testthat::expect_equal(
+    ledger$path_1_open_log_return[[10L]],
+    log(bars$open[[12L]] / bars$open[[11L]])
+  )
+  testthat::expect_equal(
+    ledger$path_10_open_log_return[[10L]],
+    log(bars$open[[21L]] / bars$open[[11L]])
+  )
+})
+
+testthat::test_that("path anatomy keeps only the four frozen focal categories", {
+  bars <- edl_ms01_test_bars(n = 40L)
+  ledger <- edl_ms01_add_forward_paths(edl_ms01_build_symbol_ledger(bars))
+  ledger$event_category[10:14] <- c(
+    "TRIGGERED_PROXY__STRONG_RECLAIM",
+    "TRIGGERED_PROXY__WEAK_CLOSE",
+    "NEAR_MISS__STRONG_RECLAIM",
+    "NEAR_MISS__WEAK_CLOSE",
+    "TRIGGERED_PROXY__MIDDLE_CLOSE"
+  )
+  paths <- edl_ms01_forward_path_long(ledger[10:14, ])
+  testthat::expect_equal(length(unique(paths$event_category)), 4L)
+  testthat::expect_false(any(paths$event_category == "TRIGGERED_PROXY__MIDDLE_CLOSE"))
+  summary <- edl_ms01_summarize_forward_paths(paths)
+  testthat::expect_true(all(c(
+    "n", "mean_open_log_return", "median_open_log_return",
+    "q25_open_log_return", "q75_open_log_return"
+  ) %in% names(summary)))
 })

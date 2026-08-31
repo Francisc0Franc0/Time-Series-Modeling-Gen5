@@ -1,0 +1,81 @@
+{"kind":"deck","id":"pr/yab4or","name":"Deck"}
+{"kind":"layout","layoutId":"46d8b051-bac2-4b96-a862-2a2b8e8d152a","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"df912e98-3588-4f10-ae3a-15bfa584b144","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/jve2ha","slide":1,"title":"EDGE DISCOVERY LAB · SECOND SLICE","textShapes":8}
+{"kind":"shape","id":"sh/upkfyp4r","slide":1,"bbox":[0,0,24,720]}
+{"kind":"textbox","id":"sh/hsbyt4ni","slide":1,"text":"EDGE DISCOVERY LAB · SECOND SLICE","textPreview":"EDGE DISCOVERY LAB · SECOND SLICE","textChars":33,"textLines":1,"bbox":[72,72,520,26]}
+{"kind":"textbox","id":"sh/wr2x0zmx","slide":1,"text":"From four tapes\nto 646 paths","textPreview":"From four tapes | to 646 paths","textChars":28,"textLines":2,"bbox":[72,145,820,188]}
+{"kind":"textbox","id":"sh/7m9gnu5g","slide":1,"text":"Does the possible five-session recovery survive contact with the full frozen event surface?","textPreview":"Does the possible five-session recovery survive contact with the full frozen event surface?","textChars":91,"textLines":1,"bbox":[76,366,760,84]}
+{"kind":"shape","id":"sh/ml0fup4v","slide":1,"bbox":[934,132,246,246]}
+{"kind":"textbox","id":"sh/9orypkn6","slide":1,"text":"1→5","textPreview":"1→5","textChars":3,"textLines":1,"bbox":[950,192,214,80]}
+{"kind":"textbox","id":"sh/8nixwfml","slide":1,"text":"sessions\nunder the microscope","textPreview":"sessions | under the microscope","textChars":29,"textLines":2,"bbox":[954,280,206,66]}
+{"kind":"shape","id":"sh/zi9wja54","slide":1,"bbox":[72,526,1108,2]}
+{"kind":"textbox","id":"sh/yx0fq54j","slide":1,"text":"Preserved","textPreview":"Preserved","textChars":9,"textLines":1,"bbox":[72,562,160,26]}
+{"kind":"textbox","id":"sh/c3e1s3at","slide":1,"text":"All event identities, next-open timing, the four trigger/reclaim groups, and the sealed 2023 endpoint.","textPreview":"All event identities, next-open timing, the four trigger/reclaim groups, and the sealed 2023 endpoint.","textChars":102,"textLines":1,"bbox":[250,554,900,62]}
+{"kind":"textbox","id":"sh/d4n218re","slide":1,"text":"DESCRIPTIVE ANATOMY · NO HORIZON SELECTION · NO EDGE CLAIM","textPreview":"DESCRIPTIVE ANATOMY · NO HORIZON SELECTION · NO EDGE CLAIM","textChars":58,"textLines":1,"bbox":[72,665,760,20]}
+{"kind":"notes","id":"nt/jve2ha","slide":1,"text":"This slice replaces the four illustrative tapes with the full frozen event surface. Five sessions is the focal question; ten sessions is displayed only to reveal whether the path persists or reverses.\n\n[Sources]\n- Local forward-path packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md\n- Local path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/forward_path_summary.csv\n- Local concentration tables: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/symbol_concentration.csv and calendar_concentration.csv\n- Intraday branch bookmark: edge_discovery_lab/docs/EDL_MS_01_INTRADAY_BRANCHES.md\n[/Sources]"}
+{"kind":"slide","id":"sl/wkz5e3","slide":2,"title":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textShapes":4}
+{"kind":"textbox","id":"sh/f6poz29g","slide":2,"text":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textChars":45,"textLines":1,"bbox":[48,26,650,22]}
+{"kind":"textbox","id":"sh/g7yp87q1","slide":2,"text":"The five-session hump appears—but only in a small, unstable group","textPreview":"The five-session hump appears—but only in a small, unstable group","textChars":65,"textLines":1,"bbox":[48,58,1184,64]}
+{"kind":"shape","id":"sh/187q1cr6","slide":2,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/29g7ah8r","slide":2,"text":"646 frozen events · 2018–2023 TRAIN · next-open clock","textPreview":"646 frozen events · 2018–2023 TRAIN · next-open clock","textChars":53,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/3ap83m9c","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"image","id":"im/hsv6d4zu","slide":2,"name":"","alt":"Four-panel forward-path anatomy with individual event paths, interquartile ribbons, and median trajectories.","bbox":[42,148,1196,510]}
+{"kind":"notes","id":"nt/wkz5e3","slide":2,"text":"Triggered strong reclaims reach a positive median around session five and then fade. The other categories do not form a clean threshold-by-reclaim ordering. Panel y-ranges clip extreme individual paths for legibility; all summaries use the full observations.\n\n[Sources]\n- Local forward-path packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md\n- Local path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/forward_path_summary.csv\n- Local concentration tables: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/symbol_concentration.csv and calendar_concentration.csv\n- Intraday branch bookmark: edge_discovery_lab/docs/EDL_MS_01_INTRADAY_BRANCHES.md\n[/Sources]"}
+{"kind":"slide","id":"sl/8r8r6v","slide":3,"title":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textShapes":4}
+{"kind":"textbox","id":"sh/yhsvi9gz","slide":3,"text":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textChars":45,"textLines":1,"bbox":[48,26,650,22]}
+{"kind":"textbox","id":"sh/lk3edozq","slide":3,"text":"The most appealing path is also the most concentrated","textPreview":"The most appealing path is also the most concentrated","textChars":53,"textLines":1,"bbox":[48,58,1184,64]}
+{"kind":"shape","id":"sh/kjadkjy5","slide":3,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/be1c7eho","slide":3,"text":"646 frozen events · 2018–2023 TRAIN · next-open clock","textPreview":"646 frozen events · 2018–2023 TRAIN · next-open clock","textChars":53,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/adsve9g3","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"image","id":"im/4b2h8bit","slide":3,"name":"","alt":"Heatmaps showing the symbol and calendar-year shares of each focal Rule 201 path group.","bbox":[56,150,1168,500]}
+{"kind":"notes","id":"nt/8r8r6v","slide":3,"text":"AMC and CVNA supply 67 percent of the 24 triggered strong-reclaim observations. The two largest years, 2020 and 2022, also supply 67 percent. This is a warning about the discovery surface, not a reason to fit exclusions.\n\n[Sources]\n- Local forward-path packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md\n- Local path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/forward_path_summary.csv\n- Local concentration tables: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/symbol_concentration.csv and calendar_concentration.csv\n- Intraday branch bookmark: edge_discovery_lab/docs/EDL_MS_01_INTRADAY_BRANCHES.md\n[/Sources]"}
+{"kind":"slide","id":"sl/wxrbw6","slide":4,"title":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textShapes":14}
+{"kind":"textbox","id":"sh/0vm9kz6l","slide":4,"text":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textChars":45,"textLines":1,"bbox":[48,26,650,22]}
+{"kind":"textbox","id":"sh/zudsre50","slide":4,"text":"The recovery clue survives; the proposed interaction does not","textPreview":"The recovery clue survives; the proposed interaction does not","textChars":61,"textLines":1,"bbox":[48,58,1184,64]}
+{"kind":"shape","id":"sh/ytkri9ov","slide":4,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/dsbap4na","slide":4,"text":"646 frozen events · 2018–2023 TRAIN · next-open clock","textPreview":"646 frozen events · 2018–2023 TRAIN · next-open clock","textChars":53,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/cr29gz6p","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/bqtsnu54","slide":4,"bbox":[58,174,558,402]}
+{"kind":"textbox","id":"sh/qpkrepoj","slide":4,"text":"WHAT REMAINS INTERESTING","textPreview":"WHAT REMAINS INTERESTING","textChars":24,"textLines":1,"bbox":[88,204,360,28]}
+{"kind":"textbox","id":"sh/hofa1one","slide":4,"text":"+3.7%","textPreview":"+3.7%","textChars":5,"textLines":1,"bbox":[88,258,220,58]}
+{"kind":"textbox","id":"sh/wn6tsjmt","slide":4,"text":"triggered/strong median at session five","textPreview":"triggered/strong median at session five","textChars":39,"textLines":1,"bbox":[88,320,450,38]}
+{"kind":"shape","id":"sh/m983uh0j","slide":4,"bbox":[90,394,9,9]}
+{"kind":"textbox","id":"sh/nahk3mh4","slide":4,"text":"The path rises mostly between sessions three and five.","textPreview":"The path rises mostly between sessions three and five.","textChars":54,"textLines":1,"bbox":[114,386,448,62]}
+{"kind":"shape","id":"sh/8balwrip","slide":4,"bbox":[90,470,9,9]}
+{"kind":"textbox","id":"sh/9cj25wza","slide":4,"text":"It fades to −1.1% by session ten—consistent with a temporary hump, not persistent drift.","textPreview":"It fades to −1.1% by session ten—consistent with a temporary hump, not persistent drift.","textChars":88,"textLines":1,"bbox":[114,462,448,62]}
+{"kind":"shape","id":"sh/e58jqh0n","slide":4,"bbox":[648,174,574,402]}
+{"kind":"textbox","id":"sh/z6hkzm18","slide":4,"text":"WHY IT STAYS A CLUE","textPreview":"WHY IT STAYS A CLUE","textChars":19,"textLines":1,"bbox":[678,204,350,28]}
+{"kind":"shape","id":"sh/07qlsrid","slide":4,"bbox":[680,278,9,9]}
+{"kind":"textbox","id":"sh/18z21czy","slide":4,"text":"Only 24 observations; the mean is negative and the interquartile band is wide.","textPreview":"Only 24 observations; the mean is negative and the interquartile band is wide.","textChars":78,"textLines":1,"bbox":[704,270,462,62]}
+{"kind":"shape","id":"sh/i1s3210r","slide":4,"bbox":[680,370,9,9]}
+{"kind":"textbox","id":"sh/j2lkb6hc","slide":4,"text":"Two symbols and two calendar years each supply 67% of the group.","textPreview":"Two symbols and two calendar years each supply 67% of the group.","textChars":64,"textLines":1,"bbox":[704,362,462,62]}
+{"kind":"shape","id":"sh/fmd03yho","slide":4,"bbox":[680,462,9,9]}
+{"kind":"textbox","id":"sh/ul4zutg3","slide":4,"text":"Near-miss strong reclaims and triggered weak closes also rise at later horizons.","textPreview":"Near-miss strong reclaims and triggered weak closes also rise at later horizons.","textChars":80,"textLines":1,"bbox":[704,454,462,62]}
+{"kind":"shape","id":"sh/h8vi58zu","slide":4,"bbox":[58,604,1164,50]}
+{"kind":"textbox","id":"sh/g7mhw3y9","slide":4,"text":"READOUT: no clean Rule 201 × reclaim ordering is visible yet","textPreview":"READOUT: no clean Rule 201 × reclaim ordering is visible yet","textChars":60,"textLines":1,"bbox":[84,616,1112,26]}
+{"kind":"notes","id":"nt/wxrbw6","slide":4,"text":"The path anatomy preserves an interesting temporary-recovery shape but weakens the original interaction story. No horizon is selected from this visual.\n\n[Sources]\n- Local forward-path packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md\n- Local path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/forward_path_summary.csv\n- Local concentration tables: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/symbol_concentration.csv and calendar_concentration.csv\n- Intraday branch bookmark: edge_discovery_lab/docs/EDL_MS_01_INTRADAY_BRANCHES.md\n[/Sources]"}
+{"kind":"slide","id":"sl/gig5f3","slide":5,"title":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textShapes":14}
+{"kind":"textbox","id":"sh/re5kfmpo","slide":5,"text":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01 · FORWARD PATH","textChars":45,"textLines":1,"bbox":[48,26,650,22]}
+{"kind":"textbox","id":"sh/cfelorqt","slide":5,"text":"Two intraday questions now have separate clocks","textPreview":"Two intraday questions now have separate clocks","textChars":47,"textLines":1,"bbox":[48,58,1184,64]}
+{"kind":"shape","id":"sh/dgnmhw7e","slide":5,"bbox":[48,130,1184,2]}
+{"kind":"textbox","id":"sh/ehw3q18z","slide":5,"text":"646 frozen events · 2018–2023 TRAIN · next-open clock","textPreview":"646 frozen events · 2018–2023 TRAIN · next-open clock","textChars":53,"textLines":1,"bbox":[48,685,720,18]}
+{"kind":"textbox","id":"sh/zi54j6pk","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1140,682,92,20]}
+{"kind":"shape","id":"sh/0jylsbq5","slide":5,"bbox":[58,176,548,340]}
+{"kind":"textbox","id":"sh/147mlg7q","slide":5,"text":"A · COMPLETED EVENT","textPreview":"A · COMPLETED EVENT","textChars":19,"textLines":1,"bbox":[88,206,330,28]}
+{"kind":"textbox","id":"sh/m5g3u18b","slide":5,"text":"When should the next trade enter?","textPreview":"When should the next trade enter?","textChars":33,"textLines":1,"bbox":[88,258,460,62]}
+{"kind":"shape","id":"sh/n6p4n6pg","slide":5,"bbox":[90,358,9,9]}
+{"kind":"textbox","id":"sh/vmp8jax0","slide":5,"text":"Daily trigger and final close-location value are already known.","textPreview":"Daily trigger and final close-location value are already known.","textChars":63,"textLines":1,"bbox":[114,350,440,62]}
+{"kind":"shape","id":"sh/ulg7q5gf","slide":5,"bbox":[90,434,9,9]}
+{"kind":"textbox","id":"sh/h8rqlkf6","slide":5,"text":"Future 30-minute study compares next-open with later completed-bar entries.","textPreview":"Future 30-minute study compares next-open with later completed-bar entries.","textChars":75,"textLines":1,"bbox":[114,426,440,62]}
+{"kind":"shape","id":"sh/wnypsfyl","slide":5,"bbox":[642,176,580,340]}
+{"kind":"textbox","id":"sh/7ipofax4","slide":5,"text":"B · LIVE BREACH / RECLAIM","textPreview":"B · LIVE BREACH / RECLAIM","textChars":25,"textLines":1,"bbox":[672,206,380,28]}
+{"kind":"textbox","id":"sh/mhg7m5gj","slide":5,"text":"Can a same-day signal be causal?","textPreview":"Can a same-day signal be causal?","textChars":32,"textLines":1,"bbox":[672,258,490,62]}
+{"kind":"shape","id":"sh/9k76hkfu","slide":5,"bbox":[674,358,9,9]}
+{"kind":"textbox","id":"sh/8jypofy9","slide":5,"text":"Threshold is crossed intraday; recovery must be defined only from completed bars.","textPreview":"Threshold is crossed intraday; recovery must be defined only from completed bars.","textChars":81,"textLines":1,"bbox":[698,350,468,62]}
+{"kind":"shape","id":"sh/re98rux8","slide":5,"bbox":[674,434,9,9]}
+{"kind":"textbox","id":"sh/6d07ypgn","slide":5,"text":"Final daily close-location value is forbidden until the session ends.","textPreview":"Final daily close-location value is forbidden until the session ends.","textChars":69,"textLines":1,"bbox":[698,426,468,62]}
+{"kind":"shape","id":"sh/294bqt0v","slide":5,"bbox":[58,558,1164,88]}
+{"kind":"textbox","id":"sh/3adszyhg","slide":5,"text":"CURRENT STATUS","textPreview":"CURRENT STATUS","textChars":14,"textLines":1,"bbox":[84,582,190,26]}
+{"kind":"textbox","id":"sh/obmts3i1","slide":5,"text":"Daily path anatomy complete · both intraday branches remain unopened","textPreview":"Daily path anatomy complete · both intraday branches remain unopened","textChars":68,"textLines":1,"bbox":[280,575,890,40]}
+{"kind":"notes","id":"nt/gig5f3","slide":5,"text":"Branch A is the operator's clarification: intraday entry timing after the completed daily event. Branch B is the separate live same-day signal proposed during the huddle. Neither is executed in this slice.\n\n[Sources]\n- Local forward-path packet: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md\n- Local path summary: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/forward_path_summary.csv\n- Local concentration tables: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/symbol_concentration.csv and calendar_concentration.csv\n- Intraday branch bookmark: edge_discovery_lab/docs/EDL_MS_01_INTRADAY_BRANCHES.md\n[/Sources]"}

@@ -89,3 +89,35 @@ Artifacts:
 The next decision will be made after inspecting the first scatterplot and event
 tapes. Do not widen the universe, add inference, or query post-2023 outcomes
 automatically.
+
+## Forward-Path Follow-up
+
+The frozen 646-event surface was decomposed from the next-open entry through
+sessions 1-5, with session 10 retained as context. Four panels preserve the
+trigger/near-miss by strong/weak-close comparison; middle-close events remain
+in the event ledger but are not promoted into the focal mechanism panels.
+
+The most interesting descriptive shape is the 24-event triggered/strong-reclaim
+group: its median path reaches approximately +3.7% at session five and falls
+back to approximately -1.1% by session ten. Its mean is negative at both
+checkpoints, its dispersion is wide, and AMC plus CVNA supply 67% of those
+events. This is a possible temporary-recovery shape, not a holding-period
+selection or edge claim.
+
+The other groups do not produce a simple threshold/reclaim ordering. In
+particular, the near-miss/strong-reclaim median continues upward through session
+ten, while triggered/weak-close events are also positive at the ten-session
+median. The current visual therefore does not isolate the proposed Rule 201
+interaction.
+
+Artifacts:
+
+- runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830
+- visuals/rule201_forward_path_anatomy.png
+- visuals/rule201_forward_path_concentration.png
+
+Status: FORWARD_PATH_ANATOMY_COMPLETE_NO_EDGE_CLAIM.
+
+Two later intraday questions are kept separate in
+docs/EDL_MS_01_INTRADAY_BRANCHES.md: entry timing after a completed daily
+event, and a live same-day breach/reclaim signal.

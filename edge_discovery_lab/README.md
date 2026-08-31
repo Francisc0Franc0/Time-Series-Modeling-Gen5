@@ -27,3 +27,9 @@ but closes strongly, does the following-session geometry look different from a
 similarly severe near miss?
 
 See `docs/EDL_MS_01_RULE201_RECLAIM.md`.
+
+The next-open forward-path anatomy and the two distinct intraday branches are
+documented under the same candidate:
+
+- docs/EDL_MS_01_RULE201_RECLAIM.md
+- docs/EDL_MS_01_INTRADAY_BRANCHES.md

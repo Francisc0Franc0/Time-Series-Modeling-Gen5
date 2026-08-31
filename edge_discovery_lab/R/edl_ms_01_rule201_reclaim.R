@@ -19,6 +19,41 @@ edl_ms01_contract <- function() {
   )
 }
 
+edl_ms01_forward_path_contract <- function() {
+  list(
+    study_id = "EDL_MS_01_RULE201_FORWARD_PATH_01",
+    horizons = 0:10,
+    display_horizons = c(1L, 2L, 3L, 4L, 5L, 10L),
+    focal_categories = c(
+      "TRIGGERED_PROXY__STRONG_RECLAIM",
+      "TRIGGERED_PROXY__WEAK_CLOSE",
+      "NEAR_MISS__STRONG_RECLAIM",
+      "NEAR_MISS__WEAK_CLOSE"
+    )
+  )
+}
+
+edl_ms01_validate_forward_path_contract <- function(
+  contract = edl_ms01_forward_path_contract()
+) {
+  if (!identical(contract$horizons, 0:10)) {
+    edl_ms01_stop("The forward-path anatomy horizons changed.")
+  }
+  if (!identical(contract$display_horizons, c(1L, 2L, 3L, 4L, 5L, 10L))) {
+    edl_ms01_stop("The displayed forward-path horizons changed.")
+  }
+  expected_categories <- c(
+    "TRIGGERED_PROXY__STRONG_RECLAIM",
+    "TRIGGERED_PROXY__WEAK_CLOSE",
+    "NEAR_MISS__STRONG_RECLAIM",
+    "NEAR_MISS__WEAK_CLOSE"
+  )
+  if (!identical(contract$focal_categories, expected_categories)) {
+    edl_ms01_stop("The four focal threshold/reclaim categories changed.")
+  }
+  contract
+}
+
 edl_ms01_validate_contract <- function(contract = edl_ms01_contract()) {
   expected <- c(
     "TSLA", "AMD", "NVDA",
@@ -118,6 +153,103 @@ edl_ms01_build_ledger <- function(bars, contract = edl_ms01_contract()) {
     x <- bars[as.character(bars$symbol) == symbol, , drop = FALSE]
     if (!nrow(x)) edl_ms01_stop(paste("Missing frozen symbol", symbol))
     edl_ms01_build_symbol_ledger(x, contract)
+  })
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out
+}
+
+edl_ms01_add_forward_paths <- function(
+  ledger,
+  path_contract = edl_ms01_forward_path_contract()
+) {
+  path_contract <- edl_ms01_validate_forward_path_contract(path_contract)
+  required <- c("symbol", "session_date", "open", "entry_open")
+  missing <- setdiff(required, names(ledger))
+  if (length(missing)) {
+    edl_ms01_stop(paste("Missing forward-path columns:", paste(missing, collapse = ", ")))
+  }
+  rows <- lapply(unique(as.character(ledger$symbol)), function(symbol) {
+    x <- ledger[as.character(ledger$symbol) == symbol, , drop = FALSE]
+    x <- x[order(as.Date(x$session_date)), , drop = FALSE]
+    if (anyDuplicated(as.Date(x$session_date))) {
+      edl_ms01_stop(paste("Duplicate sessions detected for", symbol))
+    }
+    for (h in path_contract$horizons) {
+      exit_open <- edl_ms01_lead(x$open, h + 1L)
+      exit_session <- edl_ms01_lead(x$session_date, h + 1L)
+      x[[paste0("path_exit_", h, "_session")]] <- exit_session
+      x[[paste0("path_", h, "_open_log_return")]] <-
+        log(exit_open / x$entry_open)
+    }
+    x
+  })
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out
+}
+
+edl_ms01_forward_path_long <- function(
+  events,
+  path_contract = edl_ms01_forward_path_contract()
+) {
+  path_contract <- edl_ms01_validate_forward_path_contract(path_contract)
+  required <- c("symbol", "session_date", "event_category")
+  missing <- setdiff(required, names(events))
+  if (length(missing)) {
+    edl_ms01_stop(paste("Missing event columns:", paste(missing, collapse = ", ")))
+  }
+  events <- events[
+    events$event_category %in% path_contract$focal_categories, , drop = FALSE
+  ]
+  rows <- lapply(path_contract$horizons, function(h) {
+    return_column <- paste0("path_", h, "_open_log_return")
+    if (!return_column %in% names(events)) {
+      edl_ms01_stop(paste("Missing forward-path outcome", return_column))
+    }
+    data.frame(
+      symbol = as.character(events$symbol),
+      session_date = as.Date(events$session_date),
+      event_category = as.character(events$event_category),
+      horizon = as.integer(h),
+      open_log_return = as.numeric(events[[return_column]]),
+      stringsAsFactors = FALSE
+    )
+  })
+  out <- do.call(rbind, rows)
+  out <- out[is.finite(out$open_log_return), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+edl_ms01_summarize_forward_paths <- function(
+  path_long,
+  path_contract = edl_ms01_forward_path_contract()
+) {
+  path_contract <- edl_ms01_validate_forward_path_contract(path_contract)
+  required <- c("event_category", "horizon", "open_log_return")
+  missing <- setdiff(required, names(path_long))
+  if (length(missing)) {
+    edl_ms01_stop(paste("Missing path-summary columns:", paste(missing, collapse = ", ")))
+  }
+  keys <- unique(path_long[c("event_category", "horizon")])
+  keys <- keys[order(match(keys$event_category, path_contract$focal_categories), keys$horizon), ]
+  rows <- lapply(seq_len(nrow(keys)), function(i) {
+    category <- keys$event_category[[i]]
+    horizon <- keys$horizon[[i]]
+    x <- path_long$open_log_return[
+      path_long$event_category == category & path_long$horizon == horizon
+    ]
+    data.frame(
+      event_category = category,
+      horizon = as.integer(horizon),
+      n = length(x),
+      mean_open_log_return = mean(x),
+      median_open_log_return = stats::median(x),
+      q25_open_log_return = as.numeric(stats::quantile(x, 0.25, names = FALSE)),
+      q75_open_log_return = as.numeric(stats::quantile(x, 0.75, names = FALSE)),
+      stringsAsFactors = FALSE
+    )
   })
   out <- do.call(rbind, rows)
   rownames(out) <- NULL
