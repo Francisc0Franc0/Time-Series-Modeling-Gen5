@@ -32,6 +32,8 @@ const visuals = {
   sensitivity: path.join(packetRoot, "visuals", "attention_falsification_sensitivity.png"),
 };
 const sources = {
+  pilot: "Local forward-path report: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_forward_path_20260830/report.md",
+  wide: "Local wide-atlas report: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/report.md",
   report: "Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/report.md",
   spec: "Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/run_spec.csv",
   enrollment: "Local matching enrollment audit: runs/research_workbench/edge_discovery_lab/edl_ms_01_attention_falsification_20260831/matching_enrollment_audit.csv",
@@ -354,6 +356,45 @@ async function main() {
     addNotes(slide,
       "The earlier positive cohort clue is not promoted. The inability to balance the two pools is itself a finding: the target events occur in different environments. A new slice may quantify those separators, but its feature vocabulary and outcomes must be frozen separately.",
       [sources.status, sources.balance, sources.primary, sources.report],
+    );
+  }
+
+  // 8 — plain-English closeout for the complete Rule 201 sequence.
+  {
+    const slide = p.slides.add();
+    slide.background.fill = C.white;
+    addHeader(slide, "Rule 201, in plain English: the rebound clue did not generalize", 8,
+      "The study improved our diagnosis without producing a tradable rule.");
+    addRect(slide, { left: 52, top: 182, width: 560, height: 326 }, C.paleRed);
+    addText(slide, "THE STORY", { left: 82, top: 214, width: 360, height: 24 }, {
+      fontSize: 16, bold: true, color: C.red,
+    });
+    addText(slide, "A dramatic drop and strong close looked promising.", {
+      left: 82, top: 258, width: 476, height: 74,
+    }, { fontSize: 31, bold: true, color: C.ink });
+    addBullet(slide, "Pilot: median rebound near +3.7% by session five.", { left: 84, top: 366, width: 470, height: 48 }, C.red, 20);
+    addBullet(slide, "Balanced 88-stock core: roughly −0.24%.", { left: 84, top: 426, width: 470, height: 48 }, C.red, 20);
+    addRect(slide, { left: 646, top: 182, width: 582, height: 326 }, C.paleBlue);
+    addText(slide, "THE VERDICT", { left: 676, top: 214, width: 360, height: 24 }, {
+      fontSize: 16, bold: true, color: C.blue,
+    });
+    addText(slide, "The attention-stock explanation failed its follow-up.", {
+      left: 676, top: 258, width: 500, height: 74,
+    }, { fontSize: 31, bold: true, color: C.ink });
+    addBullet(slide, "Matched difference: −3.34 pp; one-sided p = .818.", { left: 678, top: 366, width: 500, height: 48 }, C.blue, 20);
+    addBullet(slide, "Balance also failed: the cohorts came from different environments.", { left: 678, top: 426, width: 500, height: 48 }, C.blue, 20);
+    addRect(slide, { left: 52, top: 548, width: 1176, height: 108 }, C.navy);
+    addText(slide, "CURRENT STOP", { left: 80, top: 572, width: 270, height: 24 }, {
+      fontSize: 15, bold: true, color: C.paleBlue,
+    });
+    addText(slide,
+      "Do not trade the label. Carry forward the question: which measurable, pre-outcome features separate rebound environments from non-rebound environments?",
+      { left: 360, top: 566, width: 830, height: 66 },
+      { fontSize: 21, bold: true, color: C.white },
+    );
+    addNotes(slide,
+      "This slide summarizes the complete Rule 201 investigation in plain English. The original ten-stock pilot showed a temporary median rebound near session five. The balanced 88-stock core did not reproduce it. The apparent attention-stock explanation then reversed in the frozen matched follow-up, while the match-balance gate also failed. The result is a better-defined research question, not a tradable rule.",
+      [sources.pilot, sources.wide, sources.report],
     );
   }
 
