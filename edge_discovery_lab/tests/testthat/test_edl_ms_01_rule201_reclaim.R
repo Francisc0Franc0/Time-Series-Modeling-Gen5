@@ -25,6 +25,47 @@ testthat::test_that("the learning-first contract is frozen", {
   path_contract <- edl_ms01_validate_forward_path_contract()
   testthat::expect_equal(path_contract$horizons, 0:10)
   testthat::expect_equal(length(path_contract$focal_categories), 4L)
+  wide_contract <- edl_ms01_validate_wide_atlas_contract()
+  testthat::expect_equal(wide_contract$registry_size, 129L)
+  testthat::expect_equal(wide_contract$core_stock_count, 88L)
+  testthat::expect_equal(wide_contract$horizons, 0:10)
+})
+
+edl_ms01_test_registry <- function() {
+  cohorts <- c(
+    rep("GICS_CORE", 88L),
+    rep("ATTENTION_SUPPLEMENT", 16L),
+    rep("EQUITY_ETF_CONTROL", 15L),
+    rep("NON_EQUITY_CONTROL", 10L)
+  )
+  data.frame(
+    atlas_order = seq_len(129L),
+    symbol = sprintf("S%03d", seq_len(129L)),
+    atlas_cohort = cohorts,
+    sector = c(
+      rep("Core sector", 88L), rep("Attention / meme", 16L),
+      rep("Broad / sector ETF", 15L), rep("Non-equity proxy", 10L)
+    ),
+    instrument_type = ifelse(
+      cohorts %in% c("GICS_CORE", "ATTENTION_SUPPLEMENT"), "Stock", "ETF"
+    ),
+    sector_balance_eligible = cohorts == "GICS_CORE",
+    stringsAsFactors = FALSE
+  )
+}
+
+testthat::test_that("wide-atlas registry cohorts remain explicit and disjoint", {
+  registry <- edl_ms01_validate_wide_atlas_registry(edl_ms01_test_registry())
+  testthat::expect_equal(nrow(registry), 129L)
+  testthat::expect_equal(
+    table(edl_ms01_wide_atlas_group(registry$atlas_cohort)),
+    table(c(
+      rep("Core stocks (88)", 88L),
+      rep("Attention stocks (16)", 16L),
+      rep("Equity ETFs (15)", 15L),
+      rep("Non-equity ETFs (10)", 10L)
+    ))
+  )
 })
 
 testthat::test_that("the proxy trigger and reclaim geometry are explicit", {
@@ -115,4 +156,23 @@ testthat::test_that("path anatomy keeps only the four frozen focal categories", 
     "n", "mean_open_log_return", "median_open_log_return",
     "q25_open_log_return", "q75_open_log_return"
   ) %in% names(summary)))
+})
+
+testthat::test_that("equal-symbol paths do not let event-rich symbols dominate", {
+  paths <- data.frame(
+    atlas_group = "Core stocks (88)",
+    symbol = c("A", "A", "A", "B"),
+    event_category = "TRIGGERED_PROXY__STRONG_RECLAIM",
+    horizon = 5L,
+    open_log_return = c(0.30, 0.30, 0.30, -0.10),
+    stringsAsFactors = FALSE
+  )
+  out <- edl_ms01_equal_symbol_path_summary(paths)
+  testthat::expect_equal(nrow(out$symbol_paths), 2L)
+  testthat::expect_equal(out$summary$symbol_n, 2L)
+  testthat::expect_equal(out$summary$equal_symbol_mean, 0.10)
+  testthat::expect_false(isTRUE(all.equal(
+    out$summary$equal_symbol_mean,
+    mean(paths$open_log_return)
+  )))
 })

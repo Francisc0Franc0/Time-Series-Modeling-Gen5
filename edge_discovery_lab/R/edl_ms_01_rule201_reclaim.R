@@ -33,6 +33,208 @@ edl_ms01_forward_path_contract <- function() {
   )
 }
 
+edl_ms01_wide_atlas_contract <- function() {
+  list(
+    study_id = "EDL_MS_01_RULE201_WIDE_ATLAS_01",
+    registry_size = 129L,
+    core_stock_count = 88L,
+    attention_stock_count = 16L,
+    equity_etf_count = 15L,
+    non_equity_etf_count = 10L,
+    analysis_start = as.Date("2018-01-02"),
+    analysis_end = as.Date("2023-12-29"),
+    threshold = -0.10,
+    discovery_band = c(-0.12, -0.08),
+    strong_reclaim = 0.75,
+    weak_close = 0.25,
+    horizons = 0:10,
+    display_horizons = c(1L, 2L, 3L, 4L, 5L, 10L),
+    focal_categories = c(
+      "TRIGGERED_PROXY__STRONG_RECLAIM",
+      "TRIGGERED_PROXY__WEAK_CLOSE",
+      "NEAR_MISS__STRONG_RECLAIM",
+      "NEAR_MISS__WEAK_CLOSE"
+    )
+  )
+}
+
+edl_ms01_validate_wide_atlas_contract <- function(
+  contract = edl_ms01_wide_atlas_contract()
+) {
+  expected_counts <- c(129L, 88L, 16L, 15L, 10L)
+  observed_counts <- as.integer(c(
+    contract$registry_size,
+    contract$core_stock_count,
+    contract$attention_stock_count,
+    contract$equity_etf_count,
+    contract$non_equity_etf_count
+  ))
+  if (!identical(observed_counts, expected_counts)) {
+    edl_ms01_stop("The frozen wide-atlas cohort counts changed.")
+  }
+  if (!identical(contract$analysis_start, as.Date("2018-01-02")) ||
+      !identical(contract$analysis_end, as.Date("2023-12-29"))) {
+    edl_ms01_stop("The wide-atlas TRAIN window changed.")
+  }
+  if (!identical(contract$threshold, -0.10) ||
+      !identical(contract$discovery_band, c(-0.12, -0.08)) ||
+      !identical(contract$strong_reclaim, 0.75) ||
+      !identical(contract$weak_close, 0.25)) {
+    edl_ms01_stop("The Rule 201 proxy or reclaim definitions changed.")
+  }
+  if (!identical(contract$horizons, 0:10) ||
+      !identical(contract$display_horizons, c(1L, 2L, 3L, 4L, 5L, 10L))) {
+    edl_ms01_stop("The wide-atlas forward-path horizons changed.")
+  }
+  contract
+}
+
+edl_ms01_validate_wide_atlas_registry <- function(
+  registry,
+  contract = edl_ms01_wide_atlas_contract()
+) {
+  contract <- edl_ms01_validate_wide_atlas_contract(contract)
+  required <- c(
+    "atlas_order", "symbol", "atlas_cohort", "sector", "instrument_type",
+    "sector_balance_eligible"
+  )
+  missing <- setdiff(required, names(registry))
+  if (length(missing)) {
+    edl_ms01_stop(paste("Missing registry columns:", paste(missing, collapse = ", ")))
+  }
+  if (nrow(registry) != contract$registry_size || anyDuplicated(registry$symbol)) {
+    edl_ms01_stop("The wide-atlas registry size or symbol uniqueness changed.")
+  }
+  expected_cohorts <- c(
+    GICS_CORE = contract$core_stock_count,
+    ATTENTION_SUPPLEMENT = contract$attention_stock_count,
+    EQUITY_ETF_CONTROL = contract$equity_etf_count,
+    NON_EQUITY_CONTROL = contract$non_equity_etf_count
+  )
+  cohort_counts <- table(factor(registry$atlas_cohort, levels = names(expected_cohorts)))
+  if (!identical(as.integer(cohort_counts), as.integer(expected_cohorts))) {
+    edl_ms01_stop("The wide-atlas cohort membership counts changed.")
+  }
+  core <- registry$atlas_cohort == "GICS_CORE"
+  if (!all(registry$instrument_type[core] == "Stock") ||
+      !all(as.character(registry$sector_balance_eligible[core]) %in% c("TRUE", "T", "1"))) {
+    edl_ms01_stop("The 88-stock equal-sector core contract changed.")
+  }
+  registry[order(as.integer(registry$atlas_order)), , drop = FALSE]
+}
+
+edl_ms01_wide_atlas_group <- function(atlas_cohort) {
+  labels <- c(
+    GICS_CORE = "Core stocks (88)",
+    ATTENTION_SUPPLEMENT = "Attention stocks (16)",
+    EQUITY_ETF_CONTROL = "Equity ETFs (15)",
+    NON_EQUITY_CONTROL = "Non-equity ETFs (10)"
+  )
+  out <- unname(labels[as.character(atlas_cohort)])
+  if (any(is.na(out))) edl_ms01_stop("Unknown wide-atlas cohort encountered.")
+  out
+}
+
+edl_ms01_build_wide_atlas_ledger <- function(
+  bars,
+  registry,
+  wide_contract = edl_ms01_wide_atlas_contract(),
+  base_contract = edl_ms01_contract(),
+  path_contract = edl_ms01_forward_path_contract()
+) {
+  wide_contract <- edl_ms01_validate_wide_atlas_contract(wide_contract)
+  registry <- edl_ms01_validate_wide_atlas_registry(registry, wide_contract)
+  base_contract <- edl_ms01_validate_contract(base_contract)
+  path_contract <- edl_ms01_validate_forward_path_contract(path_contract)
+  if (!identical(wide_contract$threshold, base_contract$threshold) ||
+      !identical(wide_contract$discovery_band, base_contract$discovery_band) ||
+      !identical(wide_contract$strong_reclaim, base_contract$strong_reclaim) ||
+      !identical(wide_contract$weak_close, base_contract$weak_close) ||
+      !identical(wide_contract$horizons, path_contract$horizons)) {
+    edl_ms01_stop("The pilot and wide-atlas definitions are no longer identical.")
+  }
+  bars$session_date <- as.Date(bars$session_date)
+  bars <- bars[
+    bars$symbol %in% registry$symbol &
+      bars$session_date >= wide_contract$analysis_start &
+      bars$session_date <= wide_contract$analysis_end,
+    , drop = FALSE
+  ]
+  missing_symbols <- setdiff(registry$symbol, unique(as.character(bars$symbol)))
+  if (length(missing_symbols)) {
+    edl_ms01_stop(paste(
+      "Missing registry symbols in the frozen bar packet:",
+      paste(missing_symbols, collapse = ", ")
+    ))
+  }
+  rows <- lapply(registry$symbol, function(symbol) {
+    x <- bars[as.character(bars$symbol) == symbol, , drop = FALSE]
+    x <- edl_ms01_build_symbol_ledger(x, base_contract)
+    edl_ms01_add_forward_paths(x, path_contract)
+  })
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  match_index <- match(out$symbol, registry$symbol)
+  out$atlas_order <- as.integer(registry$atlas_order[match_index])
+  out$atlas_cohort <- as.character(registry$atlas_cohort[match_index])
+  out$atlas_group <- edl_ms01_wide_atlas_group(out$atlas_cohort)
+  out$sector <- as.character(registry$sector[match_index])
+  out$instrument_type <- as.character(registry$instrument_type[match_index])
+  out[order(out$atlas_order, out$session_date), , drop = FALSE]
+}
+
+edl_ms01_equal_symbol_path_summary <- function(path_long) {
+  required <- c("atlas_group", "symbol", "event_category", "horizon", "open_log_return")
+  missing <- setdiff(required, names(path_long))
+  if (length(missing)) {
+    edl_ms01_stop(paste("Missing equal-symbol columns:", paste(missing, collapse = ", ")))
+  }
+  symbol_keys <- unique(path_long[c(
+    "atlas_group", "symbol", "event_category", "horizon"
+  )])
+  symbol_rows <- lapply(seq_len(nrow(symbol_keys)), function(i) {
+    key <- symbol_keys[i, ]
+    selected <- path_long$atlas_group == key$atlas_group &
+      path_long$symbol == key$symbol &
+      path_long$event_category == key$event_category &
+      path_long$horizon == key$horizon
+    x <- path_long$open_log_return[selected]
+    data.frame(
+      atlas_group = key$atlas_group,
+      symbol = key$symbol,
+      event_category = key$event_category,
+      horizon = as.integer(key$horizon),
+      event_n = length(x),
+      symbol_median_open_log_return = stats::median(x),
+      stringsAsFactors = FALSE
+    )
+  })
+  symbol_paths <- do.call(rbind, symbol_rows)
+  keys <- unique(symbol_paths[c("atlas_group", "event_category", "horizon")])
+  summary_rows <- lapply(seq_len(nrow(keys)), function(i) {
+    key <- keys[i, ]
+    selected <- symbol_paths$atlas_group == key$atlas_group &
+      symbol_paths$event_category == key$event_category &
+      symbol_paths$horizon == key$horizon
+    x <- symbol_paths$symbol_median_open_log_return[selected]
+    data.frame(
+      atlas_group = key$atlas_group,
+      event_category = key$event_category,
+      horizon = as.integer(key$horizon),
+      symbol_n = length(x),
+      equal_symbol_mean = mean(x),
+      equal_symbol_median = stats::median(x),
+      q25_symbol_median = as.numeric(stats::quantile(x, 0.25, names = FALSE)),
+      q75_symbol_median = as.numeric(stats::quantile(x, 0.75, names = FALSE)),
+      stringsAsFactors = FALSE
+    )
+  })
+  list(
+    symbol_paths = symbol_paths,
+    summary = do.call(rbind, summary_rows)
+  )
+}
+
 edl_ms01_validate_forward_path_contract <- function(
   contract = edl_ms01_forward_path_contract()
 ) {

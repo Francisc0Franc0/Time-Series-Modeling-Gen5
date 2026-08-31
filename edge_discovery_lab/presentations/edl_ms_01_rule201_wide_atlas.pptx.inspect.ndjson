@@ -1,0 +1,161 @@
+{"kind":"deck","id":"pr/a22p9m","name":"Deck"}
+{"kind":"layout","layoutId":"75de88c2-6245-4d4a-b9b2-b69c1da765ef","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"4c927dd0-3845-41f7-bf3d-17573726f0f9","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/tx5sm4","slide":1,"title":"EDGE DISCOVERY LAB · BREADTH REPLICATION","textShapes":8}
+{"kind":"shape","id":"sh/lcbyt03e","slide":1,"bbox":[0,0,22,720]}
+{"kind":"textbox","id":"sh/y90fyl4n","slide":1,"text":"EDGE DISCOVERY LAB · BREADTH REPLICATION","textPreview":"EDGE DISCOVERY LAB · BREADTH REPLICATION","textChars":40,"textLines":1,"bbox":[56,50,640,26]}
+{"kind":"textbox","id":"sh/ja9wrql8","slide":1,"text":"Rule 201 Reclaim","textPreview":"Rule 201 Reclaim","textChars":16,"textLines":1,"bbox":[56,154,810,82]}
+{"kind":"textbox","id":"sh/w7ixwbmh","slide":1,"text":"The pilot hump is cohort-sensitive.","textPreview":"The pilot hump is cohort-sensitive.","textChars":35,"textLines":1,"bbox":[58,264,920,58]}
+{"kind":"textbox","id":"sh/x8repgn2","slide":1,"text":"The 88-stock balanced core does not reproduce the ten-stock day-five median. Attention stocks carry most of the visible temporary recovery.","textPreview":"The 88-stock balanced core does not reproduce the ten-stock day-five median. Attention stocks carry most of the visible temporary recovery.","textChars":139,"textLines":1,"bbox":[58,354,820,96]}
+{"kind":"shape","id":"sh/al0ful4r","slide":1,"bbox":[944,142,260,260]}
+{"kind":"textbox","id":"sh/b69wnq5c","slide":1,"text":"129","textPreview":"129","textChars":3,"textLines":1,"bbox":[962,187,224,80]}
+{"kind":"textbox","id":"sh/g3mx8fm1","slide":1,"text":"instruments\nenrolled","textPreview":"instruments | enrolled","textChars":20,"textLines":2,"bbox":[972,286,204,70]}
+{"kind":"shape","id":"sh/h4vy1k3m","slide":1,"bbox":[58,532,1146,2]}
+{"kind":"textbox","id":"sh/5kvmt8vq","slide":1,"text":"WIDE-ATLAS REPLICATION COMPLETE · NO EDGE CLAIM","textPreview":"WIDE-ATLAS REPLICATION COMPLETE · NO EDGE CLAIM","textChars":47,"textLines":1,"bbox":[58,572,820,28]}
+{"kind":"textbox","id":"sh/4jml03u5","slide":1,"text":"Post-2023 data remain sealed","textPreview":"Post-2023 data remain sealed","textChars":28,"textLines":1,"bbox":[930,572,274,28]}
+{"kind":"notes","id":"nt/tx5sm4","slide":1,"text":"This sequel asks whether the ten-stock pilot's visible five-session recovery hump survives a preregistered breadth expansion. The central result is cohort sensitivity, not edge promotion.\n\n[Sources]\n- Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/report.md\n- Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/run_spec.csv\n- Local pilot-versus-wide comparison: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pilot_vs_wide_comparison.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/3e3udm","slide":2,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":25}
+{"kind":"textbox","id":"sh/nu58f25g","slide":2,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/ove987m1","slide":2,"name":"slide-title","text":"One frozen rule enters four visibly separate cohorts","textPreview":"One frozen rule enters four visibly separate cohorts","textChars":52,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/9w7qhcnm","slide":2,"name":"slide-subtitle","text":"Definitions are inherited from the pilot; only representation changes.","textPreview":"Definitions are inherited from the pilot; only representation changes.","textChars":70,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/e5wr2x4z","slide":2,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/z658bi5k","slide":2,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/07e94nm5","slide":2,"name":"page-number","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/1snqdsnq","slide":2,"name":"metric-core stocks","bbox":[52,184,270,132]}
+{"kind":"shape","id":"sh/q1cryd4n","slide":2,"bbox":[52,184,8,132]}
+{"kind":"textbox","id":"sh/r2l87i58","slide":2,"text":"88","textPreview":"88","textChars":2,"textLines":1,"bbox":[76,200,228,48]}
+{"kind":"textbox","id":"sh/bedgnet8","slide":2,"text":"core stocks","textPreview":"core stocks","textChars":11,"textLines":1,"bbox":[76,252,228,24]}
+{"kind":"textbox","id":"sh/adkfu9cn","slide":2,"text":"8 per GICS sector","textPreview":"8 per GICS sector","textChars":17,"textLines":1,"bbox":[76,281,228,22]}
+{"kind":"shape","id":"sh/xgvypobe","slide":2,"name":"metric-attention stocks","bbox":[354,184,270,132]}
+{"kind":"shape","id":"sh/wfmxwjut","slide":2,"bbox":[354,184,8,132]}
+{"kind":"textbox","id":"sh/j2dgrytk","slide":2,"text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[378,200,228,48]}
+{"kind":"textbox","id":"sh/y14fytcz","slide":2,"text":"attention stocks","textPreview":"attention stocks","textChars":16,"textLines":1,"bbox":[378,252,228,24]}
+{"kind":"textbox","id":"sh/l4vytoba","slide":2,"text":"separate challenger cohort","textPreview":"separate challenger cohort","textChars":26,"textLines":1,"bbox":[378,281,228,22]}
+{"kind":"shape","id":"sh/k3mx0jup","slide":2,"name":"metric-equity ETFs","bbox":[656,184,270,132]}
+{"kind":"shape","id":"sh/z69wfud0","slide":2,"bbox":[656,184,8,132]}
+{"kind":"textbox","id":"sh/e50fmpcf","slide":2,"text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[680,200,228,48]}
+{"kind":"textbox","id":"sh/i18juxw3","slide":2,"text":"equity ETFs","textPreview":"equity ETFs","textChars":11,"textLines":1,"bbox":[680,252,228,24]}
+{"kind":"textbox","id":"sh/32h032do","slide":2,"text":"broad and sector controls","textPreview":"broad and sector controls","textChars":25,"textLines":1,"bbox":[680,281,228,22]}
+{"kind":"shape","id":"sh/43q1w7e9","slide":2,"name":"metric-non-equity ETFs","bbox":[958,184,270,132]}
+{"kind":"shape","id":"sh/54zipcvu","slide":2,"bbox":[958,184,8,132]}
+{"kind":"textbox","id":"sh/uxojqxw7","slide":2,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[982,200,228,48]}
+{"kind":"textbox","id":"sh/vyh0z2ds","slide":2,"text":"non-equity ETFs","textPreview":"non-equity ETFs","textChars":15,"textLines":1,"bbox":[982,252,228,24]}
+{"kind":"textbox","id":"sh/gzq1snex","slide":2,"text":"rates, commodities, FX","textPreview":"rates, commodities, FX","textChars":22,"textLines":1,"bbox":[982,281,228,22]}
+{"kind":"shape","id":"sh/h0zi1svi","slide":2,"bbox":[52,354,560,264]}
+{"kind":"textbox","id":"sh/69ozmdwv","slide":2,"text":"UNCHANGED EVENT GEOMETRY","textPreview":"UNCHANGED EVENT GEOMETRY","textChars":24,"textLines":1,"bbox":[82,382,400,24]}
+{"kind":"shape","id":"sh/7ax0vidg","slide":2,"bbox":[82,436,9,9]}
+{"kind":"textbox","id":"sh/90nuhkja","slide":2,"text":"Daily low / prior close from −12% through −8%.","textPreview":"Daily low / prior close from −12% through −8%.","textChars":46,"textLines":1,"bbox":[104,428,460,48]}
+{"kind":"shape","id":"sh/8zed8f2p","slide":2,"bbox":[82,496,9,9]}
+{"kind":"textbox","id":"sh/ny5cfa14","slide":2,"text":"Triggered proxy at or below −10%; strong CLV ≥ .75; weak CLV ≤ .25.","textPreview":"Triggered proxy at or below −10%; strong CLV ≥ .75; weak CLV ≤ .25.","textChars":67,"textLines":1,"bbox":[104,488,460,60]}
+{"kind":"shape","id":"sh/mxwv65kj","slide":2,"bbox":[82,566,9,9]}
+{"kind":"textbox","id":"sh/lwnud0jy","slide":2,"text":"Completed signal close → next-open entry → sessions 0–10.","textPreview":"Completed signal close → next-open entry → sessions 0–10.","textChars":57,"textLines":1,"bbox":[104,558,460,48]}
+{"kind":"shape","id":"sh/0bedkv2t","slide":2,"bbox":[646,354,582,264]}
+{"kind":"textbox","id":"sh/za5cbq18","slide":2,"text":"REPRESENTATION GUARDRAILS","textPreview":"REPRESENTATION GUARDRAILS","textChars":25,"textLines":1,"bbox":[676,382,400,24]}
+{"kind":"shape","id":"sh/y9cbi5kn","slide":2,"bbox":[676,436,9,9]}
+{"kind":"textbox","id":"sh/d83u90j2","slide":2,"text":"All 129 stay enrolled—including six with no band event.","textPreview":"All 129 stay enrolled—including six with no band event.","textChars":55,"textLines":1,"bbox":[698,428,488,48]}
+{"kind":"shape","id":"sh/c7utgv2h","slide":2,"bbox":[676,496,9,9]}
+{"kind":"textbox","id":"sh/sz2t0vyh","slide":2,"text":"Seven later listings retain shorter available histories; none are outcome-dropped.","textPreview":"Seven later listings retain shorter available histories; none are outcome-dropped.","textChars":82,"textLines":1,"bbox":[698,488,488,60]}
+{"kind":"shape","id":"sh/d0vut0f2","slide":2,"bbox":[676,566,9,9]}
+{"kind":"textbox","id":"sh/6xkby5gb","slide":2,"text":"Stocks and ETFs are separated before any cohort readout.","textPreview":"Stocks and ETFs are separated before any cohort readout.","textChars":56,"textLines":1,"bbox":[698,558,488,48]}
+{"kind":"notes","id":"nt/3e3udm","slide":2,"text":"The primary replication is the balanced 88-stock core. The attention and ETF cohorts are separate challengers and controls. Zero-event instruments remain in the enrolled-symbol ledger.\n\n[Sources]\n- Local frozen run specification: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/run_spec.csv\n- Local enrolled-symbol counts: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/symbol_event_counts.csv\n- Local coverage ledger: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/coverage_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/mfhewb","slide":3,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":5}
+{"kind":"textbox","id":"sh/d0vihsfa","slide":3,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/qxkz6xgz","slide":3,"name":"slide-title","text":"Breadth adds observations, but the target event stays sparse","textPreview":"Breadth adds observations, but the target event stays sparse","textChars":60,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/ryt0fix4","slide":3,"name":"slide-subtitle","text":"The attention cohort generates far more severe daily-low events than the balanced core.","textPreview":"The attention cohort generates far more severe daily-low events than the balanced core.","textChars":87,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/4v2h4nyt","slide":3,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/5wbidsze","slide":3,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/itkz2dgn","slide":3,"name":"page-number","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"image","id":"im/ah8zi183","slide":3,"name":"","alt":"Cohort event observations and enrolled-symbol availability across the frozen 129-instrument Rule 201 atlas.","bbox":[48,160,1184,500]}
+{"kind":"notes","id":"nt/mfhewb","slide":3,"text":"Every core and attention stock has at least one discovery-band event, but only 20 of 88 core stocks and 13 of 16 attention stocks have a triggered/strong-reclaim event. ETF target cells are especially thin.\n\n[Sources]\n- Local enrolled-symbol counts: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/symbol_event_counts.csv\n- Local coverage ledger: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/coverage_ledger.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/89ytym","slide":4,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":10}
+{"kind":"textbox","id":"sh/als7ulkb","slide":4,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/x8jq50j2","slide":4,"name":"slide-title","text":"The 88-stock core does not reproduce the pilot's day-five hump","textPreview":"The 88-stock core does not reproduce the pilot's day-five hump","textChars":62,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/wnapwv2h","slide":4,"name":"slide-subtitle","text":"Primary event-pooled replication: medians with event-level interquartile ribbons.","textPreview":"Primary event-pooled replication: medians with event-level interquartile ribbons.","textChars":81,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/jal87q18","slide":4,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/i9s7ylkn","slide":4,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/5c3q90jy","slide":4,"name":"page-number","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/rel8ba14","slide":4,"bbox":[995,182,235,180]}
+{"kind":"textbox","id":"sh/6dc725kj","slide":4,"text":"−0.24%","textPreview":"−0.24%","textChars":6,"textLines":1,"bbox":[1015,214,195,48]}
+{"kind":"textbox","id":"sh/cjut8fi5","slide":4,"text":"triggered + strong\nday-five median","textPreview":"triggered + strong | day-five median","textChars":34,"textLines":2,"bbox":[1015,274,195,62]}
+{"kind":"shape","id":"sh/xk3uhkzq","slide":4,"bbox":[995,390,235,180]}
+{"kind":"textbox","id":"sh/ahsb650z","slide":4,"text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1015,422,195,48]}
+{"kind":"textbox","id":"sh/bi1cfahk","slide":4,"text":"events across\n20 eligible symbols","textPreview":"events across | 20 eligible symbols","textChars":33,"textLines":2,"bbox":[1015,482,195,62]}
+{"kind":"textbox","id":"sh/k7utczih","slide":4,"text":"Mechanism clue: a down-then-recovery shape remains, but not the pilot median at session five.","textPreview":"Mechanism clue: a down-then-recovery shape remains, but not the pilot median at session five.","textChars":93,"textLines":1,"bbox":[995,598,235,58]}
+{"kind":"image","id":"im/pk7uhgbu","slide":4,"name":"","alt":"Four event-pooled forward-path panels for the Rule 201 event categories across the 88-stock sector core.","bbox":[44,152,930,520]}
+{"kind":"notes","id":"nt/89ytym","slide":4,"text":"The pilot ten-stock triggered/strong group had a positive 3.72 percent day-five median. The balanced core's comparable event-pooled median is negative 0.24 percent across 21 events and negative 0.48 percent at day ten.\n\n[Sources]\n- Local event-pooled paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pooled_path_summary.csv\n- Local pilot-versus-wide comparison: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pilot_vs_wide_comparison.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/agkcdv","slide":5,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":10}
+{"kind":"textbox","id":"sh/ypsja5sf","slide":5,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/lsjil0rq","slide":5,"name":"slide-title","text":"Equal-symbol weighting reveals who controls the apparent path","textPreview":"Equal-symbol weighting reveals who controls the apparent path","textChars":61,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/0ra1cval","slide":5,"name":"slide-subtitle","text":"Solid = event-pooled median; dashed = equal mean of within-symbol medians.","textPreview":"Solid = event-pooled median; dashed = equal mean of within-symbol medians.","textChars":74,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/bmh0fq9o","slide":5,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/ql8z6ls3","slide":5,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/dojih0ru","slide":5,"name":"page-number","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/vil0ru98","slide":5,"bbox":[1004,178,226,206]}
+{"kind":"textbox","id":"sh/ahcjipsn","slide":5,"text":"+0.51%","textPreview":"+0.51%","textChars":6,"textLines":1,"bbox":[1020,215,194,50]}
+{"kind":"textbox","id":"sh/4nqxcra5","slide":5,"text":"core day five\nequal-symbol mean","textPreview":"core day five | equal-symbol mean","textChars":31,"textLines":2,"bbox":[1020,278,194,60]}
+{"kind":"shape","id":"sh/pozylwbq","slide":5,"bbox":[1004,408,226,196]}
+{"kind":"textbox","id":"sh/2l8fahsz","slide":5,"text":"47 / 68","textPreview":"47 / 68","textChars":7,"textLines":1,"bbox":[1020,444,194,50]}
+{"kind":"textbox","id":"sh/3mhwjmtk","slide":5,"text":"all-stock target events\ncome from attention names","textPreview":"all-stock target events | come from attention names","textChars":49,"textLines":2,"bbox":[1020,507,194,62]}
+{"kind":"textbox","id":"sh/gjqx87a9","slide":5,"text":"The mild core signal is not the same phenomenon as the attention-stock hump.","textPreview":"The mild core signal is not the same phenomenon as the attention-stock hump.","textChars":76,"textLines":1,"bbox":[1004,622,226,42]}
+{"kind":"image","id":"im/ds7ahcfy","slide":5,"name":"","alt":"Comparison of event-pooled and equal-symbol triggered/strong-reclaim paths across the four atlas cohorts.","bbox":[46,152,940,516]}
+{"kind":"notes","id":"nt/agkcdv","slide":5,"text":"Within each eligible symbol, the median path is computed first; those symbol medians are then averaged equally. This prevents event-rich names from mechanically dominating the curve. ETF panels each have only one target event and therefore identical pooled and equal-symbol lines.\n\n[Sources]\n- Local equal-symbol paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/equal_symbol_path_summary.csv\n- Local event-pooled paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pooled_path_summary.csv\n- Local enrolled-symbol counts: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/symbol_event_counts.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/nwt5ta","slide":6,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":9}
+{"kind":"textbox","id":"sh/j2l8ne1s","slide":6,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/knupwjid","slide":6,"name":"slide-title","text":"Cohort separation matters more than the threshold label alone","textPreview":"Cohort separation matters more than the threshold label alone","textChars":61,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/lo3qpojy","slide":6,"name":"slide-subtitle","text":"Day-five and day-ten medians expose different return geometry across the same four event states.","textPreview":"Day-five and day-ten medians expose different return geometry across the same four event states.","textChars":96,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/axs7q90b","slide":6,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/by18je1w","slide":6,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/wzapsji1","slide":6,"name":"page-number","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/utcr2t0f","slide":6,"bbox":[1002,186,230,182]}
+{"kind":"textbox","id":"sh/vu58vy10","slide":6,"text":"+2.65%","textPreview":"+2.65%","textChars":6,"textLines":1,"bbox":[1018,220,198,48]}
+{"kind":"textbox","id":"sh/zitk7yp0","slide":6,"text":"attention-stock target\nday-five median","textPreview":"attention-stock target | day-five median","textChars":38,"textLines":2,"bbox":[1018,282,198,58]}
+{"kind":"shape","id":"sh/yhkjetof","slide":6,"bbox":[1002,394,230,214]}
+{"kind":"textbox","id":"sh/l4v29o76","slide":6,"text":"ETF warning","textPreview":"ETF warning","textChars":11,"textLines":1,"bbox":[1018,424,198,30]}
+{"kind":"textbox","id":"sh/k3m1gj6l","slide":6,"text":"Triggered + strong cells contain one event in each ETF cohort. Their ±10–20% values are examples, not cohort estimates.","textPreview":"Triggered + strong cells contain one event in each ETF cohort. Their ±10–20% values are examples, not cohort estimates.","textChars":119,"textLines":1,"bbox":[1020,470,194,112]}
+{"kind":"image","id":"im/cv2xg32l","slide":6,"name":"","alt":"Heatmaps of day-five and day-ten event-pooled median returns by Rule 201 event category and atlas cohort.","bbox":[46,152,930,516]}
+{"kind":"notes","id":"nt/nwt5ta","slide":6,"text":"The attention-stock triggered/strong group has a positive 2.65 percent day-five median and a negative 2.28 percent day-ten median. The ETF target cells are visually extreme because each cohort contains one eligible event, so they must not be interpreted as stable estimates.\n\n[Sources]\n- Local event-pooled paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pooled_path_summary.csv\n- Local enrolled-symbol counts: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/symbol_event_counts.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/kaxyne","slide":7,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":10}
+{"kind":"textbox","id":"sh/sj25wju9","slide":7,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/7ito3edo","slide":7,"name":"slide-title","text":"The wider atlas reduces one-name dependence, not calendar clustering","textPreview":"The wider atlas reduces one-name dependence, not calendar clustering","textChars":68,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/6h0nutcj","slide":7,"name":"slide-subtitle","text":"Triggered + strong events remain concentrated in attention names and stress-heavy years.","textPreview":"Triggered + strong events remain concentrated in attention names and stress-heavy years.","textChars":88,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/h8b698b6","slide":7,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/g72p03ul","slide":7,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/f6to7yt0","slide":7,"name":"page-number","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/xcr6x4vm","slide":7,"bbox":[976,182,252,174]}
+{"kind":"textbox","id":"sh/wbi5ozu1","slide":7,"text":"AMC · MARA · CVNA","textPreview":"AMC · MARA · CVNA","textChars":17,"textLines":1,"bbox":[993,214,218,40]}
+{"kind":"textbox","id":"sh/6lsnmd8r","slide":7,"text":"three largest symbol\ncontributions","textPreview":"three largest symbol | contributions","textChars":34,"textLines":2,"bbox":[993,274,218,60]}
+{"kind":"shape","id":"sh/rmlofipw","slide":7,"bbox":[976,384,252,174]}
+{"kind":"textbox","id":"sh/s7u5onqh","slide":7,"text":"2020 + 2022","textPreview":"2020 + 2022","textChars":11,"textLines":1,"bbox":[993,416,218,40]}
+{"kind":"textbox","id":"sh/t836hs72","slide":7,"text":"supply most target\nevents","textPreview":"supply most target | events","textChars":25,"textLines":2,"bbox":[993,478,218,58]}
+{"kind":"textbox","id":"sh/e9cnqxon","slide":7,"text":"Breadth changes the diagnosis: concentration is now a cohort-and-era question, not just AMC/CVNA.","textPreview":"Breadth changes the diagnosis: concentration is now a cohort-and-era question, not just AMC/CVNA.","textChars":97,"textLines":1,"bbox":[976,592,252,62]}
+{"kind":"image","id":"im/nipwr2lo","slide":7,"name":"","alt":"Largest symbol contributions and calendar-year shares for triggered strong-reclaim events across all 129 instruments.","bbox":[48,156,900,500]}
+{"kind":"notes","id":"nt/kaxyne","slide":7,"text":"AMC, MARA, and CVNA are the three largest individual contributors. Calendar concentration remains strongest in 2020 and 2022. The wider atlas therefore reduces the original pilot's two-name dependence but does not remove cohort and era dependence.\n\n[Sources]\n- Local enrolled-symbol counts: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/symbol_event_counts.csv\n- Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/c27cgo","slide":8,"title":"EDGE DISCOVERY LAB · EDL-MS-01","textShapes":17}
+{"kind":"textbox","id":"sh/9sze9s7q","slide":8,"name":"section-label","text":"EDGE DISCOVERY LAB · EDL-MS-01","textPreview":"EDGE DISCOVERY LAB · EDL-MS-01","textChars":30,"textLines":1,"bbox":[42,24,450,20]}
+{"kind":"textbox","id":"sh/m58fyd8z","slide":8,"name":"slide-title","text":"Breadth falsifies universality and sharpens the next question","textPreview":"Breadth falsifies universality and sharpens the next question","textChars":61,"textLines":1,"bbox":[42,53,1190,54]}
+{"kind":"textbox","id":"sh/76hw7ipk","slide":8,"name":"slide-subtitle","text":"This is a successful learning result: the visible path has a location, not yet an edge.","textPreview":"This is a successful learning result: the visible path has a location, not yet an edge.","textChars":87,"textLines":1,"bbox":[44,108,1160,30]}
+{"kind":"shape","id":"sh/k36xwnq9","slide":8,"bbox":[42,143,1196,2]}
+{"kind":"textbox","id":"sh/l4ze587e","slide":8,"name":"footer-status","text":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textPreview":"Adjusted daily · 2018–2023 TRAIN · descriptive only","textChars":51,"textLines":1,"bbox":[42,684,600,18]}
+{"kind":"textbox","id":"sh/y1ofud83","slide":8,"name":"page-number","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1160,682,76,18]}
+{"kind":"shape","id":"sh/z2xw3ipo","slide":8,"bbox":[52,184,560,336]}
+{"kind":"textbox","id":"sh/4zax87qd","slide":8,"text":"WHAT DID NOT SURVIVE","textPreview":"WHAT DID NOT SURVIVE","textChars":20,"textLines":1,"bbox":[82,214,360,24]}
+{"kind":"textbox","id":"sh/50jyhc7y","slide":8,"text":"A broad Rule 201 × reclaim rebound.","textPreview":"A broad Rule 201 × reclaim rebound.","textChars":35,"textLines":1,"bbox":[82,260,470,72]}
+{"kind":"shape","id":"sh/5wrq1wvi","slide":8,"bbox":[84,366,9,9]}
+{"kind":"textbox","id":"sh/4vip8rex","slide":8,"text":"Core 88: −0.24% event-pooled median at day five.","textPreview":"Core 88: −0.24% event-pooled median at day five.","textChars":48,"textLines":1,"bbox":[106,358,448,48]}
+{"kind":"shape","id":"sh/3u98zmdc","slide":8,"bbox":[84,428,9,9]}
+{"kind":"textbox","id":"sh/it0761wr","slide":8,"text":"Only 21 target events across 20 core symbols.","textPreview":"Only 21 target events across 20 core symbols.","textChars":45,"textLines":1,"bbox":[106,420,448,48]}
+{"kind":"shape","id":"sh/hs7qxwvm","slide":8,"bbox":[84,482,9,9]}
+{"kind":"textbox","id":"sh/gryp4re1","slide":8,"text":"ETF target cells are too thin to adjudicate anything.","textPreview":"ETF target cells are too thin to adjudicate anything.","textChars":53,"textLines":1,"bbox":[106,474,448,48]}
+{"kind":"shape","id":"sh/vqp8vmdg","slide":8,"bbox":[646,184,582,336]}
+{"kind":"textbox","id":"sh/upg72hwv","slide":8,"text":"WHAT REMAINS INTERESTING","textPreview":"WHAT REMAINS INTERESTING","textChars":24,"textLines":1,"bbox":[676,214,400,24]}
+{"kind":"textbox","id":"sh/1obq9gvq","slide":8,"text":"A temporary-recovery shape in attention stocks.","textPreview":"A temporary-recovery shape in attention stocks.","textChars":47,"textLines":1,"bbox":[676,260,500,72]}
+{"kind":"shape","id":"sh/0n2pgbu5","slide":8,"bbox":[678,366,9,9]}
+{"kind":"textbox","id":"sh/0ra9cz2h","slide":8,"text":"Attention cohort: +2.65% median at day five, negative by day ten.","textPreview":"Attention cohort: +2.65% median at day five, negative by day ten.","textChars":65,"textLines":1,"bbox":[700,358,478,56]}
+{"kind":"shape","id":"sh/lsjal432","slide":8,"bbox":[678,438,9,9]}
+{"kind":"textbox","id":"sh/ypsrapkb","slide":8,"text":"Core equal-symbol view is mildly positive, but sparse.","textPreview":"Core equal-symbol view is mildly positive, but sparse.","textChars":54,"textLines":1,"bbox":[700,430,478,48]}
+{"kind":"shape","id":"sh/zq1sjulw","slide":8,"bbox":[678,498,9,9]}
+{"kind":"textbox","id":"sh/c3q98f25","slide":8,"text":"The mechanism now points to cohort/era conditions upstream of the rule.","textPreview":"The mechanism now points to cohort/era conditions upstream of the rule.","textChars":71,"textLines":1,"bbox":[700,490,478,56]}
+{"kind":"shape","id":"sh/d4zahk3q","slide":8,"bbox":[52,558,1176,92]}
+{"kind":"textbox","id":"sh/q18r65kf","slide":8,"text":"NEXT OPERATOR GATE","textPreview":"NEXT OPERATOR GATE","textChars":18,"textLines":1,"bbox":[80,580,220,24]}
+{"kind":"textbox","id":"sh/b2hsfalk","slide":8,"text":"Explain or predeclare a falsification of the attention-stock distinction—or pause the daily lane before opening intraday data.","textPreview":"Explain or predeclare a falsification of the attention-stock distinction—or pause the daily lane before opening intraday data.","textChars":126,"textLines":1,"bbox":[310,576,880,54]}
+{"kind":"notes","id":"nt/c27cgo","slide":8,"text":"This closes the breadth replication without selecting a horizon or promoting a rule. A subsequent slice could inspect an upstream explanation for attention-stock behavior or freeze a falsification of the cohort distinction. Either intraday branch remains separately gated.\n\n[Sources]\n- Local report: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/report.md\n- Local event-pooled paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pooled_path_summary.csv\n- Local equal-symbol paths: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/equal_symbol_path_summary.csv\n- Local pilot-versus-wide comparison: runs/research_workbench/edge_discovery_lab/edl_ms_01_rule201_wide_atlas_20260830/pilot_vs_wide_comparison.csv\n[/Sources]"}
