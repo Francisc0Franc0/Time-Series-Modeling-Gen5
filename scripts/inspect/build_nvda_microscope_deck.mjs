@@ -14,6 +14,7 @@ const atlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hy
 const protoRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rules_20260831");
 const confirmationRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rule_confirmation_20260831");
 const openingRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_response_20260831");
+const openingRuleRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_rule_20260831");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -41,6 +42,11 @@ const img = {
   openingDistribution: path.join(openingRoot, "visuals", "nvda_opening_bin_remainder_distributions.png"),
   openingPaths: path.join(openingRoot, "visuals", "nvda_opening_bin_remainder_paths.png"),
   openingStates: path.join(openingRoot, "visuals", "nvda_prior_day_state_opening_response.png"),
+  openingRuleThreshold: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_rolling_threshold.png"),
+  openingRuleControls: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_control_distributions.png"),
+  openingRuleAnnual: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_annual_context.png"),
+  openingRuleEquity: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_realized_equity.png"),
+  openingRuleTapes: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_representative_tapes.png"),
 };
 
 const sources = {
@@ -65,6 +71,13 @@ const sources = {
   openingBins: "Opening-bin and prior-state summaries: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/opening_bin_summary.csv",
   openingContrasts: "Descriptive candidate contrasts: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/descriptive_candidate_contrasts.csv",
   openingChecks: "Opening-response construction checks: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/source_checks.csv",
+  openingRuleReport: "Causal intraday opening-rule TRAIN report: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/report.md",
+  openingRuleSpec: "Frozen causal rule specification: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/run_spec.csv",
+  openingRuleChecks: "Causal construction checks: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/construction_checks.csv",
+  openingRuleSummary: "Candidate and control summary: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/rule_summary.csv",
+  openingRuleCalendar: "Candidate calendar summary: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/calendar_summary.csv",
+  openingRuleGates: "Frozen TRAIN gates: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/train_gates.csv",
+  openingRuleTrades: "Causal same-day trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/trade_ledger.csv",
 };
 
 const C = {
@@ -113,6 +126,14 @@ function addOpeningHeader(slide, title, page) {
   addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
 }
 
+function addOpeningRuleHeader(slide, title, page) {
+  addText(slide, "OPERATOR HYPOTHESIS LAB · NVDA INTRADAY OPENING RULE", { left: 48, top: 25, width: 760, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "Causal TRAIN translation · 2019-01-11–2023-12-29 after prior-252-session warm-up", { left: 48, top: 684, width: 900, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
 function addNotes(slide, body, sourceList) {
   slide.speakerNotes.textFrame.setText([body, "", "[Sources]", ...sourceList.map((s) => `- ${s}`), "[/Sources]"].join("\n"));
   slide.speakerNotes.setVisible(true);
@@ -158,7 +179,7 @@ async function main() {
     addRect(s, { left: 72, top: 532, width: 1106, height: 2 }, C.rule);
     addText(s, "Research posture", { left: 72, top: 562, width: 210, height: 26 }, { fontSize: 17, bold: true, color: C.blue });
     addText(s, "Observe first. Separate descriptive clues, executable TRAIN translation, and one-shot confirmation.", { left: 300, top: 554, width: 850, height: 64 }, { fontSize: 23, color: C.navy });
-    addText(s, "RESEARCH DECK · DAILY CONFIRMATION STOP · INTRADAY OPENING RESPONSE ADDED", { left: 72, top: 666, width: 720, height: 20 }, { fontSize: 13, bold: true, color: C.red });
+    addText(s, "RESEARCH DECK · DAILY CONFIRMATION STOP · INTRADAY OPENING RULE STOP", { left: 72, top: 666, width: 760, height: 20 }, { fontSize: 13, bold: true, color: C.red });
     addNotes(s, "This deck begins the NVDA one-asset microscope and records the first two views: unconditional intraday clock behavior and the established daily return-geometry template.", [sources.intradayReport, sources.dailyReport]);
   }
 
@@ -620,8 +641,91 @@ async function main() {
     addBullet(s, "Compute the opening-tail cutoff from the prior 252 full sessions only.", 674, 258, 500, C.blue, 20, 72);
     addBullet(s, "If the first bar clears that cutoff and yesterday's ATR% was not HIGH, enter at 10:00 and exit at 16:00.", 674, 344, 500, C.green, 20, 94);
     addBullet(s, "Compare with opening-tail-only, ATR-state-only, HIGH-ATR opposite, and unconditional 10:00-to-close controls.", 674, 454, 500, C.amber, 20, 92);
-    addText(s, "NO RULE, COST, OR P&L WAS TESTED IN THIS SLICE", { left: 58, top: 622, width: 1164, height: 26 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
-    addNotes(s, "The current +1.070% cutoff was computed from the entire descriptive sample and therefore must not be used retrospectively as though it had been known each day. The recommended next slice converts the same rank concept into a rolling prior-252-session threshold, then tests a 10:00-to-close long rule with simple ingredient controls. That translation requires a separate operator decision.", [sources.openingReport, sources.openingContrasts, sources.openingChecks]);
+    addText(s, "THIS TRANSLATION IS EXECUTED ON SLIDES 35–41", { left: 58, top: 622, width: 1164, height: 26 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The current +1.070% cutoff was computed from the entire descriptive sample and therefore must not be used retrospectively as though it had been known each day. The next section converts the same rank concept into a rolling prior-252-session threshold and tests the 10:00-to-close long rule with the predeclared ingredient controls.", [sources.openingReport, sources.openingContrasts, sources.openingChecks, sources.openingRuleSpec]);
+  }
+
+  // 35 — causal opening-rule transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "SIXTH MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "Can the clue survive\ncausal timing?", { left: 72, top: 170, width: 980, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "At 10:00, compare the completed opening return with a threshold learned from the prior 252 full sessions. Trade only when yesterday's ATR% was LOW or MEDIUM; exit at 16:00. The rule must beat every simpler control after 10 bps round trip.", { left: 76, top: 408, width: 1080, height: 132 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "TRAIN only · 2024+ intraday data remain unread", { left: 76, top: 602, width: 980, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "35", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "This is a new causal TRAIN hypothesis, not a continuation of the retrospective bin. The current opening is compared with the prior 252 complete openings only; the ATR-percent state comes from the preceding completed daily session; the position begins at 10:00 and ends at 16:00.", [sources.openingRuleSpec, sources.openingRuleChecks]);
+  }
+
+  // 36 — rolling threshold
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "Every signal is knowable at 10:00 without future data", 36);
+    await addImage(s, img.openingRuleThreshold, { left: 48, top: 144, width: 1180, height: 514 }, "NVDA opening returns, causal prior-252-session 80th-percentile threshold, and candidate or HIGH-ATR tail events");
+    addNotes(s, "The first 252 full sessions are warm-up only. Beginning 2019-01-11, each opening return is compared with the prior 252 complete openings using a type-8 80th percentile. Green dots meet the opening threshold after a LOW or MEDIUM prior-day ATR-percent state; red triangles meet the same threshold after HIGH ATR-percent.", [sources.openingRuleSpec, sources.openingRuleChecks, sources.openingRuleTrades]);
+  }
+
+  // 37 — controls
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "ATR% performs real discrimination inside TRAIN", 37);
+    await addImage(s, img.openingRuleControls, { left: 48, top: 144, width: 1180, height: 514 }, "Net NVDA 10:00-to-close return distributions for the causal candidate and four predeclared controls");
+    addNotes(s, "The candidate produces 157 trades with +0.204% mean net, +0.430% median net, and 59.9% profitable. Opening-tail-only produces +0.062% mean net. LOW/MEDIUM-ATR-only produces -0.019%. The same opening tail after HIGH ATR produces -0.192%. Unconditional 10:00-to-close after costs produces -0.068%. The candidate clears every aggregate and simpler-control gate.", [sources.openingRuleReport, sources.openingRuleSummary, sources.openingRuleTrades]);
+  }
+
+  // 38 — calendar gate
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "The aggregate result fails temporal breadth", 38);
+    await addImage(s, img.openingRuleAnnual, { left: 42, top: 144, width: 850, height: 514 }, "Annual mean net return and trade counts for the causal NVDA opening-tail LOW-MEDIUM ATR candidate");
+    addRect(s, { left: 918, top: 158, width: 304, height: 464 }, C.panel);
+    addText(s, "2 / 5", { left: 944, top: 190, width: 252, height: 56 }, { fontSize: 44, bold: true, color: C.red });
+    addText(s, "positive years", { left: 944, top: 246, width: 252, height: 28 }, { fontSize: 19, bold: true, color: C.navy });
+    addText(s, "Gate required at least 3", { left: 944, top: 278, width: 252, height: 24 }, { fontSize: 15, color: C.muted });
+    addRect(s, { left: 944, top: 332, width: 252, height: 2 }, C.rule);
+    addText(s, "89.9%", { left: 944, top: 364, width: 252, height: 50 }, { fontSize: 38, bold: true, color: C.amber });
+    addText(s, "of cumulative net log return came from 2023", { left: 944, top: 416, width: 252, height: 58 }, { fontSize: 18, bold: true, color: C.navy, alignment: "center" });
+    addText(s, "2019, 2020, and 2022 had negative mean net returns.", { left: 944, top: 520, width: 252, height: 62 }, { fontSize: 18, color: C.red, alignment: "center" });
+    addNotes(s, "Only 2021 and 2023 have positive annual mean net return; the frozen calendar-breadth gate requires at least three positive years. The 2023 candidate trades contribute 0.2876 of the total 0.3201 cumulative net log return, or 89.9%. The failure is not weak sample size or weak aggregate economics; it is concentration in late sample time.", [sources.openingRuleCalendar, sources.openingRuleGates, sources.openingRuleReport]);
+  }
+
+  // 39 — realized equity
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "Most realized gains arrive late in the sample", 39);
+    await addImage(s, img.openingRuleEquity, { left: 48, top: 144, width: 1180, height: 514 }, "Realized causal NVDA opening-rule equity, flat between same-day trades, during TRAIN");
+    addNotes(s, "Sequential same-day candidate trades compound $1 to about $1.38 after 10 bps round trip, but the path spends much of 2019-2022 around or below its start and rises sharply in 2023. This is a realized TRAIN path, not confirmation and not deployable authority.", [sources.openingRuleReport, sources.openingRuleTrades, sources.openingRuleCalendar]);
+  }
+
+  // 40 — representative tapes
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "A positive typical trade still contains severe same-day risk", 40);
+    await addImage(s, img.openingRuleTapes, { left: 48, top: 144, width: 1180, height: 514 }, "Worst, median-nearest, and best intraday paths for the causal NVDA opening-rule candidate");
+    addNotes(s, "The worst candidate day loses 6.58% net from 10:00 to 16:00; the median-nearest day gains 0.43%; the best gains 6.04% net. These tapes make the distribution concrete and show that the filter does not imply low-volatility trades even when the prior-day ATR-percent state is LOW or MEDIUM.", [sources.openingRuleTrades, sources.openingRuleReport]);
+  }
+
+  // 41 — final causal opening-rule decision
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningRuleHeader(s, "The mechanism is promising; the exact rule still stops", 41);
+    addRect(s, { left: 58, top: 164, width: 1164, height: 88 }, C.paleRed);
+    addText(s, "STOP_TRAIN_TRANSLATION_GATES_FAILED", { left: 86, top: 186, width: 1108, height: 44 }, { fontSize: 31, bold: true, color: C.red, alignment: "center" });
+    addText(s, "Frozen gates", { left: 58, top: 292, width: 350, height: 38 }, { fontSize: 28, bold: true });
+    const openingGates = [
+      ["PASS", "Support", "157 trades; minimum 100"],
+      ["PASS", "Positive mean", "+0.204% net"],
+      ["PASS", "Typical trade", "+0.430% median; 59.9% up"],
+      ["PASS", "Beat controls", "strongest control +0.062%"],
+      ["FAIL", "Calendar breadth", "2 positive years; required 3"],
+    ];
+    openingGates.forEach(([status, label, detail], i) => {
+      const top = 342 + i * 48;
+      const pass = status === "PASS";
+      addRect(s, { left: 72, top, width: 92, height: 32 }, pass ? C.paleGreen : C.paleRed);
+      addText(s, status, { left: 78, top: top + 6, width: 80, height: 20 }, { fontSize: 14, bold: true, color: pass ? C.green : C.red, alignment: "center" });
+      addText(s, label, { left: 186, top: top + 4, width: 238, height: 26 }, { fontSize: 18, bold: true });
+      addText(s, detail, { left: 430, top: top + 5, width: 280, height: 24 }, { fontSize: 16, color: C.muted });
+    });
+    addRect(s, { left: 752, top: 292, width: 470, height: 334 }, C.panel);
+    addText(s, "What survives the STOP", { left: 780, top: 320, width: 414, height: 34 }, { fontSize: 27, bold: true });
+    addBullet(s, "A strong opening behaves differently after calm versus HIGH-ATR prior days.", 782, 382, 406, C.green, 19, 72);
+    addBullet(s, "The joint filter beats both ingredients, the opposite state, and drift inside TRAIN.", 782, 468, 406, C.blue, 19, 78);
+    addText(s, "The exact rule cannot advance because its gains are concentrated in 2023. No threshold, state, clock, or cost rescue is allowed from this packet.", { left: 780, top: 558, width: 414, height: 62 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "Four of five predeclared TRAIN gates pass. The calendar-breadth gate fails, so the exact rule stops and 2024+ intraday data remain unread. The scientifically useful residue is the signed ATR-state contrast: top-tail openings continue after LOW/MEDIUM ATR but fade after HIGH ATR. That mechanism can motivate a separately declared future study, but this parameterization cannot be rescue-tuned.", [sources.openingRuleGates, sources.openingRuleSummary, sources.openingRuleCalendar, sources.openingRuleReport]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {
