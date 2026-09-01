@@ -15,6 +15,7 @@ const protoRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hy
 const confirmationRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rule_confirmation_20260831");
 const openingRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_response_20260831");
 const openingRuleRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_rule_20260831");
+const openingAtlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "intraday_opening_atr_atlas_20260901");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -47,6 +48,11 @@ const img = {
   openingRuleAnnual: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_annual_context.png"),
   openingRuleEquity: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_realized_equity.png"),
   openingRuleTapes: path.join(openingRuleRoot, "visuals", "nvda_opening_rule_representative_tapes.png"),
+  openingAtlasAssets: path.join(openingAtlasRoot, "visuals", "opening_atr_asset_contrasts.png"),
+  openingAtlasEras: path.join(openingAtlasRoot, "visuals", "opening_atr_era_stability.png"),
+  openingAtlasResponse: path.join(openingAtlasRoot, "visuals", "opening_atr_asset_response_map.png"),
+  openingAtlasSectors: path.join(openingAtlasRoot, "visuals", "opening_atr_sector_context.png"),
+  openingAtlasHeatmap: path.join(openingAtlasRoot, "visuals", "opening_atr_asset_era_heatmap.png"),
 };
 
 const sources = {
@@ -78,6 +84,13 @@ const sources = {
   openingRuleCalendar: "Candidate calendar summary: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/calendar_summary.csv",
   openingRuleGates: "Frozen TRAIN gates: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/train_gates.csv",
   openingRuleTrades: "Causal same-day trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_rule_20260831/trade_ledger.csv",
+  openingAtlasReport: "Cross-asset mechanism-replication report: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/report.md",
+  openingAtlasSpec: "Frozen cross-asset mechanism specification: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/run_spec.csv",
+  openingAtlasChecks: "Cross-asset construction checks: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/construction_checks.csv",
+  openingAtlasAssets: "Asset-level mechanism summary: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/asset_summary.csv",
+  openingAtlasEras: "Era-level mechanism summary: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/era_summary.csv",
+  openingAtlasSectors: "Sector context summary: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/sector_summary.csv",
+  openingAtlasGates: "Frozen mechanism-replication gates: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/mechanism_gates.csv",
 };
 
 const C = {
@@ -134,6 +147,14 @@ function addOpeningRuleHeader(slide, title, page) {
   addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
 }
 
+function addOpeningAtlasHeader(slide, title, page) {
+  addText(slide, "OPERATOR HYPOTHESIS LAB · CROSS-ASSET OPENING MECHANISM", { left: 48, top: 25, width: 840, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "Mechanism replication · 26 non-NVDA assets · causal outcomes through 2025", { left: 48, top: 684, width: 900, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
 function addNotes(slide, body, sourceList) {
   slide.speakerNotes.textFrame.setText([body, "", "[Sources]", ...sourceList.map((s) => `- ${s}`), "[/Sources]"].join("\n"));
   slide.speakerNotes.setVisible(true);
@@ -171,7 +192,7 @@ async function main() {
     addRect(s, { left: 0, top: 0, width: 24, height: 720 }, C.blue);
     addText(s, "OPERATOR HYPOTHESIS LAB · ONE-ASSET MICROSCOPE", { left: 72, top: 70, width: 760, height: 28 }, { fontSize: 16, bold: true, color: C.muted });
     addText(s, "NVDA\nmicroscope", { left: 72, top: 142, width: 690, height: 190 }, { fontSize: 78, bold: true });
-    addText(s, "From the intraday return clock to daily return geometry.", { left: 76, top: 370, width: 760, height: 70 }, { fontSize: 30, color: C.navy });
+    addText(s, "From the intraday return clock to causal rules and cross-asset mechanism tests.", { left: 76, top: 370, width: 790, height: 86 }, { fontSize: 28, color: C.navy });
     addRect(s, { left: 914, top: 120, width: 264, height: 264 }, C.navy);
     addText(s, "30m", { left: 934, top: 170, width: 224, height: 74 }, { fontSize: 58, bold: true, color: C.white, alignment: "center" });
     addText(s, "+", { left: 1004, top: 250, width: 84, height: 50 }, { fontSize: 30, color: C.paleBlue, alignment: "center" });
@@ -726,6 +747,135 @@ async function main() {
     addBullet(s, "The joint filter beats both ingredients, the opposite state, and drift inside TRAIN.", 782, 468, 406, C.blue, 19, 78);
     addText(s, "The exact rule cannot advance because its gains are concentrated in 2023. No threshold, state, clock, or cost rescue is allowed from this packet.", { left: 780, top: 558, width: 414, height: 62 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
     addNotes(s, "Four of five predeclared TRAIN gates pass. The calendar-breadth gate fails, so the exact rule stops and 2024+ intraday data remain unread. The scientifically useful residue is the signed ATR-state contrast: top-tail openings continue after LOW/MEDIUM ATR but fade after HIGH ATR. That mechanism can motivate a separately declared future study, but this parameterization cannot be rescue-tuned.", [sources.openingRuleGates, sources.openingRuleSummary, sources.openingRuleCalendar, sources.openingRuleReport]);
+  }
+
+  // 42 — cross-asset mechanism transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "SEVENTH MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "Does the mechanism\ntravel?", { left: 72, top: 170, width: 980, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "Repeat the same causal opening-tail / prior-day ATR contrast across a pre-existing 26-asset atlas and three eras. This is a mechanism-replication test, not a strategy backtest and not a search for favorable symbols.", { left: 76, top: 408, width: 1080, height: 132 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "NVDA excluded · its 2024+ intraday confirmation window remains unread", { left: 76, top: 602, width: 1040, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "42", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "The exact NVDA rule stopped, but its ATR-dependent response suggested a separately declared mechanism question. This section asks whether that response appears broadly across assets and eras. NVDA is excluded so its later period remains available for a separate one-asset confirmation decision.", [sources.openingAtlasSpec, sources.openingAtlasChecks, sources.openingRuleReport]);
+  }
+
+  // 43 — frozen atlas contract
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "Breadth is tested without changing the original mechanism", 43);
+    addRect(s, { left: 58, top: 164, width: 544, height: 438 }, C.paleBlue);
+    addText(s, "Frozen causal question", { left: 88, top: 194, width: 480, height: 36 }, { fontSize: 28, bold: true, color: C.navy });
+    addText(s, "At 10:00", { left: 90, top: 258, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "Opening return clears its own prior-252-session 80th percentile", { left: 90, top: 292, width: 466, height: 66 }, { fontSize: 24, bold: true, color: C.navy });
+    addText(s, "Compare", { left: 90, top: 388, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "Mean 10:00-to-close response after HIGH versus LOW/MEDIUM prior-day ATR%", { left: 90, top: 422, width: 466, height: 76 }, { fontSize: 23, bold: true, color: C.navy });
+    addText(s, "Negative HIGH-minus-LOW/MED supports the mechanism", { left: 90, top: 526, width: 466, height: 42 }, { fontSize: 18, bold: true, color: C.green, alignment: "center" });
+    addRect(s, { left: 640, top: 164, width: 582, height: 438 }, C.panel);
+    addText(s, "Evidence boundary", { left: 670, top: 194, width: 500, height: 36 }, { fontSize: 28, bold: true });
+    addBullet(s, "26 pre-existing stocks and ETFs; no symbol was added because it looked favorable.", 674, 258, 500, C.blue, 20, 82);
+    addBullet(s, "Causal 30-minute outcomes span 2018–2025, with 2017 used only for warm-up.", 674, 354, 500, C.green, 20, 78);
+    addBullet(s, "Pass requires at least 60% negative assets, a negative median contrast, and the same sign in every era.", 674, 446, 500, C.amber, 20, 98);
+    addText(s, "No costs, portfolio construction, or trade authority", { left: 670, top: 558, width: 500, height: 25 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The mechanism is unchanged from the NVDA clue: each asset uses its own causal prior-252 opening threshold, the ATR-percent state comes from the prior completed session, and the outcome is the still-tradeable 10:00-to-close log return. The atlas and gates were frozen before inspecting the result.", [sources.openingAtlasSpec, sources.openingAtlasChecks, sources.openingAtlasReport]);
+  }
+
+  // 44 — asset breadth
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "The NVDA direction is a minority pattern across assets", 44);
+    await addImage(s, img.openingAtlasAssets, { left: 40, top: 148, width: 860, height: 500 }, "Asset-level HIGH-minus-LOW-MED opening response contrasts across the 26-asset atlas");
+    addRect(s, { left: 918, top: 158, width: 304, height: 464 }, C.panel);
+    addText(s, "9 / 26", { left: 944, top: 190, width: 252, height: 56 }, { fontSize: 44, bold: true, color: C.red });
+    addText(s, "assets support the sign", { left: 944, top: 246, width: 252, height: 28 }, { fontSize: 18, bold: true, color: C.navy });
+    addText(s, "Frozen gate required 60%", { left: 944, top: 278, width: 252, height: 24 }, { fontSize: 15, color: C.muted });
+    addRect(s, { left: 944, top: 332, width: 252, height: 2 }, C.rule);
+    addText(s, "+0.093%", { left: 944, top: 364, width: 252, height: 50 }, { fontSize: 36, bold: true, color: C.red });
+    addText(s, "median asset contrast", { left: 944, top: 416, width: 252, height: 28 }, { fontSize: 18, bold: true, color: C.navy, alignment: "center" });
+    addText(s, "The typical asset continues more—not less—after a HIGH-ATR strong opening.", { left: 944, top: 500, width: 252, height: 76 }, { fontSize: 18, color: C.red, alignment: "center" });
+    addNotes(s, "Only nine of 26 eligible assets have a negative HIGH-minus-LOW/MED response. The asset-median contrast is +0.093%, the opposite of the proposed mechanism. All 26 assets satisfy the predeclared support requirement, so this is a behavioral failure rather than a sample-coverage failure.", [sources.openingAtlasAssets, sources.openingAtlasGates, sources.openingAtlasReport]);
+  }
+
+  // 45 — era stability
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "The one supportive era does not persist", 45);
+    await addImage(s, img.openingAtlasEras, { left: 40, top: 148, width: 880, height: 500 }, "Pooled strong-opening remainder and asset-median ATR contrast across three eras");
+    addRect(s, { left: 942, top: 158, width: 280, height: 464 }, C.panel);
+    addText(s, "2018–20", { left: 966, top: 190, width: 232, height: 30 }, { fontSize: 20, bold: true, color: C.red });
+    addText(s, "+0.085% median contrast", { left: 966, top: 226, width: 232, height: 28 }, { fontSize: 17, color: C.navy });
+    addText(s, "2021–23", { left: 966, top: 294, width: 232, height: 30 }, { fontSize: 20, bold: true, color: C.green });
+    addText(s, "−0.038% median contrast", { left: 966, top: 330, width: 232, height: 28 }, { fontSize: 17, color: C.navy });
+    addText(s, "2024–25", { left: 966, top: 398, width: 232, height: 30 }, { fontSize: 20, bold: true, color: C.red });
+    addText(s, "+0.083% median contrast", { left: 966, top: 434, width: 232, height: 28 }, { fontSize: 17, color: C.navy });
+    addRect(s, { left: 966, top: 492, width: 232, height: 2 }, C.rule);
+    addText(s, "The clue is time-local, not era-stable.", { left: 966, top: 520, width: 232, height: 62 }, { fontSize: 19, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The asset-median contrast is negative only during 2021-2023, and even there just 53.8% of assets are negative. It is positive in 2018-2020 and again in the newly added 2024-2025 period. This fails the predeclared every-era sign gate and shows that the apparent mechanism is time-local.", [sources.openingAtlasEras, sources.openingAtlasGates, sources.openingAtlasReport]);
+  }
+
+  // 46 — asset response map
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "Assets occupy different response geometries", 46);
+    await addImage(s, img.openingAtlasResponse, { left: 36, top: 145, width: 900, height: 510 }, "Low-medium versus high ATR strong-opening mean remainder for every atlas asset");
+    addRect(s, { left: 954, top: 160, width: 268, height: 452 }, C.panel);
+    addText(s, "How to read it", { left: 978, top: 188, width: 220, height: 32 }, { fontSize: 24, bold: true });
+    addBullet(s, "Below the diagonal supports weaker continuation in HIGH ATR.", 978, 254, 220, C.green, 17, 74);
+    addBullet(s, "Above it contradicts that mechanism.", 978, 350, 220, C.red, 17, 62);
+    addBullet(s, "Large labels mark contrast magnitude—not chosen winners.", 978, 438, 220, C.blue, 17, 76);
+    addText(s, "AMD, MSFT, and GOOGL look different from TSLA, AMT, and HD—but this atlas cannot convert that post-hoc split into a rule.", { left: 978, top: 532, width: 220, height: 64 }, { fontSize: 15, color: C.muted, alignment: "center" });
+    addNotes(s, "This map retains both state-conditioned means instead of collapsing each asset to one contrast. Points below the diagonal support the proposed mechanism; points above it contradict it. The labeled assets have the largest absolute contrasts, which exposes heterogeneity but does not authorize choosing those symbols after seeing the outcome.", [sources.openingAtlasAssets, sources.openingAtlasReport]);
+  }
+
+  // 47 — sector context
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "Sector structure is a clue, not a permission slip", 47);
+    await addImage(s, img.openingAtlasSectors, { left: 40, top: 148, width: 880, height: 500 }, "Sector-median HIGH-minus-LOW-MED response across the frozen atlas");
+    addRect(s, { left: 942, top: 158, width: 280, height: 464 }, C.panel);
+    addText(s, "Pockets of support", { left: 966, top: 190, width: 232, height: 32 }, { fontSize: 23, bold: true, color: C.green });
+    addText(s, "Technology, communication services, materials, and part of energy lean negative.", { left: 966, top: 242, width: 232, height: 92 }, { fontSize: 18, color: C.navy });
+    addRect(s, { left: 966, top: 360, width: 232, height: 2 }, C.rule);
+    addText(s, "But most groups have only two representatives, and the sector split was not a selection rule.", { left: 966, top: 394, width: 232, height: 96 }, { fontSize: 18, color: C.red });
+    addText(s, "This can motivate a new predeclared sector hypothesis; it cannot rescue the broad mechanism.", { left: 966, top: 522, width: 232, height: 62 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "Technology and communication-services representatives are uniformly negative in this atlas, while many defensive and consumer groups are positive. Those differences are scientifically useful for hypothesis generation, but the groups are small and were not predeclared as a selection rule. The broad mechanism remains stopped.", [sources.openingAtlasSectors, sources.openingAtlasAssets, sources.openingAtlasReport]);
+  }
+
+  // 48 — asset-era heatmap
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "Even supportive assets can change sign through time", 48);
+    await addImage(s, img.openingAtlasHeatmap, { left: 46, top: 142, width: 760, height: 520 }, "Asset-by-era heatmap of HIGH-minus-LOW-MED opening response contrasts");
+    addRect(s, { left: 842, top: 160, width: 380, height: 452 }, C.panel);
+    addText(s, "The instability is two-dimensional", { left: 870, top: 190, width: 324, height: 64 }, { fontSize: 25, bold: true });
+    addBullet(s, "Across rows: assets disagree about the sign.", 872, 286, 320, C.blue, 19, 62);
+    addBullet(s, "Across columns: the same asset can reverse between eras.", 872, 368, 320, C.amber, 19, 74);
+    addBullet(s, "A broad static ATR gate therefore lacks transportability.", 872, 462, 320, C.red, 19, 72);
+    addText(s, "A future niche study must predeclare both the universe and the time-validation design.", { left: 870, top: 554, width: 324, height: 42 }, { fontSize: 16, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The heatmap makes the failure visible at the asset-era level. Some assets have negative contrasts in one era and positive contrasts in another. This rules out treating prior-day ATR as a broad, static permission gate for strong-opening continuation without a newly declared universe and validation design.", [sources.openingAtlasEras, sources.openingAtlasAssets, sources.openingAtlasReport]);
+  }
+
+  // 49 — cross-asset mechanism verdict
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningAtlasHeader(s, "The broad mechanism stops; NVDA remains separate", 49);
+    addRect(s, { left: 58, top: 164, width: 1164, height: 88 }, C.paleRed);
+    addText(s, "STOP_MECHANISM_REPLICATION_GATES_FAILED", { left: 86, top: 186, width: 1108, height: 44 }, { fontSize: 31, bold: true, color: C.red, alignment: "center" });
+    addText(s, "Frozen gates", { left: 58, top: 292, width: 350, height: 38 }, { fontSize: 28, bold: true });
+    const atlasGates = [
+      ["PASS", "Asset support", "26 eligible; minimum 24"],
+      ["FAIL", "Median contrast", "+0.093%; required negative"],
+      ["FAIL", "Asset breadth", "34.6% negative; required 60%"],
+      ["FAIL", "Era stability", "negative only in 2021–2023"],
+      ["FAIL", "HIGH-ATR fade", "+0.040% pooled; required nonpositive"],
+    ];
+    atlasGates.forEach(([status, label, detail], i) => {
+      const top = 342 + i * 48;
+      const pass = status === "PASS";
+      addRect(s, { left: 72, top, width: 92, height: 32 }, pass ? C.paleGreen : C.paleRed);
+      addText(s, status, { left: 78, top: top + 6, width: 80, height: 20 }, { fontSize: 14, bold: true, color: pass ? C.green : C.red, alignment: "center" });
+      addText(s, label, { left: 186, top: top + 4, width: 238, height: 26 }, { fontSize: 18, bold: true });
+      addText(s, detail, { left: 430, top: top + 5, width: 292, height: 24 }, { fontSize: 16, color: C.muted });
+    });
+    addRect(s, { left: 752, top: 292, width: 470, height: 334 }, C.panel);
+    addText(s, "What survives the STOP", { left: 780, top: 320, width: 414, height: 34 }, { fontSize: 27, bold: true });
+    addBullet(s, "The NVDA result is not evidence for an asset-agnostic ATR gate.", 782, 382, 406, C.red, 19, 72);
+    addBullet(s, "Technology and communication pockets can motivate a new, predeclared niche hypothesis.", 782, 468, 406, C.blue, 19, 82);
+    addText(s, "NVDA's 2024+ data remain unread. The one-asset thesis may still be tested on its own terms, but it cannot borrow confidence from this atlas.", { left: 780, top: 558, width: 414, height: 62 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "Only the support gate passes. The median asset contrast, asset breadth, every-era sign, and pooled HIGH-ATR fade gates all fail. The broad mechanism therefore stops. This does not retroactively answer the separate single-NVDA confirmation question, because NVDA was excluded and its 2024+ intraday data remain unread.", [sources.openingAtlasGates, sources.openingAtlasAssets, sources.openingAtlasEras, sources.openingAtlasReport]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {
