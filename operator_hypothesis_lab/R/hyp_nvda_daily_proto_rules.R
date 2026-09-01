@@ -5,6 +5,7 @@ nvpr_stop <- function(message) {
 nvpr_contract <- function() {
   list(
     study_id = "NVDA_DAILY_PROTO_RULES_01",
+    sample_role = "TRAIN",
     symbol = "NVDA",
     analysis_start = as.Date("2018-01-02"),
     analysis_end = as.Date("2023-12-29"),
@@ -27,6 +28,23 @@ nvpr_contract <- function() {
   )
 }
 
+nvpr_confirmation_contract <- function() {
+  contract <- nvpr_contract()
+  contract$study_id <- "NVDA_DAILY_PROTO_RULES_CONFIRMATION_01"
+  contract$sample_role <- "CONFIRMATION"
+  contract$analysis_start <- as.Date("2024-01-02")
+  contract$analysis_end <- as.Date("2026-06-23")
+  contract$primary_rules <- "NOT_HIGH_ATR_LOSS_REBOUND"
+  contract$rule_ids <- c(
+    "NOT_HIGH_ATR_LOSS_REBOUND",
+    "NEGATIVE_R20_ONLY",
+    "NOT_HIGH_ATR_STATE_ONLY",
+    "NOT_HIGH_ATR_POSITIVE_OPPOSITE"
+  )
+  contract$minimum_confirmation_trades <- 10L
+  contract
+}
+
 nvpr_validate_contract <- function(contract = nvpr_contract()) {
   if (!identical(contract$symbol, "NVDA") ||
       !identical(contract$prior_sessions, 20L) ||
@@ -36,8 +54,20 @@ nvpr_validate_contract <- function(contract = nvpr_contract()) {
       !identical(contract$round_trip_cost_bps, 10)) {
     nvpr_stop("The frozen symbol, horizon, state, or cost contract changed.")
   }
-  if (contract$analysis_end > as.Date("2023-12-29")) {
-    nvpr_stop("Post-2023 outcomes are sealed.")
+  if (!contract$sample_role %in% c("TRAIN", "CONFIRMATION")) {
+    nvpr_stop("Sample role must be TRAIN or CONFIRMATION.")
+  }
+  if (contract$sample_role == "TRAIN" &&
+      (!identical(contract$analysis_start, as.Date("2018-01-02")) ||
+       !identical(contract$analysis_end, as.Date("2023-12-29")))) {
+    nvpr_stop("The frozen TRAIN boundary changed.")
+  }
+  if (contract$sample_role == "CONFIRMATION" &&
+      (!identical(contract$analysis_start, as.Date("2024-01-02")) ||
+       !identical(contract$analysis_end, as.Date("2026-06-23")) ||
+       !identical(contract$primary_rules, "NOT_HIGH_ATR_LOSS_REBOUND") ||
+       !identical(contract$minimum_confirmation_trades, 10L))) {
+    nvpr_stop("The frozen one-shot confirmation contract changed.")
   }
   contract
 }
@@ -175,7 +205,7 @@ nvpr_build_study <- function(ledger, contract = nvpr_contract()) {
   contract <- nvpr_validate_contract(contract)
   candidates <- nvpr_construct_candidates(ledger, contract)
   unconditional <- mean(candidates$gross_open_log_return)
-  trades <- do.call(rbind, lapply(names(nvpr_rule_map()), function(rule_id) {
+  trades <- do.call(rbind, lapply(contract$rule_ids, function(rule_id) {
     x <- nvpr_select_nonoverlapping(
       candidates, nvpr_rule_map()[[rule_id]], rule_id
     )
@@ -185,6 +215,54 @@ nvpr_build_study <- function(ledger, contract = nvpr_contract()) {
   }))
   rownames(trades) <- NULL
   list(candidates = candidates, trades = trades)
+}
+
+nvpr_confirmation_gate <- function(rule_summary, contract = nvpr_confirmation_contract()) {
+  contract <- nvpr_validate_contract(contract)
+  if (!identical(contract$sample_role, "CONFIRMATION")) {
+    nvpr_stop("Confirmation gate requires the confirmation contract.")
+  }
+  primary <- rule_summary[
+    rule_summary$rule_id == "NOT_HIGH_ATR_LOSS_REBOUND", , drop = FALSE
+  ]
+  controls <- rule_summary[
+    rule_summary$rule_id %in% setdiff(contract$rule_ids, contract$primary_rules),
+    , drop = FALSE
+  ]
+  if (nrow(primary) != 1L || nrow(controls) != 3L) {
+    nvpr_stop("Confirmation summary is missing the primary rule or controls.")
+  }
+  checks <- data.frame(
+    gate_id = c(
+      "minimum_trade_count", "mean_beats_unconditional_drift",
+      "median_is_positive", "majority_profitable",
+      "mean_beats_each_ingredient_control"
+    ),
+    passed = c(
+      primary$trades >= contract$minimum_confirmation_trades,
+      primary$mean_net_excess_vs_unconditional > 0,
+      primary$median_net_open_log_return > 0,
+      primary$probability_profitable_net > 0.50,
+      primary$mean_net_open_log_return > max(controls$mean_net_open_log_return)
+    ),
+    observed = c(
+      sprintf("%d trades; minimum %d", primary$trades, contract$minimum_confirmation_trades),
+      sprintf("%+.2f percentage points", 100 * primary$mean_net_excess_vs_unconditional),
+      sprintf("%+.2f%%", 100 * primary$median_net_open_log_return),
+      sprintf("%.1f%%", 100 * primary$probability_profitable_net),
+      sprintf(
+        "primary %.2f%%; strongest control %.2f%%",
+        100 * primary$mean_net_open_log_return,
+        100 * max(controls$mean_net_open_log_return)
+      )
+    ),
+    stringsAsFactors = FALSE
+  )
+  list(
+    checks = checks,
+    verdict = if (all(checks$passed)) "CONFIRMED_ON_FROZEN_OOS" else
+      "STOP_CONFIRMATION_GATES_FAILED"
+  )
 }
 
 nvpr_rule_summary <- function(trades, contract = nvpr_contract()) {

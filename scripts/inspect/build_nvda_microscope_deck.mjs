@@ -12,6 +12,7 @@ const intradayRoot = path.join(repoRoot, "runs", "research_workbench", "operator
 const dailyRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_return_microscope_20260831");
 const atlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "own_asset_return_geometry_atlas_20260826");
 const protoRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rules_20260831");
+const confirmationRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rule_confirmation_20260831");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -30,6 +31,11 @@ const img = {
   protoDistributions: path.join(protoRoot, "visuals", "nvda_proto_rule_return_distributions.png"),
   protoAnnual: path.join(protoRoot, "visuals", "nvda_proto_rule_annual_context.png"),
   protoTapes: path.join(protoRoot, "visuals", "nvda_proto_rule_representative_tapes.png"),
+  confirmationComparison: path.join(confirmationRoot, "visuals", "nvda_rebound_train_confirmation_controls.png"),
+  confirmationPrice: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_price_trades.png"),
+  confirmationEquity: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_equity.png"),
+  confirmationReturns: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_trade_returns.png"),
+  confirmationTapes: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_trade_tapes.png"),
 };
 
 const sources = {
@@ -44,6 +50,11 @@ const sources = {
   protoSummary: "Local proto-rule summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/rule_summary.csv",
   protoCalendar: "Local proto-rule annual context: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/calendar_summary.csv",
   protoTrades: "Local non-overlapping trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/trade_ledger.csv",
+  confirmationReport: "Local one-shot confirmation report: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/report.md",
+  confirmationGates: "Predeclared confirmation gates: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/confirmation_gates.csv",
+  confirmationSummary: "Frozen confirmation rule summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/rule_summary.csv",
+  confirmationTrades: "Untouched-period trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/confirmation_trade_ledger.csv",
+  confirmationHealth: "Explicit-as-of query health: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/query_health.csv",
 };
 
 const C = {
@@ -73,6 +84,14 @@ function addHeader(slide, title, page, kicker = "OPERATOR HYPOTHESIS LAB · NVDA
   addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
   addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
   addText(slide, "Descriptive research · adjusted bars · frozen 2018–2023 window", { left: 48, top: 684, width: 740, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
+function addConfirmationHeader(slide, title, page) {
+  addText(slide, "OPERATOR HYPOTHESIS LAB · NVDA CONFIRMATION", { left: 48, top: 25, width: 650, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "One-shot untouched time · adjusted daily bars · frozen 2024-01-02–2026-06-23", { left: 48, top: 684, width: 820, height: 17 }, { fontSize: 12, color: C.muted });
   addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
 }
 
@@ -424,6 +443,91 @@ async function main() {
     addBullet(s, "It does not prove generalization, robustness to nearby definitions, capacity, or live edge.", 72, 582, 1100, C.red, 21, 62);
     addText(s, "NEXT GATE: freeze this exact rule, then read the untouched 2024+ period once—without rescue tuning.", { left: 58, top: 652, width: 1164, height: 26 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
     addNotes(s, "The next methodological gate is a one-shot confirmation of the frozen calm-pullback rebound rule on untouched 2024+ data. Any later robustness or neighboring-definition work must be declared separately and cannot rewrite the original confirmation result.", [sources.protoReport, sources.protoSummary, sources.protoTrades]);
+  }
+
+  // 23 — confirmation transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "FOURTH MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "The candidate meets\nuntouched time", { left: 72, top: 170, width: 960, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "The calm-pullback rebound rule is read once on 2024-01-02 through 2026-06-23. The signal, ATR% states, timing, 20-session hold, no-overlap rule, 10-bps cost, controls, and gates remain exactly frozen.", { left: 76, top: 408, width: 1080, height: 126 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "This period is now evidence—not a new tuning surface.", { left: 76, top: 602, width: 900, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "23", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "This is the irreversible confirmation read. The exact TRAIN-selected candidate is evaluated on the previously sealed period. A failure stops the exact rule without rescue tuning.", [sources.confirmationReport, sources.confirmationGates, sources.confirmationHealth]);
+  }
+
+  // 24 — scorecard
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addConfirmationHeader(s, "The TRAIN advantage does not replicate", 24);
+    await addImage(s, img.confirmationComparison, { left: 36, top: 144, width: 850, height: 514 }, "TRAIN and untouched-confirmation mean net returns for the frozen rebound rule and its controls");
+    addRect(s, { left: 910, top: 158, width: 312, height: 468 }, C.paleRed);
+    addText(s, "STOP", { left: 938, top: 186, width: 256, height: 44 }, { fontSize: 34, bold: true, color: C.red });
+    addText(s, "1.56%", { left: 938, top: 248, width: 256, height: 54 }, { fontSize: 42, bold: true });
+    addText(s, "confirmation mean net", { left: 938, top: 302, width: 256, height: 28 }, { fontSize: 17, bold: true, color: C.navy });
+    addBullet(s, "9 trades; minimum gate was 10", 938, 362, 252, C.red, 18, 56);
+    addBullet(s, "−2.88 pp versus 4.44% unconditional drift", 938, 430, 252, C.red, 18, 72);
+    addBullet(s, "Below every ingredient control; strongest = 5.12%", 938, 516, 252, C.red, 18, 82);
+    addNotes(s, "TRAIN showed a 6.33% mean net return for the joint condition. Untouched confirmation produced 1.56%, below 4.44% unconditional gross drift and below all three frozen controls. The exact rule therefore fails confirmation.", [sources.confirmationReport, sources.confirmationGates, sources.confirmationSummary]);
+  }
+
+  // 25 — every trade
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addConfirmationHeader(s, "A positive median is not enough to beat the baseline", 25);
+    await addImage(s, img.confirmationReturns, { left: 42, top: 148, width: 882, height: 490 }, "Every frozen confirmation trade return in chronological order");
+    addRect(s, { left: 950, top: 164, width: 272, height: 438 }, C.panel);
+    addText(s, "What survived", { left: 974, top: 190, width: 224, height: 30 }, { fontSize: 23, bold: true });
+    addText(s, "+2.19%", { left: 974, top: 246, width: 224, height: 46 }, { fontSize: 35, bold: true, color: C.green });
+    addText(s, "median net", { left: 974, top: 290, width: 224, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "6 / 9", { left: 974, top: 344, width: 224, height: 46 }, { fontSize: 35, bold: true, color: C.green });
+    addText(s, "profitable trades", { left: 974, top: 388, width: 224, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "What failed", { left: 974, top: 452, width: 224, height: 30 }, { fontSize: 23, bold: true, color: C.red });
+    addText(s, "The sequence's average was too weak to overcome ordinary NVDA drift or the simpler controls.", { left: 974, top: 500, width: 224, height: 82 }, { fontSize: 18, bold: true, color: C.navy });
+    addNotes(s, "The rule was right more often than wrong and had a positive median, but those facts are subordinate to the economic comparison. The average result lagged what NVDA produced unconditionally over the same 20-session horizon.", [sources.confirmationTrades, sources.confirmationSummary, sources.confirmationGates]);
+  }
+
+  // 26 — participation and realized equity
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addConfirmationHeader(s, "Participation was sparse—and the path depended on late winners", 26);
+    await addImage(s, img.confirmationPrice, { left: 38, top: 146, width: 592, height: 470 }, "NVDA price and the nine non-overlapping confirmation trade windows");
+    await addImage(s, img.confirmationEquity, { left: 650, top: 146, width: 592, height: 470 }, "Realized confirmation equity and normalized NVDA close reference");
+    addText(s, "The rule spent much of 2025 underwater, then recovered on a +21.6% late trade. A final equity level above 1 does not establish incremental edge.", { left: 84, top: 628, width: 1112, height: 44 }, { fontSize: 18, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The participation chart shows only nine non-overlapping entries. The realized-equity path remained below its starting level through much of the confirmation period before a late large winner. This visual reinforces why the drift and ingredient-control comparisons are decisive.", [sources.confirmationTrades, sources.confirmationSummary]);
+  }
+
+  // 27 — path tapes
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addConfirmationHeader(s, "The trade paths do not reveal a stable rebound shape", 27);
+    await addImage(s, img.confirmationTapes, { left: 40, top: 144, width: 1188, height: 514 }, "All nine confirmation paths and the worst, median-nearest, and best examples");
+    addNotes(s, "The all-path panel shows considerable dispersion rather than a repeated recovery trajectory. The worst trade lost 18.6%, the median-nearest trade gained 2.2%, and the best gained 21.6%. These are descriptive trade tapes, not independent confirmations.", [sources.confirmationTrades, sources.confirmationReport]);
+  }
+
+  // 28 — final confirmation decision
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addConfirmationHeader(s, "The exact calm-pullback rebound rule stops", 28);
+    addRect(s, { left: 58, top: 164, width: 1164, height: 96 }, C.paleRed);
+    addText(s, "STOP_CONFIRMATION_GATES_FAILED", { left: 86, top: 190, width: 1108, height: 44 }, { fontSize: 31, bold: true, color: C.red, alignment: "center" });
+    addText(s, "Predeclared gates", { left: 58, top: 304, width: 350, height: 38 }, { fontSize: 28, bold: true });
+    const gates = [
+      ["FAIL", "Minimum sample", "9 trades; required 10"],
+      ["FAIL", "Beat drift", "1.56% vs 4.44%"],
+      ["PASS", "Positive median", "+2.19%"],
+      ["PASS", "Majority profitable", "66.7%"],
+      ["FAIL", "Beat each control", "strongest control 5.12%"],
+    ];
+    gates.forEach(([status, label, detail], i) => {
+      const top = 360 + i * 50;
+      const pass = status === "PASS";
+      addRect(s, { left: 72, top, width: 92, height: 34 }, pass ? C.paleGreen : C.paleRed);
+      addText(s, status, { left: 78, top: top + 7, width: 80, height: 20 }, { fontSize: 14, bold: true, color: pass ? C.green : C.red, alignment: "center" });
+      addText(s, label, { left: 186, top: top + 5, width: 270, height: 26 }, { fontSize: 19, bold: true });
+      addText(s, detail, { left: 462, top: top + 6, width: 230, height: 24 }, { fontSize: 17, color: C.muted });
+    });
+    addRect(s, { left: 738, top: 304, width: 484, height: 340 }, C.panel);
+    addText(s, "What we learned", { left: 766, top: 332, width: 428, height: 34 }, { fontSize: 27, bold: true });
+    addBullet(s, "A descriptive clue can survive TRAIN execution and still vanish in new time.", 768, 394, 420, C.blue, 20, 76);
+    addBullet(s, "Win rate and median can look encouraging while average opportunity cost is unfavorable.", 768, 486, 420, C.amber, 20, 84);
+    addText(s, "No rescue tuning. Any future variation must be declared as a new hypothesis and cannot overwrite this result.", { left: 766, top: 568, width: 428, height: 66 }, { fontSize: 18, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The exact one-asset rule is stopped. The confirmation period has now been consumed and cannot be reused as untouched evidence. A later variation may be researched only as a new hypothesis with a newly protected confirmation boundary.", [sources.confirmationGates, sources.confirmationReport, sources.confirmationHealth]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {

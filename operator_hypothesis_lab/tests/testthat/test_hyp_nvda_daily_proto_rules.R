@@ -64,5 +64,37 @@ testthat::test_that("non-overlap prevents a new entry before the prior exit", {
 testthat::test_that("post-2023 outcomes cannot enter the construction", {
   contract <- nvpr_contract()
   contract$analysis_end <- as.Date("2024-01-02")
-  testthat::expect_error(nvpr_validate_contract(contract), "sealed")
+  testthat::expect_error(nvpr_validate_contract(contract), "TRAIN boundary")
+})
+
+testthat::test_that("confirmation contract is one rule, one fixed window, and one fixed gate", {
+  contract <- nvpr_confirmation_contract()
+  testthat::expect_equal(contract$analysis_start, as.Date("2024-01-02"))
+  testthat::expect_equal(contract$analysis_end, as.Date("2026-06-23"))
+  testthat::expect_identical(contract$primary_rules, "NOT_HIGH_ATR_LOSS_REBOUND")
+  testthat::expect_identical(contract$minimum_confirmation_trades, 10L)
+  changed <- contract
+  changed$analysis_end <- as.Date("2026-06-24")
+  testthat::expect_error(nvpr_validate_contract(changed), "confirmation contract")
+})
+
+testthat::test_that("confirmation gate requires every frozen criterion", {
+  contract <- nvpr_confirmation_contract()
+  summary <- data.frame(
+    rule_family = rep("NOT_HIGH_ATR_LOSS_REBOUND", 4L),
+    rule_id = contract$rule_ids,
+    primary_rule = c(TRUE, FALSE, FALSE, FALSE),
+    trades = c(12L, 15L, 18L, 17L),
+    mean_net_open_log_return = c(0.06, 0.02, 0.04, 0.03),
+    median_net_open_log_return = c(0.05, 0.01, 0.02, 0.02),
+    probability_profitable_net = c(0.60, 0.53, 0.55, 0.52),
+    mean_net_excess_vs_unconditional = c(0.03, -0.01, 0.01, 0.00),
+    stringsAsFactors = FALSE
+  )
+  passed <- nvpr_confirmation_gate(summary, contract)
+  testthat::expect_identical(passed$verdict, "CONFIRMED_ON_FROZEN_OOS")
+  summary$mean_net_open_log_return[[1L]] <- 0.035
+  stopped <- nvpr_confirmation_gate(summary, contract)
+  testthat::expect_identical(stopped$verdict, "STOP_CONFIRMATION_GATES_FAILED")
+  testthat::expect_false(stopped$checks$passed[stopped$checks$gate_id == "mean_beats_each_ingredient_control"])
 })
