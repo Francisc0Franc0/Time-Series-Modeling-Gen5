@@ -1,0 +1,264 @@
+{"kind":"deck","id":"pr/l311m7","name":"Deck"}
+{"kind":"layout","layoutId":"813924d5-6848-4f7b-b89b-21a88ddcc1ec","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"5e5e4adb-6dd7-4237-9bcf-4778119aff6c","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/7z3nzh","slide":1,"title":"OPERATOR HYPOTHESIS LAB · ONE-ASSET MICROSCOPE","textShapes":9}
+{"kind":"shape","id":"sh/wvapovid","slide":1,"bbox":[0,0,24,720]}
+{"kind":"textbox","id":"sh/vuh8vqhs","slide":1,"text":"OPERATOR HYPOTHESIS LAB · ONE-ASSET MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · ONE-ASSET MICROSCOPE","textChars":46,"textLines":1,"bbox":[72,70,760,28]}
+{"kind":"textbox","id":"sh/u987ml07","slide":1,"text":"NVDA\nmicroscope","textPreview":"NVDA | microscope","textChars":15,"textLines":2,"bbox":[72,142,690,190]}
+{"kind":"textbox","id":"sh/50jq10zu","slide":1,"text":"From the intraday return clock to daily return geometry.","textPreview":"From the intraday return clock to daily return geometry.","textChars":56,"textLines":1,"bbox":[76,370,760,70]}
+{"kind":"shape","id":"sh/4zapsfi9","slide":1,"bbox":[914,120,264,264]}
+{"kind":"textbox","id":"sh/jy18zaho","slide":1,"text":"30m","textPreview":"30m","textChars":3,"textLines":1,"bbox":[934,170,224,74]}
+{"kind":"textbox","id":"sh/ixs7q503","slide":1,"text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[1004,250,84,50]}
+{"kind":"textbox","id":"sh/t43q5kzq","slide":1,"text":"1D","textPreview":"1D","textChars":2,"textLines":1,"bbox":[934,302,224,56]}
+{"kind":"shape","id":"sh/s3upwfi5","slide":1,"bbox":[72,532,1106,2]}
+{"kind":"textbox","id":"sh/edobutsf","slide":1,"text":"Research posture","textPreview":"Research posture","textChars":16,"textLines":1,"bbox":[72,562,210,26]}
+{"kind":"textbox","id":"sh/fexsnyt0","slide":1,"text":"Observe first. Separate clock effects from state effects. Preserve 2024+ as untouched confirmation data.","textPreview":"Observe first. Separate clock effects from state effects. Preserve 2024+ as untouched confirmation data.","textChars":104,"textLines":1,"bbox":[300,554,850,64]}
+{"kind":"textbox","id":"sh/gf6tw3al","slide":1,"text":"DESCRIPTIVE SLICE · NO EDGE CLAIM","textPreview":"DESCRIPTIVE SLICE · NO EDGE CLAIM","textChars":33,"textLines":1,"bbox":[72,666,480,20]}
+{"kind":"notes","id":"nt/7z3nzh","slide":1,"text":"This deck begins the NVDA one-asset microscope and records the first two views: unconditional intraday clock behavior and the established daily return-geometry template.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/66zwfo","slide":2,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":13}
+{"kind":"textbox","id":"sh/i1wvy9cf","slide":2,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/54netov6","slide":2,"text":"One asset is a legitimate research object","textPreview":"One asset is a legitimate research object","textChars":41,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/k3ed0jul","slide":2,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/vylcned4","slide":2,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/axcvu9cj","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/x03up4vu","slide":2,"bbox":[58,164,540,430]}
+{"kind":"textbox","id":"sh/wzudwju9","slide":2,"text":"What specialization buys","textPreview":"What specialization buys","textChars":24,"textLines":1,"bbox":[86,194,470,38]}
+{"kind":"shape","id":"sh/fupwzyd8","slide":2,"bbox":[88,269,9,9]}
+{"kind":"textbox","id":"sh/etgv6tcn","slide":2,"text":"A focused view of NVDA’s own liquidity, attention, overnight, and time-of-day structure.","textPreview":"A focused view of NVDA’s own liquidity, attention, overnight, and time-of-day structure.","textChars":88,"textLines":1,"bbox":[112,260,436,86]}
+{"kind":"shape","id":"sh/8z65gn2l","slide":2,"bbox":[88,383,9,9]}
+{"kind":"textbox","id":"sh/9kf6ps36","slide":2,"text":"A tractable laboratory for operator-facing visual sanity checks.","textPreview":"A tractable laboratory for operator-facing visual sanity checks.","textChars":64,"textLines":1,"bbox":[112,374,436,74]}
+{"kind":"shape","id":"sh/mxonedkv","slide":2,"bbox":[88,481,9,9]}
+{"kind":"textbox","id":"sh/nyx4nilg","slide":2,"text":"A strategy may trade one asset if its validation remains honest and causal.","textPreview":"A strategy may trade one asset if its validation remains honest and causal.","textChars":75,"textLines":1,"bbox":[112,472,436,80]}
+{"kind":"shape","id":"sh/0vm5c3mp","slide":2,"bbox":[640,164,582,430]}
+{"kind":"textbox","id":"sh/lwfml83a","slide":2,"text":"What specialization costs","textPreview":"What specialization costs","textChars":25,"textLines":1,"bbox":[672,194,500,38]}
+{"kind":"shape","id":"sh/yt4nad4j","slide":2,"bbox":[674,269,9,9]}
+{"kind":"textbox","id":"sh/zud4jil4","slide":2,"text":"Greater risk that a pattern describes one historical path rather than a durable mechanism.","textPreview":"Greater risk that a pattern describes one historical path rather than a durable mechanism.","textChars":90,"textLines":1,"bbox":[698,260,476,86]}
+{"kind":"shape","id":"sh/crm583mt","slide":2,"bbox":[674,383,9,9]}
+{"kind":"textbox","id":"sh/dsvmh83y","slide":2,"text":"No cross-asset breadth to rescue weak causal reasoning.","textPreview":"No cross-asset breadth to rescue weak causal reasoning.","textChars":55,"textLines":1,"bbox":[698,374,476,74]}
+{"kind":"shape","id":"sh/tc3up0rq","slide":2,"bbox":[674,481,9,9]}
+{"kind":"textbox","id":"sh/sbutwva5","slide":2,"text":"Untouched time, realistic execution, and explicit baselines become even more important.","textPreview":"Untouched time, realistic execution, and explicit baselines become even more important.","textChars":87,"textLines":1,"bbox":[698,472,476,80]}
+{"kind":"textbox","id":"sh/7alcnq9k","slide":2,"text":"The design target is not asset-agnosticism. It is falsifiable specialization.","textPreview":"The design target is not asset-agnosticism. It is falsifiable specialization.","textChars":77,"textLines":1,"bbox":[58,620,1164,38]}
+{"kind":"notes","id":"nt/66zwfo","slide":2,"text":"A one-asset strategy is not methodologically disqualified. It simply cannot borrow confidence from universality; the evidence must come from causal construction, stability over time, execution realism, and untouched confirmation.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/09vfy9","slide":3,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/x0zqxobm","slide":3,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/ado729cv","slide":3,"text":"The first microscope: NVDA’s return clock","textPreview":"The first microscope: NVDA’s return clock","textChars":41,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/veh8vetg","slide":3,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/k3q983ux","slide":3,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/54zq18bi","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/j2h8zytc","slide":3,"bbox":[974,158,258,468]}
+{"kind":"textbox","id":"sh/s7a9c3u9","slide":3,"text":"How to read it","textPreview":"How to read it","textChars":14,"textLines":1,"bbox":[998,184,214,30]}
+{"kind":"shape","id":"sh/t8jq58bu","slide":3,"bbox":[998,247,9,9]}
+{"kind":"textbox","id":"sh/tobq9wrm","slide":3,"text":"Each dot is one observed return.","textPreview":"Each dot is one observed return.","textChars":32,"textLines":1,"bbox":[1022,238,190,56]}
+{"kind":"shape","id":"sh/8n2p0ra1","slide":3,"bbox":[998,321,9,9]}
+{"kind":"textbox","id":"sh/7mt87m9g","slide":3,"text":"The overnight gap sits left of the first bar.","textPreview":"The overnight gap sits left of the first bar.","textChars":45,"textLines":1,"bbox":[1022,312,190,72]}
+{"kind":"shape","id":"sh/6l07yhsb","slide":3,"bbox":[998,413,9,9]}
+{"kind":"textbox","id":"sh/hcbqdwry","slide":3,"text":"Median ticks are tiny relative to the tails.","textPreview":"Median ticks are tiny relative to the tails.","textChars":44,"textLines":1,"bbox":[1022,404,190,70]}
+{"kind":"shape","id":"sh/gb2p4rad","slide":3,"bbox":[998,505,9,9]}
+{"kind":"textbox","id":"sh/vat8bm9s","slide":3,"text":"No filter, model, or trade rule is present.","textPreview":"No filter, model, or trade rule is present.","textChars":43,"textLines":1,"bbox":[1022,496,190,70]}
+{"kind":"image","id":"im/bahczq14","slide":3,"name":"","alt":"NVDA overnight gap and regular-session 30-minute open-to-close return distributions, 2018-2023","bbox":[42,146,910,500]}
+{"kind":"notes","id":"nt/09vfy9","slide":3,"text":"This is the unconditional distribution of NVDA returns by clock position. It is a map of where variation lives, not evidence that any position is predictable.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local run specification: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/txssak","slide":4,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":22}
+{"kind":"textbox","id":"sh/writcfup","slide":4,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/vqpsjad4","slide":4,"text":"The clock is structured—even before prediction","textPreview":"The clock is structured—even before prediction","textChars":46,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/upgba5cj","slide":4,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/5wrapkv6","slide":4,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/4vitgful","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/ju9snad0","slide":4,"bbox":[58,166,260,126]}
+{"kind":"shape","id":"sh/it0be5cf","slide":4,"bbox":[58,166,8,126]}
+{"kind":"textbox","id":"sh/l07adgv2","slide":4,"text":"1,499","textPreview":"1,499","textChars":5,"textLines":1,"bbox":[82,180,220,42]}
+{"kind":"textbox","id":"sh/kzyt4vuh","slide":4,"text":"sessions","textPreview":"sessions","textChars":8,"textLines":1,"bbox":[82,229,220,24]}
+{"kind":"textbox","id":"sh/ulcfe147","slide":4,"text":"Frozen research window","textPreview":"Frozen research window","textChars":22,"textLines":1,"bbox":[82,258,220,22]}
+{"kind":"shape","id":"sh/vmlgnm5s","slide":4,"bbox":[338,166,260,126]}
+{"kind":"shape","id":"sh/w7uxgrmd","slide":4,"bbox":[338,166,8,126]}
+{"kind":"textbox","id":"sh/h83ypwny","slide":4,"text":"19,415","textPreview":"19,415","textChars":6,"textLines":1,"bbox":[362,180,220,42]}
+{"kind":"textbox","id":"sh/i9cfi143","slide":4,"text":"30-minute bars","textPreview":"30-minute bars","textChars":14,"textLines":1,"bbox":[362,229,220,24]}
+{"kind":"textbox","id":"sh/jalgr65o","slide":4,"text":"Regular-session observations","textPreview":"Regular-session observations","textChars":28,"textLines":1,"bbox":[362,258,220,22]}
+{"kind":"shape","id":"sh/4buxkbm9","slide":4,"bbox":[618,166,260,126]}
+{"kind":"shape","id":"sh/5cnytgnu","slide":4,"bbox":[618,166,8,126]}
+{"kind":"textbox","id":"sh/6dwfml4f","slide":4,"text":"1,490","textPreview":"1,490","textChars":5,"textLines":1,"bbox":[642,180,220,42]}
+{"kind":"textbox","id":"sh/re5gv650","slide":4,"text":"overnight gaps","textPreview":"overnight gaps","textChars":14,"textLines":1,"bbox":[642,229,220,24]}
+{"kind":"textbox","id":"sh/3i5wjq18","slide":4,"text":"Valid close-to-open observations","textPreview":"Valid close-to-open observations","textChars":32,"textLines":1,"bbox":[642,258,220,22]}
+{"kind":"shape","id":"sh/2hwfalkn","slide":4,"bbox":[898,166,324,126]}
+{"kind":"shape","id":"sh/p47elgjy","slide":4,"bbox":[898,166,8,126]}
+{"kind":"textbox","id":"sh/ojexcb2d","slide":4,"text":"2024+","textPreview":"2024+","textChars":5,"textLines":1,"bbox":[922,180,284,42]}
+{"kind":"textbox","id":"sh/fe5wf6lw","slide":4,"text":"unread","textPreview":"unread","textChars":6,"textLines":1,"bbox":[922,229,284,24]}
+{"kind":"textbox","id":"sh/edwv61kb","slide":4,"text":"Reserved confirmation boundary","textPreview":"Reserved confirmation boundary","textChars":30,"textLines":1,"bbox":[922,258,284,22]}
+{"kind":"shape","id":"sh/1gnehgj2","slide":4,"bbox":[58,330,1164,252]}
+{"kind":"textbox","id":"sh/gfex8b2h","slide":4,"text":"Visible pattern","textPreview":"Visible pattern","textChars":15,"textLines":1,"bbox":[86,360,260,32]}
+{"kind":"shape","id":"sh/ralwb6l0","slide":4,"bbox":[88,425,9,9]}
+{"kind":"textbox","id":"sh/69cv21kf","slide":4,"text":"The overnight gap has the broadest return distribution.","textPreview":"The overnight gap has the broadest return distribution.","textChars":55,"textLines":1,"bbox":[112,416,476,70]}
+{"kind":"shape","id":"sh/wfatc7id","slide":4,"bbox":[88,503,9,9]}
+{"kind":"textbox","id":"sh/xgju5sji","slide":4,"text":"The first 30 minutes are the widest regular-session bar; midday compresses; the close widens again.","textPreview":"The first 30 minutes are the widest regular-session bar; midday compresses; the close widens again.","textChars":99,"textLines":1,"bbox":[112,494,476,86]}
+{"kind":"textbox","id":"sh/atsbax07","slide":4,"text":"What remains unknown","textPreview":"What remains unknown","textChars":20,"textLines":1,"bbox":[672,360,300,32]}
+{"kind":"shape","id":"sh/vu1c321s","slide":4,"bbox":[674,425,9,9]}
+{"kind":"textbox","id":"sh/4jatg7i9","slide":4,"text":"Whether prior information predicts which tail will occur.","textPreview":"Whether prior information predicts which tail will occur.","textChars":57,"textLines":1,"bbox":[698,416,472,70]}
+{"kind":"shape","id":"sh/5k3u9czu","slide":4,"bbox":[674,503,9,9]}
+{"kind":"textbox","id":"sh/ihsbex03","slide":4,"text":"Whether any conditional difference survives costs and untouched time.","textPreview":"Whether any conditional difference survives costs and untouched time.","textChars":69,"textLines":1,"bbox":[698,494,472,86]}
+{"kind":"notes","id":"nt/txssak","slide":4,"text":"The distribution changes across the clock. That justifies conditioning questions, but it does not yet justify a trading action.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local run specification: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/run_spec.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/s8nemy","slide":5,"title":"SECOND MICROSCOPE","textShapes":5}
+{"kind":"textbox","id":"sh/q9wb61on","slide":5,"text":"SECOND MICROSCOPE","textPreview":"SECOND MICROSCOPE","textChars":17,"textLines":1,"bbox":[72,94,420,30]}
+{"kind":"textbox","id":"sh/dwnuhgny","slide":5,"text":"Move up one level:\ndaily return geometry","textPreview":"Move up one level: | daily return geometry","textChars":40,"textLines":2,"bbox":[72,170,900,170]}
+{"kind":"textbox","id":"sh/cvet8b6d","slide":5,"text":"The same frozen 2018–2023 NVDA history is viewed through prior-versus-forward cumulative log returns, then split by path efficiency, volatility, direction, and prior-return sign.","textPreview":"The same frozen 2018–2023 NVDA history is viewed through prior-versus-forward cumulative log returns, then split by path efficiency, vola...","textChars":178,"textLines":1,"bbox":[76,408,1040,112]}
+{"kind":"textbox","id":"sh/zypcj654","slide":5,"text":"Fixed horizons: 1, 2, 3, 4, 5, 10, 15, 20, 25 sessions","textPreview":"Fixed horizons: 1, 2, 3, 4, 5, 10, 15, 20, 25 sessions","textChars":54,"textLines":1,"bbox":[76,602,900,32]}
+{"kind":"textbox","id":"sh/exgba1oj","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1134,672,90,20]}
+{"kind":"notes","id":"nt/s8nemy","slide":5,"text":"This section reuses the predeclared atlas vocabulary. It does not choose new horizons after seeing NVDA.\n\n[Sources]\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n- Frozen own-asset atlas packet: runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/y89p2g","slide":6,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":10}
+{"kind":"textbox","id":"sh/bm1o3mx0","slide":6,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/cnupcrel","slide":6,"text":"Adjacent daily returns mostly form a cloud","textPreview":"Adjacent daily returns mostly form a cloud","textChars":42,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/xo3q5cfq","slide":6,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/2xs76xw3","slide":6,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/ni1oz2xo","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/pkj61cfu","slide":6,"bbox":[922,158,300,470]}
+{"kind":"textbox","id":"sh/mtc7i1wn","slide":6,"text":"First reading","textPreview":"First reading","textChars":13,"textLines":1,"bbox":[948,186,250,30]}
+{"kind":"textbox","id":"sh/7e58b6x8","slide":6,"text":"−0.075","textPreview":"−0.075","textChars":6,"textLines":1,"bbox":[948,244,250,58]}
+{"kind":"textbox","id":"sh/fmtkfil0","slide":6,"text":"unfiltered 1×1 Pearson r","textPreview":"unfiltered 1×1 Pearson r","textChars":24,"textLines":1,"bbox":[948,306,250,34]}
+{"kind":"shape","id":"sh/ulk3mdkf","slide":6,"bbox":[948,383,9,9]}
+{"kind":"textbox","id":"sh/hov2hs3q","slide":6,"text":"A slight adjacent-day reversal tilt.","textPreview":"A slight adjacent-day reversal tilt.","textChars":36,"textLines":1,"bbox":[972,374,220,64]}
+{"kind":"shape","id":"sh/gn2lon25","slide":6,"bbox":[948,461,9,9]}
+{"kind":"textbox","id":"sh/3qdkjilw","slide":6,"text":"Large tails exist in every directional quadrant.","textPreview":"Large tails exist in every directional quadrant.","textChars":48,"textLines":1,"bbox":[972,452,220,76]}
+{"kind":"shape","id":"sh/2p43qxkb","slide":6,"bbox":[948,553,9,9]}
+{"kind":"textbox","id":"sh/psv2ls32","slide":6,"text":"The cloud alone is not a rule.","textPreview":"The cloud alone is not a rule.","textChars":30,"textLines":1,"bbox":[972,544,220,60]}
+{"kind":"image","id":"im/98zep4ba","slide":6,"name":"","alt":"NVDA prior-day versus next-day adjusted log-return scatterplot, 2018-2023","bbox":[48,146,850,508]}
+{"kind":"notes","id":"nt/y89p2g","slide":6,"text":"The adjacent-session view is visually noisy, with a small negative Pearson correlation. The next question is whether longer windows or causal states reveal coherent regions.\n\n[Sources]\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n- Local 1x1 state summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_one_by_one_state_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/2l4fyh","slide":7,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/dkri5gfe","slide":7,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/qh0ju1gn","slide":7,"text":"The unfiltered surface is weak and mixed","textPreview":"The unfiltered surface is weak and mixed","textChars":40,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/bi9036x8","slide":7,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/ofi1sryh","slide":7,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/pgri1wz2","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/3e90zmhw","slide":7,"bbox":[846,166,376,436]}
+{"kind":"textbox","id":"sh/gby1oryl","slide":7,"text":"Geometry, not a winner cell","textPreview":"Geometry, not a winner cell","textChars":27,"textLines":1,"bbox":[874,194,320,62]}
+{"kind":"shape","id":"sh/1c7ixwz6","slide":7,"bbox":[876,291,9,9]}
+{"kind":"textbox","id":"sh/10b69gfa","slide":7,"text":"Short prior windows lean slightly negative into short forward windows.","textPreview":"Short prior windows lean slightly negative into short forward windows.","textChars":70,"textLines":1,"bbox":[900,282,292,82]}
+{"kind":"shape","id":"sh/0z2pgbep","slide":7,"bbox":[876,391,9,9]}
+{"kind":"textbox","id":"sh/fyto76xk","slide":7,"text":"Longer prior and forward windows drift mildly positive.","textPreview":"Longer prior and forward windows drift mildly positive.","textChars":55,"textLines":1,"bbox":[900,382,292,78]}
+{"kind":"shape","id":"sh/exk7e1wz","slide":7,"bbox":[876,491,9,9]}
+{"kind":"textbox","id":"sh/dcr65wfe","slide":7,"text":"Magnitude is small without a state split.","textPreview":"Magnitude is small without a state split.","textChars":41,"textLines":1,"bbox":[900,482,292,70]}
+{"kind":"textbox","id":"sh/sbipcbet","slide":7,"text":"This is a descriptive map. No multiplicity claim is made.","textPreview":"This is a descriptive map. No multiplicity claim is made.","textChars":57,"textLines":1,"bbox":[846,622,376,36]}
+{"kind":"image","id":"im/nixoz6x8","slide":7,"name":"","alt":"NVDA unfiltered 9 by 9 prior-versus-forward daily return correlation heatmap","bbox":[56,144,760,510]}
+{"kind":"notes","id":"nt/2l4fyh","slide":7,"text":"The full surface prevents us from over-reading the adjacent-day point. Without state conditioning, the grid remains close to zero and changes sign gradually across horizons.\n\n[Sources]\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/x30l3q","slide":8,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/pgj2p4j2","slide":8,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/2ds3e9kr","slide":8,"text":"The filters are observable states—not forecasts","textPreview":"The filters are observable states—not forecasts","textChars":47,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/ne1knu1c","slide":8,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/0balcz2l","slide":8,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/1cj2l4j6","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/fa1kju10","slide":8,"bbox":[970,160,252,462]}
+{"kind":"textbox","id":"sh/s7ql8f2p","slide":8,"text":"Vocabulary","textPreview":"Vocabulary","textChars":10,"textLines":1,"bbox":[994,188,208,30]}
+{"kind":"shape","id":"sh/d8z2hkju","slide":8,"bbox":[994,257,9,9]}
+{"kind":"textbox","id":"sh/xozitgby","slide":8,"text":"ER20: sideways vs efficient path","textPreview":"ER20: sideways vs efficient path","textChars":32,"textLines":1,"bbox":[1018,248,184,78]}
+{"kind":"shape","id":"sh/wnq10bad","slide":8,"bbox":[994,353,9,9]}
+{"kind":"textbox","id":"sh/bmh0rqts","slide":8,"text":"ATR%: low, medium, high volatility","textPreview":"ATR%: low, medium, high volatility","textChars":34,"textLines":1,"bbox":[1018,344,184,78]}
+{"kind":"shape","id":"sh/al8jyls7","slide":8,"bbox":[994,449,9,9]}
+{"kind":"textbox","id":"sh/9kzipgb2","slide":8,"text":"Signed ER20: down, sideways, up","textPreview":"Signed ER20: down, sideways, up","textChars":31,"textLines":1,"bbox":[1018,440,184,78]}
+{"kind":"textbox","id":"sh/oj6hwbah","slide":8,"text":"Each label is assigned from information available at the anchor session.","textPreview":"Each label is assigned from information available at the anchor session.","textChars":72,"textLines":1,"bbox":[994,548,208,58]}
+{"kind":"image","id":"im/n210j6tg","slide":8,"name":"","alt":"NVDA price with signed ER20, ER20, and ATR-percent state bands, 2018-2023","bbox":[44,148,900,492]}
+{"kind":"notes","id":"nt/x30l3q","slide":8,"text":"The state-band plot is the sanity check: the numerical filters should correspond to recognizable price-path and volatility regimes. They remain descriptive labels, not forecasts.\n\n[Sources]\n- Frozen own-asset atlas packet: runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/fgltfd","slide":9,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":8}
+{"kind":"textbox","id":"sh/xgb2lsvq","slide":9,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/adk3qdwf","slide":9,"text":"ER20 separates two different surfaces","textPreview":"ER20 separates two different surfaces","textChars":37,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/vetkjidk","slide":9,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/kjmlwnuh","slide":9,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/5kv2psv2","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/jitknidw","slide":9,"bbox":[968,160,254,458]}
+{"kind":"textbox","id":"sh/s7ml07ud","slide":9,"text":"Visual clue","textPreview":"Visual clue","textChars":11,"textLines":1,"bbox":[992,188,210,30]}
+{"kind":"shape","id":"sh/t8vmtcvy","slide":9,"bbox":[992,255,9,9]}
+{"kind":"textbox","id":"sh/xg3i1gba","slide":9,"text":"Sideways: correlations stay near zero with mild negative longer-forward patches.","textPreview":"Sideways: correlations stay near zero with mild negative longer-forward patches.","textChars":80,"textLines":1,"bbox":[1016,246,186,110]}
+{"kind":"shape","id":"sh/cfu1sba5","slide":9,"bbox":[992,391,9,9]}
+{"kind":"textbox","id":"sh/bel0z6tk","slide":9,"text":"Efficient: a positive long-prior / long-forward region appears.","textPreview":"Efficient: a positive long-prior / long-forward region appears.","textChars":63,"textLines":1,"bbox":[1016,382,186,92]}
+{"kind":"textbox","id":"sh/adcjq1sz","slide":9,"text":"ER20 alone does not say whether the efficient path is up or down.","textPreview":"ER20 alone does not say whether the efficient path is up or down.","textChars":65,"textLines":1,"bbox":[992,520,210,74]}
+{"kind":"image","id":"im/r6l0z2dg","slide":9,"name":"","alt":"NVDA daily return correlation heatmaps split by ER20 sideways and efficient states","bbox":[42,148,900,490]}
+{"kind":"notes","id":"nt/fgltfd","slide":9,"text":"The efficient-state heatmap contains a coherent positive region at longer horizons, while the sideways state remains flatter. Direction is still aggregated here, so signed ER20 is needed next.\n\n[Sources]\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/3ccaua","slide":10,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":13}
+{"kind":"textbox","id":"sh/a5wbqt8j","slide":10,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/x8nulora","slide":10,"text":"ATR% reveals a sharp short-horizon contrast","textPreview":"ATR% reveals a sharp short-horizon contrast","textChars":43,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/c7etsjqp","slide":10,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/nilcfe9s","slide":10,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/2hcbm98n","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/ojutojqd","slide":10,"bbox":[968,160,254,458]}
+{"kind":"textbox","id":"sh/7epcri9c","slide":10,"text":"1×1 Pearson r","textPreview":"1×1 Pearson r","textChars":13,"textLines":1,"bbox":[992,188,210,28]}
+{"kind":"textbox","id":"sh/mdgvyd8r","slide":10,"text":"+0.013","textPreview":"+0.013","textChars":6,"textLines":1,"bbox":[992,244,110,38]}
+{"kind":"textbox","id":"sh/4ja1snq5","slide":10,"text":"low","textPreview":"low","textChars":3,"textLines":1,"bbox":[1110,250,90,26]}
+{"kind":"textbox","id":"sh/5kj21sra","slide":10,"text":"+0.043","textPreview":"+0.043","textChars":6,"textLines":1,"bbox":[992,300,110,38]}
+{"kind":"textbox","id":"sh/ih8jqx8z","slide":10,"text":"medium","textPreview":"medium","textChars":6,"textLines":1,"bbox":[1110,306,90,26]}
+{"kind":"textbox","id":"sh/ji1kzi9k","slide":10,"text":"−0.174","textPreview":"−0.174","textChars":6,"textLines":1,"bbox":[992,356,110,38]}
+{"kind":"textbox","id":"sh/wfq1onqt","slide":10,"text":"high","textPreview":"high","textChars":4,"textLines":1,"bbox":[1110,362,90,26]}
+{"kind":"shape","id":"sh/hgz2xsre","slide":10,"bbox":[992,445,9,9]}
+{"kind":"textbox","id":"sh/ud8jmd8n","slide":10,"text":"High volatility concentrates the adjacent-day reversal clue.","textPreview":"High volatility concentrates the adjacent-day reversal clue.","textChars":60,"textLines":1,"bbox":[1016,436,186,92]}
+{"kind":"textbox","id":"sh/vehkvi98","slide":10,"text":"Longer-horizon geometry still changes sign; this is not a universal reversal label.","textPreview":"Longer-horizon geometry still changes sign; this is not a universal reversal label.","textChars":83,"textLines":1,"bbox":[992,548,210,66]}
+{"kind":"image","id":"im/wvyl8bu9","slide":10,"name":"","alt":"NVDA daily return correlation heatmaps split by prior-252-session ATR-percent state","bbox":[42,148,900,490]}
+{"kind":"notes","id":"nt/3ccaua","slide":10,"text":"At the adjacent-day point, low and medium ATR states are near zero to slightly positive, while the high ATR state is materially more negative. Across longer windows, the surface remains mixed.\n\n[Sources]\n- Local 1x1 state summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_one_by_one_state_summary.csv\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/d75rty","slide":11,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":9}
+{"kind":"textbox","id":"sh/983mxkbe","slide":11,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/mlc3m5sn","slide":11,"text":"Direction explains part of the efficient-state mixture","textPreview":"Direction explains part of the efficient-state mixture","textChars":54,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/7ml4vat8","slide":11,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/kjalkvax","slide":11,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/lk3mt0b2","slide":11,"text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/zi1krqtc","slide":11,"bbox":[968,160,254,458]}
+{"kind":"textbox","id":"sh/cfalgval","slide":11,"text":"Down state","textPreview":"Down state","textChars":10,"textLines":1,"bbox":[992,190,210,30]}
+{"kind":"shape","id":"sh/xgj2p0b6","slide":11,"bbox":[992,251,9,9]}
+{"kind":"textbox","id":"sh/5sfexwn6","slide":11,"text":"Strongest negative short/mid-horizon region.","textPreview":"Strongest negative short/mid-horizon region.","textChars":44,"textLines":1,"bbox":[1016,242,186,78]}
+{"kind":"shape","id":"sh/4r6d4b61","slide":11,"bbox":[992,343,9,9]}
+{"kind":"textbox","id":"sh/3qxwv65g","slide":11,"text":"Long forward windows turn positive for some prior windows.","textPreview":"Long forward windows turn positive for some prior windows.","textChars":58,"textLines":1,"bbox":[1016,334,186,86]}
+{"kind":"textbox","id":"sh/ipov21ov","slide":11,"text":"Up state","textPreview":"Up state","textChars":8,"textLines":1,"bbox":[992,448,210,30]}
+{"kind":"shape","id":"sh/hofetwna","slide":11,"bbox":[992,505,9,9]}
+{"kind":"textbox","id":"sh/gn6d0r6p","slide":11,"text":"Smaller short-horizon reversal and modest long-forward continuation patches.","textPreview":"Smaller short-horizon reversal and modest long-forward continuation patches.","textChars":76,"textLines":1,"bbox":[1016,496,186,102]}
+{"kind":"image","id":"im/juxg3m90","slide":11,"name":"","alt":"NVDA daily return correlation heatmaps split by signed ER20 down, sideways, and up states","bbox":[42,148,900,490]}
+{"kind":"notes","id":"nt/d75rty","slide":11,"text":"Signed ER20 shows that efficient up and efficient down paths should not be aggregated. The down state carries the strongest negative short-horizon dependence and a later positive region; the up state is milder.\n\n[Sources]\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n- Local 1x1 state summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_one_by_one_state_summary.csv\n[/Sources]"}
+{"kind":"slide","id":"sl/z1kc7r","slide":12,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":8}
+{"kind":"textbox","id":"sh/s3i5cvqt","slide":12,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/r29o3ap8","slide":12,"text":"Prior-return sign changes the long-horizon story","textPreview":"Prior-return sign changes the long-horizon story","textChars":48,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/610na58n","slide":12,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/50r61072","slide":12,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/4zi58vqh","slide":12,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/idgn6l8b","slide":12,"bbox":[968,160,254,458]}
+{"kind":"textbox","id":"sh/hc76xg7q","slide":12,"text":"Descriptive contrast","textPreview":"Descriptive contrast","textChars":20,"textLines":1,"bbox":[992,188,210,54]}
+{"kind":"shape","id":"sh/wby54bql","slide":12,"bbox":[992,275,9,9]}
+{"kind":"textbox","id":"sh/utsjip4r","slide":12,"text":"After negative long-window returns, forward long-window correlations become positive.","textPreview":"After negative long-window returns, forward long-window correlations become positive.","textChars":85,"textLines":1,"bbox":[1016,266,186,106]}
+{"kind":"shape","id":"sh/vu10ba5c","slide":12,"bbox":[992,401,9,9]}
+{"kind":"textbox","id":"sh/wva1kfmx","slide":12,"text":"After positive priors, the same region is mostly mild negative.","textPreview":"After positive priors, the same region is mostly mild negative.","textChars":63,"textLines":1,"bbox":[1016,392,186,92]}
+{"kind":"textbox","id":"sh/hwjidkni","slide":12,"text":"The negative delta at long-long cells reads more like rebound asymmetry than classical continuation.","textPreview":"The negative delta at long-long cells reads more like rebound asymmetry than classical continuation.","textChars":100,"textLines":1,"bbox":[992,514,210,84]}
+{"kind":"image","id":"im/qdkrm90v","slide":12,"name":"","alt":"NVDA unfiltered negative-prior, positive-prior, and positive-minus-negative daily return correlation heatmaps","bbox":[42,148,900,490]}
+{"kind":"notes","id":"nt/z1kc7r","slide":12,"text":"The positive-minus-negative panel asks whether the same prior magnitude has different forward dependence depending on its sign. For NVDA, the long-horizon contrast leans toward stronger rebound-like behavior after negative priors.\n\n[Sources]\n- Frozen NVDA prior-sign grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_prior_sign_cells.csv\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/fwpxhk","slide":13,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":16}
+{"kind":"textbox","id":"sh/0j6dc7el","slide":13,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/fyxw32x0","slide":13,"text":"Daily states can cleanly condition intraday returns","textPreview":"Daily states can cleanly condition intraday returns","textChars":51,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/exovahwf","slide":13,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/dwfe1cfa","slide":13,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/sv6d87ep","slide":13,"text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/ruxwz2x4","slide":13,"bbox":[58,164,552,430]}
+{"kind":"textbox","id":"sh/qt4v6xwj","slide":13,"text":"Primary next slice","textPreview":"Primary next slice","textChars":18,"textLines":1,"bbox":[86,194,480,34]}
+{"kind":"textbox","id":"sh/xszedwve","slide":13,"text":"Completed daily state at t−1","textPreview":"Completed daily state at t−1","textChars":28,"textLines":1,"bbox":[88,264,460,38]}
+{"kind":"textbox","id":"sh/crqdkret","slide":13,"text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[280,310,80,44]}
+{"kind":"textbox","id":"sh/itonul4z","slide":13,"text":"Today’s overnight gap + each 30-minute bar","textPreview":"Today’s overnight gap + each 30-minute bar","textChars":42,"textLines":1,"bbox":[88,368,460,72]}
+{"kind":"shape","id":"sh/jux4nq5k","slide":13,"bbox":[88,489,9,9]}
+{"kind":"textbox","id":"sh/4v65wvm5","slide":13,"text":"Causal at the open","textPreview":"Causal at the open","textChars":18,"textLines":1,"bbox":[112,480,436,50]}
+{"kind":"shape","id":"sh/5wfmp0nq","slide":13,"bbox":[88,541,9,9]}
+{"kind":"textbox","id":"sh/up43ql43","slide":13,"text":"Directly answers whether the return clock differs by known regime","textPreview":"Directly answers whether the return clock differs by known regime","textChars":65,"textLines":1,"bbox":[112,532,436,64]}
+{"kind":"shape","id":"sh/vqd4j658","slide":13,"bbox":[646,164,576,430]}
+{"kind":"textbox","id":"sh/wrm5sbmt","slide":13,"text":"Separate later experiment","textPreview":"Separate later experiment","textChars":25,"textLines":1,"bbox":[674,194,500,34]}
+{"kind":"textbox","id":"sh/hsfmlgne","slide":13,"text":"Completed intraday window","textPreview":"Completed intraday window","textChars":25,"textLines":1,"bbox":[676,264,468,38]}
+{"kind":"textbox","id":"sh/el8n2547","slide":13,"text":"↓","textPreview":"↓","textChars":1,"textLines":1,"bbox":[876,310,80,44]}
+{"kind":"textbox","id":"sh/fmh4va5s","slide":13,"text":"Later bars in the same session","textPreview":"Later bars in the same session","textChars":30,"textLines":1,"bbox":[676,368,468,50]}
+{"kind":"shape","id":"sh/bups7yhs","slide":13,"bbox":[676,481,9,9]}
+{"kind":"textbox","id":"sh/qtgbydg7","slide":13,"text":"Requires a separately declared bar window","textPreview":"Requires a separately declared bar window","textChars":41,"textLines":1,"bbox":[700,472,444,62]}
+{"kind":"shape","id":"sh/dwra98zy","slide":13,"bbox":[676,551,9,9]}
+{"kind":"textbox","id":"sh/cvit03yd","slide":13,"text":"Strictly prevents later bars from entering the state","textPreview":"Strictly prevents later bars from entering the state","textChars":52,"textLines":1,"bbox":[700,542,444,62]}
+{"kind":"notes","id":"nt/fwpxhk","slide":13,"text":"Daily ATR% and ER can be used as causal gates for intraday outcomes when they are computed through the prior completed session. This is the clean recommended first conditioning experiment.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n[/Sources]"}
+{"kind":"slide","id":"sl/dw7fce","slide":14,"title":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textShapes":13}
+{"kind":"textbox","id":"sh/qlcjq94j","slide":14,"text":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textPreview":"OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE","textChars":41,"textLines":1,"bbox":[48,25,650,20]}
+{"kind":"textbox","id":"sh/d8321ona","slide":14,"text":"Do not mechanically multiply ER20 by 13","textPreview":"Do not mechanically multiply ER20 by 13","textChars":39,"textLines":1,"bbox":[48,55,1160,62]}
+{"kind":"shape","id":"sh/s7u1sjmp","slide":14,"bbox":[48,128,1184,2]}
+{"kind":"textbox","id":"sh/falk3e5g","slide":14,"text":"Descriptive research · adjusted bars · frozen 2018–2023 window","textPreview":"Descriptive research · adjusted bars · frozen 2018–2023 window","textChars":62,"textLines":1,"bbox":[48,684,740,17]}
+{"kind":"textbox","id":"sh/e9cju94v","slide":14,"text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1140,682,92,18]}
+{"kind":"shape","id":"sh/1cn25on6","slide":14,"bbox":[58,164,1164,136]}
+{"kind":"textbox","id":"sh/0be1wjm1","slide":14,"text":"A daily 20-session ER asks about roughly one trading month. A 260-bar ER asks about a different object: the path through thousands of within-session micro-moves.","textPreview":"A daily 20-session ER asks about roughly one trading month. A 260-bar ER asks about a different object: the path through thousands of wit...","textChars":161,"textLines":1,"bbox":[86,198,1108,72]}
+{"kind":"textbox","id":"sh/ve10ru5w","slide":14,"text":"Recommended sequence","textPreview":"Recommended sequence","textChars":20,"textLines":1,"bbox":[58,346,340,38]}
+{"kind":"textbox","id":"sh/udsjip4r","slide":14,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[74,424,48,48]}
+{"kind":"textbox","id":"sh/sze94fqh","slide":14,"text":"Use prior-day daily ATR% / ER20 / signed ER20 to split the existing gap-and-clock plot.","textPreview":"Use prior-day daily ATR% / ER20 / signed ER20 to split the existing gap-and-clock plot.","textChars":87,"textLines":1,"bbox":[142,418,950,60]}
+{"kind":"textbox","id":"sh/tknqxkr2","slide":14,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[74,504,48,48]}
+{"kind":"textbox","id":"sh/6xwr2p8b","slide":14,"text":"Only if that view is informative, open a distinct intraday-state experiment with a small predeclared window set and strict bar timing.","textPreview":"Only if that view is informative, open a distinct intraday-state experiment with a small predeclared window set and strict bar timing.","textChars":134,"textLines":1,"bbox":[142,498,950,72]}
+{"kind":"textbox","id":"sh/7y58vu9w","slide":14,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[74,596,48,48]}
+{"kind":"textbox","id":"sh/gny98zqd","slide":14,"text":"Keep every first plot descriptive; promote only a concrete causal pattern to a falsification slice.","textPreview":"Keep every first plot descriptive; promote only a concrete causal pattern to a falsification slice.","textChars":99,"textLines":1,"bbox":[142,590,950,58]}
+{"kind":"textbox","id":"sh/ho7q14ry","slide":14,"text":"CURRENT STATUS: DAILY + INTRADAY MICROSCOPES DOCUMENTED · CONDITIONED INTRADAY VIEW NOT YET RUN","textPreview":"CURRENT STATUS: DAILY + INTRADAY MICROSCOPES DOCUMENTED · CONDITIONED INTRADAY VIEW NOT YET RUN","textChars":95,"textLines":1,"bbox":[58,660,1164,20]}
+{"kind":"notes","id":"nt/dw7fce","slide":14,"text":"Mechanical scaling assumes that the daily and intraday paths are the same object. They are not. The first clean test is to hold the daily state definition fixed and ask whether the intraday outcome distribution changes.\n\n[Sources]\n- Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md\n- Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md\n- Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv\n[/Sources]"}

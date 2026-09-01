@@ -1,0 +1,323 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
+const moduleRoot = process.env.RUNTIME_NODE_MODULES;
+if (!moduleRoot) throw new Error("RUNTIME_NODE_MODULES is required.");
+const artifactEntrypoint = path.join(moduleRoot, "@oai", "artifact-tool", "dist", "artifact_tool.mjs");
+const { Presentation, PresentationFile } = await import(pathToFileURL(artifactEntrypoint).href);
+
+const repoRoot = process.env.GEN5_REPO_ROOT || process.cwd();
+const intradayRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_clock_descriptive_20260831");
+const dailyRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_return_microscope_20260831");
+const atlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "own_asset_return_geometry_atlas_20260826");
+const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
+const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
+const renderRoot = path.join(qaRoot, "rendered");
+
+const img = {
+  clock: path.join(intradayRoot, "visuals", "nvda_overnight_and_30min_return_clock.png"),
+  scatter: path.join(dailyRoot, "visuals", "nvda_t_minus_1_vs_t_daily_log_return_scatter.png"),
+  unfiltered: path.join(dailyRoot, "visuals", "nvda_unfiltered_pearson_heatmap.png"),
+  er20: path.join(dailyRoot, "visuals", "nvda_er20_state_pearson_heatmaps.png"),
+  atrp: path.join(dailyRoot, "visuals", "nvda_atrp_state_pearson_heatmaps.png"),
+  signed: path.join(dailyRoot, "visuals", "nvda_signed_er20_state_pearson_heatmaps.png"),
+  sign: path.join(dailyRoot, "visuals", "nvda_unfiltered_prior_sign_heatmaps.png"),
+  bands: path.join(atlasRoot, "visuals", "asset_state_bands", "nvda_state_bands.png"),
+};
+
+const sources = {
+  intradayReport: "Local descriptive packet: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/report.md",
+  intradaySpec: "Local run specification: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_clock_descriptive_20260831/run_spec.csv",
+  dailyReport: "Local daily microscope packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/report.md",
+  oneByOne: "Local 1x1 state summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_one_by_one_state_summary.csv",
+  stateGrid: "Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv",
+  signGrid: "Frozen NVDA prior-sign grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_prior_sign_cells.csv",
+  atlas: "Frozen own-asset atlas packet: runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md",
+};
+
+const C = {
+  white: "#FFFFFF", ink: "#000000", navy: "#24364B", muted: "#667386",
+  rule: "#B8BCC4", blue: "#3D8DFF", paleBlue: "#D0EDFA", panel: "#F3F5F7",
+  red: "#B44738", paleRed: "#F6E5E1", green: "#14866D", paleGreen: "#E2F1EC",
+  amber: "#A86B00", paleAmber: "#FAEBC8",
+};
+
+function addText(slide, value, position, style = {}) {
+  const shape = slide.shapes.add({ geometry: "textbox", position, fill: "none", line: { style: "solid", fill: "none", width: 0 } });
+  shape.text = value;
+  shape.text.style = {
+    fontFace: "Arial", fontSize: style.fontSize ?? 20, bold: style.bold ?? false,
+    color: style.color ?? C.ink, alignment: style.alignment ?? "left",
+    verticalAlignment: style.verticalAlignment ?? "top",
+  };
+  return shape;
+}
+
+function addRect(slide, position, fill, line = fill, width = 0) {
+  return slide.shapes.add({ geometry: "rect", position, fill, line: { style: "solid", fill: line, width } });
+}
+
+function addHeader(slide, title, page, kicker = "OPERATOR HYPOTHESIS LAB · NVDA MICROSCOPE") {
+  addText(slide, kicker, { left: 48, top: 25, width: 650, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "Descriptive research · adjusted bars · frozen 2018–2023 window", { left: 48, top: 684, width: 740, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
+function addNotes(slide, body, sourceList) {
+  slide.speakerNotes.textFrame.setText([body, "", "[Sources]", ...sourceList.map((s) => `- ${s}`), "[/Sources]"].join("\n"));
+  slide.speakerNotes.setVisible(true);
+}
+
+async function addImage(slide, imagePath, position, alt) {
+  const bytes = await fs.readFile(imagePath);
+  slide.images.add({ blob: bytes, contentType: "image/png", alt, fit: "contain", position });
+}
+
+function addBullet(slide, value, left, top, width, accent = C.blue, fontSize = 21, height = 62) {
+  addRect(slide, { left, top: top + 9, width: 9, height: 9 }, accent);
+  addText(slide, value, { left: left + 24, top, width: width - 24, height }, { fontSize, color: C.navy });
+}
+
+function addMetric(slide, value, label, detail, left, top, width, accent = C.blue) {
+  addRect(slide, { left, top, width, height: 126 }, C.panel);
+  addRect(slide, { left, top, width: 8, height: 126 }, accent);
+  addText(slide, value, { left: left + 24, top: top + 14, width: width - 40, height: 42 }, { fontSize: 33, bold: true });
+  addText(slide, label, { left: left + 24, top: top + 63, width: width - 40, height: 24 }, { fontSize: 16, bold: true, color: C.navy });
+  addText(slide, detail, { left: left + 24, top: top + 92, width: width - 40, height: 22 }, { fontSize: 12, color: C.muted });
+}
+
+async function main() {
+  await fs.mkdir(path.dirname(deckPath), { recursive: true });
+  await fs.mkdir(renderRoot, { recursive: true });
+  await fs.writeFile(path.join(qaRoot, "source-notes.txt"), Object.values(sources).join("\n"), "utf8");
+  for (const imagePath of Object.values(img)) await fs.access(imagePath);
+
+  const p = Presentation.create({ slideSize: { width: 1280, height: 720 } });
+
+  // 1 — cover
+  {
+    const s = p.slides.add(); s.background.fill = C.white;
+    addRect(s, { left: 0, top: 0, width: 24, height: 720 }, C.blue);
+    addText(s, "OPERATOR HYPOTHESIS LAB · ONE-ASSET MICROSCOPE", { left: 72, top: 70, width: 760, height: 28 }, { fontSize: 16, bold: true, color: C.muted });
+    addText(s, "NVDA\nmicroscope", { left: 72, top: 142, width: 690, height: 190 }, { fontSize: 78, bold: true });
+    addText(s, "From the intraday return clock to daily return geometry.", { left: 76, top: 370, width: 760, height: 70 }, { fontSize: 30, color: C.navy });
+    addRect(s, { left: 914, top: 120, width: 264, height: 264 }, C.navy);
+    addText(s, "30m", { left: 934, top: 170, width: 224, height: 74 }, { fontSize: 58, bold: true, color: C.white, alignment: "center" });
+    addText(s, "+", { left: 1004, top: 250, width: 84, height: 50 }, { fontSize: 30, color: C.paleBlue, alignment: "center" });
+    addText(s, "1D", { left: 934, top: 302, width: 224, height: 56 }, { fontSize: 40, bold: true, color: C.white, alignment: "center" });
+    addRect(s, { left: 72, top: 532, width: 1106, height: 2 }, C.rule);
+    addText(s, "Research posture", { left: 72, top: 562, width: 210, height: 26 }, { fontSize: 17, bold: true, color: C.blue });
+    addText(s, "Observe first. Separate clock effects from state effects. Preserve 2024+ as untouched confirmation data.", { left: 300, top: 554, width: 850, height: 64 }, { fontSize: 23, color: C.navy });
+    addText(s, "DESCRIPTIVE SLICE · NO EDGE CLAIM", { left: 72, top: 666, width: 480, height: 20 }, { fontSize: 13, bold: true, color: C.red });
+    addNotes(s, "This deck begins the NVDA one-asset microscope and records the first two views: unconditional intraday clock behavior and the established daily return-geometry template.", [sources.intradayReport, sources.dailyReport]);
+  }
+
+  // 2 — legitimacy and burden
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "One asset is a legitimate research object", 2);
+    addRect(s, { left: 58, top: 164, width: 540, height: 430 }, C.paleBlue);
+    addText(s, "What specialization buys", { left: 86, top: 194, width: 470, height: 38 }, { fontSize: 28, bold: true });
+    addBullet(s, "A focused view of NVDA’s own liquidity, attention, overnight, and time-of-day structure.", 88, 260, 460, C.blue, 22, 86);
+    addBullet(s, "A tractable laboratory for operator-facing visual sanity checks.", 88, 374, 460, C.blue, 22, 74);
+    addBullet(s, "A strategy may trade one asset if its validation remains honest and causal.", 88, 472, 460, C.blue, 22, 80);
+    addRect(s, { left: 640, top: 164, width: 582, height: 430 }, C.panel);
+    addText(s, "What specialization costs", { left: 672, top: 194, width: 500, height: 38 }, { fontSize: 28, bold: true });
+    addBullet(s, "Greater risk that a pattern describes one historical path rather than a durable mechanism.", 674, 260, 500, C.red, 22, 86);
+    addBullet(s, "No cross-asset breadth to rescue weak causal reasoning.", 674, 374, 500, C.red, 22, 74);
+    addBullet(s, "Untouched time, realistic execution, and explicit baselines become even more important.", 674, 472, 500, C.red, 22, 80);
+    addText(s, "The design target is not asset-agnosticism. It is falsifiable specialization.", { left: 58, top: 620, width: 1164, height: 38 }, { fontSize: 26, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "A one-asset strategy is not methodologically disqualified. It simply cannot borrow confidence from universality; the evidence must come from causal construction, stability over time, execution realism, and untouched confirmation.", [sources.intradayReport, sources.dailyReport]);
+  }
+
+  // 3 — intraday clock
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The first microscope: NVDA’s return clock", 3);
+    await addImage(s, img.clock, { left: 42, top: 146, width: 910, height: 500 }, "NVDA overnight gap and regular-session 30-minute open-to-close return distributions, 2018-2023");
+    addRect(s, { left: 974, top: 158, width: 258, height: 468 }, C.panel);
+    addText(s, "How to read it", { left: 998, top: 184, width: 214, height: 30 }, { fontSize: 23, bold: true });
+    addBullet(s, "Each dot is one observed return.", 998, 238, 214, C.blue, 18, 56);
+    addBullet(s, "The overnight gap sits left of the first bar.", 998, 312, 214, C.blue, 18, 72);
+    addBullet(s, "Median ticks are tiny relative to the tails.", 998, 404, 214, C.blue, 18, 70);
+    addBullet(s, "No filter, model, or trade rule is present.", 998, 496, 214, C.red, 18, 70);
+    addNotes(s, "This is the unconditional distribution of NVDA returns by clock position. It is a map of where variation lives, not evidence that any position is predictable.", [sources.intradayReport, sources.intradaySpec]);
+  }
+
+  // 4 — clock readings
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The clock is structured—even before prediction", 4);
+    addMetric(s, "1,499", "sessions", "Frozen research window", 58, 166, 260, C.blue);
+    addMetric(s, "19,415", "30-minute bars", "Regular-session observations", 338, 166, 260, C.green);
+    addMetric(s, "1,490", "overnight gaps", "Valid close-to-open observations", 618, 166, 260, C.amber);
+    addMetric(s, "2024+", "unread", "Reserved confirmation boundary", 898, 166, 324, C.red);
+    addRect(s, { left: 58, top: 330, width: 1164, height: 252 }, C.panel);
+    addText(s, "Visible pattern", { left: 86, top: 360, width: 260, height: 32 }, { fontSize: 25, bold: true });
+    addBullet(s, "The overnight gap has the broadest return distribution.", 88, 416, 500, C.amber, 22, 70);
+    addBullet(s, "The first 30 minutes are the widest regular-session bar; midday compresses; the close widens again.", 88, 494, 500, C.blue, 22, 86);
+    addText(s, "What remains unknown", { left: 672, top: 360, width: 300, height: 32 }, { fontSize: 25, bold: true });
+    addBullet(s, "Whether prior information predicts which tail will occur.", 674, 416, 496, C.red, 22, 70);
+    addBullet(s, "Whether any conditional difference survives costs and untouched time.", 674, 494, 496, C.red, 22, 86);
+    addNotes(s, "The distribution changes across the clock. That justifies conditioning questions, but it does not yet justify a trading action.", [sources.intradayReport, sources.intradaySpec]);
+  }
+
+  // 5 — transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "SECOND MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "Move up one level:\ndaily return geometry", { left: 72, top: 170, width: 900, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "The same frozen 2018–2023 NVDA history is viewed through prior-versus-forward cumulative log returns, then split by path efficiency, volatility, direction, and prior-return sign.", { left: 76, top: 408, width: 1040, height: 112 }, { fontSize: 28, color: C.paleBlue });
+    addText(s, "Fixed horizons: 1, 2, 3, 4, 5, 10, 15, 20, 25 sessions", { left: 76, top: 602, width: 900, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "05", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "This section reuses the predeclared atlas vocabulary. It does not choose new horizons after seeing NVDA.", [sources.dailyReport, sources.atlas]);
+  }
+
+  // 6 — scatter
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Adjacent daily returns mostly form a cloud", 6);
+    await addImage(s, img.scatter, { left: 48, top: 146, width: 850, height: 508 }, "NVDA prior-day versus next-day adjusted log-return scatterplot, 2018-2023");
+    addRect(s, { left: 922, top: 158, width: 300, height: 470 }, C.panel);
+    addText(s, "First reading", { left: 948, top: 186, width: 250, height: 30 }, { fontSize: 24, bold: true });
+    addText(s, "−0.075", { left: 948, top: 244, width: 250, height: 58 }, { fontSize: 44, bold: true, color: C.red });
+    addText(s, "unfiltered 1×1 Pearson r", { left: 948, top: 306, width: 250, height: 34 }, { fontSize: 17, bold: true, color: C.navy });
+    addBullet(s, "A slight adjacent-day reversal tilt.", 948, 374, 244, C.red, 19, 64);
+    addBullet(s, "Large tails exist in every directional quadrant.", 948, 452, 244, C.blue, 19, 76);
+    addBullet(s, "The cloud alone is not a rule.", 948, 544, 244, C.red, 19, 60);
+    addNotes(s, "The adjacent-session view is visually noisy, with a small negative Pearson correlation. The next question is whether longer windows or causal states reveal coherent regions.", [sources.dailyReport, sources.oneByOne]);
+  }
+
+  // 7 — unfiltered grid
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The unfiltered surface is weak and mixed", 7);
+    await addImage(s, img.unfiltered, { left: 56, top: 144, width: 760, height: 510 }, "NVDA unfiltered 9 by 9 prior-versus-forward daily return correlation heatmap");
+    addRect(s, { left: 846, top: 166, width: 376, height: 436 }, C.panel);
+    addText(s, "Geometry, not a winner cell", { left: 874, top: 194, width: 320, height: 62 }, { fontSize: 25, bold: true });
+    addBullet(s, "Short prior windows lean slightly negative into short forward windows.", 876, 282, 316, C.red, 20, 82);
+    addBullet(s, "Longer prior and forward windows drift mildly positive.", 876, 382, 316, C.blue, 20, 78);
+    addBullet(s, "Magnitude is small without a state split.", 876, 482, 316, C.red, 20, 70);
+    addText(s, "This is a descriptive map. No multiplicity claim is made.", { left: 846, top: 622, width: 376, height: 36 }, { fontSize: 15, bold: true, color: C.muted, alignment: "center" });
+    addNotes(s, "The full surface prevents us from over-reading the adjacent-day point. Without state conditioning, the grid remains close to zero and changes sign gradually across horizons.", [sources.stateGrid, sources.dailyReport]);
+  }
+
+  // 8 — state bands
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The filters are observable states—not forecasts", 8);
+    await addImage(s, img.bands, { left: 44, top: 148, width: 900, height: 492 }, "NVDA price with signed ER20, ER20, and ATR-percent state bands, 2018-2023");
+    addRect(s, { left: 970, top: 160, width: 252, height: 462 }, C.panel);
+    addText(s, "Vocabulary", { left: 994, top: 188, width: 208, height: 30 }, { fontSize: 23, bold: true });
+    addBullet(s, "ER20: sideways vs efficient path", 994, 248, 208, C.blue, 18, 78);
+    addBullet(s, "ATR%: low, medium, high volatility", 994, 344, 208, C.amber, 18, 78);
+    addBullet(s, "Signed ER20: down, sideways, up", 994, 440, 208, C.green, 18, 78);
+    addText(s, "Each label is assigned from information available at the anchor session.", { left: 994, top: 548, width: 208, height: 58 }, { fontSize: 16, bold: true, color: C.navy });
+    addNotes(s, "The state-band plot is the sanity check: the numerical filters should correspond to recognizable price-path and volatility regimes. They remain descriptive labels, not forecasts.", [sources.atlas, sources.stateGrid]);
+  }
+
+  // 9 — ER20
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "ER20 separates two different surfaces", 9);
+    await addImage(s, img.er20, { left: 42, top: 148, width: 900, height: 490 }, "NVDA daily return correlation heatmaps split by ER20 sideways and efficient states");
+    addRect(s, { left: 968, top: 160, width: 254, height: 458 }, C.panel);
+    addText(s, "Visual clue", { left: 992, top: 188, width: 210, height: 30 }, { fontSize: 23, bold: true });
+    addBullet(s, "Sideways: correlations stay near zero with mild negative longer-forward patches.", 992, 246, 210, C.red, 18, 110);
+    addBullet(s, "Efficient: a positive long-prior / long-forward region appears.", 992, 382, 210, C.blue, 18, 92);
+    addText(s, "ER20 alone does not say whether the efficient path is up or down.", { left: 992, top: 520, width: 210, height: 74 }, { fontSize: 17, bold: true, color: C.navy });
+    addNotes(s, "The efficient-state heatmap contains a coherent positive region at longer horizons, while the sideways state remains flatter. Direction is still aggregated here, so signed ER20 is needed next.", [sources.stateGrid, sources.dailyReport]);
+  }
+
+  // 10 — ATR
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "ATR% reveals a sharp short-horizon contrast", 10);
+    await addImage(s, img.atrp, { left: 42, top: 148, width: 900, height: 490 }, "NVDA daily return correlation heatmaps split by prior-252-session ATR-percent state");
+    addRect(s, { left: 968, top: 160, width: 254, height: 458 }, C.panel);
+    addText(s, "1×1 Pearson r", { left: 992, top: 188, width: 210, height: 28 }, { fontSize: 22, bold: true });
+    addText(s, "+0.013", { left: 992, top: 244, width: 110, height: 38 }, { fontSize: 28, bold: true, color: C.blue });
+    addText(s, "low", { left: 1110, top: 250, width: 90, height: 26 }, { fontSize: 17, color: C.muted });
+    addText(s, "+0.043", { left: 992, top: 300, width: 110, height: 38 }, { fontSize: 28, bold: true, color: C.blue });
+    addText(s, "medium", { left: 1110, top: 306, width: 90, height: 26 }, { fontSize: 17, color: C.muted });
+    addText(s, "−0.174", { left: 992, top: 356, width: 110, height: 38 }, { fontSize: 28, bold: true, color: C.red });
+    addText(s, "high", { left: 1110, top: 362, width: 90, height: 26 }, { fontSize: 17, color: C.muted });
+    addBullet(s, "High volatility concentrates the adjacent-day reversal clue.", 992, 436, 210, C.red, 18, 92);
+    addText(s, "Longer-horizon geometry still changes sign; this is not a universal reversal label.", { left: 992, top: 548, width: 210, height: 66 }, { fontSize: 16, bold: true, color: C.navy });
+    addNotes(s, "At the adjacent-day point, low and medium ATR states are near zero to slightly positive, while the high ATR state is materially more negative. Across longer windows, the surface remains mixed.", [sources.oneByOne, sources.stateGrid]);
+  }
+
+  // 11 — signed ER20
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Direction explains part of the efficient-state mixture", 11);
+    await addImage(s, img.signed, { left: 42, top: 148, width: 900, height: 490 }, "NVDA daily return correlation heatmaps split by signed ER20 down, sideways, and up states");
+    addRect(s, { left: 968, top: 160, width: 254, height: 458 }, C.panel);
+    addText(s, "Down state", { left: 992, top: 190, width: 210, height: 30 }, { fontSize: 23, bold: true, color: C.red });
+    addBullet(s, "Strongest negative short/mid-horizon region.", 992, 242, 210, C.red, 18, 78);
+    addBullet(s, "Long forward windows turn positive for some prior windows.", 992, 334, 210, C.blue, 18, 86);
+    addText(s, "Up state", { left: 992, top: 448, width: 210, height: 30 }, { fontSize: 23, bold: true, color: C.green });
+    addBullet(s, "Smaller short-horizon reversal and modest long-forward continuation patches.", 992, 496, 210, C.green, 18, 102);
+    addNotes(s, "Signed ER20 shows that efficient up and efficient down paths should not be aggregated. The down state carries the strongest negative short-horizon dependence and a later positive region; the up state is milder.", [sources.stateGrid, sources.oneByOne]);
+  }
+
+  // 12 — sign asymmetry
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Prior-return sign changes the long-horizon story", 12);
+    await addImage(s, img.sign, { left: 42, top: 148, width: 900, height: 490 }, "NVDA unfiltered negative-prior, positive-prior, and positive-minus-negative daily return correlation heatmaps");
+    addRect(s, { left: 968, top: 160, width: 254, height: 458 }, C.panel);
+    addText(s, "Descriptive contrast", { left: 992, top: 188, width: 210, height: 54 }, { fontSize: 23, bold: true });
+    addBullet(s, "After negative long-window returns, forward long-window correlations become positive.", 992, 266, 210, C.blue, 18, 106);
+    addBullet(s, "After positive priors, the same region is mostly mild negative.", 992, 392, 210, C.red, 18, 92);
+    addText(s, "The negative delta at long-long cells reads more like rebound asymmetry than classical continuation.", { left: 992, top: 514, width: 210, height: 84 }, { fontSize: 17, bold: true, color: C.navy });
+    addNotes(s, "The positive-minus-negative panel asks whether the same prior magnitude has different forward dependence depending on its sign. For NVDA, the long-horizon contrast leans toward stronger rebound-like behavior after negative priors.", [sources.signGrid, sources.dailyReport]);
+  }
+
+  // 13 — intraday conditioning design
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Daily states can cleanly condition intraday returns", 13);
+    addRect(s, { left: 58, top: 164, width: 552, height: 430 }, C.paleBlue);
+    addText(s, "Primary next slice", { left: 86, top: 194, width: 480, height: 34 }, { fontSize: 27, bold: true });
+    addText(s, "Completed daily state at t−1", { left: 88, top: 264, width: 460, height: 38 }, { fontSize: 27, bold: true, color: C.blue });
+    addText(s, "↓", { left: 280, top: 310, width: 80, height: 44 }, { fontSize: 32, bold: true, color: C.muted, alignment: "center" });
+    addText(s, "Today’s overnight gap + each 30-minute bar", { left: 88, top: 368, width: 460, height: 72 }, { fontSize: 26, bold: true, color: C.navy, alignment: "center" });
+    addBullet(s, "Causal at the open", 88, 480, 460, C.green, 20, 50);
+    addBullet(s, "Directly answers whether the return clock differs by known regime", 88, 532, 460, C.green, 20, 64);
+    addRect(s, { left: 646, top: 164, width: 576, height: 430 }, C.panel);
+    addText(s, "Separate later experiment", { left: 674, top: 194, width: 500, height: 34 }, { fontSize: 27, bold: true });
+    addText(s, "Completed intraday window", { left: 676, top: 264, width: 468, height: 38 }, { fontSize: 27, bold: true, color: C.amber });
+    addText(s, "↓", { left: 876, top: 310, width: 80, height: 44 }, { fontSize: 32, bold: true, color: C.muted, alignment: "center" });
+    addText(s, "Later bars in the same session", { left: 676, top: 368, width: 468, height: 50 }, { fontSize: 26, bold: true, color: C.navy, alignment: "center" });
+    addBullet(s, "Requires a separately declared bar window", 676, 472, 468, C.amber, 20, 62);
+    addBullet(s, "Strictly prevents later bars from entering the state", 676, 542, 468, C.red, 20, 62);
+    addNotes(s, "Daily ATR% and ER can be used as causal gates for intraday outcomes when they are computed through the prior completed session. This is the clean recommended first conditioning experiment.", [sources.intradayReport, sources.dailyReport]);
+  }
+
+  // 14 — scaling answer and next gate
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Do not mechanically multiply ER20 by 13", 14);
+    addRect(s, { left: 58, top: 164, width: 1164, height: 136 }, C.navy);
+    addText(s, "A daily 20-session ER asks about roughly one trading month. A 260-bar ER asks about a different object: the path through thousands of within-session micro-moves.", { left: 86, top: 198, width: 1108, height: 72 }, { fontSize: 27, bold: true, color: C.white, alignment: "center" });
+    addText(s, "Recommended sequence", { left: 58, top: 346, width: 340, height: 38 }, { fontSize: 29, bold: true });
+    addText(s, "1", { left: 74, top: 424, width: 48, height: 48 }, { fontSize: 32, bold: true, color: C.blue, alignment: "center" });
+    addText(s, "Use prior-day daily ATR% / ER20 / signed ER20 to split the existing gap-and-clock plot.", { left: 142, top: 418, width: 950, height: 60 }, { fontSize: 23, color: C.navy });
+    addText(s, "2", { left: 74, top: 504, width: 48, height: 48 }, { fontSize: 32, bold: true, color: C.amber, alignment: "center" });
+    addText(s, "Only if that view is informative, open a distinct intraday-state experiment with a small predeclared window set and strict bar timing.", { left: 142, top: 498, width: 950, height: 72 }, { fontSize: 23, color: C.navy });
+    addText(s, "3", { left: 74, top: 596, width: 48, height: 48 }, { fontSize: 32, bold: true, color: C.red, alignment: "center" });
+    addText(s, "Keep every first plot descriptive; promote only a concrete causal pattern to a falsification slice.", { left: 142, top: 590, width: 950, height: 58 }, { fontSize: 23, color: C.navy });
+    addText(s, "CURRENT STATUS: DAILY + INTRADAY MICROSCOPES DOCUMENTED · CONDITIONED INTRADAY VIEW NOT YET RUN", { left: 58, top: 660, width: 1164, height: 20 }, { fontSize: 13, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "Mechanical scaling assumes that the daily and intraday paths are the same object. They are not. The first clean test is to hold the daily state definition fixed and ask whether the intraday outcome distribution changes.", [sources.intradayReport, sources.dailyReport, sources.stateGrid]);
+  }
+
+  for (const [index, slide] of p.slides.items.entries()) {
+    const stem = `slide-${String(index + 1).padStart(2, "0")}`;
+    const png = await p.export({ slide, format: "png", scale: 2 });
+    await fs.writeFile(path.join(renderRoot, `${stem}.png`), Buffer.from(await png.arrayBuffer()));
+    const layout = await slide.export({ format: "layout" });
+    await fs.writeFile(path.join(renderRoot, `${stem}.layout.json`), await layout.text());
+  }
+  const montage = await p.export({ format: "webp", montage: true, scale: 1 });
+  await fs.writeFile(path.join(qaRoot, "montage.webp"), Buffer.from(await montage.arrayBuffer()));
+  const inspect = await p.inspect({ kind: "slide,textbox,shape,image,chart,table,layout", maxChars: 200000 });
+  await fs.writeFile(path.join(qaRoot, "nvda_microscope_evidence.inspect.ndjson"), inspect.ndjson);
+  await fs.writeFile(`${deckPath}.inspect.ndjson`, inspect.ndjson);
+  const pptx = await PresentationFile.exportPptx(p);
+  await pptx.save(deckPath);
+  console.log(deckPath);
+}
+
+main().catch((error) => { console.error(error); process.exitCode = 1; });
