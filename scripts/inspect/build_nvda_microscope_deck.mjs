@@ -13,6 +13,7 @@ const dailyRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hy
 const atlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "own_asset_return_geometry_atlas_20260826");
 const protoRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rules_20260831");
 const confirmationRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rule_confirmation_20260831");
+const openingRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_response_20260831");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -36,6 +37,10 @@ const img = {
   confirmationEquity: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_equity.png"),
   confirmationReturns: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_trade_returns.png"),
   confirmationTapes: path.join(confirmationRoot, "visuals", "nvda_rebound_confirmation_trade_tapes.png"),
+  openingScatter: path.join(openingRoot, "visuals", "nvda_opening_bar_vs_remainder_scatter.png"),
+  openingDistribution: path.join(openingRoot, "visuals", "nvda_opening_bin_remainder_distributions.png"),
+  openingPaths: path.join(openingRoot, "visuals", "nvda_opening_bin_remainder_paths.png"),
+  openingStates: path.join(openingRoot, "visuals", "nvda_prior_day_state_opening_response.png"),
 };
 
 const sources = {
@@ -55,6 +60,11 @@ const sources = {
   confirmationSummary: "Frozen confirmation rule summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/rule_summary.csv",
   confirmationTrades: "Untouched-period trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/confirmation_trade_ledger.csv",
   confirmationHealth: "Explicit-as-of query health: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rule_confirmation_20260831/query_health.csv",
+  openingReport: "Local intraday opening-response report: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/report.md",
+  openingSessionLedger: "Full-session causal ledger: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/session_ledger.csv",
+  openingBins: "Opening-bin and prior-state summaries: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/opening_bin_summary.csv",
+  openingContrasts: "Descriptive candidate contrasts: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/descriptive_candidate_contrasts.csv",
+  openingChecks: "Opening-response construction checks: runs/research_workbench/operator_hypothesis_lab/nvda_intraday_opening_response_20260831/source_checks.csv",
 };
 
 const C = {
@@ -92,6 +102,14 @@ function addConfirmationHeader(slide, title, page) {
   addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
   addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
   addText(slide, "One-shot untouched time · adjusted daily bars · frozen 2024-01-02–2026-06-23", { left: 48, top: 684, width: 820, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
+function addOpeningHeader(slide, title, page) {
+  addText(slide, "OPERATOR HYPOTHESIS LAB · NVDA INTRADAY OPENING RESPONSE", { left: 48, top: 25, width: 760, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "Descriptive research · 1,487 full sessions · frozen 2018-01-02–2023-12-29", { left: 48, top: 684, width: 820, height: 17 }, { fontSize: 12, color: C.muted });
   addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
 }
 
@@ -139,8 +157,8 @@ async function main() {
     addText(s, "1D", { left: 934, top: 302, width: 224, height: 56 }, { fontSize: 40, bold: true, color: C.white, alignment: "center" });
     addRect(s, { left: 72, top: 532, width: 1106, height: 2 }, C.rule);
     addText(s, "Research posture", { left: 72, top: 562, width: 210, height: 26 }, { fontSize: 17, bold: true, color: C.blue });
-    addText(s, "Observe first. Separate clock effects from state effects. Preserve 2024+ as untouched confirmation data.", { left: 300, top: 554, width: 850, height: 64 }, { fontSize: 23, color: C.navy });
-    addText(s, "DESCRIPTIVE SLICE · NO EDGE CLAIM", { left: 72, top: 666, width: 480, height: 20 }, { fontSize: 13, bold: true, color: C.red });
+    addText(s, "Observe first. Separate descriptive clues, executable TRAIN translation, and one-shot confirmation.", { left: 300, top: 554, width: 850, height: 64 }, { fontSize: 23, color: C.navy });
+    addText(s, "RESEARCH DECK · DAILY CONFIRMATION STOP · INTRADAY OPENING RESPONSE ADDED", { left: 72, top: 666, width: 720, height: 20 }, { fontSize: 13, bold: true, color: C.red });
     addNotes(s, "This deck begins the NVDA one-asset microscope and records the first two views: unconditional intraday clock behavior and the established daily return-geometry template.", [sources.intradayReport, sources.dailyReport]);
   }
 
@@ -180,7 +198,7 @@ async function main() {
     addMetric(s, "1,499", "sessions", "Frozen research window", 58, 166, 260, C.blue);
     addMetric(s, "19,415", "30-minute bars", "Regular-session observations", 338, 166, 260, C.green);
     addMetric(s, "1,490", "overnight gaps", "Valid close-to-open observations", 618, 166, 260, C.amber);
-    addMetric(s, "2024+", "unread", "Reserved confirmation boundary", 898, 166, 324, C.red);
+    addMetric(s, "2024+", "intraday unread", "Daily confirmation is documented later", 898, 166, 324, C.red);
     addRect(s, { left: 58, top: 330, width: 1164, height: 252 }, C.panel);
     addText(s, "Visible pattern", { left: 86, top: 360, width: 260, height: 32 }, { fontSize: 25, bold: true });
     addBullet(s, "The overnight gap has the broadest return distribution.", 88, 416, 500, C.amber, 22, 70);
@@ -328,7 +346,7 @@ async function main() {
     addText(s, "Only if that view is informative, open a distinct intraday-state experiment with a small predeclared window set and strict bar timing.", { left: 142, top: 498, width: 950, height: 72 }, { fontSize: 23, color: C.navy });
     addText(s, "3", { left: 74, top: 596, width: 48, height: 48 }, { fontSize: 32, bold: true, color: C.red, alignment: "center" });
     addText(s, "Keep every first plot descriptive; promote only a concrete causal pattern to a falsification slice.", { left: 142, top: 590, width: 950, height: 58 }, { fontSize: 23, color: C.navy });
-    addText(s, "CURRENT STATUS: DAILY + INTRADAY MICROSCOPES DOCUMENTED · CONDITIONED INTRADAY VIEW NOT YET RUN", { left: 58, top: 660, width: 1164, height: 20 }, { fontSize: 13, bold: true, color: C.red, alignment: "center" });
+    addText(s, "CURRENT STATUS: OPENING-RESPONSE CONDITIONING ADDED ON SLIDES 29–34", { left: 58, top: 660, width: 1164, height: 20 }, { fontSize: 13, bold: true, color: C.red, alignment: "center" });
     addNotes(s, "Mechanical scaling assumes that the daily and intraday paths are the same object. They are not. The first clean test is to hold the daily state definition fixed and ask whether the intraday outcome distribution changes.", [sources.intradayReport, sources.dailyReport, sources.stateGrid]);
   }
 
@@ -338,7 +356,7 @@ async function main() {
     addText(s, "THIRD MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
     addText(s, "Can the geometry survive\nexecutable timing?", { left: 72, top: 170, width: 960, height: 170 }, { fontSize: 64, bold: true, color: C.white });
     addText(s, "Two fixed 20/20 clues are converted into next-open, open-to-open rules. The purpose is not to optimize them; it is to see which descriptive pattern remains visible after causal timing, no-overlap, costs, and simple controls.", { left: 76, top: 408, width: 1080, height: 126 }, { fontSize: 27, color: C.paleBlue });
-    addText(s, "2018–2023 TRAIN only · 2024+ remains sealed", { left: 76, top: 602, width: 900, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "2018–2023 TRAIN only · one-shot confirmation follows", { left: 76, top: 602, width: 900, height: 32 }, { fontSize: 20, bold: true, color: C.white });
     addText(s, "15", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
     addNotes(s, "This section translates two already-observed NVDA 20/20 geometry clues into executable rules without changing the horizon or searching thresholds. It is a TRAIN construction test, not confirmation.", [sources.protoReport, sources.protoSummary]);
   }
@@ -528,6 +546,82 @@ async function main() {
     addBullet(s, "Win rate and median can look encouraging while average opportunity cost is unfavorable.", 768, 486, 420, C.amber, 20, 84);
     addText(s, "No rescue tuning. Any future variation must be declared as a new hypothesis and cannot overwrite this result.", { left: 766, top: 568, width: 428, height: 66 }, { fontSize: 18, bold: true, color: C.red, alignment: "center" });
     addNotes(s, "The exact one-asset rule is stopped. The confirmation period has now been consumed and cannot be reused as untouched evidence. A later variation may be researched only as a new hypothesis with a newly protected confirmation boundary.", [sources.confirmationGates, sources.confirmationReport, sources.confirmationHealth]);
+  }
+
+  // 29 — opening-response transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "FIFTH MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "After the opening bar,\nwhat happens next?", { left: 72, top: 170, width: 980, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "At 10:00 ET, the first 30-minute return is complete and therefore observable. The remaining 10:00-to-16:00 return is still ahead. This section asks whether the first move carries directional information into that tradable remainder.", { left: 76, top: 408, width: 1080, height: 126 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "1,487 full sessions · 12 early closes excluded · no rule or P&L", { left: 76, top: 602, width: 980, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "29", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "The causal clock is fixed before looking at outcomes: use the completed 09:30-10:00 log return as the predictor and the 10:00-16:00 log return as the outcome. Only full 13-bar sessions are eligible.", [sources.openingReport, sources.openingChecks, sources.intradayReport]);
+  }
+
+  // 30 — raw scatter
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningHeader(s, "The opening bar carries only a weak unconditional signal", 30);
+    await addImage(s, img.openingScatter, { left: 38, top: 144, width: 856, height: 514 }, "NVDA completed opening-bar return versus still-tradeable remainder-of-day return, 2018-2023");
+    addRect(s, { left: 916, top: 158, width: 306, height: 464 }, C.panel);
+    addText(s, "+0.050", { left: 942, top: 190, width: 254, height: 52 }, { fontSize: 40, bold: true, color: C.blue });
+    addText(s, "Pearson correlation", { left: 942, top: 244, width: 254, height: 28 }, { fontSize: 18, bold: true, color: C.navy });
+    addText(s, "−0.979%", { left: 942, top: 314, width: 122, height: 42 }, { fontSize: 28, bold: true, color: C.red });
+    addText(s, "+1.070%", { left: 1072, top: 314, width: 124, height: 42 }, { fontSize: 28, bold: true, color: C.green });
+    addText(s, "sample-wide 20th / 80th cutoffs", { left: 942, top: 358, width: 254, height: 42 }, { fontSize: 15, color: C.muted, alignment: "center" });
+    addBullet(s, "The cloud dominates the relationship.", 942, 432, 250, C.red, 18, 58);
+    addBullet(s, "The tails lean slightly in the direction of the opening move.", 942, 508, 250, C.green, 18, 78);
+    addNotes(s, "The unfiltered opening-to-remainder Pearson correlation is +0.050. The vertical lines are the single sample-wide 20th and 80th percentile cutoffs. They are descriptive bins, not yet causal rolling thresholds.", [sources.openingReport, sources.openingSessionLedger, sources.openingBins]);
+  }
+
+  // 31 — broad-bin distributions
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningHeader(s, "Tail averages separate, but individual outcomes overlap heavily", 31);
+    await addImage(s, img.openingDistribution, { left: 48, top: 144, width: 1180, height: 514 }, "Remainder-of-day return distributions after bottom-20, middle-60, and top-20 percent NVDA opening bars");
+    addNotes(s, "Bottom-20% opening sessions average -0.15% over the remainder with 45.1% positive outcomes. Middle-60% sessions average -0.02% with 50.6% positive. Top-20% sessions average +0.21% with 57.6% positive. The heavy overlap is the central caution.", [sources.openingReport, sources.openingBins]);
+  }
+
+  // 32 — median paths
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningHeader(s, "The directional tilt develops gradually after 10:00", 32);
+    await addImage(s, img.openingPaths, { left: 48, top: 144, width: 1180, height: 514 }, "Median cumulative 10:00-to-close NVDA paths and interquartile bands by opening-return bin");
+    addNotes(s, "The median paths separate gradually rather than through one isolated bar. Top-tail sessions end with a positive median remainder, while bottom-tail sessions end slightly negative. Interquartile bands remain broad and overlapping; this is a conditional path summary, not an equity curve.", [sources.openingReport, sources.openingSessionLedger]);
+  }
+
+  // 33 — prior-day states
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningHeader(s, "Prior-day ATR% is the clearest descriptive discriminator", 33);
+    await addImage(s, img.openingStates, { left: 34, top: 144, width: 900, height: 500 }, "Mean remainder-of-day return by opening bin and lagged signed-ER20 or ATR-percent state");
+    addRect(s, { left: 956, top: 158, width: 266, height: 464 }, C.panel);
+    addText(s, "Top 20% opening", { left: 980, top: 184, width: 218, height: 30 }, { fontSize: 22, bold: true });
+    addText(s, "+0.38%", { left: 980, top: 238, width: 218, height: 44 }, { fontSize: 34, bold: true, color: C.green });
+    addText(s, "LOW / MEDIUM ATR%", { left: 980, top: 284, width: 218, height: 24 }, { fontSize: 16, bold: true, color: C.navy });
+    addText(s, "61.8% up · n=186", { left: 980, top: 314, width: 218, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "−0.07%", { left: 980, top: 370, width: 218, height: 44 }, { fontSize: 34, bold: true, color: C.red });
+    addText(s, "HIGH ATR%", { left: 980, top: 416, width: 218, height: 24 }, { fontSize: 16, bold: true, color: C.navy });
+    addText(s, "50.5% up · n=111", { left: 980, top: 446, width: 218, height: 24 }, { fontSize: 16, color: C.muted });
+    addRect(s, { left: 980, top: 502, width: 218, height: 2 }, C.rule);
+    addText(s, "Bottom-20% opening inside HIGH ATR% averages −0.48%; only 39.3% finish the remainder positive.", { left: 980, top: 526, width: 218, height: 78 }, { fontSize: 17, bold: true, color: C.navy });
+    addNotes(s, "The cleanest long-side descriptive contrast is a top-20% opening after a prior-day LOW or MEDIUM ATR-percent state: +0.377% mean remainder, +0.519% median, 61.8% positive, n=186. The same opening tail in HIGH ATR% averages -0.072% with 50.5% positive, n=111. Signed-ER20 down plus a top-tail opening averages +0.48% but has only 24 observations and is not promoted here.", [sources.openingReport, sources.openingBins, sources.openingContrasts]);
+  }
+
+  // 34 — candidate and next translation
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addOpeningHeader(s, "ATR% conditions a candidate for the next TRAIN test", 34);
+    addRect(s, { left: 58, top: 164, width: 544, height: 406 }, C.paleGreen);
+    addText(s, "Descriptive candidate", { left: 88, top: 192, width: 480, height: 36 }, { fontSize: 28, bold: true, color: C.green });
+    addText(s, "Before the open", { left: 90, top: 258, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "Prior-day ATR% = LOW or MEDIUM", { left: 90, top: 292, width: 466, height: 42 }, { fontSize: 26, bold: true, color: C.navy });
+    addText(s, "At 10:00", { left: 90, top: 366, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "Opening return is in its positive tail", { left: 90, top: 400, width: 466, height: 42 }, { fontSize: 26, bold: true, color: C.navy });
+    addText(s, "Observed remainder: +0.38% mean · +0.52% median · 61.8% up · n=186", { left: 90, top: 486, width: 466, height: 58 }, { fontSize: 19, bold: true, color: C.green, alignment: "center" });
+    addRect(s, { left: 640, top: 164, width: 582, height: 406 }, C.panel);
+    addText(s, "Recommended causal translation", { left: 670, top: 192, width: 500, height: 36 }, { fontSize: 28, bold: true });
+    addBullet(s, "Compute the opening-tail cutoff from the prior 252 full sessions only.", 674, 258, 500, C.blue, 20, 72);
+    addBullet(s, "If the first bar clears that cutoff and yesterday's ATR% was not HIGH, enter at 10:00 and exit at 16:00.", 674, 344, 500, C.green, 20, 94);
+    addBullet(s, "Compare with opening-tail-only, ATR-state-only, HIGH-ATR opposite, and unconditional 10:00-to-close controls.", 674, 454, 500, C.amber, 20, 92);
+    addText(s, "NO RULE, COST, OR P&L WAS TESTED IN THIS SLICE", { left: 58, top: 622, width: 1164, height: 26 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The current +1.070% cutoff was computed from the entire descriptive sample and therefore must not be used retrospectively as though it had been known each day. The recommended next slice converts the same rank concept into a rolling prior-252-session threshold, then tests a 10:00-to-close long rule with simple ingredient controls. That translation requires a separate operator decision.", [sources.openingReport, sources.openingContrasts, sources.openingChecks]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {
