@@ -11,6 +11,7 @@ const repoRoot = process.env.GEN5_REPO_ROOT || process.cwd();
 const intradayRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_clock_descriptive_20260831");
 const dailyRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_return_microscope_20260831");
 const atlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "own_asset_return_geometry_atlas_20260826");
+const protoRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_daily_proto_rules_20260831");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -24,6 +25,11 @@ const img = {
   signed: path.join(dailyRoot, "visuals", "nvda_signed_er20_state_pearson_heatmaps.png"),
   sign: path.join(dailyRoot, "visuals", "nvda_unfiltered_prior_sign_heatmaps.png"),
   bands: path.join(atlasRoot, "visuals", "asset_state_bands", "nvda_state_bands.png"),
+  protoEntries: path.join(protoRoot, "visuals", "nvda_proto_rule_price_entries.png"),
+  protoEquity: path.join(protoRoot, "visuals", "nvda_proto_rule_equity_paths.png"),
+  protoDistributions: path.join(protoRoot, "visuals", "nvda_proto_rule_return_distributions.png"),
+  protoAnnual: path.join(protoRoot, "visuals", "nvda_proto_rule_annual_context.png"),
+  protoTapes: path.join(protoRoot, "visuals", "nvda_proto_rule_representative_tapes.png"),
 };
 
 const sources = {
@@ -34,6 +40,10 @@ const sources = {
   stateGrid: "Frozen NVDA state grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_state_grid_cells.csv",
   signGrid: "Frozen NVDA prior-sign grid: runs/research_workbench/operator_hypothesis_lab/nvda_daily_return_microscope_20260831/nvda_prior_sign_cells.csv",
   atlas: "Frozen own-asset atlas packet: runs/research_workbench/operator_hypothesis_lab/own_asset_return_geometry_atlas_20260826/report.md",
+  protoReport: "Local executable proto-rule packet: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/report.md",
+  protoSummary: "Local proto-rule summary: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/rule_summary.csv",
+  protoCalendar: "Local proto-rule annual context: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/calendar_summary.csv",
+  protoTrades: "Local non-overlapping trade ledger: runs/research_workbench/operator_hypothesis_lab/nvda_daily_proto_rules_20260831/trade_ledger.csv",
 };
 
 const C = {
@@ -301,6 +311,119 @@ async function main() {
     addText(s, "Keep every first plot descriptive; promote only a concrete causal pattern to a falsification slice.", { left: 142, top: 590, width: 950, height: 58 }, { fontSize: 23, color: C.navy });
     addText(s, "CURRENT STATUS: DAILY + INTRADAY MICROSCOPES DOCUMENTED · CONDITIONED INTRADAY VIEW NOT YET RUN", { left: 58, top: 660, width: 1164, height: 20 }, { fontSize: 13, bold: true, color: C.red, alignment: "center" });
     addNotes(s, "Mechanical scaling assumes that the daily and intraday paths are the same object. They are not. The first clean test is to hold the daily state definition fixed and ask whether the intraday outcome distribution changes.", [sources.intradayReport, sources.dailyReport, sources.stateGrid]);
+  }
+
+  // 15 — proto-rule transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "THIRD MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "Can the geometry survive\nexecutable timing?", { left: 72, top: 170, width: 960, height: 170 }, { fontSize: 64, bold: true, color: C.white });
+    addText(s, "Two fixed 20/20 clues are converted into next-open, open-to-open rules. The purpose is not to optimize them; it is to see which descriptive pattern remains visible after causal timing, no-overlap, costs, and simple controls.", { left: 76, top: 408, width: 1080, height: 126 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "2018–2023 TRAIN only · 2024+ remains sealed", { left: 76, top: 602, width: 900, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "15", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "This section translates two already-observed NVDA 20/20 geometry clues into executable rules without changing the horizon or searching thresholds. It is a TRAIN construction test, not confirmation.", [sources.protoReport, sources.protoSummary]);
+  }
+
+  // 16 — exact rules
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Two clues, two frozen rule translations", 16, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    addRect(s, { left: 58, top: 164, width: 550, height: 352 }, C.paleBlue);
+    addText(s, "Efficient-up continuation", { left: 86, top: 192, width: 480, height: 38 }, { fontSize: 29, bold: true, color: C.blue });
+    addText(s, "At close t", { left: 88, top: 258, width: 130, height: 28 }, { fontSize: 18, bold: true, color: C.muted });
+    addText(s, "R20 > 0  AND  ER20 ≥ 0.30", { left: 88, top: 294, width: 470, height: 44 }, { fontSize: 28, bold: true, color: C.navy });
+    addText(s, "Thesis", { left: 88, top: 372, width: 130, height: 28 }, { fontSize: 18, bold: true, color: C.muted });
+    addText(s, "An efficient upward path may continue after the signal is observable.", { left: 88, top: 408, width: 470, height: 76 }, { fontSize: 23, color: C.navy });
+    addRect(s, { left: 640, top: 164, width: 582, height: 352 }, C.paleGreen);
+    addText(s, "Calm-pullback rebound", { left: 670, top: 192, width: 500, height: 38 }, { fontSize: 29, bold: true, color: C.green });
+    addText(s, "At close t", { left: 672, top: 258, width: 130, height: 28 }, { fontSize: 18, bold: true, color: C.muted });
+    addText(s, "R20 < 0  AND  ATR% state = LOW or MEDIUM", { left: 672, top: 294, width: 500, height: 70 }, { fontSize: 26, bold: true, color: C.navy });
+    addText(s, "Thesis", { left: 672, top: 372, width: 130, height: 28 }, { fontSize: 18, bold: true, color: C.muted });
+    addText(s, "A loss in a non-high-volatility environment may be more recoverable than one inside a volatility shock.", { left: 672, top: 408, width: 500, height: 86 }, { fontSize: 22, color: C.navy });
+    addRect(s, { left: 58, top: 548, width: 1164, height: 82 }, C.panel);
+    addText(s, "Both: enter next open · exit open t+21 · 20 open-to-open intervals · no overlapping positions · 10 bps round trip", { left: 80, top: 572, width: 1120, height: 38 }, { fontSize: 22, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The rules differ only in their causal entry condition. Timing, holding period, overlap policy, and cost are held fixed so the translation comparison remains intelligible.", [sources.protoReport, sources.protoSummary]);
+  }
+
+  // 17 — price windows
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The rules select visibly different parts of NVDA history", 17, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    await addImage(s, img.protoEntries, { left: 44, top: 144, width: 1180, height: 514 }, "NVDA adjusted price with entry-to-exit windows for efficient-up continuation and calm-pullback rebound rules");
+    addNotes(s, "The price overlays are a sanity check on participation. Efficient-up continuation is active during many rising paths but also remains exposed to the 2022 breakdown. Calm-pullback rebound fires after losses only when the prior ATR-percent state is not high.", [sources.protoReport, sources.protoTrades]);
+  }
+
+  // 18 — primary readout
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Only the rebound clears the narrow TRAIN translation gate", 18, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    await addImage(s, img.protoEquity, { left: 42, top: 154, width: 790, height: 452 }, "Realized equity paths for the two NVDA proto-rules with normalized NVDA close as a visual reference");
+    addRect(s, { left: 856, top: 160, width: 366, height: 214 }, C.panel);
+    addText(s, "Efficient-up continuation", { left: 882, top: 184, width: 314, height: 32 }, { fontSize: 23, bold: true, color: C.blue });
+    addText(s, "39 trades", { left: 882, top: 236, width: 138, height: 40 }, { fontSize: 29, bold: true });
+    addText(s, "2.59% mean net", { left: 1030, top: 236, width: 166, height: 40 }, { fontSize: 24, bold: true });
+    addText(s, "61.5% profitable · −0.29 pp vs drift", { left: 882, top: 298, width: 314, height: 34 }, { fontSize: 18, bold: true, color: C.red });
+    addText(s, "STOP: weaker than unconditional drift and all three simple controls.", { left: 882, top: 338, width: 314, height: 28 }, { fontSize: 15, color: C.navy });
+    addRect(s, { left: 856, top: 396, width: 366, height: 230 }, C.paleGreen);
+    addText(s, "Calm-pullback rebound", { left: 882, top: 420, width: 314, height: 32 }, { fontSize: 23, bold: true, color: C.green });
+    addText(s, "27 trades", { left: 882, top: 472, width: 138, height: 40 }, { fontSize: 29, bold: true });
+    addText(s, "6.33% mean net", { left: 1030, top: 472, width: 166, height: 40 }, { fontSize: 24, bold: true });
+    addText(s, "74.1% profitable · +3.45 pp vs drift", { left: 882, top: 534, width: 314, height: 34 }, { fontSize: 18, bold: true, color: C.green });
+    addText(s, "PASS TRAIN translation only—not confirmation and not edge authority.", { left: 882, top: 576, width: 314, height: 40 }, { fontSize: 15, bold: true, color: C.navy });
+    addNotes(s, "The continuation rule averages 2.59% net versus 2.88% unconditional gross drift. The rebound rule averages 6.33% net and exceeds drift by 3.45 percentage points. Realized equity is shown only when trades exit; the dotted buy-and-hold line uses a separate right axis and is a visual context reference, not a matched-risk baseline.", [sources.protoSummary, sources.protoReport]);
+  }
+
+  // 19 — controls
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "The joint rebound condition adds discrimination", 19, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    await addImage(s, img.protoDistributions, { left: 34, top: 142, width: 930, height: 520 }, "Net return distributions for each NVDA primary proto-rule and three simple controls");
+    addRect(s, { left: 986, top: 160, width: 236, height: 458 }, C.panel);
+    addText(s, "Mean net return", { left: 1008, top: 184, width: 192, height: 28 }, { fontSize: 21, bold: true });
+    addText(s, "6.33%", { left: 1008, top: 238, width: 192, height: 46 }, { fontSize: 36, bold: true, color: C.green });
+    addText(s, "joint rebound", { left: 1008, top: 282, width: 192, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "4.53%", { left: 1008, top: 334, width: 192, height: 38 }, { fontSize: 29, bold: true });
+    addText(s, "ATR state only", { left: 1008, top: 372, width: 192, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "3.85%", { left: 1008, top: 418, width: 192, height: 38 }, { fontSize: 29, bold: true });
+    addText(s, "same calm state after gains", { left: 1008, top: 456, width: 192, height: 48 }, { fontSize: 15, color: C.muted });
+    addText(s, "2.77%", { left: 1008, top: 524, width: 192, height: 38 }, { fontSize: 29, bold: true });
+    addText(s, "negative R20 only", { left: 1008, top: 562, width: 192, height: 24 }, { fontSize: 16, color: C.muted });
+    addText(s, "The sign and volatility state work better together than either alone in TRAIN.", { left: 986, top: 630, width: 236, height: 40 }, { fontSize: 14, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The primary rebound rule has a higher mean and median than negative-R20-only, low/medium-ATR-only, and the positive-R20 opposite inside the same ATR states. This is the strongest reason to retain it as a confirmation candidate, while recognizing that all comparisons come from the discovery sample.", [sources.protoSummary, sources.protoTrades]);
+  }
+
+  // 20 — annual context
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Calendar slices reveal the burden of one-asset evidence", 20, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    await addImage(s, img.protoAnnual, { left: 48, top: 146, width: 840, height: 500 }, "Annual mean net trade returns and counts for the two NVDA primary proto-rules");
+    addRect(s, { left: 916, top: 162, width: 306, height: 446 }, C.panel);
+    addText(s, "What matters", { left: 944, top: 190, width: 250, height: 30 }, { fontSize: 24, bold: true });
+    addBullet(s, "Continuation suffers a concentrated 2022 failure.", 944, 252, 250, C.red, 19, 76);
+    addBullet(s, "Rebound is positive in five of six years, but 2018 is approximately flat.", 944, 346, 250, C.green, 19, 96);
+    addBullet(s, "Only 3–6 rebound trades appear in any year.", 944, 462, 250, C.amber, 19, 76);
+    addText(s, "Years are context, not independent replications. The next honest evidence must come from untouched time.", { left: 944, top: 554, width: 250, height: 58 }, { fontSize: 15, bold: true, color: C.navy });
+    addNotes(s, "The annual view helps detect whether a full-period mean is carried by one isolated episode. Rebound is not purely a single-year artifact, but the yearly samples are tiny and correlated; they do not replace OOS confirmation.", [sources.protoCalendar, sources.protoSummary]);
+  }
+
+  // 21 — representative trades
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "Representative paths keep the trade-level reality visible", 21, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    await addImage(s, img.protoTapes, { left: 40, top: 142, width: 1188, height: 518 }, "Worst, median-nearest, and best 20-session open paths for both NVDA proto-rules");
+    addNotes(s, "The representative tapes show that neither rule creates a smooth conditional path. The continuation worst case loses roughly 41%, and the rebound worst case loses roughly 31%. The median rebound path is more consistent with the original thesis: an initially quiet path that develops into a recovery across the holding window.", [sources.protoTrades, sources.protoReport]);
+  }
+
+  // 22 — decision
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addHeader(s, "One rule stops; one earns untouched confirmation", 22, "OPERATOR HYPOTHESIS LAB · NVDA PROTO-RULES");
+    addRect(s, { left: 58, top: 166, width: 540, height: 228 }, C.paleRed);
+    addText(s, "STOP", { left: 86, top: 194, width: 120, height: 42 }, { fontSize: 31, bold: true, color: C.red });
+    addText(s, "Efficient-up continuation", { left: 86, top: 254, width: 462, height: 38 }, { fontSize: 28, bold: true });
+    addText(s, "The exact ER20-plus-positive-R20 translation adds no incremental value in TRAIN.", { left: 86, top: 316, width: 462, height: 60 }, { fontSize: 21, color: C.navy });
+    addRect(s, { left: 640, top: 166, width: 582, height: 228 }, C.paleGreen);
+    addText(s, "RETAIN", { left: 670, top: 194, width: 150, height: 42 }, { fontSize: 31, bold: true, color: C.green });
+    addText(s, "Calm-pullback rebound", { left: 670, top: 254, width: 500, height: 38 }, { fontSize: 28, bold: true });
+    addText(s, "The joint loss-plus-not-high-ATR rule clears drift and its simple controls in TRAIN.", { left: 670, top: 316, width: 500, height: 60 }, { fontSize: 21, color: C.navy });
+    addText(s, "What this does—and does not—mean", { left: 58, top: 446, width: 530, height: 38 }, { fontSize: 28, bold: true });
+    addBullet(s, "It proves the descriptive rebound clue can survive next-open timing, costs, and no-overlap construction.", 72, 510, 1100, C.green, 21, 62);
+    addBullet(s, "It does not prove generalization, robustness to nearby definitions, capacity, or live edge.", 72, 582, 1100, C.red, 21, 62);
+    addText(s, "NEXT GATE: freeze this exact rule, then read the untouched 2024+ period once—without rescue tuning.", { left: 58, top: 652, width: 1164, height: 26 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The next methodological gate is a one-shot confirmation of the frozen calm-pullback rebound rule on untouched 2024+ data. Any later robustness or neighboring-definition work must be declared separately and cannot rewrite the original confirmation result.", [sources.protoReport, sources.protoSummary, sources.protoTrades]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {
