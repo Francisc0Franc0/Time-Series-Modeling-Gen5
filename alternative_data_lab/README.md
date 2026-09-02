@@ -16,6 +16,15 @@ made available only after the UTC day ends plus a fixed 48-hour safeguard,
 against exactly one following GME open-to-open return. It opens no threshold,
 horizon search, trade rule, costs, or performance claim.
 
+The third slice is `ADL-WIKI-03.1`: the same causal attention feature and
+availability clock against move magnitude instead of direction. Its primary
+outcome is the absolute one-session open-to-open return; entry-session
+`log(high / low)` is the sole convergent diagnostic. Ten equal-count attention
+bins summarize shape only and are not thresholds.
+
+The operator-facing lane record is
+[`wikimedia_attention_alternative_data_lab.pptx`](presentations/wikimedia_attention_alternative_data_lab.pptx).
+
 Current authority:
 
 - preserve the exact Wikimedia response and complete daily calendar;
@@ -23,4 +32,6 @@ Current authority:
 - produce auditable data-health, construction, and descriptive visual outputs;
 - keep `ADL-WIKI-02.1` at
   `STOP_NO_OBVIOUS_ONE_SESSION_DIRECTIONAL_LEAD`;
+- keep `ADL-WIKI-03.1` at
+  `STOP_NO_OBVIOUS_ONE_SESSION_MAGNITUDE_LEAD`;
 - make no threshold, strategy, performance, or edge claim.
