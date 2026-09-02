@@ -329,6 +329,21 @@ and 2024+ CONFIRMATION remains sealed. See the
 [evidence deck](presentations/gen5_lit_mom_02_1_opening_gap_evidence.pptx) as
 the concise human-facing review surface.
 
+`LIT-MOM-03.1` opens a distinct dual-momentum lane from Quantpedia's July 2026
+practitioner video and May 2026 Active Dual Momentum GTAA article, grounded by
+the broader academic cross-sectional and time-series momentum literature. The
+opening [study deck](presentations/gen5_lit_mom_03_1_dual_momentum_study.pptx)
+records why earlier single-asset Gen5 nulls can coexist with a weak
+portfolio-level momentum tendency, the “fleet rather than one leaf” intuition,
+the extra hurdle faced by long-only timing against drift, matched exposure,
+SPY, and buy-and-hold, and the exact published nine-ETF, 10/25-week,
+top-three, positive-momentum-only mechanics. It also records the evidence
+boundary: the source selected its final specification after inspecting
+multiple horizons and breadths on the same 2007-2026 history, so a recent
+publication date does not make that backtest independent confirmation. Record
+`HYPOTHESIS_AND_MECHANICS_PLAN_DOCUMENTED_DATA_NOT_RUN`. No market data,
+performance, strategy gate, or edge claim has been opened for this lane.
+
 ## Running checks
 
 Run only the literature-study tests with:

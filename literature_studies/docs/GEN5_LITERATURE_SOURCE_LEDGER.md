@@ -304,6 +304,27 @@ Grounded claims used by L1:
 | Sharpe requires an explicit periodic return convention and has non-normality, transaction-cost, and backward-looking limitations. | 113-114 | 122-123 | Report naive and autocorrelation-adjusted Sharpe with costs. |
 | Maximum drawdown and drawdown duration describe distinct dimensions of loss. | 117 | 126 | Report depth, duration, and time under water. |
 
+## Active Dual-Momentum Source Set
+
+`LIT-MOM-03.1` treats a recent video as practitioner literature: it supplies a
+specific, reproducible hypothesis, while academic sources supply the broader
+mechanism. Neither source class supplies Gen5 confirmation.
+
+| Source | Source role | Imported into `LIT-MOM-03.1` | Explicitly not imported |
+|---|---|---|---|
+| Quantpedia, “Dual Momentum Strategies - Quantpedia Explains Trading Strategies,” YouTube, July 12, 2026, <https://www.youtube.com/watch?v=c1HDiohiqLU> | Operator-supplied practitioner literature and study prompt | The recent dual-momentum framing and link to the published implementation | Any verbal or displayed performance claim as Gen5 evidence |
+| Quantpedia, “Active Dual Momentum GTAA Strategy,” May 22, 2026, <https://quantpedia.com/active-dual-momentum-gtaa-strategy/> | Primary implementation specification | Nine-ETF universe (`SHY, IEF, UUP, GLD, USO, SPY, EFA, QQQ, EEM`); Wednesday-close weekly signal; 10- and 25-week ROC sleeves; top three positive selections per sleeve; failed slots in cash; 50/50 sleeve allocation | The reported 2008-2026 backtest as independent evidence; the article searched horizons and breadths on the same history before selecting 10/25 weeks and top three |
+| Antonacci, “Risk Premia Harvesting Through Dual Momentum,” SSRN 2042750, <https://doi.org/10.2139/ssrn.2042750> | Dual-momentum academic/practitioner bridge | Relative-strength selection combined with an absolute-momentum permission rule | Antonacci's exact assets, parameters, or performance as proof of the Quantpedia rule |
+| Jegadeesh and Titman (1993), “Returns to Buying Winners and Selling Losers,” <https://doi.org/10.1111/j.1540-6261.1993.tb04702.x> | Cross-sectional momentum foundation | The claim that portfolio-level winner-minus-loser continuation differs from forecasting one asset's next return | The unavailable short leg as authority for a long-only implementation |
+| Moskowitz, Ooi, and Pedersen (2012), “Time Series Momentum,” <https://www.aqr.com/Insights/Research/Journal-Article/Time-Series-Momentum> | Time-series momentum foundation | The claim that own past direction can have a weak average relation to future return when diversified across markets | Any implication that every single asset or fast horizon must show a visible signal |
+| Daniel and Moskowitz, “Momentum Crashes,” NBER Working Paper 20439, <https://www.nber.org/papers/w20439> | Risk and persistence context | Momentum can retain a premium while suffering violent reversals and difficult risk | Any claim that academic support removes implementation, timing, cost, or baseline risk |
+
+The opening
+[study deck](../presentations/gen5_lit_mom_03_1_dual_momentum_study.pptx)
+contains the source-by-slide notes, the fleet-versus-leaf intuition, the
+long-only baseline ladder, the exact published mechanics, and the next narrow
+slice: an auditable weekly signal and allocation tape before performance.
+
 ## Primary-method cross-checks
 
 - Engle, R. F. and Granger, C. W. J. (1987), "Co-integration and Error
