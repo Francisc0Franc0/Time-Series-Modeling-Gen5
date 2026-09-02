@@ -16,6 +16,7 @@ const confirmationRoot = path.join(repoRoot, "runs", "research_workbench", "oper
 const openingRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_response_20260831");
 const openingRuleRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_intraday_opening_rule_20260831");
 const openingAtlasRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "intraday_opening_atr_atlas_20260901");
+const closePressureRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_letf_close_pressure_20260901");
 const deckPath = path.join(repoRoot, "operator_hypothesis_lab", "presentations", "nvda_microscope_evidence.pptx");
 const qaRoot = path.join(repoRoot, "runs", "research_workbench", "operator_hypothesis_lab", "nvda_microscope_deck_20260831");
 const renderRoot = path.join(qaRoot, "rendered");
@@ -53,6 +54,10 @@ const img = {
   openingAtlasResponse: path.join(openingAtlasRoot, "visuals", "opening_atr_asset_response_map.png"),
   openingAtlasSectors: path.join(openingAtlasRoot, "visuals", "opening_atr_sector_context.png"),
   openingAtlasHeatmap: path.join(openingAtlasRoot, "visuals", "opening_atr_asset_era_heatmap.png"),
+  closeScatter: path.join(closePressureRoot, "visuals", "nvda_clock_continuation_scatter.png"),
+  closeComparison: path.join(closePressureRoot, "visuals", "nvda_clock_comparison.png"),
+  closeResidual: path.join(closePressureRoot, "visuals", "nvdl_tracking_residual_scatter.png"),
+  closePaths: path.join(closePressureRoot, "visuals", "nvda_extreme_close_paths.png"),
 };
 
 const sources = {
@@ -91,6 +96,16 @@ const sources = {
   openingAtlasEras: "Era-level mechanism summary: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/era_summary.csv",
   openingAtlasSectors: "Sector context summary: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/sector_summary.csv",
   openingAtlasGates: "Frozen mechanism-replication gates: runs/research_workbench/operator_hypothesis_lab/intraday_opening_atr_atlas_20260901/mechanism_gates.csv",
+  closeReport: "Local NVDA/NVDL close-pressure report: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/report.md",
+  closeSpec: "Frozen 2023-only five-minute specification: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/run_spec.csv",
+  closeChecks: "Causal construction checks: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/construction_checks.csv",
+  closeClock: "Clock-specific continuation summary: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/clock_summary.csv",
+  closeResidual: "Point-in-time 1.5x tracking-residual summary: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/tracking_residual_summary.csv",
+  closePanel: "Synchronized exact-bar ledger: runs/research_workbench/operator_hypothesis_lab/nvda_letf_close_pressure_20260901/synchronized_clock_panel.csv",
+  sec2023: "SEC EDGAR 2023 NVDL series record (GraniteShares 1.5x Long NVDA Daily ETF): https://www.sec.gov/Archives/edgar/data/1689873/000149315223032890/0001493152-23-032890-index.html",
+  sec2024: "SEC EDGAR January 2024 revised prospectus (2x; previously 1.5x): https://www.sec.gov/Archives/edgar/data/1689873/000149315224003271/form497.htm",
+  fedLetf: "Federal Reserve, Are Concerns About Leveraged ETFs Overblown?: https://www.federalreserve.gov/econres/feds/are-concerns-about-leveraged-etfs-overblown.htm",
+  alpacaBars: "Alpaca historical stock bars API: https://docs.alpaca.markets/us/reference/stockbarsingle-1",
 };
 
 const C = {
@@ -152,6 +167,14 @@ function addOpeningAtlasHeader(slide, title, page) {
   addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
   addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
   addText(slide, "Mechanism replication · 26 non-NVDA assets · causal outcomes through 2025", { left: 48, top: 684, width: 900, height: 17 }, { fontSize: 12, color: C.muted });
+  addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
+}
+
+function addClosePressureHeader(slide, title, page) {
+  addText(slide, "OPERATOR HYPOTHESIS LAB · NVDA / NVDL CLOSE PRESSURE", { left: 48, top: 25, width: 820, height: 20 }, { fontSize: 14, bold: true, color: C.muted });
+  addText(slide, title, { left: 48, top: 55, width: 1160, height: 62 }, { fontSize: 39, bold: true });
+  addRect(slide, { left: 48, top: 128, width: 1184, height: 2 }, C.rule);
+  addText(slide, "Descriptive mechanism POC · exact adjusted SIP 5-minute bars · 2023 only", { left: 48, top: 684, width: 850, height: 17 }, { fontSize: 12, color: C.muted });
   addText(slide, String(page).padStart(2, "0"), { left: 1140, top: 682, width: 92, height: 18 }, { fontSize: 12, color: C.muted, alignment: "right" });
 }
 
@@ -876,6 +899,135 @@ async function main() {
     addBullet(s, "Technology and communication pockets can motivate a new, predeclared niche hypothesis.", 782, 468, 406, C.blue, 19, 82);
     addText(s, "NVDA's 2024+ data remain unread. The one-asset thesis may still be tested on its own terms, but it cannot borrow confidence from this atlas.", { left: 780, top: 558, width: 414, height: 62 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
     addNotes(s, "Only the support gate passes. The median asset contrast, asset breadth, every-era sign, and pooled HIGH-ATR fade gates all fail. The broad mechanism therefore stops. This does not retroactively answer the separate single-NVDA confirmation question, because NVDA was excluded and its 2024+ intraday data remain unread.", [sources.openingAtlasGates, sources.openingAtlasAssets, sources.openingAtlasEras, sources.openingAtlasReport]);
+  }
+
+  // 50 — daily-rebalance mechanism transition
+  {
+    const s = p.slides.add(); s.background.fill = C.navy;
+    addText(s, "EIGHTH MICROSCOPE", { left: 72, top: 94, width: 420, height: 30 }, { fontSize: 17, bold: true, color: C.paleBlue });
+    addText(s, "Can a daily leverage reset\nleave a closing footprint?", { left: 72, top: 170, width: 1080, height: 170 }, { fontSize: 58, bold: true, color: C.white });
+    addText(s, "NVDL was a 1.5x daily NVDA fund throughout 2023. If its exposure adjustment matters, a large NVDA day should look different specifically near the close—not merely at arbitrary earlier clocks.", { left: 76, top: 408, width: 1080, height: 132 }, { fontSize: 27, color: C.paleBlue });
+    addText(s, "2023 only · exact 5-minute bars · no strategy or 2024+ NVDA outcome", { left: 76, top: 602, width: 1040, height: 32 }, { fontSize: 20, bold: true, color: C.white });
+    addText(s, "50", { left: 1134, top: 672, width: 90, height: 20 }, { fontSize: 12, color: C.paleBlue, alignment: "right" });
+    addNotes(s, "This opens a separate structural-microstructure microscope. The hypothesized mechanism is scheduled daily exposure adjustment, not a generic momentum rule. The study deliberately uses 2023 only, leaving the earlier NVDA 2024+ confirmation boundary untouched.", [sources.closeSpec, sources.sec2023, sources.fedLetf]);
+  }
+
+  // 51 — frozen mechanism and point-in-time definition
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "The clock test separates pressure from ordinary momentum", 51);
+    addRect(s, { left: 58, top: 164, width: 544, height: 438 }, C.paleBlue);
+    addText(s, "Frozen causal question", { left: 88, top: 194, width: 480, height: 36 }, { fontSize: 28, bold: true, color: C.navy });
+    addText(s, "Signal", { left: 90, top: 258, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "NVDA log return from the prior regular-session close to a completed 12:00, 14:00, or 15:30 anchor", { left: 90, top: 292, width: 466, height: 90 }, { fontSize: 23, bold: true, color: C.navy });
+    addText(s, "Outcome", { left: 90, top: 410, width: 190, height: 26 }, { fontSize: 17, bold: true, color: C.muted });
+    addText(s, "The next 30 minutes at every clock", { left: 90, top: 446, width: 466, height: 48 }, { fontSize: 24, bold: true, color: C.navy });
+    addText(s, "A closing mechanism should distinguish 15:30 from the earlier controls", { left: 90, top: 526, width: 466, height: 42 }, { fontSize: 18, bold: true, color: C.green, alignment: "center" });
+    addRect(s, { left: 640, top: 164, width: 582, height: 438 }, C.panel);
+    addText(s, "Point-in-time correction", { left: 670, top: 194, width: 500, height: 36 }, { fontSize: 28, bold: true });
+    addBullet(s, "NVDL's 2023 objective was 1.5x—not the 2x objective shown on today's product page.", 674, 258, 500, C.red, 20, 82);
+    addBullet(s, "The change to 2x occurred in January 2024, outside this sample.", 674, 354, 500, C.amber, 20, 70);
+    addBullet(s, "Tracking residual is therefore NVDL minus 1.5x NVDA on identical clock intervals.", 674, 438, 500, C.blue, 20, 84);
+    addText(s, "No AUM or shares-outstanding reconstruction yet", { left: 670, top: 558, width: 500, height: 25 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The point-in-time fund objective is a hard data contract. SEC records identify NVDL as GraniteShares 1.5x Long NVDA Daily ETF in 2023; the revised January 2024 prospectus identifies the later 2x objective and notes the prior 1.5x name. Using the current 2x label in 2023 would manufacture tracking error.", [sources.closeSpec, sources.sec2023, sources.sec2024, sources.closeChecks]);
+  }
+
+  // 52 — data admission
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "Sparse ETF trading reduces the sample—but is never filled", 52);
+    addMetric(s, "177", "15:30 pairs", "Exact synchronized sessions", 58, 174, 260, C.blue);
+    addMetric(s, "487", "clock rows", "Across all three anchors", 338, 174, 260, C.green);
+    addMetric(s, "78.8%", "anchor coverage", "1,773 / 2,250 NVDL opportunities", 618, 174, 260, C.amber);
+    addMetric(s, "0", "future bars", "No NVDA 2024+ data read", 898, 174, 260, C.red);
+    addRect(s, { left: 58, top: 340, width: 1164, height: 250 }, C.panel);
+    addText(s, "Admission rule", { left: 88, top: 370, width: 250, height: 34 }, { fontSize: 27, bold: true });
+    addBullet(s, "Both NVDA and NVDL must print the exact anchor, local-control, and outcome bars.", 92, 430, 500, C.blue, 20, 70);
+    addBullet(s, "No previous-tick carry-forward converts a stale ETF price into a synchronized observation.", 92, 510, 500, C.green, 20, 70);
+    addBullet(s, "This protects timing, but exact-bar admission may favor more actively traded NVDL sessions.", 666, 430, 500, C.amber, 20, 78);
+    addBullet(s, "The packet is descriptive; coverage is not treated as a representative population claim.", 666, 520, 500, C.red, 20, 64);
+    addNotes(s, "NVDA has complete required anchor coverage, while NVDL has 1,773 exact required bars out of 2,250 opportunities during the study. The analysis retains 177 exact 15:30 pairs and 487 total clock rows. This avoids artificial interpolation, while transparently narrowing the claim to sessions with synchronized ETF prints.", [sources.closeChecks, sources.closePanel, sources.alpacaBars]);
+  }
+
+  // 53 — primary clock scatter
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "The predicted same-direction close continuation is absent", 53);
+    await addImage(s, img.closeScatter, { left: 34, top: 146, width: 910, height: 506 }, "NVDA daily move to each clock versus the following 30-minute return in 2023");
+    addRect(s, { left: 962, top: 158, width: 260, height: 464 }, C.panel);
+    addText(s, "15:30", { left: 986, top: 190, width: 212, height: 38 }, { fontSize: 29, bold: true, color: C.green });
+    addText(s, "−0.042", { left: 986, top: 246, width: 212, height: 52 }, { fontSize: 40, bold: true, color: C.navy });
+    addText(s, "Pearson correlation", { left: 986, top: 298, width: 212, height: 25 }, { fontSize: 17, color: C.muted, alignment: "center" });
+    addRect(s, { left: 986, top: 352, width: 212, height: 2 }, C.rule);
+    addText(s, "+0.068", { left: 986, top: 382, width: 212, height: 46 }, { fontSize: 34, bold: true, color: C.navy });
+    addText(s, "Spearman correlation", { left: 986, top: 430, width: 212, height: 25 }, { fontSize: 17, color: C.muted, alignment: "center" });
+    addText(s, "The cloud is effectively flat. A positive top-minus-bottom quintile contrast (+0.069%) does not create a monotone close-pressure relationship.", { left: 986, top: 500, width: 212, height: 96 }, { fontSize: 16, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The primary descriptive relationship is slightly negative by Pearson and only slightly positive by Spearman at 15:30. The top-minus-bottom quintile mean is +0.069%, but individual outcomes overlap heavily and the fitted slope remains negative. The predeclared same-direction continuation clue is therefore not present.", [sources.closeClock, sources.closePanel, sources.closeReport]);
+  }
+
+  // 54 — matched-clock comparison
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "The close favors local momentum—not the reset signal", 54);
+    await addImage(s, img.closeComparison, { left: 40, top: 150, width: 875, height: 500 }, "Correlations of prior-close and immediately prior 60-minute NVDA returns with the next 30 minutes at three clocks");
+    addRect(s, { left: 938, top: 158, width: 284, height: 464 }, C.panel);
+    addText(s, "Two different predictors", { left: 962, top: 190, width: 236, height: 54 }, { fontSize: 24, bold: true });
+    addBullet(s, "Prior close → clock is the leveraged-reset mechanism signal.", 962, 278, 236, C.blue, 17, 76);
+    addBullet(s, "Immediately prior 60 min is an ordinary local momentum control.", 962, 374, 236, C.amber, 17, 76);
+    addText(s, "The control rises from +0.041 to +0.133. Interesting—but it is a different hypothesis and is not promoted here.", { left: 962, top: 494, width: 236, height: 94 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "Clock matching prevents us from mistaking generic intraday momentum for the proposed daily-reset mechanism. The prior-close signal is negative at all three clocks. The immediately prior 60-minute return has an increasingly positive descriptive correlation with the next 30 minutes, reaching +0.133 at 15:30. That is a separately testable local-momentum clue, not evidence for NVDL-induced pressure.", [sources.closeClock, sources.closeReport]);
+  }
+
+  // 55 — tracking residual
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "NVDL's own tracking residual does converge", 55);
+    await addImage(s, img.closeResidual, { left: 34, top: 146, width: 910, height: 506 }, "NVDL minus 1.5x NVDA tracking residual and its next-30-minute change at three clocks");
+    addRect(s, { left: 962, top: 158, width: 260, height: 464 }, C.panel);
+    addText(s, "15:30 residual", { left: 986, top: 190, width: 212, height: 34 }, { fontSize: 24, bold: true, color: C.green });
+    addText(s, "−0.419", { left: 986, top: 250, width: 212, height: 50 }, { fontSize: 39, bold: true, color: C.navy });
+    addText(s, "correlation with correction", { left: 986, top: 302, width: 212, height: 28 }, { fontSize: 16, color: C.muted, alignment: "center" });
+    addText(s, "−0.246", { left: 986, top: 378, width: 212, height: 46 }, { fontSize: 35, bold: true, color: C.navy });
+    addText(s, "descriptive slope", { left: 986, top: 426, width: 212, height: 28 }, { fontSize: 16, color: C.muted, alignment: "center" });
+    addText(s, "This says stale ETF-relative pricing tends to correct. It does not say NVDL buying or selling moved NVDA.", { left: 986, top: 504, width: 212, height: 82 }, { fontSize: 17, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "After correcting the historical leverage factor to 1.5x, NVDL's relative-price residual shows clear descriptive convergence at 14:00 and 15:30. This is a coherent ETF-pricing behavior. It is intentionally separated from the underlying-pressure thesis: residual correction can occur entirely through NVDL repricing toward NVDA.", [sources.closeResidual, sources.closePanel, sources.sec2023, sources.sec2024]);
+  }
+
+  // 56 — representative paths
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "Extreme days do not share one closing response", 56);
+    await addImage(s, img.closePaths, { left: 42, top: 144, width: 900, height: 515 }, "Six extreme 2023 NVDA paths with the 15:30 observation marked");
+    addRect(s, { left: 962, top: 158, width: 260, height: 464 }, C.panel);
+    addText(s, "Path-level reality", { left: 986, top: 190, width: 212, height: 34 }, { fontSize: 24, bold: true });
+    addBullet(s, "Some large down days rebound after 15:30; another continues lower before recovering.", 986, 258, 212, C.red, 17, 98);
+    addBullet(s, "One large up day extends; another fades sharply into the close.", 986, 382, 212, C.green, 17, 82);
+    addText(s, "The examples explain why a small quintile difference and a flat cloud can coexist.", { left: 986, top: 514, width: 212, height: 72 }, { fontSize: 17, bold: true, color: C.navy, alignment: "center" });
+    addNotes(s, "The six most extreme synchronized 15:30 observations show heterogeneous closing paths. They are descriptive examples, not selected trades. The paths make the central result intuitive: extreme daily movement does not map to one reliable final-30-minute direction in this sample.", [sources.closePanel, sources.closeReport]);
+  }
+
+  // 57 — descriptive verdict
+  {
+    const s = p.slides.add(); s.background.fill = C.white; addClosePressureHeader(s, "The pressure thesis stops at the first microscope", 57);
+    addRect(s, { left: 58, top: 164, width: 1164, height: 88 }, C.paleRed);
+    addText(s, "STOP_NO_SAME_DIRECTION_NVDA_CLOSE_FOOTPRINT", { left: 86, top: 186, width: 1108, height: 44 }, { fontSize: 31, bold: true, color: C.red, alignment: "center" });
+    addText(s, "What the slice established", { left: 58, top: 292, width: 430, height: 38 }, { fontSize: 28, bold: true });
+    const closeChecks = [
+      ["PASS", "Causal timing", "three exact completed clocks"],
+      ["PASS", "Point-in-time fund", "1.5x objective in 2023"],
+      ["PASS", "Clock controls", "12:00 and 14:00 matched"],
+      ["STOP", "NVDA continuation", "15:30 Pearson −0.042"],
+      ["CLUE", "ETF convergence", "residual correlation −0.419"],
+    ];
+    closeChecks.forEach(([status, label, detail], i) => {
+      const top = 342 + i * 48;
+      const color = status === "PASS" ? C.green : status === "CLUE" ? C.blue : C.red;
+      const pale = status === "PASS" ? C.paleGreen : status === "CLUE" ? C.paleBlue : C.paleRed;
+      addRect(s, { left: 72, top, width: 92, height: 32 }, pale);
+      addText(s, status, { left: 78, top: top + 6, width: 80, height: 20 }, { fontSize: 14, bold: true, color, alignment: "center" });
+      addText(s, label, { left: 186, top: top + 4, width: 238, height: 26 }, { fontSize: 18, bold: true });
+      addText(s, detail, { left: 430, top: top + 5, width: 292, height: 24 }, { fontSize: 16, color: C.muted });
+    });
+    addRect(s, { left: 752, top: 292, width: 470, height: 334 }, C.panel);
+    addText(s, "What deserves its own next question", { left: 780, top: 320, width: 414, height: 68 }, { fontSize: 26, bold: true });
+    addBullet(s, "Local 60-minute momentum strengthens toward the close, but was only a control here.", 782, 410, 406, C.blue, 19, 78);
+    addBullet(s, "NVDL residual convergence may support a fund-pricing study, not an NVDA-pressure strategy.", 782, 508, 406, C.green, 19, 82);
+    addText(s, "Do not reconstruct AUM for this formulation. Freeze a new slice around one surviving clue.", { left: 780, top: 570, width: 414, height: 46 }, { fontSize: 14, bold: true, color: C.red, alignment: "center" });
+    addNotes(s, "The exact daily-reset pressure thesis stops at the descriptive stage: there is no positive monotone relationship between the NVDA daily move and its final 30 minutes. The study did uncover two distinct clues—a local momentum control and ETF residual convergence—but neither is promoted automatically. Each would require a newly frozen hypothesis and untouched evidence boundary.", [sources.closeReport, sources.closeClock, sources.closeResidual, sources.closeChecks, sources.fedLetf]);
   }
 
   for (const [index, slide] of p.slides.items.entries()) {
