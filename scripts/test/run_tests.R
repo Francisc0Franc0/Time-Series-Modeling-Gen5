@@ -69,5 +69,11 @@ run_step("edge-discovery-lab non-network tests", {
   )
 })
 
+run_step("alternative-data-lab non-network tests", {
+  testthat::test_dir(
+    file.path(repo_root, "alternative_data_lab", "tests", "testthat")
+  )
+})
+
 message("")
 message("Gen5 local tests passed.")
