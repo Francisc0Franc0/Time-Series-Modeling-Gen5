@@ -25,6 +25,13 @@ bins summarize shape only and are not thresholds.
 The operator-facing lane record is
 [`wikimedia_attention_alternative_data_lab.pptx`](presentations/wikimedia_attention_alternative_data_lab.pptx).
 
+Lane disposition as of 2026-09-01: `PARKED_AFTER_ONE_SESSION_DIRECTION_AND_MAGNITUDE_STOPS`.
+The collection machinery and evidence deck remain available as a reusable
+alternative-data example, but the Wikimedia/GameStop hypothesis family is not
+an active research queue. Reopening it requires a new operator-approved
+question and a fresh contract; the inspected historical series must not be
+expanded through post-hoc thresholds, outcomes, horizons, or subperiods.
+
 Current authority:
 
 - preserve the exact Wikimedia response and complete daily calendar;
@@ -34,4 +41,5 @@ Current authority:
   `STOP_NO_OBVIOUS_ONE_SESSION_DIRECTIONAL_LEAD`;
 - keep `ADL-WIKI-03.1` at
   `STOP_NO_OBVIOUS_ONE_SESSION_MAGNITUDE_LEAD`;
-- make no threshold, strategy, performance, or edge claim.
+- make no threshold, strategy, performance, or edge claim;
+- keep the lane parked unless the operator explicitly opens a new hypothesis.
