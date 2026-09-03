@@ -345,6 +345,16 @@ descriptive transport evidence rather than a new source claim; the stock
 fleets are explicitly survivor-biased and no statistical or forward authority
 was added.
 
+The subsequent
+[broad cross-sector stock-fleet POC](GEN5_LIT_MOM_03_3_BROAD_STOCK_FLEET_RESULTS.md)
+adds no external source and makes no literature claim. It is a Gen5 mechanism
+transport test that freezes 29-of-88 per sleeve to preserve the source's
+three-of-nine selection fraction while allowing cross-sector substitution.
+Relative-only exceeded equal-weight 88 by 0.90 CAGR points descriptively, while
+the source positive-return gate reduced CAGR and improved drawdown. The static
+survivor-biased atlas, retrospective window, and unopened inference and forward
+gates remain explicit limitations.
+
 ## Primary-method cross-checks
 
 - Engle, R. F. and Granger, C. W. J. (1987), "Co-integration and Error

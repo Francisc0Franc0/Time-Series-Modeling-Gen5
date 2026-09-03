@@ -377,6 +377,19 @@ exploratory POCs. Record
 `UNIVERSE_TRANSPORT_POC_COMPLETE_DESCRIPTIVE_ONLY`; no inference, parameter
 search, point-in-time stock membership, robustness, or forward gate is open.
 
+The authorized
+[broad cross-sector stock-fleet POC](docs/GEN5_LIT_MOM_03_3_BROAD_STOCK_FLEET_RESULTS.md)
+then allowed all 88 static atlas stocks to compete together. It preserved the
+source selection fraction as 29-of-88 per 10-week and 25-week sleeve without a
+top-N search. Relative-only rotation reached 17.95% net CAGR versus 17.04% for
+equal-weight ownership of all 88, a descriptive +0.90-point ranking lift. The
+positive-return gate reduced the full source rule to 16.69% CAGR but improved
+maximum drawdown to -24.83%, versus -28.57% for relative-only and -32.51% for
+equal weight. Record
+`BROAD_CROSS_SECTOR_STOCK_FLEET_POC_COMPLETE_DESCRIPTIVE_ONLY`. The static
+survivor-biased universe prevents promotion; no inference, robustness,
+point-in-time membership, or forward authority is open.
+
 ## Running checks
 
 Run only the literature-study tests with:
