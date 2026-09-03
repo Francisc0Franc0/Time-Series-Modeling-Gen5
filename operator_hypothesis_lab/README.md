@@ -526,6 +526,20 @@ Generated packets live under
 `runs/research_workbench/operator_hypothesis_lab/` and remain ignored research
 artifacts.
 
+`HYP-PORT-01.1` opens a separate portfolio-policy POC rather than an edge
+claim. Its [frozen contract](docs/HYP_PORT_01_1_AGGRESSIVE_COMPOUNDING_CONTRACT.md)
+compares a 50% SCHG / 20% QUAL / 15% XSD / 5% each AMD-NVDA-TSLA allocation
+with the identical mix left untouched, equal-weight AMD/NVDA/TSLA, SCHG,
+QQQM, and SPY over QQQM's actual common history. The
+[results](docs/HYP_PORT_01_1_AGGRESSIVE_COMPOUNDING_RESULTS.md) show the
+intended middle ground: 22.56% CAGR and -39.77% maximum drawdown versus
+42.23% and -63.94% for the concentrated trio, and 17.29% and -36.69% for
+QQQM. The [evidence deck](presentations/hyp_port_01_1_aggressive_compounding_poc.pptx)
+shows growth, drawdown, rolling-window, calendar-return, and sleeve-drift
+views. Rebalancing modestly reduced risk but did not add return. Preserve
+`PORTFOLIO_POLICY_POC_COMPLETE_DESCRIPTIVE_ONLY`; this is not optimized,
+confirmed, or live allocation authority.
+
 The NVDA-specific descriptive lane begins with
 `HYP-NVDA-CLOCK-01.1`. Its
 [results note](docs/NVDA_INTRADAY_RETURN_CLOCK_2018_2023.md) and ignored run

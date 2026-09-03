@@ -568,3 +568,29 @@ The 30-minute lane remains sealed for later.
   negative pair, adding a third panel, changing a gate after inspection, or
   varying the raw-price transform, hedge window, z-score thresholds, exit, or
   cost model.
+
+## 2026-09-03 — HYP-PORT-01.1 aggressive-compounding portfolio comparison
+
+- Question: would a structured aggressive-growth portfolio offer a more
+  useful historical return/risk shape than concentrated AMD/NVDA/TSLA
+  ownership, SCHG, or QQQM?
+- Scope: 50% SCHG, 20% QUAL, 15% XSD, and 5% each AMD/NVDA/TSLA; same-mix
+  no-rebalance control; equal-weight AMD/NVDA/TSLA, SCHG, QQQM, and SPY;
+  2020-10-15 through 2026-09-02 open-to-open; 5 bps one-way cost.
+- Data: a bounded refresh repaired eight stale/cold cache entries. The final
+  cache-only replay had `INFO` health, 1,478 common sessions, 100% SPY-session
+  retention, and 12/12 admission gates passing.
+- Readout: the policy produced 22.56% CAGR, 25.84% volatility, and -39.77%
+  maximum drawdown. The concentrated trio produced 42.23%, 47.26%, and
+  -63.94%; QQQM produced 17.29%, 22.50%, and -36.69%. The policy occupied an
+  aggressive middle ground but did not dominate on every risk-adjusted view.
+- Control: the same mix without rebalancing produced 23.03% CAGR and -40.77%
+  maximum drawdown. Rebalancing slightly reduced risk and slightly reduced
+  return; it was governance, not the return engine.
+- Artifacts: contract and results notes under `operator_hypothesis_lab/docs/`;
+  ignored packet `hyp_port_01_1_aggressive_compounding_20260903` with metrics,
+  allocation tape, and six operator charts; ten-slide operator deck at
+  `operator_hypothesis_lab/presentations/hyp_port_01_1_aggressive_compounding_poc.pptx`.
+- Decision: preserve `PORTFOLIO_POLICY_POC_COMPLETE_DESCRIPTIVE_ONLY`. Do not
+  tune the weights or bands from this outcome. A robustness/contribution study
+  requires a separately frozen operator gate.
