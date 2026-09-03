@@ -390,6 +390,18 @@ equal weight. Record
 survivor-biased universe prevents promotion; no inference, robustness,
 point-in-time membership, or forward authority is open.
 
+The approved
+[defensible deployment-cohort replay](docs/GEN5_LIT_MOM_03_4_DEFENSIBLE_UNIVERSE_RESULTS.md)
+then froze 481 stocks from the September 2020 SPY holdings filing using only
+pre-2021 membership and coverage information. All ten terminal-aware data gates
+passed across 271 weekly intervals from January 2021 through March 2026.
+Relative-only earned 10.80% net CAGR versus 10.66% for equal-weight ownership,
+compressing the prior static-atlas ranking lift from +0.90 points to +0.14.
+The full source rule earned 9.39% and the cash gate cost 1.41 CAGR points while
+improving drawdown by only 0.05 points. SPY led return at 12.80% CAGR. Record
+`DEFENSIBLE_UNIVERSE_REPLAY_COMPLETE_STOP_RANKING_EDGE_NOT_NOMINATED`; do not
+tune horizons, breadth, or the gate to rescue this exact implementation.
+
 ## Running checks
 
 Run only the literature-study tests with:

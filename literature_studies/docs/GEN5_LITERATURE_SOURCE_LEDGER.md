@@ -355,6 +355,17 @@ the source positive-return gate reduced CAGR and improved drawdown. The static
 survivor-biased atlas, retrospective window, and unopened inference and forward
 gates remain explicit limitations.
 
+The subsequent
+[defensible deployment-cohort replay](GEN5_LIT_MOM_03_4_DEFENSIBLE_UNIVERSE_RESULTS.md)
+adds no new literature claim. It reuses the previously audited SPDR S&P 500 ETF
+Trust Form N-PORT dated September 30, 2020, SEC accession
+`0001752724-20-236128`, accepted November 18, 2020. The frozen 481-identity
+registry MD5 is `40e1f4b3b731410aed1e0249cfc92195`; every eligibility decision
+uses only the filing, contemporaneous source reconciliation, and pre-2021
+Alpaca coverage. The 2021-2026 replay is Gen5 evidence rather than an external
+source claim. Relative-only exceeded equal-weight by only 0.14 CAGR points and
+the full rule lagged, producing a stop for this exact translation.
+
 ## Primary-method cross-checks
 
 - Engle, R. F. and Granger, C. W. J. (1987), "Co-integration and Error
