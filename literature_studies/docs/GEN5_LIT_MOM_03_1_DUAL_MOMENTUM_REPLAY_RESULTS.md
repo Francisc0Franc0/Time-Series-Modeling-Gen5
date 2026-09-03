@@ -113,10 +113,12 @@ leverage, robustness battery, forward window, or live decision were opened.
 - Focused tests:
   `literature_studies/tests/testthat/test_gen5_lit_mom_03_1_dual_momentum_replay.R`
 
-## Next gate
+## Subsequent transport POC
 
-A separately frozen robustness slice should ask whether the relative-rotation
-behavior survives costs, timing perturbations, and sensible horizon or
-rebalance perturbations without searching for a better specification. A later
-forward test should be reserved until that robustness result is understood.
-Neither gate is open in this result.
+The operator next opened a universe-only breadth test while preserving the
+10/25-week, top-three, next-open, and 5-bps mechanics. See the
+[universe-transport results](GEN5_LIT_MOM_03_2_UNIVERSE_TRANSPORT_RESULTS.md).
+The source rule failed to improve CAGR over equal-weight ownership in the
+clean sector-ETF fleet and in 10/11 static stock-sector baskets. Its more
+consistent transported behavior was shallower drawdown at the cost of return.
+That descriptive POC did not open robustness or forward authority.

@@ -363,6 +363,20 @@ Record
 The result motivates a separately frozen robustness discussion, not an edge
 claim or forward promotion.
 
+The follow-up
+[universe-transport POC](docs/GEN5_LIT_MOM_03_2_UNIVERSE_TRANSPORT_RESULTS.md)
+keeps the exact 10/25-week, top-three, Wednesday-close, next-open, and 5-bps
+rule while changing only the ranking fleet. One clean ten-sector-ETF universe
+and eleven pre-existing eight-stock sector baskets each contribute 507 weekly
+intervals. Source dual momentum returned 8.53% CAGR in sector ETFs versus
+11.98% for equal weight. It beat equal-weight CAGR in only 1/11 stock sectors,
+while producing shallower drawdown in 6/11. Relative only beat source in all
+twelve fleets; the positive-momentum gate behaved as costly defense rather
+than a broad return enhancer. The stock baskets remain static survivor-biased
+exploratory POCs. Record
+`UNIVERSE_TRANSPORT_POC_COMPLETE_DESCRIPTIVE_ONLY`; no inference, parameter
+search, point-in-time stock membership, robustness, or forward gate is open.
+
 ## Running checks
 
 Run only the literature-study tests with:

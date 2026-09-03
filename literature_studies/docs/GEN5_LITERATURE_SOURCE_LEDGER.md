@@ -336,6 +336,14 @@ weekly next-open intervals and five frozen controls. The source rule produced
 identical to relative-only and its CAGR trailed SPY ownership. These are Gen5
 retrospective results, not source claims or independent confirmation. Record
 `RETROSPECTIVE_VALUE_ADD_REPLAY_COMPLETE_NO_ROBUSTNESS_OR_FORWARD_AUTHORITY`.
+The subsequent
+[universe-transport POC](GEN5_LIT_MOM_03_2_UNIVERSE_TRANSPORT_RESULTS.md)
+changes only the ranking fleet: ten U.S. sector ETFs and eleven pre-existing
+static eight-stock sector baskets. Source dual momentum failed to beat
+equal-weight CAGR in the ETF fleet and in 10/11 stock sectors. This is Gen5
+descriptive transport evidence rather than a new source claim; the stock
+fleets are explicitly survivor-biased and no statistical or forward authority
+was added.
 
 ## Primary-method cross-checks
 
