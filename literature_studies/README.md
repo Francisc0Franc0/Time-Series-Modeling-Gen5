@@ -341,8 +341,17 @@ top-three, positive-momentum-only mechanics. It also records the evidence
 boundary: the source selected its final specification after inspecting
 multiple horizons and breadths on the same 2007-2026 history, so a recent
 publication date does not make that backtest independent confirmation. Record
-`HYPOTHESIS_AND_MECHANICS_PLAN_DOCUMENTED_DATA_NOT_RUN`. No market data,
-performance, strategy gate, or edge claim has been opened for this lane.
+`MECHANICS_REPRODUCTION_PASS_LOCAL_WINDOW_PUBLISHED_WINDOW_BLOCKED`. The exact
+ranking, positive-veto, one-sixth-slot, duplicate-sleeve, holiday-fallback,
+and next-open designation mechanics now produce a 508-week allocation tape on
+clean adjusted Alpaca data from 2016-06-29 through 2026-03-18. The attempted
+refresh still returned no pre-2016 bars, so the publisher's 2008-2015 segment
+remains an explicit coverage STOP. The expanded 18-slide deck and
+[mechanics results](docs/GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_MECHANICS_RESULTS.md)
+show that 463/508 weeks were fully invested, mean cash weight was 2.56%, and
+the two sleeves shared at least one ETF in 488/508 weeks. These are allocation
+descriptors only: no performance, strategy gate, or edge claim has been
+opened for this lane.
 
 ## Running checks
 

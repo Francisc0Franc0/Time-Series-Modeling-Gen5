@@ -323,7 +323,13 @@ The opening
 [study deck](../presentations/gen5_lit_mom_03_1_dual_momentum_study.pptx)
 contains the source-by-slide notes, the fleet-versus-leaf intuition, the
 long-only baseline ladder, the exact published mechanics, and the next narrow
-slice: an auditable weekly signal and allocation tape before performance.
+slice: an auditable weekly signal and allocation tape before performance. That
+mechanics slice is now complete on the clean locally admitted 2016-2026
+window; see the
+[mechanics results](GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_MECHANICS_RESULTS.md).
+All 11 integrity checks passed across 508 decisions, but the Alpaca refresh
+still returned no pre-2016 history. The publisher's 2008-2015 segment therefore
+remains unreproduced, and no performance surface or edge claim was opened.
 
 ## Primary-method cross-checks
 
