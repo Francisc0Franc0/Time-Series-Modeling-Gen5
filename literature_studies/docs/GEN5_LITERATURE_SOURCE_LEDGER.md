@@ -329,7 +329,13 @@ window; see the
 [mechanics results](GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_MECHANICS_RESULTS.md).
 All 11 integrity checks passed across 508 decisions, but the Alpaca refresh
 still returned no pre-2016 history. The publisher's 2008-2015 segment therefore
-remains unreproduced, and no performance surface or edge claim was opened.
+remains unreproduced. The later authorized
+[causal replay](GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_REPLAY_RESULTS.md) used 507
+weekly next-open intervals and five frozen controls. The source rule produced
+12.17% net CAGR and -15.45% maximum drawdown, but its path was virtually
+identical to relative-only and its CAGR trailed SPY ownership. These are Gen5
+retrospective results, not source claims or independent confirmation. Record
+`RETROSPECTIVE_VALUE_ADD_REPLAY_COMPLETE_NO_ROBUSTNESS_OR_FORWARD_AUTHORITY`.
 
 ## Primary-method cross-checks
 

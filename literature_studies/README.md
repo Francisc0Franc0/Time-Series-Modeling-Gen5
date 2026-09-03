@@ -350,8 +350,18 @@ remains an explicit coverage STOP. The expanded 18-slide deck and
 [mechanics results](docs/GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_MECHANICS_RESULTS.md)
 show that 463/508 weeks were fully invested, mean cash weight was 2.56%, and
 the two sleeves shared at least one ETF in 488/508 weeks. These are allocation
-descriptors only: no performance, strategy gate, or edge claim has been
-opened for this lane.
+descriptors only. The subsequently authorized
+[causal replay](docs/GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_REPLAY_RESULTS.md) covers
+507 weekly next-open intervals through 2026-03-19 at 5 bps per one-way traded
+notional. The source rule reached 3.053x wealth, 12.17% net CAGR, and -15.45%
+maximum drawdown. It beat equal-weight all nine on the point estimates and
+cut SPY's drawdown roughly in half, but trailed SPY's 14.36% CAGR. Most
+importantly, it was virtually identical to relative-only: average invested
+weight was 97.44%, so the absolute veto added almost nothing in this window.
+Record
+`RETROSPECTIVE_VALUE_ADD_REPLAY_COMPLETE_NO_ROBUSTNESS_OR_FORWARD_AUTHORITY`.
+The result motivates a separately frozen robustness discussion, not an edge
+claim or forward promotion.
 
 ## Running checks
 

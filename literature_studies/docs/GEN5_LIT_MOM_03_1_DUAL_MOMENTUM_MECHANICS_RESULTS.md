@@ -73,11 +73,12 @@ computed. The allocation timeline is a target-weight tape, not a wealth curve.
 - Focused tests:
   `literature_studies/tests/testthat/test_gen5_lit_mom_03_1_dual_momentum_mechanics.R`
 
-## Next gate
+## Subsequent gate
 
-If the operator opens performance evaluation, the next narrow slice is a
-causal 2016-2026 replay with next-open execution, modest costs, and frozen
-comparators: cash/no trade, equal-weight all nine, relative-only,
-absolute-only, and an attainable long-only ownership baseline. That local
-replay cannot cure the missing 2008-2015 source span; it answers a narrower
-Gen5 question.
+The operator opened and completed the causal 2016-2026 replay described above.
+See the
+[replay results](GEN5_LIT_MOM_03_1_DUAL_MOMENTUM_REPLAY_RESULTS.md). The source
+rule reached 3.053x wealth, 12.17% net CAGR, and -15.45% maximum drawdown, but
+was virtually identical to relative-only and trailed SPY's 14.36% CAGR. The
+performance replay does not cure the missing 2008-2015 source span and does
+not create robustness or forward authority.
